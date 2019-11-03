@@ -47,6 +47,13 @@ cr_endpoint_set <- function(region = c("us-central1",
   .cr_env$endpoint
 }
 
+
+#' Create a CloudRun service
+#' @export
+cr_run <- function(){
+  NULL
+}
+
 #' List CloudRun services.
 #'
 #'
@@ -59,7 +66,7 @@ cr_endpoint_set <- function(region = c("us-central1",
 #' @param limit The maximum number of records that should be returned
 #' @importFrom googleAuthR gar_api_generator
 #' @export
-cr_service_list <- function(project,
+cr_run_list <- function(project,
                             labelSelector = NULL,
                             limit = NULL) {
 

@@ -11,11 +11,6 @@
     packageStartupMessage("Set default project ID to '", .cr_env$project,"'")
   }
 
-  if(Sys.getenv("GCE_DEFAULT_ZONE") != ""){
-    .cr_env$zone <- Sys.getenv("GCE_DEFAULT_ZONE")
-    packageStartupMessage("Set default zone to '", .cr_env$zone,"'")
-  }
-
   invisible()
 
 }

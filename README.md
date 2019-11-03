@@ -13,10 +13,10 @@ library(cloudRunner)
 
 my_plumbed_file <- "api.R"
 
-cr <- cr_plumber(my_plumbed_file)
+cr <- cr_deploy(my_plumbed_file)
 # my_r_function available on https://cloud-run.hello-r.com
 
-cr_api_schedule(cr, schedule = "1 5 * * *")
+cr_schedule(cr, schedule = "1 5 * * *")
 # my_r_function scheduled to run every day at 05:01
 ```
 
@@ -34,8 +34,8 @@ cr_api_schedule(dock_image, schedule = "1 5 * * *")
 
 1. User wraps R code in generic plumber API endpoint
 2. Get Dockerfile requirements via `containerit`
-3. Push Dockerfile to build in Build Triggers
-4. Publish Docker image to Cloud Run
+3. Push Dockerfile to build in Build Triggers - `cr_build()` (using cloudbuild.yaml)
+4. Publish Docker image to Cloud Run - `cr_run()`
 5. Return API endpoint
 6. Schedule if necessary
 
