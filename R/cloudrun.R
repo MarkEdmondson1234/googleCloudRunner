@@ -61,16 +61,16 @@ cr_run <- function(){
 #'
 #' @details
 #'
-#' @param parent The GCP project from which the services should be listed
+#' @param projectId The GCP project from which the services should be listed
 #' @param labelSelector Allows to filter resources based on a label
 #' @param limit The maximum number of records that should be returned
 #' @importFrom googleAuthR gar_api_generator
 #' @export
-cr_run_list <- function(project,
-                            labelSelector = NULL,
-                            limit = NULL) {
+cr_run_list <- function(projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"),
+                        labelSelector = NULL,
+                        limit = NULL) {
 
-  url <- make_endpoint(project)
+  url <- make_endpoint(projectId)
   # run.namespaces.services.list
   #TODO: paging
   pars = list(labelSelector = labelSelector, continue = NULL, limit = limit)

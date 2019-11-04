@@ -4,14 +4,15 @@
 \alias{cr_run_list}
 \title{List CloudRun services.}
 \usage{
-cr_run_list(project, labelSelector = NULL, limit = NULL)
+cr_run_list(projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"),
+  labelSelector = NULL, limit = NULL)
 }
 \arguments{
+\item{projectId}{The GCP project from which the services should be listed}
+
 \item{labelSelector}{Allows to filter resources based on a label}
 
 \item{limit}{The maximum number of records that should be returned}
-
-\item{parent}{The GCP project from which the services should be listed}
 }
 \description{
 List CloudRun services.

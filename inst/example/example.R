@@ -31,7 +31,6 @@ function(spec){
 
 
 #' Recieve pub/sub message
-#' @param payload
 #' @post /pubsub
 function(req){
   # https://cloud.google.com/run/docs/tutorials/pubsub
