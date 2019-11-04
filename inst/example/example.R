@@ -28,3 +28,19 @@ function(spec){
   plot(myData$Sepal.Length, myData$Petal.Length,
        main=title, xlab="Sepal Length", ylab="Petal Length")
 }
+
+
+#' Recieve pub/sub message
+#' @param payload
+#' @post /pubsub
+function(req){
+  # https://cloud.google.com/run/docs/tutorials/pubsub
+  if(any(is.null(req$postBody), is.null(req$postBody$message))){
+    stop("Bad request: invalid pub/sub message format")
+  }
+
+  stuff <- jsonlite::base64_dec(req$postBodymessage$message$data)
+
+  cat(stuff)
+
+}
