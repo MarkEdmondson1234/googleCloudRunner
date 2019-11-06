@@ -15,7 +15,7 @@ Job(attemptDeadline = NULL, pubsubTarget = NULL, httpTarget = NULL,
 
 \item{pubsubTarget}{Pub/Sub target}
 
-\item{httpTarget}{HTTP target}
+\item{httpTarget}{A HTTP target object \link{HttpTarget}}
 
 \item{timeZone}{Specifies the time zone to be used in interpreting}
 

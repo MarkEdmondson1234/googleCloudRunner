@@ -12,7 +12,7 @@ cr_schedule(schedule, name = NULL, httpTarget = NULL,
 
 \item{name}{Optionally caller-specified in CreateJob, after}
 
-\item{httpTarget}{HTTP target}
+\item{httpTarget}{A HTTP target object \link{HttpTarget}}
 
 \item{description}{Optionally caller-specified in CreateJob or}
 
@@ -20,6 +20,12 @@ cr_schedule(schedule, name = NULL, httpTarget = NULL,
 }
 \description{
 Creates a Cloud Scheduler job.
+}
+\examples{
+
+\dontrun{
+cr_schedule("* * * * *", name="test", httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
+}
 }
 \seealso{
 \href{https://cloud.google.com/scheduler/}{Google Documentation}

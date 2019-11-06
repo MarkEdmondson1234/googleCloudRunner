@@ -8,6 +8,12 @@
 #' @importFrom googleAuthR gar_api_generator
 #' @family Job functions
 #' @export
+#' @examples
+#'
+#' \dontrun{
+#' cr_init()
+#' cr_schedule("* * * * *", name="test", httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
+#' }
 cr_schedule <- function(schedule,
                         name=NULL,
                         httpTarget=NULL,
@@ -15,10 +21,16 @@ cr_schedule <- function(schedule,
                         projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID")
                         ) {
 
-  url <- sprintf("https://cloudscheduler.googleapis.com/v1/%s/jobs", projectId)
+  region <- .cr_env$region
+  assert_that(
+    is.string(region),
+    is.string(schedule)
+  )
+  url <- sprintf("https://cloudscheduler.googleapis.com/v1/projects/%s/locations/%s/jobs",
+                 projectId, region)
 
   job <- Job(schedule=schedule,
-             name = name,
+             name = sprintf("projects/%s/locations/%s/jobs/%s", projectId, region, name),
              httpTarget = httpTarget,
              description = description)
 
@@ -31,6 +43,34 @@ cr_schedule <- function(schedule,
 
 }
 
+#' HttpTarget Object
+#'
+#' @param headers A named list of HTTP headers e.g. \code{list(Blah = "yes", Boo = "no")}
+#' @param body HTTP request body
+#' @param oauthToken If specified, an OAuth token will be generated and attached as an Authorization header in the HTTP request. This type of authorization should be used when sending requests to a GCP endpoint.
+#' @param uri Required
+#' @param oidcToken If specified, an OIDC token will be generated and attached as an Authorization header in the HTTP request. This type of authorization should be used when sending requests to third party endpoints or Cloud Run.
+#' @param httpMethod Which HTTP method to use for the request
+#'
+#' @return HttpTarget object
+#'
+#' @family HttpTarget functions
+#' @export
+HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
+                       uri = NULL, oidcToken = NULL, httpMethod = NULL) {
+
+  if(!is.null(headers)){
+    assert_that(
+      is.list(headers),
+      is.character(names(headers))
+    )
+  }
+
+  structure(rmNullObs(list(headers = headers, body = body, oauthToken = oauthToken,
+                 uri = uri, oidcToken = oidcToken, httpMethod = httpMethod)),
+            class = c("gar_HttpTarget", "list"))
+}
+
 #' Job Object
 #'
 #' @details
@@ -39,7 +79,7 @@ cr_schedule <- function(schedule,
 #'
 #' @param attemptDeadline The deadline for job attempts
 #' @param pubsubTarget Pub/Sub target
-#' @param httpTarget HTTP target
+#' @param httpTarget A HTTP target object \link{HttpTarget}
 #' @param timeZone Specifies the time zone to be used in interpreting
 #' @param description Optionally caller-specified in CreateJob or
 #' @param appEngineHttpTarget App Engine HTTP target
@@ -60,11 +100,11 @@ Job <- function(attemptDeadline = NULL, pubsubTarget = NULL, httpTarget = NULL, 
                 description = NULL, appEngineHttpTarget = NULL, status = NULL, retryConfig = NULL,
                 state = NULL, name = NULL, lastAttemptTime = NULL, scheduleTime = NULL, schedule = NULL,
                 userUpdateTime = NULL) {
-  structure(list(attemptDeadline = attemptDeadline, pubsubTarget = pubsubTarget,
+  structure(rmNullObs(list(attemptDeadline = attemptDeadline, pubsubTarget = pubsubTarget,
                  httpTarget = httpTarget, timeZone = timeZone, description = description,
                  appEngineHttpTarget = appEngineHttpTarget, status = status, retryConfig = retryConfig,
                  state = state, name = name, lastAttemptTime = lastAttemptTime, scheduleTime = scheduleTime,
-                 schedule = schedule, userUpdateTime = userUpdateTime),
+                 schedule = schedule, userUpdateTime = userUpdateTime)),
             class = c("gar_Job","list"))
 }
 
