@@ -24,6 +24,7 @@ Creates a Cloud Scheduler job.
 \examples{
 
 \dontrun{
+cr_init()
 cr_schedule("* * * * *", name="test", httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
 }
 }

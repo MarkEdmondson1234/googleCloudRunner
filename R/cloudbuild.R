@@ -3,7 +3,7 @@
 #' This method returns a long-running `Operation`, which includes the buildID. Pass the build ID to `GetBuild` to determine the build status (such as`SUCCESS` or `FAILURE`).
 #'
 #'
-#' @seealso \href{https://cloud.google.com/cloud-build/docs/}{Google Documentation}
+#' @seealso \href{https://cloud.google.com/cloud-build/docs/}{Google Documentation for Cloud Build}
 #'
 #' @inheritParams Build
 #' @param projectId ID of the project
@@ -30,7 +30,9 @@ cr_build <- function(yaml,
                  images = images)
 
   # cloudbuild.projects.builds.create
-  f <- gar_api_generator(url, "POST", data_parse_function = function(x) x)
+  f <- gar_api_generator(url, "POST",
+        data_parse_function = function(x) structure(x,
+                                                    class = "BuildOperationMetadata"))
   stopifnot(inherits(build, "gar_Build"))
 
   o <- f(the_body = build)
@@ -40,7 +42,25 @@ cr_build <- function(yaml,
   invisible(o)
 }
 
+#' Returns information about a previously requested build.
+#'
+#' The `Build` that is returned includes its status (such as `SUCCESS`,`FAILURE`, or `WORKING`), and timing information.
+#'
+#'
+#' @param projectId ID of the project
+#' @param id ID of the build
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+cr_build_status <- function(id, projectId){
 
+  url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds/%s",
+                 projectId, id)
+  # cloudbuild.projects.builds.get
+  f <- gar_api_generator(url, "GET",
+                         data_parse_function = function(x) x)
+  f()
+
+}
 
 
 

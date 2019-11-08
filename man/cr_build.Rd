@@ -20,7 +20,7 @@ cr_build(yaml, timeout = NULL, images = NULL,
 This method returns a long-running `Operation`, which includes the buildID. Pass the build ID to `GetBuild` to determine the build status (such as`SUCCESS` or `FAILURE`).
 }
 \seealso{
-\href{https://cloud.google.com/cloud-build/docs/}{Google Documentation}
+\href{https://cloud.google.com/cloud-build/docs/}{Google Documentation for Cloud Build}
 
 Other Build functions: \code{\link{Build.substitutions}},
   \code{\link{Build.timing}}, \code{\link{Build}},
