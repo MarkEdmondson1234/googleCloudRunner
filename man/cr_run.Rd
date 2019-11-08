@@ -2,10 +2,36 @@
 % Please edit documentation in R/cloudrun.R
 \name{cr_run}
 \alias{cr_run}
-\title{Create a CloudRun service}
+\title{Create a service.}
 \usage{
-cr_run()
+cr_run(image, name = image, concurrency = 1,
+  projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
+}
+\arguments{
+\item{image}{Cloud Run fully managed: only supports containers from Google Container Registry}
+
+\item{name}{Name must be unique within a namespace, within a Cloud Run region}
+
+\item{projectId}{The GCP project from which the services should be listed}
 }
 \description{
-Create a CloudRun service
+Create a service.
 }
+\examples{
+
+\dontrun{
+cr_region_set("europe-west1")
+cr_run("gcr.io/my-project/my-image")
+
+}
+}
+\seealso{
+\href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
+
+Other Service functions: \code{\link{Service}},
+  \code{\link{namespaces.services.create}},
+  \code{\link{namespaces.services.replaceService}},
+  \code{\link{projects.locations.services.create}},
+  \code{\link{projects.locations.services.replaceService}}
+}
+\concept{Service functions}

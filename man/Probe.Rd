@@ -2,7 +2,7 @@
 % Please edit documentation in R/objects_run.R
 \name{Probe}
 \alias{Probe}
-\title{Cloud Run API Objects 
+\title{Cloud Run API Objects
 Deploy and manage user provided container images that scale automatically based on HTTP traffic.}
 \usage{
 Probe(periodSeconds = NULL, failureThreshold = NULL,

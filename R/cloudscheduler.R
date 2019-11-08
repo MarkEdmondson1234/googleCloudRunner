@@ -1,6 +1,6 @@
 #' Creates a Cloud Scheduler job.
 #'
-#' @seealso \href{https://cloud.google.com/scheduler/}{Google Documentation}
+#' @seealso \href{https://cloud.google.com/scheduler/}{Google Documentation for Cloud Scheduler}
 #'
 #' @inheritParams Job
 #' @param projectId The GCP project to run within

@@ -17,7 +17,19 @@ cr_build(yaml, timeout = NULL, images = NULL,
 \item{projectId}{ID of the project}
 }
 \description{
-This method returns a long-running `Operation`, which includes the buildID. Pass the build ID to `GetBuild` to determine the build status (such as`SUCCESS` or `FAILURE`).
+This method returns a long-running `Operation`, which includes the buildID. Pass the build ID to \link{cr_build_status} to determine the build status (such as `SUCCESS` or `FAILURE`).
+}
+\examples{
+
+\dontrun{
+
+cr_init()
+b1 <- cr_build("cloudbuild.yaml")
+b2 <- cr_build_wait(b1)
+cr_build_status(b1)
+cr_build_status(b2)
+
+}
 }
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/}{Google Documentation for Cloud Build}

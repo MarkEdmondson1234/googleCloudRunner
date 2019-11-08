@@ -1,26 +1,42 @@
 #' Set the endpoint for your CloudRun services
 #'
 #' @param region Region for the endpoint
-#' @param override Set a full endpoint starting with https here if necessary
 #' @import assertthat
 #' @export
-cr_init <- function(region = c("europe-west1",
+cr_region_set <- function(region = c("europe-west1",
                                "us-central1",
                                "asia-northeast1",
-                               "us-east1"),
-                    override = NULL){
+                               "us-east1")){
 
   region <- match.arg(region)
 
-  if(!is.null(override)){
-    .cr_env$endpoint <- override
-    return(override)
+  .cr_env$region <- region
+
+  myMessage("Region set to ", .cr_env$region, level = 3)
+  .cr_env$region
+}
+
+ENDPOINTS <- c("us-central1",
+               "asia-northeast1",
+               "europe-west1",
+               "us-east1")
+
+make_endpoint <- function(parent){
+  region <- .cr_env$region
+
+  if(is.null(region)){
+    region <- Sys.getenv("CRUN_ENDPOINT")
   }
 
-  .cr_env$region <- region
-  .cr_env$endpoint <- sprintf("https://%s-run.googleapis.com", region)
+  if(is.null(region)){
+    stop("Must select region via cr_region_set() or set environment CRUN_ENDPOINT",
+         call. = FALSE)
+  }
 
-  myMessage("Endpoint set to ", .cr_env$endpoint,
-            " Region set to ", .cr_env$region, level = 3)
-  .cr_env$endpoint
+  if(!region %in% ENDPOINTS){
+    warning("Endpoint is not one of ", paste(ENDPOINTS, collapse = " "), " got: ", region)
+  }
+
+  sprintf("https://%s-run.googleapis.com/apis/serving.knative.dev/v1/namespaces/%s/services",
+          region, parent)
 }

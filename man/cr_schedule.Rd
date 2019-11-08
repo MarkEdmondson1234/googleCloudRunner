@@ -29,7 +29,7 @@ cr_schedule("* * * * *", name="test", httpTarget = HttpTarget(uri="https://code.
 }
 }
 \seealso{
-\href{https://cloud.google.com/scheduler/}{Google Documentation}
+\href{https://cloud.google.com/scheduler/}{Google Documentation for Cloud Scheduler}
 
 Other Job functions: \code{\link{Job}},
   \code{\link{projects.locations.jobs.create}},

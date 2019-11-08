@@ -21,5 +21,5 @@ List CloudRun services.
 
 }
 \seealso{
-\href{https://cloud.google.com/run/}{Google Documentation}
+\href{https://cloud.run}{Google Documentation for Cloud Run}
 }
