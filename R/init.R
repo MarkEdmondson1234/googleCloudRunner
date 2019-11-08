@@ -16,6 +16,14 @@ cr_region_set <- function(region = c("europe-west1",
   .cr_env$region
 }
 
+#' @export
+cr_region_get <- function(){
+  if(is.null(.cr_env$region)){
+    stop("No region set - use cr_region_set()")
+  }
+  .cr_env$region
+}
+
 ENDPOINTS <- c("us-central1",
                "asia-northeast1",
                "europe-west1",

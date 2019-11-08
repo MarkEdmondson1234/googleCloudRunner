@@ -8,7 +8,7 @@ cr_build(yaml, timeout = NULL, images = NULL,
   projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
 }
 \arguments{
-\item{yaml}{A cloudbuild.yaml with the steps to run for the build}
+\item{yaml}{A cloudbuild.yaml with the steps to run for the build - either a file location or a yaml string produced by \link[yaml]{as.yaml}}
 
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
 

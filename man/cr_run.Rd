@@ -4,8 +4,8 @@
 \alias{cr_run}
 \title{Create a service.}
 \usage{
-cr_run(image, name = image, concurrency = 1,
-  projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
+cr_run(image, region = cr_region_get(), name = image,
+  concurrency = 1, projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
 }
 \arguments{
 \item{image}{Cloud Run fully managed: only supports containers from Google Container Registry}
@@ -16,6 +16,10 @@ cr_run(image, name = image, concurrency = 1,
 }
 \description{
 Create a service.
+}
+\details{
+Uses Cloud Build to deploy an image to Cloud Run
+ https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run
 }
 \examples{
 

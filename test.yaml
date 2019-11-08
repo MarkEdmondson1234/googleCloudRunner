@@ -1,0 +1,23 @@
+steps:
+- name: gcr.io/cloud-builders/docker
+  args:
+  - build
+  - -t
+  - gcr.io/ddd
+  - '.'
+- name: gcr.io/cloud-builders/docker
+  args:
+  - push
+  - gcr.io/ddd
+- name: gcr.io/cloud-builders/gcloud
+  args:
+  - beta
+  - run
+  - deploy
+  - gcr.io/ddd
+  - --image
+  - gcr.io/ddd
+  - --region
+  - --platform
+  - managed
+  - --allow-unauthenticated

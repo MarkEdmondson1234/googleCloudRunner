@@ -7,7 +7,7 @@
 #'
 #' @inheritParams Build
 #' @param projectId ID of the project
-#' @param yaml A cloudbuild.yaml with the steps to run for the build
+#' @param yaml A cloudbuild.yaml with the steps to run for the build - either a file location or a yaml string produced by \link[yaml]{as.yaml}
 #' @importFrom googleAuthR gar_api_generator
 #' @importFrom yaml yaml.load_file
 #' @import assertthat
@@ -29,13 +29,13 @@ cr_build <- function(yaml,
                      images=NULL,
                      projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID")) {
 
-  assert_that(
-    is.readable(yaml)
-  )
   url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds",
                  projectId)
 
-  stepsy <- yaml::yaml.load_file(yaml)
+  stepsy <- yaml::read_yaml(yaml)
+  if(is.null(stepsy$steps)){
+    stop("Invalid cloudbuild yaml - 'steps:' not found.", call. = FALSE)
+  }
   build <- Build(steps = stepsy$steps,
                  timeout = timeout,
                  images = images)

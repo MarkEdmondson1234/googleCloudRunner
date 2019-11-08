@@ -11,6 +11,12 @@
 #' @param projectId The GCP project from which the services should be listed
 #' @importFrom googleAuthR gar_api_generator
 #' @family Service functions
+#'
+#' @details
+#'
+#'  Uses Cloud Build to deploy an image to Cloud Run
+#'  https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run
+#'
 #' @export
 #' @examples
 #'
@@ -20,36 +26,43 @@
 #'
 #' }
 cr_run <- function(image,
+                   region = cr_region_get(),
                    name = image,
                    concurrency = 1,
                    projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID")) {
 
-  url <- make_endpoint(projectId)
+  # use cloud build to deploy
 
-  service <- Service(
-  #  apiVersion = "serving.knative.dev/v1",
-    spec = list(
-      template = list(
-        spec = RevisionSpec(
-          containerConcurrency = concurrency,
-          containers = Container(
-            image = image
-          )
-        )
-      )
-    ),
-    metadata = ObjectMeta(
-      name = name,
-      namespace = projectId
-    )
+  # yaml doesn't handle arguments, use JSONlite instead?
+  run_yaml <- list(
+    steps = list(
+      cr_build_step("docker", c("build","-t",image,".")),
+      cr_build_step("docker", c("push",image)),
+      cr_build_step("gcloud", c("beta","run","deploy",name,
+                                "--image", image,
+                                "--region", region,
+                                "--platform", "managed",
+                                "--allow-unauthenticated"))
+      ),
+    images = image
   )
 
-  # run.namespaces.services.create
-  f <- googleAuthR::gar_api_generator(url, "POST", data_parse_function = function(x) x)
-  stopifnot(inherits(service, "gar_Service"))
+  run_yaml
 
-  f(the_body = service)
+}
 
+#' Create a yaml build step
+#' @param name name of SDK appended to stem
+#' @param args character vector of arguments
+#' @param stem prefixed to name
+#' @export
+cr_build_step <- function(name, args, stem = "gcr.io/cloud-builders/"){
+  args <- paste0("[", paste0(args, collapse = ","), "]")
+  class(args) <- "verbatim"
+  list(
+    name = paste0(stem, name),
+    args = args
+  )
 }
 
 

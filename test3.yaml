@@ -1,0 +1,29 @@
+!omap
+- steps:
+  - !omap
+    - name: gcr.io/cloud-builders/docker
+    - args:
+      - build
+      - -t
+      - gcr.io/[PROJECT_ID]/[IMAGE]
+      - '.'
+  - !omap
+    - name: gcr.io/cloud-builders/docker
+    - args:
+      - push
+      - gcr.io/[PROJECT_ID]/[IMAGE]
+  - !omap
+    - name: gcr.io/cloud-builders/gcloud
+    - args:
+      - beta
+      - run
+      - deploy
+      - '[SERVICE_NAME]'
+      - --image
+      - gcr.io/[PROJECT_ID]/[IMAGE]
+      - --region
+      - '[REGION]'
+      - --platform
+      - managed
+      - --allow-unauthenticated
+- images: gcr.io/[PROJECT_ID]/[IMAGE]
