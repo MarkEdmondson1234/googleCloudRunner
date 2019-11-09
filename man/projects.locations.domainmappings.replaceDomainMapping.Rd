@@ -27,8 +27,7 @@ See \code{\link[googleAuthR]{gar_auth}} for details.
 \seealso{
 \href{https://cloud.google.com/run/}{Google Documentation}
 
-Other DomainMapping functions: \code{\link{DomainMapping}},
-  \code{\link{namespaces.domainmappings.create}},
+Other DomainMapping functions: \code{\link{namespaces.domainmappings.create}},
   \code{\link{namespaces.domainmappings.replaceDomainMapping}},
   \code{\link{projects.locations.domainmappings.create}}
 }

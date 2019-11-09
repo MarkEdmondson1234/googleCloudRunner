@@ -28,7 +28,5 @@ See \code{\link[googleAuthR]{gar_auth}} for details.
 }
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/}{Google Documentation}
-
-Other RetryBuildRequest functions: \code{\link{RetryBuildRequest}}
 }
 \concept{RetryBuildRequest functions}

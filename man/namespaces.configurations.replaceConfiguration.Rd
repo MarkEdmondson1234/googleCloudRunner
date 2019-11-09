@@ -27,8 +27,7 @@ See \code{\link[googleAuthR]{gar_auth}} for details.
 \seealso{
 \href{https://cloud.google.com/run/}{Google Documentation}
 
-Other Configuration functions: \code{\link{Configuration}},
-  \code{\link{namespaces.configurations.create}},
+Other Configuration functions: \code{\link{namespaces.configurations.create}},
   \code{\link{projects.locations.configurations.create}},
   \code{\link{projects.locations.configurations.replaceConfiguration}}
 }

@@ -9,6 +9,7 @@
 #' @inheritParams RevisionSpec
 #' @inheritParams Container
 #' @param projectId The GCP project from which the services should be listed
+#' @param allowUnauthenticated TRUE if can be reached from public HTTP address.
 #' @importFrom googleAuthR gar_api_generator
 #' @family Service functions
 #'
@@ -26,26 +27,44 @@
 #'
 #' }
 cr_run <- function(image,
+                   source = NULL,
                    region = cr_region_get(),
-                   name = image,
+                   name = basename(image),
+                   allowUnauthenticated = TRUE,
                    concurrency = 1,
                    projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID")) {
+
+  if(!is.null(source)){
+    assert_that(is.gar_Source(source))
+    source_build_steps <- list(
+      cr_build_step("docker", c("build","-t",image,".")),
+      cr_build_step("docker", c("push",image)),
+    )
+  } else {
+    myMessage("No source specified, deploying existing container ", image, level =3)
+    source_build_steps <- NULL
+  }
 
   # use cloud build to deploy
   run_yaml <- Yaml(
     steps = list(
-      cr_build_step("docker", c("build","-t",image,".")),
-      cr_build_step("docker", c("push",image)),
-      cr_build_step("gcloud", c("beta","run","deploy",name,
-                                "--image", image,
-                                "--region", region,
-                                "--platform", "managed",
-                                "--allow-unauthenticated"))
-      ),
+      source_build_steps,
+      cr_build_step("gcloud",
+         c("beta","run","deploy", name,
+           "--image", image,
+           "--region", region,
+           "--platform", "managed",
+           "--concurrency", concurrency,
+           if(allowUnauthenticated) "--allow-unauthenticated" else "--no-allow-unauthenticated"
+         ))
+    ),
     images = image
   )
 
-  cr_build(run_yaml, projectId=projectId)
+  cr_build(run_yaml,
+           source = source,
+           images = image,
+           projectId=projectId)
 
 }
 
@@ -81,10 +100,10 @@ cr_run_list <- function(projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"),
   url <- make_endpoint(projectId)
   # run.namespaces.services.list
   #TODO: paging
-  #pars = list(labelSelector = labelSelector, continue = NULL, limit = limit)
+  pars = list(labelSelector = labelSelector, continue = NULL, limit = limit)
   f <- gar_api_generator(url,
                          "GET",
-                         pars = NULL,
+                         pars = rmNullObs(pars),
                          data_parse_function = parse_service_list,
                          checkTrailingSlash=FALSE)
   f()
@@ -98,9 +117,7 @@ parse_service_list <- function(x){
     x$kind == "ServiceList"
   )
 
-  structure(
-    x$items,
-    class = c(x$kind, "data.frame"))
+  x$items
 
 }
 

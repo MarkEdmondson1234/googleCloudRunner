@@ -4,11 +4,13 @@
 \alias{cr_build}
 \title{Starts a build with the specified configuration.}
 \usage{
-cr_build(yaml, timeout = NULL, images = NULL,
+cr_build(yaml, source = NULL, timeout = NULL, images = NULL,
   projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
 }
 \arguments{
-\item{yaml}{A cloudbuild.yaml with the steps to run for the build - either a file location or a yaml string produced by \link[yaml]{as.yaml}}
+\item{yaml}{A cloudbuild.yaml with the steps to run for the build - either a file location or an R object that will be turned into yaml via \link[yaml]{as.yaml}}
+
+\item{source}{A \link{Source} object specifying the location of the source files to build}
 
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
 
@@ -23,19 +25,23 @@ This method returns a long-running `Operation`, which includes the buildID. Pass
 
 \dontrun{
 
-cr_init()
 b1 <- cr_build("cloudbuild.yaml")
 b2 <- cr_build_wait(b1)
 cr_build_status(b1)
 cr_build_status(b2)
+
+my_gcs_source <- Source(storageSource=StorageSource("gs://my-bucket", "my_code.tar.gz"))
+my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName="master"))
+
+build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
+build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
 
 }
 }
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/}{Google Documentation for Cloud Build}
 
-Other Build functions: \code{\link{Build.substitutions}},
-  \code{\link{Build.timing}}, \code{\link{Build}},
+Other Build functions: \code{\link{Build}},
   \code{\link{projects.builds.create}}
 }
 \concept{Build functions}

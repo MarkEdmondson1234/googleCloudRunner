@@ -26,7 +26,5 @@ See \code{\link[googleAuthR]{gar_auth}} for details.
 }
 \seealso{
 \href{https://cloud.google.com/run/}{Google Documentation}
-
-Other SetIamPolicyRequest functions: \code{\link{SetIamPolicyRequest}}
 }
 \concept{SetIamPolicyRequest functions}

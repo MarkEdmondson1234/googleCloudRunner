@@ -28,8 +28,7 @@ See \code{\link[googleAuthR]{gar_auth}} for details.
 \seealso{
 \href{https://cloud.google.com/run/}{Google Documentation}
 
-Other AutoDomainMapping functions: \code{\link{AutoDomainMapping}},
-  \code{\link{namespaces.autodomainmappings.create}},
+Other AutoDomainMapping functions: \code{\link{namespaces.autodomainmappings.create}},
   \code{\link{projects.locations.autodomainmappings.create}},
   \code{\link{projects.locations.autodomainmappings.replaceAutoDomainMapping}}
 }

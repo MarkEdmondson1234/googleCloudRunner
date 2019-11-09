@@ -20,3 +20,11 @@ print.gar_Build <- function(x, ...){
   cat("\nsteps: \n")
   print(x$steps)
 }
+
+#' @export
+print.gar_StorageSource <- function(x, ...){
+  cat("==CloudBuildStorageSource==")
+  cat("\nbucket: ", x$bucket)
+  cat("\nobject: ", x$object)
+  cat0("\ngeneration: ", x$generation)
+}

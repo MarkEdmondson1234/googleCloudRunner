@@ -4,13 +4,16 @@
 \alias{cr_run}
 \title{Create a service.}
 \usage{
-cr_run(image, region = cr_region_get(), name = image,
+cr_run(image, source = NULL, region = cr_region_get(),
+  name = basename(image), allowUnauthenticated = TRUE,
   concurrency = 1, projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
 }
 \arguments{
 \item{image}{Cloud Run fully managed: only supports containers from Google Container Registry}
 
 \item{name}{Name must be unique within a namespace, within a Cloud Run region}
+
+\item{allowUnauthenticated}{TRUE if can be reached from public HTTP address.}
 
 \item{projectId}{The GCP project from which the services should be listed}
 }

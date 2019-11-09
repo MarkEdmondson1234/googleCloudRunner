@@ -27,8 +27,6 @@ See \code{\link[googleAuthR]{gar_auth}} for details.
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/}{Google Documentation}
 
-Other BuildTrigger functions: \code{\link{BuildTrigger.substitutions}},
-  \code{\link{BuildTrigger}},
-  \code{\link{projects.triggers.patch}}
+Other BuildTrigger functions: \code{\link{projects.triggers.patch}}
 }
 \concept{BuildTrigger functions}

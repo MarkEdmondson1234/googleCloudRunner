@@ -28,7 +28,5 @@ See \code{\link[googleAuthR]{gar_auth}} for details.
 }
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/}{Google Documentation}
-
-Other CancelBuildRequest functions: \code{\link{CancelBuildRequest}}
 }
 \concept{CancelBuildRequest functions}

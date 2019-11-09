@@ -27,8 +27,7 @@ See \code{\link[googleAuthR]{gar_auth}} for details.
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/}{Google Documentation}
 
-Other Build functions: \code{\link{Build.substitutions}},
-  \code{\link{Build.timing}}, \code{\link{Build}},
+Other Build functions: \code{\link{Build}},
   \code{\link{cr_build}}
 }
 \concept{Build functions}

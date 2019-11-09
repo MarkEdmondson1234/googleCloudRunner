@@ -26,7 +26,5 @@ See \code{\link[googleAuthR]{gar_auth}} for details.
 }
 \seealso{
 \href{https://cloud.google.com/scheduler/}{Google Documentation}
-
-Other ResumeJobRequest functions: \code{\link{ResumeJobRequest}}
 }
 \concept{ResumeJobRequest functions}
