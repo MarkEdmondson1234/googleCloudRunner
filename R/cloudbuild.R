@@ -32,7 +32,7 @@ cr_build <- function(yaml,
   url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds",
                  projectId)
 
-  stepsy <- yaml::read_yaml(yaml)
+  stepsy <- get_cr_yaml(yaml)
   if(is.null(stepsy$steps)){
     stop("Invalid cloudbuild yaml - 'steps:' not found.", call. = FALSE)
   }

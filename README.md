@@ -35,11 +35,11 @@ cr_api_schedule(dock_image, schedule = "1 5 * * *")
 1. User wraps R code in generic plumber API endpoint
 2. Get Dockerfile requirements via `containerit`
 3. Push Dockerfile to build in Build Triggers - `cr_build()` (using cloudbuild.yaml)
-4. Publish Docker image to Cloud Run - `cr_run()`
+4. Publish Docker image to Cloud Run - `cr_run()` via a cloud build calling gcloud
 5. Return API endpoint
 6. Schedule if necessary
 
-Can a standard Cloud Run be used to build other images?
+You can also trigger cloud builds via scheduler, so no need for Cloud Run for non-public tasks. 
 
 ## Setup
 

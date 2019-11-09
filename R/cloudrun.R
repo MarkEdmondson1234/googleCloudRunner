@@ -32,9 +32,7 @@ cr_run <- function(image,
                    projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID")) {
 
   # use cloud build to deploy
-
-  # yaml doesn't handle arguments, use JSONlite instead?
-  run_yaml <- list(
+  run_yaml <- Yaml(
     steps = list(
       cr_build_step("docker", c("build","-t",image,".")),
       cr_build_step("docker", c("push",image)),
@@ -47,7 +45,7 @@ cr_run <- function(image,
     images = image
   )
 
-  run_yaml
+  cr_build(run_yaml, projectId=projectId)
 
 }
 
@@ -57,8 +55,6 @@ cr_run <- function(image,
 #' @param stem prefixed to name
 #' @export
 cr_build_step <- function(name, args, stem = "gcr.io/cloud-builders/"){
-  args <- paste0("[", paste0(args, collapse = ","), "]")
-  class(args) <- "verbatim"
   list(
     name = paste0(stem, name),
     args = args
