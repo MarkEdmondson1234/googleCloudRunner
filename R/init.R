@@ -18,6 +18,9 @@ cr_region_set <- function(region = c("europe-west1",
 
 #' @export
 cr_region_get <- function(){
+  if(Sys.getenv("CR_REGION") != ""){
+    .cr_env$region <- Sys.getenv("CR_REGION")
+  }
   if(is.null(.cr_env$region)){
     stop("No region set - use cr_region_set()")
   }

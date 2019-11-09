@@ -18,3 +18,13 @@ cr_build_upload_gcs(local, remote = paste0(local, format(Sys.time(),
 \description{
 This creates a \link{StorageSource} object after uploading to Google Cloud Storage
 }
+\examples{
+
+\dontrun{
+
+storage <- cr_build_upload_gcs("my_folder")
+my_gcs_source <- Source(storageSource=storage)
+build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
+
+}
+}

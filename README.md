@@ -43,7 +43,7 @@ You can also trigger cloud builds via scheduler, so no need for Cloud Run for no
 
 ## Setup
 
-`CR_ENDPOINTS` must be one of 
+`CR_REGION` can be one of 
 
 ```
 "us-central1",
@@ -51,3 +51,5 @@ You can also trigger cloud builds via scheduler, so no need for Cloud Run for no
 "europe-west1",
 "us-east1"
 ```
+
+Reuses GCE_DEFAULT_PROJECT_ID from googleComputeEngineR and GCS_DEFAULT_BUCKET from googleCloudStorageR

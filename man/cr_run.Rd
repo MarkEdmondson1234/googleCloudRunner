@@ -2,23 +2,19 @@
 % Please edit documentation in R/cloudrun.R
 \name{cr_run}
 \alias{cr_run}
-\title{Create a service.}
+\title{Create a CloudRun service.}
 \usage{
 cr_run(image, source = NULL, region = cr_region_get(),
   name = basename(image), allowUnauthenticated = TRUE,
   concurrency = 1, projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
 }
 \arguments{
-\item{image}{Cloud Run fully managed: only supports containers from Google Container Registry}
-
-\item{name}{Name must be unique within a namespace, within a Cloud Run region}
-
 \item{allowUnauthenticated}{TRUE if can be reached from public HTTP address.}
 
 \item{projectId}{The GCP project from which the services should be listed}
 }
 \description{
-Create a service.
+Create a CloudRun service.
 }
 \details{
 Uses Cloud Build to deploy an image to Cloud Run
@@ -35,8 +31,7 @@ cr_run("gcr.io/my-project/my-image")
 \seealso{
 \href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
 
-Other Service functions: \code{\link{Service}},
-  \code{\link{namespaces.services.create}},
+Other Service functions: \code{\link{namespaces.services.create}},
   \code{\link{namespaces.services.replaceService}},
   \code{\link{projects.locations.services.create}},
   \code{\link{projects.locations.services.replaceService}}

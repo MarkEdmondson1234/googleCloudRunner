@@ -219,7 +219,7 @@ Build <- function(Build.substitutions = NULL,
                   artifacts = NULL,
                   secrets = NULL) {
 
-  structure(list(Build.substitutions = Build.substitutions,
+  structure(rmNullObs(list(Build.substitutions = Build.substitutions,
                  Build.timing = Build.timing,
                  results = results,
                  logsBucket = logsBucket,
@@ -242,7 +242,7 @@ Build <- function(Build.substitutions = NULL,
                  status = status,
                  statusDetail = statusDetail,
                  artifacts = artifacts,
-                 secrets = secrets),
+                 secrets = secrets)),
             class = c("gar_Build", "list"))
 }
 
@@ -270,7 +270,8 @@ Build <- function(Build.substitutions = NULL,
 #'
 #' }
 Source <- function(storageSource = NULL, repoSource = NULL) {
-  if(xor(is.null(repoSource),is.null(storageSource))){
+
+  if(!xor(is.null(repoSource),is.null(storageSource))){
     stop("Only one of repoSource or storageSource can be supplied", call. = FALSE)
   }
 
@@ -281,7 +282,7 @@ Source <- function(storageSource = NULL, repoSource = NULL) {
   if(!is.null(storageSource)){
     assert_that(is.gar_StorageSource(storageSource))
   }
-  structure(list(repoSource = repoSource, storageSource = storageSource),
+  structure(rmNullObs(list(repoSource = repoSource, storageSource = storageSource)),
             class = c("gar_Source","list"))
 }
 
@@ -325,8 +326,8 @@ RepoSource <- function(repoName = NULL,
   stopifnot(!is.null(branchName), is.null(commitSha), is.null(tagName))
   stopifnot(!is.null(tagName), is.null(branchName), is.null(commitSha))
 
-  structure(list(tagName = tagName, projectId = projectId, repoName = repoName,
-                 commitSha = commitSha, branchName = branchName, dir = dir),
+  structure(rmNullObs(list(tagName = tagName, projectId = projectId, repoName = repoName,
+                 commitSha = commitSha, branchName = branchName, dir = dir)),
             class = c("gar_RepoSource","list"))
 }
 
@@ -351,9 +352,15 @@ is.gar_RepoSource <- function(x){
 #'
 #' \dontrun{
 #'
+#'
 #' my_gcs_source <- Source(storageSource=StorageSource("gs://my-bucket","my_code.tar.gz"))
 #'
 #' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
+#'
+#' storage <- cr_build_upload_gcs("my_folder")
+#' my_gcs_source2 <- Source(storageSource=storage)
+#'
+#' build2 <- cr_build("cloudbuild.yaml", source = my_gcs_source2)
 #'
 #' }
 StorageSource <- function(bucket = NULL, object = NULL, generation = NULL) {
@@ -375,15 +382,30 @@ is.gar_StorageSource <- function(x){
 #'
 #' @export
 #' @importFrom googleCloudStorageR gcs_upload
+#' @examples
+#'
+#' \dontrun{
+#'
+#' storage <- cr_build_upload_gcs("my_folder")
+#' my_gcs_source <- Source(storageSource=storage)
+#' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
+#'
+#' }
 cr_build_upload_gcs <- function(local,
         remote = paste0(local,format(Sys.time(), "%Y%m%d%H%M%S"),"tar.gz"),
         bucket = Sys.getenv("GCS_DEFAULT_BUCKET")){
-  tmp <- tempfile(fileext = ".tar.gz")
-  tar(tmp,
-      files = list.files(local, full.names = TRUE, recursive = TRUE),
+
+  tar_file <- paste0(basename(local), ".tar.gz")
+
+  dir.create("workspace", showWarnings = FALSE)
+  file.copy(list.files(local, recursive = TRUE, full.names = TRUE), "workspace", recursive = TRUE)
+  on.exit(unlink(tmp_local))
+
+  tar(tar_file,
+      files = "workspace",
       compression = "gzip")
 
-  gcs_upload(tmp, bucket = bucket, name = remote)
+  gcs_upload(tar_file, bucket = bucket, name = remote)
 
   StorageSource(
     bucket = bucket,

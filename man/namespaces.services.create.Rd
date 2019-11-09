@@ -27,8 +27,7 @@ See \code{\link[googleAuthR]{gar_auth}} for details.
 \seealso{
 \href{https://cloud.google.com/run/}{Google Documentation}
 
-Other Service functions: \code{\link{Service}},
-  \code{\link{cr_run}},
+Other Service functions: \code{\link{cr_run}},
   \code{\link{namespaces.services.replaceService}},
   \code{\link{projects.locations.services.create}},
   \code{\link{projects.locations.services.replaceService}}
