@@ -11,5 +11,5 @@ cr_region_set(region = c("europe-west1", "us-central1",
 \item{region}{Region for the endpoint}
 }
 \description{
-Set the endpoint for your CloudRun services
+Can also use environment argument CR_REGION
 }

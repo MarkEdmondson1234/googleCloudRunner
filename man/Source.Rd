@@ -32,4 +32,12 @@ build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
 
 }
 }
-\concept{Source functions}
+\seealso{
+Other Cloud Build functions: \code{\link{Build}},
+  \code{\link{RepoSource}}, \code{\link{StorageSource}},
+  \code{\link{cr_build_make}},
+  \code{\link{cr_build_status}},
+  \code{\link{cr_build_upload_gcs}},
+  \code{\link{cr_build_wait}}, \code{\link{cr_build}}
+}
+\concept{Cloud Build functions}

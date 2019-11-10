@@ -5,8 +5,7 @@
 \title{Create a StorageSource}
 \usage{
 cr_build_upload_gcs(local, remote = paste0(local, format(Sys.time(),
-  "\%Y\%m\%d\%H\%M\%S"), "tar.gz"),
-  bucket = Sys.getenv("GCS_DEFAULT_BUCKET"))
+  "\%Y\%m\%d\%H\%M\%S"), ".tar.gz"), bucket = cr_bucket_get())
 }
 \arguments{
 \item{local}{Local directory containing the Dockerfile etc. you wish to deploy}
@@ -18,6 +17,9 @@ cr_build_upload_gcs(local, remote = paste0(local, format(Sys.time(),
 \description{
 This creates a \link{StorageSource} object after uploading to Google Cloud Storage
 }
+\details{
+It copies the files into a folder call "deploy" in your working directory, then tars it for upload
+}
 \examples{
 
 \dontrun{
@@ -28,3 +30,11 @@ build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 
 }
 }
+\seealso{
+Other Cloud Build functions: \code{\link{Build}},
+  \code{\link{RepoSource}}, \code{\link{Source}},
+  \code{\link{StorageSource}}, \code{\link{cr_build_make}},
+  \code{\link{cr_build_status}},
+  \code{\link{cr_build_wait}}, \code{\link{cr_build}}
+}
+\concept{Cloud Build functions}

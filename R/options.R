@@ -6,11 +6,6 @@
     warning("Tried to auto-authenticate but failed.")
   }
 
-  if(Sys.getenv("GCE_DEFAULT_PROJECT_ID") != ""){
-    .cr_env$project <- Sys.getenv("GCE_DEFAULT_PROJECT_ID")
-    packageStartupMessage("Set default project ID to '", .cr_env$project,"'")
-  }
-
   invisible()
 
 }

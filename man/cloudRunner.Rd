@@ -4,7 +4,7 @@
 \name{cloudRunner}
 \alias{cloudRunner}
 \alias{cloudRunner-package}
-\title{Launch R scripts into Cloud Run}
+\title{Launch R scripts into the Google Cloud via Cloud Build, Cloud Run and Cloud Scheduler}
 \description{
-Launch R scripts into Cloud Run
+Launch R scripts into the Google Cloud via Cloud Build, Cloud Run and Cloud Scheduler
 }

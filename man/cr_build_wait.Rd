@@ -4,8 +4,7 @@
 \alias{cr_build_wait}
 \title{Wait for a Build to run}
 \usage{
-cr_build_wait(op = .Last.value,
-  projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
+cr_build_wait(op = .Last.value, projectId = cr_project_get())
 }
 \arguments{
 \item{op}{The operation build object to wait for}
@@ -15,3 +14,11 @@ cr_build_wait(op = .Last.value,
 \description{
 This will repeatedly call \link{cr_build_status} whilst the status is STATUS_UNKNOWN, QUEUED or WORKING
 }
+\seealso{
+Other Cloud Build functions: \code{\link{Build}},
+  \code{\link{RepoSource}}, \code{\link{Source}},
+  \code{\link{StorageSource}}, \code{\link{cr_build_make}},
+  \code{\link{cr_build_status}},
+  \code{\link{cr_build_upload_gcs}}, \code{\link{cr_build}}
+}
+\concept{Cloud Build functions}

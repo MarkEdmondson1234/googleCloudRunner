@@ -1,3 +1,5 @@
+#' @export
+#' @noRd
 Yaml <- function(...){
   structure(
     list(...),

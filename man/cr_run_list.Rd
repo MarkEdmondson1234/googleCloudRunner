@@ -4,8 +4,8 @@
 \alias{cr_run_list}
 \title{List CloudRun services.}
 \usage{
-cr_run_list(projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"),
-  labelSelector = NULL, limit = NULL, summary = TRUE)
+cr_run_list(projectId = cr_project_get(), labelSelector = NULL,
+  limit = NULL, summary = TRUE)
 }
 \arguments{
 \item{projectId}{The GCP project from which the services should be listed}
@@ -24,4 +24,8 @@ List CloudRun services.
 }
 \seealso{
 \href{https://cloud.run}{Google Documentation for Cloud Run}
+
+Other Cloud Run functions: \code{\link{cr_build_step}},
+  \code{\link{cr_run_get}}, \code{\link{cr_run}}
 }
+\concept{Cloud Run functions}

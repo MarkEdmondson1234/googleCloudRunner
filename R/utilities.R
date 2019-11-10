@@ -33,8 +33,7 @@ rmNullObs <- function(x) {
 }
 
 #' if argument is NULL, no line output
-#'
-#' @keywords internal
+#' @noRd
 cat0 <- function(prefix = "", x){
   if(!is.null(x)){
     cat(prefix, x, "\n")

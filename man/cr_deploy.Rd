@@ -6,8 +6,7 @@
 \usage{
 cr_deploy(local, remote = basename(local), dockerfile = NULL,
   image_name = remote, region = cr_region_get(),
-  bucket = Sys.getenv("GCS_DEFAULT_BUCKET"),
-  projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
+  bucket = cr_bucket_get(), projectId = cr_project_get())
 }
 \arguments{
 \item{local}{A folder containing the R script and all its R dependencies}

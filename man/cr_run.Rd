@@ -4,9 +4,9 @@
 \alias{cr_run}
 \title{Create a CloudRun service.}
 \usage{
-cr_run(image, source = NULL, region = cr_region_get(),
-  name = basename(image), allowUnauthenticated = TRUE,
-  concurrency = 1, projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
+cr_run(image, source = NULL, name = basename(image),
+  allowUnauthenticated = TRUE, concurrency = 1,
+  region = cr_region_get(), projectId = cr_project_get())
 }
 \arguments{
 \item{allowUnauthenticated}{TRUE if can be reached from public HTTP address.}
@@ -31,9 +31,7 @@ cr_run("gcr.io/my-project/my-image")
 \seealso{
 \href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
 
-Other Service functions: \code{\link{namespaces.services.create}},
-  \code{\link{namespaces.services.replaceService}},
-  \code{\link{projects.locations.services.create}},
-  \code{\link{projects.locations.services.replaceService}}
+Other Cloud Run functions: \code{\link{cr_build_step}},
+  \code{\link{cr_run_get}}, \code{\link{cr_run_list}}
 }
-\concept{Service functions}
+\concept{Cloud Run functions}

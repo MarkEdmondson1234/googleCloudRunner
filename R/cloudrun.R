@@ -8,7 +8,7 @@
 #' @param projectId The GCP project from which the services should be listed
 #' @param allowUnauthenticated TRUE if can be reached from public HTTP address.
 #' @importFrom googleAuthR gar_api_generator
-#' @family Service functions
+#' @family Cloud Run functions
 #'
 #' @details
 #'
@@ -25,11 +25,11 @@
 #' }
 cr_run <- function(image,
                    source = NULL,
-                   region = cr_region_get(),
                    name = basename(image),
                    allowUnauthenticated = TRUE,
                    concurrency = 1,
-                   projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID")) {
+                   region = cr_region_get(),
+                   projectId = cr_project_get()) {
 
   if(!is.null(source)){
     assert_that(is.gar_Source(source))
@@ -60,9 +60,9 @@ cr_run <- function(image,
   )
 
   build <- cr_build(run_yaml,
-           source = source,
-           images = image,
-           projectId=projectId)
+                    source = source,
+                    images = image,
+                    projectId=projectId)
 
   result <- cr_build_wait(build, projectId = projectId)
 
@@ -86,6 +86,7 @@ cr_run <- function(image,
 #' @param entrypoint change the entrypoint for the docker container
 #' @param dir The directory to use, relative to /workspace e.g. /workspace/deploy/
 #' @export
+#' @family Cloud Run functions
 #' @examples
 #'
 #' # creating yaml for use in deploying cloud run
@@ -143,8 +144,9 @@ make_endpoint <- function(endbit){
 #' @param limit The maximum number of records that should be returned
 #' @param summary If TRUE will return only a subset of info available, set to FALSE for all metadata
 #' @importFrom googleAuthR gar_api_generator
+#' @family Cloud Run functions
 #' @export
-cr_run_list <- function(projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"),
+cr_run_list <- function(projectId = cr_project_get(),
                         labelSelector = NULL,
                         limit = NULL,
                         summary = TRUE) {
@@ -204,8 +206,9 @@ parse_service_list_post <- function(x){
 #'
 #' @param name The name of the service to retrieve
 #' @importFrom googleAuthR gar_api_generator
+#' @family Cloud Run functions
 #' @export
-cr_run_get <- function(name, projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID")) {
+cr_run_get <- function(name, projectId = cr_project_get()) {
 
   url <- make_endpoint(sprintf("namespaces/%s/services/%s", projectId, name))
 

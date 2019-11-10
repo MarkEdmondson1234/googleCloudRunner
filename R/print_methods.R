@@ -12,13 +12,14 @@ print.BuildOperationMetadata <- function(x, ...){
 }
 
 #' @export
+#' @importFrom yaml as.yaml
 print.gar_Build <- function(x, ...){
   cat("==CloudBuildObject==")
   cat("\nbuildId: ", x$id)
   cat("\nstatus: ", x$status)
   cat("\nlogUrl: ", x$logUrl)
   cat("\nsteps: \n")
-  print(x$steps)
+  cat(as.yaml(x$steps))
 }
 
 #' @export
@@ -39,4 +40,15 @@ print.gar_Service <- function(x, ...){
   cat("\ncreationTimestamp: ", x$metadata$creationTimestamp)
   cat("\nobservedGeneration: ", x$status$observedGeneration)
   cat("\nurl: ", x$status$url)
+}
+
+#' @export
+print.gar_scheduleJob <- function(x, ...){
+  cat("==CloudScheduleJob==")
+  cat0("\nname: ", x$name)
+  cat0("\nstate: ", x$state)
+  cat0("\nhttpTarget.uri: ", x$httpTarget$uri)
+  cat0("\nhttpTarget.httpMethod: ", x$httpTarget$httpMethod)
+  cat0("\nuserUpdateTime: ", x$userUpdateTime)
+  cat0("\nschedule: ", x$schedule, " ", x$timeZone)
 }

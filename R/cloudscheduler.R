@@ -1,27 +1,40 @@
 #' Creates a Cloud Scheduler job.
 #'
-#' @seealso \href{https://cloud.google.com/scheduler/}{Google Documentation for Cloud Scheduler}
+#' @seealso \href{https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/create}{Google Documentation for Cloud Scheduler}
 #'
 #' @inheritParams Job
 #' @param projectId The GCP project to run within
+#' @param region The region
 #'
 #' @importFrom googleAuthR gar_api_generator
-#' @family Job functions
+#' @family Cloud Scheduler functions
 #' @export
 #' @examples
 #'
 #' \dontrun{
 #' cr_init()
 #' cr_schedule("* * * * *", name="test", httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
+#'
+#' # schedule a cloud build (no source)
+#' build1 <- cr_build_make("inst/cloudbuild/cloudbuild.yaml")
+#' cr_schedule("15 5 * * *", name="cloud-build-test",
+#'              httpTarget = cr_build_schedule_http(build1))
+#'
+#' # schedule a cloud build with code source from GCS bucket
+#' storage <- cr_build_upload_gcs("my_folder", bucket = cr_get_bucket())
+#' my_gcs_source <- Source(storageSource=storage)
+#' build <- cr_build_make("cloudbuild.yaml", source = my_gcs_source))
+#' cr_schedule("15 5 * * *", name="cloud-build-test",
+#'             httpTarget = cr_build_schedule_http(build))
 #' }
 cr_schedule <- function(schedule,
                         name=NULL,
                         httpTarget=NULL,
                         description=NULL,
-                        projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID")
+                        region = cr_region_get(),
+                        projectId = cr_project_get()
                         ) {
 
-  region <- .cr_env$region
   assert_that(
     is.string(region),
     is.string(schedule)
@@ -36,8 +49,9 @@ cr_schedule <- function(schedule,
 
   # cloudscheduler.projects.locations.jobs.create
   f <- gar_api_generator(url, "POST",
-                         data_parse_function = function(x) x)
-  stopifnot(inherits(job, "gar_Job"))
+                         data_parse_function = function(x) structure(x,
+                                                                     class = "gar_scheduleJob"))
+  stopifnot(inherits(job, "gar_scheduleJob"))
 
   f(the_body = job)
 
@@ -54,7 +68,9 @@ cr_schedule <- function(schedule,
 #'
 #' @return HttpTarget object
 #'
-#' @family HttpTarget functions
+#' @seealso https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs#HttpTarget
+#'
+#' @family Cloud Scheduler functions
 #' @export
 HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
                        uri = NULL, oidcToken = NULL, httpMethod = NULL) {
@@ -94,7 +110,7 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
 #'
 #' @return Job object
 #'
-#' @family Job functions
+#' @family Cloud Scheduler functions
 #' @export
 Job <- function(attemptDeadline = NULL, pubsubTarget = NULL, httpTarget = NULL, timeZone = NULL,
                 description = NULL, appEngineHttpTarget = NULL, status = NULL, retryConfig = NULL,
@@ -105,6 +121,6 @@ Job <- function(attemptDeadline = NULL, pubsubTarget = NULL, httpTarget = NULL, 
                  appEngineHttpTarget = appEngineHttpTarget, status = status, retryConfig = retryConfig,
                  state = state, name = name, lastAttemptTime = lastAttemptTime, scheduleTime = scheduleTime,
                  schedule = schedule, userUpdateTime = userUpdateTime)),
-            class = c("gar_Job","list"))
+            class = c("gar_scheduleJob","list"))
 }
 

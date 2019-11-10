@@ -24,8 +24,8 @@ cr_deploy <- function(local,
                       dockerfile = NULL,
                       image_name = remote,
                       region = cr_region_get(),
-                      bucket = Sys.getenv("GCS_DEFAULT_BUCKET"),
-                      projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID")){
+                      bucket = cr_bucket_get(),
+                      projectId = cr_project_get()){
 
   local_files <- list.files(local, recursive = TRUE)
   if("Dockerfile" %in% local_files){

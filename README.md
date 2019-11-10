@@ -43,7 +43,10 @@ You can also trigger cloud builds via scheduler, so no need for Cloud Run for no
 
 ## Setup
 
-`CR_REGION` can be one of 
+* Reuses environment argument `GCE_AUTH_FILE` from googleComputeEngineR which holds location of your service auth JSON
+* Reuses environment argument `GCE_DEFAULT_PROJECT_ID` from googleComputeEngineR
+* Reuses environment argument `GCS_DEFAULT_BUCKET` from googleCloudStorageR
+* New environment argument `CR_REGION` can be one of 
 
 ```
 "us-central1",
@@ -52,7 +55,20 @@ You can also trigger cloud builds via scheduler, so no need for Cloud Run for no
 "us-east1"
 ```
 
-Reuses GCE_DEFAULT_PROJECT_ID from googleComputeEngineR and GCS_DEFAULT_BUCKET from googleCloudStorageR
+e.g. your `.Renviron` should look like:
+
+```
+GCE_AUTH_FILE="/Users/me/auth/auth.json"
+GCE_DEFAULT_PROJECT_ID="my-project"
+GCS_DEFAULT_BUCKET="my-bucket"
+CR_REGION="europe-west1"
+```
+
+You can also set in the R script via:
+
+* `cr_region_set()`
+* `cr_project_set()`
+* `cr_bucket_set()`
 
 ### GCP settings
 

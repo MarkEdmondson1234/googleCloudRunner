@@ -4,7 +4,7 @@
 \alias{cr_run_get}
 \title{Get information about a Cloud Run service.}
 \usage{
-cr_run_get(name, projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
+cr_run_get(name, projectId = cr_project_get())
 }
 \arguments{
 \item{name}{The name of the service to retrieve}
@@ -17,4 +17,8 @@ Get information about a Cloud Run service.
 }
 \seealso{
 \href{https://cloud.google.com/run/docs/reference/rest/v1/namespaces.services/get}{Google Documentation on namespaces.services.get}
+
+Other Cloud Run functions: \code{\link{cr_build_step}},
+  \code{\link{cr_run_list}}, \code{\link{cr_run}}
 }
+\concept{Cloud Run functions}

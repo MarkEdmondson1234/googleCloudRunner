@@ -16,6 +16,7 @@ Imports:
     googleCloudStorageR (>= 0.5.1),
     jsonlite (>= 1.5),
     methods,
+    openssl,
     plumber,
     stats,
     utils

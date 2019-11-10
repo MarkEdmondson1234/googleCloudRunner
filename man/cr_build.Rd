@@ -5,8 +5,7 @@
 \title{Starts a build with the specified configuration.}
 \usage{
 cr_build(yaml, source = NULL, timeout = NULL, images = NULL,
-  projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"),
-  launch_browser = interactive())
+  projectId = cr_project_get(), launch_browser = interactive())
 }
 \arguments{
 \item{yaml}{A cloudbuild.yaml with the steps to run for the build - either a file location or an R object that will be turned into yaml via \link[yaml]{as.yaml}}
@@ -44,7 +43,11 @@ build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/}{Google Documentation for Cloud Build}
 
-Other Build functions: \code{\link{Build}},
-  \code{\link{projects.builds.create}}
+Other Cloud Build functions: \code{\link{Build}},
+  \code{\link{RepoSource}}, \code{\link{Source}},
+  \code{\link{StorageSource}}, \code{\link{cr_build_make}},
+  \code{\link{cr_build_status}},
+  \code{\link{cr_build_upload_gcs}},
+  \code{\link{cr_build_wait}}
 }
-\concept{Build functions}
+\concept{Cloud Build functions}

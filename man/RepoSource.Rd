@@ -4,21 +4,21 @@
 \alias{RepoSource}
 \title{RepoSource Object}
 \usage{
-RepoSource(repoName = NULL, tagName = NULL, projectId = NULL,
-  commitSha = NULL, branchName = NULL, dir = NULL)
+RepoSource(repoName = NULL, tagName = NULL, commitSha = NULL,
+  branchName = NULL, dir = NULL, projectId = NULL)
 }
 \arguments{
 \item{repoName}{Name of the Cloud Source Repository}
 
 \item{tagName}{Regex matching tags to build}
 
-\item{projectId}{ID of the project that owns the Cloud Source Repository}
-
 \item{commitSha}{Explicit commit SHA to build}
 
 \item{branchName}{Regex matching branches to build e.g. ".*"}
 
 \item{dir}{Directory, relative to the source root, in which to run the build}
+
+\item{projectId}{ID of the project that owns the Cloud Source Repository}
 }
 \value{
 RepoSource object
@@ -42,6 +42,11 @@ build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
 }
 }
 \seealso{
-Other RepoSource functions: \code{\link{projects.triggers.run}}
+Other Cloud Build functions: \code{\link{Build}},
+  \code{\link{Source}}, \code{\link{StorageSource}},
+  \code{\link{cr_build_make}},
+  \code{\link{cr_build_status}},
+  \code{\link{cr_build_upload_gcs}},
+  \code{\link{cr_build_wait}}, \code{\link{cr_build}}
 }
-\concept{RepoSource functions}
+\concept{Cloud Build functions}

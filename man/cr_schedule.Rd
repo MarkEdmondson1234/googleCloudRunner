@@ -5,7 +5,8 @@
 \title{Creates a Cloud Scheduler job.}
 \usage{
 cr_schedule(schedule, name = NULL, httpTarget = NULL,
-  description = NULL, projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
+  description = NULL, region = cr_region_get(),
+  projectId = cr_project_get())
 }
 \arguments{
 \item{schedule}{Required, except when used with UpdateJob}
@@ -15,6 +16,8 @@ cr_schedule(schedule, name = NULL, httpTarget = NULL,
 \item{httpTarget}{A HTTP target object \link{HttpTarget}}
 
 \item{description}{Optionally caller-specified in CreateJob or}
+
+\item{region}{The region}
 
 \item{projectId}{The GCP project to run within}
 }
@@ -26,13 +29,24 @@ Creates a Cloud Scheduler job.
 \dontrun{
 cr_init()
 cr_schedule("* * * * *", name="test", httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
+
+# schedule a cloud build (no source)
+build1 <- cr_build_make("inst/cloudbuild/cloudbuild.yaml")
+cr_schedule("15 5 * * *", name="cloud-build-test",
+             httpTarget = cr_build_schedule_http(build1))
+
+# schedule a cloud build with code source from GCS bucket
+storage <- cr_build_upload_gcs("my_folder", bucket = cr_get_bucket())
+my_gcs_source <- Source(storageSource=storage)
+build <- cr_build_make("cloudbuild.yaml", source = my_gcs_source))
+cr_schedule("15 5 * * *", name="cloud-build-test",
+            httpTarget = cr_build_schedule_http(build))
 }
 }
 \seealso{
-\href{https://cloud.google.com/scheduler/}{Google Documentation for Cloud Scheduler}
+\href{https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/create}{Google Documentation for Cloud Scheduler}
 
-Other Job functions: \code{\link{Job}},
-  \code{\link{projects.locations.jobs.create}},
-  \code{\link{projects.locations.jobs.patch}}
+Other Cloud Scheduler functions: \code{\link{HttpTarget}},
+  \code{\link{Job}}
 }
-\concept{Job functions}
+\concept{Cloud Scheduler functions}

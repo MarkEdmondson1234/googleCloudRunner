@@ -33,3 +33,8 @@ run_yaml <- Yaml(
     images = image)
 
 }
+\seealso{
+Other Cloud Run functions: \code{\link{cr_run_get}},
+  \code{\link{cr_run_list}}, \code{\link{cr_run}}
+}
+\concept{Cloud Run functions}

@@ -12,7 +12,7 @@
 #' @importFrom googleAuthR gar_api_generator
 #' @importFrom yaml yaml.load_file
 #' @import assertthat
-#' @family Build functions
+#' @family Cloud Build functions
 #' @export
 #' @examples
 #'
@@ -34,7 +34,7 @@ cr_build <- function(yaml,
                      source = NULL,
                      timeout=NULL,
                      images=NULL,
-                     projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"),
+                     projectId = cr_project_get(),
                      launch_browser = interactive()) {
 
   assert_that(
@@ -44,25 +44,11 @@ cr_build <- function(yaml,
   url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds",
                  projectId)
 
-  stepsy <- get_cr_yaml(yaml)
-  if(is.null(stepsy$steps)){
-    stop("Invalid cloudbuild yaml - 'steps:' not found.", call. = FALSE)
-  }
-
-  if(!is.null(source)){
-    assert_that(is.gar_Source(source))
-  }
-
-  if(!is.null(images)){
-    if(!is.null(stepsy$images)){
-      images <- stepsy$images
-    }
-  }
-
-  build <- Build(steps = stepsy$steps,
-                 timeout = timeout,
-                 images = images,
-                 source = source)
+  build <- cr_build_make(yaml = yaml,
+                         source = source,
+                         timeout = timeout,
+                         images = images,
+                         projectId = projectId)
 
   # cloudbuild.projects.builds.create
   f <- gar_api_generator(url, "POST",
@@ -87,6 +73,44 @@ is.BuildOperationMetadata <- function(x){
   inherits(x, "BuildOperationMetadata")
 }
 
+#' Make a Cloud Build object
+#'
+#' @inheritParams cr_build
+#' @export
+#' @import assertthat
+#' @family Cloud Build functions
+cr_build_make <- function(yaml,
+                          source = NULL,
+                          timeout=NULL,
+                          images=NULL,
+                          projectId = cr_project_get()){
+
+
+  assert_that(
+    is.string(projectId)
+  )
+
+  stepsy <- get_cr_yaml(yaml)
+  if(is.null(stepsy$steps)){
+    stop("Invalid cloudbuild yaml - 'steps:' not found.", call. = FALSE)
+  }
+
+  if(!is.null(source)){
+    assert_that(is.gar_Source(source))
+  }
+
+  if(!is.null(images)){
+    if(!is.null(stepsy$images)){
+      images <- stepsy$images
+    }
+  }
+
+  Build(steps = stepsy$steps,
+        timeout = timeout,
+        images = images,
+        source = source)
+}
+
 #' Returns information about a previously requested build.
 #'
 #' The `Build` that is returned includes its status (such as `SUCCESS`,`FAILURE`, or `WORKING`), and timing information.
@@ -97,8 +121,9 @@ is.BuildOperationMetadata <- function(x){
 #' @importFrom googleAuthR gar_api_generator
 #' @import assertthat
 #' @export
-cr_build_status <- function(id,
-                            projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID")){
+#' @family Cloud Build functions
+cr_build_status <- function(id = .Last.value,
+                            projectId = cr_project_get()){
 
   the_id <- extract_build_id(id)
 
@@ -118,8 +143,9 @@ cr_build_status <- function(id,
 #' @param op The operation build object to wait for
 #' @param projectId The projectId
 #' @export
+#' @family Cloud Build functions
 cr_build_wait <- function(op = .Last.value,
-                          projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID")){
+                          projectId = cr_project_get()){
 
   the_id <- extract_build_id(op)
 
@@ -170,6 +196,56 @@ is.gar_Build <- function(x){
   inherits(x, "gar_Build")
 }
 
+#' Create a StorageSource
+#'
+#' This creates a \link{StorageSource} object after uploading to Google Cloud Storage
+#'
+#' @param local Local directory containing the Dockerfile etc. you wish to deploy
+#' @param remote The name of the folder in your bucket
+#' @param bucket The Google Cloud Storage bucket to uplaod to
+#'
+#' @details
+#'
+#' It copies the files into a folder call "deploy" in your working directory, then tars it for upload
+#'
+#' @export
+#' @importFrom googleCloudStorageR gcs_upload
+#' @examples
+#'
+#' \dontrun{
+#'
+#' storage <- cr_build_upload_gcs("my_folder")
+#' my_gcs_source <- Source(storageSource=storage)
+#' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
+#'
+#' }
+#' @family Cloud Build functions
+cr_build_upload_gcs <- function(local,
+                                remote = paste0(local,format(Sys.time(), "%Y%m%d%H%M%S"),".tar.gz"),
+                                bucket = cr_bucket_get()){
+
+  tar_file <- paste0(basename(local), ".tar.gz")
+  deploy_folder <- "deploy"
+
+  dir.create(deploy_folder, showWarnings = FALSE)
+  on.exit(unlink(deploy_folder))
+  file.copy(list.files(local, recursive = TRUE, full.names = TRUE),
+            deploy_folder, recursive = TRUE)
+
+  tar(tar_file,
+      files = deploy_folder,
+      compression = "gzip")
+
+  gcs_upload(tar_file, bucket = bucket, name = remote)
+
+  StorageSource(
+    bucket = bucket,
+    object = remote
+  )
+}
+
+
+
 #' Build Object
 #'
 #' @details
@@ -203,7 +279,7 @@ is.gar_Build <- function(x){
 #'
 #' @return Build object
 #'
-#' @family Build functions
+#' @family Cloud Build functions
 #' @export
 Build <- function(Build.substitutions = NULL,
                   Build.timing = NULL,
@@ -267,7 +343,7 @@ Build <- function(Build.substitutions = NULL,
 #'
 #' @return Source object
 #'
-#' @family Source functions
+#' @family Cloud Build functions
 #' @export
 #' @examples
 #'
@@ -331,7 +407,7 @@ is.gar_SourceRepo <- function(x){
 #'
 #' @return RepoSource object
 #'
-#' @family RepoSource functions
+#' @family Cloud Build functions
 #' @export
 #' @examples
 #'
@@ -343,9 +419,11 @@ is.gar_SourceRepo <- function(x){
 #'
 #' }
 RepoSource <- function(repoName = NULL,
-                       tagName = NULL, projectId = NULL,
+                       tagName = NULL,
                        commitSha = NULL,
-                       branchName = NULL, dir = NULL) {
+                       branchName = NULL,
+                       dir = NULL,
+                       projectId = NULL) {
 
   stopifnot(!is.null(commitSha), is.null(branchName), is.null(tagName))
   stopifnot(!is.null(branchName), is.null(commitSha), is.null(tagName))
@@ -371,7 +449,7 @@ is.gar_RepoSource <- function(x){
 #'
 #' @return StorageSource object
 #'
-#' @family StorageSource functions
+#' @family Cloud Build functions
 #' @export
 #' @examples
 #'
@@ -388,55 +466,12 @@ is.gar_RepoSource <- function(x){
 #' build2 <- cr_build("cloudbuild.yaml", source = my_gcs_source2)
 #'
 #' }
-StorageSource <- function(bucket = NULL, object = NULL, generation = NULL) {
+StorageSource <- function(object = NULL, bucket = NULL, generation = NULL) {
   structure(rmNullObs(list(bucket = bucket, object = object, generation = generation)),
             class = c("gar_StorageSource","list"))
 }
 
 is.gar_StorageSource <- function(x){
   inherits(x, "gar_StorageSource")
-}
-
-#' Create a StorageSource
-#'
-#' This creates a \link{StorageSource} object after uploading to Google Cloud Storage
-#'
-#' @param local Local directory containing the Dockerfile etc. you wish to deploy
-#' @param remote The name of the folder in your bucket
-#' @param bucket The Google Cloud Storage bucket to uplaod to
-#'
-#' @export
-#' @importFrom googleCloudStorageR gcs_upload
-#' @examples
-#'
-#' \dontrun{
-#'
-#' storage <- cr_build_upload_gcs("my_folder")
-#' my_gcs_source <- Source(storageSource=storage)
-#' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
-#'
-#' }
-cr_build_upload_gcs <- function(local,
-        remote = paste0(local,format(Sys.time(), "%Y%m%d%H%M%S"),"tar.gz"),
-        bucket = Sys.getenv("GCS_DEFAULT_BUCKET")){
-
-  tar_file <- paste0(basename(local), ".tar.gz")
-  deploy_folder <- "deploy"
-
-  dir.create(deploy_folder, showWarnings = FALSE)
-  on.exit(unlink(deploy_folder))
-  file.copy(list.files(local, recursive = TRUE, full.names = TRUE),
-            deploy_folder, recursive = TRUE)
-
-  tar(tar_file,
-      files = deploy_folder,
-      compression = "gzip")
-
-  gcs_upload(tar_file, bucket = bucket, name = remote)
-
-  StorageSource(
-    bucket = bucket,
-    object = remote
-  )
 }
 

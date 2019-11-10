@@ -4,12 +4,12 @@
 \alias{StorageSource}
 \title{StorageSource Object}
 \usage{
-StorageSource(bucket = NULL, object = NULL, generation = NULL)
+StorageSource(object = NULL, bucket = NULL, generation = NULL)
 }
 \arguments{
-\item{bucket}{Google Cloud Storage bucket containing the source}
-
 \item{object}{Google Cloud Storage object containing the source. This object must be a gzipped archive file (.tar.gz) containing source to build.}
+
+\item{bucket}{Google Cloud Storage bucket containing the source}
 
 \item{generation}{Google Cloud Storage generation for the object.  If the generation is omitted, the latest generation will be used.}
 }
@@ -38,4 +38,12 @@ build2 <- cr_build("cloudbuild.yaml", source = my_gcs_source2)
 
 }
 }
-\concept{StorageSource functions}
+\seealso{
+Other Cloud Build functions: \code{\link{Build}},
+  \code{\link{RepoSource}}, \code{\link{Source}},
+  \code{\link{cr_build_make}},
+  \code{\link{cr_build_status}},
+  \code{\link{cr_build_upload_gcs}},
+  \code{\link{cr_build_wait}}, \code{\link{cr_build}}
+}
+\concept{Cloud Build functions}

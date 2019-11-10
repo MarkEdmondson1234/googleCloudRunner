@@ -4,7 +4,7 @@
 \alias{cr_build_status}
 \title{Returns information about a previously requested build.}
 \usage{
-cr_build_status(id, projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
+cr_build_status(id = .Last.value, projectId = cr_project_get())
 }
 \arguments{
 \item{id}{ID of the build or a \code{BuildOperationMetadata} object}
@@ -14,3 +14,11 @@ cr_build_status(id, projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
 \description{
 The `Build` that is returned includes its status (such as `SUCCESS`,`FAILURE`, or `WORKING`), and timing information.
 }
+\seealso{
+Other Cloud Build functions: \code{\link{Build}},
+  \code{\link{RepoSource}}, \code{\link{Source}},
+  \code{\link{StorageSource}}, \code{\link{cr_build_make}},
+  \code{\link{cr_build_upload_gcs}},
+  \code{\link{cr_build_wait}}, \code{\link{cr_build}}
+}
+\concept{Cloud Build functions}
