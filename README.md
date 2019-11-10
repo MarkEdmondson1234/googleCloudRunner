@@ -54,6 +54,7 @@ You can also trigger cloud builds via scheduler, so no need for Cloud Run for no
 "europe-west1",
 "us-east1"
 ```
+* New environment argument `CR_BUILD_EMAIL` that is your cloudbuild service email
 
 e.g. your `.Renviron` should look like:
 
@@ -62,6 +63,7 @@ GCE_AUTH_FILE="/Users/me/auth/auth.json"
 GCE_DEFAULT_PROJECT_ID="my-project"
 GCS_DEFAULT_BUCKET="my-bucket"
 CR_REGION="europe-west1"
+CR_BUILD_EMAIL=demo@cloudbuild.gserviceaccount.com
 ```
 
 You can also set in the R script via:

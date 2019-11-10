@@ -4,12 +4,10 @@
 \alias{cr_build_schedule_http}
 \title{Create a Cloud Scheduler HTTP target from a Cloud Build object}
 \usage{
-cr_build_schedule_http(build, serviceEmail, projectId = cr_project_get())
+cr_build_schedule_http(build, projectId = cr_project_get())
 }
 \arguments{
 \item{build}{A \link{Build} object}
-
-\item{serviceEmail}{You must add your cloud build service account email}
 
 \item{projectId}{The projectId}
 }
@@ -18,16 +16,6 @@ A \link{HttpTarget} object for use in \link{cr_schedule}
 }
 \description{
 This enables Cloud Scheduler to trigger Cloud Builds
-}
-\details{
-The service account email is that listed here:
-https://console.cloud.google.com/cloud-build/settings
-}
-\examples{
-
-build1 <- cr_build_make("inst/cloudbuild/cloudbuild.yaml")
-cr_build_schedule_http(build1, email = "demo@cloudbuild.gserviceaccount.com")
-
 }
 \seealso{
 https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/create

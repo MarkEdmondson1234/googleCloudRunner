@@ -5,51 +5,51 @@ print.ServiceList <- function(x, ...){
 
 #' @export
 print.BuildOperationMetadata <- function(x, ...){
-   cat("==CloudBuildOperationMetadata==")
-   cat("\nbuildId: ", x$metadata$build$id)
-   cat("\nstatus: ", x$metadata$build$status)
-   cat("\nlogUrl: ", x$metadata$build$logUrl)
+   cat("==CloudBuildOperationMetadata==\n")
+   cat0("buildId: ", x$metadata$build$id)
+   cat0("status: ", x$metadata$build$status)
+   cat0("logUrl: ", x$metadata$build$logUrl)
 }
 
 #' @export
 #' @importFrom yaml as.yaml
 print.gar_Build <- function(x, ...){
-  cat("==CloudBuildObject==")
-  cat("\nbuildId: ", x$id)
-  cat("\nstatus: ", x$status)
-  cat("\nlogUrl: ", x$logUrl)
-  cat("\nsteps: \n")
-  cat(as.yaml(x$steps))
+  cat("==CloudBuildObject==\n")
+  cat0("buildId: ", x$id)
+  cat0("status: ", x$status)
+  cat0("logUrl: ", x$logUrl)
+  cat0("steps: \n")
+  cat0(as.yaml(x$steps))
 }
 
 #' @export
 print.gar_StorageSource <- function(x, ...){
-  cat("==CloudBuildStorageSource==")
-  cat("\nbucket: ", x$bucket)
-  cat("\nobject: ", x$object)
-  cat0("\ngeneration: ", x$generation)
+  cat("==CloudBuildStorageSource==\n")
+  cat0("bucket: ", x$bucket)
+  cat0("object: ", x$object)
+  cat0("generation: ", x$generation)
 }
 
 #' @export
 print.gar_Service <- function(x, ...){
-  cat("==CloudRunService==")
-  cat("\nname: ", x$metadata$name)
-  cat("\nlocation: ", x$metadata$labels$`cloud.googleapis.com/location`)
-  cat("\nlastModifier: ", x$metadata$annotations$`serving.knative.dev/lastModifier`)
-  cat("\ncontainers: ", x$spec$template$spec$containers$image)
-  cat("\ncreationTimestamp: ", x$metadata$creationTimestamp)
-  cat("\nobservedGeneration: ", x$status$observedGeneration)
-  cat("\nurl: ", x$status$url)
+  cat("==CloudRunService==\n")
+  cat0("name: ", x$metadata$name)
+  cat0("location: ", x$metadata$labels$`cloud.googleapis.com/location`)
+  cat0("lastModifier: ", x$metadata$annotations$`serving.knative.dev/lastModifier`)
+  cat0("containers: ", x$spec$template$spec$containers$image)
+  cat0("creationTimestamp: ", x$metadata$creationTimestamp)
+  cat0("observedGeneration: ", x$status$observedGeneration)
+  cat0("url: ", x$status$url)
 }
 
 #' @export
 print.gar_scheduleJob <- function(x, ...){
-  cat("==CloudScheduleJob==")
-  cat0("\nname: ", x$name)
-  cat0("\nstate: ", x$state)
-  cat0("\nhttpTarget.uri: ", x$httpTarget$uri)
-  cat0("\nhttpTarget.httpMethod: ", x$httpTarget$httpMethod)
-  cat0("\nuserUpdateTime: ", x$userUpdateTime)
-  cat0("\nschedule: ", x$schedule)
-  cat0("\ntimezone: ", x$timeZone)
+  cat("==CloudScheduleJob==\n")
+  cat0("name: ", x$name)
+  cat0("state: ", x$state)
+  cat0("httpTarget.uri: ", x$httpTarget$uri)
+  cat0("httpTarget.httpMethod: ", x$httpTarget$httpMethod)
+  cat0("userUpdateTime: ", x$userUpdateTime)
+  cat0("schedule: ", x$schedule)
+  cat0("timezone: ", x$timeZone)
 }
