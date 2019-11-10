@@ -9,6 +9,8 @@
 #'
 #' @return A \link{HttpTarget} object for use in \link{cr_schedule}
 #'
+#' @details Ensure you have a service email with \link{cr_email_set} of format \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com} with Cloud Scheduler Service Agent role as per https://cloud.google.com/scheduler/docs/http-target-auth#add
+#'
 #' @export
 #' @import assertthat
 #' @importFrom jsonlite toJSON
