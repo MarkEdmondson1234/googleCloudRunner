@@ -50,5 +50,6 @@ print.gar_scheduleJob <- function(x, ...){
   cat0("\nhttpTarget.uri: ", x$httpTarget$uri)
   cat0("\nhttpTarget.httpMethod: ", x$httpTarget$httpMethod)
   cat0("\nuserUpdateTime: ", x$userUpdateTime)
-  cat0("\nschedule: ", x$schedule, " ", x$timeZone)
+  cat0("\nschedule: ", x$schedule)
+  cat0("\ntimezone: ", x$timeZone)
 }
