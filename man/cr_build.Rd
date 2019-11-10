@@ -5,7 +5,8 @@
 \title{Starts a build with the specified configuration.}
 \usage{
 cr_build(yaml, source = NULL, timeout = NULL, images = NULL,
-  projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
+  projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"),
+  launch_browser = interactive())
 }
 \arguments{
 \item{yaml}{A cloudbuild.yaml with the steps to run for the build - either a file location or an R object that will be turned into yaml via \link[yaml]{as.yaml}}
@@ -17,6 +18,8 @@ cr_build(yaml, source = NULL, timeout = NULL, images = NULL,
 \item{images}{A list of images to be pushed upon the successful completion of all build}
 
 \item{projectId}{ID of the project}
+
+\item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
 }
 \description{
 This method returns a long-running `Operation`, which includes the buildID. Pass the build ID to \link{cr_build_status} to determine the build status (such as `SUCCESS` or `FAILURE`).

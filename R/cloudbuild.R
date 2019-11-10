@@ -8,6 +8,7 @@
 #' @inheritParams Build
 #' @param projectId ID of the project
 #' @param yaml A cloudbuild.yaml with the steps to run for the build - either a file location or an R object that will be turned into yaml via \link[yaml]{as.yaml}
+#' @param launch_browser Whether to launch the logs URL in a browser once deployed
 #' @importFrom googleAuthR gar_api_generator
 #' @importFrom yaml yaml.load_file
 #' @import assertthat
@@ -33,8 +34,13 @@ cr_build <- function(yaml,
                      source = NULL,
                      timeout=NULL,
                      images=NULL,
-                     projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID")) {
+                     projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"),
+                     launch_browser = interactive()) {
 
+  assert_that(
+    is.flag(launch_browser),
+    is.string(projectId)
+  )
   url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds",
                  projectId)
 
@@ -62,12 +68,17 @@ cr_build <- function(yaml,
   f <- gar_api_generator(url, "POST",
         data_parse_function = function(x) structure(x,
                                            class = "BuildOperationMetadata"))
-  stopifnot(inherits(build, "gar_Build"))
+  stopifnot(is.gar_Build(build))
 
   o <- f(the_body = build)
 
-  myMessage("Cloud Build started - logs: \n", o$metadata$build$logUrl,
+  myMessage("Cloud Build started - logs: \n",
+            o$metadata$build$logUrl,
             level = 3)
+
+  if(launch_browser){
+    utils::browseURL(o$metadata$build$logUrl)
+  }
 
   invisible(o)
 }
@@ -126,6 +137,7 @@ cr_build_wait <- function(op = .Last.value,
   wait <- TRUE
   while(wait){
     status <- cr_build_status(op, projectId = projectId)
+    cat("=")
     if(!status$status %in% wait_for){
       wait <- FALSE
     }
@@ -290,6 +302,20 @@ is.gar_Source <- function(x){
   inherits(x, "gar_Source")
 }
 
+is.gar_SourceStorage <- function(x){
+  if(is.gar_Source(x)){
+    return(!is.null(x$storageSource))
+  }
+  FALSE
+}
+
+is.gar_SourceRepo <- function(x){
+  if(is.gar_Source(x)){
+    return(!is.null(x$repoSource))
+  }
+  FALSE
+}
+
 #' RepoSource Object
 #'
 #' @details
@@ -396,12 +422,15 @@ cr_build_upload_gcs <- function(local,
         bucket = Sys.getenv("GCS_DEFAULT_BUCKET")){
 
   tar_file <- paste0(basename(local), ".tar.gz")
+  deploy_folder <- "deploy"
 
-  dir.create("workspace", showWarnings = FALSE)
-  file.copy(list.files(local, recursive = TRUE, full.names = TRUE), "workspace", recursive = TRUE)
+  dir.create(deploy_folder, showWarnings = FALSE)
+  on.exit(unlink(deploy_folder))
+  file.copy(list.files(local, recursive = TRUE, full.names = TRUE),
+            deploy_folder, recursive = TRUE)
 
   tar(tar_file,
-      files = "workspace",
+      files = deploy_folder,
       compression = "gzip")
 
   gcs_upload(tar_file, bucket = bucket, name = remote)

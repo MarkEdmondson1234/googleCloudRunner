@@ -53,3 +53,9 @@ You can also trigger cloud builds via scheduler, so no need for Cloud Run for no
 ```
 
 Reuses GCE_DEFAULT_PROJECT_ID from googleComputeEngineR and GCS_DEFAULT_BUCKET from googleCloudStorageR
+
+### GCP settings
+
+The Cloud Build service account needs permissions if you want it to deploy to Cloud Run.
+
+This can be set [here](https://console.cloud.google.com/cloud-build/settings) where you enable `Cloud Run Admin` and `Service Account User` roles.  More details found at this [Google reference article](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run). 

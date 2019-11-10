@@ -4,7 +4,8 @@
 \alias{cr_build_step}
 \title{Create a yaml build step}
 \usage{
-cr_build_step(name, args, stem = "gcr.io/cloud-builders/")
+cr_build_step(name, args, stem = "gcr.io/cloud-builders/",
+  entrypoint = NULL, dir = "deploy")
 }
 \arguments{
 \item{name}{name of SDK appended to stem}
@@ -12,7 +13,23 @@ cr_build_step(name, args, stem = "gcr.io/cloud-builders/")
 \item{args}{character vector of arguments}
 
 \item{stem}{prefixed to name}
+
+\item{entrypoint}{change the entrypoint for the docker container}
+
+\item{dir}{The directory to use, relative to /workspace e.g. /workspace/deploy/}
 }
 \description{
-Create a yaml build step
+Helper for creating build steps for upload to Cloud Build
+}
+\examples{
+
+# creating yaml for use in deploying cloud run
+run_yaml <- Yaml(
+    steps = list(
+         cr_build_step("docker", c("build","-t",image,".")),
+         cr_build_step("docker", c("push",image)),
+         cr_build_step("gcloud", c("beta","run","deploy", "test1",
+                                   "--image", image))),
+    images = image)
+
 }
