@@ -4,21 +4,21 @@
 \alias{HttpTarget}
 \title{HttpTarget Object}
 \usage{
-HttpTarget(headers = NULL, body = NULL, oauthToken = NULL,
-  uri = NULL, oidcToken = NULL, httpMethod = NULL)
+HttpTarget(headers = NULL, body = NULL, uri = NULL,
+  httpMethod = NULL, authorization_header = NULL)
 }
 \arguments{
 \item{headers}{A named list of HTTP headers e.g. \code{list(Blah = "yes", Boo = "no")}}
 
 \item{body}{HTTP request body}
 
-\item{oauthToken}{If specified, an OAuth token will be generated and attached as an Authorization header in the HTTP request. This type of authorization should be used when sending requests to a GCP endpoint.}
-
 \item{uri}{Required}
 
-\item{oidcToken}{If specified, an OIDC token will be generated and attached as an Authorization header in the HTTP request. This type of authorization should be used when sending requests to third party endpoints or Cloud Run.}
-
 \item{httpMethod}{Which HTTP method to use for the request}
+
+\item{oauthToken}{If specified, an OAuth token will be generated and attached as an Authorization header in the HTTP request. This type of authorization should be used when sending requests to a GCP endpoint.}
+
+\item{oidcToken}{If specified, an OIDC token will be generated and attached as an Authorization header in the HTTP request. This type of authorization should be used when sending requests to third party endpoints or Cloud Run.}
 }
 \value{
 HttpTarget object
