@@ -45,6 +45,7 @@ cr_run <- function(image,
   # use cloud build to deploy
   run_yaml <- Yaml(
     steps = list(
+      cr_build_step("ubuntu", "ls", ""),
       source_build_steps,
       cr_build_step("gcloud",
          c("beta","run","deploy", name,

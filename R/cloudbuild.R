@@ -399,7 +399,6 @@ cr_build_upload_gcs <- function(local,
 
   dir.create("workspace", showWarnings = FALSE)
   file.copy(list.files(local, recursive = TRUE, full.names = TRUE), "workspace", recursive = TRUE)
-  on.exit(unlink(tmp_local))
 
   tar(tar_file,
       files = "workspace",

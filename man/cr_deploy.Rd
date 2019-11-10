@@ -27,3 +27,11 @@ cr_deploy(local, remote = basename(local), dockerfile = NULL,
 \description{
 Helper to create the Dockerfile
 }
+\examples{
+
+\dontrun{
+
+cr_deploy("inst/example/", remote = "cloudRunnerTest")
+
+}
+}
