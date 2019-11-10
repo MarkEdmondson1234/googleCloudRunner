@@ -1,6 +1,6 @@
 Package: cloudRunner
 Type: Package
-Title: Easier running R scripts in the Google Cloud via Cloud Run, Cloud Build and Cloud Scheduler 
+Title: Launch R scripts in the Google Cloud via Cloud Run, Cloud Build and Cloud Scheduler 
 Version: 0.0.9000
 Authors@R: c(person("Mark", "Edmondson", email = "r@sunholo.com",
                   role = c("aut", "cre"),

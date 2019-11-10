@@ -77,3 +77,5 @@ You can also set in the R script via:
 The Cloud Build service account needs permissions if you want it to deploy to Cloud Run.
 
 This can be set [here](https://console.cloud.google.com/cloud-build/settings) where you enable `Cloud Run Admin` and `Service Account User` roles.  More details found at this [Google reference article](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run). 
+
+* https://cloud.google.com/scheduler/docs/http-target-auth#add Ensure you have a service email with service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com with Cloud Scheduler Service Agent role. 
