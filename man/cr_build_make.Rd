@@ -2,7 +2,7 @@
 % Please edit documentation in R/cloudbuild.R
 \name{cr_build_make}
 \alias{cr_build_make}
-\title{Make a Cloud Build object}
+\title{Make a Cloud Build object out of a cloudbuild.yml file}
 \usage{
 cr_build_make(yaml, source = NULL, timeout = NULL, images = NULL,
   projectId = cr_project_get())
@@ -19,9 +19,14 @@ cr_build_make(yaml, source = NULL, timeout = NULL, images = NULL,
 \item{projectId}{ID of the project}
 }
 \description{
-Make a Cloud Build object
+This creates a \link{Build} object via the standard cloudbuild.yaml format
+}
+\examples{
+build1 <- cr_build_make("inst/cloudbuild/cloudbuild.yaml")
 }
 \seealso{
+https://cloud.google.com/cloud-build/docs/build-config
+
 Other Cloud Build functions: \code{\link{Build}},
   \code{\link{RepoSource}}, \code{\link{Source}},
   \code{\link{StorageSource}},

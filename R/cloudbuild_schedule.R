@@ -4,7 +4,7 @@
 #'
 #' @seealso https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/create
 #'
-#' @param build A \link{Build} object
+#' @param build A \link{Build} object usually created with \link{cr_build_make}
 #' @param projectId The projectId
 #'
 #' @return A \link{HttpTarget} object for use in \link{cr_schedule}
@@ -16,6 +16,15 @@
 #' @importFrom jsonlite toJSON
 #' @importFrom openssl base64_encode
 #' @family Cloud Scheduler functions, Cloud Build functions
+#'
+#' @examples
+#'
+#' \dontrun{
+#' build1 <- cr_build_make("inst/cloudbuild/cloudbuild.yaml")
+#' cr_schedule("15 5 * * *", name="cloud-build-test1",
+#'             httpTarget = cr_build_schedule_http(build1))
+#' }
+#'
 cr_build_schedule_http <- function(build, projectId = cr_project_get()){
 
   assert_that(

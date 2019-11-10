@@ -7,7 +7,7 @@
 cr_build_schedule_http(build, projectId = cr_project_get())
 }
 \arguments{
-\item{build}{A \link{Build} object}
+\item{build}{A \link{Build} object usually created with \link{cr_build_make}}
 
 \item{projectId}{The projectId}
 }
@@ -19,6 +19,15 @@ This enables Cloud Scheduler to trigger Cloud Builds
 }
 \details{
 Ensure you have a service email with \link{cr_email_set} of format \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com} with Cloud Scheduler Service Agent role as per https://cloud.google.com/scheduler/docs/http-target-auth#add
+}
+\examples{
+
+\dontrun{
+build1 <- cr_build_make("inst/cloudbuild/cloudbuild.yaml")
+cr_schedule("15 5 * * *", name="cloud-build-test1",
+            httpTarget = cr_build_schedule_http(build1))
+}
+
 }
 \seealso{
 https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/create

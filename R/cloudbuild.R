@@ -73,12 +73,18 @@ is.BuildOperationMetadata <- function(x){
   inherits(x, "BuildOperationMetadata")
 }
 
-#' Make a Cloud Build object
+#' Make a Cloud Build object out of a cloudbuild.yml file
+#'
+#' This creates a \link{Build} object via the standard cloudbuild.yaml format
+#'
+#' @seealso https://cloud.google.com/cloud-build/docs/build-config
 #'
 #' @inheritParams cr_build
 #' @export
 #' @import assertthat
 #' @family Cloud Build functions
+#' @examples
+#' build1 <- cr_build_make("inst/cloudbuild/cloudbuild.yaml")
 cr_build_make <- function(yaml,
                           source = NULL,
                           timeout=NULL,
