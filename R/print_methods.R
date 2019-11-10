@@ -28,3 +28,15 @@ print.gar_StorageSource <- function(x, ...){
   cat("\nobject: ", x$object)
   cat0("\ngeneration: ", x$generation)
 }
+
+#' @export
+print.gar_Service <- function(x, ...){
+  cat("==CloudRunService==")
+  cat("\nname: ", x$metadata$name)
+  cat("\nlocation: ", x$metadata$labels$`cloud.googleapis.com/location`)
+  cat("\nlastModifier: ", x$metadata$annotations$`serving.knative.dev/lastModifier`)
+  cat("\ncontainers: ", x$spec$template$spec$containers$image)
+  cat("\ncreationTimestamp: ", x$metadata$creationTimestamp)
+  cat("\nobservedGeneration: ", x$status$observedGeneration)
+  cat("\nurl: ", x$status$url)
+}

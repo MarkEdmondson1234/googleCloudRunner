@@ -5,7 +5,7 @@
 \title{List CloudRun services.}
 \usage{
 cr_run_list(projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"),
-  labelSelector = NULL, limit = NULL)
+  labelSelector = NULL, limit = NULL, summary = TRUE)
 }
 \arguments{
 \item{projectId}{The GCP project from which the services should be listed}
@@ -13,6 +13,8 @@ cr_run_list(projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"),
 \item{labelSelector}{Allows to filter resources based on a label}
 
 \item{limit}{The maximum number of records that should be returned}
+
+\item{summary}{If TRUE will return only a subset of info available, set to FALSE for all metadata}
 }
 \description{
 List CloudRun services.

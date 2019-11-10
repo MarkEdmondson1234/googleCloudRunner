@@ -66,7 +66,14 @@ cr_run <- function(image,
 
   result <- cr_build_wait(build, projectId = projectId)
 
-  result
+  if(result$status == "SUCCESS"){
+    run <- cr_run_get(name, projectId = projectId)
+    myMessage("Deployed to Cloud Run at: \n", run$status$url, level = 3)
+    return(run)
+  } else {
+    myMessage("Problem deploying to Cloud Run", level = 3)
+    return(result)
+  }
 }
 
 #' Create a yaml build step
@@ -103,6 +110,26 @@ cr_build_step <- function(name,
   )
 }
 
+make_endpoint <- function(endbit){
+  region <- .cr_env$region
+
+  if(is.null(region)){
+    region <- Sys.getenv("CR_REGION")
+    .cr_env$region <- region
+  }
+
+  if(is.null(region) || region == ""){
+    stop("Must select region via cr_region_set() or set environment CR_REGION",
+         call. = FALSE)
+  }
+
+  if(!region %in% ENDPOINTS){
+    warning("Endpoint is not one of ", paste(ENDPOINTS, collapse = " "), " got: ", region)
+  }
+
+  sprintf("https://%s-run.googleapis.com/apis/serving.knative.dev/v1/%s", region, endbit)
+}
+
 
 #' List CloudRun services.
 #'
@@ -114,13 +141,20 @@ cr_build_step <- function(name,
 #' @param projectId The GCP project from which the services should be listed
 #' @param labelSelector Allows to filter resources based on a label
 #' @param limit The maximum number of records that should be returned
+#' @param summary If TRUE will return only a subset of info available, set to FALSE for all metadata
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 cr_run_list <- function(projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"),
                         labelSelector = NULL,
-                        limit = NULL) {
+                        limit = NULL,
+                        summary = TRUE) {
 
-  url <- make_endpoint(projectId)
+  assert_that(
+    is.flag(summary)
+  )
+
+  url <- make_endpoint(sprintf("namespaces/%s/services", projectId))
+  myMessage("Cloud Run services in region: ", .cr_env$region, level = 3)
   # run.namespaces.services.list
   #TODO: paging
   pars = list(labelSelector = labelSelector, continue = NULL, limit = limit)
@@ -129,7 +163,13 @@ cr_run_list <- function(projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID"),
                          pars = rmNullObs(pars),
                          data_parse_function = parse_service_list,
                          checkTrailingSlash=FALSE)
-  f()
+  o <- f()
+
+  if(!summary){
+    return(o)
+  }
+
+  parse_service_list_post(o)
 
 }
 
@@ -142,4 +182,49 @@ parse_service_list <- function(x){
 
   x$items
 
+}
+
+parse_service_list_post <- function(x){
+
+  data.frame(
+    name = x$metadata$name,
+    container = unlist(lapply(x$spec$template$spec$containers, function(x) x$image)),
+    url = x$status$url,
+    stringsAsFactors = FALSE
+  )
+
+}
+
+#' Get information about a Cloud Run service.
+#'
+#'
+#' @seealso \href{https://cloud.google.com/run/docs/reference/rest/v1/namespaces.services/get}{Google Documentation on namespaces.services.get}
+#'
+#' @details
+#'
+#' @param name The name of the service to retrieve
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+cr_run_get <- function(name, projectId = Sys.getenv("GCE_DEFAULT_PROJECT_ID")) {
+
+  url <- make_endpoint(sprintf("namespaces/%s/services/%s", projectId, name))
+
+  # run.namespaces.services.get
+  f <- gar_api_generator(url, "GET", data_parse_function = parse_service_get,
+                         checkTrailingSlash = FALSE)
+  f()
+
+}
+
+#' @import assertthat
+#' @noRd
+parse_service_get <- function(x){
+  assert_that(
+    x$kind == "Service"
+  )
+
+  structure(
+    x,
+    class = c("gar_Service", "list")
+  )
 }

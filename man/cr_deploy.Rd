@@ -31,7 +31,7 @@ Helper to create the Dockerfile
 
 \dontrun{
 
-cr_deploy("inst/example/", remote = "cloudRunnerTest")
+cr_deploy("inst/example/", remote = "cloudrunnertest")
 
 }
 }

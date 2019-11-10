@@ -16,7 +16,7 @@
 #'
 #' \dontrun{
 #'
-#' cr_deploy("inst/example/", remote = "cloudRunnerTest")
+#' cr_deploy("inst/example/", remote = "cloudrunnertest")
 #'
 #' }
 cr_deploy <- function(local,

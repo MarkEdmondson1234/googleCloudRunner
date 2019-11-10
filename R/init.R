@@ -32,22 +32,3 @@ ENDPOINTS <- c("us-central1",
                "europe-west1",
                "us-east1")
 
-make_endpoint <- function(parent){
-  region <- .cr_env$region
-
-  if(is.null(region)){
-    region <- Sys.getenv("CRUN_ENDPOINT")
-  }
-
-  if(is.null(region)){
-    stop("Must select region via cr_region_set() or set environment CRUN_ENDPOINT",
-         call. = FALSE)
-  }
-
-  if(!region %in% ENDPOINTS){
-    warning("Endpoint is not one of ", paste(ENDPOINTS, collapse = " "), " got: ", region)
-  }
-
-  sprintf("https://%s-run.googleapis.com/apis/serving.knative.dev/v1/namespaces/%s/services",
-          region, parent)
-}

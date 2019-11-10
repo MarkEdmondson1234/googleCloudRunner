@@ -130,8 +130,7 @@ cr_build_wait <- function(op = .Last.value,
     return(init)
   }
 
-  cat("\nWaiting for build to finish:\n")
-  print(init)
+  cat("\nWaiting for build to finish:\n |=")
 
   op <- init
   wait <- TRUE
@@ -145,7 +144,7 @@ cr_build_wait <- function(op = .Last.value,
     Sys.sleep(5)
   }
 
-  cat("\nBuild finished")
+  cat("||\nBuild finished\n")
   status
 }
 
