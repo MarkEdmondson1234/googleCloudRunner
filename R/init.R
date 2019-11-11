@@ -69,7 +69,7 @@ cr_project_get <- function(){
     .cr_env$project <- Sys.getenv("GCE_DEFAULT_PROJECT_ID")
   }
   if(is.null(.cr_env$project)){
-    stop("No region set - use cr_region_set() or env arg GCE_DEFAULT_PROJECT_ID",
+    stop("No projectId set - use cr_project_set() or env arg GCE_DEFAULT_PROJECT_ID",
          call. = FALSE)
   }
   .cr_env$project
