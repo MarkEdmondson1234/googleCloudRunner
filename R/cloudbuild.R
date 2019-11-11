@@ -415,8 +415,10 @@ cr_build_write.cr_yaml <- function(x, file = "cloudbuild.yaml"){
 #'
 #' \dontrun{
 #'
-#' my_gcs_source <- Source(storageSource=StorageSource("gs://my-bucket","my_code.tar.gz"))
-#' my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName="master"))
+#' my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
+#'                                                     "gs://my-bucket"))
+#' my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com",
+#'                                                branchName="master"))
 #'
 #' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 #' build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
@@ -479,7 +481,8 @@ is.gar_SourceRepo <- function(x){
 #'
 #' \dontrun{
 #'
-#' my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName="master"))
+#' my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com",
+#'                                                branchName="master"))
 #'
 #' build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
 #'
@@ -491,9 +494,9 @@ RepoSource <- function(repoName = NULL,
                        dir = NULL,
                        projectId = NULL) {
 
-  stopifnot(!is.null(commitSha), is.null(branchName), is.null(tagName))
-  stopifnot(!is.null(branchName), is.null(commitSha), is.null(tagName))
-  stopifnot(!is.null(tagName), is.null(branchName), is.null(commitSha))
+  if(!is.null(commitSha)) assert_that(is.null(branchName), is.null(tagName))
+  if(!is.null(branchName)) assert_that(is.null(commitSha), is.null(tagName))
+  if(!is.null(tagName)) assert_that(is.null(branchName), is.null(commitSha))
 
   structure(rmNullObs(list(tagName = tagName, projectId = projectId, repoName = repoName,
                  commitSha = commitSha, branchName = branchName, dir = dir)),
@@ -522,7 +525,8 @@ is.gar_RepoSource <- function(x){
 #' \dontrun{
 #'
 #'
-#' my_gcs_source <- Source(storageSource=StorageSource("gs://my-bucket","my_code.tar.gz"))
+#' my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
+#'                                                     "gs://my-bucket"))
 #'
 #' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 #'

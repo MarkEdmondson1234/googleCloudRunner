@@ -24,8 +24,10 @@ Location of the source in a supported storage service.
 
 \dontrun{
 
-my_gcs_source <- Source(storageSource=StorageSource("gs://my-bucket","my_code.tar.gz"))
-my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName="master"))
+my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
+                                                    "gs://my-bucket"))
+my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com",
+                                               branchName="master"))
 
 build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)

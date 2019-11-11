@@ -35,7 +35,8 @@ Only one of commitSha, branchName or tagName are allowed.
 
 \dontrun{
 
-my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName="master"))
+my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com",
+                                               branchName="master"))
 
 build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
 
