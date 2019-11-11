@@ -1,6 +1,7 @@
 # cloudRunner
 
 [![Build Status](https://travis-ci.org/MarkEdmondson1234/cloudRunner.svg?branch=master)](https://travis-ci.org/MarkEdmondson1234/cloudRunner)
+[![codecov](https://codecov.io/gh/MarkEdmondson1234/cloudRunner/branch/master/graph/badge.svg)](https://codecov.io/gh/MarkEdmondson1234/cloudRunner)
 
 As easy as possible R scripts in the cloud, via Cloud Run
 
