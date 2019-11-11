@@ -9,7 +9,17 @@ cr_run(image, source = NULL, name = basename(image),
   region = cr_region_get(), projectId = cr_project_get())
 }
 \arguments{
+\item{image}{The name of the image to create or use in deployment - \code{gcr.io}}
+
+\item{source}{A \link{Source} object}
+
+\item{name}{Name for deployment on Cloud Run}
+
 \item{allowUnauthenticated}{TRUE if can be reached from public HTTP address.}
+
+\item{concurrency}{How many connections each image can serve. Can be up to 80.}
+
+\item{region}{The endpoint region for deployment}
 
 \item{projectId}{The GCP project from which the services should be listed}
 }

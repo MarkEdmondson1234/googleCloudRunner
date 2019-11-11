@@ -17,10 +17,7 @@ cr_run_list(projectId = cr_project_get(), labelSelector = NULL,
 \item{summary}{If TRUE will return only a subset of info available, set to FALSE for all metadata}
 }
 \description{
-List CloudRun services.
-}
-\details{
-
+List the Cloud Run services you have access to
 }
 \seealso{
 \href{https://cloud.run}{Google Documentation for Cloud Run}

@@ -19,7 +19,8 @@ Imports:
     openssl,
     plumber,
     stats,
-    utils
+    utils,
+    yaml
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

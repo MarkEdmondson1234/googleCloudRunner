@@ -12,6 +12,8 @@ cr_build_step(name, args, id = NULL, stem = "gcr.io/cloud-builders/",
 
 \item{args}{character vector of arguments}
 
+\item{id}{Optional id for the step}
+
 \item{stem}{prefixed to name}
 
 \item{entrypoint}{change the entrypoint for the docker container}

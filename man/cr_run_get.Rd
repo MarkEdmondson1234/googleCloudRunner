@@ -8,12 +8,14 @@ cr_run_get(name, projectId = cr_project_get())
 }
 \arguments{
 \item{name}{The name of the service to retrieve}
+
+\item{projectId}{The projectId to get from}
 }
 \description{
 Get information about a Cloud Run service.
 }
 \details{
-
+This returns details on a particular deployed Cloud Run service.
 }
 \seealso{
 \href{https://cloud.google.com/run/docs/reference/rest/v1/namespaces.services/get}{Google Documentation on namespaces.services.get}

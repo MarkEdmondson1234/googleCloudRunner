@@ -7,7 +7,7 @@
 #' @examples
 #'
 #'Yaml(steps = list(
-#'       cr_build_step("docker", "version")
+#'       cr_build_step("docker", "version"),
 #'       cr_build_step("gcloud", "version")),
 #'     images = "gcr.io/my-project/my-image")
 Yaml <- function(...){
@@ -26,6 +26,8 @@ Yaml <- function(...){
 #' @param stem prefixed to name
 #' @param entrypoint change the entrypoint for the docker container
 #' @param dir The directory to use, relative to /workspace e.g. /workspace/deploy/
+#' @param id Optional id for the step
+#'
 #' @export
 #' @family Cloud Build functions, yaml functions
 #' @examples

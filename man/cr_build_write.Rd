@@ -7,7 +7,9 @@
 cr_build_write(x, file = "cloudbuild.yaml")
 }
 \arguments{
-\item{x}{A \link{Build} object perhaps created with \link{cr_build_make} or}
+\item{x}{A \link{Build} object perhaps created with \link{cr_build_make} or \link{Yaml} created}
+
+\item{file}{Where to write the yaml file}
 }
 \description{
 Write out a Build object to cloudbuild.yaml
@@ -24,7 +26,8 @@ run_yaml <- Yaml(steps = list(
 cr_build_write(run_yaml)
 
 # write from a Build object
-build <- cr_build_make("inst/cloudbuild/cloudbuild.yaml")
+build <- cr_build_make(system.file("cloudbuild/cloudbuild.yaml",
+                                   package = "cloudRunner"))
 cr_build_write(build)
 
 }

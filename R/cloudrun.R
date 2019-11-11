@@ -2,9 +2,11 @@
 #'
 #' @seealso \href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
 #'
-#' @inheritParams ObjectMeta
-#' @inheritParams RevisionSpec
-#' @inheritParams Container
+#' @param image The name of the image to create or use in deployment - \code{gcr.io}
+#' @param source A \link{Source} object
+#' @param name Name for deployment on Cloud Run
+#' @param concurrency How many connections each image can serve. Can be up to 80.
+#' @param region The endpoint region for deployment
 #' @param projectId The GCP project from which the services should be listed
 #' @param allowUnauthenticated TRUE if can be reached from public HTTP address.
 #' @importFrom googleAuthR gar_api_generator
@@ -101,10 +103,9 @@ make_endpoint <- function(endbit){
 
 #' List CloudRun services.
 #'
+#' List the Cloud Run services you have access to
 #'
 #' @seealso \href{https://cloud.run}{Google Documentation for Cloud Run}
-#'
-#' @details
 #'
 #' @param projectId The GCP project from which the services should be listed
 #' @param labelSelector Allows to filter resources based on a label
@@ -129,7 +130,7 @@ cr_run_list <- function(projectId = cr_project_get(),
   pars = list(labelSelector = labelSelector, continue = NULL, limit = limit)
   f <- gar_api_generator(url,
                          "GET",
-                         pars = rmNullObs(pars),
+                         pars_args = rmNullObs(pars),
                          data_parse_function = parse_service_list,
                          checkTrailingSlash=FALSE)
   o <- f()
@@ -169,9 +170,11 @@ parse_service_list_post <- function(x){
 #'
 #' @seealso \href{https://cloud.google.com/run/docs/reference/rest/v1/namespaces.services/get}{Google Documentation on namespaces.services.get}
 #'
-#' @details
+#' @details This returns details on a particular deployed Cloud Run service.
 #'
 #' @param name The name of the service to retrieve
+#' @param projectId The projectId to get from
+#'
 #' @importFrom googleAuthR gar_api_generator
 #' @family Cloud Run functions
 #' @export

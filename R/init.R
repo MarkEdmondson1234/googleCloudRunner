@@ -18,6 +18,7 @@ cr_region_set <- function(region = c("europe-west1",
   .cr_env$region
 }
 
+#' Get Region Set
 #' @export
 cr_region_get <- function(){
 
@@ -56,6 +57,7 @@ cr_project_set <- function(projectId){
   .cr_env$project
 }
 
+#' Get ProjectId
 #' @export
 cr_project_get <- function(){
 
@@ -90,6 +92,7 @@ cr_bucket_set <- function(bucket){
   .cr_env$bucket
 }
 
+#' Get Cloud Storage bucket
 #' @export
 cr_bucket_get <- function(){
 

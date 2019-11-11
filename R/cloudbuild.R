@@ -84,7 +84,7 @@ is.BuildOperationMetadata <- function(x){
 #' @import assertthat
 #' @family Cloud Build functions
 #' @examples
-#' build1 <- cr_build_make("inst/cloudbuild/cloudbuild.yaml")
+#' cr_build_make(system.file("cloudbuild/cloudbuild.yaml", package = "cloudRunner"))
 cr_build_make <- function(yaml,
                           source = NULL,
                           timeout=NULL,
@@ -226,6 +226,7 @@ is.gar_Build <- function(x){
 #'
 #' }
 #' @family Cloud Build functions
+#' @importFrom utils tar
 cr_build_upload_gcs <- function(local,
                                 remote = paste0(local,format(Sys.time(), "%Y%m%d%H%M%S"),".tar.gz"),
                                 bucket = cr_bucket_get()){
@@ -273,8 +274,8 @@ cr_build_upload_gcs <- function(local,
 #' }
 #'
 #'
-#' @param Build.substitutions The \link{Build.substitutions} object or list of objects
-#' @param Build.timing The \link{Build.timing} object or list of objects
+#' @param Build.substitutions The Build.substitutions object or list of objects
+#' @param Build.timing The Build.timing object or list of objects
 #' @param results Output only
 #' @param logsBucket Google Cloud Storage bucket where logs should be written (see
 #' @param steps Required
@@ -356,7 +357,8 @@ Build <- function(Build.substitutions = NULL,
 
 #' Write out a Build object to cloudbuild.yaml
 #'
-#' @param x A \link{Build} object perhaps created with \link{cr_build_make} or
+#' @param x A \link{Build} object perhaps created with \link{cr_build_make} or \link{Yaml} created
+#' @param file Where to write the yaml file
 #'
 #' @export
 #' @family Cloud Build functions, yaml functions
@@ -372,7 +374,8 @@ Build <- function(Build.substitutions = NULL,
 #' cr_build_write(run_yaml)
 #'
 #' # write from a Build object
-#' build <- cr_build_make("inst/cloudbuild/cloudbuild.yaml")
+#' build <- cr_build_make(system.file("cloudbuild/cloudbuild.yaml",
+#'                                    package = "cloudRunner"))
 #' cr_build_write(build)
 #'
 cr_build_write <- function(x, file = "cloudbuild.yaml"){

@@ -14,9 +14,9 @@ Build(Build.substitutions = NULL, Build.timing = NULL,
   artifacts = NULL, secrets = NULL)
 }
 \arguments{
-\item{Build.substitutions}{The \link{Build.substitutions} object or list of objects}
+\item{Build.substitutions}{The Build.substitutions object or list of objects}
 
-\item{Build.timing}{The \link{Build.timing} object or list of objects}
+\item{Build.timing}{The Build.timing object or list of objects}
 
 \item{results}{Output only}
 

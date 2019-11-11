@@ -15,7 +15,7 @@ Helper to create yaml files
 \examples{
 
 Yaml(steps = list(
-      cr_build_step("docker", "version")
+      cr_build_step("docker", "version"),
       cr_build_step("gcloud", "version")),
     images = "gcr.io/my-project/my-image")
 }
