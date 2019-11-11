@@ -76,40 +76,7 @@ cr_run <- function(image,
   }
 }
 
-#' Create a yaml build step
-#'
-#' Helper for creating build steps for upload to Cloud Build
-#'
-#' @param name name of SDK appended to stem
-#' @param args character vector of arguments
-#' @param stem prefixed to name
-#' @param entrypoint change the entrypoint for the docker container
-#' @param dir The directory to use, relative to /workspace e.g. /workspace/deploy/
-#' @export
-#' @family Cloud Run functions
-#' @examples
-#'
-#' # creating yaml for use in deploying cloud run
-#' run_yaml <- Yaml(
-#'     steps = list(
-#'          cr_build_step("docker", c("build","-t",image,".")),
-#'          cr_build_step("docker", c("push",image)),
-#'          cr_build_step("gcloud", c("beta","run","deploy", "test1",
-#'                                    "--image", image))),
-#'     images = image)
-#'
-cr_build_step <- function(name,
-                          args,
-                          stem = "gcr.io/cloud-builders/",
-                          entrypoint = NULL,
-                          dir = "deploy"){
-  list(
-    name = paste0(stem, name),
-    entrypoint = entrypoint,
-    args = args,
-    dir = dir
-  )
-}
+
 
 make_endpoint <- function(endbit){
   region <- .cr_env$region

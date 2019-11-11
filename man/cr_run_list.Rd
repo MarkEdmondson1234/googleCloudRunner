@@ -25,7 +25,7 @@ List CloudRun services.
 \seealso{
 \href{https://cloud.run}{Google Documentation for Cloud Run}
 
-Other Cloud Run functions: \code{\link{cr_build_step}},
-  \code{\link{cr_run_get}}, \code{\link{cr_run}}
+Other Cloud Run functions: \code{\link{cr_run_get}},
+  \code{\link{cr_run}}
 }
 \concept{Cloud Run functions}

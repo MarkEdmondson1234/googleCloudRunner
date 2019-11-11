@@ -31,7 +31,7 @@ cr_run("gcr.io/my-project/my-image")
 \seealso{
 \href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
 
-Other Cloud Run functions: \code{\link{cr_build_step}},
-  \code{\link{cr_run_get}}, \code{\link{cr_run_list}}
+Other Cloud Run functions: \code{\link{cr_run_get}},
+  \code{\link{cr_run_list}}
 }
 \concept{Cloud Run functions}

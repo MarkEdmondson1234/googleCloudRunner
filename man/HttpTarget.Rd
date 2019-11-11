@@ -10,7 +10,7 @@ HttpTarget(headers = NULL, body = NULL, oauthToken = NULL,
 \arguments{
 \item{headers}{A named list of HTTP headers e.g. \code{list(Blah = "yes", Boo = "no")}}
 
-\item{body}{HTTP request body}
+\item{body}{HTTP request body.  Just send in the R object/list, which will be base64encoded correctly}
 
 \item{oauthToken}{If specified, an OAuth token will be generated and attached as an Authorization header in the HTTP request. This type of authorization should be used when sending requests to a GCP endpoint.}
 

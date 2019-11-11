@@ -60,7 +60,7 @@ cr_schedule <- function(schedule,
 #' HttpTarget Object
 #'
 #' @param headers A named list of HTTP headers e.g. \code{list(Blah = "yes", Boo = "no")}
-#' @param body HTTP request body
+#' @param body HTTP request body.  Just send in the R object/list, which will be base64encoded correctly
 #' @param oauthToken If specified, an OAuth token will be generated and attached as an Authorization header in the HTTP request. This type of authorization should be used when sending requests to a GCP endpoint.
 #' @param uri Required
 #' @param oidcToken If specified, an OIDC token will be generated and attached as an Authorization header in the HTTP request. This type of authorization should be used when sending requests to third party endpoints or Cloud Run.
@@ -72,6 +72,8 @@ cr_schedule <- function(schedule,
 #'
 #' @family Cloud Scheduler functions
 #' @export
+#' @importFrom jsonlite toJSON
+#' @importFrom openssl base64_encode
 HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
                        uri = NULL, oidcToken = NULL, httpMethod = NULL) {
 
@@ -80,6 +82,10 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
       is.list(headers),
       is.character(names(headers))
     )
+  }
+
+  if(!is.null(body)){
+    body <- base64_encode(toJSON(body, auto_unbox = TRUE),linebreaks = FALSE)
   }
 
   structure(rmNullObs(list(headers = headers, body = body, oauthToken = oauthToken,

@@ -18,7 +18,7 @@ Get information about a Cloud Run service.
 \seealso{
 \href{https://cloud.google.com/run/docs/reference/rest/v1/namespaces.services/get}{Google Documentation on namespaces.services.get}
 
-Other Cloud Run functions: \code{\link{cr_build_step}},
-  \code{\link{cr_run_list}}, \code{\link{cr_run}}
+Other Cloud Run functions: \code{\link{cr_run_list}},
+  \code{\link{cr_run}}
 }
 \concept{Cloud Run functions}

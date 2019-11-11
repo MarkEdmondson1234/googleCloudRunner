@@ -18,9 +18,16 @@ print.gar_Build <- function(x, ...){
   cat0("buildId: ", x$id)
   cat0("status: ", x$status)
   cat0("logUrl: ", x$logUrl)
-  cat0("steps: \n")
-  cat0(as.yaml(x$steps))
+  cat0("steps: \n", as.yaml(x$steps))
 }
+
+#' @export
+#' @importFrom yaml as.yaml
+print.cr_yaml <- function(x, ...){
+  cat("==cloudRunnerYaml==\n")
+  cat(as.yaml(x))
+}
+
 
 #' @export
 print.gar_StorageSource <- function(x, ...){
