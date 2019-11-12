@@ -74,10 +74,12 @@ make_image_name <- function(name, projectId){
 #'
 #' @return An object of class Dockerfile
 #'
-#' @importFrom containerit dockerfile write print
+#' @importFrom containerit dockerfile write print Cmd Entrypoint addInstruction<-
 #' @examples
 #'
+#' \dontrun{
 #' cr_dockerfile(system.file("example/", package = "cloudRunner"))
+#' }
 cr_dockerfile <- function(deploy_folder, ...){
 
   docker <- suppressWarnings(dockerfile(deploy_folder,

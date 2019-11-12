@@ -6,3 +6,5 @@
 ^cloudRunner.*\.tgz$
 ^\.Renviron$
 ^auth$
+^\.travis\.yml$
+^deploy$

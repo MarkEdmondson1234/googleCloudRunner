@@ -21,13 +21,13 @@ print.gar_Build <- function(x, ...){
   cat0("steps: \n", as.yaml(x$steps))
 }
 
+
 #' @export
 #' @importFrom yaml as.yaml
 print.cr_yaml <- function(x, ...){
   cat("==cloudRunnerYaml==\n")
   cat(as.yaml(x))
 }
-
 
 #' @export
 print.gar_StorageSource <- function(x, ...){
@@ -48,6 +48,8 @@ print.gar_Service <- function(x, ...){
   cat0("observedGeneration: ", x$status$observedGeneration)
   cat0("url: ", x$status$url)
 }
+
+
 
 #' @export
 print.gar_scheduleJob <- function(x, ...){
