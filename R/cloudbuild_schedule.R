@@ -16,8 +16,8 @@
 #' @family Cloud Scheduler functions, Cloud Build functions
 #'
 #' @examples
-#'
-#' build1 <- cr_build_make("inst/cloudbuild/cloudbuild.yaml")
+#' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "cloudRunner")
+#' build1 <- cr_build_make(cloudbuild)
 #' build1
 #' \dontrun{
 #' cr_schedule("15 5 * * *", name="cloud-build-test1",

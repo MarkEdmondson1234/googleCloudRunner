@@ -85,7 +85,8 @@ is.BuildOperationMetadata <- function(x){
 #' @import assertthat
 #' @family Cloud Build functions
 #' @examples
-#' cr_build_make(system.file("cloudbuild/cloudbuild.yaml", package = "cloudRunner"))
+#' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "cloudRunner")
+#' cr_build_make(cloudbuild)
 cr_build_make <- function(yaml,
                           source = NULL,
                           timeout=NULL,
