@@ -1,8 +1,10 @@
+#' @method print ServiceList
 #' @export
 print.ServiceList <- function(x, ...){
   print(x)
 }
 
+#' @method print BuildOperationMetadata
 #' @export
 print.BuildOperationMetadata <- function(x, ...){
    cat("==CloudBuildOperationMetadata==\n")
@@ -11,6 +13,7 @@ print.BuildOperationMetadata <- function(x, ...){
    cat0("logUrl: ", x$metadata$build$logUrl)
 }
 
+#' @method print gar_Build
 #' @export
 #' @importFrom yaml as.yaml
 print.gar_Build <- function(x, ...){
@@ -21,7 +24,7 @@ print.gar_Build <- function(x, ...){
   cat0("steps: \n", as.yaml(x$steps))
 }
 
-
+#' @method print cr_yaml
 #' @export
 #' @importFrom yaml as.yaml
 print.cr_yaml <- function(x, ...){
@@ -29,6 +32,7 @@ print.cr_yaml <- function(x, ...){
   cat(as.yaml(x))
 }
 
+#' @method print gar_StorageSource
 #' @export
 print.gar_StorageSource <- function(x, ...){
   cat("==CloudBuildStorageSource==\n")
@@ -37,6 +41,7 @@ print.gar_StorageSource <- function(x, ...){
   cat0("generation: ", x$generation)
 }
 
+#' @method print gar_Service
 #' @export
 print.gar_Service <- function(x, ...){
   cat("==CloudRunService==\n")
@@ -50,7 +55,7 @@ print.gar_Service <- function(x, ...){
 }
 
 
-
+#' @method print gar_scheduleJob
 #' @export
 print.gar_scheduleJob <- function(x, ...){
   cat("==CloudScheduleJob==\n")
