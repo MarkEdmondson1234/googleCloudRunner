@@ -384,14 +384,14 @@ A cloudbuild.yml using build tags (saved to "build/cloudbuild_cloudRunner.yml"):
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Build package'
-  args: ['build', '-t', 'gcr.io/gcer-public/cloudrunner$BRANCH_NAME','.']
+  args: ['build', '-t', 'gcr.io/gcer-public/cloudrunner:$BRANCH_NAME','.']
 - name: 'gcr.io/cloud-builders/docker'
   id:  'Push to gcer-public repo'
-  args: ['push', 'gcr.io/gcer-public/cloudrunner$BRANCH_NAME']
-images: 'gcr.io/gcer-public/cloudrunner$BRANCH_NAME'
+  args: ['push', 'gcr.io/gcer-public/cloudrunner:$BRANCH_NAME']
+images: 'gcr.io/gcer-public/cloudrunner:$BRANCH_NAME'
 ```
 
-Deploy:
+Make sure to deploy the above files to GitHub and then deploy:
 
 ```r
 library(cloudRunner)
