@@ -11,27 +11,51 @@ Point your R code at a function, that automatically deploys and runs it in the c
 
 ## Usage
 
+Set up auth, environment arguments etc. as per bottom of this file.
+
+* R APIs
+
+1. Make an R API via [plumber](https://www.rplumber.io/) that contains entry file api.R.  You can use the demo example in `inst/example` if you like.
+2. Deploy via the `cr_deploy()` function:
+
 ```r
 library(cloudRunner)
 
-my_plumbed_file <- "api.R"
+cr <- cr_deploy("api.R", remote = "my_r_api")
+#2019-11-12 10:34:29 -- File size detected as 903 bytes
+#2019-11-12 10:34:31> Cloud Build started - logs: 
+#https://console.cloud.google.com/gcr/builds/40343fd4-6981-41c3-98c8-f5973c3de386?project=1080525199262
 
-cr <- cr_deploy(my_plumbed_file, remote = "my_r_api")
-# my_r_function available on https://cloud-run.hello-r.com
-
-cr_schedule(cr, schedule = "1 5 * * *")
-# my_r_function scheduled to run every day at 05:01
+#Waiting for build to finish:
+# |===============||
+#Build finished
+#2019-11-12 10:35:43> Deployed to Cloud Run at: 
+#https://cloudrunnertest2-ewjogewawq-ew.a.run.app
+#==CloudRunService==
+#name:  cloudrunnertest2 
+#location:  europe-west1 
+#lastModifier:  1080525199262@cloudbuild.gserviceaccount.com 
+#containers:  gcr.io/mark-edmondson-gde/cloudrunnertest2 
+#creationTimestamp:  2019-11-12T10:35:19.993128Z 
+#observedGeneration:  1 
+#url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app 
 ```
 
-Also usable if you make your own Docker file or image
+Deployment covers these steps:
+1. Create a Dockerfile for your R script if necessary via [`containerit`](https://o2r.info/containerit/index.html)
+2. Uploads the Dockerfile and your api.R file to your Google Cloud Storage bucket
+3. Creates a Cloud Build job for building the files uploaded to the GCS bucket, and pushes the Docker images to Google Container Registry
+3. Deploys that container to Cloud Run
 
-```
-dock_file <- cr_dockerfile("Dockerfile")
-cr_api_schedule(dock_file, schedule = "1 5 * * *")
+It will launch a browser showing the build on Cloud Build, or you can wait for progress in your local R sesion.  Upon successfully deployment it gives you a `CloudRunService` object with details of the deployment. 
 
-dock_image <- cr_image("gcr.io/my-project/my-app")
-cr_api_schedule(dock_image, schedule = "1 5 * * *")
-```
+All the above stages can be customised for your own purposes.
+
+* Run R builds
+
+Cloud Run is only necessary if you want a URL endpoint for your script.  You can run other R scripts within Cloud Build that can be triggered one time for the R function, setup to trigger on GitHub events or pub/sub, or schedule the R scripts using Cloud Scheduler.
+
+TODO: demo of running your own R script on Cloud Build/Scheduler
 
 ## Strategy
 
@@ -66,10 +90,10 @@ GCE_AUTH_FILE="/Users/me/auth/auth.json"
 GCE_DEFAULT_PROJECT_ID="my-project"
 GCS_DEFAULT_BUCKET="my-bucket"
 CR_REGION="europe-west1"
-CR_BUILD_EMAIL=demo@cloudbuild.gserviceaccount.com
+CR_BUILD_EMAIL=my-project-number@cloudbuild.gserviceaccount.com
 ```
 
-You can also set in the R script via:
+You can also set some of the above in the R script via:
 
 * `cr_region_set()`
 * `cr_project_set()`
@@ -77,10 +101,7 @@ You can also set in the R script via:
 
 ### GCP settings
 
-The Cloud Build service account needs permissions if you want it to deploy to Cloud Run.
-
-This can be set [here](https://console.cloud.google.com/cloud-build/settings) where you enable `Cloud Run Admin` and `Service Account User` roles.  More details found at this [Google reference article](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run). 
-
-* https://cloud.google.com/scheduler/docs/http-target-auth#add Ensure you have a service email with service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com with Cloud Scheduler Service Agent role.  This only needs to exist in the GCP project, it is not used in deployment - create another service key for that.
-
-* A service auth key needs Cloud Storage Admin, Cloud Run Admin, Cloud Scheduler Admin roles to use all the functions in the package - this key is then downloaded and set via `GCE_AUTH_FILE`
+* Ensure you have the Cloud Build, Cloud Run and CLoud Scheduler APIs on in your GCP project
+* The Cloud Build service account needs permissions if you want it to deploy to Cloud Run: This can be set [here](https://console.cloud.google.com/cloud-build/settings) where you enable `Cloud Run Admin` and `Service Account User` roles.  More details found at this [Google reference article](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run). 
+* Ensure you have a service email with `service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com` with Cloud Scheduler Service Agent role.  This only needs to exist in the GCP project, it is not used in deployment - create another service key for that. See [here](https://cloud.google.com/scheduler/docs/http-target-auth#add)
+* A service auth key needs Cloud Storage Admin, Cloud Run Admin, Cloud Scheduler Admin roles to use all the functions in the package - this key can be downloaded and used for auth via `GCE_AUTH_FILE`
