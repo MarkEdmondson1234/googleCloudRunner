@@ -7,7 +7,7 @@ As easy as possible R scripts in the cloud, via Cloud Run...
 
 ## Ambition
 
-Point your R code at a function, that automatically deploys and runs it in the cloud via an API endpoint.
+Point your R code at a function, that automatically deploys and runs it in the cloud via an API endpoint...
 
 ## Usage
 
