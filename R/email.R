@@ -1,4 +1,6 @@
-get_service_email <- function(){
+#' Get the cloud build email that is set in CR_BUILD_EMAIL
+#' @export
+cr_email_get <- function(){
 
   if(!is.null(.cr_env$cloudbuildEmail)){
     return(.cr_env$cloudbuildEmail)

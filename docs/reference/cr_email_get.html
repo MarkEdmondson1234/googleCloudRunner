@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Write out a Build object to cloudbuild.yaml — cr_build_write • cloudRunner</title>
+<title>Get the cloud build email that is set in CR_BUILD_EMAIL — cr_email_get • cloudRunner</title>
 
 
 <!-- jquery -->
@@ -33,8 +33,8 @@
 
 
 
-<meta property="og:title" content="Write out a Build object to cloudbuild.yaml — cr_build_write" />
-<meta property="og:description" content="Write out a Build object to cloudbuild.yaml" />
+<meta property="og:title" content="Get the cloud build email that is set in CR_BUILD_EMAIL — cr_email_get" />
+<meta property="og:description" content="Get the cloud build email that is set in CR_BUILD_EMAIL" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -106,57 +106,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Write out a Build object to cloudbuild.yaml</h1>
+    <h1>Get the cloud build email that is set in CR_BUILD_EMAIL</h1>
     
-    <div class="hidden name"><code>cr_build_write.Rd</code></div>
+    <div class="hidden name"><code>cr_email_get.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Write out a Build object to cloudbuild.yaml</p>
+    <p>Get the cloud build email that is set in CR_BUILD_EMAIL</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_build_write</span>(<span class='no'>x</span>, <span class='kw'>file</span> <span class='kw'>=</span> <span class='st'>"cloudbuild.yaml"</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_email_get</span>()</pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>A <a href='Build.html'>Build</a> object perhaps created with <a href='cr_build_make.html'>cr_build_make</a> or <a href='Yaml.html'>Yaml</a> created</p></td>
-    </tr>
-    <tr>
-      <th>file</th>
-      <td><p>Where to write the yaml file</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Cloud Build functions, yaml functions: <code><a href='Yaml.html'>Yaml</a></code>,
-  <code><a href='cr_build_step.html'>cr_build_step</a></code></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='co'># write from creating a Yaml object</span>
-<span class='no'>image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/my-project/my-image$BUILD_ID"</span>
-<span class='no'>run_yaml</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Yaml.html'>Yaml</a></span>(<span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(
-    <span class='fu'><a href='cr_build_step.html'>cr_build_step</a></span>(<span class='st'>"docker"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"build"</span>,<span class='st'>"-t"</span>,<span class='no'>image</span>,<span class='st'>"."</span>)),
-    <span class='fu'><a href='cr_build_step.html'>cr_build_step</a></span>(<span class='st'>"docker"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"push"</span>,<span class='no'>image</span>)),
-    <span class='fu'><a href='cr_build_step.html'>cr_build_step</a></span>(<span class='st'>"gcloud"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"beta"</span>,<span class='st'>"run"</span>,<span class='st'>"deploy"</span>, <span class='st'>"test1"</span>, <span class='st'>"--image"</span>, <span class='no'>image</span>))),
-  <span class='kw'>images</span> <span class='kw'>=</span> <span class='no'>image</span>)
-<span class='fu'>cr_build_write</span>(<span class='no'>run_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-13 00:18:36&gt; Writing to cloudbuild.yaml</span></div><div class='input'>
-<span class='co'># write from a Build object</span>
-<span class='no'>build</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build_make.html'>cr_build_make</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/system.file'>system.file</a></span>(<span class='st'>"cloudbuild/cloudbuild.yaml"</span>,
-                                   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"cloudRunner"</span>))
-<span class='fu'>cr_build_write</span>(<span class='no'>build</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-13 00:18:36&gt; Writing to cloudbuild.yaml</span></div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

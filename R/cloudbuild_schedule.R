@@ -34,7 +34,7 @@ cr_build_schedule_http <- function(build, projectId = cr_project_get()){
     uri = sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds",
                   projectId),
     body = build,
-    oauthToken = list(serviceAccountEmail = get_service_email())
+    oauthToken = list(serviceAccountEmail = cr_email_get())
   )
 }
 

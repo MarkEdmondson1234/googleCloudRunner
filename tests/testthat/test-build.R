@@ -76,6 +76,17 @@ test_that("Building Build Objects", {
 
   unlink("cloudbuild_test.yaml")
   unlink("cloudbuild_test2.yaml")
+
+  op <- cr_project_get()
+  ob <- cr_bucket_get()
+  or <- cr_region_get()
+  oe <- cr_email_get()
+
+  expect_equal(cr_project_set(op), op)
+  expect_equal(cr_bucket_set(ob), ob)
+  expect_equal(cr_region_get(or), or)
+  expect_equal(cr_email_get(oe), oe)
+
 })
 
 
