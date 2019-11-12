@@ -149,7 +149,7 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>By default dir is set to /deploy to air deployment from GCS, but you may want to set this to "" when using <a href='RepoSource.html'>RepoSource</a></p>
+    <p>By default dir is set to <code>deploy</code> to aid deployment from GCS, but you may want to set this to <code>""</code> when using <a href='RepoSource.html'>RepoSource</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Cloud Build functions, yaml functions: <code><a href='Yaml.html'>Yaml</a></code>,
@@ -159,14 +159,36 @@
     <pre class="examples"><div class='input'>
 <span class='co'># creating yaml for use in deploying cloud run</span>
 <span class='no'>image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/my-project/my-image$BUILD_ID"</span>
-<span class='no'>run_yaml</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Yaml.html'>Yaml</a></span>(
+<span class='fu'><a href='Yaml.html'>Yaml</a></span>(
     <span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(
          <span class='fu'>cr_build_step</span>(<span class='st'>"docker"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"build"</span>,<span class='st'>"-t"</span>,<span class='no'>image</span>,<span class='st'>"."</span>)),
          <span class='fu'>cr_build_step</span>(<span class='st'>"docker"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"push"</span>,<span class='no'>image</span>)),
          <span class='fu'>cr_build_step</span>(<span class='st'>"gcloud"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"beta"</span>,<span class='st'>"run"</span>,<span class='st'>"deploy"</span>, <span class='st'>"test1"</span>,
                                    <span class='st'>"--image"</span>, <span class='no'>image</span>))),
-    <span class='kw'>images</span> <span class='kw'>=</span> <span class='no'>image</span>)
-
+    <span class='kw'>images</span> <span class='kw'>=</span> <span class='no'>image</span>)</div><div class='output co'>#&gt; ==cloudRunnerYaml==
+#&gt; steps:
+#&gt; - name: gcr.io/cloud-builders/docker
+#&gt;   args:
+#&gt;   - build
+#&gt;   - -t
+#&gt;   - gcr.io/my-project/my-image$BUILD_ID
+#&gt;   - '.'
+#&gt;   dir: deploy
+#&gt; - name: gcr.io/cloud-builders/docker
+#&gt;   args:
+#&gt;   - push
+#&gt;   - gcr.io/my-project/my-image$BUILD_ID
+#&gt;   dir: deploy
+#&gt; - name: gcr.io/cloud-builders/gcloud
+#&gt;   args:
+#&gt;   - beta
+#&gt;   - run
+#&gt;   - deploy
+#&gt;   - test1
+#&gt;   - --image
+#&gt;   - gcr.io/my-project/my-image$BUILD_ID
+#&gt;   dir: deploy
+#&gt; images: gcr.io/my-project/my-image$BUILD_ID</div><div class='input'>
 <span class='co'># list files with a new entrypoint for gcloud</span>
 <span class='fu'><a href='Yaml.html'>Yaml</a></span>(<span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'>cr_build_step</span>(<span class='st'>"gcloud"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"-c"</span>,<span class='st'>"ls -la"</span>), <span class='kw'>entrypoint</span> <span class='kw'>=</span> <span class='st'>"bash"</span>))</div><div class='output co'>#&gt; ==cloudRunnerYaml==
 #&gt; steps:

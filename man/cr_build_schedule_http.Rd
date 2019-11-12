@@ -22,8 +22,9 @@ Ensure you have a service email with \link{cr_email_set} of format \code{service
 }
 \examples{
 
-\dontrun{
 build1 <- cr_build_make("inst/cloudbuild/cloudbuild.yaml")
+build1
+\dontrun{
 cr_schedule("15 5 * * *", name="cloud-build-test1",
             httpTarget = cr_build_schedule_http(build1))
 }

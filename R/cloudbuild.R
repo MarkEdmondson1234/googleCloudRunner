@@ -16,6 +16,9 @@
 #' @export
 #' @examples
 #'
+#' my_gcs_source <- Source(storageSource=StorageSource("gs://my-bucket", "my_code.tar.gz"))
+#' my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName="master"))
+#'
 #' \dontrun{
 #'
 #' b1 <- cr_build("cloudbuild.yaml")
@@ -23,8 +26,6 @@
 #' cr_build_status(b1)
 #' cr_build_status(b2)
 #'
-#' my_gcs_source <- Source(storageSource=StorageSource("gs://my-bucket", "my_code.tar.gz"))
-#' my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName="master"))
 #'
 #' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 #' build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)

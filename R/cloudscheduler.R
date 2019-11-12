@@ -12,11 +12,10 @@
 #' @examples
 #'
 #' \dontrun{
-#' cr_init()
 #' cr_schedule("* * * * *", name="test", httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
 #'
 #' # schedule a cloud build (no source)
-#' build1 <- cr_build_make("inst/cloudbuild/cloudbuild.yaml")
+#' build1 <- cr_build_make("cloudbuild.yaml")
 #' cr_schedule("15 5 * * *", name="cloud-build-test",
 #'              httpTarget = cr_build_schedule_http(build1))
 #'

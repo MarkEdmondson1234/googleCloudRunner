@@ -29,7 +29,7 @@ Yaml <- function(...){
 #' @param id Optional id for the step
 #'
 #' @details
-#' By default dir is set to /deploy to air deployment from GCS, but you may want to set this to "" when using \link{RepoSource}
+#' By default dir is set to \code{deploy} to aid deployment from GCS, but you may want to set this to \code{""} when using \link{RepoSource}
 #'
 #' @export
 #' @family Cloud Build functions, yaml functions
@@ -37,7 +37,7 @@ Yaml <- function(...){
 #'
 #' # creating yaml for use in deploying cloud run
 #' image = "gcr.io/my-project/my-image$BUILD_ID"
-#' run_yaml <- Yaml(
+#' Yaml(
 #'     steps = list(
 #'          cr_build_step("docker", c("build","-t",image,".")),
 #'          cr_build_step("docker", c("push",image)),

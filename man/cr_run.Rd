@@ -33,9 +33,7 @@ Uses Cloud Build to deploy an image to Cloud Run
 \examples{
 
 \dontrun{
-cr_region_set("europe-west1")
 cr_run("gcr.io/my-project/my-image")
-
 }
 }
 \seealso{

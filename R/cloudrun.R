@@ -21,9 +21,7 @@
 #' @examples
 #'
 #' \dontrun{
-#' cr_region_set("europe-west1")
 #' cr_run("gcr.io/my-project/my-image")
-#'
 #' }
 cr_run <- function(image,
                    source = NULL,
@@ -93,8 +91,12 @@ make_endpoint <- function(endbit){
          call. = FALSE)
   }
 
-  if(!region %in% ENDPOINTS){
-    warning("Endpoint is not one of ", paste(ENDPOINTS, collapse = " "), " got: ", region)
+  endpoints <- c("us-central1",
+                 "asia-northeast1",
+                 "europe-west1",
+                 "us-east1")
+  if(!region %in% endpoints){
+    warning("Endpoint is not one of ", paste(endpoints, collapse = " "), " got: ", region)
   }
 
   sprintf("https://%s-run.googleapis.com/apis/serving.knative.dev/v1/%s", region, endbit)
