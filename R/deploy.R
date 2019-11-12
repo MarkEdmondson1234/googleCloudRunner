@@ -21,7 +21,7 @@
 #'
 #' \dontrun{
 #'
-#' cr_deploy(system.file("example/", package = "cloudRunner"), remote = "cloudrunnertest")
+#' cr_deploy(system.file("example/", package = "cloudRunner"))
 #'
 #' }
 cr_deploy <- function(local,

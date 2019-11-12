@@ -34,7 +34,7 @@ From that api.R you can source or call other resources in the same folder, using
 
 \dontrun{
 
-cr_deploy(system.file("example/", package = "cloudRunner"), remote = "cloudrunnertest")
+cr_deploy(system.file("example/", package = "cloudRunner"))
 
 }
 }

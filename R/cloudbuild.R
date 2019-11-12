@@ -379,6 +379,7 @@ Build <- function(Build.substitutions = NULL,
 #' cr_build_write(build)
 #'
 cr_build_write <- function(x, file = "cloudbuild.yaml"){
+  myMessage("Writing to ", file, level = 3)
   UseMethod("cr_build_write", x)
 }
 

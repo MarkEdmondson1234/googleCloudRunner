@@ -21,7 +21,7 @@ Set up auth, environment arguments etc. as per bottom of this file.
 ```r
 library(cloudRunner)
 
-cr <- cr_deploy("api.R", remote = "my_r_api")
+cr <- cr_deploy("api.R")
 #2019-11-12 10:34:29 -- File size detected as 903 bytes
 #2019-11-12 10:34:31> Cloud Build started - logs: 
 #https://console.cloud.google.com/gcr/builds/40343fd4-6981-41c3-98c8-f5973c3de386?project=1080525199262
@@ -128,6 +128,12 @@ build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
 ```
 
+You can also turn an existing build into a cloudbuild.yaml file:
+
+```r
+cr_build_write(build1)
+```
+
 ### Schedule Cloud Build
 
 As Cloud Build can run any code in a container, it becomes a powerful way to setup data flows.  These can be scheduled via Cloud Scheduler.  
@@ -179,15 +185,43 @@ See its website for details.
 
 Once you have your R script and Dockerfile in the same folder, you need to build the image.
 
+*cloudbuild.yaml*
+
 Lets say you don't want to write a cloudbuild.yaml file - instead its created all within R using the yaml helper functions `Yaml()` and `cr_build_step`.  Refer to the [cloudbuild.yaml config spec](https://cloud.google.com/cloud-build/docs/build-config) on what it expected in the file. 
 
 ```r
 image <- "gcr.io/your-project/your-name"
 my_yaml <- Yaml(
       steps = list(cr_build_step("docker", c("build","-t",image,".")),
-                   cr_build_step("docker", c("push",image)))
+                   cr_build_step("docker", c("push",image))),
       images = image)
+my_yaml
+# ==cloudRunnerYaml==
+# steps:
+# - name: gcr.io/cloud-builders/docker
+#   args:
+#   - build
+#   - -t
+#   - gcr.io/your-project/your-name
+#   - '.'
+#   dir: deploy
+# - name: gcr.io/cloud-builders/docker
+#   args:
+#   - push
+#   - gcr.io/your-project/your-name
+#   dir: deploy
+# images: gcr.io/your-project/your-name
 ```
+
+You can also write out the yaml into your own cloudbuild.yaml
+
+```r
+cr_build_write(my_yaml, file = "cloudbuild.yaml")
+```
+
+This allows you to programmatically create cloudbuild yaml files.
+
+*Source*
 
 The code/source of the build also needs to be included.  This can be a Cloud Repository mirrored from GitHub, but here we will upload it to a folder on your own private Google Cloud Storage bucket.
 
@@ -227,6 +261,79 @@ cr_schedule("15 5 * * *", name="scheduled_r",
 Your R script should now be scheduled and running in its own environment.
 
 You can automate updates to the script and/or Docker container or schedule seperately, by redoing any of the steps above. 
+
+## Cloud Run deployments
+
+Cloud Run is a service that lets you deploy container images without worrying about the underlying servers or infrastructure.  It is called with the `cr_run()` function.
+
+The Cloud Run API is not called directly when deploying - instead a Cloud Build is created for deployment. It creates a cloudbuild.yaml similar to the below:
+
+```yaml
+# use cloud build to deploy
+image <- "gcr.io/my-project/my-image"
+Yaml(
+    steps = list(
+      cr_build_step("docker", c("build","-t",image,".")),
+      cr_build_step("docker", c("push",image)),
+      cr_build_step("gcloud", c("beta","run","deploy", "my-name",
+           "--image", image,
+           "--region", "europe-west1",
+           "--platform", "managed",
+           "--concurrency", 1,
+           "--allow-unauthenticated"
+         ))
+    ),
+    images = image
+  )
+# ==cloudRunnerYaml==
+# steps:
+# - name: gcr.io/cloud-builders/docker
+#   args:
+#   - build
+#   - -t
+#   - gcr.io/my-project/my-image
+#   - '.'
+#   dir: deploy
+# - name: gcr.io/cloud-builders/docker
+#   args:
+#   - push
+#   - gcr.io/my-project/my-image
+#   dir: deploy
+# - name: gcr.io/cloud-builders/gcloud
+#   args:
+#   - beta
+#   - run
+#   - deploy
+#   - my-name
+#   - --image
+#   - gcr.io/my-project/my-image
+#   - --region
+#   - europe-west1
+#   - --platform
+#   - managed
+#   - --concurrency
+#   - '1'
+#   - --allow-unauthenticated
+#   dir: deploy
+# images: gcr.io/my-project/my-image
+
+```
+
+If you have an existing image you want to deploy on Cloud Run (usually one that serves up HTTP content, such as via `library(plumber)`) then you only need to supply that image to deploy:
+
+```r
+cr_run("gcr.io/my-project/my-image")
+```
+
+However, if you want to do the common use case of building the container first as well, you can do so by specifying a `Source` object containing the code, Dockerfile and data you want to build into the container:
+
+```r
+my_gcs_source <- Source(storageSource=StorageSource("gs://my-bucket", "my_code.tar.gz"))
+build_run <- cr_run("gcr.io/my-project/my-image", source = my_gcs_source)
+```
+
+`cr_deploy()` wraps the above in functions to check and wait for status etc. and is intended as the main method of Cloud Run deployment, but you may want to tweak the settings more by calling `cr_run()` directly. 
+
 
 ## ToDo
 
@@ -274,4 +381,4 @@ You can also set some of the above in the R script via:
 * Ensure you have the Cloud Build, Cloud Run and CLoud Scheduler APIs on in your GCP project
 * The Cloud Build service account needs permissions if you want it to deploy to Cloud Run: This can be set [here](https://console.cloud.google.com/cloud-build/settings) where you enable `Cloud Run Admin` and `Service Account User` roles.  More details found at this [Google reference article](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run). 
 * Ensure you have a service email with `service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com` with Cloud Scheduler Service Agent role.  This only needs to exist in the GCP project, it is not used in deployment - create another service key for that. See [here](https://cloud.google.com/scheduler/docs/http-target-auth#add)
-* A service auth key needs Cloud Storage Admin, Cloud Run Admin, Cloud Scheduler Admin roles to use all the functions in the package - this key can be downloaded and used for auth via `GCE_AUTH_FILE`
+* A service auth key needs Cloud Build Editor, Cloud Run Admin, Cloud Scheduler Admin roles to use all the functions in the package - this key can be downloaded and used for auth via `GCE_AUTH_FILE`

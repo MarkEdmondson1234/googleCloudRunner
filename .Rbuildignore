@@ -8,3 +8,4 @@
 ^auth$
 ^\.travis\.yml$
 ^deploy$
+^cloudbuild\.yaml$
