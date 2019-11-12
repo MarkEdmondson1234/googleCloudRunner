@@ -57,6 +57,8 @@ Cloud Run is only necessary if you want a URL endpoint for your script.  You can
 
 Cloud Build uses containers to run everything.  This means it can run almost any language/program or application including R. Having an easy way to create and trigger these builds from R means R can serve as a UI or gateway to any other program e.g. R can trigger a Cloud Build using `gcloud` to deploy Cloud Run applications.
 
+The first 120 mins per day are free.  [See here for more priceinfo.](https://cloud.google.com/cloud-build/pricing)
+
 Cloud Build is centered around the [cloudbuild.yaml format](https://cloud.google.com/cloud-build/docs/build-config) - you can use existing cloudbuild.yaml files or create your own in R using the yaml helper functions.
 
 An example cloudbuild.yaml is shown below - this outputs the versions of docker and gcloud it is using:
