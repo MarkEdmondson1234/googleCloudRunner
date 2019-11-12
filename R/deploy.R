@@ -4,7 +4,7 @@
 #'
 #' @param local A folder containing the R script using plumber called api.R and all its dependencies
 #' @param remote The folder on Google Cloud Storage
-#' @param dockerfile An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.
+#' @param dockerfile An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"
 #' @param image_name The gcr.io image name that will be deployed and/or built
 #' @param projectId The projectId where it all gets deployed to
 #' @param region The Cloud Run endpoint set by CR_REGION env arg
@@ -49,6 +49,7 @@ cr_deploy <- function(local,
     assert_that(
       is.readable(file.path(local, dockerfile))
     )
+    file.copy(dockerfile, file.path(local, "Dockerfile"))
   }
 
   storage <- cr_build_upload_gcs(local, remote = remote, bucket = bucket)
