@@ -41,15 +41,15 @@ cr <- cr_deploy("api.R", remote = "my_r_api")
 #url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app 
 ```
 
-Deployment covers these steps:
-1. Create a Dockerfile for your R script if necessary via [`containerit`](https://o2r.info/containerit/index.html)
+Deployment via `cr_deploy()` automated these steps:
+1. Creates a Dockerfile for your R script if necessary using [`containerit`](https://o2r.info/containerit/index.html)
 2. Uploads the Dockerfile and your api.R file to your Google Cloud Storage bucket
 3. Creates a Cloud Build job for building the files uploaded to the GCS bucket, and pushes the Docker images to Google Container Registry
 3. Deploys that container to Cloud Run
 
 It will launch a browser showing the build on Cloud Build, or you can wait for progress in your local R sesion.  Upon successfully deployment it gives you a `CloudRunService` object with details of the deployment. 
 
-All the above stages can be customised for your own purposes.
+All the above stages can be customised for your own purposes, using the functions explained below.
 
 ### Run R builds
 
@@ -71,7 +71,7 @@ steps:
   args: ["echo", "Hello Cloud Build"]
 ```
 
-This cloudbuild.yaml file can be scheduled directly via the `cr_build()` function:
+This cloudbuild.yaml file can be built directly via the `cr_build()` function:
 
 ```r
 b1 <- cr_build("cloudbuild.yaml")
@@ -141,7 +141,7 @@ cr_schedule("15 5 * * *", name="cloud-build-test1",
              httpTarget = cr_build_schedule_http(build1))
 ```
 
-We use `cr_build_make()` to create the Cloud Build API request, and then send that to the Cloud Scheduler API via its `httpTarget` parameter.
+We use `cr_build_make()` and `cr_build_schedule_http()` to create the Cloud Build API request, and then send that to the Cloud Scheduler API via its `httpTarget` parameter.
 
 Cloud Scheduler can schedule HTTP requests to any endpoint:
 
@@ -159,7 +159,23 @@ Putting the above together serverlessly, to schedue an R script the steps are:
 3. Build the Docker image on Cloud Build and push to "gcr.io/your-project/your-name"
 4. Schedule calling the Docker image using Cloud Scheduler
 
-Creating your Dockerfile can be done using `containerit`
+#### 1. Create your R script
+
+The R script can hold anything, but make sure its is self contained with auth files, data files etc.  All paths should be relative to the script.  Uploading auth files within Dockerfiles is not recommended security wise, but since the container is running on GCP you can use `googleAuthR::gar_gce_auth()` or similar to download configuration files from a GCE bucket in your script. 
+
+#### 2. Bundle the R script with a Dockerfile
+
+Creating your Dockerfile can be done using `containerit` - point it at the folder with your script:
+
+```r
+library(containerit)
+d <- dockerfile("your-script.R")
+write(d, "Dockerfile")
+```
+
+See its website for details.
+
+#### 3. Build the Docker image on Cloud Build
 
 Once you have your R script and Dockerfile in the same folder, you need to build the image.
 
@@ -187,7 +203,10 @@ You can now upload the build to Cloud Build, using your custom yaml and specifyi
 ```
 build <- cr_build(my_yaml, source = my_gcs_source)
 ```
+
 Change and configure the Yaml or the source as you need.
+
+#### 4. Schedule calling the Docker image using Cloud Scheduler
 
 Once the image is build successfully, you do not need to build it again for the scheduled calls.  For that, you will only need the image you build ("gcr.io/your-project/your-name") and call it via the arguments set up in the Dockerfile i.e. "R -e my_r_script.R"
 
@@ -204,6 +223,17 @@ cr_schedule("15 5 * * *", name="scheduled_r",
              httpTarget = cr_build_schedule_http(schedule_build))
 
 ```
+
+Your R script should now be scheduled and running in its own environment.
+
+You can automate updates to the script and/or Docker container or schedule seperately, by redoing any of the steps above. 
+
+## ToDo
+
+Useful R specific cloudbuilds
+
+* Checking a package, creating a website, deploying
+* Creating an Rmarkdown powered website using Cloud Run
 
 
 ## Setup
