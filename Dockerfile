@@ -1,4 +1,4 @@
-FROM o2rproject/containerit:minimal
+FROM o2rproject/containerit:latest
 LABEL maintainer="mark"
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
   && apt-get install -y git-core \
