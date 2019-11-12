@@ -13,7 +13,7 @@ Point your R code at a function, that automatically deploys and runs it in the c
 
 Set up auth, environment arguments etc. as per bottom of this file.
 
-* R APIs
+### R APIs
 
 1. Make an R API via [plumber](https://www.rplumber.io/) that contains entry file api.R.  You can use the demo example in `inst/example` if you like.
 2. Deploy via the `cr_deploy()` function:
@@ -51,24 +51,164 @@ It will launch a browser showing the build on Cloud Build, or you can wait for p
 
 All the above stages can be customised for your own purposes.
 
-* Run R builds
+### Run R builds
 
-Cloud Run is only necessary if you want a URL endpoint for your script.  You can run other R scripts within Cloud Build that can be triggered one time for the R function, setup to trigger on GitHub events or pub/sub, or schedule the R scripts using Cloud Scheduler.
+Cloud Run is only necessary if you want a URL endpoint for your script.  You can run other scripts within Cloud Build that can be triggered one time, setup to trigger on GitHub events or pub/sub, or scheduled using Cloud Scheduler.
 
-TODO: demo of running your own R script on Cloud Build/Scheduler
+Cloud Build uses containers to run everything.  This means it can run almost any language/program or application including R. Having an easy way to create and trigger these builds from R means R can serve as a UI or gateway to any other program e.g. R can trigger a Cloud Build using `gcloud` to deploy Cloud Run applications.
 
-## Strategy
+Cloud Build is centered around the [cloudbuild.yaml format](https://cloud.google.com/cloud-build/docs/build-config) - you can use existing cloudbuild.yaml files or create your own in R using the yaml helper functions.
 
-1. User wraps R code in generic plumber API endpoint
-2. Get Dockerfile requirements via `containerit`
-3. Push Dockerfile to build in Build Triggers - `cr_build()` (using cloudbuild.yaml)
-4. Publish Docker image to Cloud Run - `cr_run()` via a cloud build calling gcloud
-5. Return API endpoint
-6. Schedule if necessary
+An example cloudbuild.yaml is shown below - this outputs the versions of docker and gcloud it is using:
 
-You can also trigger cloud builds via scheduler, so no need for Cloud Run for non-public tasks. 
+```yaml
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  id: Docker Version
+  args: ["version"]
+- name: 'alpine'
+  id:  Hello Cloud Build
+  args: ["echo", "Hello Cloud Build"]
+```
+
+This cloudbuild.yaml file can be scheduled directly via the `cr_build()` function:
+
+```r
+b1 <- cr_build("cloudbuild.yaml")
+```
+The build will trigger a webpage to the build logs to open.  Or you can set this to false and wait in R for the build:
+
+```r
+b2 <- cr_build("cloudbuild.yaml", launch_browser = FALSE)
+cr_build_wait(b2)
+# Waiting for build to finish:
+#  |===||
+# Build finished
+# ==CloudBuildObject==
+# buildId:  c673143a-794d-4c69-8ad4-e777d068c066 
+# status:  SUCCESS 
+# logUrl:  https://console.cloud.google.com/gcr/builds/c673143a-794d-4c69-8ad4-e777d068c066?project=1080525199262 
+# steps: 
+#  name:
+# - gcr.io/cloud-builders/docker
+# - alpine
+# args:
+# - version
+# - - echo
+#   - Hello Cloud Build
+# id:
+# - Docker Version
+# - Hello Cloud Build
+# timing:
+#   startTime:
+#   - '2019-11-12T11:16:37.682826707Z'
+#   - '2019-11-12T11:16:38.585221812Z'
+#   endTime:
+#   - '2019-11-12T11:16:38.585157179Z'
+#   - '2019-11-12T11:16:40.680755419Z'
+# status:
+# - SUCCESS
+# - SUCCESS
+# pullTiming:
+#   startTime:
+#   - '2019-11-12T11:16:37.682826707Z'
+#   - '2019-11-12T11:16:38.585221812Z'
+#   endTime:
+#   - '2019-11-12T11:16:37.740729198Z'
+#   - '2019-11-12T11:16:39.869607125Z'
+```
+
+Cloud Builds usually need code or data to work on to be useful.  This is specified by the `source` argument.  This can be a Cloud Source Repository (perhaps mirrored from GitHub) or a Cloud Storage bucket containg the code/data you want to operate on.  An example of specifying both is below:
+
+```r
+my_gcs_source <- Source(storageSource=StorageSource("gs://my-bucket", "my_code.tar.gz"))
+my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName="master"))
+
+build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
+build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
+```
+
+### Schedule Cloud Build
+
+As Cloud Build can run any code in a container, it becomes a powerful way to setup data flows.  These can be scheduled via Cloud Scheduler.  
+
+A demo below shows how to set up a Cloud Build on a schedule from R:
+
+```r
+build1 <- cr_build_make("cloudbuild.yaml")
+
+cr_schedule("15 5 * * *", name="cloud-build-test1",
+             httpTarget = cr_build_schedule_http(build1))
+```
+
+We use `cr_build_make()` to create the Cloud Build API request, and then send that to the Cloud Scheduler API via its `httpTarget` parameter.
+
+Cloud Scheduler can schedule HTTP requests to any endpoint:
+
+```
+cr_scheduler("14 5 * * *", name = "my-webhook", 
+             httpTarget = HttpTarget(httpMethod="GET", uri = "https://mywebhook.com"))
+```
+
+### Build and schedule an R script
+
+Putting the above together serverlessly, to schedue an R script the steps are:
+
+1. Create your R script 
+2. Bundle the R script with a Dockerfile
+3. Build the Docker image on Cloud Build and push to "gcr.io/your-project/your-name"
+4. Schedule calling the Docker image using Cloud Scheduler
+
+Creating your Dockerfile can be done using `containerit`
+
+Once you have your R script and Dockerfile in the same folder, you need to build the image.
+
+Lets say you don't want to write a cloudbuild.yaml file - instead its created all within R using the yaml helper functions `Yaml()` and `cr_build_step`.  Refer to the [cloudbuild.yaml config spec](https://cloud.google.com/cloud-build/docs/build-config) on what it expected in the file. 
+
+```r
+image <- "gcr.io/your-project/your-name"
+my_yaml <- Yaml(
+      steps = list(cr_build_step("docker", c("build","-t",image,".")),
+                   cr_build_step("docker", c("push",image)))
+      images = image)
+```
+
+The code/source of the build also needs to be included.  This can be a Cloud Repository mirrored from GitHub, but here we will upload it to a folder on your own private Google Cloud Storage bucket.
+
+This returns a `StorageSource` object which is needed for `Source`:
+
+```
+storage <- cr_build_upload_gcs("my_folder")
+my_gcs_source <- Source(storageSource=storage)
+```
+
+You can now upload the build to Cloud Build, using your custom yaml and specifying the source of the data/code on the cloud storage bucket:
+
+```
+build <- cr_build(my_yaml, source = my_gcs_source)
+```
+Change and configure the Yaml or the source as you need.
+
+Once the image is build successfully, you do not need to build it again for the scheduled calls.  For that, you will only need the image you build ("gcr.io/your-project/your-name") and call it via the arguments set up in the Dockerfile i.e. "R -e my_r_script.R"
+
+```
+schedule_me <- Yaml(
+  steps = list(
+     cr_build_step("your-name", "R -e my_r_script.R", stem="gcr.io/your-project")
+  )
+)
+
+schedule_build <- cr_build_make(schedule_me)
+
+cr_schedule("15 5 * * *", name="scheduled_r",
+             httpTarget = cr_build_schedule_http(schedule_build))
+
+```
+
 
 ## Setup
+
+### R Settings
 
 * Reuses environment argument `GCE_AUTH_FILE` from googleComputeEngineR which holds location of your service auth JSON
 * Reuses environment argument `GCE_DEFAULT_PROJECT_ID` from googleComputeEngineR
