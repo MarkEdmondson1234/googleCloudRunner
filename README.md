@@ -371,6 +371,8 @@ my_repo <- Source(repoSource=RepoSource("github_markedmondson1234_cloudrunner",
 
 This is what is used to deploy this package as a Dockerimaeg to the public googleComputeEngineR docker image project.
 
+Its probably easiest in this case to make [this a trigger on GitHub push](https://console.cloud.google.com/cloud-build/triggers), which you can do online with the same cloudbuild.yml file, but as an instructive example:
+
 ```r
 library(containerit)
 
@@ -402,6 +404,8 @@ my_repo <- Source(repoSource=RepoSource("github_markedmondson1234_cloudrunner",
 
 pb <- cr_build("build/cloudbuild_cloudRunner.yml", source = my_repo)
 ```
+
+
 
 
 ## Setup
