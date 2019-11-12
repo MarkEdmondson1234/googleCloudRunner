@@ -3,3 +3,9 @@
 .RData
 .Ruserdata
 example.tar.gz
+cloudRunner.Rcheck/
+cloudRunner*.tar.gz
+cloudRunner*.tgz
+auth/
+.Renviron
+deploy

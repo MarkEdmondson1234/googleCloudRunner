@@ -2,18 +2,18 @@
 % Please edit documentation in R/deploy.R
 \name{cr_deploy}
 \alias{cr_deploy}
-\title{Deploy an R script to Cloud}
+\title{Deploy an R plumber script to Cloud Run}
 \usage{
 cr_deploy(local, remote = basename(local), dockerfile = NULL,
   image_name = remote, region = cr_region_get(),
   bucket = cr_bucket_get(), projectId = cr_project_get())
 }
 \arguments{
-\item{local}{A folder containing the R script and all its R dependencies}
+\item{local}{A folder containing the R script using plumber called api.R and all its dependencies}
 
 \item{remote}{The folder on Google Cloud Storage}
 
-\item{dockerfile}{An optional Dockerfile built to support the script}
+\item{dockerfile}{An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.}
 
 \item{image_name}{The gcr.io image name that will be deployed and/or built}
 
@@ -24,13 +24,17 @@ cr_deploy(local, remote = basename(local), dockerfile = NULL,
 \item{projectId}{The projectId where it all gets deployed to}
 }
 \description{
-Helper to create the Dockerfile
+Helper to take an R plumber script, create the Dockerfile, add the build to Cloud Build and deploy to Cloud Run
+}
+\details{
+The entrypoint for CloudRun will be via a plumber script called api.R - this should be included in your local folder to deploy.
+From that api.R you can source or call other resources in the same folder, using relative paths.
 }
 \examples{
 
 \dontrun{
 
-cr_deploy("inst/example/", remote = "cloudrunnertest")
+cr_deploy(system.file("example/", package = "cloudRunner"), remote = "cloudrunnertest")
 
 }
 }

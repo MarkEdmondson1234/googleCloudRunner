@@ -16,7 +16,7 @@ library(cloudRunner)
 
 my_plumbed_file <- "api.R"
 
-cr <- cr_deploy(my_plumbed_file)
+cr <- cr_deploy(my_plumbed_file, remote = "my_r_api")
 # my_r_function available on https://cloud-run.hello-r.com
 
 cr_schedule(cr, schedule = "1 5 * * *")
@@ -81,4 +81,6 @@ The Cloud Build service account needs permissions if you want it to deploy to Cl
 
 This can be set [here](https://console.cloud.google.com/cloud-build/settings) where you enable `Cloud Run Admin` and `Service Account User` roles.  More details found at this [Google reference article](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run). 
 
-* https://cloud.google.com/scheduler/docs/http-target-auth#add Ensure you have a service email with service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com with Cloud Scheduler Service Agent role. 
+* https://cloud.google.com/scheduler/docs/http-target-auth#add Ensure you have a service email with service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com with Cloud Scheduler Service Agent role.  This only needs to exist in the GCP project, it is not used in deployment - create another service key for that.
+
+* A service auth key needs Cloud Storage Admin, Cloud Run Admin, Cloud Scheduler Admin roles to use all the functions in the package - this key is then downloaded and set via `GCE_AUTH_FILE`

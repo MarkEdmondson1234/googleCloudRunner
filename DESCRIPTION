@@ -12,6 +12,7 @@ Depends:
     R (>= 3.3.0)
 Imports:
     assertthat (>= 0.2.0),
+    containerit,
     googleAuthR (>= 1.1.1),
     googleCloudStorageR (>= 0.5.1),
     jsonlite (>= 1.5),
@@ -27,3 +28,5 @@ LazyData: true
 RoxygenNote: 6.1.1
 Suggests: 
     testthat (>= 2.1.0)
+Remotes:
+  o2r-project/containerit
