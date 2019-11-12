@@ -1,0 +1,9 @@
+steps:
+- name: gcr.io/cloud-builders/docker
+  id: Docker Version
+  args: version
+- name: alpine
+  id: Hello Cloud Build
+  args:
+  - echo
+  - Hello Cloud Build
