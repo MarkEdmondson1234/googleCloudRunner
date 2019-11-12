@@ -11,3 +11,6 @@
 ^cloudbuild\.yaml$
 ^build$
 ^Dockerfile$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

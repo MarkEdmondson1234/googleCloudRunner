@@ -1,0 +1,42 @@
+authors:
+  name: Mark Edmondson
+  href: https://code.markedmondson.me/cloudRunner
+template:
+  params:
+    bootswatch: paper
+    ganalytics: UA-47480439-2
+reference:
+  - title: "Setup functions"
+    desc: >
+      Functions setting up your GCP configuration
+    contents:
+      - matches("cr_bucket")
+      - matches("cr_email")
+      - matches("cr_project")
+      - matches("cr_region")
+  - title: "Cloud Build functions"
+    desc: >
+      Functions for working with Cloud Build
+    contents:
+      - matches("cr_build")
+      - matches("cr_dockerfile")
+      - Build
+      - Source
+      - RepoSource
+      - StorageSource
+      - Yaml
+  - title: "Cloud Run functions"
+    desc: >
+      Functions for working with Cloud Run deployments
+    contents:
+      - matches("cr_run")
+      - matches("cr_deploy")
+  - title: "Cloud Scheduler functions"
+    desc: >
+      Functions for working with Cloud Scheduler
+    contents:
+      - matches("cr_schedule")
+      - Job
+      - HttpTarget
+
+
