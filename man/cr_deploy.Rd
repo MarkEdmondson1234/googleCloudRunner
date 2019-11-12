@@ -13,7 +13,7 @@ cr_deploy(local, remote = basename(local), dockerfile = NULL,
 
 \item{remote}{The folder on Google Cloud Storage}
 
-\item{dockerfile}{An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.}
+\item{dockerfile}{An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"}
 
 \item{image_name}{The gcr.io image name that will be deployed and/or built}
 
@@ -29,6 +29,8 @@ Helper to take an R plumber script, create the Dockerfile, add the build to Clou
 \details{
 The entrypoint for CloudRun will be via a plumber script called api.R - this should be included in your local folder to deploy.
 From that api.R you can source or call other resources in the same folder, using relative paths.
+
+The function will create a local folder called "deploy" and a tar.gz of that folder which is what is being uploaded to Google Cloud Storage
 }
 \examples{
 

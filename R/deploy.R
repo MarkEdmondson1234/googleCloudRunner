@@ -15,6 +15,8 @@
 #' The entrypoint for CloudRun will be via a plumber script called api.R - this should be included in your local folder to deploy.
 #' From that api.R you can source or call other resources in the same folder, using relative paths.
 #'
+#' The function will create a local folder called "deploy" and a tar.gz of that folder which is what is being uploaded to Google Cloud Storage
+#'
 #' @export
 #'
 #' @examples
@@ -92,7 +94,7 @@ cr_dockerfile <- function(deploy_folder, ...){
      entrypoint = Entrypoint("R",
                    params = list("-e",
                                  "pr <- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))")),
-     filter_baseimage_pkgs = TRUE,
+     filter_baseimage_pkgs = FALSE,
      ...))
 
   addInstruction(docker) <-containerit:::Copy(".","./")
