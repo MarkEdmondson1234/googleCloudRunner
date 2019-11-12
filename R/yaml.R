@@ -28,6 +28,9 @@ Yaml <- function(...){
 #' @param dir The directory to use, relative to /workspace e.g. /workspace/deploy/
 #' @param id Optional id for the step
 #'
+#' @details
+#' By default dir is set to /deploy to air deployment from GCS, but you may want to set this to "" when using \link{RepoSource}
+#'
 #' @export
 #' @family Cloud Build functions, yaml functions
 #' @examples
@@ -41,6 +44,9 @@ Yaml <- function(...){
 #'          cr_build_step("gcloud", c("beta","run","deploy", "test1",
 #'                                    "--image", image))),
 #'     images = image)
+#'
+#' # list files with a new entrypoint for gcloud
+#' Yaml(steps = cr_build_step("gcloud", c("-c","ls -la"), entrypoint = "bash"))
 #'
 cr_build_step <- function(name,
                           args,

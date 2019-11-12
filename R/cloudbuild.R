@@ -467,6 +467,8 @@ is.gar_SourceRepo <- function(x){
 #'
 #' Only one of commitSha, branchName or tagName are allowed.
 #'
+#' If you want to use GitHub or BitBucket repos, you need to setup mirroring them via Cloud Source Repositories https://source.cloud.google.com/
+#'
 #' @param tagName Regex matching tags to build
 #' @param projectId ID of the project that owns the Cloud Source Repository
 #' @param repoName Name of the Cloud Source Repository
@@ -482,10 +484,16 @@ is.gar_SourceRepo <- function(x){
 #'
 #' \dontrun{
 #'
-#' my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com",
-#'                                                branchName="master"))
+#' my_repo <- Source(
+#'   repoSource=RepoSource("github_markedmondson1234_cloudrunner",
+#'                         branchName="master"))
 #'
-#' build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
+#' build <- cr_build(
+#'   Yaml(steps =
+#'     cr_build_step("gcloud", c("-c","ls -la"),
+#'                   entrypoint = "bash",
+#'                   dir = "")),
+#'  source = my_repo)
 #'
 #' }
 RepoSource <- function(repoName = NULL,

@@ -23,6 +23,9 @@ cr_build_step(name, args, id = NULL, stem = "gcr.io/cloud-builders/",
 \description{
 Helper for creating build steps for upload to Cloud Build
 }
+\details{
+By default dir is set to /deploy to air deployment from GCS, but you may want to set this to "" when using \link{RepoSource}
+}
 \examples{
 
 # creating yaml for use in deploying cloud run
@@ -34,6 +37,9 @@ run_yaml <- Yaml(
          cr_build_step("gcloud", c("beta","run","deploy", "test1",
                                    "--image", image))),
     images = image)
+
+# list files with a new entrypoint for gcloud
+Yaml(steps = cr_build_step("gcloud", c("-c","ls -la"), entrypoint = "bash"))
 
 }
 \seealso{

@@ -9,3 +9,5 @@
 ^\.travis\.yml$
 ^deploy$
 ^cloudbuild\.yaml$
+^build$
+^Dockerfile$

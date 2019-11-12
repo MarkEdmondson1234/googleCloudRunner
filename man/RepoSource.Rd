@@ -30,15 +30,23 @@ RepoSource Object
 Location of the source in a Google Cloud Source Repository.
 
 Only one of commitSha, branchName or tagName are allowed.
+
+If you want to use GitHub or BitBucket repos, you need to setup mirroring them via Cloud Source Repositories https://source.cloud.google.com/
 }
 \examples{
 
 \dontrun{
 
-my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com",
-                                               branchName="master"))
+my_repo <- Source(
+  repoSource=RepoSource("github_markedmondson1234_cloudrunner",
+                        branchName="master"))
 
-build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
+build <- cr_build(
+  Yaml(steps =
+    cr_build_step("gcloud", c("-c","ls -la"),
+                  entrypoint = "bash",
+                  dir = "")),
+ source = my_repo)
 
 }
 }
