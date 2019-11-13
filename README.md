@@ -9,6 +9,14 @@ As easy as possible R scripts in the cloud, via Cloud Run, Cloud Build and Cloud
 
 Point your R code at a function, that automatically deploys and runs it in the GCP cloud via an API endpoint.
 
+## Install
+
+Only install available from GitHub until depedencies such as `sysreqs` and `containerit` are on CRAN
+
+```r
+remotes::install_github("MarkEdmondson1234/cloudRunner")
+```
+
 ## Usage
 
 Set up auth, environment arguments etc. as per bottom of this file.
@@ -447,6 +455,9 @@ You can also set some of the above in the R script via:
 
 * Ensure you have the Cloud Build, Cloud Run and Cloud Scheduler APIs on in your GCP project
 * The Cloud Build service account needs permissions if you want it to deploy to Cloud Run: This can be set [here](https://console.cloud.google.com/cloud-build/settings) where you enable `Cloud Run Admin` and `Service Account User` roles.  More details found at this [Google reference article](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run). 
-* Ensure you have a service email with `service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com` with Cloud Scheduler Service Agent role.  This only needs to exist in the GCP project, it is not used in deployment - create another service key for that. See [here](https://cloud.google.com/scheduler/docs/http-target-auth#add)
+* If you get the error using Cloud Scheduler with a HTTP target of "Request contains an invalid argument" then ensure you have a service email with `service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com` with Cloud Scheduler Service Agent role.  This is only needed if you created the project before MArch 2019.  This only needs to exist in the GCP project, it is not used in deployment - create another service key for that. See [here](https://cloud.google.com/scheduler/docs/http-target-auth#add)
 * A service auth key needs Cloud Build Editor, Cloud Run Admin, Cloud Scheduler Admin roles to use all the functions in the package - this key can be downloaded and used for auth via `GCE_AUTH_FILE`
 * If you want to use GitHub or BitBucket repos, you need to setup mirroring them via Cloud Source Repoitories https://source.cloud.google.com/
+* To use Cloud Scheduler you may need to initiate an App Engine application https://console.developers.google.com/appengine - you only need to set the region (one allowed per GCP project) and you don't need to create an app
+
+
