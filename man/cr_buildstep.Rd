@@ -38,6 +38,14 @@ Yaml(
                                    "--image", image))),
     images = image)
 
+# use premade docker buildstep - combine using c()
+Yaml(
+    steps = c(cr_buildstep_docker(image),
+         list(cr_buildstep("gcloud",
+                         c("beta","run","deploy", "test1","--image", image))
+             )),
+    images = image)
+
 # list files with a new entrypoint for gcloud
 Yaml(steps = cr_buildstep("gcloud", c("-c","ls -la"), entrypoint = "bash"))
 

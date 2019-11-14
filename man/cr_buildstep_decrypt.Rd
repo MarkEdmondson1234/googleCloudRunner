@@ -4,7 +4,8 @@
 \alias{cr_buildstep_decrypt}
 \title{Create a build step for decrypting files via KMS}
 \usage{
-cr_buildstep_decrypt(cipher, plain, keyring, key, locataion = "global")
+cr_buildstep_decrypt(cipher, plain, keyring, key, location = "global",
+  dir = "")
 }
 \arguments{
 \item{cipher}{The file that has been encrypted}
@@ -16,7 +17,12 @@ cr_buildstep_decrypt(cipher, plain, keyring, key, locataion = "global")
 \item{key}{The KMS key to use}
 
 \item{location}{The KMS location}
+
+\item{dir}{The directory relative to /workspace/ the command will operate in}
 }
 \description{
-Create a build step for decrypting files via KMS
+Create a build step to decrypt files using CryptoKey from Cloud Key Management Service
+}
+\details{
+You will need to set up the encrypted key using gcloud following this guide from Google: https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials
 }

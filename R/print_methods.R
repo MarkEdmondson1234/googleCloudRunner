@@ -32,6 +32,14 @@ print.cr_yaml <- function(x, ...){
   cat(as.yaml(x))
 }
 
+#' @method print cr_buildstep
+#' @export
+#' @importFrom yaml as.yaml
+print.cr_buildstep <- function(x, ...){
+  cat("==cloudRunnerBuildStep==\n")
+  cat(as.yaml(x))
+}
+
 #' @method print gar_StorageSource
 #' @export
 print.gar_StorageSource <- function(x, ...){
