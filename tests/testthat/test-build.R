@@ -87,6 +87,12 @@ test_that("Building Build Objects", {
   expect_equal(cr_region_set(or), or)
   expect_equal(cr_email_set(oe), oe)
 
+  cloudbuild_dc <- cr_buildstep_decrypt("secret.json.enc",
+                                        plain = "secret.json",
+                                        keyring = "my_keyring",
+                                        key = "my_key")
+  expect_equal(cloudbuild_dc[[1]]$args[[1]], "kms")
+  expect_equal(cloudbuild_dc[[1]]$args[[3]], "--ciphertext-file")
 
 })
 

@@ -74,6 +74,12 @@ is.cr_buildstep <- function(x){
 #'
 #'
 #' @export
+#' @examples
+#'
+#' cr_buildstep_decrypt("secret.json.enc",
+#'                      plain = "secret.json",
+#'                      keyring = "my_keyring",
+#'                      key = "my_key")
 cr_buildstep_decrypt <- function(cipher,
                                  plain,
                                  keyring,

@@ -5,7 +5,8 @@
 \title{Create a StorageSource}
 \usage{
 cr_build_upload_gcs(local, remote = paste0(local, format(Sys.time(),
-  "\%Y\%m\%d\%H\%M\%S"), ".tar.gz"), bucket = cr_bucket_get())
+  "\%Y\%m\%d\%H\%M\%S"), ".tar.gz"), bucket = cr_bucket_get(),
+  predefinedAcl = "bucketOwnerFullControl")
 }
 \arguments{
 \item{local}{Local directory containing the Dockerfile etc. you wish to deploy}
@@ -13,6 +14,8 @@ cr_build_upload_gcs(local, remote = paste0(local, format(Sys.time(),
 \item{remote}{The name of the folder in your bucket}
 
 \item{bucket}{The Google Cloud Storage bucket to upload to}
+
+\item{predefinedAcl}{The ACL rules for the object uploaded.}
 }
 \value{
 A Source object

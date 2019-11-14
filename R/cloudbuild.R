@@ -211,6 +211,7 @@ is.gar_Build <- function(x){
 #' @param local Local directory containing the Dockerfile etc. you wish to deploy
 #' @param remote The name of the folder in your bucket
 #' @param bucket The Google Cloud Storage bucket to upload to
+#' @param predefinedAcl The ACL rules for the object uploaded.
 #'
 #' @details
 #'
@@ -231,8 +232,11 @@ is.gar_Build <- function(x){
 #' @family Cloud Build functions
 #' @importFrom utils tar
 cr_build_upload_gcs <- function(local,
-                                remote = paste0(local,format(Sys.time(), "%Y%m%d%H%M%S"),".tar.gz"),
-                                bucket = cr_bucket_get()){
+                                remote = paste0(local,
+                                             format(Sys.time(), "%Y%m%d%H%M%S"),
+                                             ".tar.gz"),
+                                bucket = cr_bucket_get(),
+                                predefinedAcl="bucketOwnerFullControl"){
 
   tar_file <- paste0(basename(local), ".tar.gz")
   deploy_folder <- "deploy"
@@ -246,7 +250,8 @@ cr_build_upload_gcs <- function(local,
       files = deploy_folder,
       compression = "gzip")
 
-  gcs_upload(tar_file, bucket = bucket, name = remote)
+  gcs_upload(tar_file, bucket = bucket, name = remote,
+             predefinedAcl = predefinedAcl)
 
   Source(storageSource = StorageSource(bucket = bucket,
                                        object = remote)
