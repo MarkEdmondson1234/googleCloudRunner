@@ -137,17 +137,21 @@
       <th>dir</th>
       <td><p>The workspace folder on cloud build, eg /workspace/deploy/.  Default is equivalent to /workspace/</p></td>
     </tr>
+    <tr>
+      <th>projectId</th>
+      <td><p>The projectId</p></td>
+    </tr>
     </table>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"gcr.io/my-project/my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-14 20:47:37&gt; Image to be built:TRUE:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
+    <pre class="examples"><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"gcr.io/my-project/my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-14 21:26:48&gt; Image to be built:gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
 #&gt; - build
 #&gt; - -t
-#&gt; - TRUE:$BUILD_ID
+#&gt; - gcr.io/my-project/my-image:$BUILD_ID
 #&gt; - '.'
 #&gt; dir: ''
 #&gt; 
@@ -156,9 +160,9 @@
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
 #&gt; - push
-#&gt; - TRUE:$BUILD_ID
+#&gt; - gcr.io/my-project/my-image:$BUILD_ID
 #&gt; dir: ''
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-14 20:47:37&gt; Image to be built:gcr.io/mark-edmondson-gde/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
+#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-14 21:26:48&gt; Image to be built:gcr.io/mark-edmondson-gde/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
@@ -175,7 +179,7 @@
 #&gt; - push
 #&gt; - gcr.io/mark-edmondson-gde/my-image:$BUILD_ID
 #&gt; dir: ''
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BRANCH_NAME"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-14 20:47:37&gt; Image to be built:gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME</span></div><div class='output co'>#&gt; [[1]]
+#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BRANCH_NAME"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-14 21:26:48&gt; Image to be built:gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME</span></div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
