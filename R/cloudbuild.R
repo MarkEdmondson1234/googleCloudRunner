@@ -7,7 +7,7 @@
 #'
 #' @inheritParams Build
 #' @param projectId ID of the project
-#' @param yaml A cloudbuild.yaml with the steps to run for the build - either a file location or an R object that will be turned into yaml via \link[yaml]{as.yaml}
+#' @param x A cloudbuild.yaml file location or an R object that will be turned into yaml via \link[yaml]{as.yaml} or a \link{Build} object created by \link{cr_build_make}
 #' @param launch_browser Whether to launch the logs URL in a browser once deployed
 #' @importFrom googleAuthR gar_api_generator
 #' @importFrom yaml yaml.load_file
@@ -31,7 +31,7 @@
 #' build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
 #'
 #' }
-cr_build <- function(yaml,
+cr_build <- function(x,
                      source = NULL,
                      timeout=NULL,
                      images=NULL,
@@ -45,11 +45,16 @@ cr_build <- function(yaml,
   url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds",
                  projectId)
 
-  build <- cr_build_make(yaml = yaml,
-                         source = source,
-                         timeout = timeout,
-                         images = images,
-                         projectId = projectId)
+  if(is.gar_Build(x)){
+    build <- x
+  } else {
+    build <- cr_build_make(yaml = x,
+                           source = source,
+                           timeout = timeout,
+                           images = images,
+                           projectId = projectId)
+  }
+
 
   # cloudbuild.projects.builds.create
   f <- gar_api_generator(url, "POST",

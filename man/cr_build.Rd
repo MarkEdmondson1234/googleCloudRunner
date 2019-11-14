@@ -4,11 +4,11 @@
 \alias{cr_build}
 \title{Starts a build with the specified configuration.}
 \usage{
-cr_build(yaml, source = NULL, timeout = NULL, images = NULL,
+cr_build(x, source = NULL, timeout = NULL, images = NULL,
   projectId = cr_project_get(), launch_browser = interactive())
 }
 \arguments{
-\item{yaml}{A cloudbuild.yaml with the steps to run for the build - either a file location or an R object that will be turned into yaml via \link[yaml]{as.yaml}}
+\item{x}{A cloudbuild.yaml file location or an R object that will be turned into yaml via \link[yaml]{as.yaml} or a \link{Build} object created by \link{cr_build_make}}
 
 \item{source}{A \link{Source} object specifying the location of the source files to build}
 

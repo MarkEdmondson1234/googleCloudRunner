@@ -8,8 +8,6 @@ cr_build_make(yaml, source = NULL, timeout = NULL, images = NULL,
   projectId = cr_project_get())
 }
 \arguments{
-\item{yaml}{A cloudbuild.yaml with the steps to run for the build - either a file location or an R object that will be turned into yaml via \link[yaml]{as.yaml}}
-
 \item{source}{A \link{Source} object specifying the location of the source files to build}
 
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
