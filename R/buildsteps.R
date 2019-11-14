@@ -120,10 +120,12 @@ cr_buildstep_docker <- function(image,
   } else {
     the_image <- paste0("gcr.io/", projectId, "/", image)
   }
+
+  the_image <- paste0(the_image, ":", tag)
   myMessage("Image to be built:", the_image, level = 3)
 
   c(
     cr_buildstep("docker", c("build","-t",the_image,location), dir=dir),
-    cr_buildstep("docker", c("push", paste0(the_image,":",tag)), dir=dir)
+    cr_buildstep("docker", c("push", the_image), dir=dir)
   )
 }

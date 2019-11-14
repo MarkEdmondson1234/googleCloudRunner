@@ -23,7 +23,7 @@ print.gar_Build <- function(x, ...){
   cat0("logUrl: ", x$logUrl)
   cat0("steps: \n", as.yaml(x$steps))
   cat0("images: ", x$images)
-  cat0("source: ", x$source)
+  #cat0("source: ", x$source[[1]])
 }
 
 #' @method print cr_yaml

@@ -113,7 +113,7 @@ cr_build_make <- function(yaml,
     assert_that(is.gar_Source(source))
   }
 
-  if(!is.null(images)){
+  if(is.null(images)){
     if(!is.null(stepsy$images)){
       images <- stepsy$images
     }
