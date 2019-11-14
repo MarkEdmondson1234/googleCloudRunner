@@ -15,6 +15,8 @@ cr_buildstep_docker(image, tag = "$BUILD_ID", location = ".",
 \item{location}{Where the Dockerfile to build is in relation to \code{dir}}
 
 \item{dir}{The workspace folder on cloud build, eg /workspace/deploy/.  Default is equivalent to /workspace/}
+
+\item{projectId}{The projectId}
 }
 \description{
 Create a build step to build and push a docker image

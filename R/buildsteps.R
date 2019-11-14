@@ -102,6 +102,7 @@ cr_buildstep_decrypt <- function(cipher,
 #' @param tag The tag to attached to the pushed image - can use \code{Build} macros
 #' @param location Where the Dockerfile to build is in relation to \code{dir}
 #' @param dir The workspace folder on cloud build, eg /workspace/deploy/.  Default is equivalent to /workspace/
+#' @param projectId The projectId
 #'
 #' @export
 #' @import assertthat
