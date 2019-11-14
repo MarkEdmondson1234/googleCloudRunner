@@ -116,7 +116,7 @@ cr_buildstep_docker <- function(image,
                                 projectId = cr_project_get()){
   prefix <- grepl("^gcr.io", image)
   if(prefix){
-    the_image <- prefix
+    the_image <- image
   } else {
     the_image <- paste0("gcr.io/", projectId, "/", image)
   }
