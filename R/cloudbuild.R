@@ -86,6 +86,7 @@ is.BuildOperationMetadata <- function(x){
 #' @seealso https://cloud.google.com/cloud-build/docs/build-config
 #'
 #' @inheritParams cr_build
+#' @param yaml A \link{Yaml} object or a file location of a .yaml/.yml cloud build file
 #' @export
 #' @import assertthat
 #' @family Cloud Build functions

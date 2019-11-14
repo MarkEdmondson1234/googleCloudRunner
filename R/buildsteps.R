@@ -98,14 +98,16 @@ cr_buildstep_decrypt <- function(cipher,
 
 #' Create a build step to build and push a docker image
 #'
-#' @param image The image tag that will be pushed
+#' @param image The image tag that will be pushed, starting with gcr.io
 #' @param location Where the Dockerfile to build is in relation to \code{dir}
 #' @param dir The workspace folder on cloud build, eg /workspace/deploy/.  Default is equivalent to /workspace/
 #'
 #' @export
+#' @import assertthat
 #' @examples
 #' cr_buildstep_docker("gcr.io/my-project/my-image")
 cr_buildstep_docker <- function(image, location = ".", dir=""){
+  assert_that(grepl("^gcr.io", image))
   c(
     cr_buildstep("docker", c("build","-t",image,location), dir=dir),
     cr_buildstep("docker", c("push",image), dir=dir)
