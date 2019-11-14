@@ -35,8 +35,7 @@ cr_schedule("15 5 * * *", name="cloud-build-test",
              httpTarget = cr_build_schedule_http(build1))
 
 # schedule a cloud build with code source from GCS bucket
-storage <- cr_build_upload_gcs("my_folder", bucket = cr_get_bucket())
-my_gcs_source <- Source(storageSource=storage)
+my_gcs_source <- cr_build_upload_gcs("my_folder", bucket = cr_get_bucket())
 build <- cr_build_make("cloudbuild.yaml", source = my_gcs_source))
 cr_schedule("15 5 * * *", name="cloud-build-test",
             httpTarget = cr_build_schedule_http(build))

@@ -26,15 +26,13 @@ Location of the source in an archive file in Google Cloud Storage.
 
 \dontrun{
 
-
+# construct Source object
 my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
                                                     "gs://my-bucket"))
-
 build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 
-storage <- cr_build_upload_gcs("my_folder")
-my_gcs_source2 <- Source(storageSource=storage)
-
+# helper that tars and adds to Source() for you
+my_gcs_source2 <- cr_build_upload_gcs("my_folder")
 build2 <- cr_build("cloudbuild.yaml", source = my_gcs_source2)
 
 }

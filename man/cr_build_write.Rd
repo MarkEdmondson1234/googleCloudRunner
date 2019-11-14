@@ -19,9 +19,9 @@ Write out a Build object to cloudbuild.yaml
 # write from creating a Yaml object
 image = "gcr.io/my-project/my-image$BUILD_ID"
 run_yaml <- Yaml(steps = list(
-    cr_build_step("docker", c("build","-t",image,".")),
-    cr_build_step("docker", c("push",image)),
-    cr_build_step("gcloud", c("beta","run","deploy", "test1", "--image", image))),
+    cr_buildstep("docker", c("build","-t",image,".")),
+    cr_buildstep("docker", c("push",image)),
+    cr_buildstep("gcloud", c("beta","run","deploy", "test1", "--image", image))),
   images = image)
 cr_build_write(run_yaml)
 
@@ -33,6 +33,6 @@ cr_build_write(build)
 }
 \seealso{
 Other Cloud Build functions, yaml functions: \code{\link{Yaml}},
-  \code{\link{cr_build_step}}
+  \code{\link{cr_buildstep}}
 }
 \concept{Cloud Build functions, yaml functions}

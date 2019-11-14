@@ -15,12 +15,12 @@ Helper to create yaml files
 \examples{
 
 Yaml(steps = list(
-      cr_build_step("docker", "version"),
-      cr_build_step("gcloud", "version")),
+      cr_buildstep("docker", "version"),
+      cr_buildstep("gcloud", "version")),
     images = "gcr.io/my-project/my-image")
 }
 \seealso{
-Other Cloud Build functions, yaml functions: \code{\link{cr_build_step}},
-  \code{\link{cr_build_write}}
+Other Cloud Build functions, yaml functions: \code{\link{cr_build_write}},
+  \code{\link{cr_buildstep}}
 }
 \concept{Cloud Build functions, yaml functions}

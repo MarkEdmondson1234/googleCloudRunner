@@ -43,7 +43,7 @@ my_repo <- Source(
 
 build <- cr_build(
   Yaml(steps =
-    cr_build_step("gcloud", c("-c","ls -la"),
+    cr_buildstep("gcloud", c("-c","ls -la"),
                   entrypoint = "bash",
                   dir = "")),
  source = my_repo)

@@ -12,7 +12,10 @@ cr_build_upload_gcs(local, remote = paste0(local, format(Sys.time(),
 
 \item{remote}{The name of the folder in your bucket}
 
-\item{bucket}{The Google Cloud Storage bucket to uplaod to}
+\item{bucket}{The Google Cloud Storage bucket to upload to}
+}
+\value{
+A Source object
 }
 \description{
 This creates a \link{StorageSource} object after uploading to Google Cloud Storage
@@ -24,8 +27,7 @@ It copies the files into a folder call "deploy" in your working directory, then 
 
 \dontrun{
 
-storage <- cr_build_upload_gcs("my_folder")
-my_gcs_source <- Source(storageSource=storage)
+my_gcs_source <- cr_build_upload_gcs("my_folder")
 build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 
 }
