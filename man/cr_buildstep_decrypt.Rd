@@ -26,3 +26,10 @@ Create a build step to decrypt files using CryptoKey from Cloud Key Management S
 \details{
 You will need to set up the encrypted key using gcloud following this guide from Google: https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials
 }
+\examples{
+
+cr_buildstep_decrypt("secret.json.enc",
+                     plain = "secret.json",
+                     keyring = "my_keyring",
+                     key = "my_key")
+}
