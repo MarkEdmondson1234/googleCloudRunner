@@ -192,7 +192,7 @@ Putting the above together serverlessly, to schedue an R script the steps are:
 
 #### 1. Create your R script
 
-The R script can hold anything, but make sure its is self contained with auth files, data files etc.  All paths should be relative to the script.  Uploading auth files within Dockerfiles is not recommended security wise, but since the container is running on GCP you can use `googleAuthR::gar_gce_auth()` or similar to download configuration files from a GCE bucket in your script. 
+The R script can hold anything, but make sure its is self contained with auth files, data files etc.  All paths should be relative to the script.  Uploading auth files within Dockerfiles is not recommended security wise and  `googleAuthR::gar_gce_auth()` doesn't work as the default service auth account isn't present.  The recommend way to download auth files is to use the GKE encryption service
 
 #### 2. Bundle the R script with a Dockerfile
 
@@ -450,6 +450,13 @@ You can also set some of the above in the R script via:
 * `cr_region_set()`
 * `cr_project_set()`
 * `cr_bucket_set()`
+* `cr_email_set()`
+
+Or auth via
+
+```r
+googleAuthR::gar_service_auth("my_auth_json.com")
+```
 
 ### GCP settings
 

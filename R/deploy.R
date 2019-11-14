@@ -57,7 +57,7 @@ cr_deploy <- function(local,
   storage <- cr_build_upload_gcs(local, remote = remote, bucket = bucket)
 
   cr_run(make_image_name(image_name, projectId),
-         source = Source(storageSource=storage),
+         source = storage,
          region = region)
 
 }

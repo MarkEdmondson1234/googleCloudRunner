@@ -210,7 +210,7 @@ is.gar_Build <- function(x){
 #'
 #' @param local Local directory containing the Dockerfile etc. you wish to deploy
 #' @param remote The name of the folder in your bucket
-#' @param bucket The Google Cloud Storage bucket to uplaod to
+#' @param bucket The Google Cloud Storage bucket to upload to
 #'
 #' @details
 #'
@@ -218,12 +218,13 @@ is.gar_Build <- function(x){
 #'
 #' @export
 #' @importFrom googleCloudStorageR gcs_upload
+#'
+#' @return A Source object
 #' @examples
 #'
 #' \dontrun{
 #'
-#' storage <- cr_build_upload_gcs("my_folder")
-#' my_gcs_source <- Source(storageSource=storage)
+#' my_gcs_source <- cr_build_upload_gcs("my_folder")
 #' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 #'
 #' }
@@ -247,9 +248,8 @@ cr_build_upload_gcs <- function(local,
 
   gcs_upload(tar_file, bucket = bucket, name = remote)
 
-  StorageSource(
-    bucket = bucket,
-    object = remote
+  Source(storageSource = StorageSource(bucket = bucket,
+                                       object = remote)
   )
 }
 
@@ -369,9 +369,9 @@ Build <- function(Build.substitutions = NULL,
 #' # write from creating a Yaml object
 #' image = "gcr.io/my-project/my-image$BUILD_ID"
 #' run_yaml <- Yaml(steps = list(
-#'     cr_build_step("docker", c("build","-t",image,".")),
-#'     cr_build_step("docker", c("push",image)),
-#'     cr_build_step("gcloud", c("beta","run","deploy", "test1", "--image", image))),
+#'     cr_buildstep("docker", c("build","-t",image,".")),
+#'     cr_buildstep("docker", c("push",image)),
+#'     cr_buildstep("gcloud", c("beta","run","deploy", "test1", "--image", image))),
 #'   images = image)
 #' cr_build_write(run_yaml)
 #'
@@ -492,7 +492,7 @@ is.gar_SourceRepo <- function(x){
 #'
 #' build <- cr_build(
 #'   Yaml(steps =
-#'     cr_build_step("gcloud", c("-c","ls -la"),
+#'     cr_buildstep("gcloud", c("-c","ls -la"),
 #'                   entrypoint = "bash",
 #'                   dir = "")),
 #'  source = my_repo)
@@ -535,15 +535,13 @@ is.gar_RepoSource <- function(x){
 #'
 #' \dontrun{
 #'
-#'
+#' # construct Source object
 #' my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
 #'                                                     "gs://my-bucket"))
-#'
 #' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 #'
-#' storage <- cr_build_upload_gcs("my_folder")
-#' my_gcs_source2 <- Source(storageSource=storage)
-#'
+#' # helper that tars and adds to Source() for you
+#' my_gcs_source2 <- cr_build_upload_gcs("my_folder")
 #' build2 <- cr_build("cloudbuild.yaml", source = my_gcs_source2)
 #'
 #' }

@@ -34,8 +34,8 @@ cr_run <- function(image,
   if(!is.null(source)){
     assert_that(is.gar_Source(source))
     source_build_steps <- list(
-      cr_build_step("docker", c("build","-t",image,".")),
-      cr_build_step("docker", c("push",image))
+      cr_buildstep("docker", c("build","-t",image,".")),
+      cr_buildstep("docker", c("push",image))
     )
 
   } else {
@@ -47,7 +47,7 @@ cr_run <- function(image,
   run_yaml <- Yaml(
     steps = list(
       source_build_steps,
-      cr_build_step("gcloud",
+      cr_buildstep("gcloud",
          c("beta","run","deploy", name,
            "--image", image,
            "--region", region,
