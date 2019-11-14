@@ -55,6 +55,45 @@ cr_schedule <- function(schedule,
 
 }
 
+#' Lists Cloud Scheduler jobs.
+#'
+#' Lists cloud scheduler jobs including targeting, schedule and authentication
+#'
+#' @seealso \href{https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/list}{Google Documentation}
+#'
+#'
+#' @param region The region to run within
+#' @param projectId The projectId
+#' @importFrom googleAuthR gar_api_generator gar_api_page
+#' @export
+#' @family Cloud Scheduler functions
+#' @examples
+#'
+#' \dontrun{
+#'
+#' cr_schedule_list()
+#'
+#' }
+cr_schedule_list <- function(region = cr_region_get(),
+                             projectId = cr_project_get()) {
+
+  url <-
+    sprintf("https://cloudscheduler.googleapis.com/v1/projects/%s/locations/%s/jobs",
+            projectId, region)
+
+  # cloudscheduler.projects.locations.jobs.list
+  pars = list(pageToken = "", pageSize = 500)
+  f <- gar_api_generator(url, "GET", pars_args = rmNullObs(pars),
+                         data_parse_function = function(x) x$jobs)
+
+  o <- gar_api_page(f,
+               page_f = function(x) x$nextPageToken,
+               page_method = "param",
+               page_arg = "pageToken")
+
+  Reduce(rbind, o)
+}
+
 #' HttpTarget Object
 #'
 #' @param headers A named list of HTTP headers e.g. \code{list(Blah = "yes", Boo = "no")}

@@ -152,7 +152,7 @@
 
     <div class='dont-index'><p><a href='https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/create'>Google Documentation for Cloud Scheduler</a></p>
 <p>Other Cloud Scheduler functions: <code><a href='HttpTarget.html'>HttpTarget</a></code>,
-  <code><a href='Job.html'>Job</a></code></p></div>
+  <code><a href='Job.html'>Job</a></code>, <code><a href='cr_schedule_list.html'>cr_schedule_list</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -165,8 +165,7 @@ cr_schedule("15 5 * * *", name="cloud-build-test",
              httpTarget = cr_build_schedule_http(build1))
 
 # schedule a cloud build with code source from GCS bucket
-storage <- cr_build_upload_gcs("my_folder", bucket = cr_get_bucket())
-my_gcs_source <- Source(storageSource=storage)
+my_gcs_source <- cr_build_upload_gcs("my_folder", bucket = cr_get_bucket())
 build <- cr_build_make("cloudbuild.yaml", source = my_gcs_source))
 cr_schedule("15 5 * * *", name="cloud-build-test",
             httpTarget = cr_build_schedule_http(build))

@@ -30,6 +30,6 @@ HttpTarget Object
 https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs#HttpTarget
 
 Other Cloud Scheduler functions: \code{\link{Job}},
-  \code{\link{cr_schedule}}
+  \code{\link{cr_schedule_list}}, \code{\link{cr_schedule}}
 }
 \concept{Cloud Scheduler functions}

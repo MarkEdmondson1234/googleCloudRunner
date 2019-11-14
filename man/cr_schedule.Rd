@@ -45,6 +45,6 @@ cr_schedule("15 5 * * *", name="cloud-build-test",
 \href{https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/create}{Google Documentation for Cloud Scheduler}
 
 Other Cloud Scheduler functions: \code{\link{HttpTarget}},
-  \code{\link{Job}}
+  \code{\link{Job}}, \code{\link{cr_schedule_list}}
 }
 \concept{Cloud Scheduler functions}

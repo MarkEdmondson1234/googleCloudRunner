@@ -116,7 +116,8 @@
     </div>
 
     <pre class="usage"><span class='fu'>cr_build_upload_gcs</span>(<span class='no'>local</span>, <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='no'>local</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/format'>format</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Sys.time'>Sys.time</a></span>(),
-  <span class='st'>"%Y%m%d%H%M%S"</span>), <span class='st'>".tar.gz"</span>), <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_get.html'>cr_bucket_get</a></span>())</pre>
+  <span class='st'>"%Y%m%d%H%M%S"</span>), <span class='st'>".tar.gz"</span>), <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_get.html'>cr_bucket_get</a></span>(),
+  <span class='kw'>predefinedAcl</span> <span class='kw'>=</span> <span class='st'>"bucketOwnerFullControl"</span>, <span class='kw'>deploy_folder</span> <span class='kw'>=</span> <span class='st'>"deploy"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -131,10 +132,21 @@
     </tr>
     <tr>
       <th>bucket</th>
-      <td><p>The Google Cloud Storage bucket to uplaod to</p></td>
+      <td><p>The Google Cloud Storage bucket to upload to</p></td>
+    </tr>
+    <tr>
+      <th>predefinedAcl</th>
+      <td><p>The ACL rules for the object uploaded.</p></td>
+    </tr>
+    <tr>
+      <th>deploy_folder</th>
+      <td><p>Which folder to deploy from</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A Source object</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>It copies the files into a folder call "deploy" in your working directory, then tars it for upload</p>
@@ -149,8 +161,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 </div><span class='co'># NOT RUN {</span>
-<span class='no'>storage</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_build_upload_gcs</span>(<span class='st'>"my_folder"</span>)
-<span class='no'>my_gcs_source</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Source.html'>Source</a></span>(<span class='kw'>storageSource</span><span class='kw'>=</span><span class='no'>storage</span>)
+<span class='no'>my_gcs_source</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_build_upload_gcs</span>(<span class='st'>"my_folder"</span>)
 <span class='no'>build1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='st'>"cloudbuild.yaml"</span>, <span class='kw'>source</span> <span class='kw'>=</span> <span class='no'>my_gcs_source</span>)
 
 <span class='co'># }</span></pre>
@@ -159,6 +170,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
       <li><a href="#details">Details</a></li>
       <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
