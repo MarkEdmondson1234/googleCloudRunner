@@ -51,8 +51,16 @@ test_that("Building Build Objects", {
 
   expect_equal(run_yaml$images, image)
   expect_equal(run_yaml$steps[[1]]$dir, "deploy")
+  expect_equal(run_yaml$steps[[1]]$args[[3]],
+               "gcr.io/my-project/my-image:$BUILD_ID")
   expect_equal(run_yaml$steps[[2]]$name, "gcr.io/cloud-builders/docker")
+  expect_equal(run_yaml$steps[[2]]$args[[2]],
+               "gcr.io/my-project/my-image:$BUILD_ID")
   expect_equal(run_yaml$steps[[3]]$args[[1]], "beta")
+
+  scheduler <- cr_build_schedule_http(cr_build_make(run_yaml))
+
+  expect_equal(scheduler$body, "eyJzdGVwcyI6W3sibmFtZSI6Imdjci5pby9jbG91ZC1idWlsZGVycy9kb2NrZXIiLCJhcmdzIjpbImJ1aWxkIiwiLXQiLCJnY3IuaW8vbXktcHJvamVjdC9teS1pbWFnZTokQlVJTERfSUQiLCIuIl0sImRpciI6ImRlcGxveSJ9LHsibmFtZSI6Imdjci5pby9jbG91ZC1idWlsZGVycy9kb2NrZXIiLCJhcmdzIjpbInB1c2giLCJnY3IuaW8vbXktcHJvamVjdC9teS1pbWFnZTokQlVJTERfSUQiXSwiZGlyIjoiZGVwbG95In0seyJuYW1lIjoiZ2NyLmlvL2Nsb3VkLWJ1aWxkZXJzL2djbG91ZCIsImFyZ3MiOlsiYmV0YSIsInJ1biIsImRlcGxveSIsInRlc3QxIiwiLS1pbWFnZSIsImdjci5pby9teS1wcm9qZWN0L215LWltYWdlIl0sImRpciI6ImRlcGxveSJ9XSwiaW1hZ2VzIjoiZ2NyLmlvL215LXByb2plY3QvbXktaW1hZ2UifQ==")
 
   cr_build_write(run_yaml, file = "cloudbuild_test.yaml")
   expect_true(file.exists("cloudbuild_test.yaml"))
