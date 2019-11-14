@@ -212,6 +212,7 @@ is.gar_Build <- function(x){
 #' @param remote The name of the folder in your bucket
 #' @param bucket The Google Cloud Storage bucket to upload to
 #' @param predefinedAcl The ACL rules for the object uploaded.
+#' @param deploy_folder Which folder to deploy from
 #'
 #' @details
 #'
@@ -236,23 +237,25 @@ cr_build_upload_gcs <- function(local,
                                              format(Sys.time(), "%Y%m%d%H%M%S"),
                                              ".tar.gz"),
                                 bucket = cr_bucket_get(),
-                                predefinedAcl="bucketOwnerFullControl"){
+                                predefinedAcl="bucketOwnerFullControl",
+                                deploy_folder = "deploy"){
 
   tar_file <- paste0(basename(local), ".tar.gz")
-  deploy_folder <- "deploy"
 
   dir.create(deploy_folder, showWarnings = FALSE)
-  on.exit(unlink(deploy_folder))
-  file.copy(list.files(local, recursive = TRUE, full.names = TRUE),
-            deploy_folder, recursive = TRUE)
-
+  myMessage("Copying files from ", local, "to ", deploy_folder, level = 3)
+  file.copy(local, deploy_folder, recursive = TRUE)
+  myMessage("Compressing files from ", deploy_folder, "to ", tar_file, level = 3)
   tar(tar_file,
       files = deploy_folder,
       compression = "gzip")
 
+  unlink(deploy_folder, recursive = TRUE)
+  myMessage("Uploading ", tar_file, " to ", paste0(bucket,"/", remote), level = 3)
   gcs_upload(tar_file, bucket = bucket, name = remote,
              predefinedAcl = predefinedAcl)
 
+  myMessage("Returning source object", level = 3)
   Source(storageSource = StorageSource(bucket = bucket,
                                        object = remote)
   )

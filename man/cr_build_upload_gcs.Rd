@@ -6,7 +6,7 @@
 \usage{
 cr_build_upload_gcs(local, remote = paste0(local, format(Sys.time(),
   "\%Y\%m\%d\%H\%M\%S"), ".tar.gz"), bucket = cr_bucket_get(),
-  predefinedAcl = "bucketOwnerFullControl")
+  predefinedAcl = "bucketOwnerFullControl", deploy_folder = "deploy")
 }
 \arguments{
 \item{local}{Local directory containing the Dockerfile etc. you wish to deploy}
@@ -16,6 +16,8 @@ cr_build_upload_gcs(local, remote = paste0(local, format(Sys.time(),
 \item{bucket}{The Google Cloud Storage bucket to upload to}
 
 \item{predefinedAcl}{The ACL rules for the object uploaded.}
+
+\item{deploy_folder}{Which folder to deploy from}
 }
 \value{
 A Source object
