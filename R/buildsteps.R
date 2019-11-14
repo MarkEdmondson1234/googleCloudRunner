@@ -98,7 +98,8 @@ cr_buildstep_decrypt <- function(cipher,
 
 #' Create a build step to build and push a docker image
 #'
-#' @param image The image tag that will be pushed, starting with gcr.io
+#' @param image The image tag that will be pushed, starting with gcr.io or created by combining with \code{projectId} if not starting with gcr.io
+#' @param tag The tag to attached to the pushed image - can use \code{Build} macros
 #' @param location Where the Dockerfile to build is in relation to \code{dir}
 #' @param dir The workspace folder on cloud build, eg /workspace/deploy/.  Default is equivalent to /workspace/
 #'
@@ -106,10 +107,23 @@ cr_buildstep_decrypt <- function(cipher,
 #' @import assertthat
 #' @examples
 #' cr_buildstep_docker("gcr.io/my-project/my-image")
-cr_buildstep_docker <- function(image, location = ".", dir=""){
-  assert_that(grepl("^gcr.io", image))
+#' cr_buildstep_docker("my-image")
+#' cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")
+cr_buildstep_docker <- function(image,
+                                tag = "$BUILD_ID",
+                                location = ".",
+                                dir="",
+                                projectId = cr_project_get()){
+  prefix <- grepl("^gcr.io", image)
+  if(prefix){
+    the_image <- prefix
+  } else {
+    the_image <- paste0("gcr.io/", projectId, "/", image)
+  }
+  myMessage("Image to be built:", the_image, level = 3)
+
   c(
-    cr_buildstep("docker", c("build","-t",image,location), dir=dir),
-    cr_buildstep("docker", c("push",image), dir=dir)
+    cr_buildstep("docker", c("build","-t",the_image,location), dir=dir),
+    cr_buildstep("docker", c("push", paste0(the_image,":",tag)), dir=dir)
   )
 }

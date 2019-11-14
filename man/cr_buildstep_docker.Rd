@@ -4,10 +4,13 @@
 \alias{cr_buildstep_docker}
 \title{Create a build step to build and push a docker image}
 \usage{
-cr_buildstep_docker(image, location = ".", dir = "")
+cr_buildstep_docker(image, tag = "$BUILD_ID", location = ".",
+  dir = "", projectId = cr_project_get())
 }
 \arguments{
-\item{image}{The image tag that will be pushed}
+\item{image}{The image tag that will be pushed, starting with gcr.io or created by combining with \code{projectId} if not starting with gcr.io}
+
+\item{tag}{The tag to attached to the pushed image - can use \code{Build} macros}
 
 \item{location}{Where the Dockerfile to build is in relation to \code{dir}}
 
@@ -18,4 +21,6 @@ Create a build step to build and push a docker image
 }
 \examples{
 cr_buildstep_docker("gcr.io/my-project/my-image")
+cr_buildstep_docker("my-image")
+cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")
 }
