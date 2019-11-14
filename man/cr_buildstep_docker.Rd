@@ -4,7 +4,7 @@
 \alias{cr_buildstep_docker}
 \title{Create a build step to build and push a docker image}
 \usage{
-cr_buildstep_docker(image, location = ".")
+cr_buildstep_docker(image, location = ".", dir = "")
 }
 \arguments{
 \item{image}{The image tag that will be pushed}

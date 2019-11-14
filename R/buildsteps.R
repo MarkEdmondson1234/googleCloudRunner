@@ -104,9 +104,9 @@ cr_buildstep_decrypt <- function(cipher,
 #' @export
 #' @examples
 #' cr_buildstep_docker("gcr.io/my-project/my-image")
-cr_buildstep_docker <- function(image, location = "."){
+cr_buildstep_docker <- function(image, location = ".", dir=""){
   c(
-    cr_buildstep("docker", c("build","-t",image,location)),
-    cr_buildstep("docker", c("push",image))
+    cr_buildstep("docker", c("build","-t",image,location), dir=dir),
+    cr_buildstep("docker", c("push",image), dir=dir)
   )
 }
