@@ -19,7 +19,7 @@
 #' # creating yaml for use in deploying cloud run
 #' image = "gcr.io/my-project/my-image$BUILD_ID"
 #' Yaml(
-#'     steps = list(
+#'     steps = c(
 #'          cr_buildstep("docker", c("build","-t",image,".")),
 #'          cr_buildstep("docker", c("push",image)),
 #'          cr_buildstep("gcloud", c("beta","run","deploy", "test1",
@@ -29,9 +29,10 @@
 #' # use premade docker buildstep - combine using c()
 #' Yaml(
 #'     steps = c(cr_buildstep_docker(image),
-#'          list(cr_buildstep("gcloud",
-#'                          c("beta","run","deploy", "test1","--image", image))
-#'              )),
+#'               cr_buildstep("gcloud",
+#'                      args = c("beta","run","deploy",
+#'                               "test1","--image", image))
+#'              ),
 #'     images = image)
 #'
 #' # list files with a new entrypoint for gcloud
@@ -43,13 +44,14 @@ cr_buildstep <- function(name,
                          stem = "gcr.io/cloud-builders/",
                          entrypoint = NULL,
                          dir = "deploy"){
-  structure(rmNullObs(list(
-    name = paste0(stem, name),
-    entrypoint = entrypoint,
-    args = args,
-    id = id,
-    dir = dir
-  )), class = c("cr_buildstep","list"))
+  list(structure(
+    rmNullObs(list(
+      name = paste0(stem, name),
+      entrypoint = entrypoint,
+      args = args,
+      id = id,
+      dir = dir
+    )), class = c("cr_buildstep","list")))
 }
 
 is.cr_buildstep <- function(x){
@@ -78,7 +80,6 @@ cr_buildstep_decrypt <- function(cipher,
                                  key,
                                  location="global",
                                  dir=""){
-  list(
     cr_buildstep("gcloud",
                  args = c("kms", "decrypt",
                           "--ciphertext-file", cipher,
@@ -87,7 +88,6 @@ cr_buildstep_decrypt <- function(cipher,
                           "--keyring", keyring,
                           "--key", key),
                  dir = dir)
-  )
 }
 
 #' Create a build step to build and push a docker image
@@ -99,7 +99,7 @@ cr_buildstep_decrypt <- function(cipher,
 #' @examples
 #' cr_buildstep_docker("gcr.io/my-project/my-image")
 cr_buildstep_docker <- function(image, location = "."){
-  list(
+  c(
     cr_buildstep("docker", c("build","-t",image,location)),
     cr_buildstep("docker", c("push",image))
   )

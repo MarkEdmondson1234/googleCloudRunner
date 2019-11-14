@@ -31,7 +31,7 @@ By default dir is set to \code{deploy} to aid deployment from GCS, but you may w
 # creating yaml for use in deploying cloud run
 image = "gcr.io/my-project/my-image$BUILD_ID"
 Yaml(
-    steps = list(
+    steps = c(
          cr_buildstep("docker", c("build","-t",image,".")),
          cr_buildstep("docker", c("push",image)),
          cr_buildstep("gcloud", c("beta","run","deploy", "test1",
@@ -41,9 +41,10 @@ Yaml(
 # use premade docker buildstep - combine using c()
 Yaml(
     steps = c(cr_buildstep_docker(image),
-         list(cr_buildstep("gcloud",
-                         c("beta","run","deploy", "test1","--image", image))
-             )),
+              cr_buildstep("gcloud",
+                     args = c("beta","run","deploy",
+                              "test1","--image", image))
+             ),
     images = image)
 
 # list files with a new entrypoint for gcloud

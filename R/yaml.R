@@ -6,7 +6,7 @@
 #' @family Cloud Build functions, yaml functions
 #' @examples
 #'
-#'Yaml(steps = list(
+#'Yaml(steps = c(
 #'       cr_buildstep("docker", "version"),
 #'       cr_buildstep("gcloud", "version")),
 #'     images = "gcr.io/my-project/my-image")

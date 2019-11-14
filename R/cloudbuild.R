@@ -368,7 +368,7 @@ Build <- function(Build.substitutions = NULL,
 #'
 #' # write from creating a Yaml object
 #' image = "gcr.io/my-project/my-image$BUILD_ID"
-#' run_yaml <- Yaml(steps = list(
+#' run_yaml <- Yaml(steps = c(
 #'     cr_buildstep("docker", c("build","-t",image,".")),
 #'     cr_buildstep("docker", c("push",image)),
 #'     cr_buildstep("gcloud", c("beta","run","deploy", "test1", "--image", image))),

@@ -43,8 +43,10 @@ test_that("Building Build Objects", {
 
   # write from creating a Yaml object
   image = "gcr.io/my-project/my-image$BUILD_ID"
-  run_yaml <- Yaml(steps = c(cr_buildstep_docker(image), list(
-       cr_buildstep("gcloud", c("beta","run","deploy", "test1", "--image", image)))),
+  run_yaml <- Yaml(steps = c(cr_buildstep_docker(image),
+                             cr_buildstep("gcloud",
+                                          c("beta","run","deploy", "test1",
+                                            "--image", image))),
      images = image)
 
   expect_equal(run_yaml$images, image)
