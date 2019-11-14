@@ -9,7 +9,9 @@ cr_buildstep_docker(image, location = ".", dir = "")
 \arguments{
 \item{image}{The image tag that will be pushed}
 
-\item{location}{Which folder to build}
+\item{location}{Where the Dockerfile to build is in relation to \code{dir}}
+
+\item{dir}{The workspace folder on cloud build, eg /workspace/deploy/.  Default is equivalent to /workspace/}
 }
 \description{
 Create a build step to build and push a docker image
