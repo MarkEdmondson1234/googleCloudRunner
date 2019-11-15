@@ -1,6 +1,6 @@
 #' Create a CloudRun service.
 #'
-#' Deploys an existing gcr.io image.  Use \link{cr_deploy_dockerfile} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.
+#' Deploys an existing gcr.io image.  Use \link{cr_deploy_docker} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.
 #'
 #' @seealso \href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
 #'

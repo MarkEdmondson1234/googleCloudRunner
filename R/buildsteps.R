@@ -123,7 +123,7 @@ cr_buildstep_docker <- function(image,
   }
 
   the_image <- paste0(the_image, ":", tag)
-  myMessage("Image to be built:", the_image, level = 3)
+  myMessage("Image to be built: ", the_image, level = 3)
 
   c(
     cr_buildstep("docker", c("build","-t",the_image,location), dir=dir),

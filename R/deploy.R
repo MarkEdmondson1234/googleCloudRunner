@@ -85,6 +85,7 @@ make_image_name <- function(name, projectId){
 #' @param remote The folder on Google Cloud Storage
 #' @param dockerfile An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"
 #' @param bucket The GCS bucker that will be used to deploy code source
+#' @param image_name The name of the docker image to be built either full name starting with gcr.io or constructed from the image_name and projectId via \code{gcr.io/{projectId}/{image_name}}
 #' @inheritParams cr_buildstep_docker
 #' @inheritParams cr_build
 #' @export
@@ -107,7 +108,7 @@ cr_deploy_docker <- function(local,
   use_or_create_dockerfile(local, dockerfile = dockerfile)
 
   image <- make_image_name(image_name, projectId = projectId)
-  myMessage("Deploy docker build for image: ", image, level = 3)
+  myMessage("Deploying docker build for image: \n", image, level = 3)
 
   build_yaml <- Yaml(steps = cr_buildstep_docker(image,
                                                  tag = "$BUILD_ID",

@@ -24,7 +24,7 @@ cr_run(image, name = basename(image), allowUnauthenticated = TRUE,
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
 }
 \description{
-Deploys an existing gcr.io image.  Use \link{cr_deploy_dockerfile} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.
+Deploys an existing gcr.io image.  Use \link{cr_deploy_docker} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.
 }
 \details{
 Uses Cloud Build to deploy an image to Cloud Run

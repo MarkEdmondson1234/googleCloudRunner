@@ -34,7 +34,7 @@
 
 
 <meta property="og:title" content="Create a CloudRun service. — cr_run" />
-<meta property="og:description" content="Deploys an existing gcr.io image.  Use cr_deploy_dockerfile or similar to create image, or cr_deploy_run to automate building and deploying." />
+<meta property="og:description" content="Deploys an existing gcr.io image.  Use cr_deploy_docker or similar to create image, or cr_deploy_run to automate building and deploying." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -112,7 +112,7 @@
     </div>
 
     <div class="ref-description">
-    <p>Deploys an existing gcr.io image.  Use cr_deploy_dockerfile or similar to create image, or <a href='cr_deploy_run.html'>cr_deploy_run</a> to automate building and deploying.</p>
+    <p>Deploys an existing gcr.io image.  Use <a href='cr_deploy_docker.html'>cr_deploy_docker</a> or similar to create image, or <a href='cr_deploy_run.html'>cr_deploy_run</a> to automate building and deploying.</p>
     </div>
 
     <pre class="usage"><span class='fu'>cr_run</span>(<span class='no'>image</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/basename'>basename</a></span>(<span class='no'>image</span>), <span class='kw'>allowUnauthenticated</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
