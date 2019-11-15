@@ -3,12 +3,14 @@
 #' Helper to take an R plumber script, create the Dockerfile, add the build to Cloud Build and deploy to Cloud Run
 #'
 #' @param local A folder containing the R script using plumber called api.R and all its dependencies
-#' @param remote The folder on Google Cloud Storage
+#' @param remote The folder on Google Cloud Storage, and the name of the service on Cloud Run
 #' @param dockerfile An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"
 #' @param image_name The gcr.io image name that will be deployed and/or built
 #' @param projectId The projectId where it all gets deployed to
 #' @param region The Cloud Run endpoint set by CR_REGION env arg
 #' @param bucket The Cloud Storage bucket that will hold the code
+#' @inheritParams cr_buildstep_docker
+#' @inheritParams cr_build
 #'
 #' @details
 #'
@@ -17,58 +19,137 @@
 #'
 #' The function will create a local folder called "deploy" and a tar.gz of that folder which is what is being uploaded to Google Cloud Storage
 #'
+#' It will call \link{cr_deploy_docker} to create the image to deploy on Cloud Run
+#'
 #' @export
 #'
 #' @examples
 #'
 #' \dontrun{
 #'
-#' cr_deploy(system.file("example/", package = "cloudRunner"))
+#' cr_deploy_run(system.file("example/", package = "cloudRunner"))
 #'
 #' }
-cr_deploy <- function(local,
-                      remote = basename(local),
-                      dockerfile = NULL,
-                      image_name = remote,
-                      region = cr_region_get(),
-                      bucket = cr_bucket_get(),
-                      projectId = cr_project_get()){
+cr_deploy_run <- function(local,
+                          remote = basename(local),
+                          dockerfile = NULL,
+                          image_name = remote,
+                          tag = "$BUILD_ID",
+                          region = cr_region_get(),
+                          bucket = cr_bucket_get(),
+                          projectId = cr_project_get(),
+                          launch_browser = interactive()){
 
-  local_files <- list.files(local, recursive = TRUE)
+  local_files <- list.files(local)
   if(!"api.R" %in% local_files){
-    stop("Must include api.R in local deployment folder with library(plumber) implementation for Cloud Run deployments", call. = FALSE)
+    stop("Must include api.R in local deployment folder with library(plumber) implementation
+         for Cloud Run deployments", call. = FALSE)
   }
 
+  image_name <- make_image_name(image_name, projectId)
+
+  docker_build <- cr_deploy_docker(local,
+                                   image_name = image_name,
+                                   dockerfile = dockerfile,
+                                   remote = remote,
+                                   tag = tag,
+                                   bucket = bucket,
+                                   projectId = projectId,
+                                   launch_browser = launch_browser)
+
+  built <- cr_build_wait(docker_build, projectId = projectId)
+
+  cr_run(built$results$images$name,
+         name = tolower(remote),
+         region = region,
+         projectId = projectId,
+         launch_browser=launch_browser)
+
+}
+
+make_image_name <- function(name, projectId){
+  prefix <- grepl("^gcr.io", name)
+  if(prefix){
+    the_image <- name
+  } else {
+    the_image <- sprintf("gcr.io/%s/%s", projectId, name)
+  }
+  tolower(the_image)
+}
+
+#' Deploy a Dockerfile so it will be built on ContainerRegistry
+#'
+#' If no Dockerfile present in the deployment folder, will attempt to create a Dockerfile to upload via \link{cr_dockerfile}
+#'
+#' @param local The folder containing the Dockerfile to build
+#' @param remote The folder on Google Cloud Storage
+#' @param dockerfile An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"
+#' @param bucket The GCS bucker that will be used to deploy code source
+#' @inheritParams cr_buildstep_docker
+#' @inheritParams cr_build
+#' @export
+#' @examples
+#'
+#' \dontrun{
+#'
+#' cr_deploy_dockerfile(system.file("example", package="cloudRunner"))
+#'
+#' }
+cr_deploy_docker <- function(local,
+                             image_name = remote,
+                             dockerfile = NULL,
+                             remote = basename(local),
+                             tag = "$BUILD_ID",
+                             bucket = cr_bucket_get(),
+                             projectId = cr_project_get(),
+                             launch_browser = interactive()){
+
+  use_or_create_dockerfile(local, dockerfile = dockerfile)
+
+  image <- make_image_name(image_name, projectId = projectId)
+  myMessage("Deploy docker build for image: ", image, level = 3)
+
+  build_yaml <- Yaml(steps = cr_buildstep_docker(image,
+                                                 tag = "$BUILD_ID",
+                                                 location = ".",
+                                                 dir=paste0("deploy/", remote),
+                                                 projectId = projectId),
+                     images = image)
+
+  gcs_source <- cr_build_upload_gcs(local,
+                                    remote = remote,
+                                    bucket = bucket)
+  cr_build(build_yaml,
+           source = gcs_source,
+           launch_browser = launch_browser)
+
+
+}
+
+use_or_create_dockerfile <- function(local, dockerfile){
+  local_files <- list.files(local)
   if("Dockerfile" %in% local_files){
-    dockerfile <- "Dockerfile"
+    return(TRUE)
   }
   # if no dockerfile, attempt to create it
   if(is.null(dockerfile)){
-    # create and write a dockerfile to the folder
+    # creates and write a dockerfile to the folder
     cr_dockerfile(local)
 
   } else {
     assert_that(
       is.readable(file.path(local, dockerfile))
     )
+    myMessage("Copying Dockerfile from ", dockerfile," to ",local, level = 3)
     file.copy(dockerfile, file.path(local, "Dockerfile"))
   }
-
-  storage <- cr_build_upload_gcs(local, remote = remote, bucket = bucket)
-
-  cr_run(make_image_name(image_name, projectId),
-         source = storage,
-         region = region)
-
+  TRUE
 }
 
-make_image_name <- function(name, projectId){
-  tolower(sprintf("gcr.io/%s/%s", projectId, name))
-}
 
 #' Create Dockerfile in the deployment folder
 #'
-#' This users \link[containerit]{dockerfile} to create a Dockerfile if possible
+#' This uses \link[containerit]{dockerfile} to create a Dockerfile if possible
 #'
 #' @param deploy_folder The folder containing the assessts to deploy
 #' @param ... Other arguments pass to \link[containerit]{dockerfile}

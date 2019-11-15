@@ -11,6 +11,9 @@ cr_build_wait(op = .Last.value, projectId = cr_project_get())
 
 \item{projectId}{The projectId}
 }
+\value{
+A gar_Build object \link{Build}
+}
 \description{
 This will repeatedly call \link{cr_build_status} whilst the status is STATUS_UNKNOWN, QUEUED or WORKING
 }

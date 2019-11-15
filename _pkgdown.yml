@@ -14,6 +14,11 @@ reference:
       - matches("cr_email")
       - matches("cr_project")
       - matches("cr_region")
+  - title: "Deployment functions"
+    desc: >
+      Functions for deploying useful applications
+    contents:
+      - matches("cr_deploy")
   - title: "Cloud Build functions"
     desc: >
       Functions for working with Cloud Build

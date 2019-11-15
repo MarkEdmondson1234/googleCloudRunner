@@ -15,7 +15,7 @@ cr_dockerfile(deploy_folder, ...)
 An object of class Dockerfile
 }
 \description{
-This users \link[containerit]{dockerfile} to create a Dockerfile if possible
+This uses \link[containerit]{dockerfile} to create a Dockerfile if possible
 }
 \examples{
 

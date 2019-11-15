@@ -4,14 +4,12 @@
 \alias{cr_run}
 \title{Create a CloudRun service.}
 \usage{
-cr_run(image, source = NULL, name = basename(image),
-  allowUnauthenticated = TRUE, concurrency = 1,
-  region = cr_region_get(), projectId = cr_project_get())
+cr_run(image, name = basename(image), allowUnauthenticated = TRUE,
+  concurrency = 1, region = cr_region_get(),
+  projectId = cr_project_get(), launch_browser = interactive())
 }
 \arguments{
 \item{image}{The name of the image to create or use in deployment - \code{gcr.io}}
-
-\item{source}{A \link{Source} object}
 
 \item{name}{Name for deployment on Cloud Run}
 
@@ -22,9 +20,11 @@ cr_run(image, source = NULL, name = basename(image),
 \item{region}{The endpoint region for deployment}
 
 \item{projectId}{The GCP project from which the services should be listed}
+
+\item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
 }
 \description{
-Create a CloudRun service.
+Deploys an existing gcr.io image.  Use \link{cr_deploy_dockerfile} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.
 }
 \details{
 Uses Cloud Build to deploy an image to Cloud Run

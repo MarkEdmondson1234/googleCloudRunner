@@ -136,6 +136,7 @@ cr_build_make <- function(yaml,
 #' @import assertthat
 #' @export
 #' @family Cloud Build functions
+#' @return A gar_Build object \link{Build}
 cr_build_status <- function(id = .Last.value,
                             projectId = cr_project_get()){
 
@@ -158,6 +159,7 @@ cr_build_status <- function(id = .Last.value,
 #' @param projectId The projectId
 #' @export
 #' @family Cloud Build functions
+#' @return A gar_Build object \link{Build}
 cr_build_wait <- function(op = .Last.value,
                           projectId = cr_project_get()){
 
@@ -184,7 +186,7 @@ cr_build_wait <- function(op = .Last.value,
     Sys.sleep(5)
   }
 
-  cat("||\nBuild finished\n")
+  cat("| Build finished\n")
   status
 }
 
@@ -249,9 +251,9 @@ cr_build_upload_gcs <- function(local,
   tar_file <- paste0(basename(local), ".tar.gz")
 
   dir.create(deploy_folder, showWarnings = FALSE)
-  myMessage("Copying files from ", local, "to ", deploy_folder, level = 3)
+  myMessage("Copying files from ", local, " to /", deploy_folder, level = 3)
   file.copy(local, deploy_folder, recursive = TRUE)
-  myMessage("Compressing files from ", deploy_folder, "to ", tar_file, level = 3)
+  myMessage("Compressing files from ", deploy_folder, " to ", tar_file, level = 3)
   tar(tar_file,
       files = deploy_folder,
       compression = "gzip")

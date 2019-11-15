@@ -24,12 +24,12 @@ Set up auth, environment arguments etc. as per bottom of this file.
 ### R APIs
 
 1. Make an R API via [plumber](https://www.rplumber.io/) that contains entry file api.R.  You can use the demo example in `inst/example` if you like.
-2. Deploy via the `cr_deploy()` function:
+2. Deploy via the `cr_deploy_run()` function:
 
 ```r
 library(cloudRunner)
 
-cr <- cr_deploy("api.R")
+cr <- cr_deploy_run("api.R")
 #2019-11-12 10:34:29 -- File size detected as 903 bytes
 #2019-11-12 10:34:31> Cloud Build started - logs: 
 #https://console.cloud.google.com/gcr/builds/40343fd4-6981-41c3-98c8-f5973c3de386?project=1080525199262
@@ -49,7 +49,7 @@ cr <- cr_deploy("api.R")
 #url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app 
 ```
 
-Deployment via `cr_deploy()` automated these steps:
+Deployment via `cr_deploy_run()` automated these steps:
 1. Creates a Dockerfile for your R script if necessary using [`containerit`](https://o2r.info/containerit/index.html)
 2. Uploads the Dockerfile and your api.R file to your Google Cloud Storage bucket
 3. Creates a Cloud Build job for building the files uploaded to the GCS bucket, and pushes the Docker images to Google Container Registry
@@ -357,7 +357,7 @@ my_gcs_source <- Source(storageSource=StorageSource("gs://my-bucket", "my_code.t
 build_run <- cr_run("gcr.io/my-project/my-image", source = my_gcs_source)
 ```
 
-`cr_deploy()` wraps the above in functions to check and wait for status etc. and is intended as the main method of Cloud Run deployment, but you may want to tweak the settings more by calling `cr_run()` directly. 
+`cr_deploy_run()` wraps the above in functions to check and wait for status etc. and is intended as the main method of Cloud Run deployment, but you may want to tweak the settings more by calling `cr_run()` directly. 
 
 
 ## Demos

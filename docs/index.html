@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">cloudRunner</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9001</span>
       </span>
     </div>
 
@@ -88,11 +88,11 @@
 <a href="#r-apis" class="anchor"></a>R APIs</h3>
 <ol>
 <li>Make an R API via <a href="https://www.rplumber.io/">plumber</a> that contains entry file api.R. You can use the demo example in <code>inst/example</code> if you like.</li>
-<li>Deploy via the <code><a href="reference/cr_deploy.html">cr_deploy()</a></code> function:</li>
+<li>Deploy via the <code><a href="reference/cr_deploy_run.html">cr_deploy_run()</a></code> function:</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(cloudRunner)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">cr &lt;-<span class="st"> </span><span class="kw"><a href="reference/cr_deploy.html">cr_deploy</a></span>(<span class="st">"api.R"</span>)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">cr &lt;-<span class="st"> </span><span class="kw"><a href="reference/cr_deploy_run.html">cr_deploy_run</a></span>(<span class="st">"api.R"</span>)</a>
 <a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#2019-11-12 10:34:29 -- File size detected as 903 bytes</span></a>
 <a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#2019-11-12 10:34:31&gt; Cloud Build started - logs: </span></a>
 <a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#https://console.cloud.google.com/gcr/builds/40343fd4-6981-41c3-98c8-f5973c3de386?project=1080525199262</span></a>
@@ -110,7 +110,7 @@
 <a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#creationTimestamp:  2019-11-12T10:35:19.993128Z </span></a>
 <a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#observedGeneration:  1 </span></a>
 <a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app </span></a></code></pre></div>
-<p>Deployment via <code><a href="reference/cr_deploy.html">cr_deploy()</a></code> automated these steps:</p>
+<p>Deployment via <code><a href="reference/cr_deploy_run.html">cr_deploy_run()</a></code> automated these steps:</p>
 <ol>
 <li>Creates a Dockerfile for your R script if necessary using <a href="https://o2r.info/containerit/index.html"><code>containerit</code></a>
 </li>
@@ -355,7 +355,7 @@ cr_schedule("15 5 * * *", name="scheduled_r",
 <p>However, if you want to do the common use case of building the container first as well, you can do so by specifying a <code>Source</code> object containing the code, Dockerfile and data you want to build into the container:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">my_gcs_source &lt;-<span class="st"> </span><span class="kw"><a href="reference/Source.html">Source</a></span>(<span class="dt">storageSource=</span><span class="kw"><a href="reference/StorageSource.html">StorageSource</a></span>(<span class="st">"gs://my-bucket"</span>, <span class="st">"my_code.tar.gz"</span>))</a>
 <a class="sourceLine" id="cb18-2" data-line-number="2">build_run &lt;-<span class="st"> </span><span class="kw"><a href="reference/cr_run.html">cr_run</a></span>(<span class="st">"gcr.io/my-project/my-image"</span>, <span class="dt">source =</span> my_gcs_source)</a></code></pre></div>
-<p><code><a href="reference/cr_deploy.html">cr_deploy()</a></code> wraps the above in functions to check and wait for status etc. and is intended as the main method of Cloud Run deployment, but you may want to tweak the settings more by calling <code><a href="reference/cr_run.html">cr_run()</a></code> directly.</p>
+<p><code><a href="reference/cr_deploy_run.html">cr_deploy_run()</a></code> wraps the above in functions to check and wait for status etc. and is intended as the main method of Cloud Run deployment, but you may want to tweak the settings more by calling <code><a href="reference/cr_run.html">cr_run()</a></code> directly.</p>
 </div>
 <div id="demos" class="section level2">
 <h2 class="hasAnchor">

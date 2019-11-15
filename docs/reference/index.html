@@ -74,7 +74,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">cloudRunner</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9001</span>
       </span>
     </div>
 
@@ -170,6 +170,26 @@
           <p><code><a href="cr_region_set.html">cr_region_set()</a></code> </p>
         </td>
         <td><p>Set the endpoint for your CloudRun services</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-deployment-functions" class="hasAnchor"><a href="#section-deployment-functions" class="anchor"></a>Deployment functions</h2>
+          <p class="section-desc"><p>Functions for deploying useful applications</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="cr_deploy_docker.html">cr_deploy_docker()</a></code> </p>
+        </td>
+        <td><p>Deploy a Dockerfile so it will be built on ContainerRegistry</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_deploy_run.html">cr_deploy_run()</a></code> </p>
+        </td>
+        <td><p>Deploy an R plumber script to Cloud Run</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -303,7 +323,13 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="cr_deploy.html">cr_deploy()</a></code> </p>
+          <p><code><a href="cr_deploy_docker.html">cr_deploy_docker()</a></code> </p>
+        </td>
+        <td><p>Deploy a Dockerfile so it will be built on ContainerRegistry</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_deploy_run.html">cr_deploy_run()</a></code> </p>
         </td>
         <td><p>Deploy an R plumber script to Cloud Run</p></td>
       </tr>
@@ -347,6 +373,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#section-setup-functions">Setup functions</a></li>
+      <li><a href="#section-deployment-functions">Deployment functions</a></li>
       <li><a href="#section-cloud-build-functions">Cloud Build functions</a></li>
       <li><a href="#section-cloud-run-functions">Cloud Run functions</a></li>
       <li><a href="#section-cloud-scheduler-functions">Cloud Scheduler functions</a></li>

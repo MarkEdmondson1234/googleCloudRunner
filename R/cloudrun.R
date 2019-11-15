@@ -1,14 +1,16 @@
 #' Create a CloudRun service.
 #'
+#' Deploys an existing gcr.io image.  Use \link{cr_deploy_dockerfile} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.
+#'
 #' @seealso \href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
 #'
 #' @param image The name of the image to create or use in deployment - \code{gcr.io}
-#' @param source A \link{Source} object
 #' @param name Name for deployment on Cloud Run
 #' @param concurrency How many connections each image can serve. Can be up to 80.
 #' @param region The endpoint region for deployment
 #' @param projectId The GCP project from which the services should be listed
 #' @param allowUnauthenticated TRUE if can be reached from public HTTP address.
+#' @inheritParams cr_build
 #' @importFrom googleAuthR gar_api_generator
 #' @family Cloud Run functions
 #'
@@ -24,29 +26,17 @@
 #' cr_run("gcr.io/my-project/my-image")
 #' }
 cr_run <- function(image,
-                   source = NULL,
                    name = basename(image),
                    allowUnauthenticated = TRUE,
                    concurrency = 1,
                    region = cr_region_get(),
-                   projectId = cr_project_get()) {
+                   projectId = cr_project_get(),
+                   launch_browser=interactive()) {
 
-  if(!is.null(source)){
-    assert_that(is.gar_Source(source))
-    source_build_steps <- c(
-      cr_buildstep("docker", c("build","-t",image,".")),
-      cr_buildstep("docker", c("push",image))
-    )
-
-  } else {
-    myMessage("No source specified, deploying existing container ", image, level =3)
-    source_build_steps <- NULL
-  }
-
+  myMessage("Deploying to Cloud Run image: \n", image, level = 3)
   # use cloud build to deploy
   run_yaml <- Yaml(
     steps = c(
-      source_build_steps,
       cr_buildstep("gcloud",
          c("beta","run","deploy", name,
            "--image", image,
@@ -55,14 +45,12 @@ cr_run <- function(image,
            "--concurrency", concurrency,
            if(allowUnauthenticated) "--allow-unauthenticated" else "--no-allow-unauthenticated"
          ))
-    ),
-    images = image
+    )
   )
 
   build <- cr_build(run_yaml,
-                    source = source,
-                    images = image,
-                    projectId=projectId)
+                    projectId=projectId,
+                    launch_browser=launch_browser)
 
   result <- cr_build_wait(build, projectId = projectId)
 

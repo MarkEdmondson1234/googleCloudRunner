@@ -11,6 +11,9 @@ cr_build_status(id = .Last.value, projectId = cr_project_get())
 
 \item{projectId}{ID of the project}
 }
+\value{
+A gar_Build object \link{Build}
+}
 \description{
 The `Build` that is returned includes its status (such as `SUCCESS`,`FAILURE`, or `WORKING`), and timing information.
 }
