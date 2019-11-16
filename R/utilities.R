@@ -39,3 +39,10 @@ cat0 <- function(prefix = "", x){
     cat(prefix, x, "\n")
   }
 }
+
+#' Timestamp to R date
+#' @keywords internal
+#' @noRd
+timestamp_to_r <- function(t){
+  as.POSIXct(t, format = "%Y-%m-%dT%H:%M:%S", tz="UTC")
+}

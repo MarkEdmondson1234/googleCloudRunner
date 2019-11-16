@@ -17,7 +17,7 @@
 #' @examples
 #'
 #' # creating yaml for use in deploying cloud run
-#' image = "gcr.io/my-project/my-image$BUILD_ID"
+#' image = "gcr.io/my-project/my-image:$BUILD_ID"
 #' Yaml(
 #'     steps = c(
 #'          cr_buildstep("docker", c("build","-t",image,".")),
@@ -27,6 +27,7 @@
 #'     images = image)
 #'
 #' # use premade docker buildstep - combine using c()
+#' image = "gcr.io/my-project/my-image"
 #' Yaml(
 #'     steps = c(cr_buildstep_docker(image),
 #'               cr_buildstep("gcloud",

@@ -29,7 +29,7 @@ By default dir is set to \code{deploy} to aid deployment from GCS, but you may w
 \examples{
 
 # creating yaml for use in deploying cloud run
-image = "gcr.io/my-project/my-image$BUILD_ID"
+image = "gcr.io/my-project/my-image:$BUILD_ID"
 Yaml(
     steps = c(
          cr_buildstep("docker", c("build","-t",image,".")),
@@ -39,6 +39,7 @@ Yaml(
     images = image)
 
 # use premade docker buildstep - combine using c()
+image = "gcr.io/my-project/my-image"
 Yaml(
     steps = c(cr_buildstep_docker(image),
               cr_buildstep("gcloud",

@@ -64,12 +64,11 @@ cr_build <- function(x,
 
   o <- f(the_body = build)
 
-  myMessage("Cloud Build started - logs: \n",
-            o$metadata$build$logUrl,
-            level = 3)
+  logs <- extract_logs(o)
+  myMessage("Cloud Build started - logs: \n", logs, level = 3)
 
   if(launch_browser){
-    utils::browseURL(o$metadata$build$logUrl)
+    utils::browseURL(logs)
   }
 
   invisible(o)
@@ -77,6 +76,16 @@ cr_build <- function(x,
 
 is.BuildOperationMetadata <- function(x){
   inherits(x, "BuildOperationMetadata")
+}
+
+extract_logs <- function(o){
+  if(is.BuildOperationMetadata(o)){
+    return(o$metadata$build$logUrl)
+  } else if(is.gar_Build(o)){
+    return(o$logUrl)
+  } else {
+    warning("Could not extract logUrl from class: ", class(o))
+  }
 }
 
 #' Make a Cloud Build object out of a cloudbuild.yml file
@@ -129,6 +138,7 @@ cr_build_make <- function(yaml,
 #'
 #' The `Build` that is returned includes its status (such as `SUCCESS`,`FAILURE`, or `WORKING`), and timing information.
 #'
+#' @seealso https://cloud.google.com/cloud-build/docs/api/reference/rest/Shared.Types/Status
 #'
 #' @param projectId ID of the project
 #' @param id ID of the build or a \code{BuildOperationMetadata} object
@@ -165,6 +175,8 @@ cr_build_wait <- function(op = .Last.value,
 
   the_id <- extract_build_id(op)
 
+  task_id <- rstudio_add_job(the_id,
+                             timeout=extract_timeout(op))
   wait_for <- c("STATUS_UNKNOWN", "QUEUED", "WORKING")
 
   init <- cr_build_status(the_id, projectId = projectId)
@@ -172,13 +184,27 @@ cr_build_wait <- function(op = .Last.value,
     return(init)
   }
 
-  cat("\nWaiting for build to finish:\n |=")
+  if(!rstudioapi::isAvailable()){
+    cat("\nWaiting for build to finish:\n |=")
+  } else {
+    rstudio_add_output(task_id,
+                       paste("Created Cloud Build, online logs:\n",
+                             extract_logs(init)))
+  }
 
   op <- init
   wait <- TRUE
   while(wait){
     status <- cr_build_status(op, projectId = projectId)
-    cat("=")
+    if(rstudioapi::isAvailable()){
+      rstudio_add_progress(task_id, extract_runtime(status$startTime))
+      rstudio_add_state(task_id, status$status)
+      rstudio_add_output(task_id, paste("\nStatus:", status$status))
+    } else {
+      cat("=")
+    }
+
+
     if(!status$status %in% wait_for){
       wait <- FALSE
     }
@@ -186,8 +212,29 @@ cr_build_wait <- function(op = .Last.value,
     Sys.sleep(5)
   }
 
-  cat("| Build finished\n")
+  if(!rstudioapi::isAvailable()){
+    cat("| Build finished\n")
+  }
+
   status
+}
+
+extract_runtime <- function(start_time){
+  started <- timestamp_to_r(start_time)
+  as.integer(difftime(Sys.time(), started, units  = "secs"))
+}
+
+extract_timeout <- function(op){
+  if(is.BuildOperationMetadata(op)){
+    the_timeout <- as.integer(gsub("s", "", op$metadata$build$timeout))
+  } else if(is.gar_Build(op)){
+    the_timeout <- as.integer(gsub("s", "", op$timeout))
+  } else {
+    assert_that(is.integer(op))
+    the_timeout <- op
+  }
+
+  the_timeout
 }
 
 extract_build_id <- function(op){
