@@ -7,7 +7,7 @@ As easy as possible R scripts in the cloud, via Cloud Run, Cloud Build and Cloud
 
 ## Ambition
 
-Point your R code at a function, that automatically deploys and runs it in the GCP cloud via an API endpoint.
+Point your R code at a function, that automatically deploys and runs it in the GCP cloud via an API endpoint.  As a demo, will deploy R plumber APIs such as demonstrated here: https://github.com/MarkEdmondson1234/cloudRunR
 
 ## Install
 
