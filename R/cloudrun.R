@@ -10,6 +10,7 @@
 #' @param region The endpoint region for deployment
 #' @param projectId The GCP project from which the services should be listed
 #' @param allowUnauthenticated TRUE if can be reached from public HTTP address.
+#' @param task_id RStudio task_id if you want to use an exisiting
 #' @inheritParams cr_build
 #' @importFrom googleAuthR gar_api_generator
 #' @family Cloud Run functions
@@ -29,11 +30,19 @@ cr_run <- function(image,
                    name = basename(image),
                    allowUnauthenticated = TRUE,
                    concurrency = 1,
+                   timeout=600L,
                    region = cr_region_get(),
                    projectId = cr_project_get(),
-                   launch_browser=interactive()) {
+                   launch_browser=interactive(),
+                   task_id=NULL) {
 
-  myMessage("Deploying to Cloud Run image: \n", image, level = 3)
+  if(is.null(task_id)){
+    task_id <- rstudio_add_job("Build Cloud Run",
+                               timeout=extract_timeout(timeout))
+  }
+
+  rstudio_add_output(task_id,
+                     paste("\n#Launching CloudRun image: \n", image))
   # use cloud build to deploy
   run_yaml <- Yaml(
     steps = c(
@@ -50,16 +59,22 @@ cr_run <- function(image,
 
   build <- cr_build(run_yaml,
                     projectId=projectId,
-                    launch_browser=launch_browser)
+                    timeout = timeout)
 
-  result <- cr_build_wait(build, projectId = projectId)
+  result <- cr_build_wait(build, projectId = projectId, task_id=task_id)
 
   if(result$status == "SUCCESS"){
     run <- cr_run_get(name, projectId = projectId)
-    myMessage("Deployed to Cloud Run at: \n", run$status$url, level = 3)
+    rstudio_add_output(task_id,
+                       paste("\n#Running at: ",
+                             run$status$url))
+
+    if(launch_browser) utils::browseURL(run$status$url)
+
     return(run)
   } else {
-    myMessage("Problem deploying to Cloud Run", level = 3)
+    rstudio_add_output(task_id,
+                       "\n#Problem deploying to Cloud Run")
     return(result)
   }
 }
@@ -84,7 +99,8 @@ make_endpoint <- function(endbit){
                  "europe-west1",
                  "us-east1")
   if(!region %in% endpoints){
-    warning("Endpoint is not one of ", paste(endpoints, collapse = " "), " got: ", region)
+    warning("Endpoint is not one of ",
+            paste(endpoints, collapse = " "), " got: ", region)
   }
 
   sprintf("https://%s-run.googleapis.com/apis/serving.knative.dev/v1/%s", region, endbit)

@@ -42,6 +42,11 @@ cr_build <- function(x,
     is.flag(launch_browser),
     is.string(projectId)
   )
+
+  if(!is.null(timeout)){
+    assert_that(is.numeric(timeout))
+    timeout <- paste0(as.integer(timeout),"s")
+  }
   url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds",
                  projectId)
 
@@ -167,16 +172,21 @@ cr_build_status <- function(id = .Last.value,
 #'
 #' @param op The operation build object to wait for
 #' @param projectId The projectId
+#' @param task_id A possible RStudio job taskId to increment status upon
 #' @export
 #' @family Cloud Build functions
 #' @return A gar_Build object \link{Build}
 cr_build_wait <- function(op = .Last.value,
-                          projectId = cr_project_get()){
+                          projectId = cr_project_get(),
+                          task_id = NULL){
 
   the_id <- extract_build_id(op)
 
-  task_id <- rstudio_add_job(the_id,
-                             timeout=extract_timeout(op))
+  if(is.null(task_id)){
+    task_id <- rstudio_add_job(the_id,
+                               timeout=extract_timeout(op))
+  }
+
   wait_for <- c("STATUS_UNKNOWN", "QUEUED", "WORKING")
 
   init <- cr_build_status(the_id, projectId = projectId)
@@ -184,26 +194,22 @@ cr_build_wait <- function(op = .Last.value,
     return(init)
   }
 
-  if(!rstudioapi::isAvailable()){
-    cat("\nWaiting for build to finish:\n |=")
-  } else {
-    rstudio_add_output(task_id,
-                       paste("Created Cloud Build, online logs:\n",
-                             extract_logs(init)))
-  }
+  if(!rstudioapi::isAvailable()) cat("\nWaiting for build to finish:\n |=")
+
+  rstudio_add_output(task_id,
+                     paste("\n#Created Cloud Build, online logs:\n",
+                           extract_logs(init)))
 
   op <- init
   wait <- TRUE
   while(wait){
     status <- cr_build_status(op, projectId = projectId)
-    if(rstudioapi::isAvailable()){
-      rstudio_add_progress(task_id, extract_runtime(status$startTime))
-      rstudio_add_state(task_id, status$status)
-      rstudio_add_output(task_id, paste("\nStatus:", status$status))
-    } else {
-      cat("=")
-    }
 
+    if(!rstudioapi::isAvailable()) cat("=")
+
+    rstudio_add_progress(task_id, extract_runtime(status$startTime))
+    rstudio_add_state(task_id, status$status)
+    rstudio_add_output(task_id, paste("\nStatus:", status$status))
 
     if(!status$status %in% wait_for){
       wait <- FALSE
@@ -212,23 +218,26 @@ cr_build_wait <- function(op = .Last.value,
     Sys.sleep(5)
   }
 
-  if(!rstudioapi::isAvailable()){
-    cat("| Build finished\n")
-  }
+  if(!rstudioapi::isAvailable()) cat("| Build finished\n")
 
   status
 }
 
 extract_runtime <- function(start_time){
-  started <- timestamp_to_r(start_time)
+  started <- tryCatch(
+    timestamp_to_r(start_time), error = function(err){
+      stop("Could not parse starttime: ", start_time)
+    })
   as.integer(difftime(Sys.time(), started, units  = "secs"))
 }
 
-extract_timeout <- function(op){
+extract_timeout <- function(op=NULL){
   if(is.BuildOperationMetadata(op)){
     the_timeout <- as.integer(gsub("s", "", op$metadata$build$timeout))
   } else if(is.gar_Build(op)){
     the_timeout <- as.integer(gsub("s", "", op$timeout))
+  } else if(is.null(op)){
+    the_timeout <- 600L
   } else {
     assert_that(is.integer(op))
     the_timeout <- op
@@ -268,6 +277,7 @@ is.gar_Build <- function(x){
 #' @param bucket The Google Cloud Storage bucket to upload to
 #' @param predefinedAcl The ACL rules for the object uploaded.
 #' @param deploy_folder Which folder to deploy from
+#' @param task_id pass in existing task_id if you want to use the same RStudio job
 #'
 #' @details
 #'
@@ -293,24 +303,38 @@ cr_build_upload_gcs <- function(local,
                                              ".tar.gz"),
                                 bucket = cr_bucket_get(),
                                 predefinedAcl="bucketOwnerFullControl",
-                                deploy_folder = "deploy"){
+                                deploy_folder = "deploy",
+                                task_id=NULL){
+
+  if(is.null(task_id)){
+    task_id <- rstudio_add_job("Upload to Google Cloud Storage", timeout=0)
+  }
+
+  rstudio_add_output(task_id,
+                   paste("\n#Upload ", local, " to ",
+                         paste0("gs://",bucket,"/",remote)))
 
   tar_file <- paste0(basename(local), ".tar.gz")
 
   dir.create(deploy_folder, showWarnings = FALSE)
-  myMessage("Copying files from ", local, " to /", deploy_folder, level = 3)
+  rstudio_add_output(task_id,
+                     paste0("\nCopying files from ",
+                            local, " to /", deploy_folder))
   file.copy(local, deploy_folder, recursive = TRUE)
-  myMessage("Compressing files from ", deploy_folder, " to ", tar_file, level = 3)
+  rstudio_add_output(task_id,
+                     paste0("\nCompressing files from /",
+                           deploy_folder, " to ", tar_file))
   tar(tar_file,
       files = deploy_folder,
       compression = "gzip")
 
   unlink(deploy_folder, recursive = TRUE)
-  myMessage("Uploading ", tar_file, " to ", paste0(bucket,"/", remote), level = 3)
+  rstudio_add_output(task_id,
+                     paste("\nUploading",
+                           tar_file, "to", paste0(bucket,"/", remote)))
   gcs_upload(tar_file, bucket = bucket, name = remote,
              predefinedAcl = predefinedAcl)
 
-  myMessage("Returning source object", level = 3)
   Source(storageSource = StorageSource(bucket = bucket,
                                        object = remote)
   )

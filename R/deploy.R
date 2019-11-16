@@ -38,7 +38,11 @@ cr_deploy_run <- function(local,
                           region = cr_region_get(),
                           bucket = cr_bucket_get(),
                           projectId = cr_project_get(),
-                          launch_browser = interactive()){
+                          launch_browser = interactive(),
+                          timeout=600L){
+
+  task_id <- rstudio_add_job(paste("Deploy service ",remote," to CloudRun"),
+                             timeout=extract_timeout(timeout))
 
   local_files <- list.files(local)
   if(!"api.R" %in% local_files){
@@ -55,15 +59,19 @@ cr_deploy_run <- function(local,
                                    tag = tag,
                                    bucket = bucket,
                                    projectId = projectId,
-                                   launch_browser = launch_browser)
+                                   launch_browser = launch_browser,
+                                   timeout=timeout,
+                                   task_id=task_id)
 
-  built <- cr_build_wait(docker_build, projectId = projectId)
+  built <- cr_build_wait(docker_build, projectId = projectId, task_id=task_id)
 
   cr_run(built$results$images$name,
          name = tolower(remote),
          region = region,
          projectId = projectId,
-         launch_browser=launch_browser)
+         launch_browser=launch_browser,
+         timeout=timeout,
+         task_id=task_id)
 
 }
 
@@ -86,6 +94,7 @@ make_image_name <- function(name, projectId){
 #' @param dockerfile An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"
 #' @param bucket The GCS bucker that will be used to deploy code source
 #' @param image_name The name of the docker image to be built either full name starting with gcr.io or constructed from the image_name and projectId via \code{gcr.io/{projectId}/{image_name}}
+#' @param task_id RStudio job task_id if you want to use the same task
 #' @inheritParams cr_buildstep_docker
 #' @inheritParams cr_build
 #' @export
@@ -101,14 +110,23 @@ cr_deploy_docker <- function(local,
                              dockerfile = NULL,
                              remote = basename(local),
                              tag = "$BUILD_ID",
+                             timeout = 600L,
                              bucket = cr_bucket_get(),
                              projectId = cr_project_get(),
-                             launch_browser = interactive()){
+                             launch_browser = interactive(),
+                             task_id=NULL){
 
+  if(is.null(task_id)){
+    task_id <- rstudio_add_job("Deploy Docker",
+                               timeout=extract_timeout(timeout))
+  }
+
+  rstudio_add_output(task_id, paste("\nConfiguring Dockerfile"))
   use_or_create_dockerfile(local, dockerfile = dockerfile)
 
   image <- make_image_name(image_name, projectId = projectId)
-  myMessage("Deploying docker build for image: \n", image, level = 3)
+
+
 
   build_yaml <- Yaml(steps = cr_buildstep_docker(image,
                                                  tag = "$BUILD_ID",
@@ -116,13 +134,17 @@ cr_deploy_docker <- function(local,
                                                  dir=paste0("deploy/", remote),
                                                  projectId = projectId),
                      images = image)
+  rstudio_add_output(task_id,
+                     paste("\n#Deploy docker build for image: \n", image))
 
   gcs_source <- cr_build_upload_gcs(local,
                                     remote = remote,
-                                    bucket = bucket)
+                                    bucket = bucket,
+                                    task_id=task_id)
   cr_build(build_yaml,
            source = gcs_source,
-           launch_browser = launch_browser)
+           launch_browser = launch_browser,
+           timeout=timeout)
 
 
 }

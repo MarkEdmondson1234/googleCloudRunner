@@ -4,12 +4,15 @@
 \alias{cr_build_wait}
 \title{Wait for a Build to run}
 \usage{
-cr_build_wait(op = .Last.value, projectId = cr_project_get())
+cr_build_wait(op = .Last.value, projectId = cr_project_get(),
+  task_id = NULL)
 }
 \arguments{
 \item{op}{The operation build object to wait for}
 
 \item{projectId}{The projectId}
+
+\item{task_id}{A possible RStudio job taskId to increment status upon}
 }
 \value{
 A gar_Build object \link{Build}

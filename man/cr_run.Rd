@@ -5,8 +5,9 @@
 \title{Create a CloudRun service.}
 \usage{
 cr_run(image, name = basename(image), allowUnauthenticated = TRUE,
-  concurrency = 1, region = cr_region_get(),
-  projectId = cr_project_get(), launch_browser = interactive())
+  concurrency = 1, timeout = 600L, region = cr_region_get(),
+  projectId = cr_project_get(), launch_browser = interactive(),
+  task_id = NULL)
 }
 \arguments{
 \item{image}{The name of the image to create or use in deployment - \code{gcr.io}}
@@ -17,11 +18,15 @@ cr_run(image, name = basename(image), allowUnauthenticated = TRUE,
 
 \item{concurrency}{How many connections each image can serve. Can be up to 80.}
 
+\item{timeout}{Amount of time that this build should be allowed to run, to second}
+
 \item{region}{The endpoint region for deployment}
 
 \item{projectId}{The GCP project from which the services should be listed}
 
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
+
+\item{task_id}{RStudio task_id if you want to use an exisiting}
 }
 \description{
 Deploys an existing gcr.io image.  Use \link{cr_deploy_docker} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.

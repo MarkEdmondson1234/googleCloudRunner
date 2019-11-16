@@ -158,7 +158,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># creating yaml for use in deploying cloud run</span>
-<span class='no'>image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/my-project/my-image$BUILD_ID"</span>
+<span class='no'>image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/my-project/my-image:$BUILD_ID"</span>
 <span class='fu'><a href='Yaml.html'>Yaml</a></span>(
     <span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(
          <span class='fu'>cr_buildstep</span>(<span class='st'>"docker"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"build"</span>,<span class='st'>"-t"</span>,<span class='no'>image</span>,<span class='st'>"."</span>)),
@@ -171,13 +171,13 @@
 #&gt;   args:
 #&gt;   - build
 #&gt;   - -t
-#&gt;   - gcr.io/my-project/my-image$BUILD_ID
+#&gt;   - gcr.io/my-project/my-image:$BUILD_ID
 #&gt;   - '.'
 #&gt;   dir: deploy
 #&gt; - name: gcr.io/cloud-builders/docker
 #&gt;   args:
 #&gt;   - push
-#&gt;   - gcr.io/my-project/my-image$BUILD_ID
+#&gt;   - gcr.io/my-project/my-image:$BUILD_ID
 #&gt;   dir: deploy
 #&gt; - name: gcr.io/cloud-builders/gcloud
 #&gt;   args:
@@ -186,29 +186,30 @@
 #&gt;   - deploy
 #&gt;   - test1
 #&gt;   - --image
-#&gt;   - gcr.io/my-project/my-image$BUILD_ID
+#&gt;   - gcr.io/my-project/my-image:$BUILD_ID
 #&gt;   dir: deploy
-#&gt; images: gcr.io/my-project/my-image$BUILD_ID</div><div class='input'>
+#&gt; images: gcr.io/my-project/my-image:$BUILD_ID</div><div class='input'>
 <span class='co'># use premade docker buildstep - combine using c()</span>
+<span class='no'>image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/my-project/my-image"</span>
 <span class='fu'><a href='Yaml.html'>Yaml</a></span>(
     <span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fu'><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a></span>(<span class='no'>image</span>),
               <span class='fu'>cr_buildstep</span>(<span class='st'>"gcloud"</span>,
                      <span class='kw'>args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"beta"</span>,<span class='st'>"run"</span>,<span class='st'>"deploy"</span>,
                               <span class='st'>"test1"</span>,<span class='st'>"--image"</span>, <span class='no'>image</span>))
              ),
-    <span class='kw'>images</span> <span class='kw'>=</span> <span class='no'>image</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-15 22:17:20&gt; Image to be built: gcr.io/my-project/my-image$BUILD_ID:$BUILD_ID</span></div><div class='output co'>#&gt; ==cloudRunnerYaml==
+    <span class='kw'>images</span> <span class='kw'>=</span> <span class='no'>image</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-16 22:14:24&gt; Image to be built: gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; ==cloudRunnerYaml==
 #&gt; steps:
 #&gt; - name: gcr.io/cloud-builders/docker
 #&gt;   args:
 #&gt;   - build
 #&gt;   - -t
-#&gt;   - gcr.io/my-project/my-image$BUILD_ID:$BUILD_ID
+#&gt;   - gcr.io/my-project/my-image:$BUILD_ID
 #&gt;   - '.'
 #&gt;   dir: ''
 #&gt; - name: gcr.io/cloud-builders/docker
 #&gt;   args:
 #&gt;   - push
-#&gt;   - gcr.io/my-project/my-image$BUILD_ID:$BUILD_ID
+#&gt;   - gcr.io/my-project/my-image:$BUILD_ID
 #&gt;   dir: ''
 #&gt; - name: gcr.io/cloud-builders/gcloud
 #&gt;   args:
@@ -217,9 +218,9 @@
 #&gt;   - deploy
 #&gt;   - test1
 #&gt;   - --image
-#&gt;   - gcr.io/my-project/my-image$BUILD_ID
+#&gt;   - gcr.io/my-project/my-image
 #&gt;   dir: deploy
-#&gt; images: gcr.io/my-project/my-image$BUILD_ID</div><div class='input'>
+#&gt; images: gcr.io/my-project/my-image</div><div class='input'>
 <span class='co'># list files with a new entrypoint for gcloud</span>
 <span class='fu'><a href='Yaml.html'>Yaml</a></span>(<span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'>cr_buildstep</span>(<span class='st'>"gcloud"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"-c"</span>,<span class='st'>"ls -la"</span>), <span class='kw'>entrypoint</span> <span class='kw'>=</span> <span class='st'>"bash"</span>))</div><div class='output co'>#&gt; ==cloudRunnerYaml==
 #&gt; steps:

@@ -6,7 +6,8 @@
 \usage{
 cr_build_upload_gcs(local, remote = paste0(local, format(Sys.time(),
   "\%Y\%m\%d\%H\%M\%S"), ".tar.gz"), bucket = cr_bucket_get(),
-  predefinedAcl = "bucketOwnerFullControl", deploy_folder = "deploy")
+  predefinedAcl = "bucketOwnerFullControl", deploy_folder = "deploy",
+  task_id = NULL)
 }
 \arguments{
 \item{local}{Local directory containing the Dockerfile etc. you wish to deploy}
@@ -18,6 +19,8 @@ cr_build_upload_gcs(local, remote = paste0(local, format(Sys.time(),
 \item{predefinedAcl}{The ACL rules for the object uploaded.}
 
 \item{deploy_folder}{Which folder to deploy from}
+
+\item{task_id}{pass in existing task_id if you want to use the same RStudio job}
 }
 \value{
 A Source object

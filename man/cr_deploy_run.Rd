@@ -7,7 +7,7 @@
 cr_deploy_run(local, remote = basename(local), dockerfile = NULL,
   image_name = remote, tag = "$BUILD_ID", region = cr_region_get(),
   bucket = cr_bucket_get(), projectId = cr_project_get(),
-  launch_browser = interactive())
+  launch_browser = interactive(), timeout = 600L)
 }
 \arguments{
 \item{local}{A folder containing the R script using plumber called api.R and all its dependencies}
@@ -27,6 +27,8 @@ cr_deploy_run(local, remote = basename(local), dockerfile = NULL,
 \item{projectId}{The projectId where it all gets deployed to}
 
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
+
+\item{timeout}{Amount of time that this build should be allowed to run, to second}
 }
 \description{
 Helper to take an R plumber script, create the Dockerfile, add the build to Cloud Build and deploy to Cloud Run

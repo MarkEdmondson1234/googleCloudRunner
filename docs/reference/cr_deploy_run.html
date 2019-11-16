@@ -118,7 +118,7 @@
     <pre class="usage"><span class='fu'>cr_deploy_run</span>(<span class='no'>local</span>, <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/basename'>basename</a></span>(<span class='no'>local</span>), <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>, <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_get.html'>cr_region_get</a></span>(),
   <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_get.html'>cr_bucket_get</a></span>(), <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_get.html'>cr_project_get</a></span>(),
-  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>())</pre>
+  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/interactive'>interactive</a></span>(), <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -158,6 +158,10 @@
     <tr>
       <th>launch_browser</th>
       <td><p>Whether to launch the logs URL in a browser once deployed</p></td>
+    </tr>
+    <tr>
+      <th>timeout</th>
+      <td><p>Amount of time that this build should be allowed to run, to second</p></td>
     </tr>
     </table>
 

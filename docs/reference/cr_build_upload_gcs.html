@@ -117,7 +117,8 @@
 
     <pre class="usage"><span class='fu'>cr_build_upload_gcs</span>(<span class='no'>local</span>, <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='no'>local</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/format'>format</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Sys.time'>Sys.time</a></span>(),
   <span class='st'>"%Y%m%d%H%M%S"</span>), <span class='st'>".tar.gz"</span>), <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_get.html'>cr_bucket_get</a></span>(),
-  <span class='kw'>predefinedAcl</span> <span class='kw'>=</span> <span class='st'>"bucketOwnerFullControl"</span>, <span class='kw'>deploy_folder</span> <span class='kw'>=</span> <span class='st'>"deploy"</span>)</pre>
+  <span class='kw'>predefinedAcl</span> <span class='kw'>=</span> <span class='st'>"bucketOwnerFullControl"</span>, <span class='kw'>deploy_folder</span> <span class='kw'>=</span> <span class='st'>"deploy"</span>,
+  <span class='kw'>task_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -141,6 +142,10 @@
     <tr>
       <th>deploy_folder</th>
       <td><p>Which folder to deploy from</p></td>
+    </tr>
+    <tr>
+      <th>task_id</th>
+      <td><p>pass in existing task_id if you want to use the same RStudio job</p></td>
     </tr>
     </table>
 

@@ -5,9 +5,9 @@
 \title{Deploy a Dockerfile so it will be built on ContainerRegistry}
 \usage{
 cr_deploy_docker(local, image_name = remote, dockerfile = NULL,
-  remote = basename(local), tag = "$BUILD_ID",
+  remote = basename(local), tag = "$BUILD_ID", timeout = 600L,
   bucket = cr_bucket_get(), projectId = cr_project_get(),
-  launch_browser = interactive())
+  launch_browser = interactive(), task_id = NULL)
 }
 \arguments{
 \item{local}{The folder containing the Dockerfile to build}
@@ -20,11 +20,15 @@ cr_deploy_docker(local, image_name = remote, dockerfile = NULL,
 
 \item{tag}{The tag to attached to the pushed image - can use \code{Build} macros}
 
+\item{timeout}{Amount of time that this build should be allowed to run, to second}
+
 \item{bucket}{The GCS bucker that will be used to deploy code source}
 
 \item{projectId}{The projectId}
 
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
+
+\item{task_id}{RStudio job task_id if you want to use the same task}
 }
 \description{
 If no Dockerfile present in the deployment folder, will attempt to create a Dockerfile to upload via \link{cr_dockerfile}
