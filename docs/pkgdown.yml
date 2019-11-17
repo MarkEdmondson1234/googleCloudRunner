@@ -8,6 +8,6 @@ articles:
   Setup: Setup.html
   UseCases: UseCases.html
 urls:
-  reference: https://code.markedmondson.me/cloudRunner//reference
-  article: https://code.markedmondson.me/cloudRunner//articles
+  reference: https://code.markedmondson.me/cloudRunner/reference
+  article: https://code.markedmondson.me/cloudRunner/articles
 
