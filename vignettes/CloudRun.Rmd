@@ -1,0 +1,115 @@
+---
+title: "R on Cloud Run"
+---
+
+Cloud Run is a service that lets you deploy container images without worrying about the underlying servers or infrastructure.  It is called with `cr_run()`, or you can automate a deployment via `cr_deploy_run()`.
+
+## Quickstart - plumber API
+
+1. Make an R API via [plumber](https://www.rplumber.io/) that contains entry file api.R.  You can use the demo example in `system.file("example", package="cloudRunner")` if you like.
+2. Deploy via the `cr_deploy_run()` function:
+
+```r
+library(cloudRunner)
+
+cr <- cr_deploy_run("api.R")
+#2019-11-12 10:34:29 -- File size detected as 903 bytes
+#2019-11-12 10:34:31> Cloud Build started - logs: 
+#https://console.cloud.google.com/gcr/builds/40343fd4-6981-41c3-98c8-f5973c3de386?project=1080525199262
+
+#Waiting for build to finish:
+# |===============||
+#Build finished
+#2019-11-12 10:35:43> Deployed to Cloud Run at: 
+#https://cloudrunnertest2-ewjogewawq-ew.a.run.app
+#==CloudRunService==
+#name:  cloudrunnertest2 
+#location:  europe-west1 
+#lastModifier:  1080525199262@cloudbuild.gserviceaccount.com 
+#containers:  gcr.io/mark-edmondson-gde/cloudrunnertest2 
+#creationTimestamp:  2019-11-12T10:35:19.993128Z 
+#observedGeneration:  1 
+#url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app 
+```
+
+Deployment via `cr_deploy_run()` automated these steps:
+
+1. Creates a Dockerfile for your R script if necessary using [`containerit`](https://o2r.info/containerit/index.html)
+2. Uploads the Dockerfile and your api.R file to your Google Cloud Storage bucket
+3. Creates a Cloud Build job for building the files uploaded to the GCS bucket, and pushes the Docker images to Google Container Registry
+3. Deploys that container to Cloud Run
+
+It will launch a browser showing the build on Cloud Build, or you can wait for progress in your local R sesion.  Upon successfully deployment it gives you a `CloudRunService` object with details of the deployment. 
+
+All the above stages can be customised for your own purposes, using the functions explained below.
+
+## Customising Cloud Run deployments
+
+The Cloud Run API is not called directly when deploying - instead a Cloud Build is created for deployment. `cr_run` creates a cloudbuild.yaml similar to the below:
+
+```yaml
+# use cloud build to deploy
+image <- "gcr.io/my-project/my-image"
+Yaml(
+    steps = list(
+      cr_buildstep_docker("my-image"),
+      cr_buildstep("gcloud", c("beta","run","deploy", "my-name",
+           "--image", image,
+           "--region", "europe-west1",
+           "--platform", "managed",
+           "--concurrency", 1,
+           "--allow-unauthenticated"
+         ))
+    ),
+    images = image
+  )
+# ==cloudRunnerYaml==
+# steps:
+# - name: gcr.io/cloud-builders/docker
+#   args:
+#   - build
+#   - -t
+#   - gcr.io/my-project/my-image
+#   - '.'
+#   dir: deploy
+# - name: gcr.io/cloud-builders/docker
+#   args:
+#   - push
+#   - gcr.io/my-project/my-image
+#   dir: deploy
+# - name: gcr.io/cloud-builders/gcloud
+#   args:
+#   - beta
+#   - run
+#   - deploy
+#   - my-name
+#   - --image
+#   - gcr.io/my-project/my-image
+#   - --region
+#   - europe-west1
+#   - --platform
+#   - managed
+#   - --concurrency
+#   - '1'
+#   - --allow-unauthenticated
+#   dir: deploy
+# images: gcr.io/my-project/my-image
+
+```
+
+If you have an existing image you want to deploy on Cloud Run (usually one that serves up HTTP content, such as via `library(plumber)`) then you only need to supply that image to deploy:
+
+```r
+cr_run("gcr.io/my-project/my-image")
+```
+
+However, if you want to do the common use case of building the container first as well, you can do so by using the helper `cr_deploy_docker()`:
+
+```r
+cr_deploy_docker("my-image")
+
+cr_run("gcr.io/my-project/my-image")
+```
+
+`cr_deploy_run()` wraps the above in functions to check and wait for status etc. and is intended as the main method of Cloud Run deployment, but you may want to tweak the settings more by calling `cr_run()` directly. 
+

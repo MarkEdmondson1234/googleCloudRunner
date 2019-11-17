@@ -1,0 +1,85 @@
+---
+title: "Scheduled R scripts in the cloud via Cloud Scheduler"
+---
+
+Cloud Scheduler is a scheduler service in the Google Cloud that uses cron like syntax to schedule tasks.  It can trigger HTTP or Pub/Sub jobs via `cr_schedule()`
+
+cloudRunner uses Cloud Scheduler to help schedule Cloud Builds.
+
+## Schedule Cloud Build
+
+As Cloud Build can run any code in a container, it becomes a powerful way to setup data flows.  These can be scheduled via Cloud Scheduler.  
+
+A demo below shows how to set up a Cloud Build on a schedule from R:
+
+```r
+build1 <- cr_build_make("cloudbuild.yaml")
+
+cr_schedule("15 5 * * *", name="cloud-build-test1",
+             httpTarget = cr_build_schedule_http(build1))
+```
+
+We use `cr_build_make()` and `cr_build_schedule_http()` to create the Cloud Build API request, and then send that to the Cloud Scheduler API via its `httpTarget` parameter.
+
+Cloud Scheduler can schedule HTTP requests to any endpoint:
+
+```
+cr_scheduler("14 5 * * *", name = "my-webhook", 
+             httpTarget = HttpTarget(httpMethod="GET", uri = "https://mywebhook.com"))
+```
+
+## Build and schedule an R script
+
+Putting the above together serverlessly, to schedue an R script the steps are:
+
+1. Create your R script 
+2. Bundle the R script with a Dockerfile
+3. Build the Docker image on Cloud Build and push to "gcr.io/your-project/your-name"
+4. Schedule calling the Docker image using Cloud Scheduler
+
+### 1. Create your R script
+
+The R script can hold anything, but make sure its is self contained with auth files, data files etc.  All paths should be relative to the script.  Uploading auth files within Dockerfiles is not recommended security wise. The recommend way to download auth files is to use the GKE encryption service, which is available as a build step macro via `cr_buildsteps_decrypt()`
+
+### 2. Bundle the R script with a Dockerfile
+
+You can create your own Dockerfile or you can attempt auto-creating your Dockerfile via `containerit` - point it at the folder with your script:
+
+```r
+cr_dockerfile("my-scripts/deploy_me/")
+```
+
+This is attempted by `cr_dockerfile()` which is what the `cr_deploy_*` functions call if no Dockerfile is supplied.
+
+### 3. Build the Docker image on Cloud Build
+
+Once you have your R script and Dockerfile in the same folder, you need to build the image.
+
+For this example we first build the Docker image that will be used day to day in the schedule.  This can be automated via the `cr_deploy_docker()` function supplying the folder containing the Dockerfile - or if no Dockerfile is present it will attempt to create one via `cr_dockerfile()`
+
+```r
+cr_deploy_docker("my-scripts/", "gcr.io/your-project/your-name")
+```
+
+#### 4. Schedule calling the Docker image using Cloud Scheduler
+
+Once the image is build successfully, you do not need to build it again for the scheduled calls.  For that, you will only need the image you build `gcr.io/your-project/your-name` and call it via the arguments set up in the Dockerfile i.e. `R -e my_r_script.R`
+
+```
+schedule_me <- Yaml(
+  steps = cr_build_step("your-name", "R -e my_r_script.R",
+                         stem="gcr.io/your-project")
+                         )
+
+schedule_build <- cr_build_make(schedule_me)
+cloud_build_target <- cr_build_schedule_http(schedule_build)
+
+cr_schedule("15 5 * * *", name="scheduled_r",
+             httpTarget = cloud_build_target)
+
+```
+
+Your R script should now be scheduled and running in its own environment.
+
+You can automate updates to the script and/or Docker container or schedule seperately, by redoing any of the steps above. 
+

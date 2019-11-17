@@ -1,10 +1,37 @@
+title: "cloudRunner"
+url: https://code.markedmondson.me/cloudRunner/
 authors:
   name: Mark Edmondson
-  href: https://code.markedmondson.me/cloudRunner
+  href: https://code.markedmondson.me/
 template:
   params:
     bootswatch: paper
     ganalytics: UA-47480439-2
+navbar:
+  title: cloudRunner
+  inverse: true
+  left:
+    - href: index.html
+      icon: fa-home
+    - text: "Setup"
+      href: articles/setup.html
+      icon: fa-wrench
+    - text: "Cloud Run"
+      href: articles/cloudrun.html
+      icon: fa-running
+    - text: "Cloud Build"
+      href: articles/cloudbuild.html
+      icon: fa-shapes
+    - text: "Cloud Scheduler"
+      href: articles/cloudscheduler.html
+      icon: fa-clock
+    - text: "Use Cases"
+      href: articles/usecases.html
+      icon: fa-hands-helping
+    - text: "Functions"
+      href: reference/index.html
+      icon: fa-question
+
 reference:
   - title: "Setup functions"
     desc: >

@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Launch R scripts in the Google Cloud via Cloud Run, Cloud Build and Cloud Scheduler  • cloudRunner</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Launch R scripts in the Google Cloud via Cloud Run, Cloud Build and Cloud Scheduler ">
 <meta property="og:description" content="Tools to easily publish R scripts to the Google Cloud.">
 <meta name="twitter:card" content="summary">
@@ -44,12 +45,51 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li>
-  <a href="reference/index.html">Reference</a>
+  <a href="articles/setup.html">
+    <span class="fa fa-wrench"></span>
+     
+    Setup
+  </a>
+</li>
+<li>
+  <a href="articles/cloudrun.html">
+    <span class="fa fa-running"></span>
+     
+    Cloud Run
+  </a>
+</li>
+<li>
+  <a href="articles/cloudbuild.html">
+    <span class="fa fa-shapes"></span>
+     
+    Cloud Build
+  </a>
+</li>
+<li>
+  <a href="articles/cloudscheduler.html">
+    <span class="fa fa-clock"></span>
+     
+    Cloud Scheduler
+  </a>
+</li>
+<li>
+  <a href="articles/usecases.html">
+    <span class="fa fa-hands-helping"></span>
+     
+    Use Cases
+  </a>
+</li>
+<li>
+  <a href="reference/index.html">
+    <span class="fa fa-question"></span>
+     
+    Functions
+  </a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
@@ -61,6 +101,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="contents col-md-9">
 <div id="cloudrunner" class="section level1">
@@ -71,385 +112,31 @@
 <div id="ambition" class="section level2">
 <h2 class="hasAnchor">
 <a href="#ambition" class="anchor"></a>Ambition</h2>
-<p>Point your R code at a function, that automatically deploys and runs it in the GCP cloud via an API endpoint.</p>
+<p>Point your R code at a function, that automatically deploys and runs it in the GCP cloud via an API endpoint. As a demo, will deploy R plumber APIs such as demonstrated here: <a href="https://github.com/MarkEdmondson1234/cloudRunR" class="uri">https://github.com/MarkEdmondson1234/cloudRunR</a></p>
 </div>
 <div id="install" class="section level2">
 <h2 class="hasAnchor">
 <a href="#install" class="anchor"></a>Install</h2>
 <p>Only install available from GitHub until depedencies such as <code>sysreqs</code> and <code>containerit</code> are on CRAN</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">remotes<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/remotes/topics/install_github">install_github</a></span>(<span class="st">"MarkEdmondson1234/cloudRunner"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">remotes<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/remotes/man/install_github.html">install_github</a></span>(<span class="st">"MarkEdmondson1234/cloudRunner"</span>)</a></code></pre></div>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p>Set up auth, environment arguments etc. as per bottom of this file.</p>
-<div id="r-apis" class="section level3">
-<h3 class="hasAnchor">
-<a href="#r-apis" class="anchor"></a>R APIs</h3>
-<ol>
-<li>Make an R API via <a href="https://www.rplumber.io/">plumber</a> that contains entry file api.R. You can use the demo example in <code>inst/example</code> if you like.</li>
-<li>Deploy via the <code><a href="reference/cr_deploy_run.html">cr_deploy_run()</a></code> function:</li>
-</ol>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(cloudRunner)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">cr &lt;-<span class="st"> </span><span class="kw"><a href="reference/cr_deploy_run.html">cr_deploy_run</a></span>(<span class="st">"api.R"</span>)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#2019-11-12 10:34:29 -- File size detected as 903 bytes</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#2019-11-12 10:34:31&gt; Cloud Build started - logs: </span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#https://console.cloud.google.com/gcr/builds/40343fd4-6981-41c3-98c8-f5973c3de386?project=1080525199262</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#Waiting for build to finish:</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co"># |===============||</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#Build finished</span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#2019-11-12 10:35:43&gt; Deployed to Cloud Run at: </span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#https://cloudrunnertest2-ewjogewawq-ew.a.run.app</span></a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#==CloudRunService==</span></a>
-<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#name:  cloudrunnertest2 </span></a>
-<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#location:  europe-west1 </span></a>
-<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#lastModifier:  1080525199262@cloudbuild.gserviceaccount.com </span></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#containers:  gcr.io/mark-edmondson-gde/cloudrunnertest2 </span></a>
-<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#creationTimestamp:  2019-11-12T10:35:19.993128Z </span></a>
-<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#observedGeneration:  1 </span></a>
-<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app </span></a></code></pre></div>
-<p>Deployment via <code><a href="reference/cr_deploy_run.html">cr_deploy_run()</a></code> automated these steps:</p>
-<ol>
-<li>Creates a Dockerfile for your R script if necessary using <a href="https://o2r.info/containerit/index.html"><code>containerit</code></a>
-</li>
-<li>Uploads the Dockerfile and your api.R file to your Google Cloud Storage bucket</li>
-<li>Creates a Cloud Build job for building the files uploaded to the GCS bucket, and pushes the Docker images to Google Container Registry</li>
-<li>Deploys that container to Cloud Run</li>
-</ol>
-<p>It will launch a browser showing the build on Cloud Build, or you can wait for progress in your local R sesion. Upon successfully deployment it gives you a <code>CloudRunService</code> object with details of the deployment.</p>
-<p>All the above stages can be customised for your own purposes, using the functions explained below.</p>
-</div>
-<div id="run-r-builds" class="section level3">
-<h3 class="hasAnchor">
-<a href="#run-r-builds" class="anchor"></a>Run R builds</h3>
-<p>Cloud Run is only necessary if you want a URL endpoint for your script. You can run other scripts within Cloud Build that can be triggered one time, setup to trigger on GitHub events or pub/sub, or scheduled using Cloud Scheduler.</p>
-<p>Cloud Build uses containers to run everything. This means it can run almost any language/program or application including R. Having an easy way to create and trigger these builds from R means R can serve as a UI or gateway to any other program e.g. R can trigger a Cloud Build using <code>gcloud</code> to deploy Cloud Run applications.</p>
-<p>The first 120 mins per day are free. <a href="https://cloud.google.com/cloud-build/pricing">See here for more priceinfo.</a></p>
-<p>Cloud Build is centered around the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yaml format</a> - you can use existing cloudbuild.yaml files or create your own in R using the yaml helper functions.</p>
-<p>An example cloudbuild.yaml is shown below - this outputs the versions of docker and gcloud it is using:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="fu">steps:</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Arithmetic">-</a></span> <span class="fu">name:</span><span class="at"> </span><span class="st">'gcr.io/cloud-builders/docker'</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">  <span class="fu">id:</span><span class="at"> Docker Version</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">  <span class="fu">args:</span><span class="at"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extract">[</a></span><span class="st">"version"</span><span class="kw">]</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Arithmetic">-</a></span> <span class="fu">name:</span><span class="at"> </span><span class="st">'alpine'</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">  <span class="fu">id:</span><span class="at">  Hello Cloud Build</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">  <span class="fu">args:</span><span class="at"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extract">[</a></span><span class="st">"echo"</span><span class="kw">,</span> <span class="st">"Hello Cloud Build"</span><span class="kw">]</span></a></code></pre></div>
-<p>This cloudbuild.yaml file can be built directly via the <code><a href="reference/cr_build.html">cr_build()</a></code> function:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">b1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/cr_build.html">cr_build</a></span>(<span class="st">"cloudbuild.yaml"</span>)</a></code></pre></div>
-<p>The build will trigger a webpage to the build logs to open. Or you can set this to false and wait in R for the build:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">b2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/cr_build.html">cr_build</a></span>(<span class="st">"cloudbuild.yaml"</span>, <span class="dt">launch_browser =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="reference/cr_build_wait.html">cr_build_wait</a></span>(b2)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co"># Waiting for build to finish:</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">#  |===||</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co"># Build finished</span></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co"># ==CloudBuildObject==</span></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co"># buildId:  c673143a-794d-4c69-8ad4-e777d068c066 </span></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co"># status:  SUCCESS </span></a>
-<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co"># logUrl:  https://console.cloud.google.com/gcr/builds/c673143a-794d-4c69-8ad4-e777d068c066?project=1080525199262 </span></a>
-<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co"># steps: </span></a>
-<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#  name:</span></a>
-<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co"># - gcr.io/cloud-builders/docker</span></a>
-<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co"># - alpine</span></a>
-<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co"># args:</span></a>
-<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co"># - version</span></a>
-<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co"># - - echo</span></a>
-<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#   - Hello Cloud Build</span></a>
-<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co"># id:</span></a>
-<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co"># - Docker Version</span></a>
-<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co"># - Hello Cloud Build</span></a>
-<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co"># timing:</span></a>
-<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">#   startTime:</span></a>
-<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co">#   - '2019-11-12T11:16:37.682826707Z'</span></a>
-<a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">#   - '2019-11-12T11:16:38.585221812Z'</span></a>
-<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="co">#   endTime:</span></a>
-<a class="sourceLine" id="cb5-26" data-line-number="26"><span class="co">#   - '2019-11-12T11:16:38.585157179Z'</span></a>
-<a class="sourceLine" id="cb5-27" data-line-number="27"><span class="co">#   - '2019-11-12T11:16:40.680755419Z'</span></a>
-<a class="sourceLine" id="cb5-28" data-line-number="28"><span class="co"># status:</span></a>
-<a class="sourceLine" id="cb5-29" data-line-number="29"><span class="co"># - SUCCESS</span></a>
-<a class="sourceLine" id="cb5-30" data-line-number="30"><span class="co"># - SUCCESS</span></a>
-<a class="sourceLine" id="cb5-31" data-line-number="31"><span class="co"># pullTiming:</span></a>
-<a class="sourceLine" id="cb5-32" data-line-number="32"><span class="co">#   startTime:</span></a>
-<a class="sourceLine" id="cb5-33" data-line-number="33"><span class="co">#   - '2019-11-12T11:16:37.682826707Z'</span></a>
-<a class="sourceLine" id="cb5-34" data-line-number="34"><span class="co">#   - '2019-11-12T11:16:38.585221812Z'</span></a>
-<a class="sourceLine" id="cb5-35" data-line-number="35"><span class="co">#   endTime:</span></a>
-<a class="sourceLine" id="cb5-36" data-line-number="36"><span class="co">#   - '2019-11-12T11:16:37.740729198Z'</span></a>
-<a class="sourceLine" id="cb5-37" data-line-number="37"><span class="co">#   - '2019-11-12T11:16:39.869607125Z'</span></a></code></pre></div>
-<p>Cloud Builds usually need code or data to work on to be useful. This is specified by the <code>source</code> argument. This can be a Cloud Source Repository (perhaps mirrored from GitHub) or a Cloud Storage bucket containg the code/data you want to operate on. An example of specifying both is below:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">gcs_source &lt;-<span class="st"> </span><span class="kw"><a href="reference/Source.html">Source</a></span>(<span class="dt">storageSource=</span><span class="kw"><a href="reference/StorageSource.html">StorageSource</a></span>(<span class="st">"gs://my-bucket"</span>, <span class="st">"my_code.tar.gz"</span>))</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">repo_source &lt;-<span class="st"> </span><span class="kw"><a href="reference/Source.html">Source</a></span>(<span class="dt">repoSource=</span><span class="kw"><a href="reference/RepoSource.html">RepoSource</a></span>(<span class="st">"github_markedmondson1234_cloudrunner"</span>,</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">                                            <span class="dt">branchName=</span><span class="st">"master"</span>))</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">build1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/cr_build.html">cr_build</a></span>(<span class="st">"cloudbuild.yaml"</span>, <span class="dt">source =</span> gcs_source)</a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">build2 &lt;-<span class="st"> </span><span class="kw"><a href="reference/cr_build.html">cr_build</a></span>(<span class="st">"cloudbuild.yaml"</span>, <span class="dt">source =</span> repo_source)</a></code></pre></div>
-<p>You can also turn an existing build into a cloudbuild.yaml file:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="reference/cr_build_write.html">cr_build_write</a></span>(build1)</a></code></pre></div>
-</div>
-<div id="cloud-build-macros" class="section level3">
-<h3 class="hasAnchor">
-<a href="#cloud-build-macros" class="anchor"></a>Cloud Build macros</h3>
-<p>Cloud Builds can use reserved macros and variables to help with deployments in a continuous development situation. For instance, files can be named according to the Git branch they are committed from. These are listed in <code><a href="reference/Build.html">?Build</a></code> and reproduced below:</p>
+<p>Please see the <a href="https://code.markedmondson.me/cloudRunner/">cloudRunner website</a> for topics on how to use:</p>
 <ul>
-<li>$PROJECT_ID: the project ID of the build.</li>
-<li>$BUILD_ID: the autogenerated ID of the build.</li>
-<li>$REPO_NAME: the source repository name specified by RepoSource.</li>
-<li>$BRANCH_NAME: the branch name specified by RepoSource.</li>
-<li>$TAG_NAME: the tag name specified by RepoSource.</li>
-<li>$REVISION_ID or $COMMIT_SHA: the commit SHA specified by RepoSource or resolved from the specified branch or tag.</li>
-<li>$SHORT_SHA: first 7 characters of $REVISION_ID or $COMMIT_SHA.</li>
+<li><a href="https://code.markedmondson.me/cloudRunner/articles/setup.html">Setup</a></li>
+<li><a href="https://code.markedmondson.me/cloudRunner/articles/cloudrun.html">R APIs using Cloud Run</a></li>
+<li><a href="https://code.markedmondson.me/cloudRunner/articles/cloudbuild.html">Serverless R scripts using Cloud Build</a></li>
+<li><a href="https://code.markedmondson.me/cloudRunner/articles/cloudscheduler.html">Scheduled R in GCP using Cloud Scheduler</a></li>
+<li><a href="https://code.markedmondson.me/cloudRunner/articles/usecases.html">Use Cases</a></li>
+<li><a href="https://code.markedmondson.me/cloudRunner/reference/index.html">Function Reference</a></li>
 </ul>
-<p>Custom macros can also be configured in the web UI, starting with <em>$ e.g. </em>$MY_CUSTOM_MACRO</p>
 </div>
-<div id="schedule-cloud-build" class="section level3">
-<h3 class="hasAnchor">
-<a href="#schedule-cloud-build" class="anchor"></a>Schedule Cloud Build</h3>
-<p>As Cloud Build can run any code in a container, it becomes a powerful way to setup data flows. These can be scheduled via Cloud Scheduler.</p>
-<p>A demo below shows how to set up a Cloud Build on a schedule from R:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">build1 &lt;-<span class="st"> </span><span class="kw"><a href="reference/cr_build_make.html">cr_build_make</a></span>(<span class="st">"cloudbuild.yaml"</span>)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw"><a href="reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"15 5 * * *"</span>, <span class="dt">name=</span><span class="st">"cloud-build-test1"</span>,</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">             <span class="dt">httpTarget =</span> <span class="kw"><a href="reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(build1))</a></code></pre></div>
-<p>We use <code><a href="reference/cr_build_make.html">cr_build_make()</a></code> and <code><a href="reference/cr_build_schedule_http.html">cr_build_schedule_http()</a></code> to create the Cloud Build API request, and then send that to the Cloud Scheduler API via its <code>httpTarget</code> parameter.</p>
-<p>Cloud Scheduler can schedule HTTP requests to any endpoint:</p>
-<pre><code>cr_scheduler("14 5 * * *", name = "my-webhook", 
-             httpTarget = HttpTarget(httpMethod="GET", uri = "https://mywebhook.com"))</code></pre>
-</div>
-<div id="build-and-schedule-an-r-script" class="section level3">
-<h3 class="hasAnchor">
-<a href="#build-and-schedule-an-r-script" class="anchor"></a>Build and schedule an R script</h3>
-<p>Putting the above together serverlessly, to schedue an R script the steps are:</p>
-<ol>
-<li>Create your R script</li>
-<li>Bundle the R script with a Dockerfile</li>
-<li>Build the Docker image on Cloud Build and push to “gcr.io/your-project/your-name”</li>
-<li>Schedule calling the Docker image using Cloud Scheduler</li>
-</ol>
-<div id="create-your-r-script" class="section level4">
-<h4 class="hasAnchor">
-<a href="#create-your-r-script" class="anchor"></a>1. Create your R script</h4>
-<p>The R script can hold anything, but make sure its is self contained with auth files, data files etc. All paths should be relative to the script. Uploading auth files within Dockerfiles is not recommended security wise and <code><a href="https://code.markedmondson.me/googleAuthR//reference/gar_gce_auth.html">googleAuthR::gar_gce_auth()</a></code> doesn’t work as the default service auth account isn’t present. The recommend way to download auth files is to use the GKE encryption service</p>
-</div>
-<div id="bundle-the-r-script-with-a-dockerfile" class="section level4">
-<h4 class="hasAnchor">
-<a href="#bundle-the-r-script-with-a-dockerfile" class="anchor"></a>2. Bundle the R script with a Dockerfile</h4>
-<p>Creating your Dockerfile can be done using <code>containerit</code> - point it at the folder with your script:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(containerit)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">d &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/containerit/topics/dockerfile">dockerfile</a></span>(<span class="st">"your-script.R"</span>)</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/write">write</a></span>(d, <span class="st">"Dockerfile"</span>)</a></code></pre></div>
-<p>See its website for details.</p>
-</div>
-<div id="build-the-docker-image-on-cloud-build" class="section level4">
-<h4 class="hasAnchor">
-<a href="#build-the-docker-image-on-cloud-build" class="anchor"></a>3. Build the Docker image on Cloud Build</h4>
-<p>Once you have your R script and Dockerfile in the same folder, you need to build the image.</p>
-<p><em>cloudbuild.yaml</em></p>
-<p>Lets say you don’t want to write a cloudbuild.yaml file - instead its created all within R using the yaml helper functions <code><a href="reference/Yaml.html">Yaml()</a></code> and <code>cr_build_step</code>. Refer to the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yaml config spec</a> on what it expected in the file.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">image &lt;-<span class="st"> "gcr.io/your-project/your-name"</span></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">my_yaml &lt;-<span class="st"> </span><span class="kw"><a href="reference/Yaml.html">Yaml</a></span>(</a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">      <span class="dt">steps =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="kw">cr_build_step</span>(<span class="st">"docker"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"build"</span>,<span class="st">"-t"</span>,image,<span class="st">"."</span>)),</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4">                   <span class="kw">cr_build_step</span>(<span class="st">"docker"</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"push"</span>,image))),</a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">      <span class="dt">images =</span> image)</a>
-<a class="sourceLine" id="cb11-6" data-line-number="6">my_yaml</a>
-<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="co"># ==cloudRunnerYaml==</span></a>
-<a class="sourceLine" id="cb11-8" data-line-number="8"><span class="co"># steps:</span></a>
-<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="co"># - name: gcr.io/cloud-builders/docker</span></a>
-<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">#   args:</span></a>
-<a class="sourceLine" id="cb11-11" data-line-number="11"><span class="co">#   - build</span></a>
-<a class="sourceLine" id="cb11-12" data-line-number="12"><span class="co">#   - -t</span></a>
-<a class="sourceLine" id="cb11-13" data-line-number="13"><span class="co">#   - gcr.io/your-project/your-name</span></a>
-<a class="sourceLine" id="cb11-14" data-line-number="14"><span class="co">#   - '.'</span></a>
-<a class="sourceLine" id="cb11-15" data-line-number="15"><span class="co">#   dir: deploy</span></a>
-<a class="sourceLine" id="cb11-16" data-line-number="16"><span class="co"># - name: gcr.io/cloud-builders/docker</span></a>
-<a class="sourceLine" id="cb11-17" data-line-number="17"><span class="co">#   args:</span></a>
-<a class="sourceLine" id="cb11-18" data-line-number="18"><span class="co">#   - push</span></a>
-<a class="sourceLine" id="cb11-19" data-line-number="19"><span class="co">#   - gcr.io/your-project/your-name</span></a>
-<a class="sourceLine" id="cb11-20" data-line-number="20"><span class="co">#   dir: deploy</span></a>
-<a class="sourceLine" id="cb11-21" data-line-number="21"><span class="co"># images: gcr.io/your-project/your-name</span></a></code></pre></div>
-<p>You can also write out the yaml into your own cloudbuild.yaml</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="reference/cr_build_write.html">cr_build_write</a></span>(my_yaml, <span class="dt">file =</span> <span class="st">"cloudbuild.yaml"</span>)</a></code></pre></div>
-<p>This allows you to programmatically create cloudbuild yaml files.</p>
-<p><em>Source</em></p>
-<p>The code/source of the build also needs to be included. This can be a Cloud Repository mirrored from GitHub, but here we will upload it to a folder on your own private Google Cloud Storage bucket.</p>
-<p>This returns a <code>StorageSource</code> object which is needed for <code>Source</code>:</p>
-<pre><code>storage &lt;- cr_build_upload_gcs("my_folder")
-my_gcs_source &lt;- Source(storageSource=storage)</code></pre>
-<p>You can now upload the build to Cloud Build, using your custom yaml and specifying the source of the data/code on the cloud storage bucket:</p>
-<pre><code>build &lt;- cr_build(my_yaml, source = my_gcs_source)</code></pre>
-<p>Change and configure the Yaml or the source as you need.</p>
-</div>
-<div id="schedule-calling-the-docker-image-using-cloud-scheduler" class="section level4">
-<h4 class="hasAnchor">
-<a href="#schedule-calling-the-docker-image-using-cloud-scheduler" class="anchor"></a>4. Schedule calling the Docker image using Cloud Scheduler</h4>
-<p>Once the image is build successfully, you do not need to build it again for the scheduled calls. For that, you will only need the image you build (“gcr.io/your-project/your-name”) and call it via the arguments set up in the Dockerfile i.e. “R -e my_r_script.R”</p>
-<pre><code>schedule_me &lt;- Yaml(
-  steps = list(
-     cr_build_step("your-name", "R -e my_r_script.R", stem="gcr.io/your-project")
-  )
-)
-
-schedule_build &lt;- cr_build_make(schedule_me)
-
-cr_schedule("15 5 * * *", name="scheduled_r",
-             httpTarget = cr_build_schedule_http(schedule_build))
-</code></pre>
-<p>Your R script should now be scheduled and running in its own environment.</p>
-<p>You can automate updates to the script and/or Docker container or schedule seperately, by redoing any of the steps above.</p>
-</div>
-</div>
-</div>
-<div id="cloud-run-deployments" class="section level2">
+<div id="authors-website-blog" class="section level2">
 <h2 class="hasAnchor">
-<a href="#cloud-run-deployments" class="anchor"></a>Cloud Run deployments</h2>
-<p>Cloud Run is a service that lets you deploy container images without worrying about the underlying servers or infrastructure. It is called with the <code><a href="reference/cr_run.html">cr_run()</a></code> function.</p>
-<p>The Cloud Run API is not called directly when deploying - instead a Cloud Build is created for deployment. It creates a cloudbuild.yaml similar to the below:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co"># use cloud build to deploy</span></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2">image &lt;- <span class="st">"gcr.io/my-project/my-image"</span></a>
-<a class="sourceLine" id="cb16-3" data-line-number="3">Yaml(</a>
-<a class="sourceLine" id="cb16-4" data-line-number="4">    steps = list(</a>
-<a class="sourceLine" id="cb16-5" data-line-number="5">      cr_build_step(<span class="st">"docker"</span>, c(<span class="st">"build"</span>,<span class="st">"-t"</span>,image,<span class="st">"."</span>)),</a>
-<a class="sourceLine" id="cb16-6" data-line-number="6">      cr_build_step(<span class="st">"docker"</span>, c(<span class="st">"push"</span>,image)),</a>
-<a class="sourceLine" id="cb16-7" data-line-number="7">      cr_build_step(<span class="st">"gcloud"</span>, c(<span class="st">"beta"</span>,<span class="st">"run"</span>,<span class="st">"deploy"</span>, <span class="st">"my-name"</span>,</a>
-<a class="sourceLine" id="cb16-8" data-line-number="8">           <span class="st">"--image"</span>, image,</a>
-<a class="sourceLine" id="cb16-9" data-line-number="9">           <span class="st">"--region"</span>, <span class="st">"europe-west1"</span>,</a>
-<a class="sourceLine" id="cb16-10" data-line-number="10">           <span class="st">"--platform"</span>, <span class="st">"managed"</span>,</a>
-<a class="sourceLine" id="cb16-11" data-line-number="11">           <span class="st">"--concurrency"</span>, 1,</a>
-<a class="sourceLine" id="cb16-12" data-line-number="12">           <span class="st">"--allow-unauthenticated"</span></a>
-<a class="sourceLine" id="cb16-13" data-line-number="13">         ))</a>
-<a class="sourceLine" id="cb16-14" data-line-number="14">    ),</a>
-<a class="sourceLine" id="cb16-15" data-line-number="15">    images = image</a>
-<a class="sourceLine" id="cb16-16" data-line-number="16">  )</a>
-<a class="sourceLine" id="cb16-17" data-line-number="17"><span class="co"># ==cloudRunnerYaml==</span></a>
-<a class="sourceLine" id="cb16-18" data-line-number="18"><span class="co"># steps:</span></a>
-<a class="sourceLine" id="cb16-19" data-line-number="19"><span class="co"># - name: gcr.io/cloud-builders/docker</span></a>
-<a class="sourceLine" id="cb16-20" data-line-number="20"><span class="co">#   args:</span></a>
-<a class="sourceLine" id="cb16-21" data-line-number="21"><span class="co">#   - build</span></a>
-<a class="sourceLine" id="cb16-22" data-line-number="22"><span class="co">#   - -t</span></a>
-<a class="sourceLine" id="cb16-23" data-line-number="23"><span class="co">#   - gcr.io/my-project/my-image</span></a>
-<a class="sourceLine" id="cb16-24" data-line-number="24"><span class="co">#   - '.'</span></a>
-<a class="sourceLine" id="cb16-25" data-line-number="25"><span class="co">#   dir: deploy</span></a>
-<a class="sourceLine" id="cb16-26" data-line-number="26"><span class="co"># - name: gcr.io/cloud-builders/docker</span></a>
-<a class="sourceLine" id="cb16-27" data-line-number="27"><span class="co">#   args:</span></a>
-<a class="sourceLine" id="cb16-28" data-line-number="28"><span class="co">#   - push</span></a>
-<a class="sourceLine" id="cb16-29" data-line-number="29"><span class="co">#   - gcr.io/my-project/my-image</span></a>
-<a class="sourceLine" id="cb16-30" data-line-number="30"><span class="co">#   dir: deploy</span></a>
-<a class="sourceLine" id="cb16-31" data-line-number="31"><span class="co"># - name: gcr.io/cloud-builders/gcloud</span></a>
-<a class="sourceLine" id="cb16-32" data-line-number="32"><span class="co">#   args:</span></a>
-<a class="sourceLine" id="cb16-33" data-line-number="33"><span class="co">#   - beta</span></a>
-<a class="sourceLine" id="cb16-34" data-line-number="34"><span class="co">#   - run</span></a>
-<a class="sourceLine" id="cb16-35" data-line-number="35"><span class="co">#   - deploy</span></a>
-<a class="sourceLine" id="cb16-36" data-line-number="36"><span class="co">#   - my-name</span></a>
-<a class="sourceLine" id="cb16-37" data-line-number="37"><span class="co">#   - --image</span></a>
-<a class="sourceLine" id="cb16-38" data-line-number="38"><span class="co">#   - gcr.io/my-project/my-image</span></a>
-<a class="sourceLine" id="cb16-39" data-line-number="39"><span class="co">#   - --region</span></a>
-<a class="sourceLine" id="cb16-40" data-line-number="40"><span class="co">#   - europe-west1</span></a>
-<a class="sourceLine" id="cb16-41" data-line-number="41"><span class="co">#   - --platform</span></a>
-<a class="sourceLine" id="cb16-42" data-line-number="42"><span class="co">#   - managed</span></a>
-<a class="sourceLine" id="cb16-43" data-line-number="43"><span class="co">#   - --concurrency</span></a>
-<a class="sourceLine" id="cb16-44" data-line-number="44"><span class="co">#   - '1'</span></a>
-<a class="sourceLine" id="cb16-45" data-line-number="45"><span class="co">#   - --allow-unauthenticated</span></a>
-<a class="sourceLine" id="cb16-46" data-line-number="46"><span class="co">#   dir: deploy</span></a>
-<a class="sourceLine" id="cb16-47" data-line-number="47"><span class="co"># images: gcr.io/my-project/my-image</span></a></code></pre></div>
-<p>If you have an existing image you want to deploy on Cloud Run (usually one that serves up HTTP content, such as via <code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(plumber)</a></code>) then you only need to supply that image to deploy:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw"><a href="reference/cr_run.html">cr_run</a></span>(<span class="st">"gcr.io/my-project/my-image"</span>)</a></code></pre></div>
-<p>However, if you want to do the common use case of building the container first as well, you can do so by specifying a <code>Source</code> object containing the code, Dockerfile and data you want to build into the container:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">my_gcs_source &lt;-<span class="st"> </span><span class="kw"><a href="reference/Source.html">Source</a></span>(<span class="dt">storageSource=</span><span class="kw"><a href="reference/StorageSource.html">StorageSource</a></span>(<span class="st">"gs://my-bucket"</span>, <span class="st">"my_code.tar.gz"</span>))</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">build_run &lt;-<span class="st"> </span><span class="kw"><a href="reference/cr_run.html">cr_run</a></span>(<span class="st">"gcr.io/my-project/my-image"</span>, <span class="dt">source =</span> my_gcs_source)</a></code></pre></div>
-<p><code><a href="reference/cr_deploy_run.html">cr_deploy_run()</a></code> wraps the above in functions to check and wait for status etc. and is intended as the main method of Cloud Run deployment, but you may want to tweak the settings more by calling <code><a href="reference/cr_run.html">cr_run()</a></code> directly.</p>
-</div>
-<div id="demos" class="section level2">
-<h2 class="hasAnchor">
-<a href="#demos" class="anchor"></a>Demos</h2>
-<p>Useful R specific cloudbuilds</p>
-<p>Once your repo is connected to Source repositories, you can operate on R packages via:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co"># this repo mirrored on Google Source repos</span></a>
-<a class="sourceLine" id="cb19-2" data-line-number="2">my_repo &lt;-<span class="st"> </span><span class="kw"><a href="reference/Source.html">Source</a></span>(<span class="dt">repoSource=</span><span class="kw"><a href="reference/RepoSource.html">RepoSource</a></span>(<span class="st">"github_markedmondson1234_cloudrunner"</span>,</a>
-<a class="sourceLine" id="cb19-3" data-line-number="3">                  <span class="dt">branchName=</span><span class="st">"master"</span>))</a></code></pre></div>
-<ul>
-<li>Checking a package, creating a website, deploying</li>
-<li>Creating an Rmarkdown powered website using Cloud Run</li>
-<li>Helper container images on gcr.io/gcer-public/</li>
-<li>Showcase some useful cloudbuilds such as <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/slackbot">slackbot</a>
-</li>
-</ul>
-<div id="create-docker-image-of-a-package" class="section level3">
-<h3 class="hasAnchor">
-<a href="#create-docker-image-of-a-package" class="anchor"></a>Create Docker image of a package</h3>
-<p>This is what is used to deploy this package as a Dockerimaeg to the public googleComputeEngineR docker image project.</p>
-<p>Its probably easiest in this case to make <a href="https://console.cloud.google.com/cloud-build/triggers">this a trigger on GitHub push</a>, which you can do online with the same cloudbuild.yml file, but as an instructive example:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(containerit)</a>
-<a class="sourceLine" id="cb20-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb20-3" data-line-number="3">pd &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/containerit/topics/dockerfile">dockerfile</a></span>(<span class="st">"DESCRIPTION"</span>)</a>
-<a class="sourceLine" id="cb20-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/write">write</a></span>(package, <span class="dt">file =</span> <span class="st">"Dockerfile"</span>)</a></code></pre></div>
-<p>A cloudbuild.yml using build tags (saved to “build/cloudbuild_cloudRunner.yml”):</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode yml"><code class="sourceCode yaml"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="fu">steps:</span></a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Arithmetic">-</a></span> <span class="fu">name:</span><span class="at"> </span><span class="st">'gcr.io/cloud-builders/docker'</span></a>
-<a class="sourceLine" id="cb21-3" data-line-number="3">  <span class="fu">id:</span><span class="at"> </span><span class="st">'Build package'</span></a>
-<a class="sourceLine" id="cb21-4" data-line-number="4">  <span class="fu">args:</span><span class="at"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extract">[</a></span><span class="st">'build'</span><span class="fu">, '-t', 'gcr.io/gcer-public/cloudrunner:</span><span class="at">$BRANCH_NAME','.']</span></a>
-<a class="sourceLine" id="cb21-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Arithmetic">-</a></span> <span class="fu">name:</span><span class="at"> </span><span class="st">'gcr.io/cloud-builders/docker'</span></a>
-<a class="sourceLine" id="cb21-6" data-line-number="6">  <span class="fu">id:</span><span class="at">  </span><span class="st">'Push to gcer-public repo'</span></a>
-<a class="sourceLine" id="cb21-7" data-line-number="7">  <span class="fu">args:</span><span class="at"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extract">[</a></span><span class="st">'push'</span><span class="fu">, 'gcr.io/gcer-public/cloudrunner:</span><span class="at">$BRANCH_NAME']</span></a>
-<a class="sourceLine" id="cb21-8" data-line-number="8"><span class="fu">images:</span><span class="at"> </span><span class="st">'gcr.io/gcer-public/cloudrunner:$BRANCH_NAME'</span></a></code></pre></div>
-<p>Make sure to deploy the above files to GitHub and then deploy:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(cloudRunner)</a>
-<a class="sourceLine" id="cb22-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="co"># this repo mirrored on Google Source repos</span></a>
-<a class="sourceLine" id="cb22-4" data-line-number="4">my_repo &lt;-<span class="st"> </span><span class="kw"><a href="reference/Source.html">Source</a></span>(<span class="dt">repoSource=</span><span class="kw"><a href="reference/RepoSource.html">RepoSource</a></span>(<span class="st">"github_markedmondson1234_cloudrunner"</span>,</a>
-<a class="sourceLine" id="cb22-5" data-line-number="5">                  <span class="dt">branchName=</span><span class="st">"master"</span>))</a>
-<a class="sourceLine" id="cb22-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb22-7" data-line-number="7">pb &lt;-<span class="st"> </span><span class="kw"><a href="reference/cr_build.html">cr_build</a></span>(<span class="st">"build/cloudbuild_cloudRunner.yml"</span>, <span class="dt">source =</span> my_repo)</a></code></pre></div>
-</div>
-</div>
-<div id="setup" class="section level2">
-<h2 class="hasAnchor">
-<a href="#setup" class="anchor"></a>Setup</h2>
-<div id="r-settings" class="section level3">
-<h3 class="hasAnchor">
-<a href="#r-settings" class="anchor"></a>R Settings</h3>
-<ul>
-<li>Reuses environment argument <code>GCE_AUTH_FILE</code> from googleComputeEngineR which holds location of your service auth JSON</li>
-<li>Reuses environment argument <code>GCE_DEFAULT_PROJECT_ID</code> from googleComputeEngineR</li>
-<li>Reuses environment argument <code>GCS_DEFAULT_BUCKET</code> from googleCloudStorageR</li>
-<li>New environment argument <code>CR_REGION</code> can be one of</li>
-</ul>
-<pre><code>"us-central1",
-"asia-northeast1",
-"europe-west1",
-"us-east1"</code></pre>
-<ul>
-<li>New environment argument <code>CR_BUILD_EMAIL</code> that is your cloudbuild service email</li>
-</ul>
-<p>e.g. your <code>.Renviron</code> should look like:</p>
-<pre><code>GCE_AUTH_FILE="/Users/me/auth/auth.json"
-GCE_DEFAULT_PROJECT_ID="my-project"
-GCS_DEFAULT_BUCKET="my-bucket"
-CR_REGION="europe-west1"
-CR_BUILD_EMAIL=my-project-number@cloudbuild.gserviceaccount.com</code></pre>
-<p>You can also set some of the above in the R script via:</p>
-<ul>
-<li><code><a href="reference/cr_region_set.html">cr_region_set()</a></code></li>
-<li><code><a href="reference/cr_project_set.html">cr_project_set()</a></code></li>
-<li><code><a href="reference/cr_bucket_set.html">cr_bucket_set()</a></code></li>
-<li><code><a href="reference/cr_email_set.html">cr_email_set()</a></code></li>
-</ul>
-<p>Or auth via</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">googleAuthR<span class="op">::</span><span class="kw">gar_service_auth</span>(<span class="st">"my_auth_json.com"</span>)</a></code></pre></div>
-</div>
-<div id="gcp-settings" class="section level3">
-<h3 class="hasAnchor">
-<a href="#gcp-settings" class="anchor"></a>GCP settings</h3>
-<ul>
-<li>Ensure you have the Cloud Build, Cloud Run and Cloud Scheduler APIs on in your GCP project</li>
-<li>The Cloud Build service account needs permissions if you want it to deploy to Cloud Run: This can be set <a href="https://console.cloud.google.com/cloud-build/settings">here</a> where you enable <code>Cloud Run Admin</code> and <code>Service Account User</code> roles. More details found at this <a href="https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run">Google reference article</a>.</li>
-<li>If you get the error using Cloud Scheduler with a HTTP target of “Request contains an invalid argument” then ensure you have a service email with <code>service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com</code> with Cloud Scheduler Service Agent role. This is only needed if you created the project before MArch 2019. This only needs to exist in the GCP project, it is not used in deployment - create another service key for that. See <a href="https://cloud.google.com/scheduler/docs/http-target-auth#add">here</a>
-</li>
-<li>A service auth key needs Cloud Build Editor, Cloud Run Admin, Cloud Scheduler Admin roles to use all the functions in the package - this key can be downloaded and used for auth via <code>GCE_AUTH_FILE</code>
-</li>
-<li>If you want to use GitHub or BitBucket repos, you need to setup mirroring them via Cloud Source Repoitories <a href="https://source.cloud.google.com/" class="uri">https://source.cloud.google.com/</a>
-</li>
-<li>To use Cloud Scheduler you may need to initiate an App Engine application <a href="https://console.developers.google.com/appengine" class="uri">https://console.developers.google.com/appengine</a> - you only need to set the region (one allowed per GCP project) and you don’t need to create an app</li>
-</ul>
-</div>
+<a href="#authors-website-blog" class="anchor"></a>Author’s website blog</h2>
+<p>See <a href="https://code.markedmondson.me/">Mark Edmondson’s blog</a> that covers examples and code for data science in the Google Cloud Platform</p>
 </div>
 </div>
   </div>
@@ -473,7 +160,7 @@ CR_BUILD_EMAIL=my-project-number@cloudbuild.gserviceaccount.com</code></pre>
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Mark Edmondson <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8434-3881" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
+<li>Mark Edmondson <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8434-3881" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID"></a> </li>
 </ul>
 </div>
 
@@ -487,17 +174,20 @@ CR_BUILD_EMAIL=my-project-number@cloudbuild.gserviceaccount.com</code></pre>
 </div>
 </div>
 
+
       <footer><div class="copyright">
   <p>Developed by Mark Edmondson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

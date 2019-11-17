@@ -28,8 +28,10 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
 Suggests: 
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    knitr,
+    rmarkdown
 Remotes:
   o2r-project/containerit,
   r-hub/sysreqs
-
+VignetteBuilder: knitr

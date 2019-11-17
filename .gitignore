@@ -9,3 +9,4 @@ cloudRunner*.tgz
 auth/
 .Renviron
 deploy
+inst/doc
