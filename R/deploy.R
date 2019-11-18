@@ -129,7 +129,7 @@ cr_deploy_docker <- function(local,
 
 
   build_yaml <- Yaml(steps = cr_buildstep_docker(image,
-                                                 tag = "$BUILD_ID",
+                                                 tag = tag,
                                                  location = ".",
                                                  dir=paste0("deploy/", remote),
                                                  projectId = projectId),
