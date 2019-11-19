@@ -4,7 +4,7 @@
 #'
 #' @param name name of SDK appended to stem
 #' @param args character vector of arguments
-#' @param stem prefixed to name
+#' @param prefix prefixed to name - set to "" to suppress
 #' @param entrypoint change the entrypoint for the docker container
 #' @param dir The directory to use, relative to /workspace e.g. /workspace/deploy/
 #' @param id Optional id for the step
@@ -39,15 +39,21 @@
 #' # list files with a new entrypoint for gcloud
 #' Yaml(steps = cr_buildstep("gcloud", c("-c","ls -la"), entrypoint = "bash"))
 #'
+#' # to call from images not using gcr.io/cloud-builders stem
+#' cr_buildstep("alpine", c("-c","ls -la"), entrypoint = "bash", stem="")
+#'
 cr_buildstep <- function(name,
                          args,
                          id = NULL,
-                         stem = "gcr.io/cloud-builders/",
+                         prefix = "gcr.io/cloud-builders/",
                          entrypoint = NULL,
                          dir = "deploy"){
+
+  prefix <- if(is.null(prefix) || is.na(prefix)) "gcr.io/cloud-builders/" else prefix
+
   list(structure(
     rmNullObs(list(
-      name = paste0(stem, name),
+      name = paste0(prefix, name),
       entrypoint = entrypoint,
       args = args,
       id = id,
@@ -57,6 +63,46 @@ cr_buildstep <- function(name,
 
 is.cr_buildstep <- function(x){
   inherits(x, "cr_buildstep")
+}
+
+#' Convert a data.frame into cr_buildstep
+#'
+#' Helper to turn a data.frame of buildsteps info into format accepted by \link{cr_build}
+#'
+#' @param x A data.frame of steps to turn into buildsteps, with at least name and args columns
+#'
+#' @details
+#' This helps convert the output of \link{cr_build} into valid \link{cr_buildstep} so it can be sent back into the API
+#'
+#' If constructing arg list columns then \link{I} suppresses conversion of the list to columns that would otherwise break the yaml format
+#' @export
+#' @examples
+#'
+#' \dontrun{
+#'
+#' y <- data.frame(name = c("docker", "alpine"),
+#'                 args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
+#'                 id = c("Docker Version", "Hello Cloud Build"),
+#'                 prefix = c(NA, "")
+#'                 stringsAsFactors = FALSE)
+#' cr_buildstep_df(y)
+#'
+#' }
+cr_buildstep_df <- function(x){
+  assert_that(
+    is.data.frame(x),
+    all(c('name', 'args') %in% names(x))
+  )
+
+  apply(x, 1, function(row){
+    cr_buildstep(name = row[["name"]],
+                 args = row[["args"]],
+                 id = row[["id"]],
+                 prefix = row[["prefix"]],
+                 entrypoint = row[["entrypoint"]],
+                 dir = row[["dir"]])[[1]]
+  })
+
 }
 
 #' Create a build step for decrypting files via KMS

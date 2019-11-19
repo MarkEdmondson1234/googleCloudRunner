@@ -127,7 +127,7 @@ my_yaml <- Yaml(
       steps = cr_buildstep(
                   "my-r-script",
                   "R -e run.R",
-                  stem = "gcr.io/my-r-images/"
+                  prefix = "gcr.io/my-r-images/"
                 ))
 my_yaml
 #==cloudRunnerYaml==
@@ -163,7 +163,7 @@ my_yaml <- Yaml(
                 cr_buildstep(
                   "my-r-script",
                   "R -e run.R",
-                  stem = "gcr.io/my-r-images/"
+                  prefix = "gcr.io/my-r-images/"
                 ),
       images = "gcr.io/my-r-images/my-image"))
 # ==cloudRunnerYaml==

@@ -37,7 +37,8 @@ cr_schedule <- function(schedule,
     is.string(region),
     is.string(schedule)
   )
-  url <- sprintf("https://cloudscheduler.googleapis.com/v1/projects/%s/locations/%s/jobs",
+
+  the_url <- sprintf("https://cloudscheduler.googleapis.com/v1/projects/%s/locations/%s/jobs",
                  projectId, region)
 
   job <- Job(schedule=schedule,
@@ -46,7 +47,7 @@ cr_schedule <- function(schedule,
              description = description)
 
   # cloudscheduler.projects.locations.jobs.create
-  f <- gar_api_generator(url, "POST",
+  f <- gar_api_generator(the_url, "POST",
                          data_parse_function = function(x) structure(x,
                                                                      class = "gar_scheduleJob"))
   stopifnot(inherits(job, "gar_scheduleJob"))

@@ -2,6 +2,11 @@ context("Offline tests")
 
 test_that("Building Build Objects", {
 
+  cr_email_set("test@cloudbuilder.com")
+  cr_region_set("europe-west1")
+  cr_project_set("test-project")
+  cr_bucket_set("test-bucket")
+
   yaml <- system.file("cloudbuild/cloudbuild.yaml", package = "cloudRunner")
 
   expect_equal(basename(yaml), "cloudbuild.yaml" )
@@ -95,12 +100,42 @@ test_that("Building Build Objects", {
   expect_equal(cr_region_set(or), or)
   expect_equal(cr_email_set(oe), oe)
 
+
+})
+
+context("Build steps")
+
+test_that("Render BuildStep objects", {
+
+  bs1 <- cr_buildstep("alpine", c("-c","ls -la"), entrypoint = "bash", prefix="")
+  expect_equal(bs1[[1]]$name, "alpine")
+
   cloudbuild_dc <- cr_buildstep_decrypt("secret.json.enc",
                                         plain = "secret.json",
                                         keyring = "my_keyring",
                                         key = "my_key")
   expect_equal(cloudbuild_dc[[1]]$args[[1]], "kms")
   expect_equal(cloudbuild_dc[[1]]$args[[3]], "--ciphertext-file")
+
+  bsd <- cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")
+  expect_equal(bsd[[1]]$name, "gcr.io/cloud-builders/docker")
+  expect_equal(bsd[[1]]$args[[3]], "gcr.io/test-project/my-image:$BRANCH_NAME")
+  expect_equal(bsd[[2]]$name,  "gcr.io/cloud-builders/docker")
+  expect_equal(bsd[[2]]$args[[1]], "push")
+  expect_equal(bsd[[2]]$dir, "")
+
+  y <- data.frame(name = c("docker", "alpine"),
+                  args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
+                  id = c("Docker Version", "Hello Cloud Build"),
+                  prefix = c(NA, ""),
+                  stringsAsFactors = FALSE)
+  bsy <- cr_buildstep_df(y)
+  expect_equal(bsy[[1]]$name, "gcr.io/cloud-builders/docker")
+  expect_equal(bsy[[1]]$args, "version")
+  expect_equal(bsy[[2]]$name, "alpine")
+  expect_equal(bsy[[2]]$args[[1]], "echo")
+  expect_equal(bsy[[2]]$id, "Hello Cloud Build")
+
 
 })
 

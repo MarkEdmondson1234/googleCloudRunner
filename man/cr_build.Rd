@@ -30,14 +30,17 @@ my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName
 
 \dontrun{
 
-b1 <- cr_build("cloudbuild.yaml")
+cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml", package="cloudRunner")
+b1 <- cr_build(cloudbuild_file)
 b2 <- cr_build_wait(b1)
 cr_build_status(b1)
 cr_build_status(b2)
 
 
-build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
-build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
+build1 <- cr_build(cloudbuild_file,
+                   source = my_gcs_source)
+build2 <- cr_build(cloudbuild_file,
+                   source = my_repo_source)
 
 }
 }

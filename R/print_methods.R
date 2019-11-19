@@ -11,6 +11,11 @@ print.BuildOperationMetadata <- function(x, ...){
    cat0("buildId: ", x$metadata$build$id)
    cat0("status: ", x$metadata$build$status)
    cat0("logUrl: ", x$metadata$build$logUrl)
+   if(!is.null(x$metadata$build$steps)){
+     cat("\n")
+     print(cr_buildstep_df(x$metadata$build$steps))
+   }
+
 }
 
 #' @method print gar_Build
@@ -21,7 +26,10 @@ print.gar_Build <- function(x, ...){
   cat0("buildId: ", x$id)
   cat0("status: ", x$status)
   cat0("logUrl: ", x$logUrl)
-  cat0("steps: \n", as.yaml(x$steps))
+  if(!is.null(x$steps)){
+    cat("\n")
+    print(cr_buildstep_df(x$steps))
+  }
   cat0("images: ", x$images)
   #cat0("source: ", x$source[[1]])
 }

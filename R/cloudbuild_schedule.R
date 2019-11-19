@@ -26,9 +26,8 @@
 #'
 cr_build_schedule_http <- function(build, projectId = cr_project_get()){
 
-  assert_that(
-    is.gar_Build(build)
-  )
+  build <- as.gar_Build(build)
+
   HttpTarget(
     httpMethod = "POST",
     uri = sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds",

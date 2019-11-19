@@ -4,7 +4,7 @@
 \alias{cr_buildstep}
 \title{Create a yaml build step}
 \usage{
-cr_buildstep(name, args, id = NULL, stem = "gcr.io/cloud-builders/",
+cr_buildstep(name, args, id = NULL, prefix = "gcr.io/cloud-builders/",
   entrypoint = NULL, dir = "deploy")
 }
 \arguments{
@@ -14,7 +14,7 @@ cr_buildstep(name, args, id = NULL, stem = "gcr.io/cloud-builders/",
 
 \item{id}{Optional id for the step}
 
-\item{stem}{prefixed to name}
+\item{prefix}{prefixed to name - set to "" to suppress}
 
 \item{entrypoint}{change the entrypoint for the docker container}
 
@@ -50,6 +50,9 @@ Yaml(
 
 # list files with a new entrypoint for gcloud
 Yaml(steps = cr_buildstep("gcloud", c("-c","ls -la"), entrypoint = "bash"))
+
+# to call from images not using gcr.io/cloud-builders stem
+cr_buildstep("alpine", c("-c","ls -la"), entrypoint = "bash", stem="")
 
 }
 \seealso{

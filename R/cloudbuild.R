@@ -21,14 +21,17 @@
 #'
 #' \dontrun{
 #'
-#' b1 <- cr_build("cloudbuild.yaml")
+#' cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml", package="cloudRunner")
+#' b1 <- cr_build(cloudbuild_file)
 #' b2 <- cr_build_wait(b1)
 #' cr_build_status(b1)
 #' cr_build_status(b2)
 #'
 #'
-#' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
-#' build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
+#' build1 <- cr_build(cloudbuild_file,
+#'                    source = my_gcs_source)
+#' build2 <- cr_build(cloudbuild_file,
+#'                    source = my_repo_source)
 #'
 #' }
 cr_build <- function(x,
@@ -260,8 +263,18 @@ extract_build_id <- function(op){
 }
 
 as.gar_Build <- function(x){
-  class(x) <- c("gar_Build", class(x))
-  x
+  if(is.BuildOperationMetadata(x)){
+    o <- cr_build_status(extract_build_id(x),
+                         projectId = x$metadata$build$projectId)
+  } else if (is.gar_Build(x)) {
+    o <- x # maybe more here later...
+  } else {
+    class(x) <- c("gar_Build", class(x))
+    o <- x
+  }
+  assert_that(is.gar_Build(o))
+
+  o
 }
 
 is.gar_Build <- function(x){
@@ -308,6 +321,8 @@ cr_build_upload_gcs <- function(local,
 
   if(is.null(task_id)){
     task_id <- rstudio_add_job("Upload to Google Cloud Storage", timeout=0)
+    rstudio_add_state(task_id, "WORKING")
+    stop_task <- TRUE
   }
 
   rstudio_add_output(task_id,
@@ -334,6 +349,10 @@ cr_build_upload_gcs <- function(local,
                            tar_file, "to", paste0(bucket,"/", remote)))
   gcs_upload(tar_file, bucket = bucket, name = remote,
              predefinedAcl = predefinedAcl)
+
+  if(stop_task){
+    rstudio_add_state(task_id, "SUCCESS")
+  }
 
   Source(storageSource = StorageSource(bucket = bucket,
                                        object = remote)

@@ -3,7 +3,7 @@ rstudio_add_job <- function(task_name, timeout){
   if(!rstudioapi::isAvailable()) return(NULL)
 
   rstudioapi::jobAdd(paste0("cloudRunner - " , task_name),
-                     progressUnits = timeout,
+                     progressUnits = as.integer(timeout),
                      running = TRUE, autoRemove = FALSE)
 }
 
