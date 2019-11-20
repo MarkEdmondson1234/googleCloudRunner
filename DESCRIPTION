@@ -1,4 +1,4 @@
-Package: cloudRunner
+Package: googleCloudRunner
 Type: Package
 Title: Launch R scripts in the Google Cloud via Cloud Run, Cloud Build and Cloud Scheduler 
 Version: 0.0.9001
@@ -6,8 +6,8 @@ Authors@R: c(person("Mark", "Edmondson", email = "r@sunholo.com",
                   role = c("aut", "cre"),
                   comment = c(ORCID = "0000-0002-8434-3881")))
 Description: Tools to easily publish R scripts to the Google Cloud.
-URL: https://code.markedmondson.me/cloudRunner
-BugReports: https://github.com/MarkEdmondson1234/cloudRunner
+URL: https://code.markedmondson.me/googleCloudRunner
+BugReports: https://github.com/MarkEdmondson1234/googleCloudRunner
 Depends:
     R (>= 3.3.0)
 Imports:
