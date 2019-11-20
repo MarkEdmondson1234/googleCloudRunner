@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Creates a Cloud Scheduler job. — cr_schedule • googleCloudRunner</title>
+<title>Creates or updates a Cloud Scheduler job. — cr_schedule • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -18,13 +18,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -33,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Creates a Cloud Scheduler job. — cr_schedule" />
-<meta property="og:description" content="Creates a Cloud Scheduler job." />
+<meta property="og:title" content="Creates or updates a Cloud Scheduler job. — cr_schedule" />
+<meta property="og:description" content="Creates or updates a Cloud Scheduler job." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -59,6 +61,7 @@
 
   gtag('config', 'UA-47480439-2');
 </script>
+
 
   </head>
 
@@ -140,34 +143,35 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Creates a Cloud Scheduler job.</h1>
+    <h1>Creates or updates a Cloud Scheduler job.</h1>
     
     <div class="hidden name"><code>cr_schedule.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Creates a Cloud Scheduler job.</p>
+    <p>Creates or updates a Cloud Scheduler job.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_schedule</span>(<span class='no'>schedule</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>httpTarget</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_get.html'>cr_region_get</a></span>(),
+    <pre class="usage"><span class='fu'>cr_schedule</span>(<span class='no'>name</span>, <span class='kw'>schedule</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>httpTarget</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_get.html'>cr_region_get</a></span>(),
   <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_get.html'>cr_project_get</a></span>())</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>schedule</th>
-      <td><p>Required, except when used with UpdateJob</p></td>
-    </tr>
-    <tr>
       <th>name</th>
       <td><p>Optionally caller-specified in CreateJob, after</p></td>
+    </tr>
+    <tr>
+      <th>schedule</th>
+      <td><p>Required, except when used with UpdateJob</p></td>
     </tr>
     <tr>
       <th>httpTarget</th>
@@ -178,12 +182,16 @@
       <td><p>Optionally caller-specified in CreateJob or</p></td>
     </tr>
     <tr>
+      <th>overwrite</th>
+      <td><p>If TRUE and an existing job with the same name exists, will overwrite it with the new parameters</p></td>
+    </tr>
+    <tr>
       <th>region</th>
-      <td><p>The region</p></td>
+      <td><p>The region usually set with <a href='cr_region_set.html'>cr_region_set</a></p></td>
     </tr>
     <tr>
       <th>projectId</th>
-      <td><p>The GCP project to run within</p></td>
+      <td><p>The GCP project to run within usually set with <a href='cr_project_set.html'>cr_project_set</a></p></td>
     </tr>
     </table>
 
@@ -194,22 +202,7 @@
   <code><a href='Job.html'>Job</a></code>, <code><a href='cr_schedule_list.html'>cr_schedule_list</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-</div># NOT RUN {
-cr_schedule("* * * * *", name="test", httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
-
-# schedule a cloud build (no source)
-build1 <- cr_build_make("cloudbuild.yaml")
-cr_schedule("15 5 * * *", name="cloud-build-test",
-             httpTarget = cr_build_schedule_http(build1))
-
-# schedule a cloud build with code source from GCS bucket
-my_gcs_source <- cr_build_upload_gcs("my_folder", bucket = cr_get_bucket())
-build <- cr_build_make("cloudbuild.yaml", source = my_gcs_source))
-cr_schedule("15 5 * * *", name="cloud-build-test",
-            httpTarget = cr_build_schedule_http(build))
-# }
-</pre>
+    <pre class="examples"></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -222,19 +215,23 @@ cr_schedule("15 5 * * *", name="cloud-build-test",
   </div>
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by Mark Edmondson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 

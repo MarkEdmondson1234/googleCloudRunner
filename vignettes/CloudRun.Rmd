@@ -32,6 +32,10 @@ cr <- cr_deploy_run("api.R")
 #url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app 
 ```
 
+3. Enjoy your API
+
+### What did it do?
+
 Deployment via `cr_deploy_run()` automated these steps:
 
 1. Creates a Dockerfile for your R script if necessary using [`containerit`](https://o2r.info/containerit/index.html)

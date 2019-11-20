@@ -2,7 +2,7 @@
 title: "Setup"
 ---
 
-### R Settings
+## R Settings
 
 * Reuses environment argument `GCE_AUTH_FILE` from googleComputeEngineR which holds location of your service auth JSON
 * Reuses environment argument `GCE_DEFAULT_PROJECT_ID` from googleComputeEngineR
@@ -40,7 +40,7 @@ Or auth via
 googleAuthR::gar_service_auth("my_auth_json.com")
 ```
 
-### GCP settings
+## GCP settings
 
 Its easiest if you create a new service key in your GCP project.
 

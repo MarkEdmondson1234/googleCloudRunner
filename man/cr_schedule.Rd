@@ -2,43 +2,48 @@
 % Please edit documentation in R/cloudscheduler.R
 \name{cr_schedule}
 \alias{cr_schedule}
-\title{Creates a Cloud Scheduler job.}
+\title{Creates or updates a Cloud Scheduler job.}
 \usage{
-cr_schedule(schedule, name = NULL, httpTarget = NULL,
-  description = NULL, region = cr_region_get(),
+cr_schedule(name, schedule = NULL, httpTarget = NULL,
+  description = NULL, overwrite = FALSE, region = cr_region_get(),
   projectId = cr_project_get())
 }
 \arguments{
-\item{schedule}{Required, except when used with UpdateJob}
-
 \item{name}{Optionally caller-specified in CreateJob, after}
+
+\item{schedule}{Required, except when used with UpdateJob}
 
 \item{httpTarget}{A HTTP target object \link{HttpTarget}}
 
 \item{description}{Optionally caller-specified in CreateJob or}
 
-\item{region}{The region}
+\item{overwrite}{If TRUE and an existing job with the same name exists, will overwrite it with the new parameters}
 
-\item{projectId}{The GCP project to run within}
+\item{region}{The region usually set with \link{cr_region_set}}
+
+\item{projectId}{The GCP project to run within usually set with \link{cr_project_set}}
 }
 \description{
-Creates a Cloud Scheduler job.
+Creates or updates a Cloud Scheduler job.
 }
 \examples{
 
 \dontrun{
-cr_schedule("* * * * *", name="test", httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
+cr_schedule("test", "* * * * *", httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
 
 # schedule a cloud build (no source)
 build1 <- cr_build_make("cloudbuild.yaml")
-cr_schedule("15 5 * * *", name="cloud-build-test",
+cr_schedule("cloud-build-test", "15 5 * * *",
              httpTarget = cr_build_schedule_http(build1))
 
 # schedule a cloud build with code source from GCS bucket
 my_gcs_source <- cr_build_upload_gcs("my_folder", bucket = cr_get_bucket())
 build <- cr_build_make("cloudbuild.yaml", source = my_gcs_source))
-cr_schedule("15 5 * * *", name="cloud-build-test",
+cr_schedule("cloud-build-test2", "15 5 * * *",
             httpTarget = cr_build_schedule_http(build))
+
+# update a schedule with the same name - only supply what you want to change
+cr_schedule("cloud-build-test2", "12 6 * * *", overwrite=TRUE)
 }
 }
 \seealso{

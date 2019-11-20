@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Serverless R via Cloud Build • googleCloudRunner</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Serverless R via Cloud Build">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -100,6 +101,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -122,12 +124,12 @@
 <p>Cloud Build is centered around the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yaml format</a> - you can use existing cloudbuild.yaml files or create your own in R using the yaml helper functions.</p>
 <p>An example cloudbuild.yaml is shown below - this outputs the versions of docker and echos “Hello Cloud Build”:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="fu">steps:</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Arithmetic">-</a></span> <span class="fu">name:</span><span class="at"> </span><span class="st">'gcr.io/cloud-builders/docker'</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/Arithmetic.html">-</a></span> <span class="fu">name:</span><span class="at"> </span><span class="st">'gcr.io/cloud-builders/docker'</span></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3">  <span class="fu">id:</span><span class="at"> Docker Version</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">  <span class="fu">args:</span><span class="at"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extract">[</a></span><span class="st">"version"</span><span class="kw">]</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Arithmetic">-</a></span> <span class="fu">name:</span><span class="at"> </span><span class="st">'alpine'</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">  <span class="fu">args:</span><span class="at"> </span><span class="kw"><a href="https://rdrr.io/r/base/Extract.html">[</a></span><span class="st">"version"</span><span class="kw">]</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/base/Arithmetic.html">-</a></span> <span class="fu">name:</span><span class="at"> </span><span class="st">'alpine'</span></a>
 <a class="sourceLine" id="cb1-6" data-line-number="6">  <span class="fu">id:</span><span class="at">  Hello Cloud Build</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">  <span class="fu">args:</span><span class="at"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extract">[</a></span><span class="st">"echo"</span><span class="kw">,</span> <span class="st">"Hello Cloud Build"</span><span class="kw">]</span></a></code></pre></div>
+<a class="sourceLine" id="cb1-7" data-line-number="7">  <span class="fu">args:</span><span class="at"> </span><span class="kw"><a href="https://rdrr.io/r/base/Extract.html">[</a></span><span class="st">"echo"</span><span class="kw">,</span> <span class="st">"Hello Cloud Build"</span><span class="kw">]</span></a></code></pre></div>
 <p>This cloudbuild.yaml file can be built directly via the <code><a href="../reference/cr_build.html">cr_build()</a></code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">b1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="st">"cloudbuild.yaml"</span>)</a></code></pre></div>
 <p>The build will trigger an RStudio Jobs if you are using RStudio, or a webpage for the build logs to open. Or you can choose to wait in R for the build to finish, like below:</p>
@@ -195,9 +197,10 @@
 <p>There is a helper function for automating creation of a Google Cloud Storage source called <code><a href="../reference/cr_build_upload_gcs.html">cr_build_upload_gcs()</a></code></p>
 <p>This returns a <code>Source</code> object that can be used in build functions:</p>
 <pre><code>storage &lt;- cr_build_upload_gcs("my_folder")</code></pre>
-<div id="cloud-build-macros" class="section level3">
-<h3 class="hasAnchor">
-<a href="#cloud-build-macros" class="anchor"></a>Cloud Build macros</h3>
+</div>
+<div id="cloud-build-macros" class="section level2">
+<h2 class="hasAnchor">
+<a href="#cloud-build-macros" class="anchor"></a>Cloud Build macros</h2>
 <p>Cloud Builds can use reserved macros and variables to help with deployments in a continuous development situation. For instance, files can be named according to the Git branch they are committed from. These are listed in <code><a href="../reference/Build.html">?Build</a></code> and reproduced below:</p>
 <ul>
 <li>$PROJECT_ID: the project ID of the build.</li>
@@ -210,9 +213,9 @@
 </ul>
 <p>Custom macros can also be configured in the web UI, starting with <em>$ e.g. </em>$MY_CUSTOM_MACRO</p>
 </div>
-<div id="program-cloudbuild-yaml-objects-via-yaml" class="section level3">
-<h3 class="hasAnchor">
-<a href="#program-cloudbuild-yaml-objects-via-yaml" class="anchor"></a>Program cloudbuild.yaml objects via Yaml()</h3>
+<div id="program-cloudbuild-yaml-objects-via-yaml" class="section level2">
+<h2 class="hasAnchor">
+<a href="#program-cloudbuild-yaml-objects-via-yaml" class="anchor"></a>Program cloudbuild.yaml objects via Yaml()</h2>
 <p>Lets say you don’t want to write a cloudbuild.yaml file - instead its created all within R using the yaml helper functions <code><a href="../reference/Yaml.html">Yaml()</a></code> and <code>cr_buildstep</code>. Refer to the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yaml config spec</a> on what it expected in the file.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">image &lt;-<span class="st"> "gcr.io/your-project/your-name"</span></a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">my_yaml &lt;-<span class="st"> </span><span class="kw"><a href="../reference/Yaml.html">Yaml</a></span>(</a>
@@ -237,9 +240,9 @@
 <li>
 <code><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt()</a></code> - for using Google Key management store to decrypt auth files</li>
 </ul>
-<p>Combine buildsteps with <code><a href="https://www.rdocumentation.org/packages/base/topics/c">c()</a></code> e.g.</p>
+<p>Combine buildsteps with <code><a href="https://rdrr.io/r/base/c.html">c()</a></code> e.g.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">my_yaml &lt;-<span class="st"> </span><span class="kw"><a href="../reference/Yaml.html">Yaml</a></span>(</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">      <span class="dt">steps =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">      <span class="dt">steps =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">                  <span class="st">"my-image"</span>, <span class="dt">tag=</span><span class="st">"dev"</span></a>
 <a class="sourceLine" id="cb10-4" data-line-number="4">                ),</a>
 <a class="sourceLine" id="cb10-5" data-line-number="5">                <span class="kw"><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt</a></span>(</a>
@@ -257,7 +260,6 @@
 <p>Putting the above together:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(my_yaml, <span class="dt">source =</span> storage)</a></code></pre></div>
 </div>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -268,6 +270,8 @@
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#cloudbuild-yaml">cloudbuild.yaml</a></li>
       <li><a href="#cloud-build-source">Cloud Build source</a></li>
+      <li><a href="#cloud-build-macros">Cloud Build macros</a></li>
+      <li><a href="#program-cloudbuild-yaml-objects-via-yaml">Program cloudbuild.yaml objects via Yaml()</a></li>
       </ul>
 </div>
       </div>
@@ -275,17 +279,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Mark Edmondson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

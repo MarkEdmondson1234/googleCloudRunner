@@ -116,7 +116,7 @@ This returns a `Source` object that can be used in build functions:
 storage <- cr_build_upload_gcs("my_folder")
 ```
 
-### Cloud Build macros
+## Cloud Build macros
 
 Cloud Builds can use reserved macros and variables to help with deployments in a continuous development situation.  For instance, files can be named according to the Git branch they are committed from.  These are listed in `?Build` and reproduced below:
 
@@ -130,7 +130,7 @@ Cloud Builds can use reserved macros and variables to help with deployments in a
 
 Custom macros can also be configured in the web UI, starting with _$ e.g. _$MY_CUSTOM_MACRO
 
-### Program cloudbuild.yaml objects via Yaml()
+## Program cloudbuild.yaml objects via Yaml()
 
 Lets say you don't want to write a cloudbuild.yaml file - instead its created all within R using the yaml helper functions `Yaml()` and `cr_buildstep`.  Refer to the [cloudbuild.yaml config spec](https://cloud.google.com/cloud-build/docs/build-config) on what it expected in the file. 
 
