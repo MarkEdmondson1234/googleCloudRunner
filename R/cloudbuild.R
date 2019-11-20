@@ -7,7 +7,7 @@
 #'
 #' @inheritParams Build
 #' @param projectId ID of the project
-#' @param x A cloudbuild.yaml file location or an R object that will be turned into yaml via \link[yaml]{as.yaml} or a \link{Build} object created by \link{cr_build_make}
+#' @param x A cloudbuild.yaml file location or an R object that will be turned into yaml via \link[yaml]{as.yaml} or a \link{Build} object created by \link{cr_build_make} or from a previous build you want to rerun.
 #' @param launch_browser Whether to launch the logs URL in a browser once deployed
 #' @importFrom googleAuthR gar_api_generator
 #' @importFrom yaml yaml.load_file
@@ -23,17 +23,30 @@
 #' my_repo_source
 #' \dontrun{
 #'
+#' # build from a cloudbuild.yaml file
 #' cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml", package="googleCloudRunner")
+#'
+#' # asynchronous, will launch log browser by default
 #' b1 <- cr_build(cloudbuild_file)
+#'
+#' # synchronous waiting for build to finish
 #' b2 <- cr_build_wait(b1)
+#'
+#' # the same results
 #' cr_build_status(b1)
 #' cr_build_status(b2)
 #'
-#'
+#' # build from a cloud storage source
 #' build1 <- cr_build(cloudbuild_file,
 #'                    source = my_gcs_source)
+#' # build from a git repository source
 #' build2 <- cr_build(cloudbuild_file,
 #'                    source = my_repo_source)
+#'
+#' # you can send in results for previous builds to trigger the same build under a new Id
+#' # will trigger build2 again
+#' cr_build(build2)
+#'
 #'
 #' }
 cr_build <- function(x,
@@ -56,7 +69,12 @@ cr_build <- function(x,
                  projectId)
 
   if(is.gar_Build(x)){
-    build <- x
+    # turn existing build into a valid new build
+    build <- safe_set(x, "status", "QUEUED")
+
+  } else if(is.BuildOperationMetadata(x)){
+    x <- as.gar_Build(x)
+    build <- safe_set(x, "status", "QUEUED")
   } else {
     build <- cr_build_make(yaml = x,
                            source = source,
@@ -87,6 +105,8 @@ cr_build <- function(x,
 is.BuildOperationMetadata <- function(x){
   inherits(x, "BuildOperationMetadata")
 }
+
+
 
 extract_logs <- function(o){
   if(is.BuildOperationMetadata(o)){
@@ -283,86 +303,6 @@ is.gar_Build <- function(x){
   inherits(x, "gar_Build")
 }
 
-#' Create a StorageSource
-#'
-#' This creates a \link{StorageSource} object after uploading to Google Cloud Storage
-#'
-#' @param local Local directory containing the Dockerfile etc. you wish to deploy
-#' @param remote The name of the folder in your bucket
-#' @param bucket The Google Cloud Storage bucket to upload to
-#' @param predefinedAcl The ACL rules for the object uploaded.
-#' @param deploy_folder Which folder to deploy from
-#' @param task_id pass in existing task_id if you want to use the same RStudio job
-#'
-#' @details
-#'
-#' It copies the files into a folder call "deploy" in your working directory, then tars it for upload
-#'
-#' @export
-#' @importFrom googleCloudStorageR gcs_upload
-#'
-#' @return A Source object
-#' @examples
-#'
-#' \dontrun{
-#'
-#' my_gcs_source <- cr_build_upload_gcs("my_folder")
-#' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
-#'
-#' }
-#' @family Cloud Build functions
-#' @importFrom utils tar
-cr_build_upload_gcs <- function(local,
-                                remote = paste0(local,
-                                             format(Sys.time(), "%Y%m%d%H%M%S"),
-                                             ".tar.gz"),
-                                bucket = cr_bucket_get(),
-                                predefinedAcl="bucketOwnerFullControl",
-                                deploy_folder = "deploy",
-                                task_id=NULL){
-
-  if(is.null(task_id)){
-    task_id <- rstudio_add_job("Upload to Google Cloud Storage", timeout=0)
-    rstudio_add_state(task_id, "WORKING")
-    stop_task <- TRUE
-  }
-
-  rstudio_add_output(task_id,
-                   paste("\n#Upload ", local, " to ",
-                         paste0("gs://",bucket,"/",remote)))
-
-  tar_file <- paste0(basename(local), ".tar.gz")
-
-  dir.create(deploy_folder, showWarnings = FALSE)
-  rstudio_add_output(task_id,
-                     paste0("\nCopying files from ",
-                            local, " to /", deploy_folder))
-  file.copy(local, deploy_folder, recursive = TRUE)
-  rstudio_add_output(task_id,
-                     paste0("\nCompressing files from /",
-                           deploy_folder, " to ", tar_file))
-  tar(tar_file,
-      files = deploy_folder,
-      compression = "gzip")
-
-  unlink(deploy_folder, recursive = TRUE)
-  rstudio_add_output(task_id,
-                     paste("\nUploading",
-                           tar_file, "to", paste0(bucket,"/", remote)))
-  gcs_upload(tar_file, bucket = bucket, name = remote,
-             predefinedAcl = predefinedAcl)
-
-  if(stop_task){
-    rstudio_add_state(task_id, "SUCCESS")
-  }
-
-  Source(storageSource = StorageSource(bucket = bucket,
-                                       object = remote)
-  )
-}
-
-
-
 #' Build Object
 #'
 #' @details
@@ -510,155 +450,5 @@ cr_build_write.cr_yaml <- function(x, file = "cloudbuild.yaml"){
 
 
 
-#' Source Object
-#'
-#' @details
-#' Location of the source in a supported storage service.
-#'
-#' @param repoSource If provided via \link{RepoSource}, get the source from this location in a Cloud Source
-#' @param storageSource If provided via \link{StorageSource}, get the source from this location in Google Cloud Storage
-#'
-#' @return Source object
-#'
-#' @family Cloud Build functions
-#' @export
-#' @examples
-#'
-#' \dontrun{
-#'
-#' my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
-#'                                                     "gs://my-bucket"))
-#' my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com",
-#'                                                branchName="master"))
-#'
-#' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
-#' build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
-#'
-#' }
-Source <- function(storageSource = NULL, repoSource = NULL) {
 
-  if(!xor(is.null(repoSource),is.null(storageSource))){
-    stop("Only one of repoSource or storageSource can be supplied", call. = FALSE)
-  }
-
-  if(!is.null(repoSource)){
-    assert_that(is.gar_RepoSource(repoSource))
-  }
-
-  if(!is.null(storageSource)){
-    assert_that(is.gar_StorageSource(storageSource))
-  }
-  structure(rmNullObs(list(repoSource = repoSource, storageSource = storageSource)),
-            class = c("gar_Source","list"))
-}
-
-is.gar_Source <- function(x){
-  inherits(x, "gar_Source")
-}
-
-is.gar_SourceStorage <- function(x){
-  if(is.gar_Source(x)){
-    return(!is.null(x$storageSource))
-  }
-  FALSE
-}
-
-is.gar_SourceRepo <- function(x){
-  if(is.gar_Source(x)){
-    return(!is.null(x$repoSource))
-  }
-  FALSE
-}
-
-#' RepoSource Object
-#'
-#' @details
-#' Location of the source in a Google Cloud Source Repository.
-#'
-#' Only one of commitSha, branchName or tagName are allowed.
-#'
-#' If you want to use GitHub or BitBucket repos, you need to setup mirroring them via Cloud Source Repositories https://source.cloud.google.com/
-#'
-#' @param tagName Regex matching tags to build
-#' @param projectId ID of the project that owns the Cloud Source Repository
-#' @param repoName Name of the Cloud Source Repository
-#' @param commitSha Explicit commit SHA to build
-#' @param branchName Regex matching branches to build e.g. ".*"
-#' @param dir Directory, relative to the source root, in which to run the build
-#'
-#' @return RepoSource object
-#'
-#' @family Cloud Build functions
-#' @export
-#' @examples
-#'
-#' \dontrun{
-#'
-#' my_repo <- Source(
-#'   repoSource=RepoSource("github_markedmondson1234_googlecloudrunner",
-#'                         branchName="master"))
-#'
-#' build <- cr_build(
-#'   Yaml(steps =
-#'     cr_buildstep("gcloud", c("-c","ls -la"),
-#'                   entrypoint = "bash",
-#'                   dir = "")),
-#'  source = my_repo)
-#'
-#' }
-RepoSource <- function(repoName = NULL,
-                       tagName = NULL,
-                       commitSha = NULL,
-                       branchName = NULL,
-                       dir = NULL,
-                       projectId = NULL) {
-
-  if(!is.null(commitSha)) assert_that(is.null(branchName), is.null(tagName))
-  if(!is.null(branchName)) assert_that(is.null(commitSha), is.null(tagName))
-  if(!is.null(tagName)) assert_that(is.null(branchName), is.null(commitSha))
-
-  structure(rmNullObs(list(tagName = tagName, projectId = projectId, repoName = repoName,
-                 commitSha = commitSha, branchName = branchName, dir = dir)),
-            class = c("gar_RepoSource","list"))
-}
-
-is.gar_RepoSource <- function(x){
-  inherits(x, "gar_RepoSource")
-}
-
-#' StorageSource Object
-#'
-#' @details
-#' Location of the source in an archive file in Google Cloud Storage.
-#'
-#' @param bucket Google Cloud Storage bucket containing the source
-#' @param object Google Cloud Storage object containing the source. This object must be a gzipped archive file (.tar.gz) containing source to build.
-#' @param generation Google Cloud Storage generation for the object.  If the generation is omitted, the latest generation will be used.
-#'
-#' @return StorageSource object
-#'
-#' @family Cloud Build functions
-#' @export
-#' @examples
-#'
-#' \dontrun{
-#'
-#' # construct Source object
-#' my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
-#'                                                     "gs://my-bucket"))
-#' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
-#'
-#' # helper that tars and adds to Source() for you
-#' my_gcs_source2 <- cr_build_upload_gcs("my_folder")
-#' build2 <- cr_build("cloudbuild.yaml", source = my_gcs_source2)
-#'
-#' }
-StorageSource <- function(object = NULL, bucket = NULL, generation = NULL) {
-  structure(rmNullObs(list(bucket = bucket, object = object, generation = generation)),
-            class = c("gar_StorageSource","list"))
-}
-
-is.gar_StorageSource <- function(x){
-  inherits(x, "gar_StorageSource")
-}
 

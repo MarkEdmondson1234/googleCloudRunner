@@ -1,3 +1,8 @@
+safe_set <- function(x, set, to){
+  if(!is.null(x[[set]]) && x[[set]] != to) x[[set]] <- to
+  x
+}
+
 #' Custom message log level
 #'
 #' @param ... The message(s)

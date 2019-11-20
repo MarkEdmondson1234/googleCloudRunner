@@ -27,6 +27,7 @@
 cr_build_schedule_http <- function(build, projectId = cr_project_get()){
 
   build <- as.gar_Build(build)
+  build <- safe_set(build, "status", "QUEUED")
 
   HttpTarget(
     httpMethod = "POST",

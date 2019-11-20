@@ -8,7 +8,7 @@ cr_build(x, source = NULL, timeout = NULL, images = NULL,
   projectId = cr_project_get(), launch_browser = interactive())
 }
 \arguments{
-\item{x}{A cloudbuild.yaml file location or an R object that will be turned into yaml via \link[yaml]{as.yaml} or a \link{Build} object created by \link{cr_build_make}}
+\item{x}{A cloudbuild.yaml file location or an R object that will be turned into yaml via \link[yaml]{as.yaml} or a \link{Build} object created by \link{cr_build_make} or from a previous build you want to rerun.}
 
 \item{source}{A \link{Source} object specifying the location of the source files to build}
 
@@ -32,17 +32,30 @@ my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName
 my_repo_source
 \dontrun{
 
+# build from a cloudbuild.yaml file
 cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml", package="googleCloudRunner")
+
+# asynchronous, will launch log browser by default
 b1 <- cr_build(cloudbuild_file)
+
+# synchronous waiting for build to finish
 b2 <- cr_build_wait(b1)
+
+# the same results
 cr_build_status(b1)
 cr_build_status(b2)
 
-
+# build from a cloud storage source
 build1 <- cr_build(cloudbuild_file,
                    source = my_gcs_source)
+# build from a git repository source
 build2 <- cr_build(cloudbuild_file,
                    source = my_repo_source)
+
+# you can send in results for previous builds to trigger the same build under a new Id
+# will trigger build2 again
+cr_build(build2)
+
 
 }
 }

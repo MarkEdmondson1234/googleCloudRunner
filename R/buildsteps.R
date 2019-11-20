@@ -94,7 +94,14 @@ cr_buildstep_df <- function(x){
     all(c('name', 'args') %in% names(x))
   )
 
-  apply(x, 1, function(row){
+  if(is.null(x$prefix)){
+    #probably from API
+    x$prefix=""
+  }
+
+  xx <- x[, intersect(c("name","args","id","prefix","entrypoint","dir"), names(x))]
+
+  apply(xx, 1, function(row){
     cr_buildstep(name = row[["name"]],
                  args = row[["args"]],
                  id = row[["id"]],
