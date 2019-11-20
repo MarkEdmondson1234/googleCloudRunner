@@ -4,7 +4,7 @@
 #'
 #' @seealso https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/create
 #'
-#' @param build A \link{Build} object usually created with \link{cr_build_make}
+#' @param build A \link{Build} object created via \link{cr_build_make} or \link{cr_build}
 #' @param projectId The projectId
 #'
 #' @return A \link{HttpTarget} object for use in \link{cr_schedule}
@@ -22,6 +22,14 @@
 #' \dontrun{
 #' cr_schedule("15 5 * * *", name="cloud-build-test1",
 #'             httpTarget = cr_build_schedule_http(build1))
+#'
+#' # a cloud build you would like to schedule
+#' itworks <- cr_build("cloudbuild.yaml", launch_browser = FALSE)
+#'
+#' # once working, pass in the build to the scheduler
+#' cr_schedule("15 5 * * *", name="itworks-schedule",
+#'             httpTarget = cr_build_schedule_http(itworks))
+#'
 #' }
 #'
 cr_build_schedule_http <- function(build, projectId = cr_project_get()){

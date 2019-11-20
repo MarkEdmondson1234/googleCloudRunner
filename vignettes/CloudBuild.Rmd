@@ -71,6 +71,19 @@ cr_build_wait(b2)
 #   - '2019-11-12T11:16:39.869607125Z'
 ```
 
+You can also reuse Cloud Build objects to re-run the same build.  This is helpful when you test a build works locally, then pass the result of a successful run to `cr_build_schedule_http()` to schedule it. 
+
+```r
+# a cloud build you would like to schedule
+itworks <- cr_build("cloudbuild.yaml", launch_browser = FALSE)
+
+# once working, pass in the build to the scheduler
+cr_schedule("15 5 * * *", name="itworks-schedule",
+            httpTarget = cr_build_schedule_http(itworks))
+```
+
+
+
 ## Cloud Build source
 
 Cloud Builds usually need code or data to work on to be useful.  This is specified by the `source` argument.  

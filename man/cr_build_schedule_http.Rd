@@ -7,7 +7,7 @@
 cr_build_schedule_http(build, projectId = cr_project_get())
 }
 \arguments{
-\item{build}{A \link{Build} object usually created with \link{cr_build_make}}
+\item{build}{A \link{Build} object created via \link{cr_build_make} or \link{cr_build}}
 
 \item{projectId}{The projectId}
 }
@@ -27,6 +27,14 @@ build1
 \dontrun{
 cr_schedule("15 5 * * *", name="cloud-build-test1",
             httpTarget = cr_build_schedule_http(build1))
+
+# a cloud build you would like to schedule
+itworks <- cr_build("cloudbuild.yaml", launch_browser = FALSE)
+
+# once working, pass in the build to the scheduler
+cr_schedule("15 5 * * *", name="itworks-schedule",
+            httpTarget = cr_build_schedule_http(itworks))
+
 }
 
 }
