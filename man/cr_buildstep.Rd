@@ -52,7 +52,7 @@ Yaml(
 Yaml(steps = cr_buildstep("gcloud", c("-c","ls -la"), entrypoint = "bash"))
 
 # to call from images not using gcr.io/cloud-builders stem
-cr_buildstep("alpine", c("-c","ls -la"), entrypoint = "bash", stem="")
+cr_buildstep("alpine", c("-c","ls -la"), entrypoint = "bash", prefix="")
 
 }
 \seealso{
