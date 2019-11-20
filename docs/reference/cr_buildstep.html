@@ -236,7 +236,7 @@
                      <span class='kw'>args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"beta"</span>,<span class='st'>"run"</span>,<span class='st'>"deploy"</span>,
                               <span class='st'>"test1"</span>,<span class='st'>"--image"</span>, <span class='no'>image</span>))
              ),
-    <span class='kw'>images</span> <span class='kw'>=</span> <span class='no'>image</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-20 13:03:11&gt; Image to be built: gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; ==cloudRunnerYaml==
+    <span class='kw'>images</span> <span class='kw'>=</span> <span class='no'>image</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-20 14:58:11&gt; Image to be built: gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; ==cloudRunnerYaml==
 #&gt; steps:
 #&gt; - name: gcr.io/cloud-builders/docker
 #&gt;   args:
@@ -270,7 +270,15 @@
 #&gt;   - ls -la
 #&gt;   dir: deploy</div><div class='input'>
 <span class='co'># to call from images not using gcr.io/cloud-builders stem</span>
-<span class='fu'>cr_buildstep</span>(<span class='st'>"alpine"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"-c"</span>,<span class='st'>"ls -la"</span>), <span class='kw'>entrypoint</span> <span class='kw'>=</span> <span class='st'>"bash"</span>, <span class='kw'>stem</span><span class='kw'>=</span><span class='st'>""</span>)</div><div class='output co'>#&gt; <span class='error'>Error in cr_buildstep("alpine", c("-c", "ls -la"), entrypoint = "bash",     stem = ""): unused argument (stem = "")</span></div><div class='input'>
+<span class='fu'>cr_buildstep</span>(<span class='st'>"alpine"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"-c"</span>,<span class='st'>"ls -la"</span>), <span class='kw'>entrypoint</span> <span class='kw'>=</span> <span class='st'>"bash"</span>, <span class='kw'>prefix</span><span class='kw'>=</span><span class='st'>""</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: alpine
+#&gt; entrypoint: bash
+#&gt; args:
+#&gt; - -c
+#&gt; - ls -la
+#&gt; dir: deploy
+#&gt; </div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

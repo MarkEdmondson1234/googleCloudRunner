@@ -179,49 +179,18 @@ my_yaml <- Yaml(
                   prefix = "gcr.io/my-r-images/"
                 ),
       images = "gcr.io/my-r-images/my-image"))
-# ==cloudRunnerYaml==
-#   steps:
-#   '':
-#   name: gcr.io/cloud-builders/docker
-# args:
-#   - build
-# - -t
-# - gcr.io/mark-edmondson-gde/my-image:dev
-# - '.'
-# dir: ''
-# '':
-#   name: gcr.io/cloud-builders/docker
-# args:
-#   - push
-# - gcr.io/mark-edmondson-gde/my-image:dev
-# dir: ''
-# '':
-#   name: gcr.io/cloud-builders/gcloud
-# args:
-#   - kms
-# - decrypt
-# - --ciphertext-file
-# - secret
-# - --plaintext-file
-# - auth.json
-# - --location
-# - global
-# - --keyring
-# - keyring
-# - --key
-# - key
-# dir: ''
-# '':
-#   name: gcr.io/my-r-images/my-r-script
-# args: R -e run.R
-# dir: deploy
-# images: gcr.io/my-r-images/my-image 
 ```
 
 The code/source of the build also usually needs to be included.  This can be a Cloud Repository mirrored from GitHub, but here we will upload it to a folder on your own private Google Cloud Storage bucket via the helper `cr_build_upload_gcs()`
 
 This returns a `Source` object that can be used in build functions:
 
-```
+```r
 storage <- cr_build_upload_gcs("my_folder")
+```
+
+Putting the above together:
+
+```r
+cr_build(my_yaml, source = storage)
 ```
