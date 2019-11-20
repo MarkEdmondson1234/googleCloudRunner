@@ -17,11 +17,13 @@
 #' @examples
 #'
 #' my_gcs_source <- Source(storageSource=StorageSource("gs://my-bucket", "my_code.tar.gz"))
-#' my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName="master"))
+#' my_gcs_source
 #'
+#' my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName="master"))
+#' my_repo_source
 #' \dontrun{
 #'
-#' cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml", package="cloudRunner")
+#' cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml", package="googleCloudRunner")
 #' b1 <- cr_build(cloudbuild_file)
 #' b2 <- cr_build_wait(b1)
 #' cr_build_status(b1)
@@ -108,7 +110,7 @@ extract_logs <- function(o){
 #' @import assertthat
 #' @family Cloud Build functions
 #' @examples
-#' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "cloudRunner")
+#' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
 #' cr_build_make(cloudbuild)
 cr_build_make <- function(yaml,
                           source = NULL,
@@ -483,7 +485,7 @@ Build <- function(Build.substitutions = NULL,
 #'
 #' # write from a Build object
 #' build <- cr_build_make(system.file("cloudbuild/cloudbuild.yaml",
-#'                                    package = "cloudRunner"))
+#'                                    package = "googleCloudRunner"))
 #' cr_build_write(build)
 #'
 cr_build_write <- function(x, file = "cloudbuild.yaml"){
@@ -593,7 +595,7 @@ is.gar_SourceRepo <- function(x){
 #' \dontrun{
 #'
 #' my_repo <- Source(
-#'   repoSource=RepoSource("github_markedmondson1234_cloudrunner",
+#'   repoSource=RepoSource("github_markedmondson1234_googlecloudrunner",
 #'                         branchName="master"))
 #'
 #' build <- cr_build(

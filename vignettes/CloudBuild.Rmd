@@ -82,7 +82,7 @@ gcs_source <- Source(
   storageSource=StorageSource("gs://my-bucket", "my_code.tar.gz"))
   
 repo_source <- Source(
-  repoSource=RepoSource("github_markedmondson1234_cloudrunner",
+  repoSource=RepoSource("github_markedmondson1234_googlecloudrunner",
                         branchName="master"))
 
 build1 <- cr_build("cloudbuild.yaml", source = gcs_source)

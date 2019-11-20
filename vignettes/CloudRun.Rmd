@@ -10,7 +10,7 @@ Cloud Run is a service that lets you deploy container images without worrying ab
 2. Deploy via the `cr_deploy_run()` function:
 
 ```r
-library(cloudRunner)
+library(googleCloudRunner)
 
 cr <- cr_deploy_run("api.R")
 #2019-11-12 10:34:29 -- File size detected as 903 bytes

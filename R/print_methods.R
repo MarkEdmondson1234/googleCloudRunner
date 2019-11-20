@@ -27,8 +27,13 @@ print.gar_Build <- function(x, ...){
   cat0("status: ", x$status)
   cat0("logUrl: ", x$logUrl)
   if(!is.null(x$steps)){
-    cat("\n")
-    print(cr_buildstep_df(x$steps))
+    cat("steps:\n")
+    if(is.data.frame(x$steps)){
+      print(cr_buildstep_df(x$steps))
+    } else {
+      cat(as.yaml(x$steps))
+    }
+
   }
   cat0("images: ", x$images)
   #cat0("source: ", x$source[[1]])
@@ -50,14 +55,7 @@ print.cr_buildstep <- function(x, ...){
   cat(as.yaml(x))
 }
 
-#' @method print gar_StorageSource
-#' @export
-print.gar_StorageSource <- function(x, ...){
-  cat("==CloudBuildStorageSource==\n")
-  cat0("bucket: ", x$bucket)
-  cat0("object: ", x$object)
-  cat0("generation: ", x$generation)
-}
+
 
 #' @method print gar_Service
 #' @export
@@ -84,4 +82,29 @@ print.gar_scheduleJob <- function(x, ...){
   cat0("userUpdateTime: ", x$userUpdateTime)
   cat0("schedule: ", x$schedule)
   cat0("timezone: ", x$timeZone)
+}
+
+#' @method print gar_Source
+#' @export
+print.gar_Source <- function(x, ...){
+  cat("==CloudBuildSource==\n")
+  if(!is.null(x$repoSource)) print.gar_RepoSource(x$repoSource)
+  if(!is.null(x$storageSource)) print.gar_StorageSource(x$storageSource)
+}
+
+#' @method print gar_StorageSource
+#' @export
+print.gar_StorageSource <- function(x, ...){
+  cat("==CloudBuildStorageSource==\n")
+  cat0("bucket: ", x$bucket)
+  cat0("object: ", x$object)
+  cat0("generation: ", x$generation)
+}
+
+#' @method print gar_RepoSource
+#' @export
+print.gar_RepoSource <- function(x, ...){
+  cat("==CloudBuildRepoSource==\n")
+  cat0("repoName: ", x$repoName)
+  cat0("branchName: ", x$branchName)
 }

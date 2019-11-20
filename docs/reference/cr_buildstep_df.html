@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a StorageSource — cr_build_upload_gcs • googleCloudRunner</title>
+<title>Convert a data.frame into cr_buildstep — cr_buildstep_df • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -33,8 +33,8 @@
 
 
 
-<meta property="og:title" content="Create a StorageSource — cr_build_upload_gcs" />
-<meta property="og:description" content="This creates a StorageSource object after uploading to Google Cloud Storage" />
+<meta property="og:title" content="Convert a data.frame into cr_buildstep — cr_buildstep_df" />
+<meta property="og:description" content="Helper to turn a data.frame of buildsteps info into format accepted by cr_build" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -145,78 +145,49 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a StorageSource</h1>
+    <h1>Convert a data.frame into cr_buildstep</h1>
     
-    <div class="hidden name"><code>cr_build_upload_gcs.Rd</code></div>
+    <div class="hidden name"><code>cr_buildstep_df.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This creates a <a href='StorageSource.html'>StorageSource</a> object after uploading to Google Cloud Storage</p>
+    <p>Helper to turn a data.frame of buildsteps info into format accepted by <a href='cr_build.html'>cr_build</a></p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_build_upload_gcs</span>(<span class='no'>local</span>, <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste0</a></span>(<span class='no'>local</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/format'>format</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Sys.time'>Sys.time</a></span>(),
-  <span class='st'>"%Y%m%d%H%M%S"</span>), <span class='st'>".tar.gz"</span>), <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_get.html'>cr_bucket_get</a></span>(),
-  <span class='kw'>predefinedAcl</span> <span class='kw'>=</span> <span class='st'>"bucketOwnerFullControl"</span>, <span class='kw'>deploy_folder</span> <span class='kw'>=</span> <span class='st'>"deploy"</span>,
-  <span class='kw'>task_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_buildstep_df</span>(<span class='no'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>local</th>
-      <td><p>Local directory containing the Dockerfile etc. you wish to deploy</p></td>
-    </tr>
-    <tr>
-      <th>remote</th>
-      <td><p>The name of the folder in your bucket</p></td>
-    </tr>
-    <tr>
-      <th>bucket</th>
-      <td><p>The Google Cloud Storage bucket to upload to</p></td>
-    </tr>
-    <tr>
-      <th>predefinedAcl</th>
-      <td><p>The ACL rules for the object uploaded.</p></td>
-    </tr>
-    <tr>
-      <th>deploy_folder</th>
-      <td><p>Which folder to deploy from</p></td>
-    </tr>
-    <tr>
-      <th>task_id</th>
-      <td><p>pass in existing task_id if you want to use the same RStudio job</p></td>
+      <th>x</th>
+      <td><p>A data.frame of steps to turn into buildsteps, with at least name and args columns</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A Source object</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>It copies the files into a folder call "deploy" in your working directory, then tars it for upload</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other Cloud Build functions: <code><a href='Build.html'>Build</a></code>,
-  <code><a href='RepoSource.html'>RepoSource</a></code>, <code><a href='Source.html'>Source</a></code>,
-  <code><a href='StorageSource.html'>StorageSource</a></code>, <code><a href='cr_build_make.html'>cr_build_make</a></code>,
-  <code><a href='cr_build_status.html'>cr_build_status</a></code>,
-  <code><a href='cr_build_wait.html'>cr_build_wait</a></code>, <code><a href='cr_build.html'>cr_build</a></code></p></div>
+    <p>This helps convert the output of <a href='cr_build.html'>cr_build</a> into valid <a href='cr_buildstep.html'>cr_buildstep</a> so it can be sent back into the API</p>
+<p>If constructing arg list columns then <a href='https://www.rdocumentation.org/packages/base/topics/AsIs'>I</a> suppresses conversion of the list to columns that would otherwise break the yaml format</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-</div><span class='co'># NOT RUN {</span>
-<span class='no'>my_gcs_source</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_build_upload_gcs</span>(<span class='st'>"my_folder"</span>)
-<span class='no'>build1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='st'>"cloudbuild.yaml"</span>, <span class='kw'>source</span> <span class='kw'>=</span> <span class='no'>my_gcs_source</span>)
+</div># NOT RUN {
+y <- data.frame(name = c("docker", "alpine"),
+                args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
+                id = c("Docker Version", "Hello Cloud Build"),
+                prefix = c(NA, "")
+                stringsAsFactors = FALSE)
+cr_buildstep_df(y)
 
-<span class='co'># }</span></pre>
+# }
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
       <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 

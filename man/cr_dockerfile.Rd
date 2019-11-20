@@ -20,6 +20,6 @@ This uses \link[containerit]{dockerfile} to create a Dockerfile if possible
 \examples{
 
 \dontrun{
-cr_dockerfile(system.file("example/", package = "cloudRunner"))
+cr_dockerfile(system.file("example/", package = "googleCloudRunner"))
 }
 }

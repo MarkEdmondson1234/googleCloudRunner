@@ -1,9 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^example\.tar\.gz$
-^cloudRunner\.Rcheck$
-^cloudRunner.*\.tar\.gz$
-^cloudRunner.*\.tgz$
+^googleCloudRunner\.Rcheck$
+^googleCloudRunner.*\.tar\.gz$
+^googleCloudRunner.*\.tgz$
 ^\.Renviron$
 ^auth$
 ^\.travis\.yml$

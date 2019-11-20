@@ -27,7 +27,7 @@ cr_build_write(run_yaml)
 
 # write from a Build object
 build <- cr_build_make(system.file("cloudbuild/cloudbuild.yaml",
-                                   package = "cloudRunner"))
+                                   package = "googleCloudRunner"))
 cr_build_write(build)
 
 }

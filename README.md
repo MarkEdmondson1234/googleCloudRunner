@@ -1,7 +1,7 @@
 # googleCloudRunner
 
-[![Build Status](https://travis-ci.org/MarkEdmondson1234/cloudRunner.svg?branch=master)](https://travis-ci.org/MarkEdmondson1234/cloudRunner)
-[![codecov](https://codecov.io/gh/MarkEdmondson1234/cloudRunner/branch/master/graph/badge.svg)](https://codecov.io/gh/MarkEdmondson1234/cloudRunner)
+[![Build Status](https://travis-ci.org/MarkEdmondson1234/googleCloudRunner.svg?branch=master)](https://travis-ci.org/MarkEdmondson1234/googleCloudRunner)
+[![codecov](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner/branch/master/graph/badge.svg)](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner)
 
 As easy as possible R scripts in the cloud, via Cloud Run, Cloud Build and Cloud Scheduler.  Continuous Development and Integration tools on Google Cloud Platform.
 
@@ -21,14 +21,14 @@ remotes::install_github("MarkEdmondson1234/googleCloudRunner")
 
 ## Usage
 
-Please see the [cloudRunner website](https://code.markedmondson.me/cloudRunner/) for topics on how to use:
+Browse the [googleCloudRunner website](https://code.markedmondson.me/googleCloudRunner/) for topics on how to use:
 
-* [Setup](https://code.markedmondson.me/cloudRunner/articles/setup.html)
-* [R APIs using Cloud Run](https://code.markedmondson.me/cloudRunner/articles/cloudrun.html)
-* [Serverless R scripts using Cloud Build](https://code.markedmondson.me/cloudRunner/articles/cloudbuild.html)
-* [Scheduled R in GCP using Cloud Scheduler](https://code.markedmondson.me/cloudRunner/articles/cloudscheduler.html)
-* [Use Cases](https://code.markedmondson.me/cloudRunner/articles/usecases.html)
-* [Function Reference](https://code.markedmondson.me/cloudRunner/reference/index.html)
+* [Setup](https://code.markedmondson.me/googleCloudRunner/articles/setup.html)
+* [R APIs using Cloud Run](https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html)
+* [Serverless R scripts using Cloud Build](https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html)
+* [Scheduled R in GCP using Cloud Scheduler](https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html)
+* [Use Cases](https://code.markedmondson.me/googleCloudRunner/articles/usecases.html)
+* [Function Reference](https://code.markedmondson.me/googleCloudRunner/reference/index.html)
 
 ## Author's website blog
 

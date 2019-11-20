@@ -1,5 +1,5 @@
-title: "cloudRunner"
-url: https://code.markedmondson.me/cloudRunner
+title: "googleCloudRunner"
+url: https://code.markedmondson.me/googleCloudRunner
 authors:
   name: Mark Edmondson
   href: https://code.markedmondson.me/
@@ -8,8 +8,8 @@ template:
     bootswatch: paper
     ganalytics: UA-47480439-2
 navbar:
-  title: cloudRunner
-  inverse: true
+  title: googleCloudRunner
+  inverse: false
   left:
     - href: index.html
       icon: fa-home

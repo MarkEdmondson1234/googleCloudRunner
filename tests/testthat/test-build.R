@@ -7,19 +7,19 @@ test_that("Building Build Objects", {
   cr_project_set("test-project")
   cr_bucket_set("test-bucket")
 
-  yaml <- system.file("cloudbuild/cloudbuild.yaml", package = "cloudRunner")
+  yaml <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
 
   expect_equal(basename(yaml), "cloudbuild.yaml" )
 
   my_gcs_source <- Source(storageSource=StorageSource(object = "my_code.tar.gz",
                                                       bucket = "gs://my-bucket"
                                                       ))
-  expect_true(cloudRunner:::is.gar_Source(my_gcs_source))
+  expect_true(googleCloudRunner:::is.gar_Source(my_gcs_source))
   expect_equal(my_gcs_source$storageSource$bucket, "gs://my-bucket")
 
   my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com",
                                                  branchName="master"))
-  expect_true(cloudRunner:::is.gar_Source(my_repo_source))
+  expect_true(googleCloudRunner:::is.gar_Source(my_repo_source))
   expect_equal(my_repo_source$repoSource$branchName, "master")
 
   bq <- cr_build_make(yaml = yaml,
@@ -27,7 +27,7 @@ test_that("Building Build Objects", {
                 timeout = 10,
                 images = "gcr.io/my-project/demo",
                 projectId = "dummy-project")
-  expect_true(cloudRunner:::is.gar_Build(bq))
+  expect_true(googleCloudRunner:::is.gar_Build(bq))
   expect_equal(bq$images, "gcr.io/my-project/demo")
   expect_equal(bq$timeout, 10)
   expect_equal(bq$steps[[1]]$name, "gcr.io/cloud-builders/docker")
@@ -39,7 +39,7 @@ test_that("Building Build Objects", {
                       timeout = 11,
                       images = "gcr.io/my-project/demo",
                       projectId = "dummy-project")
-  expect_true(cloudRunner:::is.gar_Build(bq2))
+  expect_true(googleCloudRunner:::is.gar_Build(bq2))
   expect_equal(bq2$images, "gcr.io/my-project/demo")
   expect_equal(bq2$timeout, 11)
   expect_equal(bq2$steps[[1]]$name, "gcr.io/cloud-builders/docker")
@@ -76,7 +76,7 @@ test_that("Building Build Objects", {
 
   # write from a Build object
   build3 <- cr_build_make(system.file("cloudbuild/cloudbuild.yaml",
-                                      package = "cloudRunner"))
+                                      package = "googleCloudRunner"))
   expect_equal(build3$steps[[1]]$args, "version")
   expect_equal(build3$steps[[2]]$name, "alpine")
 

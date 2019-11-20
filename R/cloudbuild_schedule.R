@@ -16,7 +16,7 @@
 #' @family Cloud Scheduler functions, Cloud Build functions
 #'
 #' @examples
-#' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "cloudRunner")
+#' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
 #' build1 <- cr_build_make(cloudbuild)
 #' build1
 #' \dontrun{

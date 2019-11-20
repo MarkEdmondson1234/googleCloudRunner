@@ -27,7 +27,7 @@
 #'
 #' \dontrun{
 #'
-#' cr_deploy_run(system.file("example/", package = "cloudRunner"))
+#' cr_deploy_run(system.file("example/", package = "googleCloudRunner"))
 #'
 #' }
 cr_deploy_run <- function(local,
@@ -102,7 +102,7 @@ make_image_name <- function(name, projectId){
 #'
 #' \dontrun{
 #'
-#' cr_deploy_docker(system.file("example", package="cloudRunner"))
+#' cr_deploy_docker(system.file("example", package="googleCloudRunner"))
 #'
 #' }
 cr_deploy_docker <- function(local,
@@ -185,7 +185,7 @@ use_or_create_dockerfile <- function(local, dockerfile){
 #' @examples
 #'
 #' \dontrun{
-#' cr_dockerfile(system.file("example/", package = "cloudRunner"))
+#' cr_dockerfile(system.file("example/", package = "googleCloudRunner"))
 #' }
 cr_dockerfile <- function(deploy_folder, ...){
 

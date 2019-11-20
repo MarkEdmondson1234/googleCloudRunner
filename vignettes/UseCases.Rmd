@@ -1,8 +1,8 @@
 ---
-title: "Examples using cloudRunner for serverless R"
+title: "Examples using googleCloudRunner for serverless R"
 ---
 
-Here will be some example use cases you can use cloudRunner for.
+Here will be some example use cases you can use googleCloudRunner for.
 
 Since almost any code can be called and passed via Docker images, there is a lot of potential uses.
 
@@ -21,7 +21,7 @@ Once your repo is connected, you can operate on R packages on GitHub via:
 ```r
 # this repo mirrored on Google Source repos
 my_repo <- Source(
-  repoSource=RepoSource("github_markedmondson1234_cloudrunner",
+  repoSource=RepoSource("github_markedmondson1234_googlecloudrunner",
                         branchName="master"))
 ```
 
@@ -38,21 +38,21 @@ A cloudbuild.yml using build tags (saved to "build/cloudbuild_cloudRunner.yml"):
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: 'Build package'
-  args: ['build', '-t', 'gcr.io/gcer-public/cloudrunner:$BRANCH_NAME','.']
+  args: ['build', '-t', 'gcr.io/gcer-public/googlecloudrunner:$BRANCH_NAME','.']
 - name: 'gcr.io/cloud-builders/docker'
   id:  'Push to gcer-public repo'
-  args: ['push', 'gcr.io/gcer-public/cloudrunner:$BRANCH_NAME']
-images: 'gcr.io/gcer-public/cloudrunner:$BRANCH_NAME'
+  args: ['push', 'gcr.io/gcer-public/googlecloudrunner:$BRANCH_NAME']
+images: 'gcr.io/gcer-public/googlecloudrunner:$BRANCH_NAME'
 ```
 
 Make sure to deploy the above files to GitHub and then deploy:
 
 ```r
-library(cloudRunner)
+library(googleCloudRunner)
 
 # this repo mirrored on Google Source repos
 my_repo <- Source(
-  repoSource=RepoSource("github_markedmondson1234_cloudrunner",
+  repoSource=RepoSource("github_markedmondson1234_googlecloudrunner",
                         branchName="master"))
 
 pb <- cr_build("build/cloudbuild_cloudRunner.yml", source = my_repo)

@@ -26,11 +26,13 @@ This method returns a long-running `Operation`, which includes the buildID. Pass
 \examples{
 
 my_gcs_source <- Source(storageSource=StorageSource("gs://my-bucket", "my_code.tar.gz"))
-my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName="master"))
+my_gcs_source
 
+my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName="master"))
+my_repo_source
 \dontrun{
 
-cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml", package="cloudRunner")
+cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml", package="googleCloudRunner")
 b1 <- cr_build(cloudbuild_file)
 b2 <- cr_build_wait(b1)
 cr_build_status(b1)

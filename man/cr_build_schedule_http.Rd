@@ -21,7 +21,7 @@ This enables Cloud Scheduler to trigger Cloud Builds
 Ensure you have a service email with \link{cr_email_set} of format \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com} with Cloud Scheduler Service Agent role as per https://cloud.google.com/scheduler/docs/http-target-auth#add
 }
 \examples{
-cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "cloudRunner")
+cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
 build1 <- cr_build_make(cloudbuild)
 build1
 \dontrun{

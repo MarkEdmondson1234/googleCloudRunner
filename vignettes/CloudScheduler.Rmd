@@ -4,7 +4,7 @@ title: "Scheduled R scripts in the cloud via Cloud Scheduler"
 
 Cloud Scheduler is a scheduler service in the Google Cloud that uses cron like syntax to schedule tasks.  It can trigger HTTP or Pub/Sub jobs via `cr_schedule()`
 
-cloudRunner uses Cloud Scheduler to help schedule Cloud Builds.
+googleCloudRunner uses Cloud Scheduler to help schedule Cloud Builds.
 
 ## Schedule Cloud Build
 

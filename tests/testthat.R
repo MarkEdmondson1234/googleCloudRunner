@@ -1,4 +1,4 @@
 library(testthat)
-library(cloudRunner)
+library(googleCloudRunner)
 
-test_check("cloudRunner")
+test_check("googleCloudRunner")

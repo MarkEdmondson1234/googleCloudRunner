@@ -45,7 +45,7 @@ It will call \link{cr_deploy_docker} to create the image to deploy on Cloud Run
 
 \dontrun{
 
-cr_deploy_run(system.file("example/", package = "cloudRunner"))
+cr_deploy_run(system.file("example/", package = "googleCloudRunner"))
 
 }
 }

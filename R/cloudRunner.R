@@ -2,7 +2,7 @@
 #'
 #'
 #' @docType package
-#' @name cloudRunner
+#' @name googleCloudRunner
 NULL
 
 
