@@ -32,6 +32,6 @@ steps:
   - "-e"
   - |
     library(rhub)
-    mycheck <- check_for_cran(email="r@sunholo.com", token = Sys.getenv("RHUB_TOKEN"))
-    mycheck$print()
+    validate_email(email="r@sunholo.com", token = Sys.getenv("RHUB_TOKEN"))
+    check_for_cran(show_status = TRUE)
 
