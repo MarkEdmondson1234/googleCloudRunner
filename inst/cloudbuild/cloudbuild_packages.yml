@@ -5,11 +5,20 @@ steps:
   - "Rscript"
   - "-e"
   - |
-    devtools::install_dev_deps()
-    devtools::check()
-    devtools::install()
-    goodpractice::gp(checks = grep('(rcmdcheck|covr)', goodpractice::all_checks(), invert=TRUE, value=TRUE))
-    library('covr');codecov(line_exclusions = list('R/options.R', 'R/utilities.R', 'R/print_methods.R'))
+    library(devtools)
+    install_dev_deps()
+    library(googleCloudRunner)
+    library(goodpractice)
+    library(covr)
+    install_dev_deps()
+    cr_region_set('$_REGION')
+    cr_project_set('$PROJECT_ID')
+    cr_email_set('$_BUILD_EMAIL')
+    cr_bucket_set('$_BUCKET')
+    check()
+    install()
+    gp(checks = grep('(rcmdcheck|covr)', all_checks(), invert=TRUE, value=TRUE))
+    codecov(line_exclusions = list('R/options.R', 'R/utilities.R', 'R/print_methods.R'))
 - name: 'gcr.io/gcer-public/packagetools:master'
   id:  Deploy pkgdown site - wont work yet without git auth
   args: ["Rscript", "-e","pkgdown::build_site()"]
