@@ -188,10 +188,13 @@ cr_build_upload_gcs <- function(local,
                                 deploy_folder = "deploy",
                                 task_id=NULL){
 
+
   if(is.null(task_id)){
     task_id <- rstudio_add_job("Upload to Google Cloud Storage", timeout=0)
     rstudio_add_state(task_id, "WORKING")
     stop_task <- TRUE
+  } else {
+    stop_task <- FALSE
   }
 
   rstudio_add_output(task_id,
