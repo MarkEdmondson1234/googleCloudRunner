@@ -1,6 +1,6 @@
 steps:
 - name: 'gcr.io/gcer-public/packagetools:master'
-  id: Install Dependencies
+  id: Devtools checks
   env:
   - 'CR_REGION=$_REGION'
   - 'GCE_DEFAULT_PROJECT_ID=$PROJECT_ID'
@@ -12,11 +12,34 @@ steps:
   - |
     library(devtools)
     install_dev_deps()
-    library(goodpractice)
-    library(covr)
-    install_dev_deps()
     check()
     install()
+- name: 'gcr.io/gcer-public/packagetools:master'
+  id: Good Practices
+  env:
+  - 'CR_REGION=$_REGION'
+  - 'GCE_DEFAULT_PROJECT_ID=$PROJECT_ID'
+  - 'CR_BUILD_EMAIL=$_BUILD_EMAIL'
+  - 'GCS_DEFAULT_BUCKET=$_BUCKET'
+  args:
+  - "Rscript"
+  - "-e"
+  - |
+    library(goodpractice)
     gp(checks = grep('(rcmdcheck|covr)', all_checks(), invert=TRUE, value=TRUE))
-    pkgdown::build_site()
+- name: 'gcr.io/gcer-public/packagetools:master'
+  id: rhub checks
+  env:
+  - 'CR_REGION=$_REGION'
+  - 'GCE_DEFAULT_PROJECT_ID=$PROJECT_ID'
+  - 'CR_BUILD_EMAIL=$_BUILD_EMAIL'
+  - 'GCS_DEFAULT_BUCKET=$_BUCKET'
+  - 'RHUB_TOKEN=$_RHUB_TOKEN'
+  args:
+  - "Rscript"
+  - "-e"
+  - |
+    library(rhub)
+    mycheck <- check_for_cran(email="r@sunholo.com", token = Sys.getenv("RHUB_TOKEN"))
+    mycheck$print()
 

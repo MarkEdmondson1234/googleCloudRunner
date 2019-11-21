@@ -130,8 +130,9 @@ extract_logs <- function(o){
 #' @import assertthat
 #' @family Cloud Build functions
 #' @examples
-#' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
-#' cr_build_make(cloudbuild)
+#' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
+#'                            package = "googleCloudRunner")
+#' cr_build_make(cloudbuild, package = "test-project")
 cr_build_make <- function(yaml,
                           source = NULL,
                           timeout=NULL,
