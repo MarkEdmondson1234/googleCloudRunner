@@ -4,10 +4,10 @@ steps:
   args: ["Rscript", "-e", "devtools::install_dev_deps()"]
 - name: 'gcr.io/gcer-public/packagetools:master'
   id:  Check locally
-  args: ["Rscript", "-e ","devtools::check()"]
+  args: ["Rscript", "-e","devtools::check()"]
 - name: 'gcr.io/gcer-public/packagetools:master'
   id:  Install locally
-  args: ["Rscript", "-e ","devtools::install()"]
+  args: ["Rscript", "-e","devtools::install()"]
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: Extra diagnostics
   args: ["Rscript",
@@ -19,5 +19,5 @@ steps:
          "library('covr');codecov(line_exclusions = list('R/options.R', 'R/utilities.R', 'R/print_methods.R'))"]
 - name: 'gcr.io/gcer-public/packagetools:master'
   id:  Deploy pkgdown site - wont work yet without git auth
-  args: ["Rscript", "-e ","pkgdown::build_site()"]
+  args: ["Rscript", "-e","pkgdown::build_site()"]
 
