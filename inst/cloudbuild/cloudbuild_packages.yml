@@ -1,0 +1,7 @@
+steps:
+- name: 'gcr.io/gcer-public/packagetools:master'
+  id: Docker Version
+  args: ["version"]
+- name: 'alpine'
+  id:  Hello Cloud Build
+  args: ["echo", "Hello Cloud Build"]
