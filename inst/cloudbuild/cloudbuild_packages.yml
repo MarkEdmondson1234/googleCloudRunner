@@ -31,20 +31,19 @@ steps:
   - "Rscript"
   - "-e"
   - |
+    devtools::install()
     library(covr)
     cv <- package_coverage()
     print(cv);
     codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: rhub checks
-  env:
-  - 'RHUB_TOKEN=$_RHUB_TOKEN'
   args:
   - "Rscript"
   - "-e"
   - |
     library(rhub)
-    validate_email(email="r@sunholo.com", token = Sys.getenv("RHUB_TOKEN"))
+    validate_email(email="r@sunholo.com", token = "$_RHUB_TOKEN")
     check_for_cran(env_vars = c('CR_REGION=$_REGION',
                                 'GCE_DEFAULT_PROJECT_ID=$PROJECT_ID',
                                 'CR_BUILD_EMAIL=$_BUILD_EMAIL',
