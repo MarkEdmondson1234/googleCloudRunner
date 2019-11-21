@@ -181,27 +181,27 @@ use_or_create_dockerfile <- function(local, dockerfile){
 #'
 #' @return An object of class Dockerfile
 #'
-#' @importFrom containerit dockerfile write print Cmd Entrypoint addInstruction<-
 #' @examples
 #'
 #' \dontrun{
 #' cr_dockerfile(system.file("example/", package = "googleCloudRunner"))
 #' }
 cr_dockerfile <- function(deploy_folder, ...){
-
-  docker <- suppressWarnings(dockerfile(deploy_folder,
+  check_package_installed("containerit")
+  docker <- suppressWarnings(
+    containerit::dockerfile(deploy_folder,
      image = "trestletech/plumber",
      offline = FALSE,
-     cmd = Cmd("api.R"),
+     cmd = containerit::Cmd("api.R"),
      maintainer = NULL,
      container_workdir = NULL,
-     entrypoint = Entrypoint("R",
+     entrypoint = containerit::Entrypoint("R",
                    params = list("-e",
                                  "pr <- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))")),
      filter_baseimage_pkgs = FALSE,
      ...))
 
-  addInstruction(docker) <-containerit:::Copy(".","./")
+  containerit::addInstruction(docker) <-containerit:::Copy(".","./")
 
   write_to <- file.path(deploy_folder, "Dockerfile")
   containerit::write(docker, file = write_to)

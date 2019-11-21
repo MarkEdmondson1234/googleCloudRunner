@@ -3,6 +3,18 @@ safe_set <- function(x, set, to){
   x
 }
 
+#' check package installed
+#' @noRd
+check_package_installed <- function(y){
+  if (!requireNamespace(y, quietly = TRUE)){
+      nope <- sprintf("%s needed for this function to work. Please install it via install.packages('%s')",
+                      y,y)
+      stop(nope, call. = FALSE)
+  }
+  TRUE
+}
+
+
 #' Custom message log level
 #'
 #' @param ... The message(s)
