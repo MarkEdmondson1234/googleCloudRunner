@@ -45,10 +45,10 @@ steps:
   - |
     library(rhub)
     validate_email(email="r@sunholo.com", token = "$_RHUB_TOKEN")
-    check_for_cran(env_vars = c('CR_REGION=$_REGION',
-                                'GCE_DEFAULT_PROJECT_ID=$PROJECT_ID',
-                                'CR_BUILD_EMAIL=$_BUILD_EMAIL',
-                                'GCS_DEFAULT_BUCKET=$_BUCKET'),
+    check_for_cran(env_vars = c(CR_REGION='$_REGION',
+                                GCE_DEFAULT_PROJECT_ID='$PROJECT_ID',
+                                CR_BUILD_EMAIL='$_BUILD_EMAIL',
+                                GCS_DEFAULT_BUCKET='$_BUCKET'),
                    show_status = FALSE)
 
 
