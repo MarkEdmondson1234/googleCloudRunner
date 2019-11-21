@@ -1,6 +1,11 @@
 steps:
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: Install Dependencies
+  env:
+  - 'CR_REGION=$_REGION'
+  - 'GCE_DEFAULT_PROJECT_ID=$PROJECT_ID'
+  - 'CR_BUILD_EMAIL=$_BUILD_EMAIL'
+  - 'GCS_DEFAULT_BUCKET=$_BUCKET'
   args:
   - "Rscript"
   - "-e"
@@ -10,10 +15,6 @@ steps:
     library(goodpractice)
     library(covr)
     install_dev_deps()
-    Sys.setenv('CR_REGION'='$_REGION')
-    Sys.setenv('GCE_DEFAULT_PROJECT_ID'='$PROJECT_ID')
-    Sys.setenv('CR_BUILD_EMAIL'='$_BUILD_EMAIL')
-    Sys.setenv('GCS_DEFAULT_BUCKET'='$_BUCKET')
     check()
     install()
     gp(checks = grep('(rcmdcheck|covr)', all_checks(), invert=TRUE, value=TRUE))
