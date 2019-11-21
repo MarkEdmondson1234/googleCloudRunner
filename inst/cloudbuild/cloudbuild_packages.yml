@@ -17,8 +17,5 @@ steps:
     check()
     install()
     gp(checks = grep('(rcmdcheck|covr)', all_checks(), invert=TRUE, value=TRUE))
-    codecov(line_exclusions = list('R/options.R', 'R/utilities.R', 'R/print_methods.R'))
-- name: 'gcr.io/gcer-public/packagetools:master'
-  id:  Deploy pkgdown site - wont work yet without git auth
-  args: ["Rscript", "-e","pkgdown::build_site()"]
+    pkgdown::build_site()
 
