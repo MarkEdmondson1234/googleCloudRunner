@@ -24,6 +24,18 @@ steps:
     library(goodpractice)
     gp(checks = grep('(rcmdcheck|covr)', all_checks(), invert=TRUE, value=TRUE))
 - name: 'gcr.io/gcer-public/packagetools:master'
+  id: codecovr checks
+  env:
+  - 'CODECOV_TOKEN=$_CODECOV_TOKEN'
+  args:
+  - "Rscript"
+  - "-e"
+  - |
+    library(covr)
+    cv <- package_coverage()
+    print(cv);
+    codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
+- name: 'gcr.io/gcer-public/packagetools:master'
   id: rhub checks
   env:
   - 'RHUB_TOKEN=$_RHUB_TOKEN'
@@ -33,5 +45,10 @@ steps:
   - |
     library(rhub)
     validate_email(email="r@sunholo.com", token = Sys.getenv("RHUB_TOKEN"))
-    check_for_cran(show_status = TRUE)
+    check_for_cran(env_vars = c('CR_REGION=$_REGION',
+                                'GCE_DEFAULT_PROJECT_ID=$PROJECT_ID',
+                                'CR_BUILD_EMAIL=$_BUILD_EMAIL',
+                                'GCS_DEFAULT_BUCKET=$_BUCKET'),
+                   show_status = FALSE)
+
 
