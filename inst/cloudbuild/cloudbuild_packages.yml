@@ -1,11 +1,12 @@
-steps:
-- name: 'gcr.io/gcer-public/packagetools:master'
-  id: Devtools checks
+options:
   env:
   - 'CR_REGION=$_REGION'
   - 'GCE_DEFAULT_PROJECT_ID=$PROJECT_ID'
   - 'CR_BUILD_EMAIL=$_BUILD_EMAIL'
   - 'GCS_DEFAULT_BUCKET=$_BUCKET'
+steps:
+- name: 'gcr.io/gcer-public/packagetools:master'
+  id: Devtools checks
   args:
   - "Rscript"
   - "-e"
@@ -16,11 +17,6 @@ steps:
     install()
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: Good Practices
-  env:
-  - 'CR_REGION=$_REGION'
-  - 'GCE_DEFAULT_PROJECT_ID=$PROJECT_ID'
-  - 'CR_BUILD_EMAIL=$_BUILD_EMAIL'
-  - 'GCS_DEFAULT_BUCKET=$_BUCKET'
   args:
   - "Rscript"
   - "-e"
@@ -30,10 +26,6 @@ steps:
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: rhub checks
   env:
-  - 'CR_REGION=$_REGION'
-  - 'GCE_DEFAULT_PROJECT_ID=$PROJECT_ID'
-  - 'CR_BUILD_EMAIL=$_BUILD_EMAIL'
-  - 'GCS_DEFAULT_BUCKET=$_BUCKET'
   - 'RHUB_TOKEN=$_RHUB_TOKEN'
   args:
   - "Rscript"
