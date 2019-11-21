@@ -132,13 +132,12 @@ extract_logs <- function(o){
 #' @examples
 #' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
 #'                            package = "googleCloudRunner")
-#' cr_build_make(cloudbuild, packageId = "test-project")
+#' cr_build_make(cloudbuild, projectId = "test-project")
 cr_build_make <- function(yaml,
                           source = NULL,
                           timeout=NULL,
                           images=NULL,
                           projectId = cr_project_get()){
-
 
   assert_that(
     is.string(projectId)
