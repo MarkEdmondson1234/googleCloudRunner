@@ -54,7 +54,8 @@ steps:
     devtools::install()
     list.files()
     pkgdown::build_site()
-# Connect to the repository
+# Push build - remember to restrict other builds away from /docs
+# otherwise it will trigger again in never ending git commit loop
 - name: 'gcr.io/cloud-builders/git'
   id: push website
   dir: googleCloudRunner
@@ -62,10 +63,9 @@ steps:
   args:
   - '-c'
   - |
-    ls -la
     git add . && \
     git commit -a -m "Build website from commit ${COMMIT_SHA}: \
-                      date +%Y-%m-%d_%H-%M-%S" && \
+                      $(date +"%Y-%m-%d_%H-%M-%S")" && \
     git push git@github.com:$_GITHUB_REPO
   volumes:
   - name: 'ssh'
