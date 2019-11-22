@@ -13,7 +13,9 @@
 #' @examples
 #'
 #' \dontrun{
-#' cr_schedule("test", "* * * * *", httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
+#' cr_schedule("test",
+#'       "* * * * *",
+#'       httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
 #'
 #' # schedule a cloud build (no source)
 #' build1 <- cr_build_make("cloudbuild.yaml")
@@ -43,6 +45,8 @@ cr_schedule <- function(name,
     is.string(schedule)
   )
 
+  stem <- "https://cloudscheduler.googleapis.com/v1"
+
   the_name <- sprintf("projects/%s/locations/%s/jobs/%s", projectId, region, name)
   job <- Job(schedule=schedule,
              name = the_name,
@@ -53,22 +57,23 @@ cr_schedule <- function(name,
     scheds <- cr_schedule_list(region = region, projectId = projectId)
     if(the_name %in% scheds$name){
       myMessage("Overwriting schedule job: ", name, level=3)
-      # https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/patch
+# https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/patch
       the_url <-
-        sprintf("https://cloudscheduler.googleapis.com/v1/projects/%s/locations/%s/jobs/%s",
-                projectId, region, name)
+        sprintf("%s/projects/%s/locations/%s/jobs/%s",
+                stem, projectId, region, name)
       updateMask <- rmNullObs(list(schedule = schedule,
                              httpTarget = httpTarget,
                              description = description))
 
       f <- gar_api_generator(the_url, "PATCH",
               data_parse_function = parse_schedule,
-              pars_args = list(updateMask = paste(names(updateMask), collapse = ",")))
+              pars_args = list(updateMask = paste(names(updateMask),
+                                                  collapse = ",")))
     }
   } else {
     the_url <-
-      sprintf("https://cloudscheduler.googleapis.com/v1/projects/%s/locations/%s/jobs",
-              projectId, region)
+      sprintf("%s/projects/%s/locations/%s/jobs",
+              stem, projectId, region)
     # cloudscheduler.projects.locations.jobs.create
     f <- gar_api_generator(the_url, "POST",
                            data_parse_function = parse_schedule)

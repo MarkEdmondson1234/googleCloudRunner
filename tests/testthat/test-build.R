@@ -51,7 +51,7 @@ test_that("Building Build Objects", {
   run_yaml <- Yaml(steps = c(cr_buildstep_docker(image, dir = "deploy"),
                              cr_buildstep("gcloud",
                                           c("beta","run","deploy", "test1",
-                                            "--image", image))),
+                                            "--image", image), dir="deploy")),
      images = image)
 
   expect_equal(run_yaml$images, image)
@@ -143,6 +143,16 @@ test_that("Render BuildStep objects", {
   bp2 <- cr_buildstep_extract(bp, step = 2)
   expect_equal(bp1[[1]]$id, "Devtools checks")
   expect_equal(bp2[[1]]$id, "Good Practices")
+
+  edit1 <- cr_buildstep_edit(bp2, name = "blah")
+  edit2 <- cr_buildstep_edit(bp2, args = "blah")
+  edit3 <- cr_buildstep_edit(bp2, name = "gcr.io/blah")
+  edit4 <- cr_buildstep_edit(bp2, dir = "blah")
+
+  expect_equal(edit1[[1]]$name, "gcr.io/cloud-builders/blah")
+  expect_equal(edit2[[1]]$args, "blah")
+  expect_equal(edit3[[1]]$name, "gcr.io/blah")
+  expect_equal(edit4[[1]]$dir, "blah")
 
 })
 

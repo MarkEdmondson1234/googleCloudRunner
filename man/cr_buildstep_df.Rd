@@ -19,14 +19,10 @@ If constructing arg list columns then \link{I} suppresses conversion of the list
 }
 \examples{
 
-\dontrun{
-
 y <- data.frame(name = c("docker", "alpine"),
                 args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
                 id = c("Docker Version", "Hello Cloud Build"),
                 prefix = c(NA, "")
                 stringsAsFactors = FALSE)
 cr_buildstep_df(y)
-
-}
 }

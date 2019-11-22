@@ -27,6 +27,8 @@ cr_run(image, name = basename(image), allowUnauthenticated = TRUE,
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
 
 \item{task_id}{RStudio task_id if you want to use an exisiting}
+
+\item{dir}{The directory relative to the source to deploy from}
 }
 \description{
 Deploys an existing gcr.io image.  Use \link{cr_deploy_docker} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.

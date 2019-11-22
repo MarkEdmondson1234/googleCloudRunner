@@ -50,13 +50,19 @@ reference:
     desc: >
       Functions for working with Cloud Build
     contents:
-      - matches("cr_build")
+      - cr_build
+      - matches("cr_build_")
       - matches("cr_dockerfile")
       - Build
       - Source
       - RepoSource
       - StorageSource
       - Yaml
+  - title: "Cloud Build creation functions"
+    desc: >
+      Functions for creation of cloudbuild.yaml files and build steps
+    contents:
+      - matches("cr_buildstep")
   - title: "Cloud Run functions"
     desc: >
       Functions for working with Cloud Run deployments

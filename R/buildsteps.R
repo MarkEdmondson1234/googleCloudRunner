@@ -2,9 +2,9 @@
 #'
 #' Helper for creating build steps for upload to Cloud Build
 #'
-#' @param name name of SDK appended to stem
+#' @param name name of docker image to call appended to \code{prefix}
 #' @param args character vector of arguments
-#' @param prefix prefixed to name - set to "" to suppress
+#' @param prefix prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io
 #' @param entrypoint change the entrypoint for the docker container
 #' @param dir The directory to use, relative to /workspace e.g. /workspace/deploy/
 #' @param id Optional id for the step
@@ -67,11 +67,14 @@ cr_buildstep <- function(name,
                          id = NULL,
                          prefix = "gcr.io/cloud-builders/",
                          entrypoint = NULL,
-                         dir = "deploy",
+                         dir = "",
                          env = NULL){
 
   prefix <- if(is.null(prefix) || is.na(prefix)) "gcr.io/cloud-builders/" else prefix
 
+  if(grepl("^gcr.io", name)){
+    prefix = ""
+  }
 
   list(structure(
     rmNullObs(list(
@@ -101,16 +104,12 @@ is.cr_buildstep <- function(x){
 #' @export
 #' @examples
 #'
-#' \dontrun{
-#'
 #' y <- data.frame(name = c("docker", "alpine"),
 #'                 args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
 #'                 id = c("Docker Version", "Hello Cloud Build"),
 #'                 prefix = c(NA, "")
 #'                 stringsAsFactors = FALSE)
 #' cr_buildstep_df(y)
-#'
-#' }
 cr_buildstep_df <- function(x){
   assert_that(
     is.data.frame(x),
@@ -136,78 +135,6 @@ cr_buildstep_df <- function(x){
 
 }
 
-#' Create a build step for decrypting files via KMS
-#'
-#' Create a build step to decrypt files using CryptoKey from Cloud Key Management Service
-#'
-#' @param cipher The file that has been encrypted
-#' @param plain The file location to decrypt to
-#' @param keyring The KMS keyring to use
-#' @param key The KMS key to use
-#' @param location The KMS location
-#' @param dir The directory relative to /workspace/ the command will operate in
-#'
-#' @details
-#' You will need to set up the encrypted key using gcloud following this guide from Google: https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials
-#'
-#'
-#' @export
-#' @examples
-#'
-#' cr_buildstep_decrypt("secret.json.enc",
-#'                      plain = "secret.json",
-#'                      keyring = "my_keyring",
-#'                      key = "my_key")
-cr_buildstep_decrypt <- function(cipher,
-                                 plain,
-                                 keyring,
-                                 key,
-                                 location="global",
-                                 dir=""){
-    cr_buildstep("gcloud",
-                 args = c("kms", "decrypt",
-                          "--ciphertext-file", cipher,
-                          "--plaintext-file", plain,
-                          "--location", location,
-                          "--keyring", keyring,
-                          "--key", key),
-                 dir = dir)
-}
-
-#' Create a build step to build and push a docker image
-#'
-#' @param image The image tag that will be pushed, starting with gcr.io or created by combining with \code{projectId} if not starting with gcr.io
-#' @param tag The tag to attached to the pushed image - can use \code{Build} macros
-#' @param location Where the Dockerfile to build is in relation to \code{dir}
-#' @param dir The workspace folder on cloud build, eg /workspace/deploy/.  Default is equivalent to /workspace/
-#' @param projectId The projectId
-#'
-#' @export
-#' @import assertthat
-#' @examples
-#' cr_buildstep_docker("gcr.io/my-project/my-image")
-#' cr_buildstep_docker("my-image")
-#' cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")
-cr_buildstep_docker <- function(image,
-                                tag = "$BUILD_ID",
-                                location = ".",
-                                dir="",
-                                projectId = cr_project_get()){
-  prefix <- grepl("^gcr.io", image)
-  if(prefix){
-    the_image <- image
-  } else {
-    the_image <- paste0("gcr.io/", projectId, "/", image)
-  }
-
-  the_image <- paste0(the_image, ":", tag)
-  myMessage("Image to be built: ", the_image, level = 3)
-
-  c(
-    cr_buildstep("docker", c("build","-t",the_image,location), dir=dir),
-    cr_buildstep("docker", c("push", the_image), dir=dir)
-  )
-}
 
 #' Extract a buildstep from a Build object
 #'
@@ -236,3 +163,48 @@ cr_buildstep_extract <- function(x, step = NULL){
 
 }
 
+#' Modify an existing buildstep with new parameters
+#'
+#' Useful for editing existing buildsteps
+#'
+#' @inheritDotParams cr_buildstep
+#' @param x A buildstep created previously
+#' @export
+#' @examples
+#' package_build <- system.file("cloudbuild/cloudbuild_packages.yml",
+#'                              package = "googleCloudRunner")
+#' build <- cr_build_make(package_build)
+#' build
+#' cr_buildstep_extract(build, step = 1)
+#' cr_buildstep_extract(build, step = 2)
+#'
+#' edit_me <- cr_buildstep_extract(build, step = 2)
+#' cr_buildstep_edit(edit_me, name = "blah")
+#' cr_buildstep_edit(edit_me, name = "gcr.io/blah")
+#' cr_buildstep_edit(edit_me, args = c("blah1","blah2"), dir = "meh")
+cr_buildstep_edit <- function(x,
+                              ...){
+  #buildsteps are in a list()
+  xx  <- x[[1]]
+
+  assert_that(is.cr_buildstep(xx))
+
+  dots <- list(...)
+
+  # make sure required params are there
+  the_name <- dots$name
+  if(is.null(the_name)){
+    the_name <- xx$name
+  }
+
+  the_args <- dots$args
+  if(is.null(the_args)){
+    the_args <- xx$args
+  }
+
+  dots$name <- the_name
+  dots$args <- the_args
+
+  do.call(cr_buildstep, args = dots)
+
+}

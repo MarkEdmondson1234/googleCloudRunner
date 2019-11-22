@@ -29,7 +29,9 @@ Creates or updates a Cloud Scheduler job.
 \examples{
 
 \dontrun{
-cr_schedule("test", "* * * * *", httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
+cr_schedule("test",
+      "* * * * *",
+      httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
 
 # schedule a cloud build (no source)
 build1 <- cr_build_make("cloudbuild.yaml")

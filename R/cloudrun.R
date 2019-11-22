@@ -11,6 +11,8 @@
 #' @param projectId The GCP project from which the services should be listed
 #' @param allowUnauthenticated TRUE if can be reached from public HTTP address.
 #' @param task_id RStudio task_id if you want to use an exisiting
+#' @param dir The directory relative to the source to deploy from
+#'
 #' @inheritParams cr_build
 #' @importFrom googleAuthR gar_api_generator
 #' @family Cloud Run functions
@@ -43,6 +45,13 @@ cr_run <- function(image,
 
   rstudio_add_output(task_id,
                      paste("\n#Launching CloudRun image: \n", image))
+
+  if(allowUnauthenticated){
+    auth_calls <- "--allow-unauthenticated"
+  } else {
+    auth_calls <- "--no-allow-unauthenticated"
+  }
+
   # use cloud build to deploy
   run_yaml <- Yaml(
     steps = c(
@@ -52,7 +61,7 @@ cr_run <- function(image,
            "--region", region,
            "--platform", "managed",
            "--concurrency", concurrency,
-           if(allowUnauthenticated) "--allow-unauthenticated" else "--no-allow-unauthenticated"
+           auth_calls
          ))
     )
   )
