@@ -11,7 +11,6 @@
 #' @param projectId The GCP project from which the services should be listed
 #' @param allowUnauthenticated TRUE if can be reached from public HTTP address.
 #' @param task_id RStudio task_id if you want to use an exisiting
-#' @param dir The directory relative to the source to deploy from
 #'
 #' @inheritParams cr_build
 #' @importFrom googleAuthR gar_api_generator

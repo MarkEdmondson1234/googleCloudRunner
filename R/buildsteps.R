@@ -107,7 +107,7 @@ is.cr_buildstep <- function(x){
 #' y <- data.frame(name = c("docker", "alpine"),
 #'                 args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
 #'                 id = c("Docker Version", "Hello Cloud Build"),
-#'                 prefix = c(NA, "")
+#'                 prefix = c(NA, ""),
 #'                 stringsAsFactors = FALSE)
 #' cr_buildstep_df(y)
 cr_buildstep_df <- function(x){
