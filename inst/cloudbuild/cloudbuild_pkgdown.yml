@@ -47,7 +47,6 @@ steps:
 - name: 'gcr.io/cloud-builders/git'
   id: push website
   entrypoint: 'bash'
-  dir: googleCloudRunner
   args:
   - '-c'
   - |

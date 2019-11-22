@@ -172,7 +172,7 @@ test_that("Render BuildStep objects", {
   expect_equal(git_yaml$steps[[2]]$volumes[[1]]$name, "ssh")
   expect_equal(git_yaml$steps[[2]]$volumes[[1]]$path, "/root/.ssh")
   expect_equal(git_yaml$steps[[2]]$args[[2]],
-               "chmod 600 /root/.ssh/id_rsa\ncat <<EOF >/root/.ssh/config\nHostname github.com\nIdentityFile /root/.ssh/id_rsa\nEOF\nmv known_hosts /root/.ssh/known_hosts\n")
+               "chmod 600 /root/.ssh/id_rsa\ncat <<EOF >/root/.ssh/config\nHostname github.com\nIdentityFile /root/.ssh/id_rsa\nEOF\nmv inst/ssh/known_hosts /root/.ssh/known_hosts\n")
 
 })
 
