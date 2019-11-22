@@ -31,6 +31,8 @@ steps:
     IdentityFile /root/.ssh/id_rsa
     EOF
     cp inst/ssh/known_hosts /root/.ssh/known_hosts
+    git config --global user.name "CloudBuilder"
+    git config --global user.email $_BUILD_EMAIL
   volumes:
   - name: 'ssh'
     path: /root/.ssh
