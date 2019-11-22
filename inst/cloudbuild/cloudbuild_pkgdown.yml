@@ -30,18 +30,18 @@ steps:
     Hostname github.com
     IdentityFile /root/.ssh/id_rsa
     EOF
-    mv inst/ssh/known_hosts /root/.ssh/known_hosts
+    cp inst/ssh/known_hosts /root/.ssh/known_hosts
   volumes:
   - name: 'ssh'
     path: /root/.ssh
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: Build website
-  dir: googleCloudRunner
   args:
   - "Rscript"
   - "-e"
   - |
     devtools::install()
+    list.files()
     pkgdown::build_site()
 # Connect to the repository
 - name: 'gcr.io/cloud-builders/git'

@@ -34,7 +34,7 @@ steps:
 - name: 'gcr.io/cloud-builders/git'
   args:
   - clone
-  - git@github.com:$_GITHUB_REPO
+  - git@github.com:MarkEdmondson1234/googleCloudRunner
   volumes:
   - name: 'ssh'
     path: /root/.ssh
