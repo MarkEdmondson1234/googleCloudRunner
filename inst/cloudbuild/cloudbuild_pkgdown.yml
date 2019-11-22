@@ -47,7 +47,8 @@ steps:
 - name: 'gcr.io/cloud-builders/git'
   id: push website
   args:
-  - commit -a -m='Build website' && push git@github.com:$_GITHUB_REPO
+  - commit -a -m='Build website'
+  - push git@github.com:$_GITHUB_REPO
   volumes:
   - name: 'ssh'
     path: /root/.ssh
