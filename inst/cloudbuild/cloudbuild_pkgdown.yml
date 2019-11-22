@@ -46,9 +46,12 @@ steps:
 # Connect to the repository
 - name: 'gcr.io/cloud-builders/git'
   id: push website
+  entrypoint: 'bash'
   args:
-  - commit -a -m='Build website'
-  - push git@github.com:$_GITHUB_REPO
+  - '-c'
+  - |
+    git commit -a -m='Build website: date +%Y-%m-%d_%H-%M-%S' \
+    && git push git@github.com:$_GITHUB_REPO
   volumes:
   - name: 'ssh'
     path: /root/.ssh
