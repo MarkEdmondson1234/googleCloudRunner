@@ -5,7 +5,7 @@ steps:
   args:
   - kms
   - decrypt
-  - --ciphertext-file=id_rsa.enc
+  - --ciphertext-file=cb_rsa.enc
   - --plaintext-file=/root/.ssh/id_rsa
   - --location=global
   - --keyring=my-keyring
@@ -25,7 +25,7 @@ steps:
     Hostname github.com
     IdentityFile /root/.ssh/id_rsa
     EOF
-    mv known_hosts /root/.ssh/known_hosts
+    mv inst/ssh/known_hosts /root/.ssh/known_hosts
   volumes:
   - name: 'ssh'
     path: /root/.ssh
@@ -34,7 +34,7 @@ steps:
 - name: 'gcr.io/cloud-builders/git'
   args:
   - clone
-  - git@github.com:[GIT-USERNAME]/[REPOSITORY]
+  - git@github.com:$_GITHUB_REPO
   volumes:
   - name: 'ssh'
     path: /root/.ssh

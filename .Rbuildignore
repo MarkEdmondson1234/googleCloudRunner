@@ -16,4 +16,4 @@
 ^pkgdown$
 ^vignettes$
 ^known_hosts$
-^github_rsa\.enc$
+^cb_rsa\.enc$
