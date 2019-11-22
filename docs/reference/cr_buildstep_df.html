@@ -175,7 +175,26 @@
 <p>If constructing arg list columns then <a href='https://rdrr.io/r/base/AsIs.html'>I</a> suppresses conversion of the list to columns that would otherwise break the yaml format</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
+    <pre class="examples"><div class='input'>
+<span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"docker"</span>, <span class='st'>"alpine"</span>),
+                <span class='kw'>args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/AsIs.html'>I</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"version"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"echo"</span>, <span class='st'>"Hello Cloud Build"</span>))),
+                <span class='kw'>id</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Docker Version"</span>, <span class='st'>"Hello Cloud Build"</span>),
+                <span class='kw'>prefix</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>NA</span>, <span class='st'>""</span>),
+                <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>cr_buildstep_df</span>(<span class='no'>y</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: gcr.io/cloud-builders/docker
+#&gt; args: version
+#&gt; id: Docker Version
+#&gt; 
+#&gt; [[2]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: alpine
+#&gt; args:
+#&gt; - echo
+#&gt; - Hello Cloud Build
+#&gt; id: Hello Cloud Build
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

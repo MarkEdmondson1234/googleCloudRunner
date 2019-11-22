@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a build step to build and push a docker image — cr_buildstep_docker • googleCloudRunner</title>
+<title>Create a build step for authenticating with Git — cr_buildstep_gitsetup • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,9 @@
 
 
 
-<meta property="og:title" content="Create a build step to build and push a docker image — cr_buildstep_docker" />
-<meta property="og:description" content="Create a build step to build and push a docker image" />
+<meta property="og:title" content="Create a build step for authenticating with Git — cr_buildstep_gitsetup" />
+<meta property="og:description" content="This creates steps to configure git to use an ssh created key.
+This creates steps to use git with an ssh created key." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,102 +150,111 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a build step to build and push a docker image</h1>
+    <h1>Create a build step for authenticating with Git</h1>
     
-    <div class="hidden name"><code>cr_buildstep_docker.Rd</code></div>
+    <div class="hidden name"><code>cr_buildstep_git.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create a build step to build and push a docker image</p>
+    <p>This creates steps to configure git to use an ssh created key.</p>
+<p>This creates steps to use git with an ssh created key.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildstep_docker</span>(<span class='no'>image</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>, <span class='kw'>location</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_get.html'>cr_project_get</a></span>(), <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_buildstep_gitsetup</span>(<span class='no'>keyring</span>, <span class='no'>key</span>, <span class='kw'>cipher</span> <span class='kw'>=</span> <span class='st'>"id_rsa.enc"</span>, <span class='no'>...</span>)
+
+<span class='fu'>cr_buildstep_git</span>(<span class='kw'>git_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"clone"</span>,
+  <span class='st'>"git@github.com:[GIT-USERNAME]/[REPOSITORY]"</span>), <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>image</th>
-      <td><p>The image tag that will be pushed, starting with gcr.io or created by combining with <code>projectId</code> if not starting with gcr.io</p></td>
+      <th>keyring</th>
+      <td><p>The KMS keyring to use</p></td>
     </tr>
     <tr>
-      <th>tag</th>
-      <td><p>The tag to attached to the pushed image - can use <code>Build</code> macros</p></td>
+      <th>key</th>
+      <td><p>The KMS key to use</p></td>
     </tr>
     <tr>
-      <th>location</th>
-      <td><p>Where the Dockerfile to build is in relation to <code>dir</code></p></td>
-    </tr>
-    <tr>
-      <th>projectId</th>
-      <td><p>The projectId</p></td>
+      <th>cipher</th>
+      <td><p>The file that has been encrypted</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>Further arguments passed in to <a href='cr_buildstep.html'>cr_buildstep</a></p></td>
     </tr>
+    <tr>
+      <th>git_args</th>
+      <td><p>The arguments to send to git</p></td>
+    </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The key should be encrypted offline using <code>gcloud kms</code> or similar first.  See <a href='cr_buildstep_decrypt.html'>cr_buildstep_decrypt</a> for details.</p>
+<p>By default the encrypted key should then be at the root of your <a href='Source.html'>Source</a> object called "id_rsa.enc"</p>
+<p><code>cr_buildstep</code> must come after <code>cr_buildstep_gitsetup</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"gcr.io/my-project/my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-22 14:42:03&gt; Image to be built: gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - build
-#&gt; - -t
-#&gt; - gcr.io/my-project/my-image:$BUILD_ID
-#&gt; - '.'
-#&gt; dir: ''
-#&gt; 
-#&gt; [[2]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - push
-#&gt; - gcr.io/my-project/my-image:$BUILD_ID
-#&gt; dir: ''
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-22 14:42:03&gt; Image to be built: gcr.io/mark-edmondson-gde/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - build
-#&gt; - -t
-#&gt; - gcr.io/mark-edmondson-gde/my-image:$BUILD_ID
-#&gt; - '.'
-#&gt; dir: ''
-#&gt; 
-#&gt; [[2]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - push
-#&gt; - gcr.io/mark-edmondson-gde/my-image:$BUILD_ID
-#&gt; dir: ''
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BRANCH_NAME"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-22 14:42:03&gt; Image to be built: gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME</span></div><div class='output co'>#&gt; [[1]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - build
-#&gt; - -t
-#&gt; - gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME
-#&gt; - '.'
-#&gt; dir: ''
-#&gt; 
-#&gt; [[2]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - push
-#&gt; - gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME
-#&gt; dir: ''
-#&gt; </div></pre>
+    <pre class="examples"><div class='input'>
+<span class='co'># assumes you have previously saved git ssh key via KMS called "git_key"</span>
+<span class='fu'><a href='Yaml.html'>Yaml</a></span>(
+     <span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
+          <span class='fu'>cr_buildstep_gitsetup</span>(<span class='st'>"my_keyring"</span>, <span class='st'>"git_key"</span>),
+          <span class='fu'>cr_buildstep_git</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"clone"</span>, <span class='st'>"git@github.com:github_name/repo_name"</span>))
+     )
+ )</div><div class='output co'>#&gt; ==cloudRunnerYaml==
+#&gt; steps:
+#&gt; - name: gcr.io/cloud-builders/gcloud
+#&gt;   args:
+#&gt;   - kms
+#&gt;   - decrypt
+#&gt;   - --ciphertext-file
+#&gt;   - id_rsa.enc
+#&gt;   - --plaintext-file
+#&gt;   - /root/.ssh/id_rsa
+#&gt;   - --location
+#&gt;   - global
+#&gt;   - --keyring
+#&gt;   - my_keyring
+#&gt;   - --key
+#&gt;   - git_key
+#&gt;   dir: ''
+#&gt;   volumes:
+#&gt;   - name: ssh
+#&gt;     path: /root/.ssh
+#&gt; - name: gcr.io/cloud-builders/git
+#&gt;   entrypoint: bash
+#&gt;   args:
+#&gt;   - -c
+#&gt;   - |
+#&gt;     chmod 600 /root/.ssh/id_rsa
+#&gt;     cat &lt;&lt;EOF &gt;/root/.ssh/config
+#&gt;     Hostname github.com
+#&gt;     IdentityFile /root/.ssh/id_rsa
+#&gt;     EOF
+#&gt;     mv known_hosts /root/.ssh/known_hosts
+#&gt;   dir: ''
+#&gt;   volumes:
+#&gt;   - name: ssh
+#&gt;     path: /root/.ssh
+#&gt; - name: gcr.io/cloud-builders/git
+#&gt;   args:
+#&gt;   - clone
+#&gt;   - git@github.com:github_name/repo_name
+#&gt;   dir: ''
+#&gt;   volumes:
+#&gt;   - name: ssh
+#&gt;     path: /root/.ssh</div><div class='input'>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#details">Details</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 

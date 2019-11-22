@@ -154,6 +154,26 @@ test_that("Render BuildStep objects", {
   expect_equal(edit3[[1]]$name, "gcr.io/blah")
   expect_equal(edit4[[1]]$dir, "blah")
 
+  git_yaml <- Yaml(
+    steps = c(
+      cr_buildstep_gitsetup("my_keyring", "git_key"),
+      cr_buildstep_git(c("clone", "git@github.com:github_name/repo_name"))
+    )
+  )
+
+  expect_equal(git_yaml$steps[[1]]$name, "gcr.io/cloud-builders/gcloud")
+  expect_equal(git_yaml$steps[[1]]$args[[1]], "kms")
+  expect_equal(git_yaml$steps[[1]]$args[[4]], "id_rsa.enc")
+  expect_equal(git_yaml$steps[[1]]$args[[10]], "my_keyring")
+  expect_equal(git_yaml$steps[[1]]$volumes[[1]]$name, "ssh")
+  expect_equal(git_yaml$steps[[1]]$volumes[[1]]$path, "/root/.ssh")
+
+  expect_equal(git_yaml$steps[[2]]$name, "gcr.io/cloud-builders/git")
+  expect_equal(git_yaml$steps[[2]]$volumes[[1]]$name, "ssh")
+  expect_equal(git_yaml$steps[[2]]$volumes[[1]]$path, "/root/.ssh")
+  expect_equal(git_yaml$steps[[2]]$args[[2]],
+               "chmod 600 /root/.ssh/id_rsa\ncat <<EOF >/root/.ssh/config\nHostname github.com\nIdentityFile /root/.ssh/id_rsa\nEOF\nmv known_hosts /root/.ssh/known_hosts\n")
+
 })
 
 

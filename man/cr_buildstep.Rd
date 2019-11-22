@@ -5,7 +5,7 @@
 \title{Create a yaml build step}
 \usage{
 cr_buildstep(name, args, id = NULL, prefix = "gcr.io/cloud-builders/",
-  entrypoint = NULL, dir = "", env = NULL)
+  entrypoint = NULL, dir = "", env = NULL, volumes = NULL)
 }
 \arguments{
 \item{name}{name of docker image to call appended to \code{prefix}}
@@ -75,6 +75,9 @@ cr_buildstep("alpine", c("-c","ls -la"), entrypoint = "bash", prefix="")
 
 # to add environment arguments to the step
 cr_buildstep("docker", "version", env = c("ENV1=env1", "ENV2=$PROJECT_ID"))
+
+# to add volumes wrap in list()
+cr_buildstep("test", "ls", volumes = list(list(name = "ssh", path = "/root/.ssh")))
 
 }
 \seealso{

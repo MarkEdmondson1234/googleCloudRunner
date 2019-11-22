@@ -91,16 +91,26 @@ cr_buildstep_docker <- function(image,
 #'
 #' This creates steps to configure git to use an ssh created key.
 #'
-#' @param ... Further arguments passed in to \link{cr_buildstep}
+#' @inheritParams cr_buildstep_decrypt
 #' @details
 #'
-#' The key should be encrypted offline using \code{gcloud kms} or similar first, which you can then use \link{cr_buildstep_decrypt} to put into your builds workspace.
+#' The key should be encrypted offline using \code{gcloud kms} or similar first.  See \link{cr_buildstep_decrypt} for details.
 #'
+#' By default the encrypted key should then be at the root of your \link{Source} object called "id_rsa.enc"
 #'
+#' @rdname cr_buildstep_git
 #' @export
 #' @examples
 #'
-cr_buildstep_gitsetup <- function(...){
+#' # assumes you have previously saved git ssh key via KMS called "git_key"
+#' Yaml(
+#'      steps = c(
+#'           cr_buildstep_gitsetup("my_keyring", "git_key"),
+#'           cr_buildstep_git(c("clone", "git@github.com:github_name/repo_name"))
+#'      )
+#'  )
+#'
+cr_buildstep_gitsetup <- function(keyring, key, cipher = "id_rsa.enc", ...){
   # don't allow dot names that would break things
   dots <- list(...)
   assert_that(
@@ -112,5 +122,52 @@ cr_buildstep_gitsetup <- function(...){
 
   cb <- system.file("cloudbuild/cloudbuild_git.yml",
                     package = "googleCloudRunner")
+  bs <- cr_build_make(cb)
 
+  c(
+    cr_buildstep_decrypt(cipher = cipher,
+                         plain = "/root/.ssh/id_rsa",
+                         keyring = keyring,
+                         key = key,
+                         volumes = git_volume()),
+    cr_buildstep_extract(bs, 2)
+  )
+}
+
+
+#' Create a build step for using Git
+#'
+#' This creates steps to use git with an ssh created key.
+#'
+#' @param ... Further arguments passed in to \link{cr_buildstep}
+#' @param git_args The arguments to send to git
+#' @details
+#'
+#' \code{cr_buildstep} must come after \code{cr_buildstep_gitsetup}
+#'
+#' @export
+#' @examples
+#'
+cr_buildstep_git <- function(git_args = c("clone",
+                                          "git@github.com:[GIT-USERNAME]/[REPOSITORY]"),
+                             ...){
+  # don't allow dot names that would break things
+  dots <- list(...)
+  assert_that(
+    is.null(dots$name),
+    is.null(dots$args),
+    is.null(dots$prefix),
+    is.null(dots$entrypoint)
+  )
+
+  cr_buildstep(
+    "git",
+    args = git_args,
+    volumes = git_volume()
+  )
+}
+
+git_volume <- function(){
+  list(list(name = "ssh",
+            path = "/root/.ssh"))
 }

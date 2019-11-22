@@ -62,13 +62,17 @@
 #' # to add environment arguments to the step
 #' cr_buildstep("docker", "version", env = c("ENV1=env1", "ENV2=$PROJECT_ID"))
 #'
+#' # to add volumes wrap in list()
+#' cr_buildstep("test", "ls", volumes = list(list(name = "ssh", path = "/root/.ssh")))
+#'
 cr_buildstep <- function(name,
                          args,
                          id = NULL,
                          prefix = "gcr.io/cloud-builders/",
                          entrypoint = NULL,
                          dir = "",
-                         env = NULL){
+                         env = NULL,
+                         volumes = NULL){
 
   prefix <- if(is.null(prefix) || is.na(prefix)) "gcr.io/cloud-builders/" else prefix
 
@@ -83,7 +87,8 @@ cr_buildstep <- function(name,
       args = args,
       id = id,
       dir = dir,
-      env = env
+      env = env,
+      volumes = volumes
     )), class = c("cr_buildstep","list")))
 }
 
@@ -121,7 +126,14 @@ cr_buildstep_df <- function(x){
     x$prefix=""
   }
 
-  xx <- x[, intersect(c("name","args","id","prefix","entrypoint","dir", "env"), names(x))]
+  xx <- x[, intersect(c("name",
+                        "args",
+                        "id",
+                        "prefix",
+                        "entrypoint",
+                        "dir",
+                        "env",
+                        "volumes"), names(x))]
 
   apply(xx, 1, function(row){
     cr_buildstep(name = row[["name"]],
@@ -130,6 +142,7 @@ cr_buildstep_df <- function(x){
                  prefix = row[["prefix"]],
                  entrypoint = row[["entrypoint"]],
                  env = row[["env"]],
+                 volumes = row[["volumes"]],
                  dir = row[["dir"]])[[1]]
   })
 
