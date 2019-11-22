@@ -47,9 +47,11 @@ cr_buildstep <- function(name,
                          id = NULL,
                          prefix = "gcr.io/cloud-builders/",
                          entrypoint = NULL,
-                         dir = "deploy"){
+                         dir = "deploy",
+                         env = NULL){
 
   prefix <- if(is.null(prefix) || is.na(prefix)) "gcr.io/cloud-builders/" else prefix
+
 
   list(structure(
     rmNullObs(list(
@@ -57,7 +59,8 @@ cr_buildstep <- function(name,
       entrypoint = entrypoint,
       args = args,
       id = id,
-      dir = dir
+      dir = dir,
+      env = env
     )), class = c("cr_buildstep","list")))
 }
 
@@ -99,7 +102,7 @@ cr_buildstep_df <- function(x){
     x$prefix=""
   }
 
-  xx <- x[, intersect(c("name","args","id","prefix","entrypoint","dir"), names(x))]
+  xx <- x[, intersect(c("name","args","id","prefix","entrypoint","dir", "env"), names(x))]
 
   apply(xx, 1, function(row){
     cr_buildstep(name = row[["name"]],
@@ -107,6 +110,7 @@ cr_buildstep_df <- function(x){
                  id = row[["id"]],
                  prefix = row[["prefix"]],
                  entrypoint = row[["entrypoint"]],
+                 env = row[["env"]],
                  dir = row[["dir"]])[[1]]
   })
 
@@ -184,3 +188,31 @@ cr_buildstep_docker <- function(image,
     cr_buildstep("docker", c("push", the_image), dir=dir)
   )
 }
+
+#' Extract a buildstep from a Build object
+#'
+#' Useful if you have a step from an existing cloudbuild.yaml you want in another
+#'
+#' @param x A \link{Build} object
+#' @param step The numeric step number to extract
+#'
+#' @export
+#' @examples
+#' package_build <- system.file("cloudbuild/cloudbuild_packages.yml",
+#'                              package = "googleCloudRunner")
+#' build <- cr_build_make(package_build)
+#' build
+#' cr_buildstep_extract(build, step = 1)
+#' cr_buildstep_extract(build, step = 2)
+cr_buildstep_extract <- function(x, step = NULL){
+
+  assert_that(is.gar_Build(x))
+
+  the_step <- x$steps[[step]]
+  the_step$prefix <- ""
+
+  do.call(cr_buildstep,
+          args = the_step)
+
+}
+

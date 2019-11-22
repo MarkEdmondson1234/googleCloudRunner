@@ -136,6 +136,13 @@ test_that("Render BuildStep objects", {
   expect_equal(bsy[[2]]$args[[1]], "echo")
   expect_equal(bsy[[2]]$id, "Hello Cloud Build")
 
+  package_build <- system.file("cloudbuild/cloudbuild_packages.yml",
+                               package = "googleCloudRunner")
+  bp <- cr_build_make(package_build)
+  bp1 <- cr_buildstep_extract(bp, step = 1)
+  bp2 <- cr_buildstep_extract(bp, step = 2)
+  expect_true(bp1[[1]]$id, "Devtools checks")
+  expect_true(bp2[[1]]$id, "Good Practices")
 
 })
 

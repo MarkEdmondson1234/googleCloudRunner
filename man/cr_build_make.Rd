@@ -22,8 +22,9 @@ cr_build_make(yaml, source = NULL, timeout = NULL, images = NULL,
 This creates a \link{Build} object via the standard cloudbuild.yaml format
 }
 \examples{
-cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
-cr_build_make(cloudbuild)
+cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
+                           package = "googleCloudRunner")
+cr_build_make(cloudbuild, projectId = "test-project")
 }
 \seealso{
 https://cloud.google.com/cloud-build/docs/build-config

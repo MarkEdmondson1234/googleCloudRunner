@@ -5,7 +5,7 @@
 \title{Create a yaml build step}
 \usage{
 cr_buildstep(name, args, id = NULL, prefix = "gcr.io/cloud-builders/",
-  entrypoint = NULL, dir = "deploy")
+  entrypoint = NULL, dir = "deploy", env = NULL)
 }
 \arguments{
 \item{name}{name of SDK appended to stem}
