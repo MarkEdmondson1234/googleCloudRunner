@@ -36,7 +36,6 @@ steps:
     path: /root/.ssh
 - name: 'gcr.io/cloud-builders/git'
   id: clone repo
-  entrypoint: 'bash'
   args:
   - clone
   - git@github.com:$_GITHUB_REPO
