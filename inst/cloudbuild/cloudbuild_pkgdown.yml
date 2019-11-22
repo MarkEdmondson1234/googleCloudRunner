@@ -31,7 +31,7 @@ steps:
     IdentityFile /root/.ssh/id_rsa
     EOF
     cp inst/ssh/known_hosts /root/.ssh/known_hosts
-    git config --global user.name "CloudBuilder"
+    git config --global user.name "googleCloudRunner"
     git config --global user.email $_BUILD_EMAIL
   volumes:
   - name: 'ssh'
@@ -65,7 +65,7 @@ steps:
   - |
     git add . && \
     git commit -a -m "Build website from commit ${COMMIT_SHA}: \
-                      $(date +"%Y-%m-%d_%H-%M-%S")" && \
+                      $(date +"%Y%m%d%H:%M:%S")" && \
     git push git@github.com:$_GITHUB_REPO
   volumes:
   - name: 'ssh'
