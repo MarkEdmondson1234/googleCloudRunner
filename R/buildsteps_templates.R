@@ -98,6 +98,8 @@ cr_buildstep_docker <- function(image,
 #'
 #' By default the encrypted key should then be at the root of your \link{Source} object called "id_rsa.enc"
 #'
+#' You also need to supply a \code{known_hosts} file in working directory.  This can be created by \code{ssh-keyscan -t rsa github.com > known_hosts}
+#'
 #' @rdname cr_buildstep_git
 #' @export
 #' @examples
