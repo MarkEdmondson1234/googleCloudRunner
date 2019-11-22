@@ -194,6 +194,7 @@ This creates steps to use git with an ssh created key." />
 
     <p>The key should be encrypted offline using <code>gcloud kms</code> or similar first.  See <a href='cr_buildstep_decrypt.html'>cr_buildstep_decrypt</a> for details.</p>
 <p>By default the encrypted key should then be at the root of your <a href='Source.html'>Source</a> object called "id_rsa.enc"</p>
+<p>You also need to supply a <code>known_hosts</code> file in working directory.  This can be created by <code>ssh-keyscan -t rsa github.com &gt; known_hosts</code></p>
 <p><code>cr_buildstep</code> must come after <code>cr_buildstep_gitsetup</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

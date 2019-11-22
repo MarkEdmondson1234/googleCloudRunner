@@ -5,14 +5,6 @@ options:
   - 'CR_BUILD_EMAIL=$_BUILD_EMAIL'
   - 'GCS_DEFAULT_BUCKET=$_BUCKET'
 steps:
-- name: 'gcr.io/gcer-public/packagetools:master'
-  id: Build website
-  args:
-  - "Rscript"
-  - "-e"
-  - |
-    devtools::install()
-    pkgdown::build_site()
 - name: 'gcr.io/cloud-builders/gcloud'
   id: decrypt gitkey
   args:
@@ -42,16 +34,37 @@ steps:
   volumes:
   - name: 'ssh'
     path: /root/.ssh
-
+- name: 'gcr.io/cloud-builders/git'
+  id: clone repo
+  entrypoint: 'bash'
+  args:
+  - clone
+  - git@github.com:$_GITHUB_REPO
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+- name: 'gcr.io/gcer-public/packagetools:master'
+  id: Build website
+  dir: googleCloudRunner
+  args:
+  - "Rscript"
+  - "-e"
+  - |
+    devtools::install()
+    pkgdown::build_site()
 # Connect to the repository
 - name: 'gcr.io/cloud-builders/git'
   id: push website
   entrypoint: 'bash'
+  dir: googleCloudRunner
   args:
   - '-c'
   - |
-    git commit -a -m='Build website: date +%Y-%m-%d_%H-%M-%S' \
-    && git push git@github.com:$_GITHUB_REPO
+    ls -la
+    git add . && \
+    git commit -a -m "Build website from commit ${COMMIT_SHA}: \
+                      date +%Y-%m-%d_%H-%M-%S" && \
+    git push git@github.com:$_GITHUB_REPO
   volumes:
   - name: 'ssh'
     path: /root/.ssh
