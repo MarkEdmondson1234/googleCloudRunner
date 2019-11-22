@@ -34,8 +34,17 @@ steps:
   volumes:
   - name: 'ssh'
     path: /root/.ssh
+- name: 'gcr.io/cloud-builders/git'
+  id: clone under new git creds
+  args:
+  - clone
+  - git@github.com:$_GITHUB_REPO
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: Build website
+  dir: googleCloudRunner
   args:
   - "Rscript"
   - "-e"
@@ -46,6 +55,7 @@ steps:
 # Connect to the repository
 - name: 'gcr.io/cloud-builders/git'
   id: push website
+  dir: googleCloudRunner
   entrypoint: 'bash'
   args:
   - '-c'
