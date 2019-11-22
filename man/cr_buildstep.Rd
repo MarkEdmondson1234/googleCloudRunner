@@ -21,6 +21,8 @@ cr_buildstep(name, args, id = NULL, prefix = "gcr.io/cloud-builders/",
 \item{dir}{The directory to use, relative to /workspace e.g. /workspace/deploy/}
 
 \item{env}{Environment variables for this step.  A character vector for each assignment}
+
+\item{volumes}{volumes to connect and write to}
 }
 \description{
 Helper for creating build steps for upload to Cloud Build

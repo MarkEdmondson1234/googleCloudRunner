@@ -9,6 +9,7 @@
 #' @param dir The directory to use, relative to /workspace e.g. /workspace/deploy/
 #' @param id Optional id for the step
 #' @param env Environment variables for this step.  A character vector for each assignment
+#' @param volumes volumes to connect and write to
 #'
 #' @details
 #' By default dir is set to \code{deploy} to aid deployment from GCS, but you may want to set this to \code{""} when using \link{RepoSource}

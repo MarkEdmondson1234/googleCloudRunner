@@ -18,6 +18,7 @@ cr_buildstep_edit(x, ...)
   \item{dir}{The directory to use, relative to /workspace e.g. /workspace/deploy/}
   \item{id}{Optional id for the step}
   \item{env}{Environment variables for this step.  A character vector for each assignment}
+  \item{volumes}{volumes to connect and write to}
 }}
 }
 \description{
