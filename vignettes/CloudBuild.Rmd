@@ -82,8 +82,6 @@ cr_schedule("15 5 * * *", name="itworks-schedule",
             httpTarget = cr_build_schedule_http(itworks))
 ```
 
-
-
 ## Cloud Build source
 
 Cloud Builds usually need code or data to work on to be useful.  This is specified by the `source` argument.  
@@ -91,12 +89,11 @@ Cloud Builds usually need code or data to work on to be useful.  This is specifi
 This can be a Cloud Source Repository (perhaps mirrored from GitHub) or a Cloud Storage bucket containg the code/data you want to operate on.  An example of specifying both is below:
 
 ```r
-gcs_source <- Source(
-  storageSource=StorageSource("gs://my-bucket", "my_code.tar.gz"))
+gcs_source <- cr_build_source("gs://my-bucket", "my_code.tar.gz")
   
-repo_source <- Source(
-  repoSource=RepoSource("github_markedmondson1234_googlecloudrunner",
-                        branchName="master"))
+repo_source <- cr_build_source(
+  RepoSource("github_markedmondson1234_googlecloudrunner",
+             branchName="master"))
 
 build1 <- cr_build("cloudbuild.yaml", source = gcs_source)
 build2 <- cr_build("cloudbuild.yaml", source = repo_source)

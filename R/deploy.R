@@ -41,29 +41,33 @@ cr_deploy_run <- function(local,
                           launch_browser = interactive(),
                           timeout=600L){
 
-  task_id <- rstudio_add_job(paste("Deploy service ",remote," to CloudRun"),
-                             timeout=extract_timeout(timeout))
+  task_id <- rstudio_add_job(
+    paste("Deploy service ",remote," to CloudRun"),
+    timeout=extract_timeout(timeout))
 
   local_files <- list.files(local)
   if(!"api.R" %in% local_files){
-    stop("Must include api.R in local deployment folder with library(plumber) implementation
+    stop("Must include api.R in local deployment folder
+         with library(plumber) implementation
          for Cloud Run deployments", call. = FALSE)
   }
 
   image_name <- make_image_name(image_name, projectId)
 
   docker_build <- cr_deploy_docker(local,
-                                   image_name = image_name,
-                                   dockerfile = dockerfile,
-                                   remote = remote,
-                                   tag = tag,
-                                   bucket = bucket,
-                                   projectId = projectId,
-                                   launch_browser = launch_browser,
-                                   timeout=timeout,
-                                   task_id=task_id)
+                      image_name = image_name,
+                      dockerfile = dockerfile,
+                      remote = remote,
+                      tag = tag,
+                      bucket = bucket,
+                      projectId = projectId,
+                      launch_browser = launch_browser,
+                      timeout=timeout,
+                      task_id=task_id)
 
-  built <- cr_build_wait(docker_build, projectId = projectId, task_id=task_id)
+  built <- cr_build_wait(docker_build,
+                         projectId = projectId,
+                         task_id=task_id)
 
   cr_run(built$results$images$name,
          name = tolower(remote),
@@ -85,7 +89,7 @@ make_image_name <- function(name, projectId){
   tolower(the_image)
 }
 
-#' Deploy a Dockerfile so it will be built on ContainerRegistry
+#' Deploy a Dockerfile to be built on ContainerRegistry
 #'
 #' If no Dockerfile present in the deployment folder, will attempt to create a Dockerfile to upload via \link{cr_dockerfile}
 #'
@@ -126,16 +130,15 @@ cr_deploy_docker <- function(local,
 
   image <- make_image_name(image_name, projectId = projectId)
 
-
-
-  build_yaml <- Yaml(steps = cr_buildstep_docker(image,
-                                                 tag = tag,
-                                                 location = ".",
-                                                 dir=paste0("deploy/", remote),
-                                                 projectId = projectId),
-                     images = image)
+  build_yaml <- Yaml(
+    steps = cr_buildstep_docker(image,
+                                tag = tag,
+                                location = ".",
+                                dir=paste0("deploy/", remote),
+                                projectId = projectId),
+    images = image)
   rstudio_add_output(task_id,
-                     paste("\n#Deploy docker build for image: \n", image))
+    paste("\n#Deploy docker build for image: \n", image))
 
   gcs_source <- cr_build_upload_gcs(local,
                                     remote = remote,
@@ -149,69 +152,3 @@ cr_deploy_docker <- function(local,
 
 }
 
-use_or_create_dockerfile <- function(local, dockerfile){
-  local_files <- list.files(local)
-  if("Dockerfile" %in% local_files){
-    return(TRUE)
-  }
-  # if no dockerfile, attempt to create it
-  if(is.null(dockerfile)){
-    # creates and write a dockerfile to the folder
-    cr_dockerfile(local)
-
-  } else {
-    assert_that(
-      is.readable(file.path(local, dockerfile))
-    )
-    myMessage("Copying Dockerfile from ", dockerfile," to ",local, level = 3)
-    file.copy(dockerfile, file.path(local, "Dockerfile"))
-  }
-  TRUE
-}
-
-
-#' Create Dockerfile in the deployment folder
-#'
-#' This uses \link[containerit]{dockerfile} to create a Dockerfile if possible
-#'
-#' @param deploy_folder The folder containing the assessts to deploy
-#' @param ... Other arguments pass to \link[containerit]{dockerfile}
-#'
-#' @export
-#'
-#' @return An object of class Dockerfile
-#'
-#' @examples
-#'
-#' \dontrun{
-#' cr_dockerfile(system.file("example/", package = "googleCloudRunner"))
-#' }
-cr_dockerfile <- function(deploy_folder, ...){
-  check_package_installed("containerit")
-  docker <- suppressWarnings(
-    containerit::dockerfile(deploy_folder,
-     image = "trestletech/plumber",
-     offline = FALSE,
-     cmd = containerit::Cmd("api.R"),
-     maintainer = NULL,
-     container_workdir = NULL,
-     entrypoint = containerit::Entrypoint("R",
-                   params = list("-e",
-                                 "pr <- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))")),
-     filter_baseimage_pkgs = FALSE,
-     ...))
-
-  containerit::addInstruction(docker) <-containerit:::Copy(".","./")
-
-  write_to <- file.path(deploy_folder, "Dockerfile")
-  containerit::write(docker, file = write_to)
-
-  assert_that(
-    is.readable(write_to)
-  )
-
-  myMessage("Written Dockerfile to ", write_to, level = 3)
-  containerit::print(docker)
-  docker
-
-}

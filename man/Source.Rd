@@ -15,7 +15,7 @@ Source(storageSource = NULL, repoSource = NULL)
 Source object
 }
 \description{
-Source Object
+It is suggested to use \link{cr_build_source} instead to build sources
 }
 \details{
 Location of the source in a supported storage service.

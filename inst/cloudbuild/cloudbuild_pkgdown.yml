@@ -41,12 +41,12 @@ steps:
   args:
   - clone
   - git@github.com:$_GITHUB_REPO
+  - .
   volumes:
   - name: 'ssh'
     path: /root/.ssh
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: Build website
-  dir: googleCloudRunner
   args:
   - "Rscript"
   - "-e"
@@ -58,14 +58,13 @@ steps:
 # otherwise it will trigger again in never ending git commit loop
 - name: 'gcr.io/cloud-builders/git'
   id: push website
-  dir: googleCloudRunner
   entrypoint: 'bash'
   args:
   - '-c'
   - |
     git add . && \
     git commit -a -m "Build website from commit ${COMMIT_SHA}: \
-                      $(date +"%Y%m%d%H:%M:%S")" && \
+                      $(date +"%Y%m%dT%H:%M:%S")" && \
     git push git@github.com:$_GITHUB_REPO
   volumes:
   - name: 'ssh'

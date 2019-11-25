@@ -5,17 +5,18 @@
 \alias{cr_buildstep_git}
 \title{Create a build step for authenticating with Git}
 \usage{
-cr_buildstep_gitsetup(keyring, key, cipher = "id_rsa.enc", ...)
+cr_buildstep_gitsetup(keyring = "my-keyring", key = "github-key",
+  cipher = "id_rsa.enc", ...)
 
 cr_buildstep_git(git_args = c("clone",
-  "git@github.com:[GIT-USERNAME]/[REPOSITORY]"), ...)
+  "git@github.com:[GIT-USERNAME]/[REPOSITORY]", "."), ...)
 }
 \arguments{
-\item{keyring}{The KMS keyring to use}
+\item{keyring}{The Key Management Store keyring containing the git ssh key}
 
-\item{key}{The KMS key to use}
+\item{key}{The Key Management Store key containing the gitssh key}
 
-\item{cipher}{The file that has been encrypted}
+\item{cipher}{The filename of the encrypted git ssh key that has been checked into the repository}
 
 \item{...}{Further arguments passed in to \link{cr_buildstep}}
 
@@ -31,8 +32,6 @@ The key should be encrypted offline using \code{gcloud kms} or similar first.  S
 
 By default the encrypted key should then be at the root of your \link{Source} object called "id_rsa.enc"
 
-You also need to supply a \code{known_hosts} file in working directory.  This can be created by \code{ssh-keyscan -t rsa github.com > known_hosts}
-
 \code{cr_buildstep} must come after \code{cr_buildstep_gitsetup}
 }
 \examples{
@@ -41,9 +40,13 @@ You also need to supply a \code{known_hosts} file in working directory.  This ca
 Yaml(
      steps = c(
           cr_buildstep_gitsetup("my_keyring", "git_key"),
-          cr_buildstep_git(c("clone", "git@github.com:github_name/repo_name"))
+          cr_buildstep_git(c("clone",
+                             "git@github.com:github_name/repo_name"))
      )
  )
 
 
+}
+\seealso{
+\href{Accessing private GitHub repositories using Cloud Build (google article)}{https://cloud.google.com/cloud-build/docs/access-private-github-repos}
 }

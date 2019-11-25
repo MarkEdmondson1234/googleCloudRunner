@@ -75,7 +75,11 @@ cr_buildstep <- function(name,
                          env = NULL,
                          volumes = NULL){
 
-  prefix <- if(is.null(prefix) || is.na(prefix)) "gcr.io/cloud-builders/" else prefix
+  if(is.null(prefix) || is.na(prefix)){
+    prefix <- "gcr.io/cloud-builders/"
+  }
+
+  if(dir == "") dir <- NULL
 
   if(grepl("^gcr.io", name)){
     prefix = ""
@@ -125,6 +129,10 @@ cr_buildstep_df <- function(x){
   if(is.null(x$prefix)){
     #probably from API
     x$prefix=""
+  }
+
+  if(is.null(x$dir)){
+    x$dir=""
   }
 
   xx <- x[, intersect(c("name",

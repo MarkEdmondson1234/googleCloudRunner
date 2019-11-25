@@ -1,4 +1,38 @@
+#' Build a source object
+#'
+#' @param x A \link{RepoSource} or a \link{StorageSource} object
+#'
+#' @export
+#' @examples
+#'
+#' cr_build_source(RepoSource("my_repo", branchName = "master"))
+#' cr_build_source(StorageSource("my_code.tar.gz","gs://my-bucket"))
+#'
+#' my_gcs_source <- cr_build_source("my_code.tar.gz", "gs://my-bucket"))
+#' my_repo_source <- cr_build_source(RepoSource("https://my-repo.com",
+#'                                              branchName="master"))
+#'
+#' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
+#' build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
+cr_build_source <- function(x){
+  UseMethod("cr_build_source", x)
+}
+
+#' @export
+#' @rdname cr_build_source
+cr_build_source.gar_RepoSource <- function(x){
+  Source(repoSource = x)
+}
+
+#' @export
+#' @rdname cr_build_source
+cr_build_source.gar_StorageSource <- function(x){
+  Source(storageSource = x)
+}
+
 #' Source Object
+#'
+#' It is suggested to use \link{cr_build_source} instead to build sources
 #'
 #' @details
 #' Location of the source in a supported storage service.
@@ -226,8 +260,7 @@ cr_build_upload_gcs <- function(local,
     rstudio_add_state(task_id, "SUCCESS")
   }
 
-  Source(storageSource = StorageSource(bucket = bucket,
-                                       object = remote)
-  )
+  cr_build_source(StorageSource(bucket = bucket,
+                                object = remote))
 }
 

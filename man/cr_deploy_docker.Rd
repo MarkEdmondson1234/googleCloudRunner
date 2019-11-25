@@ -2,7 +2,7 @@
 % Please edit documentation in R/deploy.R
 \name{cr_deploy_docker}
 \alias{cr_deploy_docker}
-\title{Deploy a Dockerfile so it will be built on ContainerRegistry}
+\title{Deploy a Dockerfile to be built on ContainerRegistry}
 \usage{
 cr_deploy_docker(local, image_name = remote, dockerfile = NULL,
   remote = basename(local), tag = "$BUILD_ID", timeout = 600L,

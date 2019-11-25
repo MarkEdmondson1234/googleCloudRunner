@@ -122,7 +122,6 @@ test_that("Render BuildStep objects", {
   expect_equal(bsd[[1]]$args[[3]], "gcr.io/test-project/my-image:$BRANCH_NAME")
   expect_equal(bsd[[2]]$name,  "gcr.io/cloud-builders/docker")
   expect_equal(bsd[[2]]$args[[1]], "push")
-  expect_equal(bsd[[2]]$dir, "")
 
   y <- data.frame(name = c("docker", "alpine"),
                   args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
@@ -173,6 +172,19 @@ test_that("Render BuildStep objects", {
   expect_equal(git_yaml$steps[[2]]$volumes[[1]]$path, "/root/.ssh")
   expect_equal(git_yaml$steps[[2]]$args[[2]],
                "chmod 600 /root/.ssh/id_rsa\ncat <<EOF >/root/.ssh/config\nHostname github.com\nIdentityFile /root/.ssh/id_rsa\nEOF\nmv inst/ssh/known_hosts /root/.ssh/known_hosts\n")
+
+  pkgdown_steps <- cr_buildstep_pkgdown("$_GITHUB_REPO",
+                                        "cloudbuild@google.com")
+
+  expect_equal(pkgdown_steps[[1]]$name, "gcr.io/cloud-builders/gcloud")
+  expect_equal(pkgdown_steps[[1]]$args[[1]], "kms")
+  expect_equal(pkgdown_steps[[1]]$args[[4]], "id_rsa.enc")
+  expect_equal(pkgdown_steps[[1]]$args[[10]], "my-keyring")
+  expect_equal(pkgdown_steps[[1]]$volumes[[1]]$name, "ssh")
+  expect_equal(pkgdown_steps[[1]]$volumes[[1]]$path, "/root/.ssh")
+
+  expect_equal(pkgdown_steps[[4]]$args[[3]],
+               "devtools::install()\nlist.files()\npkgdown::build_site()\n")
 
 })
 
