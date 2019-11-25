@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Write out a Build object to cloudbuild.yaml — cr_build_write • googleCloudRunner</title>
+<title>BuildTrigger Object — BuildTrigger • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Write out a Build object to cloudbuild.yaml — cr_build_write" />
-<meta property="og:description" content="Write out a Build object to cloudbuild.yaml" />
+<meta property="og:title" content="BuildTrigger Object — BuildTrigger" />
+<meta property="og:description" content="BuildTrigger Object" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,57 +149,102 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Write out a Build object to cloudbuild.yaml</h1>
+    <h1>BuildTrigger Object</h1>
     
-    <div class="hidden name"><code>cr_build_write.Rd</code></div>
+    <div class="hidden name"><code>BuildTrigger.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Write out a Build object to cloudbuild.yaml</p>
+    <p>BuildTrigger Object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_build_write</span>(<span class='no'>x</span>, <span class='kw'>file</span> <span class='kw'>=</span> <span class='st'>"cloudbuild.yaml"</span>)</pre>
+    <pre class="usage"><span class='fu'>BuildTrigger</span>(<span class='kw'>BuildTrigger.substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>filename</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>build</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ignoredFiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>github</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>includedFiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>disabled</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>createTime</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>triggerTemplate</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>A <a href='Build.html'>Build</a> object perhaps created with <a href='cr_build_make.html'>cr_build_make</a> or <a href='Yaml.html'>Yaml</a> created</p></td>
+      <th>BuildTrigger.substitutions</th>
+      <td><p>The BuildTrigger.substitutions object or list of objects</p></td>
     </tr>
     <tr>
-      <th>file</th>
-      <td><p>Where to write the yaml file</p></td>
+      <th>filename</th>
+      <td><p>Path, from the source root, to a file whose contents is used for the</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>User assigned name of the trigger</p></td>
+    </tr>
+    <tr>
+      <th>id</th>
+      <td><p>Output only</p></td>
+    </tr>
+    <tr>
+      <th>tags</th>
+      <td><p>Tags for annotation of a `BuildTrigger`</p></td>
+    </tr>
+    <tr>
+      <th>build</th>
+      <td><p>Contents of the build template</p></td>
+    </tr>
+    <tr>
+      <th>ignoredFiles</th>
+      <td><p>ignored_files and included_files are file glob matches using</p></td>
+    </tr>
+    <tr>
+      <th>github</th>
+      <td><p>GitHubEventsConfig describes the configuration of a trigger that creates</p></td>
+    </tr>
+    <tr>
+      <th>substitutions</th>
+      <td><p>Substitutions data for Build resource</p></td>
+    </tr>
+    <tr>
+      <th>includedFiles</th>
+      <td><p>If any of the files altered in the commit pass the ignored_files</p></td>
+    </tr>
+    <tr>
+      <th>disabled</th>
+      <td><p>If true, the trigger will never result in a build</p></td>
+    </tr>
+    <tr>
+      <th>createTime</th>
+      <td><p>Output only</p></td>
+    </tr>
+    <tr>
+      <th>triggerTemplate</th>
+      <td><p>Template describing the types of source changes to trigger a build</p></td>
+    </tr>
+    <tr>
+      <th>description</th>
+      <td><p>Human-readable description of this trigger</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>BuildTrigger object</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Autogenerated via <code><a href='https://code.markedmondson.me/googleAuthR//reference/gar_create_api_objects.html'>gar_create_api_objects</a></code>
+Configuration for an automated build in response to source repositorychanges.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Cloud Build functions, yaml functions: <code><a href='Yaml.html'>Yaml</a></code>,
-  <code><a href='cr_buildstep.html'>cr_buildstep</a></code></p></div>
+    <div class='dont-index'><p>Other BuildTrigger functions: <code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a></code>,
+  <code><a href='cr_buildtrigger.html'>cr_buildtrigger</a></code></p></div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='co'># write from creating a Yaml object</span>
-<span class='no'>image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/my-project/my-image$BUILD_ID"</span>
-<span class='no'>run_yaml</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Yaml.html'>Yaml</a></span>(<span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
-    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span>(<span class='st'>"docker"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"build"</span>,<span class='st'>"-t"</span>,<span class='no'>image</span>,<span class='st'>"."</span>)),
-    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span>(<span class='st'>"docker"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"push"</span>,<span class='no'>image</span>)),
-    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span>(<span class='st'>"gcloud"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"beta"</span>,<span class='st'>"run"</span>,<span class='st'>"deploy"</span>, <span class='st'>"test1"</span>, <span class='st'>"--image"</span>, <span class='no'>image</span>))),
-  <span class='kw'>images</span> <span class='kw'>=</span> <span class='no'>image</span>)
-<span class='fu'>cr_build_write</span>(<span class='no'>run_yaml</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-25 15:58:54&gt; Writing to cloudbuild.yaml</span></div><div class='input'>
-<span class='co'># write from a Build object</span>
-<span class='no'>build</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build_make.html'>cr_build_make</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"cloudbuild/cloudbuild.yaml"</span>,
-                                   <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>))
-<span class='fu'>cr_build_write</span>(<span class='no'>build</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-25 15:58:54&gt; Writing to cloudbuild.yaml</span></div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
+      <li><a href="#details">Details</a></li>
       <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
