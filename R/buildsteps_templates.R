@@ -224,7 +224,7 @@ cr_buildstep_pkgdown <- function(
 
   repo <- paste0("git@github.com:", github_repo)
   pkg <- cr_buildstep_extract(pdb, 4)
-  pkg_env <- cr_buildstep_edit(pkg, env = env, dir = )
+  pkg_env <- cr_buildstep_edit(pkg, env = env, dir = "repo")
 
   c(
     cr_buildstep_gitsetup(keyring = keyring,
