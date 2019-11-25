@@ -40,6 +40,9 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_schedule_http.html</loc>
   </url>
   <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_source.html</loc>
+  </url>
+  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_status.html</loc>
   </url>
   <url>
@@ -71,6 +74,9 @@
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildstep_git.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildstep_pkgdown.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_docker.html</loc>

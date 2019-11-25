@@ -183,15 +183,14 @@
 <a href="#cloud-build-source" class="anchor"></a>Cloud Build source</h2>
 <p>Cloud Builds usually need code or data to work on to be useful. This is specified by the <code>source</code> argument.</p>
 <p>This can be a Cloud Source Repository (perhaps mirrored from GitHub) or a Cloud Storage bucket containg the code/data you want to operate on. An example of specifying both is below:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">gcs_source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/Source.html">Source</a></span>(</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">  <span class="dt">storageSource=</span><span class="kw"><a href="../reference/StorageSource.html">StorageSource</a></span>(<span class="st">"gs://my-bucket"</span>, <span class="st">"my_code.tar.gz"</span>))</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">  </a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">repo_source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/Source.html">Source</a></span>(</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">  <span class="dt">repoSource=</span><span class="kw"><a href="../reference/RepoSource.html">RepoSource</a></span>(<span class="st">"github_markedmondson1234_googlecloudrunner"</span>,</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">                        <span class="dt">branchName=</span><span class="st">"master"</span>))</a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">build1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="st">"cloudbuild.yaml"</span>, <span class="dt">source =</span> gcs_source)</a>
-<a class="sourceLine" id="cb5-9" data-line-number="9">build2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="st">"cloudbuild.yaml"</span>, <span class="dt">source =</span> repo_source)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">gcs_source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_source.html">cr_build_source</a></span>(<span class="st">"gs://my-bucket"</span>, <span class="st">"my_code.tar.gz"</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">  </a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">repo_source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_source.html">cr_build_source</a></span>(</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">  <span class="kw"><a href="../reference/RepoSource.html">RepoSource</a></span>(<span class="st">"github_markedmondson1234_googlecloudrunner"</span>,</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">             <span class="dt">branchName=</span><span class="st">"master"</span>))</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">build1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="st">"cloudbuild.yaml"</span>, <span class="dt">source =</span> gcs_source)</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">build2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="st">"cloudbuild.yaml"</span>, <span class="dt">source =</span> repo_source)</a></code></pre></div>
 <p>You can also turn an existing build into a cloudbuild.yaml file:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="../reference/cr_build_write.html">cr_build_write</a></span>(build1)</a></code></pre></div>
 <p>There is a helper function for automating creation of a Google Cloud Storage source called <code><a href="../reference/cr_build_upload_gcs.html">cr_build_upload_gcs()</a></code></p>

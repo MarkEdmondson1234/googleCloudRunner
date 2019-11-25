@@ -160,25 +160,26 @@ This creates steps to use git with an ssh created key." />
 <p>This creates steps to use git with an ssh created key.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildstep_gitsetup</span>(<span class='no'>keyring</span>, <span class='no'>key</span>, <span class='kw'>cipher</span> <span class='kw'>=</span> <span class='st'>"id_rsa.enc"</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>cr_buildstep_gitsetup</span>(<span class='kw'>keyring</span> <span class='kw'>=</span> <span class='st'>"my-keyring"</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"github-key"</span>,
+  <span class='kw'>cipher</span> <span class='kw'>=</span> <span class='st'>"id_rsa.enc"</span>, <span class='no'>...</span>)
 
 <span class='fu'>cr_buildstep_git</span>(<span class='kw'>git_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"clone"</span>,
-  <span class='st'>"git@github.com:[GIT-USERNAME]/[REPOSITORY]"</span>), <span class='no'>...</span>)</pre>
+  <span class='st'>"git@github.com:[GIT-USERNAME]/[REPOSITORY]"</span>, <span class='st'>"."</span>), <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>keyring</th>
-      <td><p>The KMS keyring to use</p></td>
+      <td><p>The Key Management Store keyring containing the git ssh key</p></td>
     </tr>
     <tr>
       <th>key</th>
-      <td><p>The KMS key to use</p></td>
+      <td><p>The Key Management Store key containing the gitssh key</p></td>
     </tr>
     <tr>
       <th>cipher</th>
-      <td><p>The file that has been encrypted</p></td>
+      <td><p>The filename of the encrypted git ssh key that has been checked into the repository</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -194,8 +195,10 @@ This creates steps to use git with an ssh created key." />
 
     <p>The key should be encrypted offline using <code>gcloud kms</code> or similar first.  See <a href='cr_buildstep_decrypt.html'>cr_buildstep_decrypt</a> for details.</p>
 <p>By default the encrypted key should then be at the root of your <a href='Source.html'>Source</a> object called "id_rsa.enc"</p>
-<p>You also need to supply a <code>known_hosts</code> file in working directory.  This can be created by <code>ssh-keyscan -t rsa github.com &gt; known_hosts</code></p>
 <p><code>cr_buildstep</code> must come after <code>cr_buildstep_gitsetup</code></p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><a href='Accessing private GitHub repositories using Cloud Build (google article)'>https://cloud.google.com/cloud-build/docs/access-private-github-repos</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -203,7 +206,8 @@ This creates steps to use git with an ssh created key." />
 <span class='fu'><a href='Yaml.html'>Yaml</a></span>(
      <span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
           <span class='fu'>cr_buildstep_gitsetup</span>(<span class='st'>"my_keyring"</span>, <span class='st'>"git_key"</span>),
-          <span class='fu'>cr_buildstep_git</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"clone"</span>, <span class='st'>"git@github.com:github_name/repo_name"</span>))
+          <span class='fu'>cr_buildstep_git</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"clone"</span>,
+                             <span class='st'>"git@github.com:github_name/repo_name"</span>))
      )
  )</div><div class='output co'>#&gt; ==cloudRunnerYaml==
 #&gt; steps:
@@ -221,7 +225,6 @@ This creates steps to use git with an ssh created key." />
 #&gt;   - my_keyring
 #&gt;   - --key
 #&gt;   - git_key
-#&gt;   dir: ''
 #&gt;   volumes:
 #&gt;   - name: ssh
 #&gt;     path: /root/.ssh
@@ -236,7 +239,6 @@ This creates steps to use git with an ssh created key." />
 #&gt;     IdentityFile /root/.ssh/id_rsa
 #&gt;     EOF
 #&gt;     mv inst/ssh/known_hosts /root/.ssh/known_hosts
-#&gt;   dir: ''
 #&gt;   volumes:
 #&gt;   - name: ssh
 #&gt;     path: /root/.ssh
@@ -244,7 +246,6 @@ This creates steps to use git with an ssh created key." />
 #&gt;   args:
 #&gt;   - clone
 #&gt;   - git@github.com:github_name/repo_name
-#&gt;   dir: ''
 #&gt;   volumes:
 #&gt;   - name: ssh
 #&gt;     path: /root/.ssh</div><div class='input'>
@@ -256,6 +257,7 @@ This creates steps to use git with an ssh created key." />
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#details">Details</a></li>
+      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
