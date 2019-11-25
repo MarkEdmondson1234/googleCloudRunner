@@ -21,7 +21,7 @@ cr_buildstep_pkgdown(github_repo, git_email, keyring = "my-keyring",
 
 \item{cipher}{The filename of the encrypted git ssh key that has been checked into the repository}
 
-\item{build_image}{A docker image with \link{pkgdown} installed}
+\item{build_image}{A docker image with \code{pkgdown} installed}
 }
 \description{
 Create buildsteps for deploying an R pkgdown website to GitHub

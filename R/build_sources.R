@@ -5,15 +5,22 @@
 #' @export
 #' @examples
 #'
-#' cr_build_source(RepoSource("my_repo", branchName = "master"))
-#' cr_build_source(StorageSource("my_code.tar.gz","gs://my-bucket"))
+#' repo <- RepoSource("my_repo", branchName = "master")
+#' gcs  <- StorageSource("my_code.tar.gz","gs://my-bucket")
 #'
-#' my_gcs_source <- cr_build_source("my_code.tar.gz", "gs://my-bucket"))
-#' my_repo_source <- cr_build_source(RepoSource("https://my-repo.com",
-#'                                              branchName="master"))
+#' cr_build_source(repo)
+#' cr_build_source(gcs)
+#'
+#' my_gcs_source <- cr_build_source(gcs)
+#' my_repo_source <- cr_build_source(repo)
+#'
+#' \dontrun{
 #'
 #' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 #' build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
+#'
+#' }
+#'
 cr_build_source <- function(x){
   UseMethod("cr_build_source", x)
 }
@@ -46,12 +53,13 @@ cr_build_source.gar_StorageSource <- function(x){
 #' @export
 #' @examples
 #'
-#' \dontrun{
 #'
 #' my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
 #'                                                     "gs://my-bucket"))
 #' my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com",
 #'                                                branchName="master"))
+#'
+#' \dontrun{
 #'
 #' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 #' build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)

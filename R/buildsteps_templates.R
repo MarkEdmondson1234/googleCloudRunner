@@ -186,7 +186,7 @@ cr_buildstep_git <- function(
 #' @param github_repo The GitHub repo to deploy pkgdown website from and to.
 #' @param env A character vector of env arguments to set for all steps
 #' @param git_email The email the git commands will be identifying as
-#' @param build_image A docker image with \link{pkgdown} installed
+#' @param build_image A docker image with \code{pkgdown} installed
 #'
 #' @details
 #'
@@ -218,24 +218,26 @@ cr_buildstep_pkgdown <- function(
   pd <- system.file("cloudbuild/cloudbuild_pkgdown.yml",
                     package = "googleCloudRunner")
 
+
   # In yaml.load: NAs introduced by coercion: . is not a real
   pdb <- suppressWarnings(cr_build_make(pd))
 
   repo <- paste0("git@github.com:", github_repo)
   pkg <- cr_buildstep_extract(pdb, 4)
-  pkg_env <- cr_buildstep_edit(pkg, env = env)
+  pkg_env <- cr_buildstep_edit(pkg, env = env, dir = )
 
   c(
     cr_buildstep_gitsetup(keyring = keyring,
                           key = key,
                           cipher = cipher),
-    cr_buildstep_git(c("clone",repo,".")),
+    cr_buildstep_git(c("clone",repo, "repo")),
     pkg_env,
-    cr_buildstep_git(c("add", ".")),
+    cr_buildstep_git(c("add", "."), dir = "repo"),
     cr_buildstep_git(c("commit", "-a", "-m",
                        "Build website from commit ${COMMIT_SHA}: \
-$(date +\"%Y%m%dT%H:%M:%S\")")),
-    cr_buildstep_git("push", repo)
+$(date +\"%Y%m%dT%H:%M:%S\")"),
+                     dir = "repo"),
+    cr_buildstep_git("push", repo, dir = "repo")
   )
 
 }

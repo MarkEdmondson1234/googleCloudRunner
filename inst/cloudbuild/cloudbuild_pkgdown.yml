@@ -41,12 +41,13 @@ steps:
   args:
   - clone
   - git@github.com:$_GITHUB_REPO
-  - .
+  - repo
   volumes:
   - name: 'ssh'
     path: /root/.ssh
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: Build website
+  dir: repo
   args:
   - "Rscript"
   - "-e"
@@ -58,6 +59,7 @@ steps:
 # otherwise it will trigger again in never ending git commit loop
 - name: 'gcr.io/cloud-builders/git'
   id: push website
+  dir: repo
   entrypoint: 'bash'
   args:
   - '-c'
