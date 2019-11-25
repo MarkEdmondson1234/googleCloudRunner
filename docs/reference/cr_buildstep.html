@@ -240,12 +240,10 @@
 #&gt;   - -t
 #&gt;   - gcr.io/my-project/my-image:$BUILD_ID
 #&gt;   - '.'
-#&gt;   dir: ''
 #&gt; - name: gcr.io/cloud-builders/docker
 #&gt;   args:
 #&gt;   - push
 #&gt;   - gcr.io/my-project/my-image:$BUILD_ID
-#&gt;   dir: ''
 #&gt; - name: gcr.io/cloud-builders/gcloud
 #&gt;   args:
 #&gt;   - beta
@@ -254,7 +252,6 @@
 #&gt;   - test1
 #&gt;   - --image
 #&gt;   - gcr.io/my-project/my-image:$BUILD_ID
-#&gt;   dir: ''
 #&gt; images: gcr.io/my-project/my-image:$BUILD_ID</div><div class='input'>
 <span class='co'># use premade docker buildstep - combine using c()</span>
 <span class='no'>image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/my-project/my-image"</span>
@@ -264,7 +261,7 @@
                      <span class='kw'>args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"beta"</span>,<span class='st'>"run"</span>,<span class='st'>"deploy"</span>,
                               <span class='st'>"test1"</span>,<span class='st'>"--image"</span>, <span class='no'>image</span>))
              ),
-    <span class='kw'>images</span> <span class='kw'>=</span> <span class='no'>image</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-22 23:55:20&gt; Image to be built: gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; ==cloudRunnerYaml==
+    <span class='kw'>images</span> <span class='kw'>=</span> <span class='no'>image</span>)</div><div class='output co'>#&gt; <span class='message'>2019-11-25 11:39:11&gt; Image to be built: gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; ==cloudRunnerYaml==
 #&gt; steps:
 #&gt; - name: gcr.io/cloud-builders/docker
 #&gt;   args:
@@ -272,12 +269,10 @@
 #&gt;   - -t
 #&gt;   - gcr.io/my-project/my-image:$BUILD_ID
 #&gt;   - '.'
-#&gt;   dir: ''
 #&gt; - name: gcr.io/cloud-builders/docker
 #&gt;   args:
 #&gt;   - push
 #&gt;   - gcr.io/my-project/my-image:$BUILD_ID
-#&gt;   dir: ''
 #&gt; - name: gcr.io/cloud-builders/gcloud
 #&gt;   args:
 #&gt;   - beta
@@ -286,7 +281,6 @@
 #&gt;   - test1
 #&gt;   - --image
 #&gt;   - gcr.io/my-project/my-image
-#&gt;   dir: ''
 #&gt; images: gcr.io/my-project/my-image</div><div class='input'>
 <span class='co'># list files with a new entrypoint for gcloud</span>
 <span class='fu'><a href='Yaml.html'>Yaml</a></span>(<span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'>cr_buildstep</span>(<span class='st'>"gcloud"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"-c"</span>,<span class='st'>"ls -la"</span>), <span class='kw'>entrypoint</span> <span class='kw'>=</span> <span class='st'>"bash"</span>))</div><div class='output co'>#&gt; ==cloudRunnerYaml==
@@ -295,8 +289,7 @@
 #&gt;   entrypoint: bash
 #&gt;   args:
 #&gt;   - -c
-#&gt;   - ls -la
-#&gt;   dir: ''</div><div class='input'>
+#&gt;   - ls -la</div><div class='input'>
 <span class='co'># to call from images not using gcr.io/cloud-builders stem</span>
 <span class='fu'>cr_buildstep</span>(<span class='st'>"alpine"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"-c"</span>,<span class='st'>"ls -la"</span>), <span class='kw'>entrypoint</span> <span class='kw'>=</span> <span class='st'>"bash"</span>, <span class='kw'>prefix</span><span class='kw'>=</span><span class='st'>""</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
@@ -305,14 +298,12 @@
 #&gt; args:
 #&gt; - -c
 #&gt; - ls -la
-#&gt; dir: ''
 #&gt; </div><div class='input'>
 <span class='co'># to add environment arguments to the step</span>
 <span class='fu'>cr_buildstep</span>(<span class='st'>"docker"</span>, <span class='st'>"version"</span>, <span class='kw'>env</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ENV1=env1"</span>, <span class='st'>"ENV2=$PROJECT_ID"</span>))</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args: version
-#&gt; dir: ''
 #&gt; env:
 #&gt; - ENV1=env1
 #&gt; - ENV2=$PROJECT_ID
@@ -322,7 +313,6 @@
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/test
 #&gt; args: ls
-#&gt; dir: ''
 #&gt; volumes:
 #&gt; - name: ssh
 #&gt;   path: /root/.ssh
