@@ -158,7 +158,7 @@
     <p>Lists existing `BuildTrigger`s.This API is experimental.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildtrigger_list</span>(<span class='no'>projectId</span>, <span class='kw'>pageToken</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pageSize</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_buildtrigger_list</span>(<span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_get.html'>cr_project_get</a></span>())</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -167,22 +167,24 @@
       <th>projectId</th>
       <td><p>ID of the project for which to list BuildTriggers</p></td>
     </tr>
-    <tr>
-      <th>pageToken</th>
-      <td><p>Token to provide to skip to a particular spot in the list</p></td>
-    </tr>
-    <tr>
-      <th>pageSize</th>
-      <td><p>Number of results to return in the list</p></td>
-    </tr>
     </table>
 
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other BuildTrigger functions: <code><a href='BuildTrigger.html'>BuildTrigger</a></code>,
+  <code><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></code>,
+  <code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a></code>,
+  <code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a></code>,
+  <code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a></code>,
+  <code><a href='cr_buildtrigger_run.html'>cr_buildtrigger_run</a></code>,
+  <code><a href='cr_buildtrigger.html'>cr_buildtrigger</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#see-also">See also</a></li>
     </ul>
 
   </div>
