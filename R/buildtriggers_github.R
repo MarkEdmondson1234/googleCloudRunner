@@ -5,7 +5,7 @@
 #' @param owner Owner of the repository e.g. MarkEdmondson1234
 #' @param name Name of the repository e.g. googleCloudRunner
 #' @param commentControl If a pull request, whether to require comments before builds are triggered.
-#' @param tag If a push request, regexes matching what tags to build.
+#' @param tag If a push request, regexes matching what tags to build. If not \code{NULL} then argument \code{branch} will be ignored
 #'
 #' @details
 #'
@@ -14,12 +14,13 @@
 #' @return GitHubEventsConfig object
 #'
 #' @family BuildTrigger functions
+#' @import assertthat
 #' @export
 GitHubEventsConfig <- function(owner,
                                name,
                                event = c("push", "pull"),
                                branch = ".*",
-                               tag = ".*",
+                               tag = NULL,
                                commentControl = c("COMMENTS_DISABLED",
                                                   "COMMENTS_ENABLED")) {
 
@@ -28,13 +29,18 @@ GitHubEventsConfig <- function(owner,
   pullRequest <- NULL
   push <- NULL
 
-  if(event == "push"){
+  if(!is.null(tag)){
+    branch <- NULL
+  }
+
+  if(event == "pull"){
     pullRequest <- list(branch = branch, commentControl = commentControl)
-  } else if(event == "pull"){
+  } else if(event == "push"){
     push <- list(branch = branch, tag = tag)
   }
 
-  assert_that(xor(is.null(pullRequest), is.null(push)))
+  assert_that(xor(is.null(pullRequest), is.null(push)),
+              xor(is.null(branch), is.null(tag)))
 
   structure(rmNullObs(list(pullRequest = pullRequest,
                            push = push,

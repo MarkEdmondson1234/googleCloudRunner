@@ -5,7 +5,7 @@
 \title{GitHubEventsConfig Object}
 \usage{
 GitHubEventsConfig(owner, name, event = c("push", "pull"),
-  branch = ".*", tag = ".*", commentControl = c("COMMENTS_DISABLED",
+  branch = ".*", tag = NULL, commentControl = c("COMMENTS_DISABLED",
   "COMMENTS_ENABLED"))
 }
 \arguments{
@@ -17,7 +17,7 @@ GitHubEventsConfig(owner, name, event = c("push", "pull"),
 
 \item{branch}{Regex of branches to match}
 
-\item{tag}{If a push request, regexes matching what tags to build.}
+\item{tag}{If a push request, regexes matching what tags to build. If not \code{NULL} then argument \code{branch} will be ignored}
 
 \item{commentControl}{If a pull request, whether to require comments before builds are triggered.}
 }

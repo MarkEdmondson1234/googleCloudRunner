@@ -4,7 +4,8 @@
 \alias{cr_buildtrigger}
 \title{Creates a new `BuildTrigger`.This API is experimental.}
 \usage{
-cr_buildtrigger(name, trigger, build, description = NULL, tags = NULL,
+cr_buildtrigger(name, trigger, build,
+  description = paste("cr_buildtrigger: ", Sys.time()), tags = NULL,
   disabled = FALSE, substitutions = NULL, ignoredFiles = NULL,
   includedFiles = NULL, projectId = cr_project_get())
 }
@@ -40,7 +41,14 @@ cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
 bb <- cr_build_make(cloudbuild, projectId = "test-project")
 github <- GitHubEventsConfig("MarkEdmondson1234", "googleCloudRunner", branch = "master")
 
-trig <- cr_buildtrigger("trig", trigger = github, build = bb)
+cr_buildtrigger("trig1", trigger = github, build = bb)
+
+# creates a trigger with named subtitutions
+ss <- list(`$_MYVAR` = "TEST1", `$_GITHUB` = "MarkEdmondson1234/googleCloudRunner")
+cr_buildtrigger("trig2", trigger = github, build = bb, substitutions = ss)
+
+# create a trigger that will build from the file in the repo
+cr_buildtrigger("trig3", trigger = github, build = "inst/cloudbuild/cloudbuild.yaml")
 }
 }
 \seealso{
