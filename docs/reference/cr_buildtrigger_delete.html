@@ -158,18 +158,18 @@
     <p>Deletes a `BuildTrigger` by its project ID and trigger ID.This API is experimental.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildtrigger_delete</span>(<span class='no'>projectId</span>, <span class='no'>triggerId</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_buildtrigger_delete</span>(<span class='no'>triggerId</span>, <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_get.html'>cr_project_get</a></span>())</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>projectId</th>
-      <td><p>ID of the project that owns the trigger</p></td>
+      <th>triggerId</th>
+      <td><p>ID of the `BuildTrigger` to get or a <code>BuildTriggerResponse</code> object</p></td>
     </tr>
     <tr>
-      <th>triggerId</th>
-      <td><p>ID of the `BuildTrigger` to delete</p></td>
+      <th>projectId</th>
+      <td><p>ID of the project that owns the trigger</p></td>
     </tr>
     </table>
 
