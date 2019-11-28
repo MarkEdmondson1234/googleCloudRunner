@@ -63,6 +63,13 @@ reference:
       Functions for creation of cloudbuild.yaml files and build steps
     contents:
       - matches("cr_buildstep")
+  - title: "Cloud Build Trigger functions"
+    desc: >
+      Functions for creation of triggers that determine when the builds run
+    contents:
+      - matches("cr_buildtrigger")
+      - GitHubEventsConfig
+      - BuildTrigger
   - title: "Cloud Run functions"
     desc: >
       Functions for working with Cloud Run deployments

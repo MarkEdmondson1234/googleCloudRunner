@@ -191,3 +191,37 @@ Putting the above together:
 ```r
 cr_build(my_yaml, source = storage)
 ```
+
+## Build Triggers
+
+Once you have build steps and possibly a source created, you can either set these up to run on a schedule via `cr_shedule()` or you can use triggers that will run upon certain events.  These include GitHub commits and pull requests.  These Build Triggers can be setup in the webUI or programatically from R via the `cr_buildtrigger*` functions.
+
+To work with GitHub events, configure GitHub to use the offical [Google Cloud Build app](https://github.com/marketplace/google-cloud-build) and then construct your GitHub triggers using `GitHubEventsConfig()`.
+
+The example below shows how to set up some of the examples builds above:
+
+```r
+cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
+                            package = "googleCloudRunner")
+bb <- cr_build_make(cloudbuild, projectId = "test-project")
+github <- GitHubEventsConfig("MarkEdmondson1234", "googleCloudRunner", branch = "master")
+
+cr_buildtrigger("trig1", trigger = github, build = bb)
+```
+
+The Build macros can also be configured by passing in a named list:
+
+```r
+# creates a trigger with named subtitutions
+ss <- list(`$_MYVAR` = "TEST1", `$_GITHUB` = "MarkEdmondson1234/googleCloudRunner")
+cr_buildtrigger("trig2", trigger = github, build = bb, substitutions = ss)
+```
+
+The above examples created the build step inline within the trigger, but you can use existing cloudbuild.yaml files by specifying where in the repoistory it is:
+
+```r
+# create a trigger that will build from the file in the repo
+cr_buildtrigger("trig3", trigger = github, build = "inst/cloudbuild/cloudbuild.yaml")
+```
+
+
