@@ -32,6 +32,17 @@ cr_buildtrigger(name, trigger, build, description = NULL, tags = NULL,
 \description{
 Creates a new `BuildTrigger`.This API is experimental.
 }
+\examples{
+
+\dontrun{
+cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
+                           package = "googleCloudRunner")
+bb <- cr_build_make(cloudbuild, projectId = "test-project")
+github <- GitHubEventsConfig("MarkEdmondson1234", "googleCloudRunner", branch = "master")
+
+trig <- cr_buildtrigger("trig", trigger = github, build = bb)
+}
+}
 \seealso{
 Other BuildTrigger functions: \code{\link{BuildTrigger}},
   \code{\link{GitHubEventsConfig}},

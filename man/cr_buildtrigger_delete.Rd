@@ -4,12 +4,12 @@
 \alias{cr_buildtrigger_delete}
 \title{Deletes a `BuildTrigger` by its project ID and trigger ID.This API is experimental.}
 \usage{
-cr_buildtrigger_delete(projectId, triggerId)
+cr_buildtrigger_delete(triggerId, projectId = cr_project_get())
 }
 \arguments{
-\item{projectId}{ID of the project that owns the trigger}
+\item{triggerId}{ID of the `BuildTrigger` to get or a \code{BuildTriggerResponse} object}
 
-\item{triggerId}{ID of the `BuildTrigger` to delete}
+\item{projectId}{ID of the project that owns the trigger}
 }
 \description{
 Deletes a `BuildTrigger` by its project ID and trigger ID.This API is experimental.

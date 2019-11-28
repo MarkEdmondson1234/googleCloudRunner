@@ -205,3 +205,6 @@ context("Online tests")
 #' cr_build_status(b2)
 #'   build1 <- cr_build(yaml, source = my_gcs_source)
 #'   build2 <- cr_build(yaml, source = my_repo_source)
+#'
+#'   cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
+#'   bb<- cr_build_make(cloudbuild, projectId = "test-project")

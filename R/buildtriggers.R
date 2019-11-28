@@ -2,16 +2,20 @@
 #'
 #' @family BuildTrigger functions
 #' @param projectId ID of the project that owns the trigger
-#' @param triggerId ID of the `BuildTrigger` to get
+#' @param triggerId ID of the `BuildTrigger` to get or a \code{BuildTriggerResponse} object
 #' @importFrom googleAuthR gar_api_generator
 #' @export
-cr_buildtrigger_get <- function(projectId, triggerId) {
+cr_buildtrigger_get <- function(triggerId,
+                                projectId = cr_project_get()) {
+
+    triggerId <- get_buildTriggerResponseId(triggerId)
+
     url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers/%s",
         projectId, triggerId)
     # cloudbuild.projects.triggers.get
     f <- gar_api_generator(url,
                            "GET",
-                           data_parse_function = function(x) x)
+                           data_parse_function = as.buildTriggerResponse)
     f()
 
 }
@@ -21,11 +25,16 @@ cr_buildtrigger_get <- function(projectId, triggerId) {
 #'
 #' @param BuildTrigger The \link{BuildTrigger} object to pass to this method
 #' @param projectId ID of the project that owns the trigger
-#' @param triggerId ID of the `BuildTrigger` to update
+#' @param triggerId ID of the `BuildTrigger` to get or a \code{BuildTriggerResponse} object
 #' @importFrom googleAuthR gar_api_generator
 #' @family BuildTrigger functions
 #' @export
-cr_buildtrigger_edit <- function(BuildTrigger, projectId, triggerId) {
+cr_buildtrigger_edit <- function(BuildTrigger,
+                                 triggerId,
+                                 projectId = cr_project_get()) {
+
+    triggerId <- get_buildTriggerResponseId(triggerId)
+
     url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers/%s",
         projectId, triggerId)
     # cloudbuild.projects.triggers.patch
@@ -41,16 +50,18 @@ cr_buildtrigger_edit <- function(BuildTrigger, projectId, triggerId) {
 #'
 #' @family BuildTrigger functions
 #' @param projectId ID of the project that owns the trigger
-#' @param triggerId ID of the `BuildTrigger` to delete
+#' @param triggerId ID of the `BuildTrigger` to get or a \code{BuildTriggerResponse} object
 #' @importFrom googleAuthR gar_api_generator
 #' @export
-cr_buildtrigger_delete <- function(projectId, triggerId) {
+cr_buildtrigger_delete <- function(triggerId, projectId = cr_project_get()) {
+
+    triggerId <- get_buildTriggerResponseId(triggerId)
 
     url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers/%s",
         projectId, triggerId)
     # cloudbuild.projects.triggers.delete
     f <- gar_api_generator(url, "DELETE",
-                           data_parse_function = function(x) x)
+                           data_parse_function = function(x) TRUE)
     f()
 
 }
@@ -97,6 +108,16 @@ parse_buildtrigger_list <- function(x){
 #' @importFrom googleAuthR gar_api_generator
 #' @family BuildTrigger functions
 #' @export
+#' @examples
+#'
+#' \dontrun{
+#' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
+#'                            package = "googleCloudRunner")
+#' bb <- cr_build_make(cloudbuild, projectId = "test-project")
+#' github <- GitHubEventsConfig("MarkEdmondson1234", "googleCloudRunner", branch = "master")
+#'
+#' trig <- cr_buildtrigger("trig", trigger = github, build = bb)
+#' }
 cr_buildtrigger <- function(name,
                             trigger,
                             build,
@@ -124,22 +145,47 @@ cr_buildtrigger <- function(name,
                    projectId)
     # cloudbuild.projects.triggers.create
     f <- gar_api_generator(url, "POST",
-                           data_parse_function = function(x) x)
-    stopifnot(inherits(buildTrigger, "gar_BuildTrigger"))
+                           data_parse_function = as.buildTriggerResponse)
+    stopifnot(inherits(buildTrigger, "BuildTrigger"))
 
     f(the_body = buildTrigger)
 
+}
+
+as.buildTriggerResponse <- function(x){
+    structure(
+        x,
+        class = c("BuildTriggerResponse", "list")
+    )
+}
+
+is.buildTriggerResponse <- function(x){
+    inherits(x, "BuildTriggerResponse")
+}
+
+get_buildTriggerResponseId <- function(x){
+  if(is.buildTriggerResponse(x)){
+    return(x$id)
+  } else {
+    assert_that(is.string(x))
+  }
+
+  x
 }
 
 #' Runs a `BuildTrigger` at a particular source revision.
 #'
 #' @param RepoSource The \link{RepoSource} object to pass to this method
 #' @param projectId ID of the project
-#' @param triggerId ID of the trigger
+#' @param triggerId ID of the `BuildTrigger` to get or a \code{BuildTriggerResponse} object
 #' @importFrom googleAuthR gar_api_generator
 #' @family BuildTrigger functions
 #' @export
-cr_buildtrigger_run <- function(RepoSource, projectId, triggerId){
+cr_buildtrigger_run <- function(triggerId,
+                                RepoSource,
+                                projectId = cr_project_get()){
+
+    triggerId <- get_buildTriggerResponseId(triggerId)
 
     url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers/%s:run",
         projectId, triggerId)
@@ -153,12 +199,7 @@ cr_buildtrigger_run <- function(RepoSource, projectId, triggerId){
 
 }
 
-#' Create a BuildTrigger Object
-#'
-#' Use this to make the object to pass to \link{cr_buildtrigger}
-#'
-#' @export
-#' @noRd
+
 buildtrigger_make <- function(name,
                               trigger,
                               build,
@@ -175,8 +216,6 @@ buildtrigger_make <- function(name,
     UseMethod("buildtrigger_make", trigger)
 }
 
-#' @noRd
-#' @export
 buildtrigger_make.RepoSource <- function(name,
                                             trigger,
                                             build,
@@ -187,6 +226,7 @@ buildtrigger_make.RepoSource <- function(name,
                                             ignoredFiles = NULL,
                                             includedFiles = NULL){
 
+    filename <- NULL
     if(is.string(build)){
         filename <- build
         build <- NULL
@@ -207,8 +247,7 @@ buildtrigger_make.RepoSource <- function(name,
 
 }
 
-#' @noRd
-#' @export
+
 buildtrigger_make.GitHubEventsConfig <- function(name,
                                             trigger,
                                             build,
@@ -219,6 +258,7 @@ buildtrigger_make.GitHubEventsConfig <- function(name,
                                             ignoredFiles = NULL,
                                             includedFiles = NULL){
 
+    filename <- NULL
     if(is.string(build)){
         filename <- build
         build <- NULL

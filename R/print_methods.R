@@ -1,3 +1,21 @@
+#' @method print BuildTriggerResponse
+#' @export
+print.BuildTriggerResponse <- function(x, ...){
+  cat("==CloudBuildTriggerResponse==\n")
+  cat0("id: ", x$id)
+  cat0("name: ", x$name)
+  cat0("createTime: ", x$createTime)
+  cat0("github.owner: ", x$github$owner)
+  cat0("github.name: ", x$github$name)
+  cat0("github.pullrequest.branch: ", x$github$pullRequest$branch)
+  if(!is.null(x$build$steps)){
+    cat("\n")
+    print(cr_buildstep_df(x$build$steps))
+  }
+
+}
+
+
 #' @method print ServiceList
 #' @export
 print.ServiceList <- function(x, ...){

@@ -4,14 +4,14 @@
 \alias{cr_buildtrigger_run}
 \title{Runs a `BuildTrigger` at a particular source revision.}
 \usage{
-cr_buildtrigger_run(RepoSource, projectId, triggerId)
+cr_buildtrigger_run(triggerId, RepoSource, projectId = cr_project_get())
 }
 \arguments{
+\item{triggerId}{ID of the `BuildTrigger` to get or a \code{BuildTriggerResponse} object}
+
 \item{RepoSource}{The \link{RepoSource} object to pass to this method}
 
 \item{projectId}{ID of the project}
-
-\item{triggerId}{ID of the trigger}
 }
 \description{
 Runs a `BuildTrigger` at a particular source revision.

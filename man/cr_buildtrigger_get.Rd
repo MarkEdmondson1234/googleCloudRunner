@@ -4,12 +4,12 @@
 \alias{cr_buildtrigger_get}
 \title{Returns information about a `BuildTrigger`.This API is experimental.}
 \usage{
-cr_buildtrigger_get(projectId, triggerId)
+cr_buildtrigger_get(triggerId, projectId = cr_project_get())
 }
 \arguments{
-\item{projectId}{ID of the project that owns the trigger}
+\item{triggerId}{ID of the `BuildTrigger` to get or a \code{BuildTriggerResponse} object}
 
-\item{triggerId}{ID of the `BuildTrigger` to get}
+\item{projectId}{ID of the project that owns the trigger}
 }
 \description{
 Returns information about a `BuildTrigger`.This API is experimental.

@@ -4,14 +4,15 @@
 \alias{cr_buildtrigger_edit}
 \title{Updates a `BuildTrigger` by its project ID and trigger ID.This API is experimental.}
 \usage{
-cr_buildtrigger_edit(BuildTrigger, projectId, triggerId)
+cr_buildtrigger_edit(BuildTrigger, triggerId,
+  projectId = cr_project_get())
 }
 \arguments{
 \item{BuildTrigger}{The \link{BuildTrigger} object to pass to this method}
 
-\item{projectId}{ID of the project that owns the trigger}
+\item{triggerId}{ID of the `BuildTrigger` to get or a \code{BuildTriggerResponse} object}
 
-\item{triggerId}{ID of the `BuildTrigger` to update}
+\item{projectId}{ID of the project that owns the trigger}
 }
 \description{
 Updates a `BuildTrigger` by its project ID and trigger ID.This API is experimental.
