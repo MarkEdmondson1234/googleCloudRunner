@@ -159,7 +159,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>GitHubEventsConfig</span>(<span class='no'>owner</span>, <span class='no'>name</span>, <span class='kw'>event</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"push"</span>, <span class='st'>"pull"</span>),
-  <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>".*"</span>, <span class='kw'>commentControl</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"COMMENTS_DISABLED"</span>,
+  <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>commentControl</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"COMMENTS_DISABLED"</span>,
   <span class='st'>"COMMENTS_ENABLED"</span>))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -183,7 +183,7 @@
     </tr>
     <tr>
       <th>tag</th>
-      <td><p>If a push request, regexes matching what tags to build.</p></td>
+      <td><p>If a push request, regexes matching what tags to build. If not <code>NULL</code> then argument <code>branch</code> will be ignored</p></td>
     </tr>
     <tr>
       <th>commentControl</th>
