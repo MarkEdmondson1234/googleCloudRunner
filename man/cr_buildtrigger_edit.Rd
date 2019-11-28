@@ -18,6 +18,11 @@ Updates a `BuildTrigger` by its project ID and trigger ID.This API is experiment
 }
 \seealso{
 Other BuildTrigger functions: \code{\link{BuildTrigger}},
+  \code{\link{GitHubEventsConfig}},
+  \code{\link{cr_buildtrigger_delete}},
+  \code{\link{cr_buildtrigger_get}},
+  \code{\link{cr_buildtrigger_list}},
+  \code{\link{cr_buildtrigger_run}},
   \code{\link{cr_buildtrigger}}
 }
 \concept{BuildTrigger functions}

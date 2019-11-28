@@ -186,6 +186,14 @@ test_that("Render BuildStep objects", {
   expect_equal(pkgdown_steps[[4]]$args[[3]],
                "devtools::install()\nlist.files()\npkgdown::build_site()\n")
 
+  bt <- googleCloudRunner:::buildtrigger_make("test",
+                                              trigger = GitHubEventsConfig("mark","repo"),
+                                              build = "cloudbuild.yml")
+
+  expect_equal(bt$filename, "cloudbuild.yml")
+  expect_equal(bt$github$pullRequest$branch, ".*")
+  expect_equal(bt$github$owner, "mark")
+
 })
 
 

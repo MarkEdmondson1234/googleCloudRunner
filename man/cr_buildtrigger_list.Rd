@@ -4,15 +4,21 @@
 \alias{cr_buildtrigger_list}
 \title{Lists existing `BuildTrigger`s.This API is experimental.}
 \usage{
-cr_buildtrigger_list(projectId, pageToken = NULL, pageSize = NULL)
+cr_buildtrigger_list(projectId = cr_project_get())
 }
 \arguments{
 \item{projectId}{ID of the project for which to list BuildTriggers}
-
-\item{pageToken}{Token to provide to skip to a particular spot in the list}
-
-\item{pageSize}{Number of results to return in the list}
 }
 \description{
 Lists existing `BuildTrigger`s.This API is experimental.
 }
+\seealso{
+Other BuildTrigger functions: \code{\link{BuildTrigger}},
+  \code{\link{GitHubEventsConfig}},
+  \code{\link{cr_buildtrigger_delete}},
+  \code{\link{cr_buildtrigger_edit}},
+  \code{\link{cr_buildtrigger_get}},
+  \code{\link{cr_buildtrigger_run}},
+  \code{\link{cr_buildtrigger}}
+}
+\concept{BuildTrigger functions}
