@@ -158,20 +158,16 @@
     <p>GitHubEventsConfig Object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>GitHubEventsConfig</span>(<span class='no'>owner</span>, <span class='no'>name</span>, <span class='kw'>event</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"push"</span>, <span class='st'>"pull"</span>),
-  <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>commentControl</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"COMMENTS_DISABLED"</span>,
+    <pre class="usage"><span class='fu'>GitHubEventsConfig</span>(<span class='no'>x</span>, <span class='kw'>event</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"push"</span>, <span class='st'>"pull"</span>), <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>,
+  <span class='kw'>tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>commentControl</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"COMMENTS_DISABLED"</span>,
   <span class='st'>"COMMENTS_ENABLED"</span>))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>owner</th>
-      <td><p>Owner of the repository e.g. MarkEdmondson1234</p></td>
-    </tr>
-    <tr>
-      <th>name</th>
-      <td><p>Name of the repository e.g. googleCloudRunner</p></td>
+      <th>x</th>
+      <td><p>The repository in format owner/repo e.g. MarkEdmondson1234/googleCloudRunner</p></td>
     </tr>
     <tr>
       <th>event</th>

@@ -224,12 +224,12 @@
 <span class='no'>cloudbuild</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"cloudbuild/cloudbuild.yaml"</span>,
                            <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>)
 <span class='no'>bb</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build_make.html'>cr_build_make</a></span>(<span class='no'>cloudbuild</span>, <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='st'>"test-project"</span>)
-<span class='no'>github</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></span>(<span class='st'>"MarkEdmondson1234"</span>, <span class='st'>"googleCloudRunner"</span>, <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>"master"</span>)
+<span class='no'>github</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>, <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>"master"</span>)
 
 <span class='fu'>cr_buildtrigger</span>(<span class='st'>"trig1"</span>, <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='no'>github</span>, <span class='kw'>build</span> <span class='kw'>=</span> <span class='no'>bb</span>)
 
 <span class='co'># creates a trigger with named subtitutions</span>
-<span class='no'>ss</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>`$_MYVAR`</span> <span class='kw'>=</span> <span class='st'>"TEST1"</span>, <span class='kw'>`$_GITHUB`</span> <span class='kw'>=</span> <span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>)
+<span class='no'>ss</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>`_MYVAR`</span> <span class='kw'>=</span> <span class='st'>"TEST1"</span>, <span class='kw'>`_GITHUB`</span> <span class='kw'>=</span> <span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>)
 <span class='fu'>cr_buildtrigger</span>(<span class='st'>"trig2"</span>, <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='no'>github</span>, <span class='kw'>build</span> <span class='kw'>=</span> <span class='no'>bb</span>, <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='no'>ss</span>)
 
 <span class='co'># create a trigger that will build from the file in the repo</span>

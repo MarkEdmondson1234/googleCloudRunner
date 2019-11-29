@@ -161,62 +161,6 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-setup-functions" class="hasAnchor"><a href="#section-setup-functions" class="anchor"></a>Setup functions</h2>
-          <p class="section-desc"><p>Functions setting up your GCP configuration</p></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="cr_bucket_get.html">cr_bucket_get()</a></code> </p>
-        </td>
-        <td><p>Get Cloud Storage bucket</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cr_bucket_set.html">cr_bucket_set()</a></code> </p>
-        </td>
-        <td><p>Set the Cloud Storage bucket for your Cloud Build Service</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cr_email_get.html">cr_email_get()</a></code> </p>
-        </td>
-        <td><p>Get the cloud build email that is set in CR_BUILD_EMAIL</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cr_email_set.html">cr_email_set()</a></code> </p>
-        </td>
-        <td><p>Set cloud build email</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cr_project_get.html">cr_project_get()</a></code> </p>
-        </td>
-        <td><p>Get ProjectId</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cr_project_set.html">cr_project_set()</a></code> </p>
-        </td>
-        <td><p>Set the projectId for your CloudRun services</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cr_region_get.html">cr_region_get()</a></code> </p>
-        </td>
-        <td><p>Get Region Set</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cr_region_set.html">cr_region_set()</a></code> </p>
-        </td>
-        <td><p>Set the endpoint for your CloudRun services</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
           <h2 id="section-deployment-functions" class="hasAnchor"><a href="#section-deployment-functions" class="anchor"></a>Deployment functions</h2>
           <p class="section-desc"><p>Functions for deploying useful applications</p></p>
         </th>
@@ -227,6 +171,12 @@
           <p><code><a href="cr_deploy_docker.html">cr_deploy_docker()</a></code> </p>
         </td>
         <td><p>Deploy a Dockerfile to be built on ContainerRegistry</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_deploy_pkgdown.html">cr_deploy_pkgdown()</a></code> </p>
+        </td>
+        <td><p>Deploy a trigger for auto-builds a pkgdown website for an R package</p></td>
       </tr><tr>
         
         <td>
@@ -472,6 +422,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="cr_deploy_pkgdown.html">cr_deploy_pkgdown()</a></code> </p>
+        </td>
+        <td><p>Deploy a trigger for auto-builds a pkgdown website for an R package</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="cr_deploy_run.html">cr_deploy_run()</a></code> </p>
         </td>
         <td><p>Deploy an R plumber script to Cloud Run</p></td>
@@ -508,6 +464,62 @@
         </td>
         <td><p>HttpTarget Object</p></td>
       </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-setup-functions" class="hasAnchor"><a href="#section-setup-functions" class="anchor"></a>Setup functions</h2>
+          <p class="section-desc"><p>Functions setting up your GCP configuration</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="cr_bucket_get.html">cr_bucket_get()</a></code> </p>
+        </td>
+        <td><p>Get Cloud Storage bucket</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_bucket_set.html">cr_bucket_set()</a></code> </p>
+        </td>
+        <td><p>Set the Cloud Storage bucket for your Cloud Build Service</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_email_get.html">cr_email_get()</a></code> </p>
+        </td>
+        <td><p>Get the cloud build email that is set in CR_BUILD_EMAIL</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_email_set.html">cr_email_set()</a></code> </p>
+        </td>
+        <td><p>Set cloud build email</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_project_get.html">cr_project_get()</a></code> </p>
+        </td>
+        <td><p>Get ProjectId</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_project_set.html">cr_project_set()</a></code> </p>
+        </td>
+        <td><p>Set the projectId for your CloudRun services</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_region_get.html">cr_region_get()</a></code> </p>
+        </td>
+        <td><p>Get Region Set</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_region_set.html">cr_region_set()</a></code> </p>
+        </td>
+        <td><p>Set the endpoint for your CloudRun services</p></td>
+      </tr>
     </tbody>
     </table>
   </div>
@@ -515,13 +527,13 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-setup-functions">Setup functions</a></li>
       <li><a href="#section-deployment-functions">Deployment functions</a></li>
       <li><a href="#section-cloud-build-functions">Cloud Build functions</a></li>
       <li><a href="#section-cloud-build-creation-functions">Cloud Build creation functions</a></li>
       <li><a href="#section-cloud-build-trigger-functions">Cloud Build Trigger functions</a></li>
       <li><a href="#section-cloud-run-functions">Cloud Run functions</a></li>
       <li><a href="#section-cloud-scheduler-functions">Cloud Scheduler functions</a></li>
+      <li><a href="#section-setup-functions">Setup functions</a></li>
     </ul>
   </div>
 </div>

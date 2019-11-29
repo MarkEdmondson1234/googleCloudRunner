@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create Dockerfile in the deployment folder — cr_dockerfile • googleCloudRunner</title>
+<title>Deploy a trigger for auto-builds a pkgdown website for an R package — cr_deploy_pkgdown • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Create Dockerfile in the deployment folder — cr_dockerfile" />
-<meta property="og:description" content="This uses dockerfile to create a Dockerfile if possible" />
+<meta property="og:title" content="Deploy a trigger for auto-builds a pkgdown website for an R package — cr_deploy_pkgdown" />
+<meta property="og:description" content="This will build a pkgdown website each time the trigger fires and deploy it to git" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,45 +149,81 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create Dockerfile in the deployment folder</h1>
+    <h1>Deploy a trigger for auto-builds a pkgdown website for an R package</h1>
     
-    <div class="hidden name"><code>cr_dockerfile.Rd</code></div>
+    <div class="hidden name"><code>cr_deploy_pkgdown.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This uses dockerfile to create a Dockerfile if possible</p>
+    <p>This will build a pkgdown website each time the trigger fires and deploy it to git</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_dockerfile</span>(<span class='no'>deploy_folder</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_deploy_pkgdown</span>(<span class='no'>trigger</span>, <span class='kw'>git_email</span> <span class='kw'>=</span> <span class='st'>"googlecloudrunner@r.com"</span>,
+  <span class='kw'>keyring</span> <span class='kw'>=</span> <span class='st'>"my-keyring"</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"github-key"</span>, <span class='kw'>env</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cipher</span> <span class='kw'>=</span> <span class='st'>"id_rsa.enc"</span>,
+  <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>deploy_folder</th>
-      <td><p>The folder containing the assessts to deploy</p></td>
+      <th>trigger</th>
+      <td><p>The trigger which will be a <a href='RepoSource.html'>RepoSource</a> or a <a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>Other arguments pass to dockerfile</p></td>
+      <th>git_email</th>
+      <td><p>The email the git commands will be identifying as</p></td>
+    </tr>
+    <tr>
+      <th>keyring</th>
+      <td><p>The Key Management Store keyring containing the git ssh key</p></td>
+    </tr>
+    <tr>
+      <th>key</th>
+      <td><p>The Key Management Store key containing the gitssh key</p></td>
+    </tr>
+    <tr>
+      <th>env</th>
+      <td><p>A character vector of env arguments to set for all steps</p></td>
+    </tr>
+    <tr>
+      <th>substitutions</th>
+      <td><p>A named list of Custom Build macros that can be substituted for values in the build steps.  Will be added to an existing default substitution <code>_$GIT_REPO</code> which holds the git repo as deployed in <code>trigger</code></p></td>
+    </tr>
+    <tr>
+      <th>cipher</th>
+      <td><p>The filename of the encrypted git ssh key that has been checked into the repository</p></td>
+    </tr>
+    <tr>
+      <th>build_image</th>
+      <td><p>A docker image with <code>pkgdown</code> installed</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>An object of class Dockerfile</p>
+    <p>The trigger repository needs to hold an R package configured to build a pkgdown website.</p>
+<p>For GitHub, the repository will also need to be linked to the project you are building within, via <a href='https://console.cloud.google.com/cloud-build/triggers/connect'>https://console.cloud.google.com/cloud-build/triggers/connect</a></p>
+<p>The git ssh keys need to be deployed to Google KMS for the deployment of the website - see <a href='cr_buildstep_git.html'>cr_buildstep_git</a> - this only needs to be done once per Git account.  You then need to commit the encrypted ssh key (by default called <code>id_rsa.enc</code>)</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Create your own custom deployment using <a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a> which this function uses with some defaults</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'>cr_dockerfile</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"example/"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>))
+
+<span class='no'>my_repo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></span>(<span class='st'>"MarkEdmondson1234/googleAnalyticsR"</span>)
+<span class='fu'>cr_deploy_pkgdown</span>(<span class='no'>my_repo</span>)
+
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
+      <li><a href="#details">Details</a></li>
+      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
