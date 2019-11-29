@@ -4,14 +4,12 @@
 \alias{GitHubEventsConfig}
 \title{GitHubEventsConfig Object}
 \usage{
-GitHubEventsConfig(owner, name, event = c("push", "pull"),
-  branch = ".*", tag = NULL, commentControl = c("COMMENTS_DISABLED",
+GitHubEventsConfig(x, event = c("push", "pull"), branch = ".*",
+  tag = NULL, commentControl = c("COMMENTS_DISABLED",
   "COMMENTS_ENABLED"))
 }
 \arguments{
-\item{owner}{Owner of the repository e.g. MarkEdmondson1234}
-
-\item{name}{Name of the repository e.g. googleCloudRunner}
+\item{x}{The repository in format {owner}/{repo} e.g. MarkEdmondson1234/googleCloudRunner}
 
 \item{event}{Whether to trigger on push or pull GitHub events}
 

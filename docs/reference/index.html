@@ -12,7 +12,7 @@
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
@@ -385,6 +385,62 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
+          <h2 id="section-cloud-build-trigger-functions" class="hasAnchor"><a href="#section-cloud-build-trigger-functions" class="anchor"></a>Cloud Build Trigger functions</h2>
+          <p class="section-desc"><p>Functions for creation of triggers that determine when the builds run</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="cr_buildtrigger.html">cr_buildtrigger()</a></code> </p>
+        </td>
+        <td><p>Creates a new `BuildTrigger`.This API is experimental.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_buildtrigger_delete.html">cr_buildtrigger_delete()</a></code> </p>
+        </td>
+        <td><p>Deletes a `BuildTrigger` by its project ID and trigger ID.This API is experimental.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_buildtrigger_edit.html">cr_buildtrigger_edit()</a></code> </p>
+        </td>
+        <td><p>Updates a `BuildTrigger` by its project ID and trigger ID.This API is experimental.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_buildtrigger_get.html">cr_buildtrigger_get()</a></code> </p>
+        </td>
+        <td><p>Returns information about a `BuildTrigger`.This API is experimental.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_buildtrigger_list.html">cr_buildtrigger_list()</a></code> </p>
+        </td>
+        <td><p>Lists existing `BuildTrigger`s.This API is experimental.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_buildtrigger_run.html">cr_buildtrigger_run()</a></code> </p>
+        </td>
+        <td><p>Runs a `BuildTrigger` at a particular source revision.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="GitHubEventsConfig.html">GitHubEventsConfig()</a></code> </p>
+        </td>
+        <td><p>GitHubEventsConfig Object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="BuildTrigger.html">BuildTrigger()</a></code> </p>
+        </td>
+        <td><p>BuildTrigger Object</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
           <h2 id="section-cloud-run-functions" class="hasAnchor"><a href="#section-cloud-run-functions" class="anchor"></a>Cloud Run functions</h2>
           <p class="section-desc"><p>Functions for working with Cloud Run deployments</p></p>
         </th>
@@ -463,6 +519,7 @@
       <li><a href="#section-deployment-functions">Deployment functions</a></li>
       <li><a href="#section-cloud-build-functions">Cloud Build functions</a></li>
       <li><a href="#section-cloud-build-creation-functions">Cloud Build creation functions</a></li>
+      <li><a href="#section-cloud-build-trigger-functions">Cloud Build Trigger functions</a></li>
       <li><a href="#section-cloud-run-functions">Cloud Run functions</a></li>
       <li><a href="#section-cloud-scheduler-functions">Cloud Scheduler functions</a></li>
     </ul>

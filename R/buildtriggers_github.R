@@ -2,8 +2,7 @@
 #'
 #' @param event Whether to trigger on push or pull GitHub events
 #' @param branch Regex of branches to match
-#' @param owner Owner of the repository e.g. MarkEdmondson1234
-#' @param name Name of the repository e.g. googleCloudRunner
+#' @param x The repository in format {owner}/{repo} e.g. MarkEdmondson1234/googleCloudRunner
 #' @param commentControl If a pull request, whether to require comments before builds are triggered.
 #' @param tag If a push request, regexes matching what tags to build. If not \code{NULL} then argument \code{branch} will be ignored
 #'
@@ -16,13 +15,14 @@
 #' @family BuildTrigger functions
 #' @import assertthat
 #' @export
-GitHubEventsConfig <- function(owner,
-                               name,
+GitHubEventsConfig <- function(x,
                                event = c("push", "pull"),
                                branch = ".*",
                                tag = NULL,
                                commentControl = c("COMMENTS_DISABLED",
                                                   "COMMENTS_ENABLED")) {
+
+  repo <- split_github(x)
 
   event <- match.arg(event)
   commentControl <- match.arg(commentControl)
@@ -44,11 +44,17 @@ GitHubEventsConfig <- function(owner,
 
   structure(rmNullObs(list(pullRequest = pullRequest,
                            push = push,
-                           owner = owner,
-                           name = name)),
+                           owner = repo$owner,
+                           name = repo$name)),
             class = c("GitHubEventsConfig","list"))
 }
 
 is.gar_GitHubEventsConfig <- function(x){
   inherits(x, "GitHubEventsConfig")
+}
+
+split_github <- function(x){
+  o <- list(owner = dirname(x), name = basename(x))
+  assert_that(o$owner != "", o$name != "")
+  o
 }

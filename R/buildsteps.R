@@ -79,10 +79,10 @@ cr_buildstep <- function(name,
     prefix <- "gcr.io/cloud-builders/"
   }
 
-  if(dir == "") dir <- NULL
+  if(dir %in% c("",NA)) dir <- NULL
 
   if(grepl("^gcr.io", name)){
-    prefix = ""
+    prefix <- ""
   }
 
   list(structure(
@@ -128,11 +128,11 @@ cr_buildstep_df <- function(x){
 
   if(is.null(x$prefix)){
     #probably from API
-    x$prefix=""
+    x$prefix <- ""
   }
 
   if(is.null(x$dir)){
-    x$dir=""
+    x$dir <- ""
   }
 
   xx <- x[, intersect(c("name",

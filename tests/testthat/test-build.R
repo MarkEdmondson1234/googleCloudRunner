@@ -186,7 +186,7 @@ test_that("Render BuildStep objects", {
   expect_equal(pkgdown_steps[[4]]$args[[3]],
                "devtools::install()\nlist.files()\npkgdown::build_site()\n")
 
-  gh <- GitHubEventsConfig("mark","repo")
+  gh <- GitHubEventsConfig("mark/repo")
   expect_equal(gh$owner, "mark")
   expect_equal(gh$name, "repo")
   expect_equal(gh$push$branch, ".*")

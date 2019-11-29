@@ -141,7 +141,7 @@ cr_run_list <- function(projectId = cr_project_get(),
   myMessage("Cloud Run services in region: ", .cr_env$region, level = 3)
   # run.namespaces.services.list
   #TODO: paging
-  pars = list(labelSelector = labelSelector, continue = NULL, limit = limit)
+  pars <-  list(labelSelector = labelSelector, continue = NULL, limit = limit)
   f <- gar_api_generator(url,
                          "GET",
                          pars_args = rmNullObs(pars),

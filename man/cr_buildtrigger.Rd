@@ -39,12 +39,12 @@ Creates a new `BuildTrigger`.This API is experimental.
 cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
                            package = "googleCloudRunner")
 bb <- cr_build_make(cloudbuild, projectId = "test-project")
-github <- GitHubEventsConfig("MarkEdmondson1234", "googleCloudRunner", branch = "master")
+github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner", branch = "master")
 
 cr_buildtrigger("trig1", trigger = github, build = bb)
 
 # creates a trigger with named subtitutions
-ss <- list(`$_MYVAR` = "TEST1", `$_GITHUB` = "MarkEdmondson1234/googleCloudRunner")
+ss <- list(`_MYVAR` = "TEST1", `_GITHUB` = "MarkEdmondson1234/googleCloudRunner")
 cr_buildtrigger("trig2", trigger = github, build = bb, substitutions = ss)
 
 # create a trigger that will build from the file in the repo

@@ -152,3 +152,73 @@ cr_deploy_docker <- function(local,
 
 }
 
+#' Deploy a trigger for auto-builds a pkgdown website for an R package
+#'
+#' This will build a pkgdown website each time the trigger fires and deploy it to git
+#'
+#' @inheritParams cr_buildstep_pkgdown
+#' @inheritParams cr_buildtrigger
+#' @param substitutions A named list of Custom Build macros that can be substituted for values in the build steps.  Will be added to an existing default substitution \code{_$GIT_REPO} which holds the git repo as deployed in \code{trigger}
+#'
+#' @details
+#'
+#' The trigger repository needs to hold an R package configured to build a pkgdown website.
+#'
+#' For GitHub, the repository will also need to be linked to the project you are building within, via \url{https://console.cloud.google.com/cloud-build/triggers/connect}
+#'
+#' The git ssh keys need to be deployed to Google KMS for the deployment of the website - see \link{cr_buildstep_git} - this only needs to be done once per Git account.  You then need to commit the encrypted ssh key (by default called \code{id_rsa.enc})
+#'
+#' @seealso Create your own custom deployment using \link{cr_buildstep_pkgdown} which this function uses with some defaults
+#'
+#' @export
+#' @examples
+#'
+#' \dontrun{
+#'
+#' my_repo <- GitHubEventsConfig("MarkEdmondson1234/googleAnalyticsR")
+#' cr_deploy_pkgdown(my_repo)
+#'
+#' }
+cr_deploy_pkgdown <- function(trigger,
+                              git_email = "googlecloudrunner@r.com",
+                              keyring = "my-keyring",
+                              key = "github-key",
+                              env = NULL,
+                              substitutions = NULL,
+                              cipher = "id_rsa.enc",
+                              build_image = 'gcr.io/gcer-public/packagetools:master'){
+
+  github_repo <- extract_repo(trigger)
+
+  build_yaml <-
+    Yaml(steps = cr_buildstep_pkgdown("$_GIT_REPO",
+                                      git_email = git_email,
+                                      env = env)
+         )
+
+  build <- cr_build_make(build_yaml)
+
+  pkgdown_name <- paste0("pkgdown-deploy-", tolower(basename(github_repo)))
+  trigger <- cr_buildtrigger(pkgdown_name,
+                             trigger = trigger,
+                             build = build,
+                             description = pkgdown_name,
+                             substitutions = c(list(`_GIT_REPO` = github_repo),
+                                               substitutions))
+  myMessage(paste("pkgdown trigger deployed for repo:", github_repo,
+                  "- ensure git ssh key is on KMS and ", cipher,
+                  "is checked into the repository - after which the website will be built on each commit"),
+            level = 3)
+  trigger
+
+}
+
+extract_repo <- function(x){
+  if(is.gar_RepoSource(x)){
+    return(x$repoName)
+  } else if(is.gar_GitHubEventsConfig(x)){
+    return(paste0(x$owner,"/",x$name))
+  } else {
+    stop("Could not find repo from object of class ", class(x), call. = FALSE)
+  }
+}
