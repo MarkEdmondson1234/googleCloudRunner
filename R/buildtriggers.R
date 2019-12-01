@@ -22,12 +22,36 @@ cr_buildtrigger_get <- function(triggerId,
 
 #' Updates a `BuildTrigger` by its project ID and trigger ID.This API is experimental.
 #'
+#' Seems not to work at the moment (issue #16)
 #'
 #' @param BuildTrigger The \link{BuildTrigger} object to pass to this method
 #' @param projectId ID of the project that owns the trigger
 #' @param triggerId ID of the `BuildTrigger` to get or a \code{BuildTriggerResponse} object
 #' @importFrom googleAuthR gar_api_generator
 #' @family BuildTrigger functions
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner",
+#'                             branch = "master")
+#' bt2 <- cr_buildtrigger("trig2",
+#'                        trigger = github,
+#'                        build = "inst/cloudbuild/cloudbuild.yaml")
+#' bt3 <- BuildTrigger(
+#'   filename = "inst/cloudbuild/cloudbuild.yaml",
+#'   name = "edited1",
+#'   tags = "edit",
+#'   github = github,
+#'   disabled = TRUE,
+#'   description = "edited trigger")
+#'
+#' edited <- cr_buildtrigger_edit(bt3, triggerId = bt2)
+#' # Error: API returned: trigger (1080525199262, ) not found
+#'
+#' }
+#'
 #' @export
 cr_buildtrigger_edit <- function(BuildTrigger,
                                  triggerId,
@@ -39,8 +63,9 @@ cr_buildtrigger_edit <- function(BuildTrigger,
         projectId, triggerId)
     # cloudbuild.projects.triggers.patch
     f <- gar_api_generator(url, "PATCH",
-                           data_parse_function = as.buildTriggerResponse)
-    stopifnot(inherits(BuildTrigger, "gar_BuildTrigger"))
+                           data_parse_function = as.buildTriggerResponse,
+                           checkTrailingSlash = FALSE)
+    stopifnot(inherits(BuildTrigger, "BuildTrigger"))
 
     f(the_body = BuildTrigger)
 

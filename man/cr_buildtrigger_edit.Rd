@@ -15,7 +15,30 @@ cr_buildtrigger_edit(BuildTrigger, triggerId,
 \item{projectId}{ID of the project that owns the trigger}
 }
 \description{
-Updates a `BuildTrigger` by its project ID and trigger ID.This API is experimental.
+Seems not to work at the moment (issue #16)
+}
+\examples{
+
+\dontrun{
+
+github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner",
+                            branch = "master")
+bt2 <- cr_buildtrigger("trig2",
+                       trigger = github,
+                       build = "inst/cloudbuild/cloudbuild.yaml")
+bt3 <- BuildTrigger(
+  filename = "inst/cloudbuild/cloudbuild.yaml",
+  name = "edited1",
+  tags = "edit",
+  github = github,
+  disabled = TRUE,
+  description = "edited trigger")
+
+edited <- cr_buildtrigger_edit(bt3, triggerId = bt2)
+# Error: API returned: trigger (1080525199262, ) not found
+
+}
+
 }
 \seealso{
 Other BuildTrigger functions: \code{\link{BuildTrigger}},

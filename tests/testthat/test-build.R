@@ -9,7 +9,7 @@ test_that("Online auth", {
 
 })
 
-test_that("Online test deployments", {
+test_that("[Online] Test deployments", {
   skip_on_travis()
 
   runme <- system.file("example/", package="googleCloudRunner", mustWork=TRUE)
@@ -22,6 +22,64 @@ test_that("Online test deployments", {
   expect_equal(cr$kind, "Service")
   expect_true(grepl("^gcr.io/mark-edmondson-gde/example",
                     cr$spec$template$spec$containers$image))
+
+})
+
+test_that("[Online] Test Build Triggers",{
+
+  cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
+                            package = "googleCloudRunner")
+
+  bb <- cr_build_make(cloudbuild, projectId = "test-project")
+
+  github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner",
+                               branch = "master")
+
+  ss <- list(`_MYVAR` = "TEST1",
+             `_GITHUB` = "MarkEdmondson1234/googleCloudRunner")
+
+  bt1 <- cr_buildtrigger("trig1",
+                         trigger = github,
+                         build = bb,
+                         substitutions = ss)
+  expect_equal(bt1$name, "trig1")
+  bt11 <- cr_buildtrigger_get(bt1)
+  expect_equal(bt11$name, "trig1")
+
+  bt2 <- cr_buildtrigger("trig2",
+                         trigger = github,
+                         build = "inst/cloudbuild/cloudbuild.yaml")
+  expect_equal(bt2$github$owner, "MarkEdmondson1234")
+  expect_equal(bt2$filename, "inst/cloudbuild/cloudbuild.yaml")
+
+  new_list <- cr_buildtrigger_list()
+
+  expect_true(bt1$id %in% new_list$id)
+  expect_true(bt2$id %in% new_list$id)
+  expect_true(bt2$name %in% new_list$name)
+
+  # I don't think the API works #16
+  # bt3 <- BuildTrigger(
+  #   filename = "inst/cloudbuild/cloudbuild.yaml",
+  #   name = "edited1",
+  #   tags = "edit",
+  #   github = github,
+  #   disabled = TRUE,
+  #   description = "edited trigger"
+  # )
+  # edited <- cr_buildtrigger_edit(bt3, triggerId = bt2)
+
+  washup1 <- cr_buildtrigger_delete(bt1)
+  washup2 <- cr_buildtrigger_delete(bt2$id)
+  expect_true(washup1)
+  expect_true(washup2)
+
+  newer_list <- cr_buildtrigger_list()
+
+  expect_true(!bt1$id %in% newer_list$id)
+  expect_true(!bt2$id %in% newer_list$id)
+  expect_true(!bt2$name %in% newer_list$name)
+
 
 })
 
