@@ -12,7 +12,7 @@ Cloud Run is an alternative if you want a URL endpoint for your script. If you w
 
 Cloud Build is centered around the [cloudbuild.yaml format](https://cloud.google.com/cloud-build/docs/build-config) - you can use existing cloudbuild.yaml files or create your own in R using the yaml helper functions.
 
-An example cloudbuild.yaml is shown below - this outputs the versions of docker and echos "Hello Cloud Build":
+An example cloudbuild.yaml is shown below - this outputs the versions of docker and echos "Hello Cloud Build" and calls an R function:
 
 ```yaml
 steps:
@@ -22,6 +22,10 @@ steps:
 - name: 'alpine'
   id:  Hello Cloud Build
   args: ["echo", "Hello Cloud Build"]
+- name: 'rocker/r-base'
+  id: Hello R
+  args: ["R", "-e", "paste0('1 + 1 = ', 1+1)"]
+
 ```
 
 This cloudbuild.yaml file can be built directly via the `cr_build()` function:
@@ -41,34 +45,7 @@ cr_build_wait(b2)
 # buildId:  c673143a-794d-4c69-8ad4-e777d068c066 
 # status:  SUCCESS 
 # logUrl:  https://console.cloud.google.com/gcr/builds/c673143a-794d-4c69-8ad4-e777d068c066?project=1080525199262 
-# steps: 
-#  name:
-# - gcr.io/cloud-builders/docker
-# - alpine
-# args:
-# - version
-# - - echo
-#   - Hello Cloud Build
-# id:
-# - Docker Version
-# - Hello Cloud Build
-# timing:
-#   startTime:
-#   - '2019-11-12T11:16:37.682826707Z'
-#   - '2019-11-12T11:16:38.585221812Z'
-#   endTime:
-#   - '2019-11-12T11:16:38.585157179Z'
-#   - '2019-11-12T11:16:40.680755419Z'
-# status:
-# - SUCCESS
-# - SUCCESS
-# pullTiming:
-#   startTime:
-#   - '2019-11-12T11:16:37.682826707Z'
-#   - '2019-11-12T11:16:38.585221812Z'
-#   endTime:
-#   - '2019-11-12T11:16:37.740729198Z'
-#   - '2019-11-12T11:16:39.869607125Z'
+# ...
 ```
 
 You can also reuse Cloud Build objects to re-run the same build.  This is helpful when you test a build works locally, then pass the result of a successful run to `cr_build_schedule_http()` to schedule it. 

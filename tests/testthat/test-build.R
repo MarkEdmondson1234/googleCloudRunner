@@ -170,8 +170,6 @@ test_that("Render BuildStep objects", {
   expect_equal(git_yaml$steps[[2]]$name, "gcr.io/cloud-builders/git")
   expect_equal(git_yaml$steps[[2]]$volumes[[1]]$name, "ssh")
   expect_equal(git_yaml$steps[[2]]$volumes[[1]]$path, "/root/.ssh")
-  expect_equal(git_yaml$steps[[2]]$args[[2]],
-               "chmod 600 /root/.ssh/id_rsa\ncat <<EOF >/root/.ssh/config\nHostname github.com\nIdentityFile /root/.ssh/id_rsa\nEOF\nmv inst/ssh/known_hosts /root/.ssh/known_hosts\n")
 
   pkgdown_steps <- cr_buildstep_pkgdown("$_GITHUB_REPO",
                                         "cloudbuild@google.com")
@@ -197,6 +195,16 @@ test_that("Render BuildStep objects", {
 
 context("Online tests")
 
+test_that("Online auth", {
+
+  googleAuthR::gar_gce_auth()
+  cr_project_set("mark-edmondson-gde")
+  cr_region_set("europe-west1")
+  cr_email_set("cloudrunner@mark-edmondson-gde.iam.gserviceaccount.com")
+  builds <- cr_buildtrigger_list()
+  expect_s3_class(builds, "data.frame")
+
+})
 #' b2 <- cr_build_wait(b1)
 #' cr_build_status(b1)
 #' cr_build_status(b2)

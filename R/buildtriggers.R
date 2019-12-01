@@ -39,7 +39,7 @@ cr_buildtrigger_edit <- function(BuildTrigger,
         projectId, triggerId)
     # cloudbuild.projects.triggers.patch
     f <- gar_api_generator(url, "PATCH",
-                           data_parse_function = function(x) x)
+                           data_parse_function = as.buildTriggerResponse)
     stopifnot(inherits(BuildTrigger, "gar_BuildTrigger"))
 
     f(the_body = BuildTrigger)
@@ -199,7 +199,7 @@ cr_buildtrigger_run <- function(triggerId,
 
     # cloudbuild.projects.triggers.run
     f <- gar_api_generator(url, "POST",
-                           data_parse_function = function(x) x)
+                           data_parse_function = as.buildTriggerResponse)
     stopifnot(inherits(RepoSource, "gar_RepoSource"))
 
     f(the_body = RepoSource)
