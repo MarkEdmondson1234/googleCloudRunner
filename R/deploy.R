@@ -158,6 +158,7 @@ cr_deploy_docker <- function(local,
 #'
 #' @inheritParams cr_buildstep_pkgdown
 #' @inheritParams cr_buildtrigger
+#' @param steps extra steps to run before the pkgdown website steps run
 #' @param substitutions A named list of Custom Build macros that can be substituted for values in the build steps.  Will be added to an existing default substitution \code{_$GIT_REPO} which holds the git repo as deployed in \code{trigger}
 #'
 #' @details
@@ -180,6 +181,7 @@ cr_deploy_docker <- function(local,
 #'
 #' }
 cr_deploy_pkgdown <- function(trigger,
+                              steps = NULL,
                               git_email = "googlecloudrunner@r.com",
                               keyring = "my-keyring",
                               key = "github-key",
@@ -191,9 +193,10 @@ cr_deploy_pkgdown <- function(trigger,
   github_repo <- extract_repo(trigger)
 
   build_yaml <-
-    Yaml(steps = cr_buildstep_pkgdown("$_GIT_REPO",
+    Yaml(steps = c(steps,
+                   cr_buildstep_pkgdown("$_GIT_REPO",
                                       git_email = git_email,
-                                      env = env)
+                                      env = env))
          )
 
   build <- cr_build_make(build_yaml)

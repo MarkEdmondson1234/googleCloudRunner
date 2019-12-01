@@ -4,13 +4,16 @@
 \alias{cr_deploy_pkgdown}
 \title{Deploy a trigger for auto-builds a pkgdown website for an R package}
 \usage{
-cr_deploy_pkgdown(trigger, git_email = "googlecloudrunner@r.com",
-  keyring = "my-keyring", key = "github-key", env = NULL,
-  substitutions = NULL, cipher = "id_rsa.enc",
+cr_deploy_pkgdown(trigger, steps = NULL,
+  git_email = "googlecloudrunner@r.com", keyring = "my-keyring",
+  key = "github-key", env = NULL, substitutions = NULL,
+  cipher = "id_rsa.enc",
   build_image = "gcr.io/gcer-public/packagetools:master")
 }
 \arguments{
 \item{trigger}{The trigger which will be a \link{RepoSource} or a \link{GitHubEventsConfig}}
+
+\item{steps}{extra steps to run before the pkgdown website steps run}
 
 \item{git_email}{The email the git commands will be identifying as}
 
