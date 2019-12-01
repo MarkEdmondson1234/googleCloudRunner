@@ -208,7 +208,13 @@
 #&gt;   id: Hello Cloud Build
 #&gt;   args:
 #&gt;   - echo
-#&gt;   - Hello Cloud Build</div></pre>
+#&gt;   - Hello Cloud Build
+#&gt; - name: rocker/r-base
+#&gt;   id: Hello R
+#&gt;   args:
+#&gt;   - R
+#&gt;   - -e
+#&gt;   - paste0('1 + 1 = ', 1+1)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

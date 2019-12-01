@@ -195,7 +195,13 @@
 #&gt;   id: Hello Cloud Build
 #&gt;   args:
 #&gt;   - echo
-#&gt;   - Hello Cloud Build</div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+#&gt;   - Hello Cloud Build
+#&gt; - name: rocker/r-base
+#&gt;   id: Hello R
+#&gt;   args:
+#&gt;   - R
+#&gt;   - -e
+#&gt;   - paste0('1 + 1 = ', 1+1)</div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='fu'><a href='cr_schedule.html'>cr_schedule</a></span>(<span class='st'>"15 5 * * *"</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='st'>"cloud-build-test1"</span>,
             <span class='kw'>httpTarget</span> <span class='kw'>=</span> <span class='fu'>cr_build_schedule_http</span>(<span class='no'>build1</span>))
 

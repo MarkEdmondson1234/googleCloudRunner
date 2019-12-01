@@ -158,9 +158,10 @@
     <p>This will build a pkgdown website each time the trigger fires and deploy it to git</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_pkgdown</span>(<span class='no'>trigger</span>, <span class='kw'>git_email</span> <span class='kw'>=</span> <span class='st'>"googlecloudrunner@r.com"</span>,
-  <span class='kw'>keyring</span> <span class='kw'>=</span> <span class='st'>"my-keyring"</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"github-key"</span>, <span class='kw'>env</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cipher</span> <span class='kw'>=</span> <span class='st'>"id_rsa.enc"</span>,
+    <pre class="usage"><span class='fu'>cr_deploy_pkgdown</span>(<span class='no'>trigger</span>, <span class='kw'>steps</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>git_email</span> <span class='kw'>=</span> <span class='st'>"googlecloudrunner@r.com"</span>, <span class='kw'>keyring</span> <span class='kw'>=</span> <span class='st'>"my-keyring"</span>,
+  <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"github-key"</span>, <span class='kw'>env</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>cipher</span> <span class='kw'>=</span> <span class='st'>"id_rsa.enc"</span>,
   <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -169,6 +170,10 @@
     <tr>
       <th>trigger</th>
       <td><p>The trigger which will be a <a href='RepoSource.html'>RepoSource</a> or a <a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></p></td>
+    </tr>
+    <tr>
+      <th>steps</th>
+      <td><p>extra steps to run before the pkgdown website steps run</p></td>
     </tr>
     <tr>
       <th>git_email</th>
