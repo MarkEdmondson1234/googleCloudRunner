@@ -1,0 +1,59 @@
+---
+title: "Examples using googleCloudRunner for serverless R"
+---
+
+Here will be some example use cases you can use googleCloudRunner for.
+
+Since almost any code can be called and passed via Docker images, there is a lot of potential uses.
+
+* Checking a package, creating a website, deploying
+* Creating an Rmarkdown powered website using Cloud Run
+* Helper container images on gcr.io/gcer-public/
+* Showcase some useful cloudbuilds such as [slackbot](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/slackbot)
+
+
+## Connecting to GitHub 
+
+Connect via the [Source Repository mirroring service](https://cloud.google.com/source-repositories/docs/mirroring-a-github-repository).
+
+Once your repo is connected, you can operate on R packages on GitHub via:
+
+```r
+# this repo mirrored on Google Source repos
+my_repo <- Source(
+  repoSource=RepoSource("github_markedmondson1234_googlecloudrunner",
+                        branchName="master"))
+```
+
+
+### Create Docker image of a package (WIP)
+
+This is what is used to deploy this package as a Docker image to the public `googleComputeEngineR` docker image project, `gcr.io/gcer-public`
+
+Its probably easiest in this case to make [this a trigger on GitHub push](https://console.cloud.google.com/cloud-build/triggers), which you can do online with the same cloudbuild.yml file, but as an instructive example:
+
+A cloudbuild.yml using build tags (saved to "build/cloudbuild_cloudRunner.yml"):
+
+```yml
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Build package'
+  args: ['build', '-t', 'gcr.io/gcer-public/googlecloudrunner:$BRANCH_NAME','.']
+- name: 'gcr.io/cloud-builders/docker'
+  id:  'Push to gcer-public repo'
+  args: ['push', 'gcr.io/gcer-public/googlecloudrunner:$BRANCH_NAME']
+images: 'gcr.io/gcer-public/googlecloudrunner:$BRANCH_NAME'
+```
+
+Make sure to deploy the above files to GitHub and then deploy:
+
+```r
+library(googleCloudRunner)
+
+# this repo mirrored on Google Source repos
+my_repo <- Source(
+  repoSource=RepoSource("github_markedmondson1234_googlecloudrunner",
+                        branchName="master"))
+
+pb <- cr_build("build/cloudbuild_cloudRunner.yml", source = my_repo)
+```
