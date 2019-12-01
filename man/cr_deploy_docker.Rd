@@ -37,7 +37,7 @@ If no Dockerfile present in the deployment folder, will attempt to create a Dock
 
 \dontrun{
 
-cr_deploy_docker(system.file("example", package="googleCloudRunner"))
+cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
 
 }
 }

@@ -106,7 +106,7 @@ make_image_name <- function(name, projectId){
 #'
 #' \dontrun{
 #'
-#' cr_deploy_docker(system.file("example", package="googleCloudRunner"))
+#' cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
 #'
 #' }
 cr_deploy_docker <- function(local,
