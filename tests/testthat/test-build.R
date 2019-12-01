@@ -138,8 +138,8 @@ test_that("Render BuildStep objects", {
   package_build <- system.file("cloudbuild/cloudbuild_packages.yml",
                                package = "googleCloudRunner")
   bp <- cr_build_make(package_build)
-  bp1 <- cr_buildstep_extract(bp, step = 1)
-  bp2 <- cr_buildstep_extract(bp, step = 2)
+  bp1 <- cr_buildstep_extract(bp, step = 2)
+  bp2 <- cr_buildstep_extract(bp, step = 3)
   expect_equal(bp1[[1]]$id, "Devtools checks")
   expect_equal(bp2[[1]]$id, "Good Practices")
 
@@ -196,7 +196,7 @@ test_that("Render BuildStep objects", {
 context("Online tests")
 
 test_that("Online auth", {
-
+  skip_on_travis()
   googleAuthR::gar_gce_auth()
   cr_project_set("mark-edmondson-gde")
   cr_region_set("europe-west1")

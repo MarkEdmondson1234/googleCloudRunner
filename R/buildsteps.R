@@ -167,7 +167,7 @@ cr_buildstep_df <- function(x){
 #'
 #' @export
 #' @examples
-#' package_build <- system.file("cloudbuild/cloudbuild_packages.yml",
+#' package_build <- system.file("cloudbuild/cloudbuild.yaml",
 #'                              package = "googleCloudRunner")
 #' build <- cr_build_make(package_build)
 #' build
@@ -193,7 +193,7 @@ cr_buildstep_extract <- function(x, step = NULL){
 #' @param x A buildstep created previously
 #' @export
 #' @examples
-#' package_build <- system.file("cloudbuild/cloudbuild_packages.yml",
+#' package_build <- system.file("cloudbuild/cloudbuild.yaml",
 #'                              package = "googleCloudRunner")
 #' build <- cr_build_make(package_build)
 #' build

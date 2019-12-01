@@ -4,7 +4,17 @@ options:
   - 'GCE_DEFAULT_PROJECT_ID=$PROJECT_ID'
   - 'CR_BUILD_EMAIL=$_BUILD_EMAIL'
   - 'GCS_DEFAULT_BUCKET=$_BUCKET'
+  - 'GCE_AUTH_FILE=/workspace/auth.json'
 steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - kms
+  - decrypt
+  - --ciphertext-file=auth.json.enc
+  - --plaintext-file=auth.json
+  - --location=global
+  - --keyring=my-keyring
+  - --key=gce-auth-file
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: Devtools checks
   args:
