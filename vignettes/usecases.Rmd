@@ -25,6 +25,17 @@ my_repo <- Source(
                         branchName="master"))
 ```
 
+You can create a GitHub build trigger using `GitHubEventsConfig()` - this will by default trigger builds when you push to any GitHub branch.  
+
+```r
+cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
+                           package = "googleCloudRunner")
+bb <- cr_build_make(cloudbuild, projectId = "test-project")
+github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner", branch = "master")
+
+cr_buildtrigger("trig1", trigger = github, build = bb)
+```
+
 
 ### Create Docker image of a package (WIP)
 

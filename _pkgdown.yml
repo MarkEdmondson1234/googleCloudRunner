@@ -71,12 +71,13 @@ reference:
       Functions for working with Cloud Run deployments
     contents:
       - matches("cr_run")
-      - matches("cr_deploy")
+      - cr_deploy_run
   - title: "Cloud Scheduler functions"
     desc: >
       Functions for working with Cloud Scheduler
     contents:
       - matches("cr_schedule")
+      - cr_build_schedule_http
       - Job
       - HttpTarget
   - title: "Setup functions"
