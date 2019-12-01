@@ -12,7 +12,7 @@ test_that("Online auth", {
 test_that("Online test deployments", {
   skip_on_travis()
 
-  runme <- system.file("example/", package="cloudRunner")
+  runme <- system.file("example/", package="googleCloudRunner", mustWork=TRUE)
 
   cd <- cr_deploy_docker(runme, launch_browser = FALSE)
   expect_equal(cd$metadata$`@type`,
