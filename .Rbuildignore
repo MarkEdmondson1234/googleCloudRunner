@@ -18,3 +18,4 @@
 ^known_hosts$
 ^cb_rsa\.enc$
 ^auth\.json\.enc$
+^auth\.json$

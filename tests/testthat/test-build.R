@@ -1,5 +1,24 @@
 context("Offline tests")
 
+context("Online tests")
+
+test_that("Online auth", {
+  skip_on_travis()
+
+  # assumes auth and necessary args taken from env args already set
+  builds <- cr_buildtrigger_list()
+  expect_s3_class(builds, "data.frame")
+
+})
+#' b2 <- cr_build_wait(b1)
+#' cr_build_status(b1)
+#' cr_build_status(b2)
+#'   build1 <- cr_build(yaml, source = my_gcs_source)
+#'   build2 <- cr_build(yaml, source = my_repo_source)
+#'
+#'   cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
+#'   bb<- cr_build_make(cloudbuild, projectId = "test-project")
+
 test_that("Building Build Objects", {
 
   cr_email_set("test@cloudbuilder.com")
@@ -192,24 +211,3 @@ test_that("Render BuildStep objects", {
 })
 
 
-
-context("Online tests")
-
-test_that("Online auth", {
-  skip_on_travis()
-  googleAuthR::gar_gce_auth()
-  cr_project_set("mark-edmondson-gde")
-  cr_region_set("europe-west1")
-  cr_email_set("cloudrunner@mark-edmondson-gde.iam.gserviceaccount.com")
-  builds <- cr_buildtrigger_list()
-  expect_s3_class(builds, "data.frame")
-
-})
-#' b2 <- cr_build_wait(b1)
-#' cr_build_status(b1)
-#' cr_build_status(b2)
-#'   build1 <- cr_build(yaml, source = my_gcs_source)
-#'   build2 <- cr_build(yaml, source = my_repo_source)
-#'
-#'   cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
-#'   bb<- cr_build_make(cloudbuild, projectId = "test-project")

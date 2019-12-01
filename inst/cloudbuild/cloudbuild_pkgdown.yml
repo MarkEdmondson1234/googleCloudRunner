@@ -65,7 +65,7 @@ steps:
   - '-c'
   - |
     git add . && \
-    git commit -a -m "Build website from commit ${COMMIT_SHA}: \
+    git commit -a -m "[skip travis] Build website from commit ${COMMIT_SHA}: \
                       $(date +"%Y%m%dT%H:%M:%S")" && \
     git push git@github.com:$_GITHUB_REPO
   volumes:

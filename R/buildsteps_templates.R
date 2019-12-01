@@ -234,7 +234,7 @@ cr_buildstep_pkgdown <- function(
     pkg_env,
     cr_buildstep_git(c("add", "."), dir = "repo"),
     cr_buildstep_git(c("commit", "-a", "-m",
-                       "Build website from commit ${COMMIT_SHA}: \
+                       "[skip travis] Build website from commit ${COMMIT_SHA}: \
 $(date +\"%Y%m%dT%H:%M:%S\")"),
                      dir = "repo"),
     cr_buildstep_git("push", repo, dir = "repo")
