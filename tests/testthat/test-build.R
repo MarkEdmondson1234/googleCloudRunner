@@ -26,6 +26,7 @@ test_that("[Online] Test deployments", {
 })
 
 test_that("[Online] Test Build Triggers",{
+  skip_on_travis()
 
   cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
                             package = "googleCloudRunner")
