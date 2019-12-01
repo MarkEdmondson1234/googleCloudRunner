@@ -15,7 +15,7 @@ cr_buildstep_extract(x, step = NULL)
 Useful if you have a step from an existing cloudbuild.yaml you want in another
 }
 \examples{
-package_build <- system.file("cloudbuild/cloudbuild_packages.yml",
+package_build <- system.file("cloudbuild/cloudbuild.yaml",
                              package = "googleCloudRunner")
 build <- cr_build_make(package_build)
 build

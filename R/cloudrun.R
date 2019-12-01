@@ -76,6 +76,7 @@ cr_run <- function(image,
     rstudio_add_output(task_id,
                        paste("\n#Running at: ",
                              run$status$url))
+    rstudio_add_state(task_id, "SUCCESS")
 
     if(launch_browser) utils::browseURL(run$status$url)
 
@@ -83,6 +84,7 @@ cr_run <- function(image,
   } else {
     rstudio_add_output(task_id,
                        "\n#Problem deploying to Cloud Run")
+    rstudio_add_state(task_id, "FAILURE")
     return(result)
   }
 }

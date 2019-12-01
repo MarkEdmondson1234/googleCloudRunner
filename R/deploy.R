@@ -149,7 +149,6 @@ cr_deploy_docker <- function(local,
            launch_browser = launch_browser,
            timeout=timeout)
 
-
 }
 
 #' Deploy a trigger for auto-builds a pkgdown website for an R package

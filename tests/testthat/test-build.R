@@ -1,5 +1,3 @@
-context("Offline tests")
-
 context("Online tests")
 
 test_that("Online auth", {
@@ -10,14 +8,23 @@ test_that("Online auth", {
   expect_s3_class(builds, "data.frame")
 
 })
-#' b2 <- cr_build_wait(b1)
-#' cr_build_status(b1)
-#' cr_build_status(b2)
-#'   build1 <- cr_build(yaml, source = my_gcs_source)
-#'   build2 <- cr_build(yaml, source = my_repo_source)
-#'
-#'   cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
-#'   bb<- cr_build_make(cloudbuild, projectId = "test-project")
+
+test_that("Online test deployments", {
+  skip_on_travis()
+
+  runme <- system.file("example", package="cloudRunner")
+  cd <- cr_deploy_docker(runme, launch_browser = FALSE)
+  expect_equal(cd$metadata$`@type`,
+               "type.googleapis.com/google.devtools.cloudbuild.v1.BuildOperationMetadata")
+
+  cr <- cr_deploy_run(runme)
+  expect_equal(cr$kind, "Service")
+  expect_true(grepl("^gcr.io/mark-edmondson-gde/example",
+                    cr$spec$template$spec$containers$image))
+
+})
+
+context("Offline tests")
 
 test_that("Building Build Objects", {
 

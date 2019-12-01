@@ -251,7 +251,11 @@ cr_build_wait <- function(op = .Last.value,
 extract_runtime <- function(start_time){
   started <- tryCatch(
     timestamp_to_r(start_time), error = function(err){
-      stop("Could not parse starttime: ", start_time)
+      # sometimes starttime is returned from API NULL, so we fill one in
+      tt <- Sys.time()
+      message("Could not parse starttime: ", start_time,
+              " setting starttime to:", tt, level = 2)
+      tt
     })
   as.integer(difftime(Sys.time(), started, units  = "secs"))
 }

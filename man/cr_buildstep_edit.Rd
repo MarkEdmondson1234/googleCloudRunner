@@ -25,7 +25,7 @@ cr_buildstep_edit(x, ...)
 Useful for editing existing buildsteps
 }
 \examples{
-package_build <- system.file("cloudbuild/cloudbuild_packages.yml",
+package_build <- system.file("cloudbuild/cloudbuild.yaml",
                              package = "googleCloudRunner")
 build <- cr_build_make(package_build)
 build
