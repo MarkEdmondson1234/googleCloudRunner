@@ -175,86 +175,36 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>package_build</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"cloudbuild/cloudbuild_packages.yml"</span>,
+    <pre class="examples"><div class='input'><span class='no'>package_build</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"cloudbuild/cloudbuild.yaml"</span>,
                              <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>)
 <span class='no'>build</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build_make.html'>cr_build_make</a></span>(<span class='no'>package_build</span>)
 <span class='no'>build</span></div><div class='output co'>#&gt; ==CloudBuildObject==
 #&gt; steps:
-#&gt; - name: gcr.io/cloud-builders/gcloud
+#&gt; - name: gcr.io/cloud-builders/docker
+#&gt;   id: Docker Version
+#&gt;   args: version
+#&gt; - name: alpine
+#&gt;   id: Hello Cloud Build
 #&gt;   args:
-#&gt;   - kms
-#&gt;   - decrypt
-#&gt;   - --ciphertext-file=auth.json.enc
-#&gt;   - --plaintext-file=auth.json
-#&gt;   - --location=global
-#&gt;   - --keyring=my-keyring
-#&gt;   - --key=gce-auth-file
-#&gt; - name: gcr.io/gcer-public/packagetools:master
-#&gt;   id: Devtools checks
+#&gt;   - echo
+#&gt;   - Hello Cloud Build
+#&gt; - name: rocker/r-base
+#&gt;   id: Hello R
 #&gt;   args:
-#&gt;   - Rscript
+#&gt;   - R
 #&gt;   - -e
-#&gt;   - |
-#&gt;     library(devtools)
-#&gt;     install_dev_deps()
-#&gt;     check()
-#&gt;     install()
-#&gt; - name: gcr.io/gcer-public/packagetools:master
-#&gt;   id: Good Practices
-#&gt;   args:
-#&gt;   - Rscript
-#&gt;   - -e
-#&gt;   - |
-#&gt;     library(goodpractice)
-#&gt;     gp(checks = grep('(rcmdcheck|covr)', all_checks(), invert=TRUE, value=TRUE))
-#&gt; - name: gcr.io/gcer-public/packagetools:master
-#&gt;   id: codecovr checks
-#&gt;   env: CODECOV_TOKEN=$_CODECOV_TOKEN
-#&gt;   args:
-#&gt;   - Rscript
-#&gt;   - -e
-#&gt;   - |
-#&gt;     devtools::install_dev_deps()
-#&gt;     devtools::install()
-#&gt;     library(covr)
-#&gt;     cv &lt;- package_coverage()
-#&gt;     print(cv);
-#&gt;     codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
-#&gt; - name: gcr.io/gcer-public/packagetools:master
-#&gt;   id: rhub checks
-#&gt;   args:
-#&gt;   - Rscript
-#&gt;   - -e
-#&gt;   - |
-#&gt;     library(rhub)
-#&gt;     validate_email(email="r@sunholo.com", token = "$_RHUB_TOKEN")
-#&gt;     check_for_cran(env_vars = c(CR_REGION='$_REGION',
-#&gt;                                 GCE_DEFAULT_PROJECT_ID='$PROJECT_ID',
-#&gt;                                 CR_BUILD_EMAIL='$_BUILD_EMAIL',
-#&gt;                                 GCS_DEFAULT_BUCKET='$_BUCKET'),
-#&gt;                    show_status = FALSE)</div><div class='input'><span class='fu'>cr_buildstep_extract</span>(<span class='no'>build</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt;   - paste0('1 + 1 = ', 1+1)</div><div class='input'><span class='fu'>cr_buildstep_extract</span>(<span class='no'>build</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/gcloud
-#&gt; args:
-#&gt; - kms
-#&gt; - decrypt
-#&gt; - --ciphertext-file=auth.json.enc
-#&gt; - --plaintext-file=auth.json
-#&gt; - --location=global
-#&gt; - --keyring=my-keyring
-#&gt; - --key=gce-auth-file
+#&gt; name: gcr.io/cloud-builders/docker
+#&gt; args: version
+#&gt; id: Docker Version
 #&gt; </div><div class='input'><span class='fu'>cr_buildstep_extract</span>(<span class='no'>build</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/gcer-public/packagetools:master
+#&gt; name: alpine
 #&gt; args:
-#&gt; - Rscript
-#&gt; - -e
-#&gt; - |
-#&gt;   library(devtools)
-#&gt;   install_dev_deps()
-#&gt;   check()
-#&gt;   install()
-#&gt; id: Devtools checks
+#&gt; - echo
+#&gt; - Hello Cloud Build
+#&gt; id: Hello Cloud Build
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
