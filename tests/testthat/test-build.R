@@ -47,7 +47,7 @@ test_that("[Online] Test schedule jobs", {
   expect_equal(s1$name, fid)
 
   s2 <- cr_schedule_get(id)
-  expect_equal(s1, s2)
+  expect_equal(s1$name, s2$name)
 
   s3 <- cr_schedule_pause(s1)
   expect_equal(s3$state, "PAUSED")
