@@ -23,6 +23,12 @@ test_that("[Online] Test deployments", {
   expect_true(grepl("^gcr.io/mark-edmondson-gde/example",
                     cr$spec$template$spec$containers$image))
 
+  runs <- cr_run_list()
+  expect_s3_class(runs, "data.frame")
+
+  ss <- cr_schedule_list()
+  expect_s3_class(ss, "data.frame")
+
 })
 
 test_that("[Online] Test Build Triggers",{
