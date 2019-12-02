@@ -39,7 +39,11 @@ test_that("[Online] Test schedule jobs", {
   build1 <- cr_build_make(cloudbuild)
 
   id <- "cloud-build-test1-zzzzz"
-  cr_schedule_delete(id)
+  tryCatch(cr_schedule_delete(id),
+           error = function(err){
+             message("Nothing to delete")
+           })
+
   on.exit(cr_schedule_delete(id))
 
   fid <-
