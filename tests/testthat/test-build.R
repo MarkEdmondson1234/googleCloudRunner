@@ -38,14 +38,6 @@ test_that("[Online] Test schedule jobs", {
                             package = "googleCloudRunner")
   build1 <- cr_build_make(cloudbuild)
 
-  id <- "cloud-build-test1-zzzzz"
-  tryCatch(cr_schedule_delete(id),
-           error = function(err){
-             message("Nothing to delete")
-           })
-
-  on.exit(cr_schedule_delete(id))
-
   fid <-
     "projects/mark-edmondson-gde/locations/europe-west1/jobs/cloud-build-test1-zzzzz"
 
