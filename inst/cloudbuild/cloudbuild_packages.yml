@@ -46,7 +46,7 @@ steps:
     library(covr)
     cv <- package_coverage()
     print(cv);
-    codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
+    codecov(coverage=cv, line_exclusions = list("R/options.R", "R/utilities.R", "R/print_methods.R"), commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: rhub checks
   args:
