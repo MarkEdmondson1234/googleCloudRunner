@@ -173,6 +173,15 @@
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other Cloud Buildsteps: <code><a href='cr_buildstep_decrypt.html'>cr_buildstep_decrypt</a></code>,
+  <code><a href='cr_buildstep_df.html'>cr_buildstep_df</a></code>,
+  <code><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a></code>,
+  <code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a></code>,
+  <code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a></code>,
+  <code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a></code>,
+  <code><a href='cr_buildstep_r.html'>cr_buildstep_r</a></code>, <code><a href='cr_buildstep.html'>cr_buildstep</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>package_build</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"cloudbuild/cloudbuild.yaml"</span>,
@@ -191,7 +200,7 @@
 #&gt; - name: rocker/r-base
 #&gt;   id: Hello R
 #&gt;   args:
-#&gt;   - R
+#&gt;   - Rscript
 #&gt;   - -e
 #&gt;   - paste0('1 + 1 = ', 1+1)</div><div class='input'><span class='fu'>cr_buildstep_extract</span>(<span class='no'>build</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
@@ -211,6 +220,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 

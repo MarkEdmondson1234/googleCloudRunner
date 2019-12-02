@@ -10,6 +10,6 @@ steps:
 - name: rocker/r-base
   id: Hello R
   args:
-  - R
+  - Rscript
   - -e
   - paste0('1 + 1 = ', 1+1)
