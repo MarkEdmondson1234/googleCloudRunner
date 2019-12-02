@@ -188,9 +188,9 @@
 </ul>
 <p>Custom macros can also be configured in the web UI, starting with <em>$ e.g. </em>$MY_CUSTOM_MACRO</p>
 </div>
-<div id="program-cloudbuild-yaml-objects-via-yaml" class="section level2">
+<div id="create-cloudbuild-yaml-build-steps-via-yaml-and-cr_buildstep" class="section level2">
 <h2 class="hasAnchor">
-<a href="#program-cloudbuild-yaml-objects-via-yaml" class="anchor"></a>Program cloudbuild.yaml objects via Yaml()</h2>
+<a href="#create-cloudbuild-yaml-build-steps-via-yaml-and-cr_buildstep" class="anchor"></a>Create cloudbuild.yaml build steps via Yaml() and cr_buildstep()</h2>
 <p>Lets say you don’t want to write a cloudbuild.yaml file - instead its created all within R using the yaml helper functions <code><a href="../reference/Yaml.html">Yaml()</a></code> and <code>cr_buildstep</code>. Refer to the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yaml config spec</a> on what it expected in the file.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">image &lt;-<span class="st"> "gcr.io/your-project/your-name"</span></a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">my_yaml &lt;-<span class="st"> </span><span class="kw"><a href="../reference/Yaml.html">Yaml</a></span>(</a>
@@ -208,12 +208,21 @@
 <p>You can also write out the yaml into your own cloudbuild.yaml</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="../reference/cr_build_write.html">cr_build_write</a></span>(my_yaml, <span class="dt">file =</span> <span class="st">"cloudbuild.yaml"</span>)</a></code></pre></div>
 <p>This allows you to programmatically create cloudbuild yaml files for other languages and triggers. See more at this article on <a href="https://cloud.google.com/cloud-build/docs/create-custom-build-steps">creating custom build steps with your own Docker images</a>.</p>
+<div id="pre-made-build-step-templates" class="section level3">
+<h3 class="hasAnchor">
+<a href="#pre-made-build-step-templates" class="anchor"></a>Pre-made Build Step templates</h3>
 <p>Some helpful build yamls are included:</p>
 <ul>
 <li>
 <code><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker()</a></code> - for building and pushing Docker images</li>
 <li>
 <code><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt()</a></code> - for using Google Key management store to decrypt auth files</li>
+<li>
+<code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code> - for running R code</li>
+<li>
+<code><a href="../reference/cr_buildstep_git.html">cr_buildstep_git()</a></code> - for running git commands</li>
+<li>
+<code><a href="../reference/cr_buildstep_pkgdown.html">cr_buildstep_pkgdown()</a></code> - for setting up pkgdown documentation of an R package</li>
 </ul>
 <p>Combine buildsteps with <code><a href="https://rdrr.io/r/base/c.html">c()</a></code> e.g.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">my_yaml &lt;-<span class="st"> </span><span class="kw"><a href="../reference/Yaml.html">Yaml</a></span>(</a>
@@ -235,50 +244,51 @@
 <p>Putting the above together:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(my_yaml, <span class="dt">source =</span> storage)</a></code></pre></div>
 </div>
+<div id="r-buildsteps" class="section level3">
+<h3 class="hasAnchor">
+<a href="#r-buildsteps" class="anchor"></a>R buildsteps</h3>
+<p>You can send in R code into a build trigger using <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>. It accepts both inline R code or a file location. They default to the R images provided by Rocker <a href="https://www.rocker-project.org/">rocker-project.org</a> or if you create your own R images you can reference those.</p>
+<p>The R code can be created within the Build at build time, or you can refer to an existing R script within the Source.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co"># create an R buildstep inline</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"paste('1+1=', 1+1)"</span>, <span class="st">"sessionInfo()"</span>))</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="co"># create an R buildstep from a local file</span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(<span class="st">"my-r-file.R"</span>)</a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="co"># create an R buildstep from a file within the source of the Build</span></a>
+<a class="sourceLine" id="cb13-8" data-line-number="8"><span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(<span class="st">"inst/schedule/schedule.R"</span>, <span class="dt">r_source =</span> <span class="st">"runtime"</span>)</a>
+<a class="sourceLine" id="cb13-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb13-10" data-line-number="10"><span class="co"># use a different Rocker image e.g. rocker/verse</span></a>
+<a class="sourceLine" id="cb13-11" data-line-number="11"><span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"library(dplyr)"</span>, <span class="st">"mtcars %&gt;% select(mpg)"</span>, <span class="st">"sessionInfo"</span>),</a>
+<a class="sourceLine" id="cb13-12" data-line-number="12">                <span class="dt">name =</span> <span class="st">"verse"</span>)</a>
+<a class="sourceLine" id="cb13-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb13-14" data-line-number="14"><span class="co"># use your own R image with custom R</span></a>
+<a class="sourceLine" id="cb13-15" data-line-number="15">my_r &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"devtools::install()"</span>, <span class="st">"pkgdown::build_site()"</span>)</a>
+<a class="sourceLine" id="cb13-16" data-line-number="16">br &lt;-<span class="st">  </span><span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(my_r, <span class="dt">name=</span> <span class="st">"gcr.io/gcer-public/packagetools:master"</span>)</a>
+<a class="sourceLine" id="cb13-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb13-18" data-line-number="18"><span class="co"># send it for building</span></a>
+<a class="sourceLine" id="cb13-19" data-line-number="19"><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="kw"><a href="../reference/Yaml.html">Yaml</a></span>(<span class="dt">steps=</span>br))</a></code></pre></div>
+</div>
+</div>
 <div id="build-triggers" class="section level2">
 <h2 class="hasAnchor">
 <a href="#build-triggers" class="anchor"></a>Build Triggers</h2>
 <p>Once you have build steps and possibly a source created, you can either set these up to run on a schedule via <code><a href="../reference/cr_schedule.html">cr_schedule()</a></code> or you can use triggers that will run upon certain events. These include GitHub commits and pull requests. These Build Triggers can be setup in the webUI or programatically from R via the <code>cr_buildtrigger*</code> functions.</p>
 <p>To work with GitHub events, configure GitHub to use the offical <a href="https://github.com/marketplace/google-cloud-build">Google Cloud Build app</a> and then construct your GitHub triggers using <code><a href="../reference/GitHubEventsConfig.html">GitHubEventsConfig()</a></code>.</p>
 <p>The example below shows how to set up some of the builds above:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">cloudbuild &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"cloudbuild/cloudbuild.yaml"</span>,</a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">                            <span class="dt">package =</span> <span class="st">"googleCloudRunner"</span>)</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">bb &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_make.html">cr_build_make</a></span>(cloudbuild, <span class="dt">projectId =</span> <span class="st">"test-project"</span>)</a>
-<a class="sourceLine" id="cb13-4" data-line-number="4">github &lt;-<span class="st"> </span><span class="kw"><a href="../reference/GitHubEventsConfig.html">GitHubEventsConfig</a></span>(<span class="st">"MarkEdmondson1234/googleCloudRunner"</span>, <span class="dt">branch =</span> <span class="st">"master"</span>)</a>
-<a class="sourceLine" id="cb13-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="kw"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"trig1"</span>, <span class="dt">trigger =</span> github, <span class="dt">build =</span> bb)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">cloudbuild &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"cloudbuild/cloudbuild.yaml"</span>,</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">                            <span class="dt">package =</span> <span class="st">"googleCloudRunner"</span>)</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">bb &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_make.html">cr_build_make</a></span>(cloudbuild, <span class="dt">projectId =</span> <span class="st">"test-project"</span>)</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">github &lt;-<span class="st"> </span><span class="kw"><a href="../reference/GitHubEventsConfig.html">GitHubEventsConfig</a></span>(<span class="st">"MarkEdmondson1234/googleCloudRunner"</span>, <span class="dt">branch =</span> <span class="st">"master"</span>)</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb14-6" data-line-number="6"><span class="kw"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"trig1"</span>, <span class="dt">trigger =</span> github, <span class="dt">build =</span> bb)</a></code></pre></div>
 <p>The Build macros can also be configured by passing in a named list:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co"># creates a trigger with named substitutions</span></a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">ss &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">`</span><span class="dt">$_MYVAR</span><span class="st">`</span> =<span class="st"> "TEST1"</span>, <span class="st">`</span><span class="dt">$_GITHUB</span><span class="st">`</span> =<span class="st"> "MarkEdmondson1234/googleCloudRunner"</span>)</a>
-<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="kw"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"trig2"</span>, <span class="dt">trigger =</span> github, <span class="dt">build =</span> bb, <span class="dt">substitutions =</span> ss)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># creates a trigger with named substitutions</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">ss &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">`</span><span class="dt">$_MYVAR</span><span class="st">`</span> =<span class="st"> "TEST1"</span>, <span class="st">`</span><span class="dt">$_GITHUB</span><span class="st">`</span> =<span class="st"> "MarkEdmondson1234/googleCloudRunner"</span>)</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="kw"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"trig2"</span>, <span class="dt">trigger =</span> github, <span class="dt">build =</span> bb, <span class="dt">substitutions =</span> ss)</a></code></pre></div>
 <p>The above examples created the build step inline within the trigger, but you can use existing cloudbuild.yaml files by specifying where in the repository the build file will be:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># create a trigger that will build from the file in the repo</span></a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="kw"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"trig3"</span>, <span class="dt">trigger =</span> github, <span class="dt">build =</span> <span class="st">"inst/cloudbuild/cloudbuild.yaml"</span>)</a></code></pre></div>
-<div id="r-build-triggers" class="section level3">
-<h3 class="hasAnchor">
-<a href="#r-build-triggers" class="anchor"></a>R build triggers</h3>
-<p>You can send in R code into a build trigger using <code>cr_buildtrigger_r()</code>. It accepts both inline R code or a file location. They default to the R images provided by Rocker <a href="https://www.rocker-project.org/">rocker-project.org</a> or if you create your own R images you can reference those.</p>
-<p>The R code can be created within the Build at build time, or you can refer to an existing R script within the Source.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co"># create an R buildstep inline</span></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"paste('1+1=', 1+1)"</span>, <span class="st">"sessionInfo()"</span>))</a>
-<a class="sourceLine" id="cb16-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="co"># create an R buildstep from a local file</span></a>
-<a class="sourceLine" id="cb16-5" data-line-number="5"><span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(<span class="st">"my-r-file.R"</span>)</a>
-<a class="sourceLine" id="cb16-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb16-7" data-line-number="7"><span class="co"># create an R buildstep from a file within the source of the Build</span></a>
-<a class="sourceLine" id="cb16-8" data-line-number="8"><span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(<span class="st">"inst/schedule/schedule.R"</span>, <span class="dt">r_source =</span> <span class="st">"runtime"</span>)</a>
-<a class="sourceLine" id="cb16-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb16-10" data-line-number="10"><span class="co"># use a different Rocker image e.g. rocker/verse</span></a>
-<a class="sourceLine" id="cb16-11" data-line-number="11"><span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"library(dplyr)"</span>, <span class="st">"mtcars %&gt;% select(mpg)"</span>, <span class="st">"sessionInfo"</span>),</a>
-<a class="sourceLine" id="cb16-12" data-line-number="12">                <span class="dt">name =</span> <span class="st">"verse"</span>)</a>
-<a class="sourceLine" id="cb16-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb16-14" data-line-number="14"><span class="co"># use your own R image with custom R</span></a>
-<a class="sourceLine" id="cb16-15" data-line-number="15">my_r &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"devtools::install()"</span>, <span class="st">"pkgdown::build_site()"</span>)</a>
-<a class="sourceLine" id="cb16-16" data-line-number="16">br &lt;-<span class="st">  </span><span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(my_r, <span class="dt">name=</span> <span class="st">"gcr.io/gcer-public/packagetools:master"</span>)</a>
-<a class="sourceLine" id="cb16-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb16-18" data-line-number="18"><span class="co"># send it for building</span></a>
-<a class="sourceLine" id="cb16-19" data-line-number="19"><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="kw"><a href="../reference/Yaml.html">Yaml</a></span>(<span class="dt">steps=</span>br))</a></code></pre></div>
-</div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co"># create a trigger that will build from the file in the repo</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"trig3"</span>, <span class="dt">trigger =</span> github, <span class="dt">build =</span> <span class="st">"inst/cloudbuild/cloudbuild.yaml"</span>)</a></code></pre></div>
 </div>
   </div>
 
@@ -291,7 +301,7 @@
 <li><a href="#cloudbuild-yaml">cloudbuild.yaml</a></li>
       <li><a href="#cloud-build-source">Cloud Build source</a></li>
       <li><a href="#cloud-build-macros">Cloud Build macros</a></li>
-      <li><a href="#program-cloudbuild-yaml-objects-via-yaml">Program cloudbuild.yaml objects via Yaml()</a></li>
+      <li><a href="#create-cloudbuild-yaml-build-steps-via-yaml-and-cr_buildstep">Create cloudbuild.yaml build steps via Yaml() and cr_buildstep()</a></li>
       <li><a href="#build-triggers">Build Triggers</a></li>
       </ul>
 </div>
