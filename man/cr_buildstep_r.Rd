@@ -31,11 +31,15 @@ If \code{r_source="local"} then it will copy over from a character string or loc
 # create an R buildstep inline
 cr_buildstep_r(c("paste('1+1=', 1+1)", "sessionInfo()"))
 
+\dontrun{
+
 # create an R buildstep from a local file
 cr_buildstep_r("my-r-file.R")
 
 # create an R buildstep from a file within the source of the Build
 cr_buildstep_r("inst/schedule/schedule.R", r_source = "runtime")
+
+}
 
 # use a different Rocker image e.g. rocker/verse
 cr_buildstep_r(c("library(dplyr)",
