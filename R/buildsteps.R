@@ -11,6 +11,8 @@
 #' @param env Environment variables for this step.  A character vector for each assignment
 #' @param volumes volumes to connect and write to
 #'
+#' @seealso \href{https://cloud.google.com/cloud-build/docs/create-custom-build-steps}{Creating custom build steps how-to guide}
+#'
 #' @details
 #' By default dir is set to \code{deploy} to aid deployment from GCS, but you may want to set this to \code{""} when using \link{RepoSource}
 #'
@@ -31,7 +33,7 @@
 #' Or you can add your own custom variables, set in the Build Trigger.  Custom variables always start with $_ e.g. $_MY_VAR
 #'
 #' @export
-#' @family Cloud Build functions, yaml functions
+#' @family Cloud Buildsteps
 #' @examples
 #'
 #' # creating yaml for use in deploying cloud run
@@ -112,8 +114,9 @@ is.cr_buildstep <- function(x){
 #'
 #' If constructing arg list columns then \link{I} suppresses conversion of the list to columns that would otherwise break the yaml format
 #' @export
+#' @family Cloud Buildsteps
 #' @examples
-#'
+
 #' y <- data.frame(name = c("docker", "alpine"),
 #'                 args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
 #'                 id = c("Docker Version", "Hello Cloud Build"),
@@ -164,7 +167,7 @@ cr_buildstep_df <- function(x){
 #'
 #' @param x A \link{Build} object
 #' @param step The numeric step number to extract
-#'
+#' @family Cloud Buildsteps
 #' @export
 #' @examples
 #' package_build <- system.file("cloudbuild/cloudbuild.yaml",
@@ -192,6 +195,7 @@ cr_buildstep_extract <- function(x, step = NULL){
 #' @inheritDotParams cr_buildstep
 #' @param x A buildstep created previously
 #' @export
+#' @family Cloud Buildsteps
 #' @examples
 #' package_build <- system.file("cloudbuild/cloudbuild.yaml",
 #'                              package = "googleCloudRunner")

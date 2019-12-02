@@ -130,7 +130,7 @@ You can also write out the yaml into your own cloudbuild.yaml
 cr_build_write(my_yaml, file = "cloudbuild.yaml")
 ```
 
-This allows you to programmatically create cloudbuild yaml files for other languages and triggers.
+This allows you to programmatically create cloudbuild yaml files for other languages and triggers.  See more at this article on [creating custom build steps with your own Docker images](https://cloud.google.com/cloud-build/docs/create-custom-build-steps).
 
 Some helpful build yamls are included:
 
@@ -149,7 +149,7 @@ my_yaml <- Yaml(
                 ),
                 cr_buildstep(
                   "my-r-script",
-                  "R -e run.R",
+                  c("Rscript","-e", "run.R"),
                   prefix = "gcr.io/my-r-images/"
                 ),
       images = "gcr.io/my-r-images/my-image"))
@@ -199,6 +199,35 @@ The above examples created the build step inline within the trigger, but you can
 ```r
 # create a trigger that will build from the file in the repo
 cr_buildtrigger("trig3", trigger = github, build = "inst/cloudbuild/cloudbuild.yaml")
+```
+
+### R build triggers
+
+You can send in R code into a build trigger using `cr_buildtrigger_r()`.   It accepts both inline R code or a file location.  They default to the R images provided by Rocker [rocker-project.org](https://www.rocker-project.org/) or if you create your own R images you can reference those. 
+
+The R code can be created within the Build at build time, or you can refer to an existing R script within the Source.
+
+```r
+# create an R buildstep inline
+cr_buildstep_r(c("paste('1+1=', 1+1)", "sessionInfo()"))
+
+# create an R buildstep from a local file
+cr_buildstep_r("my-r-file.R")
+
+# create an R buildstep from a file within the source of the Build
+cr_buildstep_r("inst/schedule/schedule.R", r_source = "runtime")
+
+# use a different Rocker image e.g. rocker/verse
+cr_buildstep_r(c("library(dplyr)", "mtcars %>% select(mpg)", "sessionInfo"),
+                name = "verse")
+
+# use your own R image with custom R
+my_r <- c("devtools::install()", "pkgdown::build_site()")
+br <-  cr_buildstep_r(my_r, name= "gcr.io/gcer-public/packagetools:master")
+
+# send it for building
+cr_build(Yaml(steps=br))
+
 ```
 
 

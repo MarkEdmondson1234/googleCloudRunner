@@ -26,3 +26,13 @@ cr_buildstep_docker("gcr.io/my-project/my-image")
 cr_buildstep_docker("my-image")
 cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")
 }
+\seealso{
+Other Cloud Buildsteps: \code{\link{cr_buildstep_decrypt}},
+  \code{\link{cr_buildstep_df}},
+  \code{\link{cr_buildstep_edit}},
+  \code{\link{cr_buildstep_extract}},
+  \code{\link{cr_buildstep_gitsetup}},
+  \code{\link{cr_buildstep_pkgdown}},
+  \code{\link{cr_buildstep_r}}, \code{\link{cr_buildstep}}
+}
+\concept{Cloud Buildsteps}

@@ -1,3 +1,86 @@
+#' Run an R script in a Cloud Build R step
+#'
+#' Helper to run R code within build steps, from either an existing local R file or within the source of the build.
+#'
+#' @param r R code to run or a file containing R code - see details
+#' @param name The docker image that will run the R code, usually from rocker-project.org
+#' @param r_source Whether the R code will be from a runtime file within the source or at build time copying over from a local R file in your session
+#' @param ... Other arguments passed to \link{cr_buildstep}
+#' @inheritParams cr_buildstep
+#' @family Cloud Buildsteps
+#'
+#' @details
+#'
+#' If \code{r_source="runtime"} then \code{r} should be the location of that file within the source or \code{image} that will be run by the R code from \code{image}
+#'
+#' If \code{r_source="local"} then it will copy over from a character string or local file into the build step directly.
+#'
+#' @examples
+#'
+#' # create an R buildstep inline
+#' cr_buildstep_r(c("paste('1+1=', 1+1)", "sessionInfo()"))
+#'
+#' # create an R buildstep from a local file
+#' cr_buildstep_r("my-r-file.R")
+#'
+#' # create an R buildstep from a file within the source of the Build
+#' cr_buildstep_r("inst/schedule/schedule.R", r_source = "runtime")
+#'
+#' # use a different Rocker image e.g. rocker/verse
+#' cr_buildstep_r(c("library(dplyr)",
+#'                  "mtcars %>% select(mpg)",
+#'                  "sessionInfo"),
+#'                name = "verse")
+#'
+#' # use your own R image with custom R
+#' my_r <- c("devtools::install()", "pkgdown::build_site()")
+#' br <-  cr_buildstep_r(my_r, name= "gcr.io/gcer-public/packagetools:master")
+#'
+#'
+#'
+#' @export
+cr_buildstep_r <- function(r,
+                           name = "r-base",
+                           r_source = c("local", "runtime"),
+                           prefix = "rocker/",
+                           ...){
+
+  r_source <- match.arg(r_source)
+  # don't allow dot names that would break things
+  dots <- list(...)
+  assert_that(
+    is.null(dots$args),
+    is.null(dots$name),
+    is.null(dots$prefix)
+  )
+
+  rchars <- r
+  if(r_source == "local"){
+    assert_that(is.character(r))
+
+    rchars <- r
+    if(grepl("\\.R", r[[1]], ignore.case = TRUE)){
+      # filepath
+      assert_that(is.readable(r), is.string(r))
+      rchars <- readLines(r)
+      myMessage("Copying into build step R code from ", r, level = 3)
+    }
+
+    rchars <- paste(rchars, collapse = "\n")
+
+  } else if(r_source == "runtime"){
+    #filepath in source, not much we can do to check it
+    myMessage("Will read R code in source from filepath ", rchars, level = 3)
+  }
+
+  cr_buildstep(name = name,
+               args = c("Rscript", "-e", rchars),
+               prefix = prefix,
+               ...)
+
+}
+
+
 #' Create a build step for decrypting files via KMS
 #'
 #' Create a build step to decrypt files using CryptoKey from Cloud Key Management Service
@@ -11,7 +94,7 @@
 #' @details
 #' You will need to set up the encrypted key using gcloud following this guide from Google: https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials
 #'
-#'
+#' @family Cloud Buildsteps
 #' @export
 #' @examples
 #'
@@ -50,7 +133,7 @@ cr_buildstep_decrypt <- function(cipher,
 #' @param location Where the Dockerfile to build is in relation to \code{dir}
 #' @param ... Further arguments passed in to \link{cr_buildstep}
 #' @param projectId The projectId
-#'
+#' @family Cloud Buildsteps
 #' @export
 #' @import assertthat
 #' @examples
@@ -100,8 +183,7 @@ cr_buildstep_docker <- function(image,
 #'
 #' By default the encrypted key should then be at the root of your \link{Source} object called "id_rsa.enc"
 #'
-#' @seealso \href{Accessing private GitHub repositories using Cloud Build (google article)}{https://cloud.google.com/cloud-build/docs/access-private-github-repos}
-#'
+#' @seealso \href{https://cloud.google.com/cloud-build/docs/access-private-github-repos}{Accessing private GitHub repositories using Cloud Build (google article)}
 #'
 #' @rdname cr_buildstep_git
 #' @export
@@ -154,10 +236,8 @@ cr_buildstep_gitsetup <- function(keyring = "my-keyring",
 #' @details
 #'
 #' \code{cr_buildstep} must come after \code{cr_buildstep_gitsetup}
-#'
+#' @family Cloud Buildsteps
 #' @export
-#' @examples
-#'
 cr_buildstep_git <- function(
   git_args = c("clone",
                "git@github.com:[GIT-USERNAME]/[REPOSITORY]",
@@ -193,6 +273,7 @@ cr_buildstep_git <- function(
 #' Its convenient to set some of the above via \link{Build} macros, such as \code{github_repo=$_GITHUB_REPO} and \code{git_email=$_BUILD_EMAIL} in the Build Trigger web UI
 #'
 #' @export
+#' @family Cloud Buildsteps
 #' @examples
 #'
 #' # github repo set via build trigger macro _GITHUB_REPO

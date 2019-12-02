@@ -45,8 +45,16 @@ Yaml(
      )
  )
 
-
 }
 \seealso{
-\href{Accessing private GitHub repositories using Cloud Build (google article)}{https://cloud.google.com/cloud-build/docs/access-private-github-repos}
+\href{https://cloud.google.com/cloud-build/docs/access-private-github-repos}{Accessing private GitHub repositories using Cloud Build (google article)}
+
+Other Cloud Buildsteps: \code{\link{cr_buildstep_decrypt}},
+  \code{\link{cr_buildstep_df}},
+  \code{\link{cr_buildstep_docker}},
+  \code{\link{cr_buildstep_edit}},
+  \code{\link{cr_buildstep_extract}},
+  \code{\link{cr_buildstep_pkgdown}},
+  \code{\link{cr_buildstep_r}}, \code{\link{cr_buildstep}}
 }
+\concept{Cloud Buildsteps}

@@ -20,7 +20,6 @@ Yaml(steps = c(
     images = "gcr.io/my-project/my-image")
 }
 \seealso{
-Other Cloud Build functions, yaml functions: \code{\link{cr_build_write}},
-  \code{\link{cr_buildstep}}
+Other Cloud Build functions, yaml functions: \code{\link{cr_build_write}}
 }
 \concept{Cloud Build functions, yaml functions}

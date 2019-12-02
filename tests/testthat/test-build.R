@@ -275,6 +275,11 @@ test_that("Render BuildStep objects", {
   expect_equal(gh$name, "repo")
   expect_equal(gh$push$branch, ".*")
 
+  # use your own R image with custom R
+  my_r <- c("devtools::install()", "pkgdown::build_site()")
+  br <-  cr_buildstep_r(my_r, name = "gcr.io/gcer-public/packagetools:master")
+  expect_equal(br[[1]]$args[[3]], "devtools::install()\npkgdown::build_site()")
+
 })
 
 

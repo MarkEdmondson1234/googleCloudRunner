@@ -32,7 +32,6 @@ cr_build_write(build)
 
 }
 \seealso{
-Other Cloud Build functions, yaml functions: \code{\link{Yaml}},
-  \code{\link{cr_buildstep}}
+Other Cloud Build functions, yaml functions: \code{\link{Yaml}}
 }
 \concept{Cloud Build functions, yaml functions}

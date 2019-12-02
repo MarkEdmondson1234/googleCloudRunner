@@ -43,3 +43,13 @@ build_yaml <- Yaml(steps = steps)
 my_source <- cr_build_source(RepoSource("my_repo", branch="master"))
 build <- cr_build_make(build_yaml, source = my_source)
 }
+\seealso{
+Other Cloud Buildsteps: \code{\link{cr_buildstep_decrypt}},
+  \code{\link{cr_buildstep_df}},
+  \code{\link{cr_buildstep_docker}},
+  \code{\link{cr_buildstep_edit}},
+  \code{\link{cr_buildstep_extract}},
+  \code{\link{cr_buildstep_gitsetup}},
+  \code{\link{cr_buildstep_r}}, \code{\link{cr_buildstep}}
+}
+\concept{Cloud Buildsteps}

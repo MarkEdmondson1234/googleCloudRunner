@@ -37,3 +37,13 @@ cr_buildstep_edit(edit_me, name = "blah")
 cr_buildstep_edit(edit_me, name = "gcr.io/blah")
 cr_buildstep_edit(edit_me, args = c("blah1","blah2"), dir = "meh")
 }
+\seealso{
+Other Cloud Buildsteps: \code{\link{cr_buildstep_decrypt}},
+  \code{\link{cr_buildstep_df}},
+  \code{\link{cr_buildstep_docker}},
+  \code{\link{cr_buildstep_extract}},
+  \code{\link{cr_buildstep_gitsetup}},
+  \code{\link{cr_buildstep_pkgdown}},
+  \code{\link{cr_buildstep_r}}, \code{\link{cr_buildstep}}
+}
+\concept{Cloud Buildsteps}
