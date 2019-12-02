@@ -198,7 +198,14 @@ This creates steps to use git with an ssh created key." />
 <p><code>cr_buildstep</code> must come after <code>cr_buildstep_gitsetup</code></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='Accessing private GitHub repositories using Cloud Build (google article)'>https://cloud.google.com/cloud-build/docs/access-private-github-repos</a></p></div>
+    <div class='dont-index'><p><a href='https://cloud.google.com/cloud-build/docs/access-private-github-repos'>Accessing private GitHub repositories using Cloud Build (google article)</a></p>
+<p>Other Cloud Buildsteps: <code><a href='cr_buildstep_decrypt.html'>cr_buildstep_decrypt</a></code>,
+  <code><a href='cr_buildstep_df.html'>cr_buildstep_df</a></code>,
+  <code><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a></code>,
+  <code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a></code>,
+  <code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a></code>,
+  <code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a></code>,
+  <code><a href='cr_buildstep_r.html'>cr_buildstep_r</a></code>, <code><a href='cr_buildstep.html'>cr_buildstep</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -252,7 +259,6 @@ This creates steps to use git with an ssh created key." />
 #&gt;   volumes:
 #&gt;   - name: ssh
 #&gt;     path: /root/.ssh</div><div class='input'>
-
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
