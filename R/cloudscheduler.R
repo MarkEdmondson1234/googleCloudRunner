@@ -47,7 +47,7 @@ cr_schedule <- function(name,
 
   stem <- "https://cloudscheduler.googleapis.com/v1"
 
-  the_name <- sprintf("projects/%s/locations/%s/jobs/%s", projectId, region, name)
+  the_name <- contruct_name(name = name, region = region, project = projectId)
   job <- Job(schedule=schedule,
              name = the_name,
              httpTarget = httpTarget,
@@ -58,9 +58,7 @@ cr_schedule <- function(name,
     if(the_name %in% scheds$name){
       myMessage("Overwriting schedule job: ", name, level=3)
 # https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/patch
-      the_url <-
-        sprintf("%s/projects/%s/locations/%s/jobs/%s",
-                stem, projectId, region, name)
+      the_url <- paste0(stem,"/", the_name)
       updateMask <- rmNullObs(list(schedule = schedule,
                              httpTarget = httpTarget,
                              description = description))
@@ -152,6 +150,198 @@ cr_schedule_list <- function(region = cr_region_get(),
   Reduce(rbind, o)
 }
 
+#' Deletes a scheduled job.
+#'
+#' @seealso \href{https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/delete}{cloudscheduler.projects.locations.jobs.delete}
+#'
+#' @family Cloud Scheduler functions
+#' @param x The name of the scheduled job or a \link{Job} object
+#' @param region The region to run within
+#' @param projectId The projectId
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+#'
+#' @examples
+#'
+#' \dontrun{
+#'
+#' cr_schedule_delete("cloud-build-test1")
+#' }
+cr_schedule_delete <- function(x,
+                               region = cr_region_get(),
+                               projectId = cr_project_get()){
+
+  the_name <- contruct_name(name = extract_schedule_name(x),
+                            region = region,
+                            project = projectId)
+
+  url <- sprintf("https://cloudscheduler.googleapis.com/v1/%s", the_name)
+  # cloudscheduler.projects.locations.jobs.delete
+  f <- googleAuthR::gar_api_generator(url, "DELETE",
+                                      data_parse_function = function(x) TRUE)
+  f()
+
+}
+
+contruct_name <- function(name, region, project){
+  if(grepl("^projects", name)){
+    return(name)
+  }
+
+  sprintf("projects/%s/locations/%s/jobs/%s",
+          project, region, name)
+}
+
+extract_schedule_name <- function(x){
+  if(is.gar_scheduleJob(x)){
+     return(x$name)
+  } else {
+    assert_that(is.string(x))
+  }
+
+  x
+}
+
+#' Gets a scheduler job.
+#'
+#'
+#' @seealso \href{https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/get}{Google Documentation}
+
+#' @family Cloud Scheduler functions
+#' @param name Required
+#' @param region The region to run within
+#' @param projectId The projectId
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+#' @examples
+#'
+#' \dontrun{
+#'
+#' cr_schedule_get("cloud-build-test1")
+#' }
+cr_schedule_get <- function(name,
+                            region = cr_region_get(),
+                            projectId = cr_project_get()) {
+
+  the_name <- contruct_name(name = name,
+                            region = region,
+                            project = projectId)
+
+  url <- sprintf("https://cloudscheduler.googleapis.com/v1/%s", the_name)
+  # cloudscheduler.projects.locations.jobs.get
+  f <- gar_api_generator(url, "GET",
+                         data_parse_function = parse_schedule)
+  f()
+
+}
+
+#' Forces a job to run now.
+#'
+#' When this method is called, Cloud Scheduler will dispatch the job, even if the job is already running.
+#'
+#' @seealso \href{https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/run}{cloudscheduler.projects.locations.jobs.run}
+#'
+#' @family Cloud Scheduler functions
+#' @param x The name of the scheduled job or a \link{Job} object
+#' @param region The region to run within
+#' @param projectId The projectId
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+#' @examples
+#'
+#' \dontrun{
+#'
+#' cr_schedule_run("cloud-build-test1")
+#' }
+cr_schedule_run <- function(x,
+                            region = cr_region_get(),
+                            projectId = cr_project_get()) {
+
+  the_name <- contruct_name(name = extract_schedule_name(x),
+                            region = region,
+                            project = projectId)
+
+  url <- sprintf("https://cloudscheduler.googleapis.com/v1/%s:run",
+                 the_name)
+  # cloudscheduler.projects.locations.jobs.run
+  f <- gar_api_generator(url,"POST",
+                         data_parse_function = parse_schedule)
+
+  f()
+
+}
+
+#' Pauses and resumes a scheduled job.
+#'
+#' If a job is paused then the system will stop executing the job until it is re-enabled via \link{cr_schedule_resume}.
+#'
+#' @details
+#'
+#' The state of the job is stored in state; if paused it will be set to Job.State.PAUSED. A job must be in Job.State.ENABLED to be paused.
+#'
+#' @family Cloud Scheduler functions
+#' @seealso \href{https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/pause}{cloudscheduler.projects.locations.jobs.pause}
+#'
+#' @param x The name of the scheduled job or a \link{Job} object
+#' @param region The region to run within
+#' @param projectId The projectId
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+#' @examples
+#'
+#' \dontrun{
+#'
+#' cr_schedule_pause("cloud-build-test1")
+#' cr_schedule_resume("cloud-build-test1")
+#' }
+cr_schedule_pause <- function(x,
+                              region = cr_region_get(),
+                              projectId = cr_project_get()) {
+
+  the_name <- contruct_name(name = extract_schedule_name(x),
+                            region = region,
+                            project = projectId)
+
+  url <- sprintf("https://cloudscheduler.googleapis.com/v1/%s:pause",
+                 the_name)
+
+  # cloudscheduler.projects.locations.jobs.pause
+  f <- gar_api_generator(url, "POST",
+                         data_parse_function = parse_schedule)
+
+
+  f()
+
+}
+
+
+#' Resume a job.
+#'
+#' @seealso \href{https://cloud.google.com/scheduler/}{cloudscheduler.projects.locations.jobs.resume}
+#'
+#' @importFrom googleAuthR gar_api_generator
+#' @export
+#' @rdname cr_schedule_pause
+cr_schedule_resume <- function(x,
+                               region = cr_region_get(),
+                               projectId = cr_project_get()) {
+
+  the_name <- contruct_name(name = extract_schedule_name(x),
+                            region = region,
+                            project = projectId)
+
+  url <- sprintf("https://cloudscheduler.googleapis.com/v1/%s:resume",
+                 the_name)
+  # cloudscheduler.projects.locations.jobs.resume
+  f <- gar_api_generator(url, "POST",
+                         data_parse_function = parse_schedule)
+
+  f()
+
+
+}
+
+
 #' HttpTarget Object
 #'
 #' @param headers A named list of HTTP headers e.g. \code{list(Blah = "yes", Boo = "no")}
@@ -213,15 +403,39 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
 #'
 #' @family Cloud Scheduler functions
 #' @export
-Job <- function(attemptDeadline = NULL, pubsubTarget = NULL, httpTarget = NULL, timeZone = NULL,
-                description = NULL, appEngineHttpTarget = NULL, status = NULL, retryConfig = NULL,
-                state = NULL, name = NULL, lastAttemptTime = NULL, scheduleTime = NULL, schedule = NULL,
+Job <- function(attemptDeadline = NULL,
+                pubsubTarget = NULL,
+                httpTarget = NULL,
+                timeZone = NULL,
+                description = NULL,
+                appEngineHttpTarget = NULL,
+                status = NULL,
+                retryConfig = NULL,
+                state = NULL,
+                name = NULL,
+                lastAttemptTime = NULL,
+                scheduleTime = NULL,
+                schedule = NULL,
                 userUpdateTime = NULL) {
-  structure(rmNullObs(list(attemptDeadline = attemptDeadline, pubsubTarget = pubsubTarget,
-                 httpTarget = httpTarget, timeZone = timeZone, description = description,
-                 appEngineHttpTarget = appEngineHttpTarget, status = status, retryConfig = retryConfig,
-                 state = state, name = name, lastAttemptTime = lastAttemptTime, scheduleTime = scheduleTime,
-                 schedule = schedule, userUpdateTime = userUpdateTime)),
+
+  structure(rmNullObs(list(attemptDeadline = attemptDeadline,
+                           pubsubTarget = pubsubTarget,
+                           httpTarget = httpTarget,
+                           timeZone = timeZone,
+                           description = description,
+                           appEngineHttpTarget = appEngineHttpTarget,
+                           status = status,
+                           retryConfig = retryConfig,
+                           state = state,
+                           name = name,
+                           lastAttemptTime = lastAttemptTime,
+                           scheduleTime = scheduleTime,
+                           schedule = schedule,
+                           userUpdateTime = userUpdateTime)),
             class = c("gar_scheduleJob","list"))
+}
+
+is.gar_scheduleJob <- function(x){
+  inherits(x, "gar_scheduleJob")
 }
 

@@ -52,6 +52,10 @@ cr_schedule("cloud-build-test2", "12 6 * * *", overwrite=TRUE)
 \href{https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/create}{Google Documentation for Cloud Scheduler}
 
 Other Cloud Scheduler functions: \code{\link{HttpTarget}},
-  \code{\link{Job}}, \code{\link{cr_schedule_list}}
+  \code{\link{Job}}, \code{\link{cr_schedule_delete}},
+  \code{\link{cr_schedule_get}},
+  \code{\link{cr_schedule_list}},
+  \code{\link{cr_schedule_pause}},
+  \code{\link{cr_schedule_run}}
 }
 \concept{Cloud Scheduler functions}

@@ -13,8 +13,6 @@ Point your R code at a function, that automatically deploys and runs it in the G
 
 ## Install
 
-Only install available from GitHub until depedencies such as `sysreqs` and `containerit` are on CRAN
-
 ```r
 remotes::install_github("MarkEdmondson1234/googleCloudRunner")
 ```
@@ -29,7 +27,3 @@ Browse the [googleCloudRunner website](https://code.markedmondson.me/googleCloud
 * [Scheduled R in GCP using Cloud Scheduler](https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html)
 * [Use Cases](https://code.markedmondson.me/googleCloudRunner/articles/usecases.html)
 * [Function Reference](https://code.markedmondson.me/googleCloudRunner/reference/index.html)
-
-## Author's website blog
-
-See [Mark Edmondson's blog](https://code.markedmondson.me/) that covers examples and code for data science in the Google Cloud Platform

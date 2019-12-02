@@ -31,6 +31,41 @@ test_that("[Online] Test deployments", {
 
 })
 
+test_that("[Online] Test schedule jobs", {
+  skip_on_travis()
+
+  cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
+                            package = "googleCloudRunner")
+  build1 <- cr_build_make(cloudbuild)
+
+  id <- "cloud-build-test1-zzzzz"
+  fid <-
+    "projects/mark-edmondson-gde/locations/europe-west1/jobs/cloud-build-test1-zzzzz"
+
+  s1 <- cr_schedule("11 11 * * *", name=id,
+              httpTarget = cr_build_schedule_http(build1))
+  expect_equal(s1$name, fid)
+
+  s2 <- cr_schedule_get(id)
+  expect_equal(s1, s2)
+
+  s3 <- cr_schedule_pause(s1)
+  expect_equal(s3$state, "PAUSED")
+  s4 <- cr_schedule_resume(s3)
+  expect_equal(s4$state, "ENABLED")
+  s5 <- cr_schedule_run(s4)
+  expect_equal(s5$state, "ENABLED")
+  new_list <- cr_schedule_list()
+  expect_true(s4$name %in% new_list$name)
+  deleteme <- cr_schedule_delete(id)
+  expect_true(deleteme)
+  newer_list <- cr_schedule_list()
+  expect_true(!s4$name %in% newer_list$name)
+
+})
+
+
+
 test_that("[Online] Test Build Triggers",{
   skip_on_travis()
 
