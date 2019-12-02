@@ -38,6 +38,7 @@ test_that("[Online] Test schedule jobs", {
                             package = "googleCloudRunner")
   build1 <- cr_build_make(cloudbuild)
 
+  id <- "cloud-build-test1-zzzzz"
   fid <-
     "projects/mark-edmondson-gde/locations/europe-west1/jobs/cloud-build-test1-zzzzz"
 
