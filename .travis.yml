@@ -9,3 +9,5 @@ r_packages:
 - knitr
 - covr
 - drat
+after_success:
+- Rscript -e 'library("covr");codecov(line_exclusions = list("R/options.R", "R/utilities.R", "R/print_methods.R"))'
