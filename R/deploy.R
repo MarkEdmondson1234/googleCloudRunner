@@ -54,7 +54,7 @@ cr_deploy_run <- function(local,
 
   image_name <- make_image_name(image_name, projectId)
 
-  docker_build <- cr_deploy_docker(local,
+  built <- cr_deploy_docker(local,
                       image_name = image_name,
                       dockerfile = dockerfile,
                       remote = remote,
@@ -64,10 +64,6 @@ cr_deploy_run <- function(local,
                       launch_browser = launch_browser,
                       timeout=timeout,
                       task_id=task_id)
-
-  built <- cr_build_wait(docker_build,
-                         projectId = projectId,
-                         task_id=task_id)
 
   cr_run(built$results$images$name,
          name = tolower(remote),
@@ -119,8 +115,9 @@ cr_deploy_docker <- function(local,
                              projectId = cr_project_get(),
                              launch_browser = interactive(),
                              task_id=NULL){
-
+  this_job <- FALSE
   if(is.null(task_id)){
+    this_job <- TRUE
     task_id <- rstudio_add_job("Deploy Docker",
                                timeout=extract_timeout(timeout))
   }
@@ -144,11 +141,15 @@ cr_deploy_docker <- function(local,
                                     remote = remote,
                                     bucket = bucket,
                                     task_id=task_id)
-  cr_build(build_yaml,
-           source = gcs_source,
-           launch_browser = launch_browser,
-           timeout=timeout)
 
+  docker_build <- cr_build(build_yaml,
+                           source = gcs_source,
+                           launch_browser = launch_browser,
+                           timeout=timeout)
+
+  cr_build_wait(docker_build,
+                projectId = projectId,
+                task_id=task_id)
 }
 
 #' Deploy a trigger for auto-builds a pkgdown website for an R package
