@@ -133,13 +133,34 @@
 <p>Update a schedule by specifying the same name and the <code>overwrite=TRUE</code> flag. You need then need to supply what you want to change, everything else will remain as previously configured.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"my-webhook"</span>, <span class="st">"12 6 * * *"</span>, <span class="dt">overwrite=</span><span class="ot">TRUE</span>)</a></code></pre></div>
 </div>
-<div id="build-and-schedule-an-r-script" class="section level2">
+<div id="schedule-an-r-script" class="section level2">
 <h2 class="hasAnchor">
-<a href="#build-and-schedule-an-r-script" class="anchor"></a>Build and schedule an R script</h2>
-<p>Putting the above together serverlessly, to schedue an R script the steps are:</p>
+<a href="#schedule-an-r-script" class="anchor"></a>Schedule an R script</h2>
+<p>A common use case is scheduling an R script. This is provided by <code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># this can be an R filepath or lines of R read in from a script</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">r_lines &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"list.files()"</span>,</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">              <span class="st">"library(dplyr)"</span>,</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">              <span class="st">"mtcars %&gt;% select(mpg)"</span>,</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">              <span class="st">"sessionInfo()"</span>)</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co"># in this example the source is a mirrored GitHub repo</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_source.html">cr_build_source</a></span>(<span class="kw"><a href="../reference/RepoSource.html">RepoSource</a></span>(<span class="st">"googleCloudStorageR"</span>,</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">                                      <span class="dt">branchName =</span> <span class="st">"master"</span>))</a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co"># check the script runs ok</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="kw"><a href="../reference/cr_deploy_r.html">cr_deploy_r</a></span>(r_lines, <span class="dt">source =</span> source)</a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co"># schedule the script once its working</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="kw"><a href="../reference/cr_deploy_r.html">cr_deploy_r</a></span>(r_lines, <span class="dt">schedule =</span> <span class="st">"15 21 * * *"</span>, <span class="dt">source =</span> source)</a></code></pre></div>
+</div>
+<div id="build-and-schedule-an-r-script-custom" class="section level2">
+<h2 class="hasAnchor">
+<a href="#build-and-schedule-an-r-script-custom" class="anchor"></a>Build and schedule an R script (custom)</h2>
+<p>If you want to customise deployments, then the steps covered by <code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code> are covered below.</p>
+<p>To schedue an R script the steps are:</p>
 <ol style="list-style-type: decimal">
 <li>Create your R script</li>
-<li>Bundle the R script with a Dockerfile</li>
+<li>Select or build an R enabled Dockerfile to run the R code</li>
 <li>Build the Docker image on Cloud Build and push to “gcr.io/your-project/your-name”</li>
 <li>Schedule calling the Docker image using Cloud Scheduler</li>
 </ol>
@@ -152,8 +173,8 @@
 <h3 class="hasAnchor">
 <a href="#bundle-the-r-script-with-a-dockerfile" class="anchor"></a>2. Bundle the R script with a Dockerfile</h3>
 <p>You can create your own Dockerfile or you can attempt auto-creating your Dockerfile via <a href="https://github.com/o2r-project/containerit"><code>containerit</code></a> - point it at the folder with your script:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># should produce a Dockerfile you can then use for deployment</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="../reference/cr_dockerfile.html">cr_dockerfile</a></span>(<span class="st">"my-scripts/deploy_me/"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># should produce a Dockerfile you can then use for deployment</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="../reference/cr_dockerfile.html">cr_dockerfile</a></span>(<span class="st">"my-scripts/deploy_me/"</span>)</a></code></pre></div>
 <p>The <code>cr_deploy_*</code> functions call <code><a href="../reference/cr_dockerfile.html">cr_dockerfile()</a></code> if no Dockerfile is supplied in an attempt to create one automatically themselves.</p>
 </div>
 <div id="build-the-docker-image-on-cloud-build" class="section level3">
@@ -162,7 +183,7 @@
 <p>Once you have your R script and Dockerfile in the same folder, you need to build the image.</p>
 <p>For this example we first build the Docker image that will be used day to day in the schedule.</p>
 <p>This can be automated via the <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> function supplying the folder containing the Dockerfile - or if no Dockerfile is present it will attempt to create one via <code><a href="../reference/cr_dockerfile.html">cr_dockerfile()</a></code></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span>(<span class="st">"my-scripts/"</span>, <span class="st">"gcr.io/your-project/your-name"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span>(<span class="st">"my-scripts/"</span>, <span class="st">"gcr.io/your-project/your-name"</span>)</a></code></pre></div>
 </div>
 <div id="schedule-calling-the-docker-image-using-cloud-scheduler" class="section level3">
 <h3 class="hasAnchor">
@@ -183,7 +204,7 @@ cr_schedule("15 5 * * *", name="scheduled_r",
              httpTarget = cloud_build_target)
 </code></pre>
 <p>Your R script should now be scheduled and running in its own environment.</p>
-<p>You can automate updates to the script and/or Docker container or schedule seperately, by redoing any of the steps above.</p>
+<p>You can automate updates to the script and/or Docker container or schedule separately, by redoing any of the steps above.</p>
 </div>
 </div>
   </div>
@@ -195,7 +216,8 @@ cr_schedule("15 5 * * *", name="scheduled_r",
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#schedule-cloud-build">Schedule Cloud Build</a></li>
-      <li><a href="#build-and-schedule-an-r-script">Build and schedule an R script</a></li>
+      <li><a href="#schedule-an-r-script">Schedule an R script</a></li>
+      <li><a href="#build-and-schedule-an-r-script-custom">Build and schedule an R script (custom)</a></li>
       </ul>
 </div>
       </div>
