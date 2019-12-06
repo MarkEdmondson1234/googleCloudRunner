@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a build step to build and push a docker image — cr_buildstep_docker • googleCloudRunner</title>
+<title>Pauses and resumes a scheduled job. — cr_schedule_pause • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Create a build step to build and push a docker image — cr_buildstep_docker" />
-<meta property="og:description" content="Create a build step to build and push a docker image" />
+<meta property="og:title" content="Pauses and resumes a scheduled job. — cr_schedule_pause" />
+<meta property="og:description" content="If a job is paused then the system will stop executing the job until it is re-enabled via cr_schedule_resume." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,105 +149,64 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a build step to build and push a docker image</h1>
+    <h1>Pauses and resumes a scheduled job.</h1>
     
-    <div class="hidden name"><code>cr_buildstep_docker.Rd</code></div>
+    <div class="hidden name"><code>cr_schedule_pause.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create a build step to build and push a docker image</p>
+    <p>If a job is paused then the system will stop executing the job until it is re-enabled via cr_schedule_resume.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildstep_docker</span>(<span class='no'>image</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>, <span class='kw'>location</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_get.html'>cr_project_get</a></span>(), <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_schedule_pause</span>(<span class='no'>x</span>, <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_get.html'>cr_region_get</a></span>(),
+  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_get.html'>cr_project_get</a></span>())
+
+<span class='fu'>cr_schedule_resume</span>(<span class='no'>x</span>, <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_get.html'>cr_region_get</a></span>(),
+  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_get.html'>cr_project_get</a></span>())</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>image</th>
-      <td><p>The image tag that will be pushed, starting with gcr.io or created by combining with <code>projectId</code> if not starting with gcr.io</p></td>
+      <th>x</th>
+      <td><p>The name of the scheduled job or a <a href='Job.html'>Job</a> object</p></td>
     </tr>
     <tr>
-      <th>tag</th>
-      <td><p>The tag to attached to the pushed image - can use <code>Build</code> macros</p></td>
-    </tr>
-    <tr>
-      <th>location</th>
-      <td><p>Where the Dockerfile to build is in relation to <code>dir</code></p></td>
+      <th>region</th>
+      <td><p>The region to run within</p></td>
     </tr>
     <tr>
       <th>projectId</th>
       <td><p>The projectId</p></td>
     </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Further arguments passed in to <a href='cr_buildstep.html'>cr_buildstep</a></p></td>
-    </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The state of the job is stored in state; if paused it will be set to Job.State.PAUSED. A job must be in Job.State.ENABLED to be paused.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Cloud Buildsteps: <code><a href='cr_buildstep_decrypt.html'>cr_buildstep_decrypt</a></code>,
-  <code><a href='cr_buildstep_df.html'>cr_buildstep_df</a></code>,
-  <code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a></code>,
-  <code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a></code>,
-  <code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a></code>,
-  <code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a></code>,
-  <code><a href='cr_buildstep_r.html'>cr_buildstep_r</a></code>, <code><a href='cr_buildstep.html'>cr_buildstep</a></code></p></div>
+    <div class='dont-index'><p><a href='https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/pause'>cloudscheduler.projects.locations.jobs.pause</a></p>
+<p><a href='https://cloud.google.com/scheduler/'>cloudscheduler.projects.locations.jobs.resume</a></p>
+<p>Other Cloud Scheduler functions: <code><a href='HttpTarget.html'>HttpTarget</a></code>,
+  <code><a href='Job.html'>Job</a></code>, <code><a href='cr_schedule_delete.html'>cr_schedule_delete</a></code>,
+  <code><a href='cr_schedule_get.html'>cr_schedule_get</a></code>,
+  <code><a href='cr_schedule_list.html'>cr_schedule_list</a></code>,
+  <code><a href='cr_schedule_run.html'>cr_schedule_run</a></code>, <code><a href='cr_schedule.html'>cr_schedule</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"gcr.io/my-project/my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-12-06 22:08:44&gt; Image to be built: gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - build
-#&gt; - -t
-#&gt; - gcr.io/my-project/my-image:$BUILD_ID
-#&gt; - '.'
-#&gt; 
-#&gt; [[2]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - push
-#&gt; - gcr.io/my-project/my-image:$BUILD_ID
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-12-06 22:08:44&gt; Image to be built: gcr.io/mark-edmondson-gde/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - build
-#&gt; - -t
-#&gt; - gcr.io/mark-edmondson-gde/my-image:$BUILD_ID
-#&gt; - '.'
-#&gt; 
-#&gt; [[2]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - push
-#&gt; - gcr.io/mark-edmondson-gde/my-image:$BUILD_ID
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BRANCH_NAME"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-12-06 22:08:44&gt; Image to be built: gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME</span></div><div class='output co'>#&gt; [[1]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - build
-#&gt; - -t
-#&gt; - gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME
-#&gt; - '.'
-#&gt; 
-#&gt; [[2]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - push
-#&gt; - gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME
-#&gt; </div></pre>
+    <pre class="examples"><div class='input'>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+
+<span class='fu'>cr_schedule_pause</span>(<span class='st'>"cloud-build-test1"</span>)
+<span class='fu'>cr_schedule_resume</span>(<span class='st'>"cloud-build-test1"</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#details">Details</a></li>
       <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
