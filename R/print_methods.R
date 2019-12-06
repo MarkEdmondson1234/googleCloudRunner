@@ -9,6 +9,11 @@ print.BuildTriggerResponse <- function(x, ...){
   cat0("github.name: ", x$github$name)
   cat0("github.pullrequest.branch: ", x$github$pullRequest$branch)
   cat0("github.push.branch: ", x$github$push$branch)
+  cat0("triggerTemplate.repoName: ", x$triggerTemplate$repoName)
+  cat0("triggerTemplate.projectId: ", x$triggerTemplate$projectId)
+  cat0("triggerTemplate.tagName: ", x$triggerTemplate$tagName)
+  cat0("triggerTemplate.commitSha: ", x$triggerTemplate$commitSha)
+  cat0("triggerTemplate.branchName: ", x$triggerTemplate$branchName)
   cat0("filename: ", x$filename)
   if(!is.null(x$build$steps)){
     cat("\n")

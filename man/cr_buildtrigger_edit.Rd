@@ -8,9 +8,9 @@ cr_buildtrigger_edit(BuildTrigger, triggerId,
   projectId = cr_project_get())
 }
 \arguments{
-\item{BuildTrigger}{The \link{BuildTrigger} object to pass to this method}
+\item{BuildTrigger}{The \link{BuildTrigger} object to update to}
 
-\item{triggerId}{ID of the `BuildTrigger` to get or a \code{BuildTriggerResponse} object}
+\item{triggerId}{ID of the `BuildTrigger` to edit or a previous \code{BuildTriggerResponse} object that will be edited}
 
 \item{projectId}{ID of the project that owns the trigger}
 }
@@ -35,7 +35,6 @@ bt3 <- BuildTrigger(
   description = "edited trigger")
 
 edited <- cr_buildtrigger_edit(bt3, triggerId = bt2)
-# Error: API returned: trigger (1080525199262, ) not found
 
 }
 
@@ -46,6 +45,7 @@ Other BuildTrigger functions: \code{\link{BuildTrigger}},
   \code{\link{cr_buildtrigger_delete}},
   \code{\link{cr_buildtrigger_get}},
   \code{\link{cr_buildtrigger_list}},
+  \code{\link{cr_buildtrigger_make}},
   \code{\link{cr_buildtrigger_run}},
   \code{\link{cr_buildtrigger}}
 }

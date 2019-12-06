@@ -27,12 +27,15 @@ is.Yaml <- function(x){
 get_cr_yaml <- function(x){
   if(is.Yaml(x)){
     return(x)
+  } else if(assertthat::is.string(x)){
+    # its a yaml file
+    assert_that(
+      is.readable(x),
+      grepl("\\.ya?ml$", x, ignore.case = TRUE)
+    )
+  } else {
+    stop("Yaml is not class(yaml) or a filepath - class:", class(x))
   }
-  # its a yaml file
-  assert_that(
-    is.readable(x),
-    grepl("\\.ya?ml$", x, ignore.case = TRUE)
-  )
 
   read_yaml(x)
 }

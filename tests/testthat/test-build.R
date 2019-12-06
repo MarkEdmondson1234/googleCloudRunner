@@ -77,6 +77,7 @@ test_that("[Online] Test Build Triggers",{
   github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner",
                                branch = "master")
 
+
   ss <- list(`_MYVAR` = "TEST1",
              `_GITHUB` = "MarkEdmondson1234/googleCloudRunner")
 
@@ -94,22 +95,41 @@ test_that("[Online] Test Build Triggers",{
   expect_equal(bt2$github$owner, "MarkEdmondson1234")
   expect_equal(bt2$filename, "inst/cloudbuild/cloudbuild.yaml")
 
+  # needs to be mirrored from GitHub or created with Google Cloud Repositories
+  repo <- RepoSource("googleCloudStorageR",
+                     projectId = cr_project_get(),
+                     tagName = "v0.5.1")
+  gcs_repo <- "gcs-repo-test1zzzz"
+  my_build <- cr_build_make(
+    Yaml(steps = cr_buildstep_r("list.files()"))
+  )
+
+  bt_repo <- cr_buildtrigger(
+    gcs_repo,
+    trigger = repo,
+    build = my_build
+  )
+
   new_list <- cr_buildtrigger_list()
 
   expect_true(bt1$id %in% new_list$id)
   expect_true(bt2$id %in% new_list$id)
   expect_true(bt2$name %in% new_list$name)
+  expect_true(bt_repo$id %in% new_list$id)
 
-  # I don't think the API works #16
-  # bt3 <- BuildTrigger(
-  #   filename = "inst/cloudbuild/cloudbuild.yaml",
-  #   name = "edited1",
-  #   tags = "edit",
-  #   github = github,
-  #   disabled = TRUE,
-  #   description = "edited trigger"
-  # )
-  # edited <- cr_buildtrigger_edit(bt3, triggerId = bt2)
+  my_build2 <- cr_build_make(
+    Yaml(steps = cr_buildstep_r("list.files(full.names=TRUE)"))
+    )
+
+  bt3 <- cr_buildtrigger_make(
+    trigger = repo,
+    build = my_build2,
+    name = "edited1",
+    tags = "edit",
+    disabled = TRUE,
+    description = "edited trigger"
+  )
+  edited <- cr_buildtrigger_edit(bt3, triggerId = bt_repo)
 
   washup1 <- cr_buildtrigger_delete(bt1)
   washup2 <- cr_buildtrigger_delete(bt2$id)
@@ -118,10 +138,12 @@ test_that("[Online] Test Build Triggers",{
 
   newer_list <- cr_buildtrigger_list()
 
+  expect_true(edited$id %in% newer_list$id)
   expect_true(!bt1$id %in% newer_list$id)
   expect_true(!bt2$id %in% newer_list$id)
   expect_true(!bt2$name %in% newer_list$name)
 
+  washup3 <- cr_buildtrigger_delete(edited)
 
 })
 

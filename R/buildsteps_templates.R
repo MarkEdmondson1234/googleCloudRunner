@@ -57,13 +57,12 @@ cr_buildstep_r <- function(r,
     is.null(dots$name),
     is.null(dots$prefix)
   )
-
   rchars <- r
   if(r_source == "local"){
     assert_that(is.character(r))
 
     rchars <- r
-    if(grepl("\\.R", r[[1]], ignore.case = TRUE)){
+    if(grepl("\\.R$", r[[1]], ignore.case = TRUE)){
       # filepath
       assert_that(is.readable(r), is.string(r))
       rchars <- readLines(r)

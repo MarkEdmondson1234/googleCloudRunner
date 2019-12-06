@@ -11,7 +11,7 @@ cr_deploy_pkgdown(trigger, steps = NULL,
   build_image = "gcr.io/gcer-public/packagetools:master")
 }
 \arguments{
-\item{trigger}{The trigger which will be a \link{RepoSource} or a \link{GitHubEventsConfig}}
+\item{trigger}{The trigger source which will be a \link{RepoSource} or a \link{GitHubEventsConfig}}
 
 \item{steps}{extra steps to run before the pkgdown website steps run}
 

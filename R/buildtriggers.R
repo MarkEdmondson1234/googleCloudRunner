@@ -24,9 +24,9 @@ cr_buildtrigger_get <- function(triggerId,
 #'
 #' Seems not to work at the moment (issue #16)
 #'
-#' @param BuildTrigger The \link{BuildTrigger} object to pass to this method
+#' @param BuildTrigger The \link{BuildTrigger} object to update to
 #' @param projectId ID of the project that owns the trigger
-#' @param triggerId ID of the `BuildTrigger` to get or a \code{BuildTriggerResponse} object
+#' @param triggerId ID of the `BuildTrigger` to edit or a previous \code{BuildTriggerResponse} object that will be edited
 #' @importFrom googleAuthR gar_api_generator
 #' @family BuildTrigger functions
 #'
@@ -48,7 +48,6 @@ cr_buildtrigger_get <- function(triggerId,
 #'   description = "edited trigger")
 #'
 #' edited <- cr_buildtrigger_edit(bt3, triggerId = bt2)
-#' # Error: API returned: trigger (1080525199262, ) not found
 #'
 #' }
 #'
@@ -58,13 +57,14 @@ cr_buildtrigger_edit <- function(BuildTrigger,
                                  projectId = cr_project_get()) {
 
     triggerId <- get_buildTriggerResponseId(triggerId)
+    BuildTrigger$id <- triggerId
 
     url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers/%s",
         projectId, triggerId)
     # cloudbuild.projects.triggers.patch
     f <- gar_api_generator(url, "PATCH",
                            data_parse_function = as.buildTriggerResponse,
-                           checkTrailingSlash = FALSE)
+                           checkTrailingSlash = TRUE)
     stopifnot(inherits(BuildTrigger, "BuildTrigger"))
 
     f(the_body = BuildTrigger)
@@ -127,7 +127,7 @@ parse_buildtrigger_list <- function(x){
 #' Creates a new `BuildTrigger`.This API is experimental.
 #'
 #' @inheritParams BuildTrigger
-#' @param trigger The trigger which will be a \link{RepoSource} or a \link{GitHubEventsConfig}
+#' @param trigger The trigger source which will be a \link{RepoSource} or a \link{GitHubEventsConfig}
 #' @param build A file location within the trigger source to use for the build steps, or a \link{Build} object
 #' @param projectId ID of the project for which to configure automatic builds
 #' @importFrom googleAuthR gar_api_generator
@@ -231,6 +231,16 @@ cr_buildtrigger_run <- function(triggerId,
 
 }
 
+#' Create a buildtrigger object
+#' @family BuildTrigger functions
+#' @inheritDotParams cr_buildtrigger
+#' @export
+cr_buildtrigger_make <- function(...){
+
+  buildtrigger_make(...)
+
+}
+
 
 buildtrigger_make <- function(name,
                               trigger,
@@ -248,7 +258,7 @@ buildtrigger_make <- function(name,
     UseMethod("buildtrigger_make", trigger)
 }
 
-buildtrigger_make.RepoSource <- function(name,
+buildtrigger_make.gar_RepoSource <- function(name,
                                             trigger,
                                             build,
                                             description = NULL,

@@ -12,7 +12,7 @@ cr_buildtrigger(name, trigger, build,
 \arguments{
 \item{name}{User assigned name of the trigger}
 
-\item{trigger}{The trigger which will be a \link{RepoSource} or a \link{GitHubEventsConfig}}
+\item{trigger}{The trigger source which will be a \link{RepoSource} or a \link{GitHubEventsConfig}}
 
 \item{build}{A file location within the trigger source to use for the build steps, or a \link{Build} object}
 
@@ -58,6 +58,7 @@ Other BuildTrigger functions: \code{\link{BuildTrigger}},
   \code{\link{cr_buildtrigger_edit}},
   \code{\link{cr_buildtrigger_get}},
   \code{\link{cr_buildtrigger_list}},
+  \code{\link{cr_buildtrigger_make}},
   \code{\link{cr_buildtrigger_run}}
 }
 \concept{BuildTrigger functions}
