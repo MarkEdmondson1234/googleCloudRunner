@@ -8,7 +8,7 @@ cr_buildstep_r(r, name = "r-base", r_source = c("local", "runtime"),
   prefix = "rocker/", ...)
 }
 \arguments{
-\item{r}{R code to run or a file containing R code - see details}
+\item{r}{R code to run or a file containing R code}
 
 \item{name}{The docker image that will run the R code, usually from rocker-project.org}
 
@@ -44,7 +44,7 @@ cr_buildstep_r("inst/schedule/schedule.R", r_source = "runtime")
 # use a different Rocker image e.g. rocker/verse
 cr_buildstep_r(c("library(dplyr)",
                  "mtcars \%>\% select(mpg)",
-                 "sessionInfo"),
+                 "sessionInfo()"),
                name = "verse")
 
 # use your own R image with custom R

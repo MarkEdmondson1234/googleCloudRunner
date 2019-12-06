@@ -5,6 +5,7 @@
 #' @seealso https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/create
 #'
 #' @param build A \link{Build} object created via \link{cr_build_make} or \link{cr_build}
+#' @param email The email that will authenticate the job set via \link{cr_email_set}
 #' @param projectId The projectId
 #'
 #' @return A \link{HttpTarget} object for use in \link{cr_schedule}
@@ -32,7 +33,9 @@
 #'
 #' }
 #'
-cr_build_schedule_http <- function(build, projectId = cr_project_get()){
+cr_build_schedule_http <- function(build,
+                                   email = cr_email_get(),
+                                   projectId = cr_project_get()){
 
   build <- as.gar_Build(build)
   build <- safe_set(build, "status", "QUEUED")
@@ -42,7 +45,7 @@ cr_build_schedule_http <- function(build, projectId = cr_project_get()){
     uri = sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds",
                   projectId),
     body = build,
-    oauthToken = list(serviceAccountEmail = cr_email_get())
+    oauthToken = list(serviceAccountEmail = email)
   )
 }
 

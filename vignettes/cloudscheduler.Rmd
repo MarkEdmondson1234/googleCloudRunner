@@ -33,12 +33,38 @@ Update a schedule by specifying the same name and the `overwrite=TRUE` flag.  Yo
 ```r
 cr_schedule("my-webhook", "12 6 * * *", overwrite=TRUE)
 ```
-## Build and schedule an R script
 
-Putting the above together serverlessly, to schedue an R script the steps are:
+## Schedule an R script
+
+A common use case is scheduling an R script.  This is provided by `cr_deploy_r()`
+
+```r
+# this can be an R filepath or lines of R read in from a script
+r_lines <- c("list.files()",
+              "library(dplyr)",
+              "mtcars %>% select(mpg)",
+              "sessionInfo()")
+
+# in this example the source is a mirrored GitHub repo
+source <- cr_build_source(RepoSource("googleCloudStorageR",
+                                      branchName = "master"))
+
+# check the script runs ok
+cr_deploy_r(r_lines, source = source)
+
+# schedule the script once its working
+cr_deploy_r(r_lines, schedule = "15 21 * * *", source = source)
+
+```
+
+## Build and schedule an R script (custom)
+
+If you want to customise deployments, then the steps covered by `cr_deploy_r()` are covered below.
+
+To schedue an R script the steps are:
 
 1. Create your R script 
-2. Bundle the R script with a Dockerfile
+2. Select or build an R enabled Dockerfile to run the R code
 3. Build the Docker image on Cloud Build and push to "gcr.io/your-project/your-name"
 4. Schedule calling the Docker image using Cloud Scheduler
 
@@ -92,5 +118,5 @@ cr_schedule("15 5 * * *", name="scheduled_r",
 
 Your R script should now be scheduled and running in its own environment.
 
-You can automate updates to the script and/or Docker container or schedule seperately, by redoing any of the steps above. 
+You can automate updates to the script and/or Docker container or schedule separately, by redoing any of the steps above. 
 

@@ -10,7 +10,7 @@ cr_build(x, source = NULL, timeout = NULL, images = NULL,
 \arguments{
 \item{x}{A cloudbuild.yaml file location or an R object that will be turned into yaml via \link[yaml]{as.yaml} or a \link{Build} object created by \link{cr_build_make} or from a previous build you want to rerun.}
 
-\item{source}{A \link{Source} object specifying the location of the source files to build}
+\item{source}{A \link{Source} object specifying the location of the source files to build, usually created by \link{cr_build_source}}
 
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
 

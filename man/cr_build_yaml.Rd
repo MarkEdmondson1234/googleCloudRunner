@@ -25,7 +25,7 @@ cr_build_yaml(steps, timeout = NULL, logsBucket = NULL,
 
 \item{images}{What images will be build from this cloudbuild}
 
-\item{artificats}{What artifacts may be built from this cloudbuild}
+\item{artifacts}{What artifacts may be built from this cloudbuild}
 }
 \description{
 This can be written to disk or used directly with functions such as \link{cr_build}

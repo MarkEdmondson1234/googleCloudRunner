@@ -2,7 +2,7 @@
 #'
 #' Helper to run R code within build steps, from either an existing local R file or within the source of the build.
 #'
-#' @param r R code to run or a file containing R code - see details
+#' @param r R code to run or a file containing R code
 #' @param name The docker image that will run the R code, usually from rocker-project.org
 #' @param r_source Whether the R code will be from a runtime file within the source or at build time copying over from a local R file in your session
 #' @param ... Other arguments passed to \link{cr_buildstep}
@@ -33,7 +33,7 @@
 #' # use a different Rocker image e.g. rocker/verse
 #' cr_buildstep_r(c("library(dplyr)",
 #'                  "mtcars %>% select(mpg)",
-#'                  "sessionInfo"),
+#'                  "sessionInfo()"),
 #'                name = "verse")
 #'
 #' # use your own R image with custom R
@@ -50,6 +50,12 @@ cr_buildstep_r <- function(r,
                            ...){
 
   r_source <- match.arg(r_source)
+
+  # catches name=rocker/verse etc.
+  if(dirname(name) == "rocker"){
+     name <- basename(name)
+  }
+
   # don't allow dot names that would break things
   dots <- list(...)
   assert_that(

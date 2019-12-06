@@ -125,7 +125,7 @@ extract_logs <- function(o){
 #' @seealso https://cloud.google.com/cloud-build/docs/build-config
 #'
 #' @inheritParams cr_build
-#' @param yaml A \link{Yaml} object created from \link{cr_build_yaml} or a file location of a .yaml/.yml cloud build file
+#' @param yaml A \code{Yaml} object created from \link{cr_build_yaml} or a file location of a .yaml/.yml cloud build file
 #' @export
 #' @import assertthat
 #' @family Cloud Build functions
@@ -142,6 +142,8 @@ cr_build_make <- function(yaml,
   assert_that(
     is.string(projectId)
   )
+
+  timeout <- check_timeout(timeout)
 
   stepsy <- get_cr_yaml(yaml)
   if(is.null(stepsy$steps)){
@@ -312,7 +314,7 @@ is.gar_Build <- function(x){
 #' @details
 #' A build resource in the Cloud Build API.
 #'
-#' At a high level, a `Build` describes where to find source code, how to buildit (for example, the builder image to run on the source), and where to store the built artifacts.
+#' At a high level, a `Build` describes where to find source code, how to build it (for example, the builder image to run on the source), and where to store the built artifacts.
 #'
 #' @section Build Macros:
 #' Fields can include the following variables, which will be expanded when the build is created:-
@@ -345,7 +347,7 @@ is.gar_Build <- function(x){
 #' @param projectId Output only
 #' @param logUrl Output only
 #' @param finishTime Output only
-#' @param source A \link{Source} object specifying the location of the source files to build
+#' @param source A \link{Source} object specifying the location of the source files to build, usually created by \link{cr_build_source}
 #' @param options Special options for this build
 #' @param timeout Amount of time that this build should be allowed to run, to second
 #' @param status Output only
