@@ -39,7 +39,7 @@ cr_buildstep_pkgdown("$_GITHUB_REPO",
 steps <- cr_buildstep_pkgdown("$_GITHUB_REPO",
                      "cloudbuild@google.com",
                      env = c("MYVAR=$_MY_VAR", "PROJECT=$PROJECT_ID"))
-build_yaml <- Yaml(steps = steps)
+build_yaml <- cr_build_yaml(steps = steps)
 my_source <- cr_build_source(RepoSource("my_repo", branch="master"))
 build <- cr_build_make(build_yaml, source = my_source)
 }

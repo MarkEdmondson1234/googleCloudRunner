@@ -33,7 +33,8 @@ my_repo_source
 \dontrun{
 
 # build from a cloudbuild.yaml file
-cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml", package="googleCloudRunner")
+cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml",
+                               package="googleCloudRunner")
 
 # asynchronous, will launch log browser by default
 b1 <- cr_build(cloudbuild_file)
@@ -52,7 +53,8 @@ build1 <- cr_build(cloudbuild_file,
 build2 <- cr_build(cloudbuild_file,
                    source = my_repo_source)
 
-# you can send in results for previous builds to trigger the same build under a new Id
+# you can send in results for previous builds to trigger
+# the same build under a new Id
 # will trigger build2 again
 cr_build(build2)
 

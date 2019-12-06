@@ -193,7 +193,7 @@ cr_buildstep_docker <- function(image,
 #' @examples
 #'
 #' # assumes you have previously saved git ssh key via KMS called "git_key"
-#' Yaml(
+#' cr_build_yaml(
 #'      steps = c(
 #'           cr_buildstep_gitsetup("my_keyring", "git_key"),
 #'           cr_buildstep_git(c("clone",
@@ -224,7 +224,6 @@ cr_buildstep_gitsetup <- function(keyring = "my-keyring",
                          keyring = keyring,
                          key = key,
                          volumes = git_volume()),
-    #TODO: pull in the host_file in inst/ssh/host_file
     cr_buildstep_extract(bs, 2)
   )
 }
@@ -287,7 +286,7 @@ cr_buildstep_git <- function(
 #' steps <- cr_buildstep_pkgdown("$_GITHUB_REPO",
 #'                      "cloudbuild@google.com",
 #'                      env = c("MYVAR=$_MY_VAR", "PROJECT=$PROJECT_ID"))
-#' build_yaml <- Yaml(steps = steps)
+#' build_yaml <- cr_build_yaml(steps = steps)
 #' my_source <- cr_build_source(RepoSource("my_repo", branch="master"))
 #' build <- cr_build_make(build_yaml, source = my_source)
 cr_buildstep_pkgdown <- function(

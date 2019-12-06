@@ -7,7 +7,7 @@
 cr_build_write(x, file = "cloudbuild.yaml")
 }
 \arguments{
-\item{x}{A \link{Build} object perhaps created with \link{cr_build_make} or \link{Yaml} created}
+\item{x}{A \link{Build} object perhaps created with \link{cr_build_make} or \link{cr_build_yaml}}
 
 \item{file}{Where to write the yaml file}
 }
@@ -18,7 +18,7 @@ Write out a Build object to cloudbuild.yaml
 
 # write from creating a Yaml object
 image = "gcr.io/my-project/my-image$BUILD_ID"
-run_yaml <- Yaml(steps = c(
+run_yaml <- cr_build_yaml(steps = c(
     cr_buildstep("docker", c("build","-t",image,".")),
     cr_buildstep("docker", c("push",image)),
     cr_buildstep("gcloud", c("beta","run","deploy", "test1", "--image", image))),
@@ -30,8 +30,5 @@ build <- cr_build_make(system.file("cloudbuild/cloudbuild.yaml",
                                    package = "googleCloudRunner"))
 cr_build_write(build)
 
-}
-\seealso{
-Other Cloud Build functions, yaml functions: \code{\link{Yaml}}
 }
 \concept{Cloud Build functions, yaml functions}

@@ -51,7 +51,7 @@ Or you can add your own custom variables, set in the Build Trigger.  Custom vari
 
 # creating yaml for use in deploying cloud run
 image = "gcr.io/my-project/my-image:$BUILD_ID"
-Yaml(
+cr_build_yaml(
     steps = c(
          cr_buildstep("docker", c("build","-t",image,".")),
          cr_buildstep("docker", c("push",image)),
@@ -61,7 +61,7 @@ Yaml(
 
 # use premade docker buildstep - combine using c()
 image = "gcr.io/my-project/my-image"
-Yaml(
+cr_build_yaml(
     steps = c(cr_buildstep_docker(image),
               cr_buildstep("gcloud",
                      args = c("beta","run","deploy",
@@ -70,7 +70,8 @@ Yaml(
     images = image)
 
 # list files with a new entrypoint for gcloud
-Yaml(steps = cr_buildstep("gcloud", c("-c","ls -la"), entrypoint = "bash"))
+cr_build_yaml(steps = cr_buildstep("gcloud", c("-c","ls -la"),
+                                   entrypoint = "bash"))
 
 # to call from images not using gcr.io/cloud-builders stem
 cr_buildstep("alpine", c("-c","ls -la"), entrypoint = "bash", prefix="")

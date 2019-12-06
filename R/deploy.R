@@ -127,7 +127,7 @@ cr_deploy_docker <- function(local,
 
   image <- make_image_name(image_name, projectId = projectId)
 
-  build_yaml <- Yaml(
+  build_yaml <- cr_build_yaml(
     steps = cr_buildstep_docker(image,
                                 tag = tag,
                                 location = ".",
@@ -193,7 +193,7 @@ cr_deploy_pkgdown <- function(trigger,
   github_repo <- extract_repo(trigger)
 
   build_yaml <-
-    Yaml(steps = c(steps,
+    cr_build_yaml(steps = c(steps,
                    cr_buildstep_pkgdown("$_GIT_REPO",
                                       git_email = git_email,
                                       env = env))

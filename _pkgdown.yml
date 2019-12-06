@@ -53,7 +53,6 @@ reference:
       - Source
       - RepoSource
       - StorageSource
-      - Yaml
   - title: "Cloud Build creation functions"
     desc: >
       Functions for creation of cloudbuild.yaml files and build steps

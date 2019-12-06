@@ -100,7 +100,7 @@ test_that("[Online] Test Build Triggers",{
                      tagName = "v0.5.1")
   gcs_repo <- "gcs-repo-test1zzzz"
   my_build <- cr_build_make(
-    Yaml(steps = cr_buildstep_r("list.files()"))
+    cr_build_yaml(steps = cr_buildstep_r("list.files()"))
   )
 
   bt_repo <- cr_buildtrigger(
@@ -117,7 +117,7 @@ test_that("[Online] Test Build Triggers",{
   expect_true(bt_repo$id %in% new_list$id)
 
   my_build2 <- cr_build_make(
-    Yaml(steps = cr_buildstep_r("list.files(full.names=TRUE)"))
+    cr_build_yaml(steps = cr_buildstep_r("list.files(full.names=TRUE)"))
     )
 
   bt3 <- cr_buildtrigger_make(
@@ -197,7 +197,7 @@ test_that("Building Build Objects", {
 
   # write from creating a Yaml object
   image = "gcr.io/my-project/my-image"
-  run_yaml <- Yaml(steps = c(cr_buildstep_docker(image, dir = "deploy"),
+  run_yaml <- cr_build_yaml(steps = c(cr_buildstep_docker(image, dir = "deploy"),
                              cr_buildstep("gcloud",
                                           c("beta","run","deploy", "test1",
                                             "--image", image), dir="deploy")),
@@ -302,7 +302,7 @@ test_that("Render BuildStep objects", {
   expect_equal(edit3[[1]]$name, "gcr.io/blah")
   expect_equal(edit4[[1]]$dir, "blah")
 
-  git_yaml <- Yaml(
+  git_yaml <- cr_build_yaml(
     steps = c(
       cr_buildstep_gitsetup("my_keyring", "git_key"),
       cr_buildstep_git(c("clone", "git@github.com:github_name/repo_name"))

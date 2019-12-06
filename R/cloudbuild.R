@@ -24,7 +24,8 @@
 #' \dontrun{
 #'
 #' # build from a cloudbuild.yaml file
-#' cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml", package="googleCloudRunner")
+#' cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml",
+#'                                package="googleCloudRunner")
 #'
 #' # asynchronous, will launch log browser by default
 #' b1 <- cr_build(cloudbuild_file)
@@ -43,7 +44,8 @@
 #' build2 <- cr_build(cloudbuild_file,
 #'                    source = my_repo_source)
 #'
-#' # you can send in results for previous builds to trigger the same build under a new Id
+#' # you can send in results for previous builds to trigger
+#' # the same build under a new Id
 #' # will trigger build2 again
 #' cr_build(build2)
 #'
@@ -61,10 +63,8 @@ cr_build <- function(x,
     is.string(projectId)
   )
 
-  if(!is.null(timeout)){
-    assert_that(is.numeric(timeout))
-    timeout <- paste0(as.integer(timeout),"s")
-  }
+  timeout <- check_timeout(timeout)
+
   url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds",
                  projectId)
 
@@ -125,7 +125,7 @@ extract_logs <- function(o){
 #' @seealso https://cloud.google.com/cloud-build/docs/build-config
 #'
 #' @inheritParams cr_build
-#' @param yaml A \link{Yaml} object or a file location of a .yaml/.yml cloud build file
+#' @param yaml A \link{Yaml} object created from \link{cr_build_yaml} or a file location of a .yaml/.yml cloud build file
 #' @export
 #' @import assertthat
 #' @family Cloud Build functions
@@ -411,7 +411,7 @@ Build <- function(Build.substitutions = NULL,
 
 #' Write out a Build object to cloudbuild.yaml
 #'
-#' @param x A \link{Build} object perhaps created with \link{cr_build_make} or \link{Yaml} created
+#' @param x A \link{Build} object perhaps created with \link{cr_build_make} or \link{cr_build_yaml}
 #' @param file Where to write the yaml file
 #'
 #' @export
@@ -420,7 +420,7 @@ Build <- function(Build.substitutions = NULL,
 #'
 #' # write from creating a Yaml object
 #' image = "gcr.io/my-project/my-image$BUILD_ID"
-#' run_yaml <- Yaml(steps = c(
+#' run_yaml <- cr_build_yaml(steps = c(
 #'     cr_buildstep("docker", c("build","-t",image,".")),
 #'     cr_buildstep("docker", c("push",image)),
 #'     cr_buildstep("gcloud", c("beta","run","deploy", "test1", "--image", image))),
@@ -439,7 +439,7 @@ cr_build_write <- function(x, file = "cloudbuild.yaml"){
 
 #' @export
 cr_build_write.gar_Build <- function(x, file = "cloudbuild.yaml"){
-  o <- rmNullObs(Yaml(
+  o <- rmNullObs(cr_build_yaml(
     steps = x$steps,
     images = x$images
   ))
