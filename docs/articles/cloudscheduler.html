@@ -152,6 +152,15 @@
 <a class="sourceLine" id="cb4-13" data-line-number="13"></a>
 <a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co"># schedule the script once its working</span></a>
 <a class="sourceLine" id="cb4-15" data-line-number="15"><span class="kw"><a href="../reference/cr_deploy_r.html">cr_deploy_r</a></span>(r_lines, <span class="dt">schedule =</span> <span class="st">"15 21 * * *"</span>, <span class="dt">source =</span> source)</a></code></pre></div>
+<p>You may want to customise the R docker image you run code from - in this case build your docker image first with your R libraries installed, then specify that image in your R deployment:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span>(<span class="st">"my_folder_with_dockerfile"</span>, </a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">                 <span class="dt">image_name =</span> <span class="st">"gcr.io/my-project/my-image"</span>,</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">                 <span class="dt">tag =</span> <span class="st">"dev"</span>)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="kw"><a href="../reference/cr_deploy_r.html">cr_deploy_r</a></span>(r_lines, </a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">            <span class="dt">schedule =</span> <span class="st">"15 21 * * *"</span>, </a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">            <span class="dt">source =</span> source,</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">            <span class="dt">r_image =</span> <span class="st">"gcr.io/my-project/my-image:dev"</span>)</a></code></pre></div>
 </div>
 <div id="build-and-schedule-an-r-script-custom" class="section level2">
 <h2 class="hasAnchor">
@@ -173,8 +182,8 @@
 <h3 class="hasAnchor">
 <a href="#bundle-the-r-script-with-a-dockerfile" class="anchor"></a>2. Bundle the R script with a Dockerfile</h3>
 <p>You can create your own Dockerfile or you can attempt auto-creating your Dockerfile via <a href="https://github.com/o2r-project/containerit"><code>containerit</code></a> - point it at the folder with your script:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># should produce a Dockerfile you can then use for deployment</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="../reference/cr_dockerfile.html">cr_dockerfile</a></span>(<span class="st">"my-scripts/deploy_me/"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># should produce a Dockerfile you can then use for deployment</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw"><a href="../reference/cr_dockerfile.html">cr_dockerfile</a></span>(<span class="st">"my-scripts/deploy_me/"</span>)</a></code></pre></div>
 <p>The <code>cr_deploy_*</code> functions call <code><a href="../reference/cr_dockerfile.html">cr_dockerfile()</a></code> if no Dockerfile is supplied in an attempt to create one automatically themselves.</p>
 </div>
 <div id="build-the-docker-image-on-cloud-build" class="section level3">
@@ -183,7 +192,7 @@
 <p>Once you have your R script and Dockerfile in the same folder, you need to build the image.</p>
 <p>For this example we first build the Docker image that will be used day to day in the schedule.</p>
 <p>This can be automated via the <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> function supplying the folder containing the Dockerfile - or if no Dockerfile is present it will attempt to create one via <code><a href="../reference/cr_dockerfile.html">cr_dockerfile()</a></code></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span>(<span class="st">"my-scripts/"</span>, <span class="st">"gcr.io/your-project/your-name"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span>(<span class="st">"my-scripts/"</span>, <span class="st">"gcr.io/your-project/your-name"</span>)</a></code></pre></div>
 </div>
 <div id="schedule-calling-the-docker-image-using-cloud-scheduler" class="section level3">
 <h3 class="hasAnchor">
