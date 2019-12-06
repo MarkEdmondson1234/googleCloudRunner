@@ -54,7 +54,19 @@ cr_deploy_r(r_lines, source = source)
 
 # schedule the script once its working
 cr_deploy_r(r_lines, schedule = "15 21 * * *", source = source)
+```
 
+You may want to customise the R docker image you run code from - in this case build your docker image first with your R libraries installed, then specify that image in your R deployment:
+
+```r
+cr_deploy_docker("my_folder_with_dockerfile", 
+                 image_name = "gcr.io/my-project/my-image",
+                 tag = "dev")
+
+cr_deploy_r(r_lines, 
+            schedule = "15 21 * * *", 
+            source = source,
+            r_image = "gcr.io/my-project/my-image:dev")
 ```
 
 ## Build and schedule an R script (custom)

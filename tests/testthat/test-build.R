@@ -196,14 +196,14 @@ test_that("Building Build Objects", {
                 projectId = "dummy-project")
   expect_true(googleCloudRunner:::is.gar_Build(bq))
   expect_equal(bq$images, "gcr.io/my-project/demo")
-  expect_equal(bq$timeout, 10)
+  expect_equal(bq$timeout, "10s")
   expect_equal(bq$steps[[1]]$name, "gcr.io/cloud-builders/docker")
   expect_equal(bq$steps[[2]]$name, "alpine")
   expect_equal(bq$source$storageSource$bucket, "gs://my-bucket")
 
   bq2 <- cr_build_make(yaml = yaml,
                       source = my_repo_source,
-                      timeout = 11,
+                      timeout = "11s",
                       images = "gcr.io/my-project/demo",
                       projectId = "dummy-project")
   expect_true(googleCloudRunner:::is.gar_Build(bq2))

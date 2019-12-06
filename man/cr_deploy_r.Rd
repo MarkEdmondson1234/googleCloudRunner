@@ -20,9 +20,9 @@ cr_deploy_r(r, schedule = NULL, source = NULL, run_name = NULL,
 
 \item{r_image}{The R docker environment exectuting the R code}
 
-\item{pre_steps}{Other \link{cr_buildsteps} to run before the R code executes}
+\item{pre_steps}{Other \link{cr_buildstep} to run before the R code executes}
 
-\item{post_steps}{Other \link{cr_buildsteps} to run after the R code executes}
+\item{post_steps}{Other \link{cr_buildstep} to run after the R code executes}
 
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
 
@@ -65,3 +65,9 @@ cr_deploy_r(r_lines, schedule = "15 21 * * *", source = source)
 }
 
 }
+\seealso{
+Other Deployment functions: \code{\link{cr_deploy_docker}},
+  \code{\link{cr_deploy_pkgdown}},
+  \code{\link{cr_deploy_run}}
+}
+\concept{Deployment functions}

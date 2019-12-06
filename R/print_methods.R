@@ -51,6 +51,13 @@ print.gar_Build <- function(x, ...){
   cat0("buildId: ", x$id)
   cat0("status: ", x$status)
   cat0("logUrl: ", x$logUrl)
+  cat0("timeout: ", x$timeout)
+  cat0("logsBucket: ", x$logsBucket)
+  cat0("options: ", x$options)
+  cat0("substitutions: ", x$substitution)
+  cat0("tags: ", x$tags)
+  cat0("secrets: ", x$secrets)
+  cat0("artifacts: ", x$artifacts)
   if(!is.null(x$steps)){
     cat("steps:\n")
     if(is.data.frame(x$steps)){
