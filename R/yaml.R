@@ -10,7 +10,7 @@
 #' @param tags Tags for the build
 #' @param secrets A secrets object
 #' @param images What images will be build from this cloudbuild
-#' @param artificats What artifacts may be built from this cloudbuild
+#' @param artifacts What artifacts may be built from this cloudbuild
 #'
 #' @export
 #' @family Cloud Build functions

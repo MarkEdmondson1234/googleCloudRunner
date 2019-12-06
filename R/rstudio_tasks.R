@@ -1,4 +1,3 @@
-
 rstudio_add_job <- function(task_name, timeout){
   if(!rstudioapi::isAvailable()) return(NULL)
 
