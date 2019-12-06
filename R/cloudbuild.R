@@ -415,7 +415,7 @@ Build <- function(Build.substitutions = NULL,
 #' @param file Where to write the yaml file
 #'
 #' @export
-#' @family Cloud Build functions, yaml functions
+#' @family Cloud Build functions
 #' @examples
 #'
 #' # write from creating a Yaml object

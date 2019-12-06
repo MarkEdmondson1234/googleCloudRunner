@@ -69,6 +69,7 @@ Other Cloud Build functions: \code{\link{Build}},
   \code{\link{StorageSource}}, \code{\link{cr_build_make}},
   \code{\link{cr_build_status}},
   \code{\link{cr_build_upload_gcs}},
-  \code{\link{cr_build_wait}}
+  \code{\link{cr_build_wait}},
+  \code{\link{cr_build_write}}, \code{\link{cr_build_yaml}}
 }
 \concept{Cloud Build functions}
