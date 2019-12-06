@@ -52,9 +52,9 @@ cr_deploy_gadget <- function(){
 
     ## Your reactive logic goes here.
     output$rSourceDyn <- shiny::renderUI({
-      shiny::req(input$rSourceDyn)
+      shiny::req(input$rSource)
 
-      ss <- input$rSourceDyn
+      ss <- input$rSource
       if(ss == "None"){
         return(NULL)
       } else if(ss == "CloudRepository"){
@@ -62,7 +62,7 @@ cr_deploy_gadget <- function(){
           shiny::tagList(
             shiny::textInput("source1", label = "repoName",
                              placeholder = "MarkEdmondson1234/googleCloudRunner"),
-            shiny::textInput("source2", label = "branchName",
+            shiny::textInput("source2", label = "branchName regex",
                              value = ".*")
           )
         )

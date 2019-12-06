@@ -307,7 +307,6 @@ cr_buildstep_pkgdown <- function(
   pd <- system.file("cloudbuild/cloudbuild_pkgdown.yml",
                     package = "googleCloudRunner")
 
-
   # In yaml.load: NAs introduced by coercion: . is not a real
   pdb <- suppressWarnings(cr_build_make(pd))
 
@@ -321,11 +320,12 @@ cr_buildstep_pkgdown <- function(
                           cipher = cipher),
     cr_buildstep_git(c("clone",repo, "repo")),
     pkg_env,
-    cr_buildstep_git(c("add", "."), dir = "repo"),
+    cr_buildstep_git(c("add", "--all"), dir = "repo"),
     cr_buildstep_git(c("commit", "-a", "-m",
                        "[skip travis] Build website from commit ${COMMIT_SHA}: \
 $(date +\"%Y%m%dT%H:%M:%S\")"),
                      dir = "repo"),
+    cr_buildstep_git(c("status"), dir = "repo"),
     cr_buildstep_git("push", repo, dir = "repo")
   )
 
