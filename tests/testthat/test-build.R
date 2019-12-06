@@ -15,8 +15,7 @@ test_that("[Online] Test deployments", {
   runme <- system.file("example/", package="googleCloudRunner", mustWork=TRUE)
 
   cd <- cr_deploy_docker(runme, launch_browser = FALSE)
-  expect_equal(cd$metadata$`@type`,
-               "type.googleapis.com/google.devtools.cloudbuild.v1.BuildOperationMetadata")
+  expect_equal(cd$status,"SUCCESS")
 
   cr <- cr_deploy_run(runme)
   expect_equal(cr$kind, "Service")
@@ -144,6 +143,7 @@ test_that("[Online] Test Build Triggers",{
   expect_true(!bt2$name %in% newer_list$name)
 
   washup3 <- cr_buildtrigger_delete(edited)
+  expect_true(washup3)
 
 })
 
