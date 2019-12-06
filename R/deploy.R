@@ -23,6 +23,9 @@
 #' @return If scheduling then a \link{Job}, if building immediately then a \link{Build}
 #' @family Deployment functions
 #' @export
+#'
+#' @seealso If you want to run R code upon certain events like GitHub pushes, look at \link{cr_buildtrigger}
+#'
 #' @examples
 #'
 #' r_lines <- c("list.files()",

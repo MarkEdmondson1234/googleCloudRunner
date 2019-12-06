@@ -44,7 +44,7 @@ test_that("[Online] Test deployments", {
   expect_equal(rs$state, "ENABLED")
 
   deleteme <- cr_schedule_delete(rs)
-  expect_true(rs)
+  expect_true(deleteme)
 
 })
 
@@ -208,7 +208,7 @@ test_that("Building Build Objects", {
                       projectId = "dummy-project")
   expect_true(googleCloudRunner:::is.gar_Build(bq2))
   expect_equal(bq2$images, "gcr.io/my-project/demo")
-  expect_equal(bq2$timeout, 11)
+  expect_equal(bq2$timeout, "11s")
   expect_equal(bq2$steps[[1]]$name, "gcr.io/cloud-builders/docker")
   expect_equal(bq2$steps[[2]]$name, "alpine")
   expect_equal(bq2$source$repoSource$branchName, "master")

@@ -7,31 +7,42 @@ cr_deploy_gadget <- function(){
         miniUI::miniContentPanel(
           shiny::fileInput("rFile",
                            "Select R File",
-                           accept = c(".R",".r"))
+                           accept = c(".R",".r")),
+          shiny::textInput("rSchedule", label = "cron Schedule",
+                           value = "15 8 * * *"),
+          shiny::textInput("rImage", label = "Docker image to use",
+                           value = "rocker/verse"),
+          shiny::radioButtons("rSource", "Data Source",
+                             choices = c("None",
+                                         "CloudRepository",
+                                         "CloudStorage"),
+                             inline = TRUE),
+          shiny::uiOutput("rSourceDyn"),
+          shiny::numericInput("rTimeout", label = "Timeout",
+                              value = 600,
+                              min = 100, max = 3600)
         )
       ),
       miniUI::miniTabPanel("plumber API", icon = shiny::icon("wrench"),
         miniUI::miniContentPanel(
-          shiny::fileInput("apiFolder",
-                           "Select folder with plumber api.R file",
+          shiny::fileInput("apiFile",
+                           "Select plumber api.R file",
                            accept = c(".R",".r")),
-          shiny::textInput("apiImage",
-                           label = "gcr.io image name",
-                           placeholder = paste0("gcr.io/",
-                                                cr_project_get(),
-                                                "/my-image"))
+          shiny::textInput("apiImage", label = "Docker image to build",
+                           value = paste0("gcr.io/",
+                                          cr_project_get(),
+                                          "/your-r-api")),
+          shiny::br()
         )
       ),
       miniUI::miniTabPanel("Dockerfile", icon = shiny::icon("docker"),
-                           miniUI::miniContentPanel(
-                             shiny::fileInput("dockerFolder",
-                                              "Select folder with Dockerfile"),
-                             shiny::textInput("dockerImage",
-                                              label = "gcr.io image name",
-                                              placeholder = paste0("gcr.io/",
-                                                                   cr_project_get(),
-                                                                   "/my-image"))
-                           )
+        miniUI::miniContentPanel(
+          shiny::fileInput("dockerFile","Select Dockerfile"),
+            shiny::textInput("dockerImage", label = "Docker image to build",
+              value = paste0("gcr.io/",
+                             cr_project_get(),
+                             "/my-image"))
+          )
       )
     )
 
@@ -40,6 +51,32 @@ cr_deploy_gadget <- function(){
   server <- function(input, output, session) {
 
     ## Your reactive logic goes here.
+    output$rSourceDyn <- shiny::renderUI({
+      shiny::req(input$rSourceDyn)
+
+      ss <- input$rSourceDyn
+      if(ss == "None"){
+        return(NULL)
+      } else if(ss == "CloudRepository"){
+        return(
+          shiny::tagList(
+            shiny::textInput("source1", label = "repoName",
+                             placeholder = "MarkEdmondson1234/googleCloudRunner"),
+            shiny::textInput("source2", label = "branchName",
+                             value = ".*")
+          )
+        )
+      } else if(ss == "CloudStorage"){
+        return(shiny::tagList(
+          shiny::textInput("source1", label = "bucket",
+                           value = cr_bucket_get()),
+          shiny::textInput("source2", label = "tar File",
+                           placeholder = "my_code.tar.gz")
+        ))
+      }
+
+    })
+
 
 
     shiny::observeEvent(input$done, {
