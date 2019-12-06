@@ -28,9 +28,6 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/StorageSource.html</loc>
   </url>
   <url>
-    <loc>https://code.markedmondson.me/googleCloudRunner/reference/Yaml.html</loc>
-  </url>
-  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_bucket_get.html</loc>
   </url>
   <url>
@@ -59,6 +56,9 @@
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_write.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_yaml.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildstep.html</loc>
