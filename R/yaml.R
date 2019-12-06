@@ -9,7 +9,8 @@
 #'Yaml(steps = c(
 #'       cr_buildstep("docker", "version"),
 #'       cr_buildstep("gcloud", "version")),
-#'     images = "gcr.io/my-project/my-image")
+#'     images = "gcr.io/my-project/my-image",
+#'     timeout = "660s")
 Yaml <- function(...){
   structure(
     list(...),
