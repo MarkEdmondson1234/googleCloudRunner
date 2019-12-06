@@ -280,7 +280,7 @@
 #&gt; name: gcr.io/cloud-builders/git
 #&gt; args:
 #&gt; - add
-#&gt; - '.'
+#&gt; - --all
 #&gt; volumes:
 #&gt; - name: ssh
 #&gt;   path: /root/.ssh
@@ -298,6 +298,14 @@
 #&gt;   path: /root/.ssh
 #&gt; 
 #&gt; [[7]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: gcr.io/cloud-builders/git
+#&gt; args: status
+#&gt; volumes:
+#&gt; - name: ssh
+#&gt;   path: /root/.ssh
+#&gt; 
+#&gt; [[8]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/git
 #&gt; args: push
