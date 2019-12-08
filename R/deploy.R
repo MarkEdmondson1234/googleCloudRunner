@@ -217,7 +217,12 @@ cr_deploy_docker <- function(local,
                              projectId = cr_project_get(),
                              launch_browser = interactive(),
                              task_id=NULL){
-  myMessage("Uploading ", local, " folder for Docker build", level = 3)
+  assert_that(
+    dir.exists(local)
+  )
+
+  myMessage("Building ", local, " folder for Docker image: ", image_name, level = 3)
+
   this_job <- FALSE
   if(is.null(task_id)){
     this_job <- TRUE
@@ -227,6 +232,10 @@ cr_deploy_docker <- function(local,
 
   rstudio_add_output(task_id, paste("\nConfiguring Dockerfile"))
   use_or_create_dockerfile(local, dockerfile = dockerfile)
+
+  assert_that(
+    is.readable(file.path(local, "Dockerfile"))
+  )
 
   image <- make_image_name(image_name, projectId = projectId)
 

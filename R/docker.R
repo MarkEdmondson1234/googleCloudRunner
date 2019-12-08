@@ -48,10 +48,12 @@ cr_dockerfile <- function(deploy_folder, ...){
 use_or_create_dockerfile <- function(local, dockerfile){
   local_files <- list.files(local)
   if("Dockerfile" %in% local_files){
+    myMessage("Dockerfile found in ",local, level = 3)
     return(TRUE)
   }
   # if no dockerfile, attempt to create it
   if(is.null(dockerfile)){
+    myMessage("Creating Dockerfile from ",local, level = 3)
     # creates and write a dockerfile to the folder
     cr_dockerfile(local)
 
