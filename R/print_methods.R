@@ -53,7 +53,6 @@ print.gar_Build <- function(x, ...){
   cat0("logUrl: ", x$logUrl)
   cat0("timeout: ", x$timeout)
   cat0("logsBucket: ", x$logsBucket)
-  cat0("options: ", x$options)
   cat0("substitutions: ", x$substitution)
   cat0("tags: ", x$tags)
   cat0("secrets: ", x$secrets)

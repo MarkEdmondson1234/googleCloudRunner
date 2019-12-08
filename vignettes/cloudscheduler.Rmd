@@ -6,6 +6,13 @@ Cloud Scheduler is a scheduler service in the Google Cloud that uses cron like s
 
 googleCloudRunner uses Cloud Scheduler to help schedule Cloud Builds.
 
+Cloud Scheduler can schedule HTTP requests to any endpoint:
+
+```r
+cr_scheduler(name = "my-webhook", "14 5 * * *", 
+             httpTarget = HttpTarget(httpMethod="GET", uri = "https://mywebhook.com"))
+```
+
 ## Schedule Cloud Build
 
 As Cloud Build can run any code in a container, it becomes a powerful way to setup data flows.  These can be scheduled via Cloud Scheduler.  
@@ -20,13 +27,6 @@ cr_schedule("15 5 * * *", name="cloud-build-test1",
 ```
 
 We use `cr_build_make()` and `cr_build_schedule_http()` to create the Cloud Build API request, and then send that to the Cloud Scheduler API via its `httpTarget` parameter.
-
-Cloud Scheduler can schedule HTTP requests to any endpoint:
-
-```r
-cr_scheduler(name = "my-webhook", "14 5 * * *", 
-             httpTarget = HttpTarget(httpMethod="GET", uri = "https://mywebhook.com"))
-```
 
 Update a schedule by specifying the same name and the `overwrite=TRUE` flag.  You need then need to supply what you want to change, everything else will remain as previously configured.
 
@@ -45,7 +45,7 @@ r_lines <- c("list.files()",
               "mtcars %>% select(mpg)",
               "sessionInfo()")
 
-# in this example the source is a mirrored GitHub repo
+# example code runs against a source that is a mirrored GitHub repo
 source <- cr_build_source(RepoSource("googleCloudStorageR",
                                       branchName = "master"))
 

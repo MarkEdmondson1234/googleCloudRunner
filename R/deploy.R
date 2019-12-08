@@ -141,10 +141,7 @@ cr_deploy_run <- function(local,
                           launch_browser = interactive(),
                           timeout=600L){
 
-  task_id <- rstudio_add_job(
-    paste("Deploy service ",remote," to CloudRun"),
-    timeout=extract_timeout(timeout))
-
+  myMessage("Uploading ", local, " folder for Cloud Run", level = 3)
   local_files <- list.files(local)
   if(!"api.R" %in% local_files){
     stop("Must include api.R in local deployment folder
@@ -153,6 +150,10 @@ cr_deploy_run <- function(local,
   }
 
   image_name <- make_image_name(image_name, projectId)
+
+  task_id <- rstudio_add_job(
+    paste("Deploy service ",remote," to CloudRun"),
+    timeout=extract_timeout(timeout))
 
   built <- cr_deploy_docker(local,
                       image_name = image_name,
@@ -216,6 +217,7 @@ cr_deploy_docker <- function(local,
                              projectId = cr_project_get(),
                              launch_browser = interactive(),
                              task_id=NULL){
+  myMessage("Uploading ", local, " folder for Docker build", level = 3)
   this_job <- FALSE
   if(is.null(task_id)){
     this_job <- TRUE
