@@ -28,22 +28,26 @@ cr_deploy_gadget <- function(){
   }
 
   ui <- miniUI::miniPage(
-    miniUI::gadgetTitleBar("Setup googleCloudRunner Deploy"),
+    miniUI::gadgetTitleBar("googleCloudRunner Deploy"),
     miniUI::miniTabstripPanel(between = miniUI::miniButtonBlock(
       shiny::numericInput("rTimeout",
-                         label = "Build Timeout",
+                         label = "Timeout",
                          value = 600,
                          min = 100,
-                         max = 3600, width = "100px")),
+                         max = 3600, width = "100px"),
+      shiny::textInput("dockerProject", label = "projectId",
+                       value = cr_project_get()),
+      shiny::checkboxInput("interactive", "Launch logs in browser", value = TRUE)
+      ),
       miniUI::miniTabPanel("R script", icon = shiny::icon("r-project"),
         miniUI::miniContentPanel(
-          shiny::helpText("Configure arguments passed to cr_deploy_r()"),
+          shiny::h2("Configure cr_deploy_r()"),
           shiny::fileInput("rFile",
                            "Select R File",
                            accept = c(".R",".r")),
-          shiny::helpText("Set schedule to empty to run immediatly"),
           shiny::textInput("rSchedule", label = "cron Schedule",
                            value = "15 8 * * *"),
+          shiny::helpText("Set schedule to empty to run now"),
           shiny::textInput("rImage", label = "R docker image",
                            value = "rocker/verse"),
           shiny::radioButtons("rSource", "Data Source",
@@ -57,30 +61,29 @@ cr_deploy_gadget <- function(){
       ),
       miniUI::miniTabPanel("plumber API", icon = shiny::icon("wrench"),
         miniUI::miniContentPanel(
-          shiny::helpText("Configure arguments passed to cr_deploy_run()"),
+          shiny::h2("Configure cr_deploy_run()"),
           shiny::textInput("apiFile",
-                           label = "Select folder with api.R file",
+                           label = "Select folder with api.R file and Dockerfile",
                            placeholder = "plumber/"),
           shiny::helpText("Working dir: ", getwd()),
-          shiny::textInput("apiImage", label = "Docker image to build",
-                           placeholder = paste0("gcr.io/",
-                                          cr_project_get(),
-                                          "/your-r-api")),
-          shiny::br()
+          # shiny::textInput("apiName", label = "Cloud Run service name",
+          #                  placeholder = "api-name"),
+          shiny::textInput("apiImage", label = "Edit docker basename",
+                           placeholder = "my-image"),
+          shiny::textInput("apiTag", label = "Docker tag",
+                           value = "$BUILD_ID"),
+          shiny::helpText(shiny::textOutput("apiGCRIO"))
         )
       ),
       miniUI::miniTabPanel("Dockerfile", icon = shiny::icon("docker"),
         miniUI::miniContentPanel(
-          shiny::textOutput("wd"),
-          shiny::helpText("Configure arguments passed to cr_deploy_docker()"),
+          shiny::h2("Configure cr_deploy_docker()"),
           shiny::textInput("dockerFile",
                            label = "Select folder with Dockerfile",
                            placeholder = "docker/"),
           shiny::helpText("Working dir: ", getwd()),
           shiny::textInput("dockerImage", label = "Edit docker basename",
                              placeholder = "my-image"),
-          shiny::textInput("dockerProject", label = "GCP project",
-                           value = cr_project_get()),
           shiny::textInput("dockerTag", label = "Docker tag",
                            value = "$BUILD_ID"),
           shiny::helpText(shiny::textOutput("dockerGCRIO"))
@@ -96,6 +99,13 @@ cr_deploy_gadget <- function(){
                         dockerFile = input$dockerFile,
                         dockerProject = input$dockerProject,
                         dockerTag = input$dockerTag)
+    })
+
+    output$apiGCRIO <- shiny::renderText({
+      image_name_helper(dockerImage = input$apiImage,
+                        dockerFile = input$apiFile,
+                        dockerProject = input$dockerProject,
+                        dockerTag = input$apiTag)
     })
 
     ## Your reactive logic goes here.
@@ -144,7 +154,8 @@ cr_deploy_gadget <- function(){
                       source = source,
                       run_name = input$name,
                       r_image = input$rImage,
-                      timeout = input$rTimeout)
+                      timeout = input$rTimeout,
+                      launch_browser=input$interactive)
         )
       }
 
@@ -152,8 +163,24 @@ cr_deploy_gadget <- function(){
 
         folder <- input$apiFile
 
+        image_name <- image_name_helper(
+          dockerImage = input$apiImage,
+          dockerFile = input$apiFile,
+          dockerProject = input$dockerProject,
+          dockerTag = NULL)
+
+        # if(input$apiName == ""){
+        #   apiName <- gsub("[^A-Za-z0-9_-]","",basename(folder))
+        # } else {
+        #   apiName <- input$apiName
+        # }
+
         shiny::stopApp(
-          cr_deploy_run(folder, image_name = input$apiImage)
+          cr_deploy_run(folder,
+                        # remote = apiName,
+                        image_name = image_name,
+                        tag = input$apiTag,
+                        launch_browser=input$interactive)
         )
       }
 
@@ -170,7 +197,8 @@ cr_deploy_gadget <- function(){
         shiny::stopApp(
           cr_deploy_docker(folder,
                            image_name = image_name,
-                           tag = input$dockerTag)
+                           tag = input$dockerTag,
+                           launch_browser=input$interactive)
           )
       }
 

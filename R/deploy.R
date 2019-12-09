@@ -53,7 +53,8 @@ cr_deploy_r <- function(r,
                         timeout = 600L,
                         email = cr_email_get(),
                         region = cr_region_get(),
-                        projectId = cr_project_get()){
+                        projectId = cr_project_get(),
+                        launch_browser=interactive()){
 
   if(is.null(run_name)){
     run_name <- paste0("cr_rscript_", format(Sys.time(), "%Y%m%s%H%M%S"))
@@ -92,7 +93,7 @@ cr_deploy_r <- function(r,
   }
 
   # build it now
-  br1 <- cr_build(br)
+  br1 <- cr_build(br, launch_browser=launch_browser)
 
   cr_build_wait(br1, projectId = projectId)
 
@@ -165,6 +166,11 @@ cr_deploy_run <- function(local,
                       launch_browser = launch_browser,
                       timeout=timeout,
                       task_id=task_id)
+  if(built$status != "SUCCESS"){
+    myMessage("Error building Dockerfile", level = 3)
+    rstudio_add_state(task_id, "FAILURE")
+    return(built)
+  }
 
   cr_run(built$results$images$name,
          name = tolower(remote),
@@ -247,7 +253,7 @@ cr_deploy_docker <- function(local,
                                 projectId = projectId),
     images = image)
   rstudio_add_output(task_id,
-    paste("\n#Deploy docker build for image: \n", image))
+    paste("\n#> Deploy docker build for image: \n", image))
 
   gcs_source <- cr_build_upload_gcs(local,
                                     remote = remote,

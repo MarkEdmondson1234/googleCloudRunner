@@ -39,14 +39,18 @@ function(spec){
 
 #' Recieve pub/sub message
 #' @post /pubsub
-function(req){
+#' @param message a pub/sub message
+function(message=NULL){
   # https://cloud.google.com/run/docs/tutorials/pubsub
-  if(any(is.null(req$postBody), is.null(req$postBody$message))){
-    stop("Bad request: invalid pub/sub message format")
-  }
+  if(is.null(message)) stop("pub/sub message not found")
+  stopifnot(
+    is.list(message),
+    !is.null(message$data)
+  )
+  str(message)
 
-  stuff <- jsonlite::base64_dec(req$postBodymessage$message$data)
+  the_data <- rawToChar(jsonlite::base64_dec(message$data))
 
-  cat(stuff)
+  the_data
 
 }

@@ -7,7 +7,7 @@
 cr_deploy_r(r, schedule = NULL, source = NULL, run_name = NULL,
   r_image = "rocker/verse", pre_steps = NULL, post_steps = NULL,
   timeout = 600L, email = cr_email_get(), region = cr_region_get(),
-  projectId = cr_project_get())
+  projectId = cr_project_get(), launch_browser = interactive())
 }
 \arguments{
 \item{r}{R code to run or a file containing R code}
@@ -31,6 +31,8 @@ cr_deploy_r(r, schedule = NULL, source = NULL, run_name = NULL,
 \item{region}{The region usually set with \link{cr_region_set}}
 
 \item{projectId}{ID of the project}
+
+\item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
 }
 \value{
 If scheduling then a \link{Job}, if building immediately then a \link{Build}

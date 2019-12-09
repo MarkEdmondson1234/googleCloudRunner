@@ -224,7 +224,7 @@ cr_build_wait <- function(op = .Last.value,
   if(!rstudioapi::isAvailable()) cat("\nWaiting for build to finish:\n |=")
 
   rstudio_add_output(task_id,
-                     paste("\n#Created Cloud Build, online logs:\n",
+                     paste("\n#> Created Cloud Build, online logs:\n",
                            extract_logs(init)))
 
   op <- init

@@ -3,7 +3,12 @@ rstudio_add_job <- function(task_name, timeout){
 
   rstudioapi::jobAdd(paste0("cloudRunner - " , task_name),
                      progressUnits = as.integer(timeout),
-                     running = TRUE, autoRemove = FALSE)
+                     running = TRUE, autoRemove = FALSE,
+                     actions = list(
+                       stop = function(id){
+                         rstudioapi::jobSetState(id, "cancelled")
+                       }
+                     ))
 }
 
 rstudio_add_state <- function(job_id, state){

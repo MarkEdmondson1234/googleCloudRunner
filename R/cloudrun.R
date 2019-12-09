@@ -43,7 +43,7 @@ cr_run <- function(image,
   }
 
   rstudio_add_output(task_id,
-                     paste("\n#Launching CloudRun image: \n", image))
+                     paste("\n#> Launching CloudRun image: \n", image))
 
   if(allowUnauthenticated){
     auth_calls <- "--allow-unauthenticated"
@@ -67,14 +67,15 @@ cr_run <- function(image,
 
   build <- cr_build(run_yaml,
                     projectId=projectId,
-                    timeout = timeout)
+                    timeout = timeout,
+                    launch_browser=launch_browser)
 
   result <- cr_build_wait(build, projectId = projectId, task_id=task_id)
 
   if(result$status == "SUCCESS"){
     run <- cr_run_get(name, projectId = projectId)
     rstudio_add_output(task_id,
-                       paste("\n#Running at: ",
+                       paste("\n#> Running at: ",
                              run$status$url))
     rstudio_add_state(task_id, "SUCCESS")
 
