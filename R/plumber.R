@@ -36,7 +36,7 @@
 #' }
 #' @seealso \href{https://cloud.google.com/run/docs/tutorials/pubsub}{Google Pub/Sub tutorial for Cloud Run}
 #' @family Cloud Run functions
-cr_run_pubsub <- function(message=NULL,
+cr_plumber_pubsub <- function(message=NULL,
                               pass_f=function(x) x){
   #
   if(is.null(message)) stop("pub/sub message not found")
