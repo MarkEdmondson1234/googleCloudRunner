@@ -134,8 +134,10 @@ cr_deploy_docker <- function(local,
                                 dir=paste0("deploy/", remote),
                                 projectId = projectId),
     images = image)
+
+  image_tag <- paste0(image, ":", tag)
   rstudio_add_output(task_id,
-    paste("\n#Deploy docker build for image: \n", image))
+    paste("\n#Deploy docker build for image: \n", image_tag))
 
   gcs_source <- cr_build_upload_gcs(local,
                                     remote = remote,
@@ -147,9 +149,13 @@ cr_deploy_docker <- function(local,
                            launch_browser = launch_browser,
                            timeout=timeout)
 
-  cr_build_wait(docker_build,
-                projectId = projectId,
-                task_id=task_id)
+  b <- cr_build_wait(docker_build,
+                     projectId = projectId,
+                     task_id=task_id)
+
+  rstudio_add_output(task_id, image_tag)
+
+  b
 }
 
 #' Deploy a trigger for auto-builds a pkgdown website for an R package
