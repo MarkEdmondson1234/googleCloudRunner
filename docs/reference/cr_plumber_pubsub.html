@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Launch the googleCloudRunner deployment RStudio gadget — cr_deploy_gadget • googleCloudRunner</title>
+<title>Plumber - Pub/Sub parser — cr_plumber_pubsub • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Launch the googleCloudRunner deployment RStudio gadget — cr_deploy_gadget" />
-<meta property="og:description" content="You can assign a hotkey to the addin via Tools &amp;gt; Addins &amp;gt; Browse Addins &amp;gt; Keyboard shortcuts.  CTRL+SHIFT+D is a suggested hotkey." />
+<meta property="og:title" content="Plumber - Pub/Sub parser — cr_plumber_pubsub" />
+<meta property="og:description" content="A function to use in plumber scripts to accept Pub/Sub messages" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,23 +149,68 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Launch the googleCloudRunner deployment RStudio gadget</h1>
+    <h1>Plumber - Pub/Sub parser</h1>
     
-    <div class="hidden name"><code>cr_deploy_gadget.Rd</code></div>
+    <div class="hidden name"><code>cr_plumber_pubsub.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>You can assign a hotkey to the addin via Tools &gt; Addins &gt; Browse Addins &gt; Keyboard shortcuts.  CTRL+SHIFT+D is a suggested hotkey.</p>
+    <p>A function to use in plumber scripts to accept Pub/Sub messages</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_gadget</span>()</pre>
+    <pre class="usage"><span class='fu'>cr_plumber_pubsub</span>(<span class='kw'>message</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pass_f</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>x</span>)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>message</th>
+      <td><p>The pubsub message</p></td>
+    </tr>
+    <tr>
+      <th>pass_f</th>
+      <td><p>An R function that will work with the data parsed out of the pubsub <code>message$data</code> field.</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>This function is intended to be used within plumb API scripts.  It needs to be annotated with a <code>@post</code> URL route and a <code>@param message The pubsub message</code> as per the plumber documentation.</p>
+<p><code>pass_f</code> should be a function you create that accepts one argument, the data from the pubsub <code>message$data</code> field.  It is unencoded for you.</p>
+<p>The Docker container for the API will need to include <code>googleCloudRunner</code> installed in its R environment to run this function.  This is available in the public <code>gcr.io/gcer-public/cloudrunner</code> image.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><a href='https://cloud.google.com/run/docs/tutorials/pubsub'>Google Pub/Sub tutorial for Cloud Run</a></p>
+<p>Other Cloud Run functions: <code><a href='cr_run_get.html'>cr_run_get</a></code>,
+  <code><a href='cr_run_list.html'>cr_run_list</a></code>, <code><a href='cr_run.html'>cr_run</a></code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+
+<span class='co'># within a plumber api.R script:</span>
+
+<span class='co'># example function echos back pubsub message</span>
+<span class='no'>pub</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
+  <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Echo:"</span>, <span class='no'>x</span>)
+}
+
+<span class='co'>#' Recieve pub/sub message</span>
+<span class='co'>#' @post /pubsub</span>
+<span class='co'>#' @param message a pub/sub message</span>
+<span class='kw'>function</span>(<span class='no'>message</span><span class='kw'>=</span><span class='kw'>NULL</span>){
+  <span class='kw pkg'>googleCloudRunner</span><span class='kw ns'>::</span><span class='fu'><a href='https://code.markedmondson.me/googleCloudRunner/reference/cr_plumber_pubsub.html'>cr_plumber_pubsub</a></span>(<span class='no'>message</span>, <span class='no'>pub</span>)
+  }
+
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#details">Details</a></li>
+      <li><a href="#see-also">See also</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
