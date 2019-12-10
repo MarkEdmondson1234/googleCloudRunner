@@ -15,8 +15,7 @@ test_that("[Online] Test deployments", {
   runme <- system.file("example/", package="googleCloudRunner", mustWork=TRUE)
 
   cd <- cr_deploy_docker(runme, launch_browser = FALSE)
-  expect_equal(cd$metadata$`@type`,
-               "type.googleapis.com/google.devtools.cloudbuild.v1.BuildOperationMetadata")
+  expect_equal(cd$status,"SUCCESS")
 
   cr <- cr_deploy_run(runme)
   expect_equal(cr$kind, "Service")
@@ -28,6 +27,24 @@ test_that("[Online] Test deployments", {
 
   ss <- cr_schedule_list()
   expect_s3_class(ss, "data.frame")
+
+  r_lines <- c("list.files()",
+                "library(dplyr)",
+                "mtcars %>% select(mpg)",
+                "sessionInfo()")
+  source <- cr_build_source(RepoSource("googleCloudStorageR",
+                                        branchName = "master"))
+
+  # check the script runs ok
+  rb <- cr_deploy_r(r_lines, source = source)
+  expect_equal(rb$status, "SUCCESS")
+
+  # schedule the script
+  rs <- cr_deploy_r(r_lines, schedule = "15 21 * * *", source = source)
+  expect_equal(rs$state, "ENABLED")
+
+  deleteme <- cr_schedule_delete(rs)
+  expect_true(deleteme)
 
 })
 
@@ -77,6 +94,7 @@ test_that("[Online] Test Build Triggers",{
   github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner",
                                branch = "master")
 
+
   ss <- list(`_MYVAR` = "TEST1",
              `_GITHUB` = "MarkEdmondson1234/googleCloudRunner")
 
@@ -94,22 +112,41 @@ test_that("[Online] Test Build Triggers",{
   expect_equal(bt2$github$owner, "MarkEdmondson1234")
   expect_equal(bt2$filename, "inst/cloudbuild/cloudbuild.yaml")
 
+  # needs to be mirrored from GitHub or created with Google Cloud Repositories
+  repo <- RepoSource("googleCloudStorageR",
+                     projectId = cr_project_get(),
+                     tagName = "v0.5.1")
+  gcs_repo <- "gcs-repo-test1zzzz"
+  my_build <- cr_build_make(
+    cr_build_yaml(steps = cr_buildstep_r("list.files()"))
+  )
+
+  bt_repo <- cr_buildtrigger(
+    gcs_repo,
+    trigger = repo,
+    build = my_build
+  )
+
   new_list <- cr_buildtrigger_list()
 
   expect_true(bt1$id %in% new_list$id)
   expect_true(bt2$id %in% new_list$id)
   expect_true(bt2$name %in% new_list$name)
+  expect_true(bt_repo$id %in% new_list$id)
 
-  # I don't think the API works #16
-  # bt3 <- BuildTrigger(
-  #   filename = "inst/cloudbuild/cloudbuild.yaml",
-  #   name = "edited1",
-  #   tags = "edit",
-  #   github = github,
-  #   disabled = TRUE,
-  #   description = "edited trigger"
-  # )
-  # edited <- cr_buildtrigger_edit(bt3, triggerId = bt2)
+  my_build2 <- cr_build_make(
+    cr_build_yaml(steps = cr_buildstep_r("list.files(full.names=TRUE)"))
+    )
+
+  bt3 <- cr_buildtrigger_make(
+    trigger = repo,
+    build = my_build2,
+    name = "edited1",
+    tags = "edit",
+    disabled = TRUE,
+    description = "edited trigger"
+  )
+  edited <- cr_buildtrigger_edit(bt3, triggerId = bt_repo)
 
   washup1 <- cr_buildtrigger_delete(bt1)
   washup2 <- cr_buildtrigger_delete(bt2$id)
@@ -118,10 +155,13 @@ test_that("[Online] Test Build Triggers",{
 
   newer_list <- cr_buildtrigger_list()
 
+  expect_true(edited$id %in% newer_list$id)
   expect_true(!bt1$id %in% newer_list$id)
   expect_true(!bt2$id %in% newer_list$id)
   expect_true(!bt2$name %in% newer_list$name)
 
+  washup3 <- cr_buildtrigger_delete(edited)
+  expect_true(washup3)
 
 })
 
@@ -156,26 +196,26 @@ test_that("Building Build Objects", {
                 projectId = "dummy-project")
   expect_true(googleCloudRunner:::is.gar_Build(bq))
   expect_equal(bq$images, "gcr.io/my-project/demo")
-  expect_equal(bq$timeout, 10)
+  expect_equal(bq$timeout, "10s")
   expect_equal(bq$steps[[1]]$name, "gcr.io/cloud-builders/docker")
   expect_equal(bq$steps[[2]]$name, "alpine")
   expect_equal(bq$source$storageSource$bucket, "gs://my-bucket")
 
   bq2 <- cr_build_make(yaml = yaml,
                       source = my_repo_source,
-                      timeout = 11,
+                      timeout = "11s",
                       images = "gcr.io/my-project/demo",
                       projectId = "dummy-project")
   expect_true(googleCloudRunner:::is.gar_Build(bq2))
   expect_equal(bq2$images, "gcr.io/my-project/demo")
-  expect_equal(bq2$timeout, 11)
+  expect_equal(bq2$timeout, "11s")
   expect_equal(bq2$steps[[1]]$name, "gcr.io/cloud-builders/docker")
   expect_equal(bq2$steps[[2]]$name, "alpine")
   expect_equal(bq2$source$repoSource$branchName, "master")
 
   # write from creating a Yaml object
   image = "gcr.io/my-project/my-image"
-  run_yaml <- Yaml(steps = c(cr_buildstep_docker(image, dir = "deploy"),
+  run_yaml <- cr_build_yaml(steps = c(cr_buildstep_docker(image, dir = "deploy"),
                              cr_buildstep("gcloud",
                                           c("beta","run","deploy", "test1",
                                             "--image", image), dir="deploy")),
@@ -280,7 +320,7 @@ test_that("Render BuildStep objects", {
   expect_equal(edit3[[1]]$name, "gcr.io/blah")
   expect_equal(edit4[[1]]$dir, "blah")
 
-  git_yaml <- Yaml(
+  git_yaml <- cr_build_yaml(
     steps = c(
       cr_buildstep_gitsetup("my_keyring", "git_key"),
       cr_buildstep_git(c("clone", "git@github.com:github_name/repo_name"))

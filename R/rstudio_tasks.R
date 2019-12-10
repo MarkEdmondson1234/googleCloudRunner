@@ -1,10 +1,14 @@
-
 rstudio_add_job <- function(task_name, timeout){
   if(!rstudioapi::isAvailable()) return(NULL)
 
   rstudioapi::jobAdd(paste0("cloudRunner - " , task_name),
                      progressUnits = as.integer(timeout),
-                     running = TRUE, autoRemove = FALSE)
+                     running = TRUE, autoRemove = FALSE,
+                     actions = list(
+                       stop = function(id){
+                         rstudioapi::jobSetState(id, "cancelled")
+                       }
+                     ))
 }
 
 rstudio_add_state <- function(job_id, state){
@@ -28,7 +32,10 @@ rstudio_add_state <- function(job_id, state){
 }
 
 rstudio_add_progress <- function(job_id, add){
-  if(!rstudioapi::isAvailable()) return(NULL)
+  if(!rstudioapi::isAvailable()){
+    myMessage("\nRuntime: ",add, level = 3)
+    return(NULL)
+  }
   if(is.null(job_id)) return(NULL)
 
   rstudioapi::jobAddProgress(job_id, add)

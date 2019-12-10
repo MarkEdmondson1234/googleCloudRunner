@@ -48,7 +48,7 @@ Build(Build.substitutions = NULL, Build.timing = NULL,
 
 \item{finishTime}{Output only}
 
-\item{source}{A \link{Source} object specifying the location of the source files to build}
+\item{source}{A \link{Source} object specifying the location of the source files to build, usually created by \link{cr_build_source}}
 
 \item{options}{Special options for this build}
 
@@ -71,7 +71,7 @@ Build Object
 \details{
 A build resource in the Cloud Build API.
 
-At a high level, a `Build` describes where to find source code, how to buildit (for example, the builder image to run on the source), and where to store the built artifacts.
+At a high level, a `Build` describes where to find source code, how to build it (for example, the builder image to run on the source), and where to store the built artifacts.
 }
 \section{Build Macros}{
 
@@ -94,6 +94,8 @@ Other Cloud Build functions: \code{\link{RepoSource}},
   \code{\link{cr_build_make}},
   \code{\link{cr_build_status}},
   \code{\link{cr_build_upload_gcs}},
-  \code{\link{cr_build_wait}}, \code{\link{cr_build}}
+  \code{\link{cr_build_wait}},
+  \code{\link{cr_build_write}},
+  \code{\link{cr_build_yaml}}, \code{\link{cr_build}}
 }
 \concept{Cloud Build functions}

@@ -37,7 +37,7 @@ By default the encrypted key should then be at the root of your \link{Source} ob
 \examples{
 
 # assumes you have previously saved git ssh key via KMS called "git_key"
-Yaml(
+cr_build_yaml(
      steps = c(
           cr_buildstep_gitsetup("my_keyring", "git_key"),
           cr_buildstep_git(c("clone",

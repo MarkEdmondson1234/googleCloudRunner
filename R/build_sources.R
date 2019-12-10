@@ -129,7 +129,7 @@ is.gar_SourceRepo <- function(x){
 #'                         branchName="master"))
 #'
 #' build <- cr_build(
-#'   Yaml(steps =
+#'   cr_build_yaml(steps =
 #'     cr_buildstep("gcloud", c("-c","ls -la"),
 #'                   entrypoint = "bash",
 #'                   dir = "")),

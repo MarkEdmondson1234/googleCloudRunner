@@ -1,0 +1,4 @@
+Name: Deploy onto GCP
+Description: Deploys R code via Google Cloud Build, Cloud Run or Cloud Scheduler
+Binding: cr_deploy_gadget
+Interactive: true

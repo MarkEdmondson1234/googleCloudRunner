@@ -8,9 +8,9 @@ cr_build_make(yaml, source = NULL, timeout = NULL, images = NULL,
   projectId = cr_project_get())
 }
 \arguments{
-\item{yaml}{A \link{Yaml} object or a file location of a .yaml/.yml cloud build file}
+\item{yaml}{A \code{Yaml} object created from \link{cr_build_yaml} or a file location of a .yaml/.yml cloud build file}
 
-\item{source}{A \link{Source} object specifying the location of the source files to build}
+\item{source}{A \link{Source} object specifying the location of the source files to build, usually created by \link{cr_build_source}}
 
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
 
@@ -34,6 +34,8 @@ Other Cloud Build functions: \code{\link{Build}},
   \code{\link{StorageSource}},
   \code{\link{cr_build_status}},
   \code{\link{cr_build_upload_gcs}},
-  \code{\link{cr_build_wait}}, \code{\link{cr_build}}
+  \code{\link{cr_build_wait}},
+  \code{\link{cr_build_write}},
+  \code{\link{cr_build_yaml}}, \code{\link{cr_build}}
 }
 \concept{Cloud Build functions}

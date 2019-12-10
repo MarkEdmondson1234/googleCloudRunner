@@ -2,7 +2,7 @@
 #'
 #' Helper to run R code within build steps, from either an existing local R file or within the source of the build.
 #'
-#' @param r R code to run or a file containing R code - see details
+#' @param r R code to run or a file containing R code
 #' @param name The docker image that will run the R code, usually from rocker-project.org
 #' @param r_source Whether the R code will be from a runtime file within the source or at build time copying over from a local R file in your session
 #' @param ... Other arguments passed to \link{cr_buildstep}
@@ -33,7 +33,7 @@
 #' # use a different Rocker image e.g. rocker/verse
 #' cr_buildstep_r(c("library(dplyr)",
 #'                  "mtcars %>% select(mpg)",
-#'                  "sessionInfo"),
+#'                  "sessionInfo()"),
 #'                name = "verse")
 #'
 #' # use your own R image with custom R
@@ -50,6 +50,12 @@ cr_buildstep_r <- function(r,
                            ...){
 
   r_source <- match.arg(r_source)
+
+  # catches name=rocker/verse etc.
+  if(dirname(name) == "rocker"){
+     name <- basename(name)
+  }
+
   # don't allow dot names that would break things
   dots <- list(...)
   assert_that(
@@ -57,13 +63,12 @@ cr_buildstep_r <- function(r,
     is.null(dots$name),
     is.null(dots$prefix)
   )
-
   rchars <- r
   if(r_source == "local"){
     assert_that(is.character(r))
 
     rchars <- r
-    if(grepl("\\.R", r[[1]], ignore.case = TRUE)){
+    if(grepl("\\.R$", r[[1]], ignore.case = TRUE)){
       # filepath
       assert_that(is.readable(r), is.string(r))
       rchars <- readLines(r)
@@ -194,7 +199,7 @@ cr_buildstep_docker <- function(image,
 #' @examples
 #'
 #' # assumes you have previously saved git ssh key via KMS called "git_key"
-#' Yaml(
+#' cr_build_yaml(
 #'      steps = c(
 #'           cr_buildstep_gitsetup("my_keyring", "git_key"),
 #'           cr_buildstep_git(c("clone",
@@ -225,7 +230,6 @@ cr_buildstep_gitsetup <- function(keyring = "my-keyring",
                          keyring = keyring,
                          key = key,
                          volumes = git_volume()),
-    #TODO: pull in the host_file in inst/ssh/host_file
     cr_buildstep_extract(bs, 2)
   )
 }
@@ -288,7 +292,7 @@ cr_buildstep_git <- function(
 #' steps <- cr_buildstep_pkgdown("$_GITHUB_REPO",
 #'                      "cloudbuild@google.com",
 #'                      env = c("MYVAR=$_MY_VAR", "PROJECT=$PROJECT_ID"))
-#' build_yaml <- Yaml(steps = steps)
+#' build_yaml <- cr_build_yaml(steps = steps)
 #' my_source <- cr_build_source(RepoSource("my_repo", branch="master"))
 #' build <- cr_build_make(build_yaml, source = my_source)
 cr_buildstep_pkgdown <- function(
@@ -303,7 +307,6 @@ cr_buildstep_pkgdown <- function(
   pd <- system.file("cloudbuild/cloudbuild_pkgdown.yml",
                     package = "googleCloudRunner")
 
-
   # In yaml.load: NAs introduced by coercion: . is not a real
   pdb <- suppressWarnings(cr_build_make(pd))
 
@@ -317,11 +320,12 @@ cr_buildstep_pkgdown <- function(
                           cipher = cipher),
     cr_buildstep_git(c("clone",repo, "repo")),
     pkg_env,
-    cr_buildstep_git(c("add", "."), dir = "repo"),
+    cr_buildstep_git(c("add", "--all"), dir = "repo"),
     cr_buildstep_git(c("commit", "-a", "-m",
                        "[skip travis] Build website from commit ${COMMIT_SHA}: \
 $(date +\"%Y%m%dT%H:%M:%S\")"),
                      dir = "repo"),
+    cr_buildstep_git(c("status"), dir = "repo"),
     cr_buildstep_git("push", repo, dir = "repo")
   )
 

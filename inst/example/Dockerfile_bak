@@ -1,4 +1,4 @@
-FROM trestletech/plumber
+FROM gcr.io/gcer-public/cloudrunner:master
 LABEL maintainer="cloudRunner"
 
 COPY [".", "./"]

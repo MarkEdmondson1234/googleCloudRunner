@@ -11,7 +11,7 @@ cr_deploy_pkgdown(trigger, steps = NULL,
   build_image = "gcr.io/gcer-public/packagetools:master")
 }
 \arguments{
-\item{trigger}{The trigger which will be a \link{RepoSource} or a \link{GitHubEventsConfig}}
+\item{trigger}{The trigger source which will be a \link{RepoSource} or a \link{GitHubEventsConfig}}
 
 \item{steps}{extra steps to run before the pkgdown website steps run}
 
@@ -50,4 +50,8 @@ cr_deploy_pkgdown(my_repo)
 }
 \seealso{
 Create your own custom deployment using \link{cr_buildstep_pkgdown} which this function uses with some defaults
+
+Other Deployment functions: \code{\link{cr_deploy_docker}},
+  \code{\link{cr_deploy_run}}, \code{\link{cr_deploy_r}}
 }
+\concept{Deployment functions}

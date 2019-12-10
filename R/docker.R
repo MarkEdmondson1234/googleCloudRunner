@@ -17,17 +17,18 @@
 cr_dockerfile <- function(deploy_folder, ...){
   check_package_installed("containerit")
   docker <- suppressWarnings(
-    containerit::dockerfile(deploy_folder,
-                            image = "trestletech/plumber",
-                            offline = FALSE,
-                            cmd = containerit::Cmd("api.R"),
-                            maintainer = NULL,
-                            container_workdir = NULL,
-                            entrypoint = containerit::Entrypoint("R",
-                                                                 params = list("-e",
-                                                                               "pr <- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))")),
-                            filter_baseimage_pkgs = FALSE,
-                            ...))
+    containerit::dockerfile(
+      deploy_folder,
+      image = "trestletech/plumber",
+      offline = FALSE,
+      cmd = containerit::Cmd("api.R"),
+      maintainer = NULL,
+      container_workdir = NULL,
+      entrypoint = containerit::Entrypoint("R",
+                       params = list("-e",
+                                     "pr <- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))")),
+      filter_baseimage_pkgs = FALSE,
+      ...))
 
   containerit::addInstruction(docker) <-containerit:::Copy(".","./")
 
@@ -45,18 +46,21 @@ cr_dockerfile <- function(deploy_folder, ...){
 }
 
 use_or_create_dockerfile <- function(local, dockerfile){
+
   local_files <- list.files(local)
   if("Dockerfile" %in% local_files){
+    myMessage("Dockerfile found in ",local, level = 3)
     return(TRUE)
   }
   # if no dockerfile, attempt to create it
   if(is.null(dockerfile)){
+    myMessage("Creating Dockerfile from ",local, level = 3)
     # creates and write a dockerfile to the folder
     cr_dockerfile(local)
 
   } else {
     assert_that(
-      is.readable(file.path(local, dockerfile))
+      is.readable(dockerfile)
     )
     myMessage("Copying Dockerfile from ", dockerfile," to ",local, level = 3)
     file.copy(dockerfile, file.path(local, "Dockerfile"))

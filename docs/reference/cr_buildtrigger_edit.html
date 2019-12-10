@@ -166,11 +166,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>BuildTrigger</th>
-      <td><p>The <a href='BuildTrigger.html'>BuildTrigger</a> object to pass to this method</p></td>
+      <td><p>The <a href='BuildTrigger.html'>BuildTrigger</a> object to update to</p></td>
     </tr>
     <tr>
       <th>triggerId</th>
-      <td><p>ID of the `BuildTrigger` to get or a <code>BuildTriggerResponse</code> object</p></td>
+      <td><p>ID of the `BuildTrigger` to edit or a previous <code>BuildTriggerResponse</code> object that will be edited</p></td>
     </tr>
     <tr>
       <th>projectId</th>
@@ -185,6 +185,7 @@
   <code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a></code>,
   <code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a></code>,
   <code><a href='cr_buildtrigger_list.html'>cr_buildtrigger_list</a></code>,
+  <code><a href='cr_buildtrigger_make.html'>cr_buildtrigger_make</a></code>,
   <code><a href='cr_buildtrigger_run.html'>cr_buildtrigger_run</a></code>,
   <code><a href='cr_buildtrigger.html'>cr_buildtrigger</a></code></p></div>
 
@@ -206,7 +207,6 @@
   <span class='kw'>description</span> <span class='kw'>=</span> <span class='st'>"edited trigger"</span>)
 
 <span class='no'>edited</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_buildtrigger_edit</span>(<span class='no'>bt3</span>, <span class='kw'>triggerId</span> <span class='kw'>=</span> <span class='no'>bt2</span>)
-<span class='co'># Error: API returned: trigger (1080525199262, ) not found</span>
 
 }</div></pre>
   </div>

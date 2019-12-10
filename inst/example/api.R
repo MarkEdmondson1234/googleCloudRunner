@@ -39,14 +39,10 @@ function(spec){
 
 #' Recieve pub/sub message
 #' @post /pubsub
-function(req){
-  # https://cloud.google.com/run/docs/tutorials/pubsub
-  if(any(is.null(req$postBody), is.null(req$postBody$message))){
-    stop("Bad request: invalid pub/sub message format")
-  }
+#' @param message a pub/sub message
+function(message=NULL){
 
-  stuff <- jsonlite::base64_dec(req$postBodymessage$message$data)
-
-  cat(stuff)
+  pub <- function(x){paste("Echo:", x)}
+  googleCloudRunner::cr_plumber_pubsub(message, pub)
 
 }

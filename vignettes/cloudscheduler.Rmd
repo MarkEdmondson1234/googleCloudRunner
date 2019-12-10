@@ -6,6 +6,13 @@ Cloud Scheduler is a scheduler service in the Google Cloud that uses cron like s
 
 googleCloudRunner uses Cloud Scheduler to help schedule Cloud Builds.
 
+Cloud Scheduler can schedule HTTP requests to any endpoint:
+
+```r
+cr_scheduler(name = "my-webhook", "14 5 * * *", 
+             httpTarget = HttpTarget(httpMethod="GET", uri = "https://mywebhook.com"))
+```
+
 ## Schedule Cloud Build
 
 As Cloud Build can run any code in a container, it becomes a powerful way to setup data flows.  These can be scheduled via Cloud Scheduler.  
@@ -21,24 +28,55 @@ cr_schedule("15 5 * * *", name="cloud-build-test1",
 
 We use `cr_build_make()` and `cr_build_schedule_http()` to create the Cloud Build API request, and then send that to the Cloud Scheduler API via its `httpTarget` parameter.
 
-Cloud Scheduler can schedule HTTP requests to any endpoint:
-
-```r
-cr_scheduler(name = "my-webhook", "14 5 * * *", 
-             httpTarget = HttpTarget(httpMethod="GET", uri = "https://mywebhook.com"))
-```
-
 Update a schedule by specifying the same name and the `overwrite=TRUE` flag.  You need then need to supply what you want to change, everything else will remain as previously configured.
 
 ```r
 cr_schedule("my-webhook", "12 6 * * *", overwrite=TRUE)
 ```
-## Build and schedule an R script
 
-Putting the above together serverlessly, to schedue an R script the steps are:
+## Schedule an R script
+
+A common use case is scheduling an R script.  This is provided by `cr_deploy_r()`
+
+```r
+# this can be an R filepath or lines of R read in from a script
+r_lines <- c("list.files()",
+              "library(dplyr)",
+              "mtcars %>% select(mpg)",
+              "sessionInfo()")
+
+# example code runs against a source that is a mirrored GitHub repo
+source <- cr_build_source(RepoSource("googleCloudStorageR",
+                                      branchName = "master"))
+
+# check the script runs ok
+cr_deploy_r(r_lines, source = source)
+
+# schedule the script once its working
+cr_deploy_r(r_lines, schedule = "15 21 * * *", source = source)
+```
+
+You may want to customise the R docker image you run code from - in this case build your docker image first with your R libraries installed, then specify that image in your R deployment:
+
+```r
+cr_deploy_docker("my_folder_with_dockerfile", 
+                 image_name = "gcr.io/my-project/my-image",
+                 tag = "dev")
+
+cr_deploy_r(r_lines, 
+            schedule = "15 21 * * *", 
+            source = source,
+            r_image = "gcr.io/my-project/my-image:dev")
+```
+
+## Build and schedule an R script (custom)
+
+If you want to customise deployments, then the steps covered by `cr_deploy_r()` are covered below.
+
+To schedue an R script the steps are:
 
 1. Create your R script 
-2. Bundle the R script with a Dockerfile
+2. Select or build an R enabled Dockerfile to run the R code
 3. Build the Docker image on Cloud Build and push to "gcr.io/your-project/your-name"
 4. Schedule calling the Docker image using Cloud Scheduler
 
@@ -92,5 +130,5 @@ cr_schedule("15 5 * * *", name="scheduled_r",
 
 Your R script should now be scheduled and running in its own environment.
 
-You can automate updates to the script and/or Docker container or schedule seperately, by redoing any of the steps above. 
+You can automate updates to the script and/or Docker container or schedule separately, by redoing any of the steps above. 
 

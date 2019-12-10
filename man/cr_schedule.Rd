@@ -11,7 +11,7 @@ cr_schedule(name, schedule = NULL, httpTarget = NULL,
 \arguments{
 \item{name}{Optionally caller-specified in CreateJob, after}
 
-\item{schedule}{Required, except when used with UpdateJob}
+\item{schedule}{A cron schedule e.g. \code{"15 5 * * *"}}
 
 \item{httpTarget}{A HTTP target object \link{HttpTarget}}
 

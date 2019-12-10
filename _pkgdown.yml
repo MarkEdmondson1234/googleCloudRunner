@@ -53,7 +53,6 @@ reference:
       - Source
       - RepoSource
       - StorageSource
-      - Yaml
   - title: "Cloud Build creation functions"
     desc: >
       Functions for creation of cloudbuild.yaml files and build steps
@@ -72,6 +71,7 @@ reference:
     contents:
       - matches("cr_run")
       - cr_deploy_run
+      - cr_plumber_pubsub
   - title: "Cloud Scheduler functions"
     desc: >
       Functions for working with Cloud Scheduler

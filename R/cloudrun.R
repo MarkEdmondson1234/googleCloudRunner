@@ -1,8 +1,9 @@
 #' Create a CloudRun service.
 #'
-#' Deploys an existing gcr.io image.  Use \link{cr_deploy_docker} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.
+#' Deploys an existing gcr.io image.
 #'
 #' @seealso \href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
+#' @seealso Use \link{cr_deploy_docker} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.
 #'
 #' @param image The name of the image to create or use in deployment - \code{gcr.io}
 #' @param name Name for deployment on Cloud Run
@@ -19,7 +20,8 @@
 #' @details
 #'
 #'  Uses Cloud Build to deploy an image to Cloud Run
-#'  https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run
+#'
+#' @seealso \href{https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run}{Deploying Cloud Run using Cloud Build}
 #'
 #' @export
 #' @examples
@@ -43,7 +45,8 @@ cr_run <- function(image,
   }
 
   rstudio_add_output(task_id,
-                     paste("\n#Launching CloudRun image: \n", image))
+                     paste("\n#> Launching CloudRun image: \n",
+                           image))
 
   if(allowUnauthenticated){
     auth_calls <- "--allow-unauthenticated"
@@ -52,7 +55,7 @@ cr_run <- function(image,
   }
 
   # use cloud build to deploy
-  run_yaml <- Yaml(
+  run_yaml <- cr_build_yaml(
     steps = c(
       cr_buildstep("gcloud",
          c("beta","run","deploy", name,
@@ -67,14 +70,17 @@ cr_run <- function(image,
 
   build <- cr_build(run_yaml,
                     projectId=projectId,
-                    timeout = timeout)
+                    timeout = timeout,
+                    launch_browser=launch_browser)
 
-  result <- cr_build_wait(build, projectId = projectId, task_id=task_id)
+  result <- cr_build_wait(build,
+                          projectId = projectId,
+                          task_id=task_id)
 
   if(result$status == "SUCCESS"){
     run <- cr_run_get(name, projectId = projectId)
     rstudio_add_output(task_id,
-                       paste("\n#Running at: ",
+                       paste("\n#> Running at: ",
                              run$status$url))
     rstudio_add_state(task_id, "SUCCESS")
 
@@ -113,7 +119,8 @@ make_endpoint <- function(endbit){
             paste(endpoints, collapse = " "), " got: ", region)
   }
 
-  sprintf("https://%s-run.googleapis.com/apis/serving.knative.dev/v1/%s", region, endbit)
+  sprintf("https://%s-run.googleapis.com/apis/serving.knative.dev/v1/%s",
+          region, endbit)
 }
 
 
@@ -140,10 +147,13 @@ cr_run_list <- function(projectId = cr_project_get(),
   )
 
   url <- make_endpoint(sprintf("namespaces/%s/services", projectId))
-  myMessage("Cloud Run services in region: ", .cr_env$region, level = 3)
+  myMessage("Cloud Run services in region: ",
+            .cr_env$region, level = 3)
   # run.namespaces.services.list
   #TODO: paging
-  pars <-  list(labelSelector = labelSelector, continue = NULL, limit = limit)
+  pars <-  list(labelSelector = labelSelector,
+                continue = NULL,
+                limit = limit)
   f <- gar_api_generator(url,
                          "GET",
                          pars_args = rmNullObs(pars),
@@ -174,7 +184,8 @@ parse_service_list_post <- function(x){
 
   data.frame(
     name = x$metadata$name,
-    container = unlist(lapply(x$spec$template$spec$containers, function(x) x$image)),
+    container = unlist(lapply(x$spec$template$spec$containers,
+                              function(x) x$image)),
     url = x$status$url,
     stringsAsFactors = FALSE
   )
@@ -196,10 +207,12 @@ parse_service_list_post <- function(x){
 #' @export
 cr_run_get <- function(name, projectId = cr_project_get()) {
 
-  url <- make_endpoint(sprintf("namespaces/%s/services/%s", projectId, name))
+  url <- make_endpoint(sprintf("namespaces/%s/services/%s",
+                               projectId, name))
 
   # run.namespaces.services.get
-  f <- gar_api_generator(url, "GET", data_parse_function = parse_service_get,
+  f <- gar_api_generator(url, "GET",
+                         data_parse_function = parse_service_get,
                          checkTrailingSlash = FALSE)
   f()
 

@@ -191,9 +191,9 @@
 <div id="create-cloudbuild-yaml-build-steps-via-yaml-and-cr_buildstep" class="section level2">
 <h2 class="hasAnchor">
 <a href="#create-cloudbuild-yaml-build-steps-via-yaml-and-cr_buildstep" class="anchor"></a>Create cloudbuild.yaml build steps via Yaml() and cr_buildstep()</h2>
-<p>Lets say you don’t want to write a cloudbuild.yaml file - instead its created all within R using the yaml helper functions <code><a href="../reference/Yaml.html">Yaml()</a></code> and <code>cr_buildstep</code>. Refer to the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yaml config spec</a> on what it expected in the file.</p>
+<p>Lets say you don’t want to write a cloudbuild.yaml file - instead its created all within R using the yaml helper functions <code>Yaml()</code> and <code>cr_buildstep</code>. Refer to the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yaml config spec</a> on what it expected in the file.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">image &lt;-<span class="st"> "gcr.io/your-project/your-name"</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">my_yaml &lt;-<span class="st"> </span><span class="kw"><a href="../reference/Yaml.html">Yaml</a></span>(</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">my_yaml &lt;-<span class="st"> </span><span class="kw">Yaml</span>(</a>
 <a class="sourceLine" id="cb8-3" data-line-number="3">      <span class="dt">steps =</span> <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(</a>
 <a class="sourceLine" id="cb8-4" data-line-number="4">                  <span class="st">"my-r-script"</span>,</a>
 <a class="sourceLine" id="cb8-5" data-line-number="5">                  <span class="st">"R -e run.R"</span>,</a>
@@ -225,7 +225,7 @@
 <code><a href="../reference/cr_buildstep_pkgdown.html">cr_buildstep_pkgdown()</a></code> - for setting up pkgdown documentation of an R package</li>
 </ul>
 <p>Combine buildsteps with <code><a href="https://rdrr.io/r/base/c.html">c()</a></code> e.g.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">my_yaml &lt;-<span class="st"> </span><span class="kw"><a href="../reference/Yaml.html">Yaml</a></span>(</a>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">my_yaml &lt;-<span class="st"> </span><span class="kw">Yaml</span>(</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">      <span class="dt">steps =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">                  <span class="st">"my-image"</span>, <span class="dt">tag=</span><span class="st">"dev"</span></a>
 <a class="sourceLine" id="cb10-4" data-line-number="4">                ),</a>
@@ -267,7 +267,7 @@
 <a class="sourceLine" id="cb13-16" data-line-number="16">br &lt;-<span class="st">  </span><span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(my_r, <span class="dt">name=</span> <span class="st">"gcr.io/gcer-public/packagetools:master"</span>)</a>
 <a class="sourceLine" id="cb13-17" data-line-number="17"></a>
 <a class="sourceLine" id="cb13-18" data-line-number="18"><span class="co"># send it for building</span></a>
-<a class="sourceLine" id="cb13-19" data-line-number="19"><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="kw"><a href="../reference/Yaml.html">Yaml</a></span>(<span class="dt">steps=</span>br))</a></code></pre></div>
+<a class="sourceLine" id="cb13-19" data-line-number="19"><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="kw">Yaml</span>(<span class="dt">steps=</span>br))</a></code></pre></div>
 </div>
 </div>
 <div id="build-triggers" class="section level2">

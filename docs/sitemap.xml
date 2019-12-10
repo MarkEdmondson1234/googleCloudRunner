@@ -28,9 +28,6 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/StorageSource.html</loc>
   </url>
   <url>
-    <loc>https://code.markedmondson.me/googleCloudRunner/reference/Yaml.html</loc>
-  </url>
-  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_bucket_get.html</loc>
   </url>
   <url>
@@ -59,6 +56,9 @@
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_write.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_yaml.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildstep.html</loc>
@@ -103,13 +103,22 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildtrigger_list.html</loc>
   </url>
   <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildtrigger_make.html</loc>
+  </url>
+  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildtrigger_run.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_docker.html</loc>
   </url>
   <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_gadget.html</loc>
+  </url>
+  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_pkgdown.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_r.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_run.html</loc>
@@ -122,6 +131,9 @@
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_email_set.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_plumber_pubsub.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_project_get.html</loc>
