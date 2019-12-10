@@ -2,10 +2,13 @@
 % Please edit documentation in R/init.R
 \name{cr_region_set}
 \alias{cr_region_set}
-\title{Set the endpoint for your CloudRun services}
+\alias{cr_region_get}
+\title{Get/Set the endpoint for your CloudRun services}
 \usage{
 cr_region_set(region = c("europe-west1", "us-central1",
   "asia-northeast1", "us-east1"))
+
+cr_region_get()
 }
 \arguments{
 \item{region}{Region for the endpoint}

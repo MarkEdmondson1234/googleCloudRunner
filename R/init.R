@@ -1,4 +1,4 @@
-#' Set the endpoint for your CloudRun services
+#' Get/Set the endpoint for your CloudRun services
 #'
 #' Can also use environment argument CR_REGION
 #'
@@ -18,7 +18,7 @@ cr_region_set <- function(region = c("europe-west1",
   .cr_env$region
 }
 
-#' Get Region Set
+#' @rdname cr_region_set
 #' @export
 cr_region_get <- function(){
 
@@ -42,7 +42,7 @@ ENDPOINTS <- c("us-central1",
                "us-east1")
 
 
-#' Set the projectId for your CloudRun services
+#' Get/Set the projectId for your CloudRun services
 #'
 #' Can also use environment argument GCE_DEFAULT_PROJECT_ID
 #'
@@ -57,7 +57,7 @@ cr_project_set <- function(projectId){
   .cr_env$project
 }
 
-#' Get ProjectId
+#' @rdname cr_project_set
 #' @export
 cr_project_get <- function(){
 
@@ -77,7 +77,7 @@ cr_project_get <- function(){
 
 
 
-#' Set the Cloud Storage bucket for your Cloud Build Service
+#' Get/Set the Cloud Storage bucket for your Cloud Build Service
 #'
 #' Can also use environment arg GCS_DEFAULT_BUCKET
 #'
@@ -92,8 +92,8 @@ cr_bucket_set <- function(bucket){
   .cr_env$bucket
 }
 
-#' Get Cloud Storage bucket
 #' @export
+#' @rdname cr_bucket_set
 cr_bucket_get <- function(){
 
   if(!is.null(.cr_env$bucket)){

@@ -19,7 +19,7 @@ test_that("[Online] Test deployments", {
 
   cr <- cr_deploy_run(runme)
   expect_equal(cr$kind, "Service")
-  expect_true(grepl("^gcr.io/mark-edmondson-gde/example",
+  expect_true(grepl("^gcr.io/.+/example$",
                     cr$spec$template$spec$containers$image))
 
   runs <- cr_run_list()

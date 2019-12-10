@@ -1,4 +1,4 @@
-#' Get the cloud build email that is set in CR_BUILD_EMAIL
+#' @rdname cr_email_set
 #' @export
 cr_email_get <- function(){
 
@@ -16,9 +16,9 @@ cr_email_get <- function(){
   .cr_env$cloudbuildEmail
 }
 
-#' Set cloud build email
+#' Get/Set cloud build email
 #'
-#' Needed so Cloud Scheduler can run Cloud Build jobs
+#' Needed so Cloud Scheduler can run Cloud Build jobs - can also set via environment argument CR_BUILD_EMAIL
 #'
 #' @seealso https://console.cloud.google.com/cloud-build/settings
 #'

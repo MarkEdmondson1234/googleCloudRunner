@@ -140,7 +140,7 @@ cr_schedule_list <- function(region = cr_region_get(),
   # cloudscheduler.projects.locations.jobs.list
   pars = list(pageToken = "", pageSize = 500)
   f <- gar_api_generator(url, "GET", pars_args = rmNullObs(pars),
-                         data_parse_function = function(x) x$jobs)
+                         data_parse_function = parse_schedule_list)
 
   o <- gar_api_page(f,
                page_f = function(x) x$nextPageToken,
@@ -148,6 +148,14 @@ cr_schedule_list <- function(region = cr_region_get(),
                page_arg = "pageToken")
 
   Reduce(rbind, o)
+}
+
+parse_schedule_list <- function(x){
+  if(is.null(x$jobs)){
+    return(data.frame())
+  }
+
+  x$jobs
 }
 
 #' Deletes a scheduled job.

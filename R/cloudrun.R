@@ -50,8 +50,16 @@ cr_run <- function(image,
 
   if(allowUnauthenticated){
     auth_calls <- "--allow-unauthenticated"
+    #sometimes unauth fails, so attempt to fix as per warning suggestion
+    auth_step <- cr_buildstep("gcloud",
+                              c("beta", "run", "services", "add-iam-policy-binding",
+                                "--region", region,
+                                "--member=allUsers",
+                                "--role=roles/run.invoker",
+                                name))
   } else {
     auth_calls <- "--no-allow-unauthenticated"
+    auth_step <- NULL
   }
 
   # use cloud build to deploy
@@ -64,8 +72,10 @@ cr_run <- function(image,
            "--platform", "managed",
            "--concurrency", concurrency,
            auth_calls
-         ))
-    )
+         ),
+         id = "deploy cloudrun"),
+      auth_step
+      )
   )
 
   build <- cr_build(run_yaml,

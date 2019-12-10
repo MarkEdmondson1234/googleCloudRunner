@@ -12,6 +12,12 @@ cr_deploy_gadget <- function(){
     Sys.getenv("GCE_AUTH_FILE") != ""
   )
 
+  # if invoked when the library is not loaded
+  if(!googleAuthR::gar_has_token()){
+    googleAuthR::gar_attach_auto_auth("https://www.googleapis.com/auth/cloud-platform",
+                                      environment_var = "GCE_AUTH_FILE")
+  }
+
   image_name_helper <- function(dockerImage,
                                 dockerFile,
                                 dockerProject,

@@ -2,9 +2,12 @@
 % Please edit documentation in R/init.R
 \name{cr_project_set}
 \alias{cr_project_set}
-\title{Set the projectId for your CloudRun services}
+\alias{cr_project_get}
+\title{Get/Set the projectId for your CloudRun services}
 \usage{
 cr_project_set(projectId)
+
+cr_project_get()
 }
 \arguments{
 \item{projectId}{The projectId}

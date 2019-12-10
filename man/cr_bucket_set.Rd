@@ -2,9 +2,12 @@
 % Please edit documentation in R/init.R
 \name{cr_bucket_set}
 \alias{cr_bucket_set}
-\title{Set the Cloud Storage bucket for your Cloud Build Service}
+\alias{cr_bucket_get}
+\title{Get/Set the Cloud Storage bucket for your Cloud Build Service}
 \usage{
 cr_bucket_set(bucket)
+
+cr_bucket_get()
 }
 \arguments{
 \item{bucket}{The GCS bucket}
