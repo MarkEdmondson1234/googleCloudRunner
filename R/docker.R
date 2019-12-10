@@ -46,6 +46,7 @@ cr_dockerfile <- function(deploy_folder, ...){
 }
 
 use_or_create_dockerfile <- function(local, dockerfile){
+
   local_files <- list.files(local)
   if("Dockerfile" %in% local_files){
     myMessage("Dockerfile found in ",local, level = 3)
@@ -59,7 +60,7 @@ use_or_create_dockerfile <- function(local, dockerfile){
 
   } else {
     assert_that(
-      is.readable(file.path(local, dockerfile))
+      is.readable(dockerfile)
     )
     myMessage("Copying Dockerfile from ", dockerfile," to ",local, level = 3)
     file.copy(dockerfile, file.path(local, "Dockerfile"))

@@ -41,16 +41,8 @@ function(spec){
 #' @post /pubsub
 #' @param message a pub/sub message
 function(message=NULL){
-  # https://cloud.google.com/run/docs/tutorials/pubsub
-  if(is.null(message)) stop("pub/sub message not found")
-  stopifnot(
-    is.list(message),
-    !is.null(message$data)
-  )
-  str(message)
 
-  the_data <- rawToChar(jsonlite::base64_dec(message$data))
-
-  the_data
+  pub <- function(x){paste("Echo:", x)}
+  googleCloudRunner::cr_plumber_pubsub(message, pub)
 
 }

@@ -7,5 +7,5 @@
 cr_deploy_gadget()
 }
 \description{
-Launch the googleCloudRunner deployment RStudio gadget
+You can assign a hotkey to the addin via Tools > Addins > Browse Addins > Keyboard shortcuts.  CTRL+SHIFT+D is a suggested hotkey.
 }

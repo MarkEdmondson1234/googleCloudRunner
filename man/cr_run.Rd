@@ -29,11 +29,10 @@ cr_run(image, name = basename(image), allowUnauthenticated = TRUE,
 \item{task_id}{RStudio task_id if you want to use an exisiting}
 }
 \description{
-Deploys an existing gcr.io image.  Use \link{cr_deploy_docker} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.
+Deploys an existing gcr.io image.
 }
 \details{
 Uses Cloud Build to deploy an image to Cloud Run
- https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run
 }
 \examples{
 
@@ -44,7 +43,11 @@ cr_run("gcr.io/my-project/my-image")
 \seealso{
 \href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
 
-Other Cloud Run functions: \code{\link{cr_run_get}},
-  \code{\link{cr_run_list}}
+Use \link{cr_deploy_docker} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.
+
+\href{https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run}{Deploying Cloud Run using Cloud Build}
+
+Other Cloud Run functions: \code{\link{cr_plumber_pubsub}},
+  \code{\link{cr_run_get}}, \code{\link{cr_run_list}}
 }
 \concept{Cloud Run functions}

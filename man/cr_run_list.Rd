@@ -22,7 +22,7 @@ List the Cloud Run services you have access to
 \seealso{
 \href{https://cloud.run}{Google Documentation for Cloud Run}
 
-Other Cloud Run functions: \code{\link{cr_run_get}},
-  \code{\link{cr_run}}
+Other Cloud Run functions: \code{\link{cr_plumber_pubsub}},
+  \code{\link{cr_run_get}}, \code{\link{cr_run}}
 }
 \concept{Cloud Run functions}

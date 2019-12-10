@@ -1,4 +1,6 @@
 #' Launch the googleCloudRunner deployment RStudio gadget
+#'
+#' You can assign a hotkey to the addin via Tools > Addins > Browse Addins > Keyboard shortcuts.  CTRL+SHIFT+D is a suggested hotkey.
 #' @import assertthat
 #' @export
 cr_deploy_gadget <- function(){
@@ -63,13 +65,18 @@ cr_deploy_gadget <- function(){
         miniUI::miniContentPanel(
           shiny::h2("Configure cr_deploy_run()"),
           shiny::textInput("apiFile",
-                           label = "Select folder with api.R file and Dockerfile",
-                           placeholder = "plumber/"),
+            label = "Select folder with api.R file and Dockerfile",
+            placeholder = "plumber/"),
           shiny::helpText("Working dir: ", getwd()),
+          shiny::textInput("apiDockerfile",
+             label = "Dockerfile to build from",
+             value = ""),
+          shiny::helpText("Leave Dockerfile blank to attempt autodetection"),
           # shiny::textInput("apiName", label = "Cloud Run service name",
           #                  placeholder = "api-name"),
-          shiny::textInput("apiImage", label = "Edit docker basename",
-                           placeholder = "my-image"),
+          shiny::textInput("apiImage",
+            label = "Edit docker basename",
+            placeholder = "my-image"),
           shiny::textInput("apiTag", label = "Docker tag",
                            value = "$BUILD_ID"),
           shiny::helpText(shiny::textOutput("apiGCRIO"))
@@ -175,9 +182,16 @@ cr_deploy_gadget <- function(){
         #   apiName <- input$apiName
         # }
 
+        if(input$apiDockerfile == ""){
+          dockerfile <- NULL
+        } else {
+          dockerfile <- input$apiDockerfile
+        }
+
         shiny::stopApp(
           cr_deploy_run(folder,
                         # remote = apiName,
+                        dockerfile = dockerfile,
                         image_name = image_name,
                         tag = input$apiTag,
                         launch_browser=input$interactive)
