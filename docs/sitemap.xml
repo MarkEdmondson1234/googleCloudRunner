@@ -28,9 +28,6 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/StorageSource.html</loc>
   </url>
   <url>
-    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_bucket_get.html</loc>
-  </url>
-  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_bucket_set.html</loc>
   </url>
   <url>
@@ -127,22 +124,13 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_dockerfile.html</loc>
   </url>
   <url>
-    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_email_get.html</loc>
-  </url>
-  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_email_set.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_plumber_pubsub.html</loc>
   </url>
   <url>
-    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_project_get.html</loc>
-  </url>
-  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_project_set.html</loc>
-  </url>
-  <url>
-    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_region_get.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_region_set.html</loc>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Set cloud build email — cr_email_set • googleCloudRunner</title>
+<title>Get/Set cloud build email — cr_email_get • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Set cloud build email — cr_email_set" />
-<meta property="og:description" content="Needed so Cloud Scheduler can run Cloud Build jobs" />
+<meta property="og:title" content="Get/Set cloud build email — cr_email_get" />
+<meta property="og:description" content="Needed so Cloud Scheduler can run Cloud Build jobs - can also set via environment argument CR_BUILD_EMAIL" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,16 +149,18 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Set cloud build email</h1>
+    <h1>Get/Set cloud build email</h1>
     
     <div class="hidden name"><code>cr_email_set.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Needed so Cloud Scheduler can run Cloud Build jobs</p>
+    <p>Needed so Cloud Scheduler can run Cloud Build jobs - can also set via environment argument CR_BUILD_EMAIL</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_email_set</span>(<span class='no'>cloudbuildEmail</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_email_get</span>()
+
+<span class='fu'>cr_email_set</span>(<span class='no'>cloudbuildEmail</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
