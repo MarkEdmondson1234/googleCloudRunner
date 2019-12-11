@@ -72,6 +72,9 @@ test_that("[Online] Test schedule jobs", {
   fid <-
     "projects/mark-edmondson-gde/locations/europe-west1/jobs/cloud-build-test1-zzzzz"
 
+  # in case a failed test run left it up
+  try(cr_schedule_delete(id))
+
   s1 <- cr_schedule("11 11 * * *", name=id,
               httpTarget = cr_build_schedule_http(build1))
   expect_equal(s1$name, fid)
