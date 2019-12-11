@@ -19,7 +19,8 @@ test_that("[Online] Test deployments", {
   cd <- cr_deploy_docker(runme, launch_browser = FALSE)
   expect_equal(cd$status,"SUCCESS")
 
-  cr <- cr_deploy_run(runme, dockerfile = "Dockerfile_bak")
+  cr <- cr_deploy_run(runme,
+                      dockerfile = paste0(runme, "Dockerfile_bak"))
 
   expect_equal(cr$kind, "Service")
   expect_true(grepl("^gcr.io/.+/example$",

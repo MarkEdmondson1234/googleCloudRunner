@@ -1,5 +1,4 @@
 FROM gcr.io/gcer-public/googlecloudrunner:master
-LABEL maintainer="cloudRunner"
 
 COPY [".", "./"]
 
