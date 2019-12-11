@@ -41,8 +41,7 @@ cr_schedule <- function(name,
                         ) {
 
   assert_that(
-    is.string(region),
-    is.string(schedule)
+    is.string(region)
   )
 
   stem <- "https://cloudscheduler.googleapis.com/v1"
@@ -69,6 +68,7 @@ cr_schedule <- function(name,
                                                   collapse = ",")))
     }
   } else {
+    assert_that(is.string(schedule))
     the_url <-
       sprintf("%s/projects/%s/locations/%s/jobs",
               stem, projectId, region)
