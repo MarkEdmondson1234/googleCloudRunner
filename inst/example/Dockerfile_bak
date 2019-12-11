@@ -1,4 +1,4 @@
-FROM gcr.io/gcer-public/cloudrunner:master
+FROM gcr.io/gcer-public/googlecloudrunner:master
 LABEL maintainer="cloudRunner"
 
 COPY [".", "./"]

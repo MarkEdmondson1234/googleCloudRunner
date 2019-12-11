@@ -36,11 +36,6 @@ cr_region_get <- function(){
   .cr_env$region
 }
 
-ENDPOINTS <- c("us-central1",
-               "asia-northeast1",
-               "europe-west1",
-               "us-east1")
-
 
 #' Get/Set the projectId for your CloudRun services
 #'

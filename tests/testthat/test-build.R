@@ -12,18 +12,30 @@ test_that("Online auth", {
 test_that("[Online] Test deployments", {
   skip_on_travis()
 
-  runme <- system.file("example/", package="googleCloudRunner", mustWork=TRUE)
+  runme <- system.file("example/",
+                       package="googleCloudRunner",
+                       mustWork=TRUE)
 
   cd <- cr_deploy_docker(runme, launch_browser = FALSE)
   expect_equal(cd$status,"SUCCESS")
 
-  cr <- cr_deploy_run(runme)
+  cr <- cr_deploy_run(runme, dockerfile = "Dockerfile_bak")
+
   expect_equal(cr$kind, "Service")
   expect_true(grepl("^gcr.io/.+/example$",
                     cr$spec$template$spec$containers$image))
 
   runs <- cr_run_list()
   expect_s3_class(runs, "data.frame")
+
+  # test pubsub works for example cloud run R app
+  test_url <- runs[runs$name == "example", "url"]
+  test_call <- httr::content(
+    httr::POST(paste0(test_url,"/pubsub"),
+               body = list(message = list(
+                 data = jsonlite::base64_enc("hello"))),
+               encode="json"))[[1]]
+  expect_equal(test_call, "Echo: hello")
 
   ss <- cr_schedule_list()
   expect_s3_class(ss, "data.frame")
