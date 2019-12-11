@@ -34,8 +34,9 @@ test_that("[Online] Test deployments", {
 
   # test pubsub works for example cloud run R app
   test_url <- cr$status$url
+  print(test_url)
   test_call <- cr_pubsub(paste0(cr$status$url,"/pubsub"), "hello")
-  expect_equal(test_call, "Echo: hello")
+  expect_equal(test_call[[1]], "Echo: hello")
 
   ss <- cr_schedule_list()
   expect_s3_class(ss, "data.frame")
