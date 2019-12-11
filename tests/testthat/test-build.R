@@ -75,7 +75,7 @@ test_that("[Online] Test schedule jobs", {
   # in case a failed test run left it up
   try(cr_schedule_delete(id))
 
-  s1 <- cr_schedule("11 11 * * *", name=id,
+  s1 <- cr_schedule(name=id, schedule = "11 11 * * *",
               httpTarget = cr_build_schedule_http(build1))
   expect_equal(s1$name, fid)
 
@@ -90,6 +90,8 @@ test_that("[Online] Test schedule jobs", {
   expect_equal(s5$state, "ENABLED")
   new_list <- cr_schedule_list()
   expect_true(s4$name %in% new_list$name)
+  s6 <- cr_schedule(name=id, description = "edited", overwrite = TRUE)
+  expect_equal(s6$description, "edited")
   deleteme <- cr_schedule_delete(id)
   expect_true(deleteme)
   newer_list <- cr_schedule_list()
