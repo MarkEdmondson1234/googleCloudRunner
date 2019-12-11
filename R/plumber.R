@@ -50,3 +50,21 @@ cr_plumber_pubsub <- function(message=NULL,
   pass_f(the_data)
 
 }
+
+#' Send a message to pubsub
+#'
+#' Useful for testing Cloud Run pubsub deployments
+#'
+#' @param payload Will be base64 encoded and placed in \code{message$data}
+#' @param endpoint The url endpoint of the PubSub service
+#'
+#' @export
+#' @importFrom httr content POST
+#' @importFrom jsonlite base64_enc
+cr_pubsub <- function(endpoint, payload = jsonlite::toJSON("hello")){
+  content(
+    POST(endpoint,
+         body = list(message = list(
+           data = base64_enc(payload))),
+         encode="json"))
+}

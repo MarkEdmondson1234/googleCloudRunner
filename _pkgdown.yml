@@ -72,6 +72,7 @@ reference:
       - matches("cr_run")
       - cr_deploy_run
       - cr_plumber_pubsub
+      - cr_pubsub
   - title: "Cloud Scheduler functions"
     desc: >
       Functions for working with Cloud Scheduler

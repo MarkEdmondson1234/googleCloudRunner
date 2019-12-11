@@ -14,6 +14,7 @@ Imports:
     assertthat (>= 0.2.0),
     googleAuthR (>= 1.1.1),
     googleCloudStorageR (>= 0.5.1),
+    httr (>= 1.4.1),
     jsonlite (>= 1.5),
     methods,
     openssl,
