@@ -15,7 +15,7 @@
 #' @export
 #' @family Cloud Build functions
 #' @examples
-#' image = "gcr.io/my-project/my-image"
+#' image <- "gcr.io/my-project/my-image"
 #' cr_build_yaml(steps = c(
 #'     cr_buildstep("docker", c("build","-t",image,".")),
 #'     cr_buildstep("docker", c("push",image)),
@@ -79,7 +79,7 @@ check_timeout <- function(timeout){
 #'     timeout = "660s")
 Yaml <- function(...){
   structure(
-    list(...),
+    rmNullObs(list(...)),
     class = c("cr_yaml","list")
   )
 }

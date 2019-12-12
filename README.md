@@ -9,7 +9,13 @@ Not an official Google product.
 
 ## Ambition
 
-Point your R code at a function, that automatically deploys and runs it in the GCP cloud via an API endpoint.  As a demo, will deploy R plumber APIs such as demonstrated here: https://github.com/MarkEdmondson1234/cloudRunR
+Select an R file, and have it scheduled in the cloud with a couple of clicks.
+
+Deploy your plumber API code automatically on Cloud Run to scale from 0 (no cost) to millions (auto-scaling)
+
+Integrate R inputs and outputs with other languages in a serverless cloud environment.
+
+Have R code react to events such as GitHub pushes, pub/sub messages and Cloud Storage file events. 
 
 ## Install
 

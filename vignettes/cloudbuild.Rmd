@@ -1,16 +1,18 @@
 ---
-title: "Serverless R via Cloud Build"
+title: "Serverless batched R scripts via Cloud Build"
 ---
 
-Cloud Build uses containers to run everything.  This means it can run almost any language/program or application including R. Having an easy way to create and trigger these builds from R means R can serve as a UI or gateway to any other program e.g. R can trigger a Cloud Build using `gcloud` to deploy Cloud Run applications.
+Cloud Build uses [Docker containers](https://www.docker.com/resources/what-container) to run everything.  This means it can run almost any language/program or application including R. Having an easy way to create and trigger these builds from R means R can serve as a UI or gateway to any other program e.g. R can trigger a Cloud Build using `gcloud` to deploy Cloud Run applications.
 
 The first 120 mins per day are free.  [See here for more priceinfo.](https://cloud.google.com/cloud-build/pricing)
 
-Cloud Run is an alternative if you want a URL endpoint for your script. If you want to run scripts that can be triggered one time, setup to trigger on GitHub events or pub/sub, or scheduled using Cloud Scheduler then Cloud Build is more suited to that use case. 
+If you want to run scripts that can be triggered one time, batch style, and set them up to trigger on GitHub events or pub/sub, or schedule them using Cloud Scheduler then Cloud Build is suited to your use case. 
+
+If you would also like to have your R code react in realtime to events such as HTTP or sub/sub events, such as a website or API endpoint, consider [Cloud Run](https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html). 
 
 ## cloudbuild.yaml
 
-Cloud Build is centered around the [cloudbuild.yaml format](https://cloud.google.com/cloud-build/docs/build-config) - you can use existing cloudbuild.yaml files or create your own in R using the yaml helper functions.
+Cloud Build is centered around the [cloudbuild.yaml format](https://cloud.google.com/cloud-build/docs/build-config) - you can use existing cloudbuild.yaml files or create your own in R using the cloudbuild.yaml helper functions.
 
 An example cloudbuild.yaml is shown below - this outputs the versions of docker and echos "Hello Cloud Build" and calls an R function:
 
@@ -28,16 +30,17 @@ steps:
 
 ```
 
-This cloudbuild.yaml file can be built directly via the `cr_build()` function:
+This cloudbuild.yaml file can be built online directly via the `cr_build()` function:
 
 ```r
 b1 <- cr_build("cloudbuild.yaml")
 ```
+
 The build will trigger an RStudio Jobs if you are using RStudio, or a webpage for the build logs to open.  Or you can choose to wait in R for the build to finish, like below:
 
 ```r
 b2 <- cr_build("cloudbuild.yaml", launch_browser = FALSE)
-cr_build_wait(b2)
+b3 <- cr_build_wait(b2)
 # Waiting for build to finish:
 #  |===||
 # Build finished
@@ -48,7 +51,13 @@ cr_build_wait(b2)
 # ...
 ```
 
-You can also reuse Cloud Build objects to re-run the same build.  This is helpful when you test a build works locally, then pass the result of a successful run to `cr_build_schedule_http()` to schedule it. 
+You can turn an existing build into a cloudbuild.yaml file, for instance to run in another project not using R. 
+
+```r
+cr_build_write(b3, file = "cloudbuild.yml")
+```
+
+You can also reuse Cloud Build objects to re-run a new build with the same settings.  This is helpful when you test a build works locally, then pass the result of a successful run to `cr_build_schedule_http()` to schedule it. 
 
 ```r
 # a cloud build you would like to schedule
@@ -61,9 +70,13 @@ cr_schedule("15 5 * * *", name="itworks-schedule",
 
 ## Cloud Build source
 
-Cloud Builds usually need code or data to work on to be useful.  This is specified by the `source` argument.  
+Cloud Builds sometimes need code or data to work on to be useful.  
 
-This can be a Cloud Source Repository (perhaps mirrored from GitHub) or a Cloud Storage bucket containg the code/data you want to operate on.  An example of specifying both is below:
+All cloudbuilds are launched in a serverless environment with a default directory `/workspace/`.  The Source is copied into this workspace before the build steps execute, so steps can share state and files. 
+
+Cloud Build sources are specified by the `source` argument.
+
+A source can be a [Cloud Source Repository](https://cloud.google.com/source-repositories/) (perhaps mirrored from GitHub) or a [Cloud Storage](https://cloud.google.com/storage/) bucket containg the code/data you want to operate on.  An example of specifying both is below:
 
 ```r
 gcs_source <- cr_build_source("gs://my-bucket", "my_code.tar.gz")
@@ -76,14 +89,9 @@ build1 <- cr_build("cloudbuild.yaml", source = gcs_source)
 build2 <- cr_build("cloudbuild.yaml", source = repo_source)
 ```
 
-You can also turn an existing build into a cloudbuild.yaml file:
-
-```r
-cr_build_write(build1)
-```
-
-There is a helper function for automating creation of a Google Cloud Storage source called `cr_build_upload_gcs()`
-
+There is a helper function for automating creation of a Google Cloud Storage source called `cr_build_upload_gcs()` - this uses [`googleCloudStorageR`](http://code.markedmondson.me/googleCloudStorageR/)
+ to tar and upload your source code locally to your bucket, making it available to your build.
+ 
 This returns a `Source` object that can be used in build functions:
 
 ```
@@ -102,31 +110,24 @@ Cloud Builds can use reserved macros and variables to help with deployments in a
 * $REVISION_ID or $COMMIT_SHA: the commit SHA specified by RepoSource or resolved from the specified branch or tag.
 * $SHORT_SHA: first 7 characters of $REVISION_ID or $COMMIT_SHA.
 
-Custom macros can also be configured in the web UI, starting with _$ e.g. _$MY_CUSTOM_MACRO
+Custom macros can also be configured in the web UI, starting with _$ e.g. $_MY_CUSTOM_MACRO
 
-## Create cloudbuild.yaml build steps via Yaml() and cr_buildstep()
+## Create cloudbuild.yaml build steps via cr_build_yaml() and cr_buildstep()
 
-Lets say you don't want to write a cloudbuild.yaml file - instead its created all within R using the yaml helper functions `Yaml()` and `cr_buildstep`.  Refer to the [cloudbuild.yaml config spec](https://cloud.google.com/cloud-build/docs/build-config) on what it expected in the file. 
+Lets say you don't want to write a cloudbuild.yaml file - instead its created all within R using the yaml helper functions `cr_build_yaml()` and `cr_buildstep`.  Refer to the [cloudbuild.yaml config spec](https://cloud.google.com/cloud-build/docs/build-config) on what it expected in the file. 
 
 ```r
-image <- "gcr.io/your-project/your-name"
-my_yaml <- Yaml(
-      steps = cr_buildstep(
-                  "my-r-script",
-                  "R -e run.R",
-                  prefix = "gcr.io/my-r-images/"
-                ))
-my_yaml
+cr_build_yaml(steps = cr_buildstep( "gcloud","version"))
 #==cloudRunnerYaml==
 #steps:
-#- name: gcr.io/my-r-images/my-r-script
-#  args: R -e run.R
-#  dir: deploy
+#- name: gcr.io/cloud-builders/gcloud
+#  args: version
 ```
 
 You can also write out the yaml into your own cloudbuild.yaml
 
 ```r
+my_yaml <- cr_build_yaml(steps = cr_buildstep( "gcloud","version"))
 cr_build_write(my_yaml, file = "cloudbuild.yaml")
 ```
 
@@ -134,7 +135,7 @@ This allows you to programmatically create cloudbuild yaml files for other langu
 
 ### Pre-made Build Step templates
 
-Some helpful build yamls are included:
+Some helpful build steps you can use in your own cloudbuild steps are included:
 
 * `cr_buildstep_docker()` - for building and pushing Docker images
 * `cr_buildstep_decrypt()` - for using Google Key management store to decrypt auth files
@@ -145,32 +146,21 @@ Some helpful build yamls are included:
 Combine buildsteps with `c()` e.g.
 
 ```r
-my_yaml <- Yaml(
-      steps = c(cr_buildstep_docker(
-                  "my-image", tag="dev"
-                ),
-                cr_buildstep_decrypt(
-                  "secret","auth.json","keyring","key"
-                ),
-                cr_buildstep(
-                  "my-r-script",
-                  c("Rscript","-e", "run.R"),
-                  prefix = "gcr.io/my-r-images/"
-                ),
-      images = "gcr.io/my-r-images/my-image"))
+cr_build_yaml(
+      steps = c(
+        cr_buildstep("gcloud","version"),
+        cr_buildstep_docker("my-image", tag="dev"),
+        cr_buildstep_decrypt("secret","auth.json","keyring","key"),
+        cr_buildstep_r("sessionInfo()")),
+      images = "gcr.io/my-project/my-image")
 ```
 
-The code/source of the build also usually needs to be included.  This can be a Cloud Repository mirrored from GitHub, but here we will upload it to a folder on your own private Google Cloud Storage bucket via the helper `cr_build_upload_gcs()`
+Before building this example, the code/source of the build will be included.  Here we will upload it to a folder on your own private Google Cloud Storage bucket via the helper `cr_build_upload_gcs()`
 
 This returns a `Source` object that can be used in build functions:
 
 ```r
 storage <- cr_build_upload_gcs("my_folder")
-```
-
-Putting the above together:
-
-```r
 cr_build(my_yaml, source = storage)
 ```
 
@@ -206,7 +196,7 @@ cr_build(Yaml(steps=br))
 
 ## Build Triggers
 
-Once you have build steps and possibly a source created, you can either set these up to run on a schedule via `cr_schedule()` or you can use triggers that will run upon certain events.  These include GitHub commits and pull requests.  These Build Triggers can be setup in the webUI or programatically from R via the `cr_buildtrigger*` functions.
+Once you have build steps and possibly a source created, you can either set these up to run on a schedule via `cr_schedule()` or you can use triggers that will run upon certain events.  These include GitHub commits and pull requests.  These Build Triggers can be setup in the webUI or programatically from R via the `cr_buildtrigger()` functions.
 
 To work with GitHub events, configure GitHub to use the offical [Google Cloud Build app](https://github.com/marketplace/google-cloud-build) and then construct your GitHub triggers using `GitHubEventsConfig()`.
 

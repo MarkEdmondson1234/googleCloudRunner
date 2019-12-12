@@ -6,11 +6,14 @@ Here will be some example use cases you can use googleCloudRunner for.
 
 Since almost any code can be called and passed via Docker images, there is a lot of potential uses.
 
-* Checking a package, creating a website, deploying
+* Scheduling R scripts in the cloud
+* R APIs to call from anywhere
+* Triggering R code to run on events, such as BigQuery table updates or GitHub pushes
+* Checking a package, creating a website, deploying it to GitHub
+* Running authenticated tests for R packages in private environment
 * Creating an Rmarkdown powered website using Cloud Run
-* Helper container images on gcr.io/gcer-public/
-* Showcase some useful cloudbuilds such as [slackbot](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/slackbot)
-
+* Integrating R with other language applications
+* Public and private Docker image creations on triggers
 
 ## Connecting to GitHub 
 
@@ -37,34 +40,85 @@ cr_buildtrigger("trig1", trigger = github, build = bb)
 ```
 
 
-### Create Docker image of a package (WIP)
+### Create Docker image of a package
 
 This is what is used to deploy this package as a Docker image to the public `googleComputeEngineR` docker image project, `gcr.io/gcer-public`
 
-Its probably easiest in this case to make [this a trigger on GitHub push](https://console.cloud.google.com/cloud-build/triggers), which you can do online with the same cloudbuild.yml file, but as an instructive example:
-
-A cloudbuild.yml using build tags (saved to "build/cloudbuild_cloudRunner.yml"):
-
-```yml
-steps:
-- name: 'gcr.io/cloud-builders/docker'
-  id: 'Build package'
-  args: ['build', '-t', 'gcr.io/gcer-public/googlecloudrunner:$BRANCH_NAME','.']
-- name: 'gcr.io/cloud-builders/docker'
-  id:  'Push to gcer-public repo'
-  args: ['push', 'gcr.io/gcer-public/googlecloudrunner:$BRANCH_NAME']
-images: 'gcr.io/gcer-public/googlecloudrunner:$BRANCH_NAME'
-```
-
-Make sure to deploy the above files to GitHub and then deploy:
+This builds a Docker image of the Dockerfile in the root directory of the GitHub repo, which is then [mirrored to Google Source Repositories](https://cloud.google.com/source-repositories/docs/mirroring-a-github-repository) via the GitHub app. 
 
 ```r
-library(googleCloudRunner)
+my_image <- "gcr.io/my-project/my-image"
 
 # this repo mirrored on Google Source repos
-my_repo <- Source(
-  repoSource=RepoSource("github_markedmondson1234_googlecloudrunner",
-                        branchName="master"))
+my_repo <- RepoSource("MarkEdmondson1234/googleCloudRunner",
+                      branchName="master"))
+                        
+docker_yaml <- cr_build_yaml(steps = cr_buildstep_docker(my_image))
 
-pb <- cr_build("build/cloudbuild_cloudRunner.yml", source = my_repo)
+built_docker <- cr_build(docker_yaml, source = my_repo)
+
+# make a build trigger so it builds on each push to master
+cr_buildtrigger("build-docker", trigger = my_repo, build = built_docker)
 ```
+
+### Trigger an R function from pubsub
+
+This uses `cr_deploy_run` to deploy an R API that can then be triggered from pub/sub events, such as Cloud logging events or when files get updated in a Cloud Storage bucket.  This in turn can trigger other Cloud Builds. 
+
+A plumber API that accepts pub/sub messages is facilitated by `cr_plumber_pubsub()`
+
+`api.R`:
+
+```r
+# example function echos back pubsub message
+# change to do something more interesting with event data
+pub <- function(x){
+  paste("Echo:", x)
+}
+
+#' Recieve pub/sub message
+#' @post /pubsub
+#' @param message a pub/sub message
+function(message=NULL){
+  googleCloudRunner::cr_plumber_pubsub(message, pub)
+}
+```
+
+Deploy the R API using an image that has plumber and googleCloudRunner installed.  There is one available at `gcr.io/gcer-public/googlecloudrunner`
+
+`Dockerfile`:
+
+```
+FROM gcr.io/gcer-public/googlecloudrunner:master
+
+COPY [".", "./"]
+
+ENTRYPOINT ["R", "-e", "pr <- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))"]
+CMD ["api.R"]
+```
+
+Put both the Dockerfile and the `api.R` script in the same folder then deploy it to Cloud Run:
+
+```r
+cr_deploy_run("the_folder")
+```
+
+Once built you will have a pub/sub live that will trigger the function you defined.  You can test pubsub messages via `cr_pubsub()`
+
+```r
+test_url <- "http://your-cloudrun-api.com/pubsub"
+
+cr_pubsub(test_url, "hello")
+# [1] "Echo: hello"
+```
+
+In this case the function only echos, but you can modify the function to call other libraries, functions, operate on data sent in pubsub such as bucket object names, BigQuery tableIds, etc.
+
+```r
+# perhaps the function calls another Cloud Build
+pub <- function(x){
+  cr_build(x, source = my_source)
+}
+```
+
+

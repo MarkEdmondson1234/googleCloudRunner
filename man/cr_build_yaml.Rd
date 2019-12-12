@@ -31,7 +31,7 @@ cr_build_yaml(steps, timeout = NULL, logsBucket = NULL,
 This can be written to disk or used directly with functions such as \link{cr_build}
 }
 \examples{
-image = "gcr.io/my-project/my-image"
+image <- "gcr.io/my-project/my-image"
 cr_build_yaml(steps = c(
     cr_buildstep("docker", c("build","-t",image,".")),
     cr_buildstep("docker", c("push",image)),
