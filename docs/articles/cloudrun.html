@@ -115,7 +115,9 @@
 
     
     
-<p>Cloud Run is a service that lets you deploy container images without worrying about the underlying servers or infrastructure. It is called with <code><a href="../reference/cr_run.html">cr_run()</a></code>, or you can automate a deployment via <code><a href="../reference/cr_deploy_run.html">cr_deploy_run()</a></code>.</p>
+<p><a href="https://cloud.run">Cloud Run</a> is a service that lets you deploy container images without worrying about the underlying servers or infrastructure. It is called with <code><a href="../reference/cr_run.html">cr_run()</a></code>, or you can automate a deployment via <code><a href="../reference/cr_deploy_run.html">cr_deploy_run()</a></code>.</p>
+<p>If you would like to have your R code react in realtime to events such as HTTP or sub/sub events, such as a website or API endpoint, Cloud Run is a good fit.</p>
+<p>If you want to run scripts that can be triggered one time, setup to trigger on GitHub events or pub/sub, or scheduled using Cloud Scheduler then <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html">Cloud Build</a> is suited to your use case.</p>
 <div id="quickstart---plumber-api" class="section level2">
 <h2 class="hasAnchor">
 <a href="#quickstart---plumber-api" class="anchor"></a>Quickstart - plumber API</h2>
@@ -167,7 +169,7 @@
 <p>The Cloud Run API is not called directly when deploying - instead a Cloud Build is created for deployment. <code>cr_run</code> creates a cloudbuild.yaml similar to the below:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># use cloud build to deploy</span></a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">image &lt;- <span class="st">"gcr.io/my-project/my-image"</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">Yaml(</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">cr_build_yaml(</a>
 <a class="sourceLine" id="cb2-4" data-line-number="4">    steps = list(</a>
 <a class="sourceLine" id="cb2-5" data-line-number="5">      cr_buildstep_docker(<span class="st">"my-image"</span>),</a>
 <a class="sourceLine" id="cb2-6" data-line-number="6">      cr_buildstep(<span class="st">"gcloud"</span>, c(<span class="st">"beta"</span>,<span class="st">"run"</span>,<span class="st">"deploy"</span>, <span class="st">"my-name"</span>,</a>
