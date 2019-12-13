@@ -234,11 +234,23 @@
 
 <span class='fu'>cr_buildtrigger</span>(<span class='st'>"trig1"</span>, <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='no'>github</span>, <span class='kw'>build</span> <span class='kw'>=</span> <span class='no'>bb</span>)
 
-<span class='fu'>cr_buildtrigger</span>(<span class='st'>"trig2"</span>, <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='no'>github</span>, <span class='kw'>build</span> <span class='kw'>=</span> <span class='no'>bb</span>, <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='no'>ss</span>)
+<span class='fu'>cr_buildtrigger</span>(<span class='st'>"trig2"</span>, <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='no'>github</span>,
+                <span class='kw'>build</span> <span class='kw'>=</span> <span class='no'>bb</span>,
+                <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='no'>ss</span>)
 
 <span class='co'># create a trigger that will build from the file in the repo</span>
+<span class='co'># this is similar to what cr_deploy_docker_github() does</span>
 <span class='fu'>cr_buildtrigger</span>(<span class='st'>"trig3"</span>, <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='no'>github</span>,
                 <span class='kw'>build</span> <span class='kw'>=</span> <span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>)
+
+<span class='no'>build_docker</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build_make.html'>cr_build_make</a></span>(
+                    <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span>(
+                      <span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a></span>(<span class='st'>"build-dockerfile"</span>),
+                      <span class='kw'>images</span> <span class='kw'>=</span> <span class='st'>"gcr.io/my-project/my-image"</span>
+                    ))
+
+<span class='fu'>cr_buildtrigger</span>(<span class='st'>"trig4"</span>, <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='no'>github</span>,
+                 <span class='kw'>build</span> <span class='kw'>=</span> <span class='no'>build_docker</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

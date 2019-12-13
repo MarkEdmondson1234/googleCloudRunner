@@ -196,7 +196,7 @@
 </div>
 <div id="make-the-build-and-optional-source" class="section level3">
 <h3 class="hasAnchor">
-<a href="#make-the-build-and-optional-source" class="anchor"></a>5. Make the build and optional source</h3>
+<a href="#make-the-build-and-optional-source" class="anchor"></a>4. Make the build and optional source</h3>
 <p>You may want your R code to operate on data in Google Cloud Storage or a git repo. Specify that source in your build, then make the build object:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">schedule_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">  <span class="dt">steps =</span> <span class="kw">cr_build_step</span>(<span class="st">"your-name"</span>, </a>
@@ -216,7 +216,7 @@
 </div>
 <div id="schedule-calling-the-docker-image-using-cloud-scheduler" class="section level3">
 <h3 class="hasAnchor">
-<a href="#schedule-calling-the-docker-image-using-cloud-scheduler" class="anchor"></a>6. Schedule calling the Docker image using Cloud Scheduler</h3>
+<a href="#schedule-calling-the-docker-image-using-cloud-scheduler" class="anchor"></a>5. Schedule calling the Docker image using Cloud Scheduler</h3>
 <p>Once you have a working build, schedule that build object by passing it to the <code><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http()</a></code> function, which constructs the Cloud Build API call for Cloud Scheduler to call at its scheduled times.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># you can feed the Build result back to the scheduler</span></a>
 <a class="sourceLine" id="cb9-2" data-line-number="2">cloud_build_target &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(schedule_build)</a>

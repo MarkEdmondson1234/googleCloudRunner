@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a build step to build and push a docker image — cr_buildstep_docker • googleCloudRunner</title>
+<title>Deploy Docker build from a GitHub repo — cr_deploy_docker_github • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Create a build step to build and push a docker image — cr_buildstep_docker" />
-<meta property="og:description" content="Create a build step to build and push a docker image" />
+<meta property="og:title" content="Deploy Docker build from a GitHub repo — cr_deploy_docker_github" />
+<meta property="og:description" content="This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,107 +149,62 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a build step to build and push a docker image</h1>
+    <h1>Deploy Docker build from a GitHub repo</h1>
     
-    <div class="hidden name"><code>cr_buildstep_docker.Rd</code></div>
+    <div class="hidden name"><code>cr_deploy_docker_github.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create a build step to build and push a docker image</p>
+    <p>This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildstep_docker</span>(<span class='no'>image</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>, <span class='kw'>location</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(), <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_deploy_docker_github</span>(<span class='no'>x</span>, <span class='kw'>image</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>,
+  <span class='kw'>image_tag</span> <span class='kw'>=</span> <span class='st'>"$SHORT_SHA"</span>, <span class='kw'>dockerfile_location</span> <span class='kw'>=</span> <span class='st'>"."</span>,
+  <span class='kw'>github_tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>())</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>x</th>
+      <td><p>The GitHub repo e.g. <code>MarkEdmondson1234/googleCloudRunner</code></p></td>
+    </tr>
+    <tr>
       <th>image</th>
-      <td><p>The image tag that will be pushed, starting with gcr.io or created by combining with <code>projectId</code> if not starting with gcr.io</p></td>
+      <td><p>The name of the image you want to build</p></td>
     </tr>
     <tr>
-      <th>tag</th>
-      <td><p>The tag to attached to the pushed image - can use <code>Build</code> macros</p></td>
+      <th>branch</th>
+      <td><p>A regex of the GitHub branches that will trigger a build</p></td>
     </tr>
     <tr>
-      <th>location</th>
-      <td><p>Where the Dockerfile to build is in relation to <code>dir</code></p></td>
+      <th>image_tag</th>
+      <td><p>What to tag the build docker image</p></td>
+    </tr>
+    <tr>
+      <th>dockerfile_location</th>
+      <td><p>Where the Dockerfile sits within the GitHub repo</p></td>
+    </tr>
+    <tr>
+      <th>github_tag</th>
+      <td><p>Regexes matching what tags to build. If not NULL then argument branch will be ignored</p></td>
     </tr>
     <tr>
       <th>projectId</th>
-      <td><p>The projectId</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Further arguments passed in to <a href='cr_buildstep.html'>cr_buildstep</a></p></td>
+      <td><p>The project to build under</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Cloud Buildsteps: <code><a href='cr_buildstep_decrypt.html'>cr_buildstep_decrypt</a></code>,
-  <code><a href='cr_buildstep_df.html'>cr_buildstep_df</a></code>,
-  <code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a></code>,
-  <code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a></code>,
-  <code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a></code>,
-  <code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a></code>,
-  <code><a href='cr_buildstep_r.html'>cr_buildstep_r</a></code>, <code><a href='cr_buildstep.html'>cr_buildstep</a></code></p></div>
+    <div class='dont-index'><p><a href='cr_deploy_docker.html'>cr_deploy_docker</a> which lets you build Dockerfiles for more generic use cases</p></div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"gcr.io/my-project/my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-12-13 15:29:31&gt; Image to be built: gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - build
-#&gt; - -t
-#&gt; - gcr.io/my-project/my-image:$BUILD_ID
-#&gt; - '.'
-#&gt; 
-#&gt; [[2]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - push
-#&gt; - gcr.io/my-project/my-image:$BUILD_ID
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-12-13 15:29:31&gt; Image to be built: gcr.io/mark-edmondson-gde/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - build
-#&gt; - -t
-#&gt; - gcr.io/mark-edmondson-gde/my-image:$BUILD_ID
-#&gt; - '.'
-#&gt; 
-#&gt; [[2]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - push
-#&gt; - gcr.io/mark-edmondson-gde/my-image:$BUILD_ID
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BRANCH_NAME"</span>)</div><div class='output co'>#&gt; <span class='message'>2019-12-13 15:29:31&gt; Image to be built: gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME</span></div><div class='output co'>#&gt; [[1]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - build
-#&gt; - -t
-#&gt; - gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME
-#&gt; - '.'
-#&gt; 
-#&gt; [[2]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/docker
-#&gt; args:
-#&gt; - push
-#&gt; - gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME
-#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
