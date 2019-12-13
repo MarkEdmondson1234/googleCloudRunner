@@ -48,11 +48,23 @@ ss <- list(`_MYVAR` = "TEST1",
 
 cr_buildtrigger("trig1", trigger = github, build = bb)
 
-cr_buildtrigger("trig2", trigger = github, build = bb, substitutions = ss)
+cr_buildtrigger("trig2", trigger = github,
+                build = bb,
+                substitutions = ss)
 
 # create a trigger that will build from the file in the repo
+# this is similar to what cr_deploy_docker_github() does
 cr_buildtrigger("trig3", trigger = github,
                 build = "inst/cloudbuild/cloudbuild.yaml")
+
+build_docker <- cr_build_make(
+                    cr_build_yaml(
+                      steps = cr_buildstep_docker("build-dockerfile"),
+                      images = "gcr.io/my-project/my-image"
+                    ))
+
+cr_buildtrigger("trig4", trigger = github,
+                 build = build_docker)
 }
 }
 \seealso{

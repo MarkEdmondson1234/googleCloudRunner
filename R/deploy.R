@@ -276,6 +276,46 @@ cr_deploy_docker <- function(local,
   b
 }
 
+#' Deploy Docker build from a GitHub repo
+#'
+#' This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit.
+#'
+#' @seealso \link{cr_deploy_docker} which lets you build Dockerfiles for more generic use cases
+#'
+#' @param x The GitHub repo e.g. \code{MarkEdmondson1234/googleCloudRunner}
+#' @param image The name of the image you want to build
+#' @param branch A regex of the GitHub branches that will trigger a build
+#' @param image_tag What to tag the build docker image
+#' @param dockerfile_location Where the Dockerfile sits within the GitHub repo
+#' @param github_tag Regexes matching what tags to build. If not NULL then argument branch will be ignored
+#' @param projectId The project to build under
+#'
+#' @export
+cr_deploy_docker_github <- function(x,
+                                    image = x,
+                                    branch = ".*",
+                                    image_tag = "$SHORT_SHA",
+                                    dockerfile_location = ".",
+                                    github_tag = NULL,
+                                    projectId = cr_project_get()){
+
+  build_docker <- cr_build_make(
+    cr_build_yaml(
+      steps = cr_buildstep_docker(image,
+                                  tag = image_tag,
+                                  location = dockerfile_location),
+      images = paste0("gcr.io/", projectId, "/", "image")
+      ))
+
+  github <- GitHubEventsConfig(x, branch = branch, tag = github_tag)
+
+  safe_name <- gsub("[^a-zA-Z1-9]","-", x)
+  cr_buildtrigger(safe_name,
+                  description = safe_name,
+                  trigger = github,
+                  build = build_docker)
+}
+
 #' Deploy a trigger for auto-builds a pkgdown website for an R package
 #'
 #' This will build a pkgdown website each time the trigger fires and deploy it to git

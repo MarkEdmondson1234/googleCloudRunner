@@ -105,7 +105,7 @@ Once the image is build successfully, you do not need to build it again for the 
 
 The the scheduler, you will only need the image you build `gcr.io/your-project/your-name` and call it via the arguments set up in the Dockerfile i.e. `R -e my_r_script.R`
 
-### 5. Make the build and optional source
+### 4. Make the build and optional source
 
 You may want your R code to operate on data in Google Cloud Storage or a git repo.  Specify that source in your build, then make the build object:
 
@@ -131,7 +131,7 @@ You may want to test the build works with a one off build first:
 schedule_build <- cr_build(my_build)
 ```
 
-### 6. Schedule calling the Docker image using Cloud Scheduler
+### 5. Schedule calling the Docker image using Cloud Scheduler
 
 Once you have a working build, schedule that build object by passing it to the `cr_build_schedule_http()` function, which constructs the Cloud Build API call for Cloud Scheduler to call at its scheduled times.
 
