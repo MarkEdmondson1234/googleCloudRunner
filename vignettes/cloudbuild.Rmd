@@ -189,7 +189,7 @@ my_r <- c("devtools::install()", "pkgdown::build_site()")
 br <-  cr_buildstep_r(my_r, name= "gcr.io/gcer-public/packagetools:master")
 
 # send it for building
-cr_build(Yaml(steps=br))
+cr_build(cr_build_yaml(steps=br))
 
 ```
 
