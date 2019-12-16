@@ -289,7 +289,8 @@ cr_deploy_docker <- function(local,
 #' @param dockerfile_location Where the Dockerfile sits within the GitHub repo
 #' @param github_tag Regexes matching what tags to build. If not NULL then argument branch will be ignored
 #' @param projectId The project to build under
-#'
+#' @param timeout timeout for the Docker build
+#' @family Deployment functions
 #' @export
 cr_deploy_docker_github <- function(x,
                                     image = x,
@@ -297,6 +298,7 @@ cr_deploy_docker_github <- function(x,
                                     image_tag = "$SHORT_SHA",
                                     dockerfile_location = ".",
                                     github_tag = NULL,
+                                    timeout = 600L,
                                     projectId = cr_project_get()){
 
   build_docker <- cr_build_make(
@@ -304,7 +306,8 @@ cr_deploy_docker_github <- function(x,
       steps = cr_buildstep_docker(image,
                                   tag = image_tag,
                                   location = dockerfile_location),
-      images = paste0("gcr.io/", projectId, "/", "image")
+      images = paste0("gcr.io/", projectId, "/", "image"),
+      timeout = timeout
       ))
 
   github <- GitHubEventsConfig(x, branch = branch, tag = github_tag)
