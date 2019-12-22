@@ -6,7 +6,7 @@
 \usage{
 cr_deploy_docker_github(x, image = x, branch = ".*",
   image_tag = "$SHORT_SHA", dockerfile_location = ".",
-  github_tag = NULL, projectId = cr_project_get())
+  github_tag = NULL, timeout = 600L, projectId = cr_project_get())
 }
 \arguments{
 \item{x}{The GitHub repo e.g. \code{MarkEdmondson1234/googleCloudRunner}}
@@ -21,6 +21,8 @@ cr_deploy_docker_github(x, image = x, branch = ".*",
 
 \item{github_tag}{Regexes matching what tags to build. If not NULL then argument branch will be ignored}
 
+\item{timeout}{timeout for the Docker build}
+
 \item{projectId}{The project to build under}
 }
 \description{
@@ -28,4 +30,9 @@ This helps the common use case of building a Dockerfile based on the contents of
 }
 \seealso{
 \link{cr_deploy_docker} which lets you build Dockerfiles for more generic use cases
+
+Other Deployment functions: \code{\link{cr_deploy_docker}},
+  \code{\link{cr_deploy_pkgdown}},
+  \code{\link{cr_deploy_run}}, \code{\link{cr_deploy_r}}
 }
+\concept{Deployment functions}

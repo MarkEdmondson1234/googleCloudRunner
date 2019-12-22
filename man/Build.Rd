@@ -91,11 +91,13 @@ Fields can include the following variables, which will be expanded when the buil
 \seealso{
 Other Cloud Build functions: \code{\link{RepoSource}},
   \code{\link{Source}}, \code{\link{StorageSource}},
+  \code{\link{cr_build_artifacts}},
   \code{\link{cr_build_make}},
   \code{\link{cr_build_status}},
   \code{\link{cr_build_upload_gcs}},
   \code{\link{cr_build_wait}},
   \code{\link{cr_build_write}},
+  \code{\link{cr_build_yaml_artifact}},
   \code{\link{cr_build_yaml}}, \code{\link{cr_build}}
 }
 \concept{Cloud Build functions}

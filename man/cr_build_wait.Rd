@@ -23,10 +23,13 @@ This will repeatedly call \link{cr_build_status} whilst the status is STATUS_UNK
 \seealso{
 Other Cloud Build functions: \code{\link{Build}},
   \code{\link{RepoSource}}, \code{\link{Source}},
-  \code{\link{StorageSource}}, \code{\link{cr_build_make}},
+  \code{\link{StorageSource}},
+  \code{\link{cr_build_artifacts}},
+  \code{\link{cr_build_make}},
   \code{\link{cr_build_status}},
   \code{\link{cr_build_upload_gcs}},
   \code{\link{cr_build_write}},
+  \code{\link{cr_build_yaml_artifact}},
   \code{\link{cr_build_yaml}}, \code{\link{cr_build}}
 }
 \concept{Cloud Build functions}

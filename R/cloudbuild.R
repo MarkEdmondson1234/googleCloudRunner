@@ -84,10 +84,13 @@ cr_build <- function(x,
   }
 
 
+  parse_f <- function(x){
+    structure(x,
+              class = "BuildOperationMetadata")
+  }
   # cloudbuild.projects.builds.create
   f <- gar_api_generator(url, "POST",
-        data_parse_function = function(x) structure(x,
-                                           class = "BuildOperationMetadata"))
+         data_parse_function = parse_f)
   stopifnot(is.gar_Build(build))
 
   o <- f(the_body = build)
@@ -137,6 +140,8 @@ cr_build_make <- function(yaml,
                           source = NULL,
                           timeout=NULL,
                           images=NULL,
+                          artifacts = NULL,
+                          options = NULL,
                           projectId = cr_project_get()){
 
   assert_that(
@@ -160,10 +165,24 @@ cr_build_make <- function(yaml,
     }
   }
 
+  if(is.null(artifacts)){
+    if(!is.null(stepsy$artifacts)){
+      artifacts <- stepsy$artifacts
+    }
+  }
+
+  if(is.null(options)){
+    if(!is.null(stepsy$options)){
+      options <- stepsy$options
+    }
+  }
+
   Build(steps = stepsy$steps,
         timeout = timeout,
         images = images,
-        source = source)
+        source = source,
+        options = options,
+        artifacts = artifacts)
 }
 
 #' Returns information about a previously requested build.
@@ -188,8 +207,83 @@ cr_build_status <- function(id = .Last.value,
                  projectId, the_id)
   # cloudbuild.projects.builds.get
   f <- gar_api_generator(url, "GET",
-          data_parse_function = function(x) as.gar_Build(x))
+                         data_parse_function = function(x) as.gar_Build(x))
   f()
+
+}
+
+#' Download artifacts from a build
+#'
+#' If a completed build includes artifact files this downloads them to local files
+#'
+#' @param build A \link{Build} object that includes the artifact location
+#' @param download_folder Where to download the artifact files
+#' @param overwrite Whether to overwrite existing local data
+#' @param path_regex A regex of files to fetch from the artifact bucket location.  This is due to not being able to support the path globs
+#'
+#' @details
+#' If your artifacts are using file glob (e.g. \code{myfolder/**}) to decide which workspace files are uploaded to Cloud Storage, you will need to create a path_regex of similar functionality (\code{"^myfolder/"}).  This is not needed if you use absolete path names such as \code{"myfile.csv"}
+#'
+#' @export
+#' @family Cloud Build functions
+#' @import assertthat
+#' @importFrom googleCloudStorageR gcs_list_objects gcs_get_object
+#'
+#' @examples
+#'
+#' r <- "write.csv(mtcars,file = 'artifact.csv')"
+#' ba <- cr_build_yaml(
+#'     steps = cr_buildstep_r(r),
+#'     artifacts = cr_build_yaml_artifact('artifact.csv')
+#'     )
+#'
+#' \dontrun{
+#'    #' build <- cr_build(ba)
+#' built <- cr_build_wait(build)
+#'
+#' cr_build_artifacts(built)
+#' }
+#'
+cr_build_artifacts <- function(build,
+                               download_folder = getwd(),
+                               overwrite = FALSE,
+                               path_regex = NULL){
+
+  assert_that(
+    is.gar_Build(build),
+    !is.null(build$artifacts$objects),
+    !is.null(build$artifacts$objects$location),
+    !is.null(build$artifacts$objects$paths)
+    )
+
+  bucket <- build$artifacts$objects$location
+  paths <- build$artifacts$objects$paths
+  just_bucket <- gsub("(gs://.+?)/(.+)$","\\1",bucket)
+  if(dirname(bucket) == "gs:"){
+    just_path <- NULL
+  } else {
+    just_path <- gsub("(gs://.+?)/(.+)$","\\2",bucket)
+  }
+
+  cloud_files <- gcs_list_objects(basename(just_bucket),
+                                  prefix = just_path)
+
+  # does not support glob
+  if(is.null(path_regex)){
+    cloud_files <- cloud_files[cloud_files$name %in% paths,]
+  } else {
+    assert_that(is.string(path_regex))
+    cloud_files <- cloud_files[grepl(path_regex, cloud_files$name), ]
+  }
+
+  lapply(cloud_files$name, function(x){
+    o <- paste0(just_bucket, x)
+    gcs_get_object(o,
+                   saveToDisk = x,
+                   overwrite = overwrite)
+  })
+
+  cloud_files$name
 
 }
 
@@ -385,29 +479,29 @@ Build <- function(Build.substitutions = NULL,
                   secrets = NULL) {
 
   structure(rmNullObs(list(Build.substitutions = Build.substitutions,
-                 Build.timing = Build.timing,
-                 results = results,
-                 logsBucket = logsBucket,
-                 steps = steps,
-                 buildTriggerId = buildTriggerId,
-                 id = id,
-                 tags = tags,
-                 startTime = startTime,
-                 substitutions = substitutions,
-                 timing = timing,
-                 sourceProvenance = sourceProvenance,
-                 createTime = createTime,
-                 images = images,
-                 projectId = projectId,
-                 logUrl = logUrl,
-                 finishTime = finishTime,
-                 source = source,
-                 options = options,
-                 timeout = timeout,
-                 status = status,
-                 statusDetail = statusDetail,
-                 artifacts = artifacts,
-                 secrets = secrets)),
+                           Build.timing = Build.timing,
+                           results = results,
+                           logsBucket = logsBucket,
+                           steps = steps,
+                           buildTriggerId = buildTriggerId,
+                           id = id,
+                           tags = tags,
+                           startTime = startTime,
+                           substitutions = substitutions,
+                           timing = timing,
+                           sourceProvenance = sourceProvenance,
+                           createTime = createTime,
+                           images = images,
+                           projectId = projectId,
+                           logUrl = logUrl,
+                           finishTime = finishTime,
+                           source = source,
+                           options = options,
+                           timeout = timeout,
+                           status = status,
+                           statusDetail = statusDetail,
+                           artifacts = artifacts,
+                           secrets = secrets)),
             class = c("gar_Build", "list"))
 }
 

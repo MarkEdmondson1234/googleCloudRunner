@@ -183,6 +183,27 @@ test_that("[Online] Test Build Triggers",{
 
 })
 
+test_that("Test build artifacts", {
+
+  r <- "write.csv(mtcars,file = 'artifact.csv')"
+  ba <- cr_build_yaml(
+    steps = cr_buildstep_r(r),
+    artifacts = cr_build_yaml_artifact('artifact.csv')
+    )
+
+  build <- cr_build(ba)
+  built <- cr_build_wait(build)
+
+  b <- cr_build_artifacts(built)
+  expect_equal(b, "artifact.csv")
+  expect_true(file.exists("artifact.csv"))
+  df <- read.csv("artifact.csv")
+  expect_s3_class(df, "data.frame")
+
+  unlink("artifact.csv")
+
+})
+
 context("Offline tests")
 
 test_that("Building Build Objects", {

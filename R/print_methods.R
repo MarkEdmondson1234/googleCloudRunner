@@ -67,6 +67,11 @@ print.gar_Build <- function(x, ...){
   }
   cat0("images: ", x$images)
   #cat0("source: ", x$source[[1]])
+  if(!is.null(x$artifacts)){
+    cat("artifacts:\n")
+    str(x$artifacts[[1]])
+  }
+
 }
 
 #' @method print cr_yaml

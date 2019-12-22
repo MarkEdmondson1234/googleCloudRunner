@@ -70,7 +70,8 @@ cr_deploy_r(r_lines, schedule = "15 21 * * *", source = source)
 \seealso{
 If you want to run R code upon certain events like GitHub pushes, look at \link{cr_buildtrigger}
 
-Other Deployment functions: \code{\link{cr_deploy_docker}},
+Other Deployment functions: \code{\link{cr_deploy_docker_github}},
+  \code{\link{cr_deploy_docker}},
   \code{\link{cr_deploy_pkgdown}},
   \code{\link{cr_deploy_run}}
 }

@@ -12,6 +12,7 @@
 #' @param images What images will be build from this cloudbuild
 #' @param artifacts What artifacts may be built from this cloudbuild
 #'
+#' @seealso \href{Build configuration overview for cloudbuild.yaml}{https://cloud.google.com/cloud-build/docs/build-config}
 #' @export
 #' @family Cloud Build functions
 #' @examples
@@ -45,6 +46,46 @@ cr_build_yaml <- function(steps,
     artifacts = artifacts
   )
 }
+
+#' Add an artifact for cloudbuild.yaml
+#'
+#' Add artifact objects to a build
+#'
+#' @param paths Which files from the working directory to upload to cloud storage once the build is finished.  Can use globs but see details of \link{cr_build_artifacts} on how that affects downloads
+#' @param bucket_dir The directory in the bucket the files will be uploaded to
+#' @param bucket the bucket to send to
+#' @family Cloud Build functions
+#' @export
+#' @examples
+#'
+#' r <- "write.csv(mtcars,file = 'artifact.csv')"
+#' cr_build_yaml(
+#'   steps = cr_buildstep_r(r),
+#'   artifacts = cr_build_yaml_artifact('artifact.csv')
+#'   )
+cr_build_yaml_artifact <- function(paths,
+                                   bucket_dir = NULL,
+                                   bucket = cr_bucket_get()){
+  if(grepl("^gs://", bucket)){
+    location <- bucket
+  } else {
+    location <- paste0("gs://", bucket)
+  }
+
+
+  if(!is.null(bucket_dir)){
+    location <- paste0(location, "/", bucket_dir)
+  }
+
+  list(
+    objects = list(
+      location = location,
+      paths = paths
+    )
+  )
+}
+
+
 
 #' @noRd
 #' @import assertthat

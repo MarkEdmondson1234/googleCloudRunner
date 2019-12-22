@@ -112,7 +112,9 @@ Cloud Builds can use reserved macros and variables to help with deployments in a
 
 Custom macros can also be configured in the web UI, starting with _$ e.g. $_MY_CUSTOM_MACRO
 
-## Create cloudbuild.yaml build steps via cr_build_yaml() and cr_buildstep()
+## Creating cloudbuild.yaml build steps 
+
+You can make your own cloudbuild.yaml files in R via `cr_build_yaml()` and `cr_buildstep()`
 
 Lets say you don't want to write a cloudbuild.yaml file - instead its created all within R using the yaml helper functions `cr_build_yaml()` and `cr_buildstep`.  Refer to the [cloudbuild.yaml config spec](https://cloud.google.com/cloud-build/docs/build-config) on what it expected in the file. 
 
@@ -133,7 +135,7 @@ cr_build_write(my_yaml, file = "cloudbuild.yaml")
 
 This allows you to programmatically create cloudbuild yaml files for other languages and triggers.  See more at this article on [creating custom build steps with your own Docker images](https://cloud.google.com/cloud-build/docs/create-custom-build-steps).
 
-### Pre-made Build Step templates
+## Pre-made Build Step templates
 
 Some helpful build steps you can use in your own cloudbuild steps are included:
 
@@ -164,7 +166,7 @@ storage <- cr_build_upload_gcs("my_folder")
 cr_build(my_yaml, source = storage)
 ```
 
-### R buildsteps
+## R buildsteps
 
 You can send in R code into a build trigger using `cr_buildstep_r()`.   It accepts both inline R code or a file location.  They default to the R images provided by Rocker [rocker-project.org](https://www.rocker-project.org/) or if you create your own R images you can reference those. 
 
@@ -193,6 +195,32 @@ cr_build(cr_build_yaml(steps=br))
 
 ```
 
+## Build Artifacts
+
+You may have some useful files or data after your buildsteps that you want to use later.  You can specify these files as **artifacts** that will be uploaded to a Google Cloud Storage bucket after the build finishes.  A helper function `cr_build_artifacts()` will take your build object and download the files to your local directory via `googleCloudStorageR`
+
+
+```r
+r <- "write.csv(mtcars,file = 'artifact.csv')"
+ba <- cr_build_yaml(
+     steps = cr_buildstep_r(r),
+     artifacts = cr_build_yaml_artifact('artifact.csv')
+     )
+
+build <- cr_build(ba)
+built <- cr_build_wait(build)
+
+cr_build_artifacts(built)
+# 2019-12-22 12:36:10 -- Saved artifact.csv to artifact.csv (1.7 Kb)
+
+read.csv("artifact.csv")
+#                     X  mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+#1            Mazda RX4 21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
+#2        Mazda RX4 Wag 21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
+#3           Datsun 710 22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
+#4       Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1
+# ... etc ...
+```
 
 ## Build Triggers
 

@@ -40,7 +40,7 @@ cr_buildtrigger("trig1", trigger = github, build = bb)
 ```
 
 
-### Create Docker image of a package
+## Create Docker image of a package
 
 This is what is used to deploy this package as a Docker image to the public `googleComputeEngineR` docker image project, `gcr.io/gcer-public`
 
@@ -61,7 +61,7 @@ built_docker <- cr_build(docker_yaml, source = my_repo)
 cr_buildtrigger("build-docker", trigger = my_repo, build = built_docker)
 ```
 
-### Trigger an R function from pubsub
+## Trigger an R function from pubsub
 
 This uses `cr_deploy_run` to deploy an R API that can then be triggered from pub/sub events, such as Cloud logging events or when files get updated in a Cloud Storage bucket.  This in turn can trigger other Cloud Builds. 
 
