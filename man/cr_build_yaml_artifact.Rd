@@ -4,8 +4,7 @@
 \alias{cr_build_yaml_artifact}
 \title{Add an artifact for cloudbuild.yaml}
 \usage{
-cr_build_yaml_artifact(paths, bucket_dir = NULL,
-  bucket = cr_bucket_get())
+cr_build_yaml_artifact(paths, bucket_dir = NULL, bucket = cr_bucket_get())
 }
 \arguments{
 \item{paths}{Which files from the working directory to upload to cloud storage once the build is finished.  Can use globs but see details of \link{cr_build_artifacts} on how that affects downloads}
@@ -26,15 +25,18 @@ cr_build_yaml(
   )
 }
 \seealso{
-Other Cloud Build functions: \code{\link{Build}},
-  \code{\link{RepoSource}}, \code{\link{Source}},
-  \code{\link{StorageSource}},
-  \code{\link{cr_build_artifacts}},
-  \code{\link{cr_build_make}},
-  \code{\link{cr_build_status}},
-  \code{\link{cr_build_upload_gcs}},
-  \code{\link{cr_build_wait}},
-  \code{\link{cr_build_write}},
-  \code{\link{cr_build_yaml}}, \code{\link{cr_build}}
+Other Cloud Build functions: 
+\code{\link{Build}()},
+\code{\link{RepoSource}()},
+\code{\link{Source}()},
+\code{\link{StorageSource}()},
+\code{\link{cr_build_artifacts}()},
+\code{\link{cr_build_make}()},
+\code{\link{cr_build_status}()},
+\code{\link{cr_build_upload_gcs}()},
+\code{\link{cr_build_wait}()},
+\code{\link{cr_build_write}()},
+\code{\link{cr_build_yaml}()},
+\code{\link{cr_build}()}
 }
 \concept{Cloud Build functions}

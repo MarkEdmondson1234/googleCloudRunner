@@ -4,9 +4,16 @@
 \alias{cr_deploy_docker_github}
 \title{Deploy Docker build from a GitHub repo}
 \usage{
-cr_deploy_docker_github(x, image = x, branch = ".*",
-  image_tag = "$SHORT_SHA", dockerfile_location = ".",
-  github_tag = NULL, timeout = 600L, projectId = cr_project_get())
+cr_deploy_docker_github(
+  x,
+  image = x,
+  branch = ".*",
+  image_tag = "$SHORT_SHA",
+  dockerfile_location = ".",
+  github_tag = NULL,
+  timeout = 600L,
+  projectId = cr_project_get()
+)
 }
 \arguments{
 \item{x}{The GitHub repo e.g. \code{MarkEdmondson1234/googleCloudRunner}}
@@ -31,8 +38,10 @@ This helps the common use case of building a Dockerfile based on the contents of
 \seealso{
 \link{cr_deploy_docker} which lets you build Dockerfiles for more generic use cases
 
-Other Deployment functions: \code{\link{cr_deploy_docker}},
-  \code{\link{cr_deploy_pkgdown}},
-  \code{\link{cr_deploy_run}}, \code{\link{cr_deploy_r}}
+Other Deployment functions: 
+\code{\link{cr_deploy_docker}()},
+\code{\link{cr_deploy_pkgdown}()},
+\code{\link{cr_deploy_run}()},
+\code{\link{cr_deploy_r}()}
 }
 \concept{Deployment functions}

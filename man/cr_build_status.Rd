@@ -20,15 +20,18 @@ The `Build` that is returned includes its status (such as `SUCCESS`,`FAILURE`, o
 \seealso{
 https://cloud.google.com/cloud-build/docs/api/reference/rest/Shared.Types/Status
 
-Other Cloud Build functions: \code{\link{Build}},
-  \code{\link{RepoSource}}, \code{\link{Source}},
-  \code{\link{StorageSource}},
-  \code{\link{cr_build_artifacts}},
-  \code{\link{cr_build_make}},
-  \code{\link{cr_build_upload_gcs}},
-  \code{\link{cr_build_wait}},
-  \code{\link{cr_build_write}},
-  \code{\link{cr_build_yaml_artifact}},
-  \code{\link{cr_build_yaml}}, \code{\link{cr_build}}
+Other Cloud Build functions: 
+\code{\link{Build}()},
+\code{\link{RepoSource}()},
+\code{\link{Source}()},
+\code{\link{StorageSource}()},
+\code{\link{cr_build_artifacts}()},
+\code{\link{cr_build_make}()},
+\code{\link{cr_build_upload_gcs}()},
+\code{\link{cr_build_wait}()},
+\code{\link{cr_build_write}()},
+\code{\link{cr_build_yaml_artifact}()},
+\code{\link{cr_build_yaml}()},
+\code{\link{cr_build}()}
 }
 \concept{Cloud Build functions}

@@ -46,6 +46,7 @@ print.BuildOperationMetadata <- function(x, ...){
 #' @method print gar_Build
 #' @export
 #' @importFrom yaml as.yaml
+#' @importFrom utils str
 print.gar_Build <- function(x, ...){
   cat("==CloudBuildObject==\n")
   cat0("buildId: ", x$id)
@@ -66,7 +67,12 @@ print.gar_Build <- function(x, ...){
 
   }
   cat0("images: ", x$images)
-  #cat0("source: ", x$source[[1]])
+
+  if(!is.null(x$source)){
+    cat("source:\n")
+    str(x$source[[1]])
+  }
+
   if(!is.null(x$artifacts)){
     cat("artifacts:\n")
     str(x$artifacts[[1]])

@@ -4,10 +4,18 @@
 \alias{cr_buildtrigger}
 \title{Creates a new `BuildTrigger`.This API is experimental.}
 \usage{
-cr_buildtrigger(name, trigger, build,
-  description = paste("cr_buildtrigger: ", Sys.time()), tags = NULL,
-  disabled = FALSE, substitutions = NULL, ignoredFiles = NULL,
-  includedFiles = NULL, projectId = cr_project_get())
+cr_buildtrigger(
+  name,
+  trigger,
+  build,
+  description = paste("cr_buildtrigger: ", Sys.time()),
+  tags = NULL,
+  disabled = FALSE,
+  substitutions = NULL,
+  ignoredFiles = NULL,
+  includedFiles = NULL,
+  projectId = cr_project_get()
+)
 }
 \arguments{
 \item{name}{User assigned name of the trigger}
@@ -68,13 +76,14 @@ cr_buildtrigger("trig4", trigger = github,
 }
 }
 \seealso{
-Other BuildTrigger functions: \code{\link{BuildTrigger}},
-  \code{\link{GitHubEventsConfig}},
-  \code{\link{cr_buildtrigger_delete}},
-  \code{\link{cr_buildtrigger_edit}},
-  \code{\link{cr_buildtrigger_get}},
-  \code{\link{cr_buildtrigger_list}},
-  \code{\link{cr_buildtrigger_make}},
-  \code{\link{cr_buildtrigger_run}}
+Other BuildTrigger functions: 
+\code{\link{BuildTrigger}()},
+\code{\link{GitHubEventsConfig}()},
+\code{\link{cr_buildtrigger_delete}()},
+\code{\link{cr_buildtrigger_edit}()},
+\code{\link{cr_buildtrigger_get}()},
+\code{\link{cr_buildtrigger_list}()},
+\code{\link{cr_buildtrigger_make}()},
+\code{\link{cr_buildtrigger_run}()}
 }
 \concept{BuildTrigger functions}

@@ -129,6 +129,9 @@ extract_logs <- function(o){
 #'
 #' @inheritParams cr_build
 #' @param yaml A \code{Yaml} object created from \link{cr_build_yaml} or a file location of a .yaml/.yml cloud build file
+#' @param artifacts Artifacts that may be built via \link{cr_build_yaml_artifact}
+#' @param options Options
+#'
 #' @export
 #' @import assertthat
 #' @family Cloud Build functions
@@ -229,6 +232,8 @@ cr_build_status <- function(id = .Last.value,
 #' @import assertthat
 #' @importFrom googleCloudStorageR gcs_list_objects gcs_get_object
 #'
+#' @seealso \href{Storing images and artifacts}{https://cloud.google.com/cloud-build/docs/configuring-builds/store-images-artifacts}
+#'
 #' @examples
 #'
 #' r <- "write.csv(mtcars,file = 'artifact.csv')"
@@ -236,9 +241,9 @@ cr_build_status <- function(id = .Last.value,
 #'     steps = cr_buildstep_r(r),
 #'     artifacts = cr_build_yaml_artifact('artifact.csv')
 #'     )
-#'
+#' ba
 #' \dontrun{
-#'    #' build <- cr_build(ba)
+#' build <- cr_build(ba)
 #' built <- cr_build_wait(build)
 #'
 #' cr_build_artifacts(built)

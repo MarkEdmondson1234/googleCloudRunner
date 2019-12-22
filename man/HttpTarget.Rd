@@ -4,8 +4,14 @@
 \alias{HttpTarget}
 \title{HttpTarget Object}
 \usage{
-HttpTarget(headers = NULL, body = NULL, oauthToken = NULL,
-  uri = NULL, oidcToken = NULL, httpMethod = NULL)
+HttpTarget(
+  headers = NULL,
+  body = NULL,
+  oauthToken = NULL,
+  uri = NULL,
+  oidcToken = NULL,
+  httpMethod = NULL
+)
 }
 \arguments{
 \item{headers}{A named list of HTTP headers e.g. \code{list(Blah = "yes", Boo = "no")}}
@@ -29,11 +35,13 @@ HttpTarget Object
 \seealso{
 https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs#HttpTarget
 
-Other Cloud Scheduler functions: \code{\link{Job}},
-  \code{\link{cr_schedule_delete}},
-  \code{\link{cr_schedule_get}},
-  \code{\link{cr_schedule_list}},
-  \code{\link{cr_schedule_pause}},
-  \code{\link{cr_schedule_run}}, \code{\link{cr_schedule}}
+Other Cloud Scheduler functions: 
+\code{\link{Job}()},
+\code{\link{cr_schedule_delete}()},
+\code{\link{cr_schedule_get}()},
+\code{\link{cr_schedule_list}()},
+\code{\link{cr_schedule_pause}()},
+\code{\link{cr_schedule_run}()},
+\code{\link{cr_schedule}()}
 }
 \concept{Cloud Scheduler functions}

@@ -94,7 +94,7 @@ There is a helper function for automating creation of a Google Cloud Storage sou
  
 This returns a `Source` object that can be used in build functions:
 
-```
+```r
 storage <- cr_build_upload_gcs("my_folder")
 ```
 

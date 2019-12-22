@@ -4,8 +4,13 @@
 \alias{cr_buildstep_r}
 \title{Run an R script in a Cloud Build R step}
 \usage{
-cr_buildstep_r(r, name = "r-base", r_source = c("local", "runtime"),
-  prefix = "rocker/", ...)
+cr_buildstep_r(
+  r,
+  name = "r-base",
+  r_source = c("local", "runtime"),
+  prefix = "rocker/",
+  ...
+)
 }
 \arguments{
 \item{r}{R code to run or a file containing R code}
@@ -55,13 +60,14 @@ br <-  cr_buildstep_r(my_r, name= "gcr.io/gcer-public/packagetools:master")
 
 }
 \seealso{
-Other Cloud Buildsteps: \code{\link{cr_buildstep_decrypt}},
-  \code{\link{cr_buildstep_df}},
-  \code{\link{cr_buildstep_docker}},
-  \code{\link{cr_buildstep_edit}},
-  \code{\link{cr_buildstep_extract}},
-  \code{\link{cr_buildstep_gitsetup}},
-  \code{\link{cr_buildstep_pkgdown}},
-  \code{\link{cr_buildstep}}
+Other Cloud Buildsteps: 
+\code{\link{cr_buildstep_decrypt}()},
+\code{\link{cr_buildstep_df}()},
+\code{\link{cr_buildstep_docker}()},
+\code{\link{cr_buildstep_edit}()},
+\code{\link{cr_buildstep_extract}()},
+\code{\link{cr_buildstep_gitsetup}()},
+\code{\link{cr_buildstep_pkgdown}()},
+\code{\link{cr_buildstep}()}
 }
 \concept{Cloud Buildsteps}

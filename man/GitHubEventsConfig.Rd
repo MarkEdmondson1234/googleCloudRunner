@@ -4,9 +4,13 @@
 \alias{GitHubEventsConfig}
 \title{GitHubEventsConfig Object}
 \usage{
-GitHubEventsConfig(x, event = c("push", "pull"), branch = ".*",
-  tag = NULL, commentControl = c("COMMENTS_DISABLED",
-  "COMMENTS_ENABLED"))
+GitHubEventsConfig(
+  x,
+  event = c("push", "pull"),
+  branch = ".*",
+  tag = NULL,
+  commentControl = c("COMMENTS_DISABLED", "COMMENTS_ENABLED")
+)
 }
 \arguments{
 \item{x}{The repository in format {owner}/{repo} e.g. MarkEdmondson1234/googleCloudRunner}
@@ -29,13 +33,14 @@ GitHubEventsConfig Object
 The syntax of the regular expressions accepted is the syntax accepted by RE2 and described at \url{https://github.com/google/re2/wiki/Syntax}
 }
 \seealso{
-Other BuildTrigger functions: \code{\link{BuildTrigger}},
-  \code{\link{cr_buildtrigger_delete}},
-  \code{\link{cr_buildtrigger_edit}},
-  \code{\link{cr_buildtrigger_get}},
-  \code{\link{cr_buildtrigger_list}},
-  \code{\link{cr_buildtrigger_make}},
-  \code{\link{cr_buildtrigger_run}},
-  \code{\link{cr_buildtrigger}}
+Other BuildTrigger functions: 
+\code{\link{BuildTrigger}()},
+\code{\link{cr_buildtrigger_delete}()},
+\code{\link{cr_buildtrigger_edit}()},
+\code{\link{cr_buildtrigger_get}()},
+\code{\link{cr_buildtrigger_list}()},
+\code{\link{cr_buildtrigger_make}()},
+\code{\link{cr_buildtrigger_run}()},
+\code{\link{cr_buildtrigger}()}
 }
 \concept{BuildTrigger functions}

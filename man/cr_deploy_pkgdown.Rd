@@ -4,11 +4,17 @@
 \alias{cr_deploy_pkgdown}
 \title{Deploy a trigger for auto-builds a pkgdown website for an R package}
 \usage{
-cr_deploy_pkgdown(trigger, steps = NULL,
-  git_email = "googlecloudrunner@r.com", keyring = "my-keyring",
-  key = "github-key", env = NULL, substitutions = NULL,
+cr_deploy_pkgdown(
+  trigger,
+  steps = NULL,
+  git_email = "googlecloudrunner@r.com",
+  keyring = "my-keyring",
+  key = "github-key",
+  env = NULL,
+  substitutions = NULL,
   cipher = "id_rsa.enc",
-  build_image = "gcr.io/gcer-public/packagetools:master")
+  build_image = "gcr.io/gcer-public/packagetools:master"
+)
 }
 \arguments{
 \item{trigger}{The trigger source which will be a \link{RepoSource} or a \link{GitHubEventsConfig}}
@@ -51,8 +57,10 @@ cr_deploy_pkgdown(my_repo)
 \seealso{
 Create your own custom deployment using \link{cr_buildstep_pkgdown} which this function uses with some defaults
 
-Other Deployment functions: \code{\link{cr_deploy_docker_github}},
-  \code{\link{cr_deploy_docker}},
-  \code{\link{cr_deploy_run}}, \code{\link{cr_deploy_r}}
+Other Deployment functions: 
+\code{\link{cr_deploy_docker_github}()},
+\code{\link{cr_deploy_docker}()},
+\code{\link{cr_deploy_run}()},
+\code{\link{cr_deploy_r}()}
 }
 \concept{Deployment functions}

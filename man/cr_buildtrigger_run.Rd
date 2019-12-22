@@ -17,13 +17,14 @@ cr_buildtrigger_run(triggerId, RepoSource, projectId = cr_project_get())
 Runs a `BuildTrigger` at a particular source revision.
 }
 \seealso{
-Other BuildTrigger functions: \code{\link{BuildTrigger}},
-  \code{\link{GitHubEventsConfig}},
-  \code{\link{cr_buildtrigger_delete}},
-  \code{\link{cr_buildtrigger_edit}},
-  \code{\link{cr_buildtrigger_get}},
-  \code{\link{cr_buildtrigger_list}},
-  \code{\link{cr_buildtrigger_make}},
-  \code{\link{cr_buildtrigger}}
+Other BuildTrigger functions: 
+\code{\link{BuildTrigger}()},
+\code{\link{GitHubEventsConfig}()},
+\code{\link{cr_buildtrigger_delete}()},
+\code{\link{cr_buildtrigger_edit}()},
+\code{\link{cr_buildtrigger_get}()},
+\code{\link{cr_buildtrigger_list}()},
+\code{\link{cr_buildtrigger_make}()},
+\code{\link{cr_buildtrigger}()}
 }
 \concept{BuildTrigger functions}

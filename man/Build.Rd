@@ -4,14 +4,32 @@
 \alias{Build}
 \title{Build Object}
 \usage{
-Build(Build.substitutions = NULL, Build.timing = NULL,
-  results = NULL, logsBucket = NULL, steps = NULL,
-  buildTriggerId = NULL, id = NULL, tags = NULL, startTime = NULL,
-  substitutions = NULL, timing = NULL, sourceProvenance = NULL,
-  createTime = NULL, images = NULL, projectId = NULL,
-  logUrl = NULL, finishTime = NULL, source = NULL, options = NULL,
-  timeout = NULL, status = NULL, statusDetail = NULL,
-  artifacts = NULL, secrets = NULL)
+Build(
+  Build.substitutions = NULL,
+  Build.timing = NULL,
+  results = NULL,
+  logsBucket = NULL,
+  steps = NULL,
+  buildTriggerId = NULL,
+  id = NULL,
+  tags = NULL,
+  startTime = NULL,
+  substitutions = NULL,
+  timing = NULL,
+  sourceProvenance = NULL,
+  createTime = NULL,
+  images = NULL,
+  projectId = NULL,
+  logUrl = NULL,
+  finishTime = NULL,
+  source = NULL,
+  options = NULL,
+  timeout = NULL,
+  status = NULL,
+  statusDetail = NULL,
+  artifacts = NULL,
+  secrets = NULL
+)
 }
 \arguments{
 \item{Build.substitutions}{The Build.substitutions object or list of objects}
@@ -89,15 +107,18 @@ Fields can include the following variables, which will be expanded when the buil
 }
 
 \seealso{
-Other Cloud Build functions: \code{\link{RepoSource}},
-  \code{\link{Source}}, \code{\link{StorageSource}},
-  \code{\link{cr_build_artifacts}},
-  \code{\link{cr_build_make}},
-  \code{\link{cr_build_status}},
-  \code{\link{cr_build_upload_gcs}},
-  \code{\link{cr_build_wait}},
-  \code{\link{cr_build_write}},
-  \code{\link{cr_build_yaml_artifact}},
-  \code{\link{cr_build_yaml}}, \code{\link{cr_build}}
+Other Cloud Build functions: 
+\code{\link{RepoSource}()},
+\code{\link{Source}()},
+\code{\link{StorageSource}()},
+\code{\link{cr_build_artifacts}()},
+\code{\link{cr_build_make}()},
+\code{\link{cr_build_status}()},
+\code{\link{cr_build_upload_gcs}()},
+\code{\link{cr_build_wait}()},
+\code{\link{cr_build_write}()},
+\code{\link{cr_build_yaml_artifact}()},
+\code{\link{cr_build_yaml}()},
+\code{\link{cr_build}()}
 }
 \concept{Cloud Build functions}

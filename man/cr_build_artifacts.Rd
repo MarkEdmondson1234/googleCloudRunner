@@ -4,8 +4,12 @@
 \alias{cr_build_artifacts}
 \title{Download artifacts from a build}
 \usage{
-cr_build_artifacts(build, download_folder = getwd(), overwrite = FALSE,
-  path_regex = NULL)
+cr_build_artifacts(
+  build,
+  download_folder = getwd(),
+  overwrite = FALSE,
+  path_regex = NULL
+)
 }
 \arguments{
 \item{build}{A \link{Build} object that includes the artifact location}
@@ -29,9 +33,9 @@ ba <- cr_build_yaml(
     steps = cr_buildstep_r(r),
     artifacts = cr_build_yaml_artifact('artifact.csv')
     )
-
+ba
 \dontrun{
-   #' build <- cr_build(ba)
+build <- cr_build(ba)
 built <- cr_build_wait(build)
 
 cr_build_artifacts(built)
@@ -39,14 +43,20 @@ cr_build_artifacts(built)
 
 }
 \seealso{
-Other Cloud Build functions: \code{\link{Build}},
-  \code{\link{RepoSource}}, \code{\link{Source}},
-  \code{\link{StorageSource}}, \code{\link{cr_build_make}},
-  \code{\link{cr_build_status}},
-  \code{\link{cr_build_upload_gcs}},
-  \code{\link{cr_build_wait}},
-  \code{\link{cr_build_write}},
-  \code{\link{cr_build_yaml_artifact}},
-  \code{\link{cr_build_yaml}}, \code{\link{cr_build}}
+\href{Storing images and artifacts}{https://cloud.google.com/cloud-build/docs/configuring-builds/store-images-artifacts}
+
+Other Cloud Build functions: 
+\code{\link{Build}()},
+\code{\link{RepoSource}()},
+\code{\link{Source}()},
+\code{\link{StorageSource}()},
+\code{\link{cr_build_make}()},
+\code{\link{cr_build_status}()},
+\code{\link{cr_build_upload_gcs}()},
+\code{\link{cr_build_wait}()},
+\code{\link{cr_build_write}()},
+\code{\link{cr_build_yaml_artifact}()},
+\code{\link{cr_build_yaml}()},
+\code{\link{cr_build}()}
 }
 \concept{Cloud Build functions}

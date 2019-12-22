@@ -4,11 +4,22 @@
 \alias{Job}
 \title{Job Schedule Object}
 \usage{
-Job(attemptDeadline = NULL, pubsubTarget = NULL, httpTarget = NULL,
-  timeZone = NULL, description = NULL, appEngineHttpTarget = NULL,
-  status = NULL, retryConfig = NULL, state = NULL, name = NULL,
-  lastAttemptTime = NULL, scheduleTime = NULL, schedule = NULL,
-  userUpdateTime = NULL)
+Job(
+  attemptDeadline = NULL,
+  pubsubTarget = NULL,
+  httpTarget = NULL,
+  timeZone = NULL,
+  description = NULL,
+  appEngineHttpTarget = NULL,
+  status = NULL,
+  retryConfig = NULL,
+  state = NULL,
+  name = NULL,
+  lastAttemptTime = NULL,
+  scheduleTime = NULL,
+  schedule = NULL,
+  userUpdateTime = NULL
+)
 }
 \arguments{
 \item{attemptDeadline}{The deadline for job attempts}
@@ -49,11 +60,13 @@ Job Schedule Object
 Configuration for a job.The maximum allowed size for a job is 100KB.
 }
 \seealso{
-Other Cloud Scheduler functions: \code{\link{HttpTarget}},
-  \code{\link{cr_schedule_delete}},
-  \code{\link{cr_schedule_get}},
-  \code{\link{cr_schedule_list}},
-  \code{\link{cr_schedule_pause}},
-  \code{\link{cr_schedule_run}}, \code{\link{cr_schedule}}
+Other Cloud Scheduler functions: 
+\code{\link{HttpTarget}()},
+\code{\link{cr_schedule_delete}()},
+\code{\link{cr_schedule_get}()},
+\code{\link{cr_schedule_list}()},
+\code{\link{cr_schedule_pause}()},
+\code{\link{cr_schedule_run}()},
+\code{\link{cr_schedule}()}
 }
 \concept{Cloud Scheduler functions}

@@ -4,10 +4,20 @@
 \alias{cr_deploy_r}
 \title{Deploy an R script with an optional schedule}
 \usage{
-cr_deploy_r(r, schedule = NULL, source = NULL, run_name = NULL,
-  r_image = "rocker/verse", pre_steps = NULL, post_steps = NULL,
-  timeout = 600L, email = cr_email_get(), region = cr_region_get(),
-  projectId = cr_project_get(), launch_browser = interactive())
+cr_deploy_r(
+  r,
+  schedule = NULL,
+  source = NULL,
+  run_name = NULL,
+  r_image = "rocker/verse",
+  pre_steps = NULL,
+  post_steps = NULL,
+  timeout = 600L,
+  email = cr_email_get(),
+  region = cr_region_get(),
+  projectId = cr_project_get(),
+  launch_browser = interactive()
+)
 }
 \arguments{
 \item{r}{R code to run or a file containing R code}
@@ -70,9 +80,10 @@ cr_deploy_r(r_lines, schedule = "15 21 * * *", source = source)
 \seealso{
 If you want to run R code upon certain events like GitHub pushes, look at \link{cr_buildtrigger}
 
-Other Deployment functions: \code{\link{cr_deploy_docker_github}},
-  \code{\link{cr_deploy_docker}},
-  \code{\link{cr_deploy_pkgdown}},
-  \code{\link{cr_deploy_run}}
+Other Deployment functions: 
+\code{\link{cr_deploy_docker_github}()},
+\code{\link{cr_deploy_docker}()},
+\code{\link{cr_deploy_pkgdown}()},
+\code{\link{cr_deploy_run}()}
 }
 \concept{Deployment functions}

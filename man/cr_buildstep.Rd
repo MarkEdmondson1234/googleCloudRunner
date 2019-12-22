@@ -4,8 +4,16 @@
 \alias{cr_buildstep}
 \title{Create a yaml build step}
 \usage{
-cr_buildstep(name, args, id = NULL, prefix = "gcr.io/cloud-builders/",
-  entrypoint = NULL, dir = "", env = NULL, volumes = NULL)
+cr_buildstep(
+  name,
+  args,
+  id = NULL,
+  prefix = "gcr.io/cloud-builders/",
+  entrypoint = NULL,
+  dir = "",
+  env = NULL,
+  volumes = NULL
+)
 }
 \arguments{
 \item{name}{name of docker image to call appended to \code{prefix}}
@@ -86,13 +94,14 @@ cr_buildstep("test", "ls", volumes = list(list(name = "ssh", path = "/root/.ssh"
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/create-custom-build-steps}{Creating custom build steps how-to guide}
 
-Other Cloud Buildsteps: \code{\link{cr_buildstep_decrypt}},
-  \code{\link{cr_buildstep_df}},
-  \code{\link{cr_buildstep_docker}},
-  \code{\link{cr_buildstep_edit}},
-  \code{\link{cr_buildstep_extract}},
-  \code{\link{cr_buildstep_gitsetup}},
-  \code{\link{cr_buildstep_pkgdown}},
-  \code{\link{cr_buildstep_r}}
+Other Cloud Buildsteps: 
+\code{\link{cr_buildstep_decrypt}()},
+\code{\link{cr_buildstep_df}()},
+\code{\link{cr_buildstep_docker}()},
+\code{\link{cr_buildstep_edit}()},
+\code{\link{cr_buildstep_extract}()},
+\code{\link{cr_buildstep_gitsetup}()},
+\code{\link{cr_buildstep_pkgdown}()},
+\code{\link{cr_buildstep_r}()}
 }
 \concept{Cloud Buildsteps}
