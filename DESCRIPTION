@@ -22,7 +22,6 @@ Imports:
     utils,
     yaml
 Suggests: 
-    containerit (>= 0.6.0),
     knitr,
     miniUI,
     rmarkdown,

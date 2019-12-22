@@ -7,7 +7,7 @@ safe_set <- function(x, set, to){
 #' @noRd
 check_package_installed <- function(y){
   if (!requireNamespace(y, quietly = TRUE)){
-      nope <- sprintf("%s needed for this function to work. Please install it via install.packages('%s')",
+      nope <- sprintf("%s needed for this function to work. Please install it and try this function again.",
                       y,y)
       stop(nope, call. = FALSE)
   }
