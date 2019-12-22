@@ -53,7 +53,7 @@ cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
 Other Deployment functions: 
 \code{\link{cr_deploy_docker_github}()},
 \code{\link{cr_deploy_pkgdown}()},
-\code{\link{cr_deploy_run}()},
+\code{\link{cr_deploy_plumber}()},
 \code{\link{cr_deploy_r}()}
 }
 \concept{Deployment functions}

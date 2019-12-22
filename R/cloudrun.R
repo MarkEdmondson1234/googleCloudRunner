@@ -56,6 +56,7 @@ cr_run <- function(image,
                                 "--region", region,
                                 "--member=allUsers",
                                 "--role=roles/run.invoker",
+                                "--platform", "managed",
                                 name))
   } else {
     auth_calls <- "--no-allow-unauthenticated"

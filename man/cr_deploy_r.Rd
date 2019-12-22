@@ -84,6 +84,6 @@ Other Deployment functions:
 \code{\link{cr_deploy_docker_github}()},
 \code{\link{cr_deploy_docker}()},
 \code{\link{cr_deploy_pkgdown}()},
-\code{\link{cr_deploy_run}()}
+\code{\link{cr_deploy_plumber}()}
 }
 \concept{Deployment functions}

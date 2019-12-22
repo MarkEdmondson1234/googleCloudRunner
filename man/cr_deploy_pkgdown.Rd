@@ -60,7 +60,7 @@ Create your own custom deployment using \link{cr_buildstep_pkgdown} which this f
 Other Deployment functions: 
 \code{\link{cr_deploy_docker_github}()},
 \code{\link{cr_deploy_docker}()},
-\code{\link{cr_deploy_run}()},
+\code{\link{cr_deploy_plumber}()},
 \code{\link{cr_deploy_r}()}
 }
 \concept{Deployment functions}

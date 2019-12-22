@@ -12,9 +12,9 @@
 #' @examples
 #'
 #' \dontrun{
-#' cr_dockerfile(system.file("example/", package = "googleCloudRunner"))
+#' cr_dockerfile_plumber(system.file("example/", package = "googleCloudRunner"))
 #' }
-cr_dockerfile <- function(deploy_folder, ...){
+cr_dockerfile_plumber <- function(deploy_folder, ...){
   check_package_installed("containerit")
   docker <- suppressWarnings(
     containerit::dockerfile(
@@ -45,26 +45,20 @@ cr_dockerfile <- function(deploy_folder, ...){
 
 }
 
-use_or_create_dockerfile <- function(local, dockerfile){
+find_dockerfile <- function(local, dockerfile){
 
   local_files <- list.files(local)
   if("Dockerfile" %in% local_files){
     myMessage("Dockerfile found in ",local, level = 3)
     return(TRUE)
   }
-  # if no dockerfile, attempt to create it
-  if(is.null(dockerfile)){
-    myMessage("Creating Dockerfile from ",local, level = 3)
-    # creates and write a dockerfile to the folder
-    cr_dockerfile(local)
 
-  } else {
-    assert_that(
-      is.readable(dockerfile)
-    )
-    myMessage("Copying Dockerfile from ", dockerfile," to ",local, level = 3)
-    file.copy(dockerfile, file.path(local, "Dockerfile"))
-  }
+  # if no dockerfile, attempt to create it
+  assert_that(is.readable(dockerfile))
+
+  myMessage("Copying Dockerfile from ", dockerfile," to ",local, level = 3)
+  file.copy(dockerfile, file.path(local, "Dockerfile"))
+
   TRUE
 }
 
