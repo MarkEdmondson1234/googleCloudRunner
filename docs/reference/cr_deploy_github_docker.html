@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a buildtrigger object — cr_buildtrigger_make • googleCloudRunner</title>
+<title>Deploy Docker build from a GitHub repo — cr_deploy_github_docker • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Create a buildtrigger object — cr_buildtrigger_make" />
-<meta property="og:description" content="Create a buildtrigger object" />
+<meta property="og:title" content="Deploy Docker build from a GitHub repo — cr_deploy_github_docker" />
+<meta property="og:description" content="This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,49 +149,73 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a buildtrigger object</h1>
+    <h1>Deploy Docker build from a GitHub repo</h1>
     
-    <div class="hidden name"><code>cr_buildtrigger_make.Rd</code></div>
+    <div class="hidden name"><code>cr_deploy_github_docker.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create a buildtrigger object</p>
+    <p>This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildtrigger_make</span>(<span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_deploy_github_docker</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>image</span> <span class='kw'>=</span> <span class='no'>x</span>,
+  <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>,
+  <span class='kw'>image_tag</span> <span class='kw'>=</span> <span class='st'>"$SHORT_SHA"</span>,
+  <span class='kw'>dockerfile_location</span> <span class='kw'>=</span> <span class='st'>"."</span>,
+  <span class='kw'>github_tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
+  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>...</th>
-      <td><p>Arguments passed on to <code><a href='cr_buildtrigger.html'>cr_buildtrigger</a></code></p><dl class='dl-horizontal'>
-    <dt><code>trigger</code></dt><dd><p>The trigger source which will be a <a href='RepoSource.html'>RepoSource</a> or a <a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></p></dd>
-    <dt><code>build</code></dt><dd><p>A file location within the trigger source to use for the build steps, or a <a href='Build.html'>Build</a> object</p></dd>
-    <dt><code>projectId</code></dt><dd><p>ID of the project for which to configure automatic builds</p></dd>
-    <dt><code>name</code></dt><dd><p>User assigned name of the trigger</p></dd>
-    <dt><code>description</code></dt><dd><p>Human-readable description of this trigger</p></dd>
-    <dt><code>tags</code></dt><dd><p>Tags for annotation of a `BuildTrigger`</p></dd>
-    <dt><code>disabled</code></dt><dd><p>If true, the trigger will never result in a build</p></dd>
-    <dt><code>substitutions</code></dt><dd><p>A named list of Build macro variables</p></dd>
-    <dt><code>ignoredFiles</code></dt><dd><p>ignored_files and included_files are file glob matches extended with support for "**".</p></dd>
-    <dt><code>includedFiles</code></dt><dd><p>If any of the files altered in the commit pass the ignored_files</p></dd>
-  
-</dl></td>
+      <th>x</th>
+      <td><p>The GitHub repo e.g. <code>MarkEdmondson1234/googleCloudRunner</code></p></td>
+    </tr>
+    <tr>
+      <th>image</th>
+      <td><p>The name of the image you want to build</p></td>
+    </tr>
+    <tr>
+      <th>branch</th>
+      <td><p>A regex of the GitHub branches that will trigger a build</p></td>
+    </tr>
+    <tr>
+      <th>image_tag</th>
+      <td><p>What to tag the build docker image</p></td>
+    </tr>
+    <tr>
+      <th>dockerfile_location</th>
+      <td><p>Where the Dockerfile sits within the GitHub repo</p></td>
+    </tr>
+    <tr>
+      <th>github_tag</th>
+      <td><p>Regexes matching what tags to build. If not NULL then argument branch will be ignored</p></td>
+    </tr>
+    <tr>
+      <th>timeout</th>
+      <td><p>timeout for the Docker build</p></td>
+    </tr>
+    <tr>
+      <th>projectId</th>
+      <td><p>The project to build under</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other BuildTrigger functions: 
-<code><a href='BuildTrigger.html'>BuildTrigger</a>()</code>,
-<code><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a>()</code>,
-<code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a>()</code>,
-<code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a>()</code>,
-<code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a>()</code>,
-<code><a href='cr_buildtrigger_list.html'>cr_buildtrigger_list</a>()</code>,
-<code><a href='cr_buildtrigger_run.html'>cr_buildtrigger_run</a>()</code>,
-<code><a href='cr_buildtrigger.html'>cr_buildtrigger</a>()</code></p></div>
+    <div class='dont-index'><p><a href='cr_deploy_docker.html'>cr_deploy_docker</a> which lets you build Dockerfiles for more generic use cases</p>
+<p>Other Deployment functions: 
+<code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
+<code><a href='cr_deploy_github_html.html'>cr_deploy_github_html</a>()</code>,
+<code><a href='cr_deploy_run.html'>cr_deploy_html</a>()</code>,
+<code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a>()</code>,
+<code><a href='cr_deploy_plumber.html'>cr_deploy_plumber</a>()</code>,
+<code><a href='cr_deploy_r.html'>cr_deploy_r</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -143,9 +143,10 @@
 <a class="sourceLine" id="cb2-4" data-line-number="4">github &lt;-<span class="st"> </span><span class="kw"><a href="../reference/GitHubEventsConfig.html">GitHubEventsConfig</a></span>(<span class="st">"MarkEdmondson1234/googleCloudRunner"</span>, <span class="dt">branch =</span> <span class="st">"master"</span>)</a>
 <a class="sourceLine" id="cb2-5" data-line-number="5"></a>
 <a class="sourceLine" id="cb2-6" data-line-number="6"><span class="kw"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"trig1"</span>, <span class="dt">trigger =</span> github, <span class="dt">build =</span> bb)</a></code></pre></div>
-<div id="create-docker-image-of-a-package" class="section level3">
-<h3 class="hasAnchor">
-<a href="#create-docker-image-of-a-package" class="anchor"></a>Create Docker image of a package</h3>
+</div>
+<div id="create-docker-image-of-a-package" class="section level2">
+<h2 class="hasAnchor">
+<a href="#create-docker-image-of-a-package" class="anchor"></a>Create Docker image of a package</h2>
 <p>This is what is used to deploy this package as a Docker image to the public <code>googleComputeEngineR</code> docker image project, <code>gcr.io/gcer-public</code></p>
 <p>This builds a Docker image of the Dockerfile in the root directory of the GitHub repo, which is then <a href="https://cloud.google.com/source-repositories/docs/mirroring-a-github-repository">mirrored to Google Source Repositories</a> via the GitHub app.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">my_image &lt;-<span class="st"> "gcr.io/my-project/my-image"</span></a>
@@ -161,9 +162,9 @@
 <a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co"># make a build trigger so it builds on each push to master</span></a>
 <a class="sourceLine" id="cb3-12" data-line-number="12"><span class="kw"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"build-docker"</span>, <span class="dt">trigger =</span> my_repo, <span class="dt">build =</span> built_docker)</a></code></pre></div>
 </div>
-<div id="trigger-an-r-function-from-pubsub" class="section level3">
-<h3 class="hasAnchor">
-<a href="#trigger-an-r-function-from-pubsub" class="anchor"></a>Trigger an R function from pubsub</h3>
+<div id="trigger-an-r-function-from-pubsub" class="section level2">
+<h2 class="hasAnchor">
+<a href="#trigger-an-r-function-from-pubsub" class="anchor"></a>Trigger an R function from pubsub</h2>
 <p>This uses <code>cr_deploy_run</code> to deploy an R API that can then be triggered from pub/sub events, such as Cloud logging events or when files get updated in a Cloud Storage bucket. This in turn can trigger other Cloud Builds.</p>
 <p>A plumber API that accepts pub/sub messages is facilitated by <code><a href="../reference/cr_plumber_pubsub.html">cr_plumber_pubsub()</a></code></p>
 <p><code>api.R</code>:</p>
@@ -188,7 +189,7 @@ COPY [".", "./"]
 ENTRYPOINT ["R", "-e", "pr &lt;- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))"]
 CMD ["api.R"]</code></pre>
 <p>Put both the Dockerfile and the <code>api.R</code> script in the same folder then deploy it to Cloud Run:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span>(<span class="st">"the_folder"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_plumber.html">cr_deploy_run</a></span>(<span class="st">"the_folder"</span>)</a></code></pre></div>
 <p>Once built you will have a pub/sub live that will trigger the function you defined. You can test pubsub messages via <code><a href="../reference/cr_pubsub.html">cr_pubsub()</a></code></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">test_url &lt;-<span class="st"> "http://your-cloudrun-api.com/pubsub"</span></a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"></a>
@@ -200,7 +201,6 @@ CMD ["api.R"]</code></pre>
 <a class="sourceLine" id="cb8-3" data-line-number="3">  <span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(x, <span class="dt">source =</span> my_source)</a>
 <a class="sourceLine" id="cb8-4" data-line-number="4">}</a></code></pre></div>
 </div>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -210,6 +210,8 @@ CMD ["api.R"]</code></pre>
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#connecting-to-github">Connecting to GitHub</a></li>
+      <li><a href="#create-docker-image-of-a-package">Create Docker image of a package</a></li>
+      <li><a href="#trigger-an-r-function-from-pubsub">Trigger an R function from pubsub</a></li>
       </ul>
 </div>
       </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a buildtrigger object — cr_buildtrigger_make • googleCloudRunner</title>
+<title>Deploy HTML built from a GitHub repo each commit — cr_deploy_github_html • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Create a buildtrigger object — cr_buildtrigger_make" />
-<meta property="og:description" content="Create a buildtrigger object" />
+<meta property="og:title" content="Deploy HTML built from a GitHub repo each commit — cr_deploy_github_html" />
+<meta property="og:description" content="This lets you set up triggers that will update a website each commit" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,55 +149,97 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a buildtrigger object</h1>
+    <h1>Deploy HTML built from a GitHub repo each commit</h1>
     
-    <div class="hidden name"><code>cr_buildtrigger_make.Rd</code></div>
+    <div class="hidden name"><code>cr_deploy_github_html.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create a buildtrigger object</p>
+    <p>This lets you set up triggers that will update a website each commit</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildtrigger_make</span>(<span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_deploy_github_html</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>image</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>x</span>, <span class='st'>"-html"</span>),
+  <span class='kw'>rmd_folder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>html_folder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>,
+  <span class='kw'>image_tag</span> <span class='kw'>=</span> <span class='st'>"$SHORT_SHA"</span>,
+  <span class='kw'>github_tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
+  <span class='kw'>edit_r</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
+  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>...</th>
-      <td><p>Arguments passed on to <code><a href='cr_buildtrigger.html'>cr_buildtrigger</a></code></p><dl class='dl-horizontal'>
-    <dt><code>trigger</code></dt><dd><p>The trigger source which will be a <a href='RepoSource.html'>RepoSource</a> or a <a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></p></dd>
-    <dt><code>build</code></dt><dd><p>A file location within the trigger source to use for the build steps, or a <a href='Build.html'>Build</a> object</p></dd>
-    <dt><code>projectId</code></dt><dd><p>ID of the project for which to configure automatic builds</p></dd>
-    <dt><code>name</code></dt><dd><p>User assigned name of the trigger</p></dd>
-    <dt><code>description</code></dt><dd><p>Human-readable description of this trigger</p></dd>
-    <dt><code>tags</code></dt><dd><p>Tags for annotation of a `BuildTrigger`</p></dd>
-    <dt><code>disabled</code></dt><dd><p>If true, the trigger will never result in a build</p></dd>
-    <dt><code>substitutions</code></dt><dd><p>A named list of Build macro variables</p></dd>
-    <dt><code>ignoredFiles</code></dt><dd><p>ignored_files and included_files are file glob matches extended with support for "**".</p></dd>
-    <dt><code>includedFiles</code></dt><dd><p>If any of the files altered in the commit pass the ignored_files</p></dd>
-  
-</dl></td>
+      <th>x</th>
+      <td><p>The GitHub repo e.g. <code>MarkEdmondson1234/googleCloudRunner</code></p></td>
+    </tr>
+    <tr>
+      <th>image</th>
+      <td><p>The name of the image you want to build</p></td>
+    </tr>
+    <tr>
+      <th>rmd_folder</th>
+      <td><p>A folder of Rmd files within GitHub source that will be built into HTML for serving via <a href='https://rdrr.io/pkg/rmarkdown/man/render.html'>render</a></p></td>
+    </tr>
+    <tr>
+      <th>html_folder</th>
+      <td><p>A folder of html to deploy within GitHub source.  Will be ignored if rmd_folder is not NULL</p></td>
+    </tr>
+    <tr>
+      <th>branch</th>
+      <td><p>A regex of the GitHub branches that will trigger a build</p></td>
+    </tr>
+    <tr>
+      <th>image_tag</th>
+      <td><p>What to tag the build docker image</p></td>
+    </tr>
+    <tr>
+      <th>github_tag</th>
+      <td><p>Regexes matching what tags to build. If not NULL then argument branch will be ignored</p></td>
+    </tr>
+    <tr>
+      <th>timeout</th>
+      <td><p>timeout for the Docker build</p></td>
+    </tr>
+    <tr>
+      <th>edit_r</th>
+      <td><p>If you want to change the R code to render the HTML, supply R code via a file or string of R as per <a href='cr_buildstep_r.html'>cr_buildstep_r</a></p></td>
+    </tr>
+    <tr>
+      <th>projectId</th>
+      <td><p>The project to build under</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This default R code is rendered in the rmd_folder:</p>
+<p><code><a href='https://rdrr.io/r/base/lapply.html'>lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
+      rmarkdown::render, output_format = 'html_document')</a></code></p>
+<p>You need to mirror the repo onto Google Cloud Repositories, as well as connect to the GitHub app for the source and the build trigger to work from the same GitHub repo.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other BuildTrigger functions: 
-<code><a href='BuildTrigger.html'>BuildTrigger</a>()</code>,
-<code><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a>()</code>,
-<code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a>()</code>,
-<code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a>()</code>,
-<code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a>()</code>,
-<code><a href='cr_buildtrigger_list.html'>cr_buildtrigger_list</a>()</code>,
-<code><a href='cr_buildtrigger_run.html'>cr_buildtrigger_run</a>()</code>,
-<code><a href='cr_buildtrigger.html'>cr_buildtrigger</a>()</code></p></div>
+    <div class='dont-index'><p><a href='cr_deploy_run.html'>cr_deploy_html</a> that lets you deploy HTML files</p>
+<p>Other Deployment functions: 
+<code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
+<code><a href='cr_deploy_github_docker.html'>cr_deploy_github_docker</a>()</code>,
+<code><a href='cr_deploy_run.html'>cr_deploy_html</a>()</code>,
+<code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a>()</code>,
+<code><a href='cr_deploy_plumber.html'>cr_deploy_plumber</a>()</code>,
+<code><a href='cr_deploy_r.html'>cr_deploy_r</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#details">Details</a></li>
       <li><a href="#see-also">See also</a></li>
     </ul>
 

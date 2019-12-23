@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a buildtrigger object — cr_buildtrigger_make • googleCloudRunner</title>
+<title>Create Dockerfile in the deployment folder — cr_dockerfile_plumber • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Create a buildtrigger object — cr_buildtrigger_make" />
-<meta property="og:description" content="Create a buildtrigger object" />
+<meta property="og:title" content="Create Dockerfile in the deployment folder — cr_dockerfile_plumber" />
+<meta property="og:description" content="This uses dockerfile to create a Dockerfile if possible" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,56 +149,46 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a buildtrigger object</h1>
+    <h1>Create Dockerfile in the deployment folder</h1>
     
-    <div class="hidden name"><code>cr_buildtrigger_make.Rd</code></div>
+    <div class="hidden name"><code>cr_dockerfile_plumber.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create a buildtrigger object</p>
+    <p>This uses dockerfile to create a Dockerfile if possible</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildtrigger_make</span>(<span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_dockerfile_plumber</span>(<span class='no'>deploy_folder</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>deploy_folder</th>
+      <td><p>The folder containing the assessts to deploy</p></td>
+    </tr>
+    <tr>
       <th>...</th>
-      <td><p>Arguments passed on to <code><a href='cr_buildtrigger.html'>cr_buildtrigger</a></code></p><dl class='dl-horizontal'>
-    <dt><code>trigger</code></dt><dd><p>The trigger source which will be a <a href='RepoSource.html'>RepoSource</a> or a <a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></p></dd>
-    <dt><code>build</code></dt><dd><p>A file location within the trigger source to use for the build steps, or a <a href='Build.html'>Build</a> object</p></dd>
-    <dt><code>projectId</code></dt><dd><p>ID of the project for which to configure automatic builds</p></dd>
-    <dt><code>name</code></dt><dd><p>User assigned name of the trigger</p></dd>
-    <dt><code>description</code></dt><dd><p>Human-readable description of this trigger</p></dd>
-    <dt><code>tags</code></dt><dd><p>Tags for annotation of a `BuildTrigger`</p></dd>
-    <dt><code>disabled</code></dt><dd><p>If true, the trigger will never result in a build</p></dd>
-    <dt><code>substitutions</code></dt><dd><p>A named list of Build macro variables</p></dd>
-    <dt><code>ignoredFiles</code></dt><dd><p>ignored_files and included_files are file glob matches extended with support for "**".</p></dd>
-    <dt><code>includedFiles</code></dt><dd><p>If any of the files altered in the commit pass the ignored_files</p></dd>
-  
-</dl></td>
+      <td><p>Other arguments pass to dockerfile</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <div class='dont-index'><p>Other BuildTrigger functions: 
-<code><a href='BuildTrigger.html'>BuildTrigger</a>()</code>,
-<code><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a>()</code>,
-<code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a>()</code>,
-<code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a>()</code>,
-<code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a>()</code>,
-<code><a href='cr_buildtrigger_list.html'>cr_buildtrigger_list</a>()</code>,
-<code><a href='cr_buildtrigger_run.html'>cr_buildtrigger_run</a>()</code>,
-<code><a href='cr_buildtrigger.html'>cr_buildtrigger</a>()</code></p></div>
+    <p>An object of class Dockerfile</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'>cr_dockerfile_plumber</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"example/"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>))
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#see-also">See also</a></li>
+      <li><a href="#value">Value</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

@@ -34,6 +34,9 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build.html</loc>
   </url>
   <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_artifacts.html</loc>
+  </url>
+  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_make.html</loc>
   </url>
   <url>
@@ -56,6 +59,9 @@
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_yaml.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_yaml_artifact.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildstep.html</loc>
@@ -109,13 +115,19 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_docker.html</loc>
   </url>
   <url>
-    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_docker_github.html</loc>
-  </url>
-  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_gadget.html</loc>
   </url>
   <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_github_docker.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_github_html.html</loc>
+  </url>
+  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_pkgdown.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_plumber.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_r.html</loc>
@@ -124,7 +136,7 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_run.html</loc>
   </url>
   <url>
-    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_dockerfile.html</loc>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_dockerfile_plumber.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_email_set.html</loc>

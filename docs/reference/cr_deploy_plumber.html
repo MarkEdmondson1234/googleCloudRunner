@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deploy a Dockerfile to be built on ContainerRegistry — cr_deploy_docker • googleCloudRunner</title>
+<title>Deploy to Cloud Run — cr_deploy_plumber • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Deploy a Dockerfile to be built on ContainerRegistry — cr_deploy_docker" />
-<meta property="og:description" content="If no Dockerfile present in the deployment folder, will attempt to create a Dockerfile to upload via cr_dockerfile" />
+<meta property="og:title" content="Deploy to Cloud Run — cr_deploy_plumber" />
+<meta property="og:description" content="Deploy R api plumber scripts, HTML files or other images create the Docker image, add the build to Cloud Build and deploy to Cloud Run" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,26 +149,39 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deploy a Dockerfile to be built on ContainerRegistry</h1>
+    <h1>Deploy to Cloud Run</h1>
     
-    <div class="hidden name"><code>cr_deploy_docker.Rd</code></div>
+    <div class="hidden name"><code>cr_deploy_plumber.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>If no Dockerfile present in the deployment folder, will attempt to create a Dockerfile to upload via cr_dockerfile</p>
+    <p>Deploy R api plumber scripts, HTML files or other images create the Docker image, add the build to Cloud Build and deploy to Cloud Run</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_docker</span>(
+    <pre class="usage"><span class='fu'>cr_deploy_plumber</span>(
   <span class='no'>local</span>,
-  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>,
-  <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>local</span>),
+  <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>,
   <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>,
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
+  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
   <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(),
   <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
   <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
-  <span class='kw'>task_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>
+)
+
+<span class='fu'>cr_deploy_run</span>(
+  <span class='no'>local</span>,
+  <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>local</span>),
+  <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>,
+  <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>,
+  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
+  <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(),
+  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
+  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
+  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -176,61 +189,75 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>local</th>
-      <td><p>The folder containing the Dockerfile to build</p></td>
+      <td><p>A folder containing the R script using plumber called api.R and all its dependencies</p></td>
     </tr>
     <tr>
-      <th>image_name</th>
-      <td><p>The name of the docker image to be built either full name starting with gcr.io or constructed from the image_name and projectId via <code>gcr.io/{projectId}/{image_name}</code></p></td>
+      <th>remote</th>
+      <td><p>The folder on Google Cloud Storage, and the name of the service on Cloud Run</p></td>
     </tr>
     <tr>
       <th>dockerfile</th>
       <td><p>An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"</p></td>
     </tr>
     <tr>
-      <th>remote</th>
-      <td><p>The folder on Google Cloud Storage</p></td>
+      <th>image_name</th>
+      <td><p>The gcr.io image name that will be deployed and/or built</p></td>
     </tr>
     <tr>
       <th>tag</th>
       <td><p>The tag to attached to the pushed image - can use <code>Build</code> macros</p></td>
     </tr>
     <tr>
-      <th>timeout</th>
-      <td><p>Amount of time that this build should be allowed to run, to second</p></td>
+      <th>region</th>
+      <td><p>The Cloud Run endpoint set by CR_REGION env arg</p></td>
     </tr>
     <tr>
       <th>bucket</th>
-      <td><p>The GCS bucker that will be used to deploy code source</p></td>
+      <td><p>The Cloud Storage bucket that will hold the code</p></td>
     </tr>
     <tr>
       <th>projectId</th>
-      <td><p>The projectId</p></td>
+      <td><p>The projectId where it all gets deployed to</p></td>
     </tr>
     <tr>
       <th>launch_browser</th>
       <td><p>Whether to launch the logs URL in a browser once deployed</p></td>
     </tr>
     <tr>
-      <th>task_id</th>
-      <td><p>RStudio job task_id if you want to use the same task</p></td>
+      <th>timeout</th>
+      <td><p>Amount of time that this build should be allowed to run, to second</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    
+
+
+    <h2 class="hasAnchor" id="plumber-scripts"><a class="anchor" href="#plumber-scripts"></a>plumber scripts</h2>
+
+    
+
+
+<p>The entrypoint for CloudRun will be via a plumber script called api.R - this should be included in your local folder to deploy.
+From that api.R you can source or call other resources in the same folder, using relative paths.</p>
+<p>The function will create a local folder called "deploy" and a tar.gz of that folder which is what is being uploaded to Google Cloud Storage</p>
+<p>It will call <a href='cr_deploy_docker.html'>cr_deploy_docker</a> to create the image to deploy on Cloud Run</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Deployment functions: 
+<code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
 <code><a href='cr_deploy_github_docker.html'>cr_deploy_github_docker</a>()</code>,
 <code><a href='cr_deploy_github_html.html'>cr_deploy_github_html</a>()</code>,
 <code><a href='cr_deploy_run.html'>cr_deploy_html</a>()</code>,
 <code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a>()</code>,
-<code><a href='cr_deploy_plumber.html'>cr_deploy_plumber</a>()</code>,
 <code><a href='cr_deploy_r.html'>cr_deploy_r</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 
-<span class='fu'>cr_deploy_docker</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"example/"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"googleCloudRunner"</span>))
+<span class='fu'>cr_deploy_run</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"example/"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>))
 
 }</div></pre>
   </div>
@@ -238,6 +265,8 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#details">Details</a></li>
+      <li><a href="#plumber-scripts">plumber scripts</a></li>
       <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>

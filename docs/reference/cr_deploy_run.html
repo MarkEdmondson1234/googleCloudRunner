@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deploy an R plumber script to Cloud Run — cr_deploy_run • googleCloudRunner</title>
+<title>Deploy html files to a nginx server on Cloud Run — cr_deploy_html • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Deploy an R plumber script to Cloud Run — cr_deploy_run" />
-<meta property="og:description" content="Helper to take an R plumber script, create the Dockerfile, add the build to Cloud Build and deploy to Cloud Run" />
+<meta property="og:title" content="Deploy html files to a nginx server on Cloud Run — cr_deploy_html" />
+<meta property="og:description" content="Deploy html files to a nginx server on Cloud Run" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,34 +149,37 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deploy an R plumber script to Cloud Run</h1>
+    <h1>Deploy html files to a nginx server on Cloud Run</h1>
     
     <div class="hidden name"><code>cr_deploy_run.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Helper to take an R plumber script, create the Dockerfile, add the build to Cloud Build and deploy to Cloud Run</p>
+    <p>Deploy html files to a nginx server on Cloud Run</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_run</span>(<span class='no'>local</span>, <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>local</span>), <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>, <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(), <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
-  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(), <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_deploy_html</span>(
+  <span class='no'>html_folder</span>,
+  <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>html_folder</span>),
+  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>,
+  <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>,
+  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
+  <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(),
+  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
+  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
+  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>local</th>
-      <td><p>A folder containing the R script using plumber called api.R and all its dependencies</p></td>
+      <th>html_folder</th>
+      <td><p>the folder containing all the html</p></td>
     </tr>
     <tr>
       <th>remote</th>
       <td><p>The folder on Google Cloud Storage, and the name of the service on Cloud Run</p></td>
-    </tr>
-    <tr>
-      <th>dockerfile</th>
-      <td><p>An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"</p></td>
     </tr>
     <tr>
       <th>image_name</th>
@@ -210,21 +213,31 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The entrypoint for CloudRun will be via a plumber script called api.R - this should be included in your local folder to deploy.
-From that api.R you can source or call other resources in the same folder, using relative paths.</p>
-<p>The function will create a local folder called "deploy" and a tar.gz of that folder which is what is being uploaded to Google Cloud Storage</p>
-<p>It will call <a href='cr_deploy_docker.html'>cr_deploy_docker</a> to create the image to deploy on Cloud Run</p>
+    
+
+
+    <h2 class="hasAnchor" id="cr-deploy-html"><a class="anchor" href="#cr-deploy-html"></a>cr_deploy_html</h2>
+
+    
+
+<p>Deploy html files to a nginx server on Cloud Run.</p>
+<p>Supply the html folder to host it on Cloud Run.  Builds the dockerfile with the html within it, then deploys to Cloud Run</p>
+<p>Will add a <code>default.template</code> file to the html folder that holds the nginx configuration</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Deployment functions: <code><a href='cr_deploy_docker.html'>cr_deploy_docker</a></code>,
-  <code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a></code>,
-  <code><a href='cr_deploy_r.html'>cr_deploy_r</a></code></p></div>
+    <div class='dont-index'><p>Other Deployment functions: 
+<code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
+<code><a href='cr_deploy_github_docker.html'>cr_deploy_github_docker</a>()</code>,
+<code><a href='cr_deploy_github_html.html'>cr_deploy_github_html</a>()</code>,
+<code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a>()</code>,
+<code><a href='cr_deploy_plumber.html'>cr_deploy_plumber</a>()</code>,
+<code><a href='cr_deploy_r.html'>cr_deploy_r</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 
-<span class='fu'>cr_deploy_run</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"example/"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>))
+<span class='fu'>cr_deploy_html</span>(<span class='st'>"my_folder"</span>)
 
 }</div></pre>
   </div>
@@ -233,6 +246,7 @@ From that api.R you can source or call other resources in the same folder, using
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#details">Details</a></li>
+      <li><a href="#cr-deploy-html">cr_deploy_html</a></li>
       <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
