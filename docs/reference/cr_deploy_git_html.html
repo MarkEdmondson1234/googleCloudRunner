@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deploy Docker build from a GitHub repo — cr_deploy_github_docker • googleCloudRunner</title>
+<title>Deploy HTML built from a GitHub repo each commit — cr_deploy_git_html • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Deploy Docker build from a GitHub repo — cr_deploy_github_docker" />
-<meta property="og:description" content="This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit." />
+<meta property="og:title" content="Deploy HTML built from a GitHub repo each commit — cr_deploy_git_html" />
+<meta property="og:description" content="This lets you set up triggers that will update a website each commit" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,23 +149,26 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deploy Docker build from a GitHub repo</h1>
+    <h1>Deploy HTML built from a GitHub repo each commit</h1>
     
-    <div class="hidden name"><code>cr_deploy_github_docker.Rd</code></div>
+    <div class="hidden name"><code>cr_deploy_git_html.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit.</p>
+    <p>This lets you set up triggers that will update a website each commit</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_github_docker</span>(
+    <pre class="usage"><span class='fu'>cr_deploy_git_html</span>(
   <span class='no'>x</span>,
-  <span class='kw'>image</span> <span class='kw'>=</span> <span class='no'>x</span>,
+  <span class='kw'>image</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>x</span>, <span class='st'>"-html"</span>),
+  <span class='kw'>rmd_folder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>html_folder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>,
   <span class='kw'>image_tag</span> <span class='kw'>=</span> <span class='st'>"$SHORT_SHA"</span>,
-  <span class='kw'>dockerfile_location</span> <span class='kw'>=</span> <span class='st'>"."</span>,
   <span class='kw'>github_tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
+  <span class='kw'>edit_r</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
   <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
 )</pre>
 
@@ -181,16 +184,20 @@
       <td><p>The name of the image you want to build</p></td>
     </tr>
     <tr>
+      <th>rmd_folder</th>
+      <td><p>A folder of Rmd files within GitHub source that will be built into HTML for serving via <a href='https://rdrr.io/pkg/rmarkdown/man/render.html'>render</a></p></td>
+    </tr>
+    <tr>
+      <th>html_folder</th>
+      <td><p>A folder of html to deploy within GitHub source.  Will be ignored if rmd_folder is not NULL</p></td>
+    </tr>
+    <tr>
       <th>branch</th>
       <td><p>A regex of the GitHub branches that will trigger a build</p></td>
     </tr>
     <tr>
       <th>image_tag</th>
       <td><p>What to tag the build docker image</p></td>
-    </tr>
-    <tr>
-      <th>dockerfile_location</th>
-      <td><p>Where the Dockerfile sits within the GitHub repo</p></td>
     </tr>
     <tr>
       <th>github_tag</th>
@@ -201,27 +208,49 @@
       <td><p>timeout for the Docker build</p></td>
     </tr>
     <tr>
+      <th>edit_r</th>
+      <td><p>If you want to change the R code to render the HTML, supply R code via a file or string of R as per <a href='cr_buildstep_r.html'>cr_buildstep_r</a></p></td>
+    </tr>
+    <tr>
+      <th>region</th>
+      <td><p>The region for cloud run</p></td>
+    </tr>
+    <tr>
       <th>projectId</th>
       <td><p>The project to build under</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This default R code is rendered in the rmd_folder:</p>
+<p><code><a href='https://rdrr.io/r/base/lapply.html'>lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
+      rmarkdown::render, output_format = 'html_document')</a></code></p>
+<p>You need to mirror the GitHub/Bitbucket repo onto Google Cloud Repositories for this to work</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='cr_deploy_docker.html'>cr_deploy_docker</a> which lets you build Dockerfiles for more generic use cases</p>
+    <div class='dont-index'><p><a href='cr_deploy_run.html'>cr_deploy_html</a> that lets you deploy HTML files</p>
 <p>Other Deployment functions: 
 <code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
-<code><a href='cr_deploy_git_html.html'>cr_deploy_git_html</a>()</code>,
+<code><a href='cr_deploy_github_docker.html'>cr_deploy_github_docker</a>()</code>,
 <code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a>()</code>,
 <code><a href='cr_deploy_run.html'>cr_deploy_run</a>()</code>,
 <code><a href='cr_deploy_r.html'>cr_deploy_r</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+  <span class='fu'>cr_deploy_github_html</span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
+                        <span class='kw'>rmd_folder</span> <span class='kw'>=</span> <span class='st'>"vignettes"</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#details">Details</a></li>
       <li><a href="#see-also">See also</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
