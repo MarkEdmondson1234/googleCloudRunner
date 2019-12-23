@@ -40,6 +40,7 @@ cr_buildstep_edit(edit_me, args = c("blah1","blah2"), dir = "meh")
 }
 \seealso{
 Other Cloud Buildsteps: 
+\code{\link{cr_buildstep_bash}()},
 \code{\link{cr_buildstep_decrypt}()},
 \code{\link{cr_buildstep_df}()},
 \code{\link{cr_buildstep_docker}()},

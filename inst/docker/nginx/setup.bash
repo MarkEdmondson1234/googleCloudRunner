@@ -1,6 +1,6 @@
 cat <<EOF >default.template
 server {
-    listen       ${PORT};
+    listen       $_PORT;
     server_name  localhost;
     location / {
         root   /usr/share/nginx/html;

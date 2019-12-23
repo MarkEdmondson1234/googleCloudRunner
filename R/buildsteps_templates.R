@@ -1,8 +1,51 @@
+#' Run a bash script in a Cloud Build step
+#'
+#' Helper to run a supplied bash script, that will be copied in-line
+#' @param bash_script bash code to run or a filepath to a file containing bash code that ends with .bash or .sh
+#' @param name The image that will run the R code
+#' @param bash_source Whether the code will be from a runtime file within the source or at build time copying over from a local file in your session
+#' @param ... Other arguments passed to \link{cr_buildstep}
+#' @family Cloud Buildsteps
+#' @export
+#' @examples
+#'
+#' bs <- cr_build_yaml(
+#'   steps = cr_buildstep_bash("echo 'Hello'")
+#'  )
+#'
+#' \dontrun{
+#' cr_build(bs)
+#' }
+cr_buildstep_bash <- function(bash_script,
+                              name = "ubuntu",
+                              bash_source = c("local", "runtime"),
+                              ...){
+
+  bash_source <- match.arg(bash_source)
+
+  # don't allow dot names that would break things
+  dots <- list(...)
+  assert_that(
+    is.null(dots$args),
+    is.null(dots$name),
+    is.null(dots$prefix)
+  )
+
+  bchars <- read_buildstep_file(bash_script,
+                                code_source = bash_source,
+                                file_grep = "\\.(bash|sh)$")
+
+  cr_buildstep(name = name,
+               prefix = "",
+               args = c("bash","-c", bchars),
+               ...)
+}
+
 #' Run an R script in a Cloud Build R step
 #'
 #' Helper to run R code within build steps, from either an existing local R file or within the source of the build.
 #'
-#' @param r R code to run or a file containing R code
+#' @param r R code to run or a file containing R code ending with .R
 #' @param name The docker image that will run the R code, usually from rocker-project.org
 #' @param r_source Whether the R code will be from a runtime file within the source or at build time copying over from a local R file in your session
 #' @param ... Other arguments passed to \link{cr_buildstep}
@@ -63,24 +106,10 @@ cr_buildstep_r <- function(r,
     is.null(dots$name),
     is.null(dots$prefix)
   )
-  rchars <- r
-  if(r_source == "local"){
-    assert_that(is.character(r))
 
-    rchars <- r
-    if(grepl("\\.R$", r[[1]], ignore.case = TRUE)){
-      # filepath
-      assert_that(is.readable(r), is.string(r))
-      rchars <- readLines(r)
-      myMessage("Copying into build step R code from ", r, level = 3)
-    }
-
-    rchars <- paste(rchars, collapse = "\n")
-
-  } else if(r_source == "runtime"){
-    #filepath in source, not much we can do to check it
-    myMessage("Will read R code in source from filepath ", rchars, level = 3)
-  }
+  rchars <- read_buildstep_file(r,
+                                code_source = r_source,
+                                file_grep = "\\.R$")
 
   cr_buildstep(name = name,
                args = c("Rscript", "-e", rchars),
@@ -88,6 +117,34 @@ cr_buildstep_r <- function(r,
                ...)
 
 }
+
+
+read_buildstep_file <- function(x,
+                                code_source = c("local","runtime"),
+                                file_grep = ".*") {
+  code_source <- match.arg(code_source)
+  rchars <- x
+  if(code_source == "local"){
+    assert_that(is.character(x))
+
+    rchars <- x
+    if(grepl(file_grep, x[[1]], ignore.case = TRUE)){
+      # filepath
+      assert_that(is.readable(x), is.string(x))
+      rchars <- readLines(x)
+      myMessage("Copying into build step code from ", x, level = 3)
+    }
+
+    rchars <- paste(rchars, collapse = "\n")
+
+  } else if(code_source == "runtime"){
+    #filepath in source, not much we can do to check it
+    myMessage("Will read code in source from filepath ", rchars, level = 3)
+  }
+
+  rchars
+}
+
 
 
 #' Create a build step for decrypting files via KMS

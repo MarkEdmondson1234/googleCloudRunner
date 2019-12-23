@@ -50,6 +50,7 @@ cr_deploy_github_docker <- function(x,
 #' @param rmd_folder A folder of Rmd files within GitHub source that will be built into HTML for serving via \link[rmarkdown]{render}
 #' @param html_folder A folder of html to deploy within GitHub source.  Will be ignored if rmd_folder is not NULL
 #' @param edit_r If you want to change the R code to render the HTML, supply R code via a file or string of R as per \link{cr_buildstep_r}
+#' @param region The region for cloud run
 #' @inheritParams cr_deploy_github_docker
 #' @family Deployment functions
 #'
@@ -63,6 +64,12 @@ cr_deploy_github_docker <- function(x,
 #' You need to mirror the repo onto Google Cloud Repositories, as well as connect to the GitHub app for the source and the build trigger to work from the same GitHub repo.
 #'
 #' @export
+#' @examples
+#'
+#' \dontrun{
+#'   cr_deploy_github_html("MarkEdmondson1234/googleCloudRunner",
+#'                         rmd_folder = "vignettes")
+#' }
 cr_deploy_github_html <- function(x,
                                   image = paste0(x,"-html"),
                                   rmd_folder = NULL,
@@ -96,19 +103,13 @@ cr_deploy_github_html <- function(x,
 
   bash_script <- system.file("docker", "nginx", "setup.bash",
                              package = "googleCloudRunner")
-  bashstep <- cr_buildstep("ubuntu", prefix = "",
-                           args = c("bash","-c\n",
-                             readChar(bash_script,
-                                      file.info(bash_script)$size)
-                           ),
-                           dir = html_folder,
-                           id = "setup nginx")
 
   build_html <- cr_build_make(
     cr_build_yaml(
       steps = c(
           rmd_step,
-          bashstep,
+          cr_buildstep_bash(bash_script,
+                            dir = html_folder, id = "setup nginx"),
           cr_buildstep_docker(image,tag = image_tag, dir = html_folder),
           cr_buildstep("gcloud",
                        c("beta","run","deploy", image,
@@ -136,6 +137,7 @@ cr_deploy_github_html <- function(x,
                   description = safe_name,
                   trigger = github,
                   build = build_html,
+                  substitutions = list(`_PORT` = "${PORT}"),
                   includedFiles = glob)
 
 

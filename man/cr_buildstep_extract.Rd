@@ -24,6 +24,7 @@ cr_buildstep_extract(build, step = 2)
 }
 \seealso{
 Other Cloud Buildsteps: 
+\code{\link{cr_buildstep_bash}()},
 \code{\link{cr_buildstep_decrypt}()},
 \code{\link{cr_buildstep_df}()},
 \code{\link{cr_buildstep_docker}()},

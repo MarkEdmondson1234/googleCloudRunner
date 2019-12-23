@@ -13,7 +13,7 @@ cr_buildstep_r(
 )
 }
 \arguments{
-\item{r}{R code to run or a file containing R code}
+\item{r}{R code to run or a file containing R code ending with .R}
 
 \item{name}{The docker image that will run the R code, usually from rocker-project.org}
 
@@ -61,6 +61,7 @@ br <-  cr_buildstep_r(my_r, name= "gcr.io/gcer-public/packagetools:master")
 }
 \seealso{
 Other Cloud Buildsteps: 
+\code{\link{cr_buildstep_bash}()},
 \code{\link{cr_buildstep_decrypt}()},
 \code{\link{cr_buildstep_df}()},
 \code{\link{cr_buildstep_docker}()},

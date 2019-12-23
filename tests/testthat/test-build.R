@@ -401,6 +401,9 @@ test_that("Render BuildStep objects", {
   br <-  cr_buildstep_r(my_r, name = "gcr.io/gcer-public/packagetools:master")
   expect_equal(br[[1]]$args[[3]], "devtools::install()\npkgdown::build_site()")
 
+  bs <- cr_build_yaml(steps = cr_buildstep_bash("echo Hello"))
+  expect_equal(bs$steps[[1]]$args[[3]], "echo Hello")
+
 })
 
 

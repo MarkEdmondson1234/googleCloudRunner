@@ -37,6 +37,8 @@ cr_deploy_github_html(
 
 \item{edit_r}{If you want to change the R code to render the HTML, supply R code via a file or string of R as per \link{cr_buildstep_r}}
 
+\item{region}{The region for cloud run}
+
 \item{projectId}{The project to build under}
 }
 \description{
@@ -49,6 +51,13 @@ This default R code is rendered in the rmd_folder:
       rmarkdown::render, output_format = 'html_document')}
 
 You need to mirror the repo onto Google Cloud Repositories, as well as connect to the GitHub app for the source and the build trigger to work from the same GitHub repo.
+}
+\examples{
+
+\dontrun{
+  cr_deploy_github_html("MarkEdmondson1234/googleCloudRunner",
+                        rmd_folder = "vignettes")
+}
 }
 \seealso{
 \link{cr_deploy_html} that lets you deploy HTML files

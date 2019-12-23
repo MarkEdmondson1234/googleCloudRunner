@@ -51,6 +51,7 @@ build <- cr_build_make(build_yaml, source = my_source)
 }
 \seealso{
 Other Cloud Buildsteps: 
+\code{\link{cr_buildstep_bash}()},
 \code{\link{cr_buildstep_decrypt}()},
 \code{\link{cr_buildstep_df}()},
 \code{\link{cr_buildstep_docker}()},

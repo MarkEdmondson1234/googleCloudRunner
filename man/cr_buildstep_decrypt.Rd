@@ -36,6 +36,7 @@ cr_buildstep_decrypt("secret.json.enc",
 }
 \seealso{
 Other Cloud Buildsteps: 
+\code{\link{cr_buildstep_bash}()},
 \code{\link{cr_buildstep_df}()},
 \code{\link{cr_buildstep_docker}()},
 \code{\link{cr_buildstep_edit}()},
