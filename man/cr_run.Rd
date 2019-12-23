@@ -50,7 +50,7 @@ cr_run("gcr.io/my-project/my-image")
 \seealso{
 \href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
 
-Use \link{cr_deploy_docker} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.
+Use \link{cr_deploy_docker} or similar to create image, \link{cr_deploy_run} to automate building and deploying, \link{cr_deploy_plumber} to deploy plumber APIs.
 
 \href{https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run}{Deploying Cloud Run using Cloud Build}
 

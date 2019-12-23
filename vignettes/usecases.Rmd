@@ -63,7 +63,7 @@ cr_buildtrigger("build-docker", trigger = my_repo, build = built_docker)
 
 ## Trigger an R function from pubsub
 
-This uses `cr_deploy_run` to deploy an R API that can then be triggered from pub/sub events, such as Cloud logging events or when files get updated in a Cloud Storage bucket.  This in turn can trigger other Cloud Builds. 
+This uses `cr_deploy_plumber` to deploy an R API that can then be triggered from pub/sub events, such as Cloud logging events or when files get updated in a Cloud Storage bucket.  This in turn can trigger other Cloud Builds. 
 
 A plumber API that accepts pub/sub messages is facilitated by `cr_plumber_pubsub()`
 
@@ -100,7 +100,7 @@ CMD ["api.R"]
 Put both the Dockerfile and the `api.R` script in the same folder then deploy it to Cloud Run:
 
 ```r
-cr_deploy_run("the_folder")
+cr_deploy_plumber("the_folder")
 ```
 
 Once built you will have a pub/sub live that will trigger the function you defined.  You can test pubsub messages via `cr_pubsub()`

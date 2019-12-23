@@ -101,7 +101,10 @@ cr_buildstep_r <- function(r,
 #' @param location The KMS location
 #' @param ... Further arguments passed in to \link{cr_buildstep}
 #' @details
-#' You will need to set up the encrypted key using gcloud following this guide from Google: https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials
+#'
+#' Key Management Store can encrypt secret files for use within your later buildsteps.
+#'
+#'  @seealso  You will need to set up the \href{encrypted key using gcloud following this guide from Google}{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials}
 #'
 #' @family Cloud Buildsteps
 #' @export

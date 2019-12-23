@@ -3,7 +3,7 @@
 #' Deploys an existing gcr.io image.
 #'
 #' @seealso \href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
-#' @seealso Use \link{cr_deploy_docker} or similar to create image, or \link{cr_deploy_run} to automate building and deploying.
+#' @seealso Use \link{cr_deploy_docker} or similar to create image, \link{cr_deploy_run} to automate building and deploying, \link{cr_deploy_plumber} to deploy plumber APIs.
 #'
 #' @param image The name of the image to create or use in deployment - \code{gcr.io}
 #' @param name Name for deployment on Cloud Run

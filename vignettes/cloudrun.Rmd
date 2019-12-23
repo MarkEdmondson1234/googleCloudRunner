@@ -119,5 +119,9 @@ cr_deploy_docker("my-image")
 cr_run("gcr.io/my-project/my-image")
 ```
 
-`cr_deploy_run()` wraps the above in functions to check and wait for status etc. and is intended as the main method of Cloud Run deployment, but you may want to tweak the settings more by calling `cr_run()` directly. 
+`cr_deploy_run()` wraps the above in functions to check and wait for status etc.
+
+`cr_deploy_plumber()` adds checks for plumber API files.
+
+
 

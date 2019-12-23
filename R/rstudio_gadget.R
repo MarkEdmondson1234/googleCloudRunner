@@ -70,7 +70,7 @@ cr_deploy_gadget <- function(){
       ),
       miniUI::miniTabPanel("plumber API", icon = shiny::icon("wrench"),
         miniUI::miniContentPanel(
-          shiny::h2("Configure cr_deploy_run()"),
+          shiny::h2("Configure cr_deploy_plumber()"),
           shiny::textInput("apiFile",
             label = "Select folder with api.R file and Dockerfile",
             placeholder = "plumber/"),

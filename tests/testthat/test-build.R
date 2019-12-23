@@ -22,7 +22,7 @@ test_that("[Online] Test deployments", {
   # remove generated Dockerfile to test moving your own Dockerfile_bak in
   unlink(paste0(runme, "Dockerfile"))
 
-  cr <- cr_deploy_run(runme,
+  cr <- cr_deploy_plumber(runme,
                       dockerfile = paste0(runme, "Dockerfile_bak"))
 
   expect_equal(cr$kind, "Service")
