@@ -11,12 +11,12 @@ If you want to run scripts that can be triggered one time, setup to trigger on G
 ## Quickstart - plumber API
 
 1. Make an R API via [plumber](https://www.rplumber.io/) that contains entry file api.R.  You can use the demo example in `system.file("example", package="cloudRunner")` if you like.
-2. Deploy via the `cr_deploy_run()` function:
+2. Deploy via the `cr_deploy_plumber()` function:
 
 ```r
 library(googleCloudRunner)
 
-cr <- cr_deploy_run("api.R")
+cr <- cr_deploy_plumber("api.R")
 #2019-11-12 10:34:29 -- File size detected as 903 bytes
 #2019-11-12 10:34:31> Cloud Build started - logs: 
 #https://console.cloud.google.com/gcr/builds/40343fd4-6981-41c3-98c8-f5973c3de386?project=1080525199262
@@ -40,7 +40,7 @@ cr <- cr_deploy_run("api.R")
 
 ### What did it do?
 
-Deployment via `cr_deploy_run()` automated these steps:
+Deployment via `cr_deploy_plumber()` automated these steps:
 
 1. Creates a Dockerfile for your R script if necessary using [`containerit`](https://o2r.info/containerit/index.html)
 2. Uploads the Dockerfile and your api.R file to your Google Cloud Storage bucket
