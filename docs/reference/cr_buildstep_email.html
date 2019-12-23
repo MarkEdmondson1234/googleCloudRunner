@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deploy HTML built from a GitHub repo each commit — cr_deploy_github_html • googleCloudRunner</title>
+<title>Send an email in a Cloud Build step — cr_buildstep_email • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Deploy HTML built from a GitHub repo each commit — cr_deploy_github_html" />
-<meta property="og:description" content="This lets you set up triggers that will update a website each commit" />
+<meta property="og:title" content="Send an email in a Cloud Build step — cr_buildstep_email" />
+<meta property="og:description" content="This uses smtp_send to send markdown emails." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,89 +149,76 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deploy HTML built from a GitHub repo each commit</h1>
+    <h1>Send an email in a Cloud Build step</h1>
     
-    <div class="hidden name"><code>cr_deploy_github_html.Rd</code></div>
+    <div class="hidden name"><code>cr_buildstep_email.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This lets you set up triggers that will update a website each commit</p>
+    <p>This uses smtp_send to send markdown emails.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_github_html</span>(
-  <span class='no'>x</span>,
-  <span class='kw'>image</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>x</span>, <span class='st'>"-html"</span>),
-  <span class='kw'>rmd_folder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>html_folder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>,
-  <span class='kw'>image_tag</span> <span class='kw'>=</span> <span class='st'>"$SHORT_SHA"</span>,
-  <span class='kw'>github_tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
-  <span class='kw'>edit_r</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
+    <pre class="usage"><span class='fu'>cr_buildstep_email</span>(
+  <span class='no'>message</span>,
+  <span class='no'>from</span>,
+  <span class='no'>to</span>,
+  <span class='no'>subject</span>,
+  <span class='kw'>cipher</span> <span class='kw'>=</span> <span class='st'>"email_creds.enc"</span>,
+  <span class='kw'>plain</span> <span class='kw'>=</span> <span class='st'>"email_creds"</span>,
+  <span class='kw'>keyring</span> <span class='kw'>=</span> <span class='st'>"my_keyring"</span>,
+  <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"email_creds"</span>,
+  <span class='kw'>location</span> <span class='kw'>=</span> <span class='st'>"global"</span>,
+  <span class='no'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>The GitHub repo e.g. <code>MarkEdmondson1234/googleCloudRunner</code></p></td>
+      <th>message</th>
+      <td><p>The message markdown</p></td>
     </tr>
     <tr>
-      <th>image</th>
-      <td><p>The name of the image you want to build</p></td>
+      <th>from</th>
+      <td><p>from email</p></td>
     </tr>
     <tr>
-      <th>rmd_folder</th>
-      <td><p>A folder of Rmd files within GitHub source that will be built into HTML for serving via <a href='https://rdrr.io/pkg/rmarkdown/man/render.html'>render</a></p></td>
+      <th>to</th>
+      <td><p>to email</p></td>
     </tr>
     <tr>
-      <th>html_folder</th>
-      <td><p>A folder of html to deploy within GitHub source.  Will be ignored if rmd_folder is not NULL</p></td>
+      <th>subject</th>
+      <td><p>subject email</p></td>
     </tr>
     <tr>
-      <th>branch</th>
-      <td><p>A regex of the GitHub branches that will trigger a build</p></td>
+      <th>cipher</th>
+      <td><p>The file that has been encrypted</p></td>
     </tr>
     <tr>
-      <th>image_tag</th>
-      <td><p>What to tag the build docker image</p></td>
+      <th>plain</th>
+      <td><p>The file location to decrypt to</p></td>
     </tr>
     <tr>
-      <th>github_tag</th>
-      <td><p>Regexes matching what tags to build. If not NULL then argument branch will be ignored</p></td>
+      <th>keyring</th>
+      <td><p>The KMS keyring to use</p></td>
     </tr>
     <tr>
-      <th>timeout</th>
-      <td><p>timeout for the Docker build</p></td>
+      <th>key</th>
+      <td><p>The KMS key to use</p></td>
     </tr>
     <tr>
-      <th>edit_r</th>
-      <td><p>If you want to change the R code to render the HTML, supply R code via a file or string of R as per <a href='cr_buildstep_r.html'>cr_buildstep_r</a></p></td>
+      <th>location</th>
+      <td><p>The KMS location</p></td>
     </tr>
     <tr>
-      <th>projectId</th>
-      <td><p>The project to build under</p></td>
+      <th>...</th>
+      <td><p>Further arguments passed in to <a href='cr_buildstep.html'>cr_buildstep</a></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This default R code is rendered in the rmd_folder:</p>
-<p><code><a href='https://rdrr.io/r/base/lapply.html'>lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
-      rmarkdown::render, output_format = 'html_document')</a></code></p>
-<p>You need to mirror the repo onto Google Cloud Repositories, as well as connect to the GitHub app for the source and the build trigger to work from the same GitHub repo.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><a href='cr_deploy_run.html'>cr_deploy_html</a> that lets you deploy HTML files</p>
-<p>Other Deployment functions: 
-<code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
-<code><a href='cr_deploy_github_docker.html'>cr_deploy_github_docker</a>()</code>,
-<code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a>()</code>,
-<code><a href='cr_deploy_run.html'>cr_deploy_run</a>()</code>,
-<code><a href='cr_deploy_r.html'>cr_deploy_r</a>()</code></p></div>
+    <p>You will need to create a credentials file locally first, then deploy it to Key Management Store.  This will be used to send the emails securely.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -239,7 +226,6 @@
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
     </ul>
 
   </div>
