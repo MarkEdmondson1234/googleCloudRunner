@@ -36,8 +36,35 @@ cr_deploy_html(
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
 }
 \description{
-Supply the html folder to host it on Cloud Run.  Builds the dockerfile with the html within it, then deploys to Cloud Run
+Deploy html files to a nginx server on Cloud Run
 }
 \details{
+
+}
+\section{cr_deploy_html}{
+
+Deploy html files to a nginx server on Cloud Run.
+
+Supply the html folder to host it on Cloud Run.  Builds the dockerfile with the html within it, then deploys to Cloud Run
+
 Will add a \code{default.template} file to the html folder that holds the nginx configuration
 }
+
+\examples{
+
+\dontrun{
+
+cr_deploy_html("my_folder")
+
+}
+}
+\seealso{
+Other Deployment functions: 
+\code{\link{cr_deploy_docker}()},
+\code{\link{cr_deploy_github_docker}()},
+\code{\link{cr_deploy_github_html}()},
+\code{\link{cr_deploy_pkgdown}()},
+\code{\link{cr_deploy_plumber}()},
+\code{\link{cr_deploy_r}()}
+}
+\concept{Deployment functions}

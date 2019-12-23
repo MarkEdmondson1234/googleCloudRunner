@@ -196,7 +196,7 @@ cr_deploy_gadget <- function(){
         }
 
         shiny::stopApp(
-          cr_deploy_run(folder,
+          cr_deploy_plumber(folder,
                         # remote = apiName,
                         dockerfile = dockerfile,
                         image_name = image_name,

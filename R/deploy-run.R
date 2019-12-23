@@ -1,16 +1,27 @@
 #' Deploy html files to a nginx server on Cloud Run
 #'
-#' Supply the html folder to host it on Cloud Run.  Builds the dockerfile with the html within it, then deploys to Cloud Run
-#'
 #' @param html_folder the folder containing all the html
 #' @inheritParams cr_deploy_run
-#'
+#' @family Deployment functions
 #' @details
+#'
+#' @section cr_deploy_html:
+#' Deploy html files to a nginx server on Cloud Run.
+#'
+#' Supply the html folder to host it on Cloud Run.  Builds the dockerfile with the html within it, then deploys to Cloud Run
 #'
 #' Will add a \code{default.template} file to the html folder that holds the nginx configuration
 #'
 #' @export
 #' @import assertthat
+#' @examples
+#'
+#' \dontrun{
+#'
+#' cr_deploy_html("my_folder")
+#'
+#' }
+#' @rdname cr_deploy_run
 cr_deploy_html <- function(html_folder,
                            remote = basename(html_folder),
                            image_name = remote,
@@ -37,13 +48,11 @@ cr_deploy_html <- function(html_folder,
                 projectId = projectId,
                 launch_browser = launch_browser,
                 timeout=timeout)
-
-
 }
 
-#' Deploy an R plumber script to Cloud Run
+#' Deploy to Cloud Run
 #'
-#' Helper to take an R plumber script, create the Dockerfile, add the build to Cloud Build and deploy to Cloud Run
+#' Deploy R api plumber scripts, HTML files or other images create the Docker image, add the build to Cloud Build and deploy to Cloud Run
 #'
 #' @param local A folder containing the R script using plumber called api.R and all its dependencies
 #' @param remote The folder on Google Cloud Storage, and the name of the service on Cloud Run

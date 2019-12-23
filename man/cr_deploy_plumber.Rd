@@ -3,7 +3,7 @@
 \name{cr_deploy_plumber}
 \alias{cr_deploy_plumber}
 \alias{cr_deploy_run}
-\title{Deploy an R plumber script to Cloud Run}
+\title{Deploy to Cloud Run}
 \usage{
 cr_deploy_plumber(
   local,
@@ -53,7 +53,7 @@ cr_deploy_run(
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
 }
 \description{
-Helper to take an R plumber script, create the Dockerfile, add the build to Cloud Build and deploy to Cloud Run
+Deploy R api plumber scripts, HTML files or other images create the Docker image, add the build to Cloud Build and deploy to Cloud Run
 }
 \details{
 
@@ -79,8 +79,10 @@ cr_deploy_run(system.file("example/", package = "googleCloudRunner"))
 }
 \seealso{
 Other Deployment functions: 
-\code{\link{cr_deploy_docker_github}()},
 \code{\link{cr_deploy_docker}()},
+\code{\link{cr_deploy_github_docker}()},
+\code{\link{cr_deploy_github_html}()},
+\code{\link{cr_deploy_html}()},
 \code{\link{cr_deploy_pkgdown}()},
 \code{\link{cr_deploy_r}()}
 }
