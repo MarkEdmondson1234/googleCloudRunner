@@ -61,7 +61,7 @@ cr_deploy_github_docker <- function(x,
 #' \code{lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
 #'       rmarkdown::render, output_format = 'html_document')}
 #'
-#' You need to mirror the repo onto Google Cloud Repositories, as well as connect to the GitHub app for the source and the build trigger to work from the same GitHub repo.
+#' You need to mirror the GitHub/Bitbucket repo onto Google Cloud Repositories for this to work
 #'
 #' @export
 #' @examples
@@ -70,7 +70,7 @@ cr_deploy_github_docker <- function(x,
 #'   cr_deploy_github_html("MarkEdmondson1234/googleCloudRunner",
 #'                         rmd_folder = "vignettes")
 #' }
-cr_deploy_github_html <- function(x,
+cr_deploy_git_html <- function(x,
                                   image = paste0(x,"-html"),
                                   rmd_folder = NULL,
                                   html_folder = NULL,
@@ -86,6 +86,8 @@ cr_deploy_github_html <- function(x,
     xor(!is.null(rmd_folder), !is.null(html_folder))
   )
 
+  image <- gsub("[^-a-zA-Z0-9\\/]","",tolower(image))
+
   r <- "lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
        rmarkdown::render, output_format = 'html_document')"
   if(!is.null(edit_r)){
@@ -94,7 +96,10 @@ cr_deploy_github_html <- function(x,
 
   rmd_step <- NULL
   if(!is.null(rmd_folder)){
-    rmd_step <- cr_buildstep_r(r, dir = rmd_folder, id="render rmd")
+    rmd_step <- cr_buildstep_r(r,
+                  name = "gcr.io/gcer-public/packagetools:master",
+                  dir = rmd_folder,
+                  id="render rmd")
     html_folder <- rmd_folder
     glob <- paste0(rmd_folder,"/**")
   } else {
@@ -103,6 +108,11 @@ cr_deploy_github_html <- function(x,
 
   bash_script <- system.file("docker", "nginx", "setup.bash",
                              package = "googleCloudRunner")
+
+  repo_source <- RepoSource(make_github_mirror(x),
+                            tagName = github_tag,
+                            branchName = branch,
+                            projectId = projectId)
 
   build_html <- cr_build_make(
     cr_build_yaml(
@@ -124,18 +134,15 @@ cr_deploy_github_html <- function(x,
     images = paste0("gcr.io/", projectId, "/", image),
     timeout = timeout,
     options = list(substitution_option = "ALLOW_LOOSE"),
-    source = cr_build_source(RepoSource(make_github_mirror(x),
-                                        tagName = github_tag,
-                                        branchName = branch,
-                                        projectId = projectId))
+    source = cr_build_source(repo_source)
     )
 
-  github <- GitHubEventsConfig(x, branch = branch, tag = github_tag)
+  #github <- GitHubEventsConfig(x, branch = branch, tag = github_tag)
 
   safe_name <- gsub("[^a-zA-Z1-9]","-", x)
   cr_buildtrigger(safe_name,
                   description = safe_name,
-                  trigger = github,
+                  trigger = repo_source,
                   build = build_html,
                   substitutions = list(`_PORT` = "${PORT}"),
                   includedFiles = glob)

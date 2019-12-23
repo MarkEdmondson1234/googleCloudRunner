@@ -39,7 +39,7 @@ cr_deploy_docker(
 \item{task_id}{RStudio job task_id if you want to use the same task}
 }
 \description{
-If no Dockerfile present in the deployment folder, will attempt to create a Dockerfile to upload via \link{cr_dockerfile}
+If no Dockerfile present in the deployment folder, will attempt to create a Dockerfile to upload via \link{cr_dockerfile_plumber}
 }
 \examples{
 
@@ -51,8 +51,8 @@ cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
 }
 \seealso{
 Other Deployment functions: 
+\code{\link{cr_deploy_git_html}()},
 \code{\link{cr_deploy_github_docker}()},
-\code{\link{cr_deploy_github_html}()},
 \code{\link{cr_deploy_pkgdown}()},
 \code{\link{cr_deploy_run}()},
 \code{\link{cr_deploy_r}()}

@@ -2,4 +2,5 @@ FROM rocker/verse:latest
 
 RUN install2.r --error \
     -r 'http://cran.rstudio.com' \
-    devtools covr rhub pkgdown goodpractice blastula plumber
+    devtools covr rhub pkgdown goodpractice blastula plumber rmarkdown
+

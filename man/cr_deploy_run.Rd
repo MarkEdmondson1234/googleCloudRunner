@@ -122,8 +122,8 @@ cr_deploy_plumber(system.file("example/", package = "googleCloudRunner"))
 \seealso{
 Other Deployment functions: 
 \code{\link{cr_deploy_docker}()},
+\code{\link{cr_deploy_git_html}()},
 \code{\link{cr_deploy_github_docker}()},
-\code{\link{cr_deploy_github_html}()},
 \code{\link{cr_deploy_pkgdown}()},
 \code{\link{cr_deploy_r}()}
 }
