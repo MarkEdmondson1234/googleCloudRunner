@@ -252,12 +252,4 @@ cr_deploy_pkgdown <- function(trigger,
 
 }
 
-extract_repo <- function(x){
-  if(is.gar_RepoSource(x)){
-    return(x$repoName)
-  } else if(is.gar_GitHubEventsConfig(x)){
-    return(paste0(x$owner,"/",x$name))
-  } else {
-    stop("Could not find repo from object of class ", class(x), call. = FALSE)
-  }
-}
+

@@ -64,7 +64,7 @@ cr_deploy_run <- function(local,
   }
 
   cr_run(built$results$images$name,
-         name = tolower(remote),
+         name = lower_alpha_dash(remote),
          region = region,
          projectId = projectId,
          launch_browser=launch_browser,
@@ -183,19 +183,5 @@ cr_deploy_plumber <- function(api,
                 launch_browser = launch_browser,
                 timeout=timeout)
 
-}
-
-
-
-
-
-make_image_name <- function(name, projectId){
-  prefix <- grepl("^gcr.io", name)
-  if(prefix){
-    the_image <- name
-  } else {
-    the_image <- sprintf("gcr.io/%s/%s", projectId, name)
-  }
-  tolower(the_image)
 }
 

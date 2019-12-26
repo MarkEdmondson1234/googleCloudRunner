@@ -1,3 +1,58 @@
+#' Create buildsteps to deploy to Cloud Run
+#'
+#' @inheritParams cr_run
+#' @param ... passed on to \link{cr_buildstep}
+#' @export
+#' @family Cloud Buildsteps
+cr_buildstep_run <- function(name,
+                             image,
+                             allowUnauthenticated = TRUE,
+                             region = cr_region_get(),
+                             concurrency = 80,
+                             ...){
+
+  # don't allow dot names that would break things
+  dots <- list(...)
+  assert_that(
+    is.null(dots$args),
+    is.null(dots$name),
+    is.null(dots$prefix)
+  )
+
+  if(allowUnauthenticated){
+    auth_calls <- "--allow-unauthenticated"
+    #sometimes unauth fails, so attempt to fix as per warning suggestion
+    auth_step <- cr_buildstep("gcloud",
+                              c("beta", "run", "services", "add-iam-policy-binding",
+                                "--region", region,
+                                "--member=allUsers",
+                                "--role=roles/run.invoker",
+                                "--platform", "managed",
+                                name),
+                              id = "auth cloudrun",
+                              ...)
+  } else {
+    auth_calls <- "--no-allow-unauthenticated"
+    auth_step <- NULL
+  }
+
+
+  c(
+    cr_buildstep("gcloud",
+                   c("beta","run","deploy", name,
+                     "--image", image,
+                     "--region", region,
+                     "--platform", "managed",
+                     "--concurrency", concurrency,
+                     auth_calls
+                   ),
+                   id = "deploy cloudrun",
+                 ...),
+      auth_step
+    )
+
+}
+
 #' Run a bash script in a Cloud Build step
 #'
 #' Helper to run a supplied bash script, that will be copied in-line
@@ -7,6 +62,11 @@
 #' @param ... Other arguments passed to \link{cr_buildstep}
 #' @family Cloud Buildsteps
 #' @export
+#'
+#' @details
+#'
+#' If you need to escape build parameters in bash scripts, you need to escpae CloudBuild's substitution via \code{$$} and bash's substitution via \code{\$} e.g. \code{\$$PARAM}
+#'
 #' @examples
 #'
 #' bs <- cr_build_yaml(

@@ -2,7 +2,7 @@
 % Please edit documentation in R/deploy-github.R
 \name{cr_deploy_git_html}
 \alias{cr_deploy_git_html}
-\title{Deploy HTML built from a GitHub repo each commit}
+\title{Deploy HTML built from a repo each commit}
 \usage{
 cr_deploy_git_html(
   x,
@@ -14,6 +14,7 @@ cr_deploy_git_html(
   github_tag = NULL,
   timeout = 600L,
   edit_r = NULL,
+  allowUnauthenticated = TRUE,
   region = cr_region_get(),
   projectId = cr_project_get()
 )
@@ -37,12 +38,14 @@ cr_deploy_git_html(
 
 \item{edit_r}{If you want to change the R code to render the HTML, supply R code via a file or string of R as per \link{cr_buildstep_r}}
 
+\item{allowUnauthenticated}{TRUE if can be reached from public HTTP address.}
+
 \item{region}{The region for cloud run}
 
 \item{projectId}{The project to build under}
 }
 \description{
-This lets you set up triggers that will update a website each commit
+This lets you set up triggers that will update a website each commit. You need to mirror the GitHub/Bitbucket repo onto Google Cloud Repositories for this to work.
 }
 \details{
 This default R code is rendered in the rmd_folder:
@@ -55,7 +58,7 @@ You need to mirror the GitHub/Bitbucket repo onto Google Cloud Repositories for 
 \examples{
 
 \dontrun{
-  cr_deploy_github_html("MarkEdmondson1234/googleCloudRunner",
+  cr_deploy_git_html("MarkEdmondson1234/googleCloudRunner",
                         rmd_folder = "vignettes")
 }
 }

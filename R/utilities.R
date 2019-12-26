@@ -1,3 +1,28 @@
+extract_repo <- function(x){
+  if(is.gar_RepoSource(x)){
+    return(x$repoName)
+  } else if(is.gar_GitHubEventsConfig(x)){
+    return(paste0(x$owner,"/",x$name))
+  } else {
+    stop("Could not find repo from object of class ", class(x), call. = FALSE)
+  }
+}
+
+make_image_name <- function(name, projectId){
+  prefix <- grepl("^gcr.io", name)
+  if(prefix){
+    the_image <- name
+  } else {
+    the_image <- sprintf("gcr.io/%s/%s", projectId, name)
+  }
+  tolower(the_image)
+}
+
+lower_alpha_dash <- function(x){
+  gsub("[^-a-zA-Z1-9]","-", x)
+}
+
+
 safe_set <- function(x, set, to){
   if(!is.null(x[[set]]) && x[[set]] != to) x[[set]] <- to
   x

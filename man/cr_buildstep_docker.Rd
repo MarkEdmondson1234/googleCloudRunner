@@ -40,6 +40,7 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_extract}()},
 \code{\link{cr_buildstep_gitsetup}()},
 \code{\link{cr_buildstep_pkgdown}()},
+\code{\link{cr_buildstep_run}()},
 \code{\link{cr_buildstep_r}()},
 \code{\link{cr_buildstep}()}
 }

@@ -23,6 +23,9 @@ cr_buildstep_bash(
 \description{
 Helper to run a supplied bash script, that will be copied in-line
 }
+\details{
+If you need to escape build parameters in bash scripts, you need to escpae CloudBuild's substitution via \code{$$} and bash's substitution via \code{\$} e.g. \code{\$$PARAM}
+}
 \examples{
 
 bs <- cr_build_yaml(
@@ -42,6 +45,7 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_extract}()},
 \code{\link{cr_buildstep_gitsetup}()},
 \code{\link{cr_buildstep_pkgdown}()},
+\code{\link{cr_buildstep_run}()},
 \code{\link{cr_buildstep_r}()},
 \code{\link{cr_buildstep}()}
 }

@@ -41,9 +41,9 @@ cr_deploy_github_docker <- function(x,
                   build = build_docker)
 }
 
-#' Deploy HTML built from a GitHub repo each commit
+#' Deploy HTML built from a repo each commit
 #'
-#' This lets you set up triggers that will update a website each commit
+#' This lets you set up triggers that will update a website each commit. You need to mirror the GitHub/Bitbucket repo onto Google Cloud Repositories for this to work.
 #'
 #' @seealso \link{cr_deploy_html} that lets you deploy HTML files
 #'
@@ -52,6 +52,7 @@ cr_deploy_github_docker <- function(x,
 #' @param edit_r If you want to change the R code to render the HTML, supply R code via a file or string of R as per \link{cr_buildstep_r}
 #' @param region The region for cloud run
 #' @inheritParams cr_deploy_github_docker
+#' @inheritParams cr_buildstep_run
 #' @family Deployment functions
 #'
 #' @details
@@ -67,20 +68,21 @@ cr_deploy_github_docker <- function(x,
 #' @examples
 #'
 #' \dontrun{
-#'   cr_deploy_github_html("MarkEdmondson1234/googleCloudRunner",
+#'   cr_deploy_git_html("MarkEdmondson1234/googleCloudRunner",
 #'                         rmd_folder = "vignettes")
 #' }
 cr_deploy_git_html <- function(x,
-                                  image = paste0(x,"-html"),
-                                  rmd_folder = NULL,
-                                  html_folder = NULL,
-                                  branch = ".*",
-                                  image_tag = "$SHORT_SHA",
-                                  github_tag = NULL,
-                                  timeout = 600L,
-                                  edit_r = NULL,
-                                  region = cr_region_get(),
-                                  projectId = cr_project_get()){
+                               image = paste0(x,"-html"),
+                               rmd_folder = NULL,
+                               html_folder = NULL,
+                               branch = ".*",
+                               image_tag = "$SHORT_SHA",
+                               github_tag = NULL,
+                               timeout = 600L,
+                               edit_r = NULL,
+                               allowUnauthenticated = TRUE,
+                               region = cr_region_get(),
+                               projectId = cr_project_get()){
 
   assert_that(
     xor(!is.null(rmd_folder), !is.null(html_folder))
@@ -114,26 +116,28 @@ cr_deploy_git_html <- function(x,
                             branchName = branch,
                             projectId = projectId)
 
+  cr_image <- lower_alpha_dash(image)
+  run_image <- sprintf("%s:%s", make_image_name(image, projectId), image_tag)
+
   build_html <- cr_build_make(
     cr_build_yaml(
       steps = c(
           rmd_step,
           cr_buildstep_bash(bash_script,
                             dir = html_folder, id = "setup nginx"),
-          cr_buildstep_docker(image,tag = image_tag, dir = html_folder),
-          cr_buildstep("gcloud",
-                       c("beta","run","deploy", image,
-                         "--image", image,
-                         "--region", region,
-                         "--platform", "managed",
-                         "--concurrency", 80
-                       ),
-                       id = "deploy cloudrun")
+          cr_buildstep_docker(image,
+                              tag = image_tag,
+                              dir = html_folder,
+                              projectId = projectId),
+          cr_buildstep_run(name = cr_image,
+                           image = run_image,
+                           allowUnauthenticated = allowUnauthenticated,
+                           region = region,
+                           concurrency = 80)
           )
     ),
-    images = paste0("gcr.io/", projectId, "/", image),
+    images = run_image,
     timeout = timeout,
-    options = list(substitution_option = "ALLOW_LOOSE"),
     source = cr_build_source(repo_source)
     )
 
@@ -144,7 +148,6 @@ cr_deploy_git_html <- function(x,
                   description = safe_name,
                   trigger = repo_source,
                   build = build_html,
-                  substitutions = list(`_PORT` = "${PORT}"),
                   includedFiles = glob)
 
 
