@@ -216,13 +216,23 @@ CMD ["api.R"]</code></pre>
 <a class="sourceLine" id="cb9-2" data-line-number="2">markdown_folder &lt;-<span class="st">  "vignettes"</span></a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"><span class="kw"><a href="../reference/cr_deploy_git_html.html">cr_deploy_git_html</a></span>(your_repo, <span class="dt">rmd_folder =</span> markdown_folder)</a></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
-<li>If you want to customise how your markdown is rendered (perhaps using pkgdown to render your package website), supply that code in edit_r argument:</li>
+<li>If you want to customise how your markdown is rendered (perhaps using pkgdown to render your package website), supply that code in <code>edit_r</code> argument:</li>
 </ol>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">your_repo &lt;-<span class="st"> "MarkEdmondson1234/googleCloudRunner"</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">r &lt;-<span class="st"> "pkgdown::build_site()"</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">r &lt;-<span class="st"> "devtools::install(); pkgdown::build_site()"</span></a>
 <a class="sourceLine" id="cb10-3" data-line-number="3"><span class="kw"><a href="../reference/cr_deploy_git_html.html">cr_deploy_git_html</a></span>(your_repo, </a>
 <a class="sourceLine" id="cb10-4" data-line-number="4">                   <span class="dt">image =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(your_repo, <span class="st">"-pkgdown"</span>), </a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">                   <span class="dt">rmd_folder =</span> <span class="st">"."</span>, <span class="dt">edit_r =</span> r)</a></code></pre></div>
+<a class="sourceLine" id="cb10-5" data-line-number="5">                   <span class="dt">rmd_folder =</span> <span class="st">"."</span>, <span class="dt">edit_r =</span> r)</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">                   </a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="kw"><a href="../reference/cr_run_get.html">cr_run_get</a></span>(<span class="st">"markedmondson1234-googlecloudrunner-pkgdown"</span>)</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#==CloudRunService==</span></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#name:  markedmondson1234-googlecloudrunner-pkgdown </span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co">#location:  europe-west1 </span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="co">#lastModifier:  1080525199262@cloudbuild.gserviceaccount.com </span></a>
+<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co">#containers:  gcr.io/mark-edmondson-gde/markedmondson1234/googlecloudrunner-pkgdown:20d3e18 </span></a>
+<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="co">#creationTimestamp:  2019-12-26T19:24:10.789691Z </span></a>
+<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="co">#observedGeneration:  1 </span></a>
+<a class="sourceLine" id="cb10-15" data-line-number="15"><span class="co">#url:  https://markedmondson1234-googlecloudrunner-pkgdown-ewjogewawq-ew.a.run.app </span></a></code></pre></div>
 </div>
   </div>
 

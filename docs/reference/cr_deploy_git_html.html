@@ -168,6 +168,7 @@
   <span class='kw'>github_tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
   <span class='kw'>edit_r</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>r_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>,
   <span class='kw'>allowUnauthenticated</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
   <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
@@ -213,6 +214,10 @@
       <td><p>If you want to change the R code to render the HTML, supply R code via a file or string of R as per <a href='cr_buildstep_r.html'>cr_buildstep_r</a></p></td>
     </tr>
     <tr>
+      <th>r_image</th>
+      <td><p>The image that will run the R code from <code>edit_r</code></p></td>
+    </tr>
+    <tr>
       <th>allowUnauthenticated</th>
       <td><p>TRUE if can be reached from public HTTP address.</p></td>
     </tr>
@@ -245,8 +250,17 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-  <span class='fu'>cr_deploy_git_html</span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
-                        <span class='kw'>rmd_folder</span> <span class='kw'>=</span> <span class='st'>"vignettes"</span>)
+<span class='no'>your_repo</span> <span class='kw'>&lt;-</span> <span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>
+<span class='fu'>cr_deploy_git_html</span>(<span class='no'>your_repo</span>, <span class='kw'>rmd_folder</span> <span class='kw'>=</span> <span class='st'>"vignettes"</span>)
+
+<span class='co'># change the Rmd rendering to pkgdown</span>
+<span class='no'>r</span> <span class='kw'>&lt;-</span> <span class='st'>"devtools::install();pkgdown::build_site()"</span>
+
+<span class='fu'>cr_deploy_git_html</span>(<span class='no'>your_repo</span>,
+                   <span class='kw'>image</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>your_repo</span>, <span class='st'>"-pkgdown"</span>),
+                   <span class='kw'>rmd_folder</span> <span class='kw'>=</span> <span class='st'>"."</span>,
+                   <span class='kw'>edit_r</span> <span class='kw'>=</span> <span class='no'>r</span>)
+
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
