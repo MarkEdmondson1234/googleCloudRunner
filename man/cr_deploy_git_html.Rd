@@ -14,6 +14,7 @@ cr_deploy_git_html(
   github_tag = NULL,
   timeout = 600L,
   edit_r = NULL,
+  r_image = "gcr.io/gcer-public/packagetools:master",
   allowUnauthenticated = TRUE,
   region = cr_region_get(),
   projectId = cr_project_get()
@@ -38,6 +39,8 @@ cr_deploy_git_html(
 
 \item{edit_r}{If you want to change the R code to render the HTML, supply R code via a file or string of R as per \link{cr_buildstep_r}}
 
+\item{r_image}{The image that will run the R code from \code{edit_r}}
+
 \item{allowUnauthenticated}{TRUE if can be reached from public HTTP address.}
 
 \item{region}{The region for cloud run}
@@ -58,8 +61,17 @@ You need to mirror the GitHub/Bitbucket repo onto Google Cloud Repositories for 
 \examples{
 
 \dontrun{
-  cr_deploy_git_html("MarkEdmondson1234/googleCloudRunner",
-                        rmd_folder = "vignettes")
+your_repo <- "MarkEdmondson1234/googleCloudRunner"
+cr_deploy_git_html(your_repo, rmd_folder = "vignettes")
+
+# change the Rmd rendering to pkgdown
+r <- "devtools::install();pkgdown::build_site()"
+
+cr_deploy_git_html(your_repo,
+                   image = paste0(your_repo, "-pkgdown"),
+                   rmd_folder = ".",
+                   edit_r = r)
+
 }
 }
 \seealso{

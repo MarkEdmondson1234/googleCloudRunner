@@ -138,13 +138,24 @@ your_repo <- "MarkEdmondson1234/googleCloudRunner"
 markdown_folder <-  "vignettes"
 cr_deploy_git_html(your_repo, rmd_folder = markdown_folder)
 ```
-4. If you want to customise how your markdown is rendered (perhaps using pkgdown to render your package website), supply that code in edit_r argument:
+
+4. If you want to customise how your markdown is rendered (perhaps using pkgdown to render your package website), supply that code in `edit_r` argument:
 
 ```r
 your_repo <- "MarkEdmondson1234/googleCloudRunner"
-r <- "pkgdown::build_site()"
+r <- "devtools::install(); pkgdown::build_site()"
 cr_deploy_git_html(your_repo, 
                    image = paste0(your_repo, "-pkgdown"), 
                    rmd_folder = ".", edit_r = r)
+                   
+cr_run_get("markedmondson1234-googlecloudrunner-pkgdown")
+#==CloudRunService==
+#name:  markedmondson1234-googlecloudrunner-pkgdown 
+#location:  europe-west1 
+#lastModifier:  1080525199262@cloudbuild.gserviceaccount.com 
+#containers:  gcr.io/mark-edmondson-gde/markedmondson1234/googlecloudrunner-pkgdown:20d3e18 
+#creationTimestamp:  2019-12-26T19:24:10.789691Z 
+#observedGeneration:  1 
+#url:  https://markedmondson1234-googlecloudrunner-pkgdown-ewjogewawq-ew.a.run.app 
 ```
 

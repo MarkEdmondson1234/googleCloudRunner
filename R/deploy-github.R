@@ -51,6 +51,7 @@ cr_deploy_github_docker <- function(x,
 #' @param html_folder A folder of html to deploy within GitHub source.  Will be ignored if rmd_folder is not NULL
 #' @param edit_r If you want to change the R code to render the HTML, supply R code via a file or string of R as per \link{cr_buildstep_r}
 #' @param region The region for cloud run
+#' @param r_image The image that will run the R code from \code{edit_r}
 #' @inheritParams cr_deploy_github_docker
 #' @inheritParams cr_buildstep_run
 #' @family Deployment functions
@@ -68,8 +69,17 @@ cr_deploy_github_docker <- function(x,
 #' @examples
 #'
 #' \dontrun{
-#'   cr_deploy_git_html("MarkEdmondson1234/googleCloudRunner",
-#'                         rmd_folder = "vignettes")
+#' your_repo <- "MarkEdmondson1234/googleCloudRunner"
+#' cr_deploy_git_html(your_repo, rmd_folder = "vignettes")
+#'
+#' # change the Rmd rendering to pkgdown
+#' r <- "devtools::install();pkgdown::build_site()"
+#'
+#' cr_deploy_git_html(your_repo,
+#'                    image = paste0(your_repo, "-pkgdown"),
+#'                    rmd_folder = ".",
+#'                    edit_r = r)
+#'
 #' }
 cr_deploy_git_html <- function(x,
                                image = paste0(x,"-html"),
@@ -80,6 +90,7 @@ cr_deploy_git_html <- function(x,
                                github_tag = NULL,
                                timeout = 600L,
                                edit_r = NULL,
+                               r_image = "gcr.io/gcer-public/packagetools:master",
                                allowUnauthenticated = TRUE,
                                region = cr_region_get(),
                                projectId = cr_project_get()){
@@ -96,17 +107,25 @@ cr_deploy_git_html <- function(x,
     r <- edit_r
   }
 
+  glob_f <- function(x){
+    if(x=="."){
+      return(x)
+    }
+    paste0(x,"/**")
+  }
+
   rmd_step <- NULL
   if(!is.null(rmd_folder)){
     rmd_step <- cr_buildstep_r(r,
-                  name = "gcr.io/gcer-public/packagetools:master",
+                  name = r_image,
                   dir = rmd_folder,
                   id="render rmd")
     html_folder <- rmd_folder
-    glob <- paste0(rmd_folder,"/**")
+    glob <- glob_f(rmd_folder)
   } else {
-    glob <- paste0(html_folder,"/**")
+    glob <- glob_f(html_folder)
   }
+
 
   bash_script <- system.file("docker", "nginx", "setup.bash",
                              package = "googleCloudRunner")
@@ -140,8 +159,6 @@ cr_deploy_git_html <- function(x,
     timeout = timeout,
     source = cr_build_source(repo_source)
     )
-
-  #github <- GitHubEventsConfig(x, branch = branch, tag = github_tag)
 
   safe_name <- gsub("[^a-zA-Z1-9]","-", image)
   cr_buildtrigger(safe_name,
