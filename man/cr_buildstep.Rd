@@ -36,7 +36,7 @@ cr_buildstep(
 Helper for creating build steps for upload to Cloud Build
 }
 \details{
-By default dir is set to \code{deploy} to aid deployment from GCS, but you may want to set this to \code{""} when using \link{RepoSource}
+
 }
 \section{Build Macros}{
 

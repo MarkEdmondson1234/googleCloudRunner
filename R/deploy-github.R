@@ -143,7 +143,7 @@ cr_deploy_git_html <- function(x,
 
   #github <- GitHubEventsConfig(x, branch = branch, tag = github_tag)
 
-  safe_name <- gsub("[^a-zA-Z1-9]","-", x)
+  safe_name <- gsub("[^a-zA-Z1-9]","-", image)
   cr_buildtrigger(safe_name,
                   description = safe_name,
                   trigger = repo_source,

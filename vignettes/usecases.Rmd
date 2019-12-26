@@ -121,4 +121,30 @@ pub <- function(x){
 }
 ```
 
+## Build and deploy Rmd files to Cloud Run every Git commit
+
+Cloud Run scales from 0 to millions of hits, so can be an option for hosting a website.  In particular you may want a private internal website, or have lots of traffic or data that goes over other free hosting options such as GitHub pages. A nginx server configuration is included to host any HTML you provide via `cr_deploy_html()`.  
+
+Coupled to that, a common use case is to render Rmd files and host them on a website.  
+
+This can be achieved using `cr_deploy_git_html()` which will upon your chosen git event trigger run R code on your markdown files that should create HTML pages, and then deploy those to Cloud Run.
+
+1. Mirror your GitHub/Bitbucket repo to Cloud Repositories
+2. Put your markdown files in a directory within your Git repo 
+3. Run the below code to setup a build trigger that will render and deploy the markdown files each commit:
+
+```r
+your_repo <- "MarkEdmondson1234/googleCloudRunner"
+markdown_folder <-  "vignettes"
+cr_deploy_git_html(your_repo, rmd_folder = markdown_folder)
+```
+4. If you want to customise how your markdown is rendered (perhaps using pkgdown to render your package website), supply that code in edit_r argument:
+
+```r
+your_repo <- "MarkEdmondson1234/googleCloudRunner"
+r <- "pkgdown::build_site()"
+cr_deploy_git_html(your_repo, 
+                   image = paste0(your_repo, "-pkgdown"), 
+                   rmd_folder = ".", edit_r = r)
+```
 

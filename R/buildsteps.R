@@ -14,8 +14,6 @@
 #' @seealso \href{https://cloud.google.com/cloud-build/docs/create-custom-build-steps}{Creating custom build steps how-to guide}
 #'
 #' @details
-#' By default dir is set to \code{deploy} to aid deployment from GCS, but you may want to set this to \code{""} when using \link{RepoSource}
-#'
 #'
 #' @section Build Macros:
 #' Fields can include the following variables, which will be expanded when the build is created:-
