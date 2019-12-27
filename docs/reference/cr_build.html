@@ -163,6 +163,9 @@
   <span class='kw'>source</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>images</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>artifacts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>options</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
   <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()
 )</pre>
@@ -185,6 +188,18 @@
     <tr>
       <th>images</th>
       <td><p>A list of images to be pushed upon the successful completion of all build</p></td>
+    </tr>
+    <tr>
+      <th>substitutions</th>
+      <td><p>Substitutions data for `Build` resource</p></td>
+    </tr>
+    <tr>
+      <th>artifacts</th>
+      <td><p>Artifacts produced by the build that should be uploaded upon</p></td>
+    </tr>
+    <tr>
+      <th>options</th>
+      <td><p>Special options for this build</p></td>
     </tr>
     <tr>
       <th>projectId</th>
