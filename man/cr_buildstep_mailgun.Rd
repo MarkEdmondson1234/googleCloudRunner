@@ -26,6 +26,8 @@ cr_buildstep_mailgun(
 \item{mailgun_url}{The Mailgun API base URL. Default assumes you set this in \link{Build} substitution macros}
 
 \item{mailgun_key}{The Mailgun API key.  Default assumes you set this in \link{Build} substitution macros}
+
+\item{...}{Other arguments passed to \link{cr_buildstep_r}}
 }
 \description{
 This uses Mailgun to send emails.  It calls an R script that posts the message to MailGuns API.

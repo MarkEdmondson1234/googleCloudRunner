@@ -8,6 +8,7 @@
 #' @param subject subject email
 #' @param mailgun_url The Mailgun API base URL. Default assumes you set this in \link{Build} substitution macros
 #' @param mailgun_key The Mailgun API key.  Default assumes you set this in \link{Build} substitution macros
+#' @param ... Other arguments passed to \link{cr_buildstep_r}
 #'
 #' @details
 #'

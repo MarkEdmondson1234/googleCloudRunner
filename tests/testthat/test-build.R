@@ -19,9 +19,6 @@ test_that("[Online] Test deployments", {
   cd <- cr_deploy_docker(runme, launch_browser = FALSE)
   expect_equal(cd$status,"SUCCESS")
 
-  # remove generated Dockerfile to test moving your own Dockerfile_bak in
-  unlink(paste0(runme, "Dockerfile"))
-
   cr <- cr_deploy_plumber(runme, dockerfile = paste0(runme, "Dockerfile"))
 
   expect_equal(cr$kind, "Service")
