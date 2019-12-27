@@ -1,3 +1,77 @@
+#' Send an email in a Cloud Build step via MailGun.org
+#'
+#' This uses Mailgun to send emails.  It calls an R script that posts the message to MailGuns API.
+#'
+#' @param message The message markdown
+#' @param from from email
+#' @param to to email
+#' @param subject subject email
+#' @param mailgun_url The Mailgun API base URL. Default assumes you set this in \link{Build} substitution macros
+#' @param mailgun_key The Mailgun API key.  Default assumes you set this in \link{Build} substitution macros
+#'
+#' @details
+#'
+#' Requires an account at Mailgun: https://mailgun.com
+#' Pre-verification you can only send to a whitelist of emails you configure - see Mailgun website for details.
+#'
+#'
+#' @export
+#' @examples
+#'
+#' mailgun_url <- "https://api.mailgun.net/v3/sandboxXXX.mailgun.org"
+#' mailgun_key <- "key-XXXX"
+#'
+#' \dontrun{
+#' # assumes you have verified the email
+#' cr_build(
+#'   cr_build_yaml(steps = cr_buildstep_mailgun(
+#'                            "Hello from Cloud Build",
+#'                            to = "me@verfied_email.com",
+#'                            subject = "Hello",
+#'                            from = "googleCloudRunner@example.com"),
+#'                 substitutions = list(
+#'                   `_MAILGUN_URL` = mailgun_url,
+#'                   `_MAILGUN_KEY` = mailgun_key)
+#'           ))
+#' }
+cr_buildstep_mailgun <- function(message,
+                               to,
+                               subject,
+                               from,
+                               mailgun_url = "$_MAILGUN_URL",
+                               mailgun_key = "$_MAILGUN_KEY",
+                               ...){
+
+  # don't allow dot names that would break things
+  dots <- list(...)
+  assert_that(
+    is.null(dots$args),
+    is.null(dots$name),
+    is.null(dots$prefix)
+  )
+
+  r <- sprintf(
+    'httr::POST(paste0("%s","/messages"),
+           httr::authenticate("api", "%s"),
+           encode = "form",
+           body = list(
+             from="%s",
+             to="%s",
+             subject="%s",
+             text="%s"
+           ))',
+    mailgun_url, mailgun_key,
+    from, to, subject, message
+  )
+
+  cr_buildstep_r(r,
+                 id = "send mailgun",
+                 name= "gcr.io/gcer-public/packagetools:master",
+                 ...
+                 )
+
+}
+
 #' Create buildsteps to deploy to Cloud Run
 #'
 #' @inheritParams cr_run

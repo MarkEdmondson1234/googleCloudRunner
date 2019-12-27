@@ -9,6 +9,9 @@ cr_build(
   source = NULL,
   timeout = NULL,
   images = NULL,
+  substitutions = NULL,
+  artifacts = NULL,
+  options = NULL,
   projectId = cr_project_get(),
   launch_browser = interactive()
 )
@@ -21,6 +24,12 @@ cr_build(
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
 
 \item{images}{A list of images to be pushed upon the successful completion of all build}
+
+\item{substitutions}{Substitutions data for `Build` resource}
+
+\item{artifacts}{Artifacts produced by the build that should be uploaded upon}
+
+\item{options}{Special options for this build}
 
 \item{projectId}{ID of the project}
 

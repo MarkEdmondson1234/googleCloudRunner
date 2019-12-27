@@ -403,6 +403,21 @@ test_that("Render BuildStep objects", {
   bs <- cr_build_yaml(steps = cr_buildstep_bash("echo Hello"))
   expect_equal(bs$steps[[1]]$args[[3]], "echo Hello")
 
+  mg <- cr_build_yaml(steps =
+                        cr_buildstep_mailgun("Hello from Cloud Build",
+                                             "x@x.me",
+                                             "Hello",
+                                             "googleCloudRunner@example.com"),
+                      substitutions = list(
+                        `_MAILGUN_URL` = "blah",
+                        `_MAILGUN_KEY` = "poo"))
+
+  expect_equal(mg$steps[[1]]$args[[3]],
+               "httr::POST(paste0(\"$_MAILGUN_URL\",\"/messages\"),\n           httr::authenticate(\"api\", \"$_MAILGUN_KEY\"),\n           encode = \"form\",\n           body = list(\n             from=\"googleCloudRunner@example.com\",\n             to=\"x@x.me\",\n             subject=\"Hello\",\n             text=\"Hello from Cloud Build\"\n           ))")
+  expect_equal(mg$substitutions$`_MAILGUN_URL`, "blah")
+
+
+
 })
 
 

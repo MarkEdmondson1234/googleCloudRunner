@@ -55,6 +55,9 @@ cr_build <- function(x,
                      source = NULL,
                      timeout=NULL,
                      images=NULL,
+                     substitutions=NULL,
+                     artifacts = NULL,
+                     options = NULL,
                      projectId = cr_project_get(),
                      launch_browser = interactive()) {
 
@@ -80,6 +83,9 @@ cr_build <- function(x,
                            source = source,
                            timeout = timeout,
                            images = images,
+                           artifacts = artifacts,
+                           options = options,
+                           substitutions = substitutions,
                            projectId = projectId)
   }
 
@@ -145,6 +151,7 @@ cr_build_make <- function(yaml,
                           images=NULL,
                           artifacts = NULL,
                           options = NULL,
+                          substitutions = NULL,
                           projectId = cr_project_get()){
 
   assert_that(
@@ -180,11 +187,18 @@ cr_build_make <- function(yaml,
     }
   }
 
+  if(is.null(substitutions)){
+    if(!is.null(stepsy$substitutions)){
+      substitutions <- stepsy$substitutions
+    }
+  }
+
   Build(steps = stepsy$steps,
         timeout = timeout,
         images = images,
         source = source,
         options = options,
+        substitutions = substitutions,
         artifacts = artifacts)
 }
 

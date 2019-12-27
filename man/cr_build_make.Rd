@@ -11,6 +11,7 @@ cr_build_make(
   images = NULL,
   artifacts = NULL,
   options = NULL,
+  substitutions = NULL,
   projectId = cr_project_get()
 )
 }
@@ -26,6 +27,8 @@ cr_build_make(
 \item{artifacts}{Artifacts that may be built via \link{cr_build_yaml_artifact}}
 
 \item{options}{Options}
+
+\item{substitutions}{Substitutions data for `Build` resource}
 
 \item{projectId}{ID of the project}
 }

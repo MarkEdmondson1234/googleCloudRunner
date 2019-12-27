@@ -144,6 +144,7 @@ Some helpful build steps you can use in your own cloudbuild steps are included:
 * `cr_buildstep_r()` - for running R code
 * `cr_buildstep_git()` - for running git commands
 * `cr_buildstep_pkgdown()` - for setting up pkgdown documentation of an R package
+* `cr_buildstep_mailgun()` - send an email with Mailgun.org
 
 Combine buildsteps with `c()` e.g.
 
