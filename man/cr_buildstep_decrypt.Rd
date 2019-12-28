@@ -24,9 +24,13 @@ Create a build step to decrypt files using CryptoKey from Cloud Key Management S
 }
 \details{
 Key Management Store can encrypt secret files for use within your later buildsteps.
-
- @seealso  You will need to set up the \href{encrypted key using gcloud following this guide from Google}{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials}
 }
+\section{Setup}{
+
+
+You will need to set up the \href{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials}{encrypted key using gcloud following this guide from Google}
+}
+
 \examples{
 
 cr_buildstep_decrypt("secret.json.enc",

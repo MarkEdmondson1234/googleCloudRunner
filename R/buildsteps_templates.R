@@ -91,7 +91,8 @@ cr_buildstep_run <- function(name,
   assert_that(
     is.null(dots$args),
     is.null(dots$name),
-    is.null(dots$prefix)
+    is.null(dots$prefix),
+    is.null(dots$id)
   )
 
   if(allowUnauthenticated){
@@ -296,7 +297,9 @@ read_buildstep_file <- function(x,
 #'
 #' Key Management Store can encrypt secret files for use within your later buildsteps.
 #'
-#'  @seealso  You will need to set up the \href{encrypted key using gcloud following this guide from Google}{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials}
+#' @section Setup:
+#'
+#' You will need to set up the \href{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials}{encrypted key using gcloud} following the link from Google
 #'
 #' @family Cloud Buildsteps
 #' @export
@@ -355,7 +358,8 @@ cr_buildstep_docker <- function(image,
     is.null(dots$name),
     is.null(dots$args),
     is.null(dots$prefix),
-    is.null(dots$entrypoint)
+    is.null(dots$entrypoint),
+    is.null(dots$id)
   )
 
   prefix <- grepl("^gcr.io", image)

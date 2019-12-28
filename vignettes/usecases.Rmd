@@ -159,3 +159,19 @@ cr_run_get("markedmondson1234-googlecloudrunner-pkgdown")
 #url:  https://markedmondson1234-googlecloudrunner-pkgdown-ewjogewawq-ew.a.run.app 
 ```
 
+## Polygot Cloud Builds - integrating R code with other languages
+
+Since Docker containers can hold any language within them, they offer a universal UI to combine languages.  This offers opportunities to extend other languages with R features, and give other languages access to R code without needing to know R.
+
+An example below uses:
+
+* `gcloud` - [Google's Cloud command line tool](https://cloud.google.com/sdk/gcloud/) to access Google's key management store and download an authentication file
+* `gago` - [A Go package for fast downloads of Google Analytics data](https://github.com/MarkEdmondson1234/gago)
+* `R` - R code to create an Rmd file that will hold interactive forecasts of the Google Analytics data via `cr_buildstep_r()`
+* `nginx` - serve up the Rmd files rendered into HTML and hosted on Cloud Run via `cr_deploy_html()`
+
+
+```{r, code=readLines("polygot.R"), eval=FALSE, echo = TRUE}
+```
+
+

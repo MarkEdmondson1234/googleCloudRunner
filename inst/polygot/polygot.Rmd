@@ -1,0 +1,53 @@
+---
+title: "Polygot"
+author: "Mark Edmondson"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## googleCloudRunner - combining R with other languages example
+
+This is an Rmd file that is downloaded within the Cloud Build polygot demo as described on the [googleCloudRunner use cases](https://code.markedmondson.me/googleCloudRunner/articles/usecases.html). 
+
+## Previous Cloud Build steps
+
+The previous steps have download an encrypted authentication file, decrypted it and used `gago` to download Google Analytics data.  
+
+The gago docker image was called for these arguments:
+
+```sh
+gagocli reports --view=81416156 --dims='ga:date,ga:medium' --mets='ga:sessions' --start=2014-01-01 --end=2019-11-30 -v --max=-1 -o=google_analytics.csv
+```
+
+## R processing
+
+This data is now available to be sourced by this Rmd file in `google_analytics.csv`
+
+```{r}
+ga <- read.csv("google_analytics.csv", stringsAsFactors = FALSE)
+knitr::kable(head(ga))
+```
+
+Any R processes can be done with an Rmd file, so long as the calling R image has the correct packages installed - this one is `gcr.io/gcer-public/packagetools:master` which has tidyverse and other package tools installed.  
+
+For this demo, we decompose the data to tease out seasonality and trends:
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+pivot <- ga %>% 
+  spread(ga.medium, ga.sessions) %>%
+  arrange(ga.date)
+
+pivot_ts <- ts(pivot[, c("referral","(none)","organic")], frequency = 30)
+plot(pivot_ts, axes = FALSE)
+pivot_ts[is.na(pivot_ts)] <- 0
+plot(decompose(pivot_ts[, "organic"]), axes = FALSE)
+```
+
+## Post Cloud Build steps
+
+This Rmd file is then rendered into HTML that is hosted on Cloud Run.  It is intended as a demo of setting up a scheduled reporting service, whilst using many applications and services besides R
+
