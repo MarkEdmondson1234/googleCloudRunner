@@ -1,0 +1,119 @@
+steps:
+- name: gcr.io/cloud-builders/gsutil
+  args:
+  - cp
+  - gs://marks-bucket-of-stuff/auth.json.enc
+  - /workspace/auth.json.enc
+  id: download encrypted auth file
+- name: gcr.io/cloud-builders/gcloud
+  args:
+  - kms
+  - decrypt
+  - --ciphertext-file
+  - /workspace/auth.json.enc
+  - --plaintext-file
+  - /workspace/auth.json
+  - --location
+  - global
+  - --keyring
+  - my-keyring
+  - --key
+  - ga_auth
+  id: decrypt file
+- name: gcr.io/gcer-public/gago:master
+  args:
+  - reports
+  - --view=81416156
+  - --dims=ga:date,ga:medium
+  - --mets=ga:sessions
+  - --start=2014-01-01
+  - --end=2019-11-30
+  - --antisample
+  - --max=-1
+  - -o=google_analytics.csv
+  id: download google analytics
+  dir: build
+  env: GAGO_AUTH=/workspace/auth.json
+- name: gcr.io/cloud-builders/gsutil
+  args:
+  - cp
+  - gs://mark-edmondson-public-read/polygot.Rmd
+  - /workspace/build/polygot.Rmd
+  id: download Rmd template
+- name: gcr.io/gcer-public/packagetools:master
+  args:
+  - Rscript
+  - -e
+  - |-
+    lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
+                 rmarkdown::render, output_format = 'html_document')
+  id: render rmd
+  dir: build
+- name: ubuntu
+  args:
+  - bash
+  - -c
+  - |-
+    echo "
+    server {
+        listen       \$${PORT};
+        server_name  localhost;
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+        }
+    }" > default.template
+
+    cat <<EOF >Dockerfile
+    FROM nginx
+    COPY . /usr/share/nginx/html
+    COPY default.template /etc/nginx/conf.d/default.template
+    CMD envsubst < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'
+    EOF
+
+    cat default.template
+    cat Dockerfile
+  id: setup nginx
+  dir: build
+- name: gcr.io/cloud-builders/docker
+  args:
+  - build
+  - -t
+  - gcr.io/gcer-public/polygot_demo:latest
+  - '.'
+  dir: build
+- name: gcr.io/cloud-builders/docker
+  args:
+  - push
+  - gcr.io/gcer-public/polygot_demo:latest
+  dir: build
+- name: gcr.io/cloud-builders/gcloud
+  args:
+  - beta
+  - run
+  - deploy
+  - polygot-demo
+  - --image
+  - gcr.io/gcer-public/polygot_demo
+  - --region
+  - europe-west1
+  - --platform
+  - managed
+  - --concurrency
+  - '80'
+  - --allow-unauthenticated
+  id: deploy cloudrun
+- name: gcr.io/cloud-builders/gcloud
+  args:
+  - beta
+  - run
+  - services
+  - add-iam-policy-binding
+  - --region
+  - europe-west1
+  - --member=allUsers
+  - --role=roles/run.invoker
+  - --platform
+  - managed
+  - polygot-demo
+  id: auth cloudrun

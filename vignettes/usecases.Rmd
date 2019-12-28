@@ -174,4 +174,13 @@ An example below uses:
 ```{r, code=readLines("polygot.R"), eval=FALSE, echo = TRUE}
 ```
 
+An example of the demo output is on this Cloud Run instance URL:
+`https://polygot-demo-ewjogewawq-ew.a.run.app/polygot.html`
 
+This constructed cloud build can also be used outside of R, by writing out the Cloud Build file via `cr_build_write()`
+
+```r
+# write out to cloudbuild.yaml for other languages
+cr_build_write(polygot)
+# 2019-12-28 19:15:50> Writing to cloudbuild.yaml
+```

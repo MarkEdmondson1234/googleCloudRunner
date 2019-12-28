@@ -6,22 +6,22 @@ polygot <- cr_build_yaml(
       name = "gsutil",
       args = c("cp",
                "gs://marks-bucket-of-stuff/auth.json.enc",
-               "auth.json.enc"),
+               "/workspace/auth.json.enc"),
     ),
     cr_buildstep_decrypt(
       id = "decrypt file",
-      cipher = "auth.json.enc",
-      plain = "auth.json",
+      cipher = "/workspace/auth.json.enc",
+      plain = "/workspace/auth.json",
       keyring = "my-keyring",
       key = "ga_auth"
     ),
     cr_buildstep(
       id = "download google analytics",
       name = "gcr.io/gcer-public/gago:master",
-      env = c("GAGO_AUTH=auth.json"),
+      env = c("GAGO_AUTH=/workspace/auth.json"),
       args = c("reports",
                "--view=81416156",
-               "--dims=ga:date,ga:sourceMedium",
+               "--dims=ga:date,ga:medium",
                "--mets=ga:sessions",
                "--start=2014-01-01",
                "--end=2019-11-30",
@@ -35,7 +35,7 @@ polygot <- cr_build_yaml(
       name = "gsutil",
       args = c("cp",
                "gs://mark-edmondson-public-read/polygot.Rmd",
-               "build/polygot.Rmd")
+               "/workspace/build/polygot.Rmd")
     ),
     cr_buildstep_r(
       id="render rmd",
@@ -57,14 +57,14 @@ polygot <- cr_build_yaml(
       dir = "build"
       ),
     cr_buildstep_run(
-      name = "polygot_demo",
+      name = "polygot-demo",
       image = "gcr.io/gcer-public/polygot_demo",
       concurrency = 80)
   )
 )
 
-# test build
-build <- cr_build(polygot, timeout = 1800)
+# build the polygot cloud build steps
+build <- cr_build(polygot)
 built <- cr_build_wait(build)
 
-#
+
