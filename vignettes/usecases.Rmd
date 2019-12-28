@@ -184,3 +184,5 @@ This constructed cloud build can also be used outside of R, by writing out the C
 cr_build_write(polygot)
 # 2019-12-28 19:15:50> Writing to cloudbuild.yaml
 ```
+
+An example of that cloudbuild.yaml is on GitHub [here](https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml).
