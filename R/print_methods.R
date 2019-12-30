@@ -70,7 +70,7 @@ print.gar_Build <- function(x, ...){
 
   if(!is.null(x$source)){
     cat("source:\n")
-    str(x$source[[1]])
+    str(x$source)
   }
 
   if(!is.null(x$artifacts)){
