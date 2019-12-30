@@ -327,10 +327,8 @@ cr_build_wait <- function(op = .Last.value,
                                timeout=extract_timeout(op))
   }
 
-  wait_for <- c("STATUS_UNKNOWN", "QUEUED", "WORKING")
-
   init <- cr_build_status(the_id, projectId = projectId)
-  if(!init$status %in% wait_for){
+  if(!init$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
     return(init)
   }
 
@@ -340,28 +338,50 @@ cr_build_wait <- function(op = .Last.value,
                      paste("\n#> Created Cloud Build, online logs:\n",
                            extract_logs(init)))
 
+  wait_f(init, projectId, task_id)
+
+}
+
+wait_f <- function(init, projectId, task_id){
   op <- init
   wait <- TRUE
-  while(wait){
-    status <- cr_build_status(op, projectId = projectId)
 
-    if(!rstudioapi::isAvailable()) cat("=")
-
-    rstudio_add_progress(task_id, extract_runtime(status$startTime))
-    rstudio_add_state(task_id, status$status)
-    rstudio_add_output(task_id, paste("\nStatus:", status$status))
-
-    if(!status$status %in% wait_for){
-      wait <- FALSE
+  if(!rstudioapi::isAvailable()){
+    while(wait){
+      status <- cr_build_status(op, projectId = projectId)
+      cat("=")
+      if(!status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
+        wait <- FALSE
+      }
+      op <- status
+      Sys.sleep(5)
     }
-    op <- status
-    Sys.sleep(5)
-  }
+    cat("| Build finished\n")
+  } else {
+    # rstudio task in background
+    while(wait){
+      status <- cr_build_status(op, projectId = projectId)
 
-  if(!rstudioapi::isAvailable()) cat("| Build finished\n")
+      if(!rstudioapi::isAvailable()) cat("=")
+
+      rstudio_add_progress(task_id, extract_runtime(status$startTime))
+      rstudio_add_state(task_id, status$status)
+      rstudio_add_output(task_id, paste("\nStatus:", status$status))
+
+      if(!status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
+        wait <- FALSE
+      }
+      op <- status
+      Sys.sleep(5)
+    }
+
+    rstudio_add_state(task_id, status$status)
+
+  }
 
   status
 }
+
 
 extract_runtime <- function(start_time){
   started <- tryCatch(
