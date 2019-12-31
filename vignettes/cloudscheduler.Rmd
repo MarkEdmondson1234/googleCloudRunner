@@ -1,5 +1,12 @@
 ---
 title: "Scheduled R scripts via Cloud Scheduler"
+author: "Mark Edmondson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Scheduled R scripts via Cloud Scheduler}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 [Cloud Scheduler](https://cloud.google.com/scheduler/) is a scheduler service in the Google Cloud that uses cron like syntax to schedule tasks.  It can trigger HTTP or Pub/Sub jobs via `cr_schedule()`
@@ -67,6 +74,16 @@ cr_deploy_r(r_lines,
             r_image = "gcr.io/my-project/my-image:dev")
 ```
 
+### RStudio Gadget - schedule R scripts
+
+If you are using RStudio, installing the library will enable an [RStudio Addin](https://rstudio.github.io/rstudioaddins/) that can be called after you have setup the library as per the setup page. 
+
+It includes a Shiny gadget that you can call via the Addin menu in RStudio, via `googleCloudRunner::cr_deploy_gadget()` or assigned to a hotkey (I use CTRL+SHIFT+D).
+
+This sets up a Shiny UI to help smooth out deployments as pictured:
+
+![r gadget](gadget_r.png)
+
 ## Build and schedule an R script (custom)
 
 If you want to customise deployments, then the steps covered by `cr_deploy_r()` are covered below.
@@ -101,9 +118,7 @@ This can be automated via the `cr_deploy_docker()` function supplying the folder
 cr_deploy_docker("my-scripts/", "gcr.io/your-project/your-name")
 ```
 
-Once the image is build successfully, you do not need to build it again for the scheduled calls - you could setup doing that only if the R code changes.  
-
-The the scheduler, you will only need the image you build `gcr.io/your-project/your-name` and call it via the arguments set up in the Dockerfile i.e. `R -e my_r_script.R`
+Once the image is built successfully, you do not need to build it again for the scheduled calls - you could setup doing that only if the R code changes.  
 
 ### 4. Make the build and optional source
 
@@ -147,5 +162,5 @@ cr_schedule("15 5 * * *", name="scheduled_r",
 
 Your R script should now be scheduled and running in its own environment.
 
-You can automate updates to the script and/or Docker container or schedule separately, by redoing any of the steps above. 
+You can automate updates to the script and/or Docker container or schedule separately, by redoing the relevant step above, perhaps adding a [build trigger](https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html#build-triggers) to do so. 
 

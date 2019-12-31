@@ -1,12 +1,19 @@
 ---
 title: "Setup"
+author: "Mark Edmondson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{googleCloudRunner Setup}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ## R Settings
 
-* Reuses environment argument `GCE_AUTH_FILE` from googleComputeEngineR which holds location of your service auth JSON
+* Reuses environment argument `GCE_AUTH_FILE` from [googleComputeEngineR](https://cloudyr.github.io/googleComputeEngineR) which holds location of your service auth JSON
 * Reuses environment argument `GCE_DEFAULT_PROJECT_ID` from googleComputeEngineR
-* Reuses environment argument `GCS_DEFAULT_BUCKET` from googleCloudStorageR
+* Reuses environment argument `GCS_DEFAULT_BUCKET` from [googleCloudStorageR](http://code.markedmondson.me/googleCloudStorageR/)
 * New environment argument `CR_REGION` can be one of 
 
 ```
@@ -27,7 +34,7 @@ CR_REGION="europe-west1"
 CR_BUILD_EMAIL=my-project-number@cloudbuild.gserviceaccount.com
 ```
 
-You can also set some of the above in the R script via:
+You can also set the above in the R scripts via:
 
 * `cr_region_set()`
 * `cr_project_set()`

@@ -21,12 +21,12 @@ navbar:
     - text: "Setup"
       href: articles/setup.html
       icon: fa-wrench
-    - text: "Cloud Run"
-      href: articles/cloudrun.html
-      icon: fa-running
     - text: "Cloud Build"
       href: articles/cloudbuild.html
       icon: fa-shapes
+    - text: "Cloud Run"
+      href: articles/cloudrun.html
+      icon: fa-running
     - text: "Cloud Scheduler"
       href: articles/cloudscheduler.html
       icon: fa-clock

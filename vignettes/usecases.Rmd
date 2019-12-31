@@ -1,5 +1,12 @@
 ---
-title: "Examples using googleCloudRunner for serverless R"
+title: "Example Use Cases for googleCloudRunner"
+author: "Mark Edmondson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Example Use Cases for googleCloudRunner}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 Here will be some example use cases you can use googleCloudRunner for.
@@ -14,31 +21,6 @@ Since almost any code can be called and passed via Docker images, there is a lot
 * Creating an Rmarkdown powered website using Cloud Run
 * Integrating R with other language applications
 * Public and private Docker image creations on triggers
-
-## Connecting to GitHub 
-
-Connect via the [Source Repository mirroring service](https://cloud.google.com/source-repositories/docs/mirroring-a-github-repository).
-
-Once your repo is connected, you can operate on R packages on GitHub via:
-
-```r
-# this repo mirrored on Google Source repos
-my_repo <- Source(
-  repoSource=RepoSource("github_markedmondson1234_googlecloudrunner",
-                        branchName="master"))
-```
-
-You can create a GitHub build trigger using `GitHubEventsConfig()` - this will by default trigger builds when you push to any GitHub branch.  
-
-```r
-cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
-                           package = "googleCloudRunner")
-bb <- cr_build_make(cloudbuild, projectId = "test-project")
-github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner", branch = "master")
-
-cr_buildtrigger("trig1", trigger = github, build = bb)
-```
-
 
 ## Create Docker image of a package
 
@@ -184,5 +166,7 @@ This constructed cloud build can also be used outside of R, by writing out the C
 cr_build_write(polygot)
 # 2019-12-28 19:15:50> Writing to cloudbuild.yaml
 ```
+
+This can also be scheduled as described in Cloud Scheduler section on [scheduled cloud builds](https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html).
 
 An example of that cloudbuild.yaml is on GitHub [here](https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml).
