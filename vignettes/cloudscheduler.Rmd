@@ -1,6 +1,5 @@
 ---
 title: "Scheduled R scripts via Cloud Scheduler"
-author: "Mark Edmondson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -82,7 +81,7 @@ It includes a Shiny gadget that you can call via the Addin menu in RStudio, via 
 
 This sets up a Shiny UI to help smooth out deployments as pictured:
 
-![r gadget](gadget_r.png)
+![](gadget_r.png)
 
 ## Build and schedule an R script (custom)
 

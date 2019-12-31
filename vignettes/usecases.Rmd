@@ -1,6 +1,5 @@
 ---
 title: "Example Use Cases for googleCloudRunner"
-author: "Mark Edmondson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >

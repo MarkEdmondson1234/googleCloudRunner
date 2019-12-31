@@ -1,6 +1,5 @@
 ---
 title: "R on Cloud Run"
-author: "Mark Edmondson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -54,7 +53,7 @@ It includes a Shiny gadget that you can call via the Addin menu in RStudio, via 
 
 This sets up a Shiny UI to help smooth out deployments as pictured:
 
-![plumber gadget](gadget_plumber.png)
+![](gadget_plumber.png)
 
 ### What did it do?
 

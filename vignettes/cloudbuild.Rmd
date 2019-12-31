@@ -1,6 +1,5 @@
 ---
 title: "Serverless batched R scripts via Cloud Build"
-author: "Mark Edmondson"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -210,7 +209,7 @@ It includes a Shiny gadget that you can call via the Addin menu in RStudio, via 
 
 This sets up a Shiny UI to help smooth out deployments as pictured:
 
-![docker gadget](gadget_docker.png)
+![](gadget_docker.png)
 
 
 ## R buildsteps
