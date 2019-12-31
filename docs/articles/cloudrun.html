@@ -57,17 +57,17 @@
   </a>
 </li>
 <li>
-  <a href="../articles/cloudrun.html">
-    <span class="fa fa-running"></span>
-     
-    Cloud Run
-  </a>
-</li>
-<li>
   <a href="../articles/cloudbuild.html">
     <span class="fa fa-shapes"></span>
      
     Cloud Build
+  </a>
+</li>
+<li>
+  <a href="../articles/cloudrun.html">
+    <span class="fa fa-running"></span>
+     
+    Cloud Run
   </a>
 </li>
 <li>
@@ -106,7 +106,9 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>R on Cloud Run</h1>
+                        <h4 class="author">Mark Edmondson</h4>
             
+            <h4 class="date">2019-12-31</h4>
       
       
       <div class="hidden name"><code>cloudrun.Rmd</code></div>
@@ -117,7 +119,7 @@
     
 <p><a href="https://cloud.run">Cloud Run</a> is a service that lets you deploy container images without worrying about the underlying servers or infrastructure. It is called with <code><a href="../reference/cr_run.html">cr_run()</a></code>, or you can automate a deployment via <code><a href="../reference/cr_deploy_run.html">cr_deploy_run()</a></code>.</p>
 <p>If you would like to have your R code react in realtime to events such as HTTP or sub/sub events, such as a website or API endpoint, Cloud Run is a good fit.</p>
-<p>If you want to run scripts that can be triggered one time, setup to trigger on GitHub events or pub/sub, or scheduled using Cloud Scheduler then <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html">Cloud Build</a> is suited to your use case.</p>
+<p>If you want to run scripts that can be triggered one time, setup to trigger on GitHub events or pub/sub, or scheduled using Cloud Scheduler then <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html">Cloud Build</a> is more suited to your use case.</p>
 <div id="quickstart---plumber-api" class="section level2">
 <h2 class="hasAnchor">
 <a href="#quickstart---plumber-api" class="anchor"></a>Quickstart - plumber API</h2>
@@ -127,27 +129,38 @@
 </ol>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleCloudRunner)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">cr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span>(<span class="st">"api.R"</span>)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">#2019-11-12 10:34:29 -- File size detected as 903 bytes</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">#2019-11-12 10:34:31&gt; Cloud Build started - logs: </span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">#https://console.cloud.google.com/gcr/builds/40343fd4-6981-41c3-98c8-f5973c3de386?project=1080525199262</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">#Waiting for build to finish:</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co"># |===============||</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">#Build finished</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="co">#2019-11-12 10:35:43&gt; Deployed to Cloud Run at: </span></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">#https://cloudrunnertest2-ewjogewawq-ew.a.run.app</span></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">#==CloudRunService==</span></a>
-<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">#name:  cloudrunnertest2 </span></a>
-<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">#location:  europe-west1 </span></a>
-<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">#lastModifier:  1080525199262@cloudbuild.gserviceaccount.com </span></a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="co">#containers:  gcr.io/mark-edmondson-gde/cloudrunnertest2 </span></a>
-<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="co">#creationTimestamp:  2019-11-12T10:35:19.993128Z </span></a>
-<a class="sourceLine" id="cb1-19" data-line-number="19"><span class="co">#observedGeneration:  1 </span></a>
-<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="co">#url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app </span></a></code></pre></div>
+<a class="sourceLine" id="cb1-3" data-line-number="3">my_plumber_folder &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"example"</span>, <span class="dt">package=</span><span class="st">"cloudRunner"</span>)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">cr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span>(my_plumber_folder)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">#2019-11-12 10:34:29 -- File size detected as 903 bytes</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co">#2019-11-12 10:34:31&gt; Cloud Build started - logs: </span></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">#https://console.cloud.google.com/gcr/builds/40343fd4-6981-41c3-98c8-f5973c3de386?project=1080525199262</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">#Waiting for build to finish:</span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co"># |===============||</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="co">#Build finished</span></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="co">#2019-11-12 10:35:43&gt; Deployed to Cloud Run at: </span></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">#https://cloudrunnertest2-ewjogewawq-ew.a.run.app</span></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">#==CloudRunService==</span></a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">#name:  cloudrunnertest2 </span></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">#location:  europe-west1 </span></a>
+<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="co">#lastModifier:  1080525199262@cloudbuild.gserviceaccount.com </span></a>
+<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="co">#containers:  gcr.io/mark-edmondson-gde/cloudrunnertest2 </span></a>
+<a class="sourceLine" id="cb1-19" data-line-number="19"><span class="co">#creationTimestamp:  2019-11-12T10:35:19.993128Z </span></a>
+<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="co">#observedGeneration:  1 </span></a>
+<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="co">#url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app </span></a></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
 <li>Enjoy your API</li>
 </ol>
+<div id="rstudio-gadget---deploy-plumber-script" class="section level3">
+<h3 class="hasAnchor">
+<a href="#rstudio-gadget---deploy-plumber-script" class="anchor"></a>RStudio Gadget - deploy plumber script</h3>
+<p>If you are using RStudio, installing the library will enable an <a href="https://rstudio.github.io/rstudioaddins/">RStudio Addin</a> that can be called after you have setup the library as per the setup page.</p>
+<p>It includes a Shiny gadget that you can call via the Addin menu in RStudio, via <code><a href="../reference/cr_deploy_gadget.html">googleCloudRunner::cr_deploy_gadget()</a></code> or assigned to a hotkey (I use CTRL+SHIFT+D).</p>
+<p>This sets up a Shiny UI to help smooth out deployments as pictured:</p>
+<div class="figure">
+<img src="gadget_plumber.png" alt="plumber gadget"><p class="caption">plumber gadget</p>
+</div>
+</div>
 <div id="what-did-it-do" class="section level3">
 <h3 class="hasAnchor">
 <a href="#what-did-it-do" class="anchor"></a>What did it do?</h3>
@@ -166,61 +179,24 @@
 <div id="customising-cloud-run-deployments" class="section level2">
 <h2 class="hasAnchor">
 <a href="#customising-cloud-run-deployments" class="anchor"></a>Customising Cloud Run deployments</h2>
-<p>The Cloud Run API is not called directly when deploying - instead a Cloud Build is created for deployment. <code>cr_run</code> creates a cloudbuild.yaml similar to the below:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># use cloud build to deploy</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">image &lt;- <span class="st">"gcr.io/my-project/my-image"</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">cr_build_yaml(</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">    steps = list(</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">      cr_buildstep_docker(<span class="st">"my-image"</span>),</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">      cr_buildstep(<span class="st">"gcloud"</span>, c(<span class="st">"beta"</span>,<span class="st">"run"</span>,<span class="st">"deploy"</span>, <span class="st">"my-name"</span>,</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">           <span class="st">"--image"</span>, image,</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">           <span class="st">"--region"</span>, <span class="st">"europe-west1"</span>,</a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">           <span class="st">"--platform"</span>, <span class="st">"managed"</span>,</a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">           <span class="st">"--concurrency"</span>, 1,</a>
-<a class="sourceLine" id="cb2-11" data-line-number="11">           <span class="st">"--allow-unauthenticated"</span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12">         ))</a>
-<a class="sourceLine" id="cb2-13" data-line-number="13">    ),</a>
-<a class="sourceLine" id="cb2-14" data-line-number="14">    images = image</a>
-<a class="sourceLine" id="cb2-15" data-line-number="15">  )</a>
-<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co"># ==cloudRunnerYaml==</span></a>
-<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co"># steps:</span></a>
-<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co"># - name: gcr.io/cloud-builders/docker</span></a>
-<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#   args:</span></a>
-<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#   - build</span></a>
-<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co">#   - -t</span></a>
-<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="co">#   - gcr.io/my-project/my-image</span></a>
-<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co">#   - '.'</span></a>
-<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#   dir: deploy</span></a>
-<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co"># - name: gcr.io/cloud-builders/docker</span></a>
-<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="co">#   args:</span></a>
-<a class="sourceLine" id="cb2-27" data-line-number="27"><span class="co">#   - push</span></a>
-<a class="sourceLine" id="cb2-28" data-line-number="28"><span class="co">#   - gcr.io/my-project/my-image</span></a>
-<a class="sourceLine" id="cb2-29" data-line-number="29"><span class="co">#   dir: deploy</span></a>
-<a class="sourceLine" id="cb2-30" data-line-number="30"><span class="co"># - name: gcr.io/cloud-builders/gcloud</span></a>
-<a class="sourceLine" id="cb2-31" data-line-number="31"><span class="co">#   args:</span></a>
-<a class="sourceLine" id="cb2-32" data-line-number="32"><span class="co">#   - beta</span></a>
-<a class="sourceLine" id="cb2-33" data-line-number="33"><span class="co">#   - run</span></a>
-<a class="sourceLine" id="cb2-34" data-line-number="34"><span class="co">#   - deploy</span></a>
-<a class="sourceLine" id="cb2-35" data-line-number="35"><span class="co">#   - my-name</span></a>
-<a class="sourceLine" id="cb2-36" data-line-number="36"><span class="co">#   - --image</span></a>
-<a class="sourceLine" id="cb2-37" data-line-number="37"><span class="co">#   - gcr.io/my-project/my-image</span></a>
-<a class="sourceLine" id="cb2-38" data-line-number="38"><span class="co">#   - --region</span></a>
-<a class="sourceLine" id="cb2-39" data-line-number="39"><span class="co">#   - europe-west1</span></a>
-<a class="sourceLine" id="cb2-40" data-line-number="40"><span class="co">#   - --platform</span></a>
-<a class="sourceLine" id="cb2-41" data-line-number="41"><span class="co">#   - managed</span></a>
-<a class="sourceLine" id="cb2-42" data-line-number="42"><span class="co">#   - --concurrency</span></a>
-<a class="sourceLine" id="cb2-43" data-line-number="43"><span class="co">#   - '1'</span></a>
-<a class="sourceLine" id="cb2-44" data-line-number="44"><span class="co">#   - --allow-unauthenticated</span></a>
-<a class="sourceLine" id="cb2-45" data-line-number="45"><span class="co">#   dir: deploy</span></a>
-<a class="sourceLine" id="cb2-46" data-line-number="46"><span class="co"># images: gcr.io/my-project/my-image</span></a></code></pre></div>
-<p>If you have an existing image you want to deploy on Cloud Run (usually one that serves up HTTP content, such as via <code><a href="https://rdrr.io/r/base/library.html">library(plumber)</a></code>) then you only need to supply that image to deploy:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="st">"gcr.io/my-project/my-image"</span>)</a></code></pre></div>
+<p>The Cloud Run API is not called directly when deploying - instead a Cloud Build is created for deployment. <code>cr_run</code> creates a cloudbuild that make a cloud build including <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code>.</p>
+<p>You can build the deployment yourself by using <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code> within your own <code><a href="../reference/cr_build.html">cr_build()</a></code>. This may cover things like downloading encrypted resources necessary for a build, running other code etc.</p>
+<p>If you have an existing image you want to deploy on Cloud Run (usually one that serves up HTTP content, such as a website or via <code><a href="https://rdrr.io/r/base/library.html">library(plumber)</a></code>) then you only need to supply that image to deploy:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="st">"gcr.io/my-project/my-image"</span>)</a></code></pre></div>
+<p>Cloud Run needs <a href="https://cloud.google.com/run/docs/deploying">specific ports available in your container</a>, so you may want to consult the documentation if you do.</p>
 <p>However, if you want to do the common use case of building the container first as well, you can do so by using the helper <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span>(<span class="st">"my-image"</span>)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="st">"gcr.io/my-project/my-image"</span>)</a></code></pre></div>
-<p><code><a href="../reference/cr_deploy_run.html">cr_deploy_run()</a></code> wraps the above in functions to check and wait for status etc.</p>
-<p><code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code> adds checks for plumber API files.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span>(<span class="st">"my-image"</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="st">"gcr.io/my-project/my-image"</span>)</a></code></pre></div>
+</div>
+<div id="cloud-run-deployment-functions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#cloud-run-deployment-functions" class="anchor"></a>Cloud Run deployment functions</h2>
+<ul>
+<li><p><code><a href="../reference/cr_deploy_run.html">cr_deploy_run()</a></code> wraps the steps described above to build the Dockerfile, and deploy it to Cloud Run, setting authentication as needed.</p></li>
+<li><p><code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code> adds checks for plumber API files. You need to make sure you have an <code>api.R</code> file in the deployment folder you provide, that will hold plumber code.</p></li>
+<li><p><code><a href="../reference/cr_deploy_run.html">cr_deploy_html()</a></code> adds steps to deploy a nginx web server ready to serve the HTML files you supply.</p></li>
+</ul>
 </div>
   </div>
 
@@ -232,6 +208,7 @@
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#quickstart---plumber-api">Quickstart - plumber API</a></li>
       <li><a href="#customising-cloud-run-deployments">Customising Cloud Run deployments</a></li>
+      <li><a href="#cloud-run-deployment-functions">Cloud Run deployment functions</a></li>
       </ul>
 </div>
       </div>

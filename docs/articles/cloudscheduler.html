@@ -57,17 +57,17 @@
   </a>
 </li>
 <li>
-  <a href="../articles/cloudrun.html">
-    <span class="fa fa-running"></span>
-     
-    Cloud Run
-  </a>
-</li>
-<li>
   <a href="../articles/cloudbuild.html">
     <span class="fa fa-shapes"></span>
      
     Cloud Build
+  </a>
+</li>
+<li>
+  <a href="../articles/cloudrun.html">
+    <span class="fa fa-running"></span>
+     
+    Cloud Run
   </a>
 </li>
 <li>
@@ -106,7 +106,9 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Scheduled R scripts via Cloud Scheduler</h1>
+                        <h4 class="author">Mark Edmondson</h4>
             
+            <h4 class="date">2019-12-31</h4>
       
       
       <div class="hidden name"><code>cloudscheduler.Rmd</code></div>
@@ -160,6 +162,16 @@
 <a class="sourceLine" id="cb5-6" data-line-number="6">            <span class="dt">schedule =</span> <span class="st">"15 21 * * *"</span>, </a>
 <a class="sourceLine" id="cb5-7" data-line-number="7">            <span class="dt">source =</span> source,</a>
 <a class="sourceLine" id="cb5-8" data-line-number="8">            <span class="dt">r_image =</span> <span class="st">"gcr.io/my-project/my-image:dev"</span>)</a></code></pre></div>
+<div id="rstudio-gadget---schedule-r-scripts" class="section level3">
+<h3 class="hasAnchor">
+<a href="#rstudio-gadget---schedule-r-scripts" class="anchor"></a>RStudio Gadget - schedule R scripts</h3>
+<p>If you are using RStudio, installing the library will enable an <a href="https://rstudio.github.io/rstudioaddins/">RStudio Addin</a> that can be called after you have setup the library as per the setup page.</p>
+<p>It includes a Shiny gadget that you can call via the Addin menu in RStudio, via <code><a href="../reference/cr_deploy_gadget.html">googleCloudRunner::cr_deploy_gadget()</a></code> or assigned to a hotkey (I use CTRL+SHIFT+D).</p>
+<p>This sets up a Shiny UI to help smooth out deployments as pictured:</p>
+<div class="figure">
+<img src="gadget_r.png" alt="r gadget"><p class="caption">r gadget</p>
+</div>
+</div>
 </div>
 <div id="build-and-schedule-an-r-script-custom" class="section level2">
 <h2 class="hasAnchor">
@@ -191,8 +203,7 @@
 <p>Once you have your R script and Dockerfile in the same folder, you need to build the image.</p>
 <p>This can be automated via the <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> function supplying the folder containing the Dockerfile:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span>(<span class="st">"my-scripts/"</span>, <span class="st">"gcr.io/your-project/your-name"</span>)</a></code></pre></div>
-<p>Once the image is build successfully, you do not need to build it again for the scheduled calls - you could setup doing that only if the R code changes.</p>
-<p>The the scheduler, you will only need the image you build <code>gcr.io/your-project/your-name</code> and call it via the arguments set up in the Dockerfile i.e. <code>R -e my_r_script.R</code></p>
+<p>Once the image is built successfully, you do not need to build it again for the scheduled calls - you could setup doing that only if the R code changes.</p>
 </div>
 <div id="make-the-build-and-optional-source" class="section level3">
 <h3 class="hasAnchor">
@@ -225,7 +236,7 @@
 <a class="sourceLine" id="cb9-5" data-line-number="5"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"15 5 * * *"</span>, <span class="dt">name=</span><span class="st">"scheduled_r"</span>,</a>
 <a class="sourceLine" id="cb9-6" data-line-number="6">             <span class="dt">httpTarget =</span> cloud_build_target)</a></code></pre></div>
 <p>Your R script should now be scheduled and running in its own environment.</p>
-<p>You can automate updates to the script and/or Docker container or schedule separately, by redoing any of the steps above.</p>
+<p>You can automate updates to the script and/or Docker container or schedule separately, by redoing the relevant step above, perhaps adding a <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html#build-triggers">build trigger</a> to do so.</p>
 </div>
 </div>
   </div>

@@ -57,17 +57,17 @@
   </a>
 </li>
 <li>
-  <a href="../articles/cloudrun.html">
-    <span class="fa fa-running"></span>
-     
-    Cloud Run
-  </a>
-</li>
-<li>
   <a href="../articles/cloudbuild.html">
     <span class="fa fa-shapes"></span>
      
     Cloud Build
+  </a>
+</li>
+<li>
+  <a href="../articles/cloudrun.html">
+    <span class="fa fa-running"></span>
+     
+    Cloud Run
   </a>
 </li>
 <li>
@@ -106,7 +106,9 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Setup</h1>
+                        <h4 class="author">Mark Edmondson</h4>
             
+            <h4 class="date">2019-12-31</h4>
       
       
       <div class="hidden name"><code>setup.Rmd</code></div>
@@ -119,9 +121,10 @@
 <h2 class="hasAnchor">
 <a href="#r-settings" class="anchor"></a>R Settings</h2>
 <ul>
-<li>Reuses environment argument <code>GCE_AUTH_FILE</code> from googleComputeEngineR which holds location of your service auth JSON</li>
+<li>Reuses environment argument <code>GCE_AUTH_FILE</code> from <a href="https://cloudyr.github.io/googleComputeEngineR">googleComputeEngineR</a> which holds location of your service auth JSON</li>
 <li>Reuses environment argument <code>GCE_DEFAULT_PROJECT_ID</code> from googleComputeEngineR</li>
-<li>Reuses environment argument <code>GCS_DEFAULT_BUCKET</code> from googleCloudStorageR</li>
+<li>Reuses environment argument <code>GCS_DEFAULT_BUCKET</code> from <a href="http://code.markedmondson.me/googleCloudStorageR/">googleCloudStorageR</a>
+</li>
 <li>New environment argument <code>CR_REGION</code> can be one of</li>
 </ul>
 <pre><code>"us-central1",
@@ -137,7 +140,7 @@ GCE_DEFAULT_PROJECT_ID="my-project"
 GCS_DEFAULT_BUCKET="my-bucket"
 CR_REGION="europe-west1"
 CR_BUILD_EMAIL=my-project-number@cloudbuild.gserviceaccount.com</code></pre>
-<p>You can also set some of the above in the R script via:</p>
+<p>You can also set the above in the R scripts via:</p>
 <ul>
 <li><code><a href="../reference/cr_region_set.html">cr_region_set()</a></code></li>
 <li><code><a href="../reference/cr_project_set.html">cr_project_set()</a></code></li>
