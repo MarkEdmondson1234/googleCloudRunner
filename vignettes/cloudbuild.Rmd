@@ -74,6 +74,8 @@ cr_schedule("15 5 * * *", name="itworks-schedule",
             httpTarget = cr_build_schedule_http(itworks))
 ```
 
+Any utility that has a Docker image can be used within Cloud Build steps.  Some [community contributed Cloud Build images are listed here](https://github.com/GoogleCloudPlatform/cloud-builders-community), including [hugo](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo), [make](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make), and [tar](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar), or you can configure your own Dockerfile and build what image you need yourself, perhaps by using a previous Cloud Build and `cr_deploy_docker()`
+
 ## Cloud Build source
 
 Cloud Builds sometimes need code or data to work on to be useful.  
@@ -85,7 +87,8 @@ Cloud Build sources are specified by the `source` argument.
 A source can be a [Cloud Source Repository](https://cloud.google.com/source-repositories/) (perhaps mirrored from GitHub) or a [Cloud Storage](https://cloud.google.com/storage/) bucket containg the code/data you want to operate on.  An example of specifying both is below:
 
 ```r
-gcs_source <- cr_build_source("gs://my-bucket", "my_code.tar.gz")
+gcs_source <- cr_build_source(
+  StorageSource("gs://my-bucket", "my_code.tar.gz"))
   
 repo_source <- cr_build_source(
   RepoSource("github_markedmondson1234_googlecloudrunner",
@@ -148,11 +151,11 @@ read.csv("artifact.csv")
 ```
 
 
-## Creating cloudbuild.yaml build steps 
+## Creating cloudbuild.yml build steps 
 
-Instead of using seperate `cloudbuild.yaml` files, you can also choose to make your own cloudbuild.yaml files in R via `cr_build_yaml()` and `cr_buildstep()`
+Instead of using seperate `cloudbuild.yml` files, you can also choose to make your own cloudbuild.yaml files in R via `cr_build_yaml()` and `cr_buildstep()`
 
-Lets say you don't want to write a cloudbuild.yaml file - instead you can create all the features of the yaml files in R.  Refer to the [cloudbuild.yaml config spec](https://cloud.google.com/cloud-build/docs/build-config) on what it expected in the files or functions. 
+Lets say you don't want to write a cloudbuild.yaml file - instead you can create all the features of the yaml files in R.  Refer to the [cloudbuild.yml config spec](https://cloud.google.com/cloud-build/docs/build-config) on what it expected in the files or functions. 
 
 An example below recreates a simple cloudbuild.yml file.  If you print it to console it will output what the build would look like if it was in a yaml file:
 

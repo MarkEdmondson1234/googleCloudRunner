@@ -21,6 +21,8 @@ Since almost any code can be called and passed via Docker images, there are a lo
 * Integrating R with other language applications
 * Public and private Docker image creations on triggers
 
+Some [community contributed Cloud Build images are listed here](https://github.com/GoogleCloudPlatform/cloud-builders-community), including [hugo](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo), [make](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make), and [tar](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar).
+
 ## Create Docker image of a package
 
 This is what is used to deploy this package as a Docker image to the public `googleComputeEngineR` docker image project, `gcr.io/gcer-public`
@@ -31,9 +33,9 @@ This builds a Docker image of the Dockerfile in the root directory of the GitHub
 my_image <- "gcr.io/my-project/my-image"
 
 # this repo mirrored on Google Source repos
-my_repo <- RepoSource("MarkEdmondson1234/googleCloudRunner",
+my_repo <- RepoSource("github_markedmondson1234_googlecloudrunner",
                       branchName="master"))
-                        
+
 docker_yaml <- cr_build_yaml(steps = cr_buildstep_docker(my_image))
 
 built_docker <- cr_build(docker_yaml, source = my_repo)

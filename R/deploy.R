@@ -102,7 +102,7 @@ cr_deploy_r <- function(r,
 
 
 
-#' Deploy a Dockerfile to be built on ContainerRegistry
+#' Deploy a local Dockerfile to be built on ContainerRegistry
 #'
 #' If no Dockerfile present in the deployment folder, will attempt to create a Dockerfile to upload via \link{cr_dockerfile_plumber}
 #'
@@ -115,11 +115,18 @@ cr_deploy_r <- function(r,
 #' @inheritParams cr_build
 #' @export
 #' @family Deployment functions
+#'
+#' @details
+#'
+#' This lets you deploy local folders with Dockerfiles, automating saving the source on Google Cloud Storage.
+#'
+#' To deploy builds on git triggers and sources such as GitHub, see the examples of \link{cr_buildstep_docker} or the use cases on the website
+#'
 #' @examples
 #'
 #' \dontrun{
 #'
-#' cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
+#' b <- cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
 #'
 #' }
 cr_deploy_docker <- function(local,
