@@ -333,10 +333,6 @@ wait_f <- function(init, projectId){
   op <- init
   wait <- TRUE
 
-  myMessage(paste("\n#> Created Cloud Build, online logs:\n",
-                  extract_logs(init)),
-            level = 3)
-
   cat("\nWaiting for build to finish:\n |=")
 
   while(wait){

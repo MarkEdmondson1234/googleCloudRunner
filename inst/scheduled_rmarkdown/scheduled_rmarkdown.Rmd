@@ -1,0 +1,56 @@
+---
+title: "Scheduled RMarkdown"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(googlesheets4)
+library(ggplot2)
+library(plotly)
+library(dplyr)
+
+# for public Googlesheets.  
+# If private see https://gargle.r-lib.org/articles/non-interactive-auth.html
+sheets_deauth()
+
+# this is the data that may update each time the Rmd is rendered
+gm <- sheets_example("gap") %>% read_sheet()
+
+gm_agg <- gm %>%
+  mutate(gdp=gdpPercap*pop) %>%
+  filter(continent=="Africa") %>%
+  group_by(year) %>%
+  summarize(mean(lifeExp), mean(gdp))
+
+p <- ggplot(gm, aes(gdpPercap, lifeExp)) + theme_minimal() + scale_x_log10()
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+ggplotly(p + geom_point() + geom_smooth())
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+p <- ggplot(gm, aes(lifeExp)) + theme_minimal()
+ggplotly(p + geom_density(aes(fill=continent), alpha=1/4))
+```
+
+### Chart C
+
+```{r}
+ggplotly(p + geom_histogram(bins=60))
+```
+
