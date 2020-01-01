@@ -60,7 +60,8 @@ cr_deploy_r <- function(r,
     run_name <- paste0("cr_rscript_", format(Sys.time(), "%Y%m%s%H%M%S"))
   }
 
-  myMessage(paste("Deploy R script ",run_name," to Cloud Build"), level = 3)
+  myMessage(paste("Deploy R script", run_name, "to Cloud Build"),
+            level = 3)
 
   build <- cr_build_yaml(
     steps = c(pre_steps,
@@ -77,7 +78,7 @@ cr_deploy_r <- function(r,
 
   if(!is.null(schedule)){
     # a cloud build you would like to schedule
-    myMessage(paste0("Scheduling R script on cron schedule:", schedule),
+    myMessage(paste("Scheduling R script on cron schedule:", schedule),
               level = 3)
 
     https <- cr_build_schedule_http(br,
@@ -110,7 +111,6 @@ cr_deploy_r <- function(r,
 #' @param dockerfile An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"
 #' @param bucket The GCS bucker that will be used to deploy code source
 #' @param image_name The name of the docker image to be built either full name starting with gcr.io or constructed from the image_name and projectId via \code{gcr.io/{projectId}/{image_name}}
-#' @param task_id RStudio job task_id if you want to use the same task
 #' @inheritParams cr_buildstep_docker
 #' @inheritParams cr_build
 #' @export
@@ -130,8 +130,7 @@ cr_deploy_docker <- function(local,
                              timeout = 600L,
                              bucket = cr_bucket_get(),
                              projectId = cr_project_get(),
-                             launch_browser = interactive(),
-                             task_id=NULL){
+                             launch_browser = interactive()){
   assert_that(
     dir.exists(local)
   )
@@ -139,14 +138,7 @@ cr_deploy_docker <- function(local,
   myMessage("Building ", local, " folder for Docker image: ",
             image_name, level = 3)
 
-  this_job <- FALSE
-  if(is.null(task_id)){
-    this_job <- TRUE
-    task_id <- rstudio_add_job("Deploy Docker",
-                               timeout=extract_timeout(timeout))
-  }
-
-  rstudio_add_output(task_id, paste("\nConfiguring Dockerfile"))
+  myMessage(paste("Configuring Dockerfile"), level = 3)
   find_dockerfile(local, dockerfile = dockerfile)
 
   assert_that(
@@ -164,24 +156,21 @@ cr_deploy_docker <- function(local,
     images = image)
 
   image_tag <- paste0(image, ":", tag)
-  rstudio_add_output(task_id,
-    paste("\n#Deploy docker build for image: \n", image_tag))
+  myMessage(paste("#Deploy docker build for image: \n", image_tag),
+            level = 3)
 
   gcs_source <- cr_build_upload_gcs(local,
                                     remote = remote,
-                                    bucket = bucket,
-                                    task_id=task_id)
+                                    bucket = bucket)
 
   docker_build <- cr_build(build_yaml,
                            source = gcs_source,
                            launch_browser = launch_browser,
                            timeout=timeout)
 
-  b <- cr_build_wait(docker_build,
-                     projectId = projectId,
-                     task_id=task_id)
+  b <- cr_build_wait(docker_build, projectId = projectId)
 
-  rstudio_add_output(task_id, image_tag)
+  myMessage(image_tag, level = 3)
 
   b
 }

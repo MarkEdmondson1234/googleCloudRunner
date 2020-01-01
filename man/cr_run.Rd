@@ -12,8 +12,7 @@ cr_run(
   timeout = 600L,
   region = cr_region_get(),
   projectId = cr_project_get(),
-  launch_browser = interactive(),
-  task_id = NULL
+  launch_browser = interactive()
 )
 }
 \arguments{
@@ -32,8 +31,6 @@ cr_run(
 \item{projectId}{The GCP project from which the services should be listed}
 
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
-
-\item{task_id}{RStudio task_id if you want to use an exisiting}
 }
 \description{
 Deploys an existing gcr.io image.

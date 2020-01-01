@@ -312,72 +312,44 @@ cr_build_artifacts <- function(build,
 #'
 #' @param op The operation build object to wait for
 #' @param projectId The projectId
-#' @param task_id A possible RStudio job taskId to increment status upon
 #' @export
 #' @family Cloud Build functions
 #' @return A gar_Build object \link{Build}
 cr_build_wait <- function(op = .Last.value,
-                          projectId = cr_project_get(),
-                          task_id = NULL){
+                          projectId = cr_project_get()){
 
   the_id <- extract_build_id(op)
-
-  if(is.null(task_id)){
-    task_id <- rstudio_add_job(the_id,
-                               timeout=extract_timeout(op))
-  }
 
   init <- cr_build_status(the_id, projectId = projectId)
   if(!init$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
     return(init)
   }
 
-  if(!rstudioapi::isAvailable()) cat("\nWaiting for build to finish:\n |=")
-
-  rstudio_add_output(task_id,
-                     paste("\n#> Created Cloud Build, online logs:\n",
-                           extract_logs(init)))
-
-  wait_f(init, projectId, task_id)
+  wait_f(init, projectId)
 
 }
 
-wait_f <- function(init, projectId, task_id){
+wait_f <- function(init, projectId){
   op <- init
   wait <- TRUE
 
-  if(!rstudioapi::isAvailable()){
-    while(wait){
-      status <- cr_build_status(op, projectId = projectId)
-      cat("=")
-      if(!status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
-        wait <- FALSE
-      }
-      op <- status
-      Sys.sleep(5)
+  myMessage(paste("\n#> Created Cloud Build, online logs:\n",
+                  extract_logs(init)),
+            level = 3)
+
+  cat("\nWaiting for build to finish:\n |=")
+
+  while(wait){
+    status <- cr_build_status(op, projectId = projectId)
+    cat("=")
+    if(!status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
+       wait <- FALSE
     }
-    cat("| Build finished\n")
-  } else {
-    # rstudio task in background
-    while(wait){
-      status <- cr_build_status(op, projectId = projectId)
-
-      if(!rstudioapi::isAvailable()) cat("=")
-
-      rstudio_add_progress(task_id, extract_runtime(status$startTime))
-      rstudio_add_state(task_id, status$status)
-      rstudio_add_output(task_id, paste("\nStatus:", status$status))
-
-      if(!status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
-        wait <- FALSE
-      }
-      op <- status
-      Sys.sleep(5)
-    }
-
-    rstudio_add_state(task_id, status$status)
-
+    op <- status
+    Sys.sleep(5)
   }
+  cat("| Build finished\n")
+  myMessage("Build finished with status: ", status$status, level = 3)
 
   status
 }

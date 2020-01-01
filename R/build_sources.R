@@ -201,7 +201,6 @@ is.gar_StorageSource <- function(x){
 #' @param bucket The Google Cloud Storage bucket to upload to
 #' @param predefinedAcl The ACL rules for the object uploaded.
 #' @param deploy_folder Which folder to deploy from
-#' @param task_id pass in existing task_id if you want to use the same RStudio job
 #'
 #' @details
 #'
@@ -227,46 +226,32 @@ cr_build_upload_gcs <- function(local,
                                                 ".tar.gz"),
                                 bucket = cr_bucket_get(),
                                 predefinedAcl="bucketOwnerFullControl",
-                                deploy_folder = "deploy",
-                                task_id=NULL){
+                                deploy_folder = "deploy"){
 
-
-  if(is.null(task_id)){
-    task_id <- rstudio_add_job("Upload to Google Cloud Storage", timeout=0)
-    rstudio_add_state(task_id, "WORKING")
-    stop_task <- TRUE
-  } else {
-    stop_task <- FALSE
-  }
-
-  rstudio_add_output(task_id,
-                     paste("\n#Upload ", local, " to ",
-                           paste0("gs://",bucket,"/",remote)))
+  myMessage(paste("#Upload ", local, " to ",
+                  paste0("gs://", bucket,"/",remote)),
+            level = 3)
 
   tar_file <- paste0(basename(local), ".tar.gz")
 
   dir.create(deploy_folder, showWarnings = FALSE)
-  rstudio_add_output(task_id,
-                     paste0("\nCopying files from ",
-                            local, " to /", deploy_folder))
+  myMessage(paste0("Copying files from ",
+                   local, " to /", deploy_folder),
+            level = 3)
   file.copy(local, deploy_folder, recursive = TRUE)
-  rstudio_add_output(task_id,
-                     paste0("\nCompressing files from /",
-                            deploy_folder, " to ", tar_file))
+  myMessage(paste0("Compressing files from /",
+                   deploy_folder, " to ", tar_file),
+            level = 3)
   tar(tar_file,
       files = deploy_folder,
       compression = "gzip")
 
   unlink(deploy_folder, recursive = TRUE)
-  rstudio_add_output(task_id,
-                     paste("\nUploading",
-                           tar_file, "to", paste0(bucket,"/", remote)))
+  myMessage(paste("Uploading",
+                  tar_file, "to", paste0(bucket,"/", remote)),
+            level = 3)
   gcs_upload(tar_file, bucket = bucket, name = remote,
              predefinedAcl = predefinedAcl)
-
-  if(stop_task){
-    rstudio_add_state(task_id, "SUCCESS")
-  }
 
   cr_build_source(StorageSource(bucket = bucket,
                                 object = remote))

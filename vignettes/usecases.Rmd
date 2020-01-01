@@ -10,7 +10,7 @@ vignette: >
 
 Here will be some example use cases you can use googleCloudRunner for.
 
-Since almost any code can be called and passed via Docker images, there is a lot of potential uses.
+Since almost any code can be called and passed via Docker images, there are a lot of potential uses.
 
 * Scheduling R scripts in the cloud
 * R APIs to call from anywhere

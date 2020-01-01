@@ -152,9 +152,9 @@ read.csv("artifact.csv")
 
 Instead of using seperate `cloudbuild.yaml` files, you can also choose to make your own cloudbuild.yaml files in R via `cr_build_yaml()` and `cr_buildstep()`
 
-Lets say you don't want to write a cloudbuild.yaml file - instead you can create all the features of the yaml files.  Refer to the [cloudbuild.yaml config spec](https://cloud.google.com/cloud-build/docs/build-config) on what it expected in the files or functions. 
+Lets say you don't want to write a cloudbuild.yaml file - instead you can create all the features of the yaml files in R.  Refer to the [cloudbuild.yaml config spec](https://cloud.google.com/cloud-build/docs/build-config) on what it expected in the files or functions. 
 
-An example below recreated a simple cloudbuild.yaml file.  If you print it to console it will output what the build would look like if it was in a yaml file:
+An example below recreates a simple cloudbuild.yml file.  If you print it to console it will output what the build would look like if it was in a yaml file:
 
 ```r
 cr_build_yaml(steps = cr_buildstep( "gcloud","version"))
@@ -164,7 +164,7 @@ cr_build_yaml(steps = cr_buildstep( "gcloud","version"))
 #  args: version
 ```
 
-You can write back out the yaml into your own cloudbuild.yml
+You can write back out into your own cloudbuild.yml
 
 ```r
 my_yaml <- cr_build_yaml(steps = cr_buildstep( "gcloud","version"))

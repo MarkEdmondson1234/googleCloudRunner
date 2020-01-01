@@ -11,7 +11,6 @@
 #' @param region The endpoint region for deployment
 #' @param projectId The GCP project from which the services should be listed
 #' @param allowUnauthenticated TRUE if can be reached from public HTTP address.
-#' @param task_id RStudio task_id if you want to use an exisiting
 #'
 #' @inheritParams cr_build
 #' @importFrom googleAuthR gar_api_generator
@@ -36,17 +35,10 @@ cr_run <- function(image,
                    timeout=600L,
                    region = cr_region_get(),
                    projectId = cr_project_get(),
-                   launch_browser=interactive(),
-                   task_id=NULL) {
+                   launch_browser=interactive()) {
 
-  if(is.null(task_id)){
-    task_id <- rstudio_add_job("Build Cloud Run",
-                               timeout=extract_timeout(timeout))
-  }
-
-  rstudio_add_output(task_id,
-                     paste("\n#> Launching CloudRun image: \n",
-                           image))
+  myMessage(paste("#> Launching CloudRun image: ",image),
+            level = 3)
 
   # use cloud build to deploy
   run_yaml <- cr_build_yaml(
@@ -62,24 +54,18 @@ cr_run <- function(image,
                     timeout = timeout,
                     launch_browser=launch_browser)
 
-  result <- cr_build_wait(build,
-                          projectId = projectId,
-                          task_id=task_id)
+  result <- cr_build_wait(build, projectId = projectId)
 
   if(result$status == "SUCCESS"){
     run <- cr_run_get(name, projectId = projectId)
-    rstudio_add_output(task_id,
-                       paste("\n#> Running at: ",
-                             run$status$url))
-    rstudio_add_state(task_id, "SUCCESS")
+    myMessage(paste("#> Running at: ",
+                     run$status$url), level = 3)
 
     if(launch_browser) utils::browseURL(run$status$url)
 
     return(run)
   } else {
-    rstudio_add_output(task_id,
-                       "\n#Problem deploying to Cloud Run")
-    rstudio_add_state(task_id, "FAILURE")
+    myMessage("#Problem deploying to Cloud Run", level = 3)
     return(result)
   }
 }

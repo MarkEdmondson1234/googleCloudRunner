@@ -13,8 +13,7 @@ cr_deploy_docker(
   timeout = 600L,
   bucket = cr_bucket_get(),
   projectId = cr_project_get(),
-  launch_browser = interactive(),
-  task_id = NULL
+  launch_browser = interactive()
 )
 }
 \arguments{
@@ -35,8 +34,6 @@ cr_deploy_docker(
 \item{projectId}{The projectId}
 
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
-
-\item{task_id}{RStudio job task_id if you want to use the same task}
 }
 \description{
 If no Dockerfile present in the deployment folder, will attempt to create a Dockerfile to upload via \link{cr_dockerfile_plumber}

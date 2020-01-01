@@ -43,10 +43,6 @@ cr_deploy_run <- function(local,
 
   image_name <- make_image_name(image_name, projectId)
 
-  task_id <- rstudio_add_job(
-    paste("Deploy service ",remote," to CloudRun"),
-    timeout=extract_timeout(timeout))
-
   built <- cr_deploy_docker(local,
                             image_name = image_name,
                             dockerfile = dockerfile,
@@ -55,11 +51,9 @@ cr_deploy_run <- function(local,
                             bucket = bucket,
                             projectId = projectId,
                             launch_browser = launch_browser,
-                            timeout=timeout,
-                            task_id=task_id)
+                            timeout=timeout)
   if(built$status != "SUCCESS"){
     myMessage("Error building Dockerfile", level = 3)
-    rstudio_add_state(task_id, "FAILURE")
     return(built)
   }
 
@@ -68,8 +62,7 @@ cr_deploy_run <- function(local,
          region = region,
          projectId = projectId,
          launch_browser=launch_browser,
-         timeout=timeout,
-         task_id=task_id)
+         timeout=timeout)
 
 }
 

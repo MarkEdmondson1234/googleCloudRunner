@@ -268,7 +268,7 @@ read_buildstep_file <- function(x,
       # filepath
       assert_that(is.readable(x), is.string(x))
       rchars <- readLines(x)
-      myMessage("Copying into build step code from ", x, level = 3)
+      myMessage("Copying into build step code from ", x, level = 2)
     }
 
     rchars <- paste(rchars, collapse = "\n")
