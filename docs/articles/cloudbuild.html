@@ -107,7 +107,7 @@
     <div class="page-header toc-ignore">
       <h1>Serverless batched R scripts via Cloud Build</h1>
             
-            <h4 class="date">2019-12-31</h4>
+            <h4 class="date">2020-01-01</h4>
       
       
       <div class="hidden name"><code>cloudbuild.Rmd</code></div>
@@ -221,14 +221,14 @@
 <h2 class="hasAnchor">
 <a href="#creating-cloudbuild-yaml-build-steps" class="anchor"></a>Creating cloudbuild.yaml build steps</h2>
 <p>Instead of using seperate <code>cloudbuild.yaml</code> files, you can also choose to make your own cloudbuild.yaml files in R via <code><a href="../reference/cr_build_yaml.html">cr_build_yaml()</a></code> and <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code></p>
-<p>Lets say you don’t want to write a cloudbuild.yaml file - instead you can create all the features of the yaml files. Refer to the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yaml config spec</a> on what it expected in the files or functions.</p>
-<p>An example below recreated a simple cloudbuild.yaml file. If you print it to console it will output what the build would look like if it was in a yaml file:</p>
+<p>Lets say you don’t want to write a cloudbuild.yaml file - instead you can create all the features of the yaml files in R. Refer to the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yaml config spec</a> on what it expected in the files or functions.</p>
+<p>An example below recreates a simple cloudbuild.yml file. If you print it to console it will output what the build would look like if it was in a yaml file:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(<span class="dt">steps =</span> <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>( <span class="st">"gcloud"</span>,<span class="st">"version"</span>))</a>
 <a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">#==cloudRunnerYaml==</span></a>
 <a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">#steps:</span></a>
 <a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">#- name: gcr.io/cloud-builders/gcloud</span></a>
 <a class="sourceLine" id="cb9-5" data-line-number="5"><span class="co">#  args: version</span></a></code></pre></div>
-<p>You can write back out the yaml into your own cloudbuild.yml</p>
+<p>You can write back out into your own cloudbuild.yml</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">my_yaml &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(<span class="dt">steps =</span> <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>( <span class="st">"gcloud"</span>,<span class="st">"version"</span>))</a>
 <a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw"><a href="../reference/cr_build_write.html">cr_build_write</a></span>(my_yaml, <span class="dt">file =</span> <span class="st">"cloudbuild.yaml"</span>)</a></code></pre></div>
 <p>And also edit or extract steps from existing cloudbuild.yml files via <code><a href="../reference/cr_buildstep_edit.html">cr_buildstep_edit()</a></code> and <code><a href="../reference/cr_buildstep_extract.html">cr_buildstep_extract()</a></code>.</p>
