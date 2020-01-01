@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleCloudRunner</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9003</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9004</span>
       </span>
     </div>
 
@@ -157,6 +157,7 @@
 <a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co"># once working, pass in the build to the scheduler</span></a>
 <a class="sourceLine" id="cb5-5" data-line-number="5"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"15 5 * * *"</span>, <span class="dt">name=</span><span class="st">"itworks-schedule"</span>,</a>
 <a class="sourceLine" id="cb5-6" data-line-number="6">            <span class="dt">httpTarget =</span> <span class="kw"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(itworks))</a></code></pre></div>
+<p>Any utility that has a Docker image can be used within Cloud Build steps. Some <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community">community contributed Cloud Build images are listed here</a>, including <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo">hugo</a>, <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make">make</a>, and <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar">tar</a>, or you can configure your own Dockerfile and build what image you need yourself, perhaps by using a previous Cloud Build and <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code></p>
 </div>
 <div id="cloud-build-source" class="section level2">
 <h2 class="hasAnchor">
@@ -165,14 +166,15 @@
 <p>All cloudbuilds are launched in a serverless environment with a default directory <code>/workspace/</code>. The Source is copied into this workspace before the build steps execute, so steps can share state and files.</p>
 <p>Cloud Build sources are specified by the <code>source</code> argument.</p>
 <p>A source can be a <a href="https://cloud.google.com/source-repositories/">Cloud Source Repository</a> (perhaps mirrored from GitHub) or a <a href="https://cloud.google.com/storage/">Cloud Storage</a> bucket containg the code/data you want to operate on. An example of specifying both is below:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">gcs_source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_source.html">cr_build_source</a></span>(<span class="st">"gs://my-bucket"</span>, <span class="st">"my_code.tar.gz"</span>)</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">  </a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">repo_source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_source.html">cr_build_source</a></span>(</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">  <span class="kw"><a href="../reference/RepoSource.html">RepoSource</a></span>(<span class="st">"github_markedmondson1234_googlecloudrunner"</span>,</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">             <span class="dt">branchName=</span><span class="st">"master"</span>))</a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7">build1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="st">"cloudbuild.yaml"</span>, <span class="dt">source =</span> gcs_source)</a>
-<a class="sourceLine" id="cb6-8" data-line-number="8">build2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="st">"cloudbuild.yaml"</span>, <span class="dt">source =</span> repo_source)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">gcs_source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_source.html">cr_build_source</a></span>(</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">  <span class="kw"><a href="../reference/StorageSource.html">StorageSource</a></span>(<span class="st">"gs://my-bucket"</span>, <span class="st">"my_code.tar.gz"</span>))</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">  </a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">repo_source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_source.html">cr_build_source</a></span>(</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">  <span class="kw"><a href="../reference/RepoSource.html">RepoSource</a></span>(<span class="st">"github_markedmondson1234_googlecloudrunner"</span>,</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">             <span class="dt">branchName=</span><span class="st">"master"</span>))</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">build1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="st">"cloudbuild.yaml"</span>, <span class="dt">source =</span> gcs_source)</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">build2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="st">"cloudbuild.yaml"</span>, <span class="dt">source =</span> repo_source)</a></code></pre></div>
 <p><code><a href="../reference/cr_build_upload_gcs.html">cr_build_upload_gcs()</a></code> is a helper function for automating creation of a Google Cloud Storage source - this uses <a href="http://code.markedmondson.me/googleCloudStorageR/"><code>googleCloudStorageR</code></a> to tar and upload your source code locally to your bucket, making it available to your build.</p>
 <p>This returns a <code>Source</code> object that can be used in build functions:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">storage &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_upload_gcs.html">cr_build_upload_gcs</a></span>(<span class="st">"my_folder"</span>)</a>
@@ -217,11 +219,11 @@
 <a class="sourceLine" id="cb8-18" data-line-number="18"><span class="co">#4       Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span></a>
 <a class="sourceLine" id="cb8-19" data-line-number="19"><span class="co"># ... etc ...</span></a></code></pre></div>
 </div>
-<div id="creating-cloudbuild-yaml-build-steps" class="section level2">
+<div id="creating-cloudbuild-yml-build-steps" class="section level2">
 <h2 class="hasAnchor">
-<a href="#creating-cloudbuild-yaml-build-steps" class="anchor"></a>Creating cloudbuild.yaml build steps</h2>
-<p>Instead of using seperate <code>cloudbuild.yaml</code> files, you can also choose to make your own cloudbuild.yaml files in R via <code><a href="../reference/cr_build_yaml.html">cr_build_yaml()</a></code> and <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code></p>
-<p>Lets say you don’t want to write a cloudbuild.yaml file - instead you can create all the features of the yaml files in R. Refer to the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yaml config spec</a> on what it expected in the files or functions.</p>
+<a href="#creating-cloudbuild-yml-build-steps" class="anchor"></a>Creating cloudbuild.yml build steps</h2>
+<p>Instead of using seperate <code>cloudbuild.yml</code> files, you can also choose to make your own cloudbuild.yaml files in R via <code><a href="../reference/cr_build_yaml.html">cr_build_yaml()</a></code> and <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code></p>
+<p>Lets say you don’t want to write a cloudbuild.yaml file - instead you can create all the features of the yaml files in R. Refer to the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yml config spec</a> on what it expected in the files or functions.</p>
 <p>An example below recreates a simple cloudbuild.yml file. If you print it to console it will output what the build would look like if it was in a yaml file:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(<span class="dt">steps =</span> <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>( <span class="st">"gcloud"</span>,<span class="st">"version"</span>))</a>
 <a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">#==cloudRunnerYaml==</span></a>
@@ -362,7 +364,7 @@
       <li><a href="#cloud-build-source">Cloud Build source</a></li>
       <li><a href="#cloud-build-macros">Cloud Build macros</a></li>
       <li><a href="#build-artifacts">Build Artifacts</a></li>
-      <li><a href="#creating-cloudbuild-yaml-build-steps">Creating cloudbuild.yaml build steps</a></li>
+      <li><a href="#creating-cloudbuild-yml-build-steps">Creating cloudbuild.yml build steps</a></li>
       <li><a href="#pre-made-build-step-templates">Pre-made Build Step templates</a></li>
       <li><a href="#r-buildsteps">R buildsteps</a></li>
       <li><a href="#build-triggers">Build Triggers</a></li>

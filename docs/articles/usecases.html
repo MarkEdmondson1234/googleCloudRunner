@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleCloudRunner</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9003</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9004</span>
       </span>
     </div>
 
@@ -128,6 +128,7 @@
 <li>Integrating R with other language applications</li>
 <li>Public and private Docker image creations on triggers</li>
 </ul>
+<p>Some <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community">community contributed Cloud Build images are listed here</a>, including <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo">hugo</a>, <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make">make</a>, and <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar">tar</a>.</p>
 <div id="create-docker-image-of-a-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#create-docker-image-of-a-package" class="anchor"></a>Create Docker image of a package</h2>
@@ -136,9 +137,9 @@
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">my_image &lt;-<span class="st"> "gcr.io/my-project/my-image"</span></a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co"># this repo mirrored on Google Source repos</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">my_repo &lt;-<span class="st"> </span><span class="kw"><a href="../reference/RepoSource.html">RepoSource</a></span>(<span class="st">"MarkEdmondson1234/googleCloudRunner"</span>,</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">my_repo &lt;-<span class="st"> </span><span class="kw"><a href="../reference/RepoSource.html">RepoSource</a></span>(<span class="st">"github_markedmondson1234_googlecloudrunner"</span>,</a>
 <a class="sourceLine" id="cb1-5" data-line-number="5">                      <span class="dt">branchName=</span><span class="st">"master"</span>)<span class="er">)</span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">                        </a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb1-7" data-line-number="7">docker_yaml &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(<span class="dt">steps =</span> <span class="kw"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(my_image))</a>
 <a class="sourceLine" id="cb1-8" data-line-number="8"></a>
 <a class="sourceLine" id="cb1-9" data-line-number="9">built_docker &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(docker_yaml, <span class="dt">source =</span> my_repo)</a>
