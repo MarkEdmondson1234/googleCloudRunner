@@ -2,24 +2,23 @@
 % Please edit documentation in R/deploy.R
 \name{cr_deploy_pkgdown}
 \alias{cr_deploy_pkgdown}
-\title{Deploy a trigger for auto-builds a pkgdown website for an R package}
+\title{Deploy a cloudbuild.yml for a pkgdown website of an R package}
 \usage{
 cr_deploy_pkgdown(
-  trigger,
   steps = NULL,
+  cloudbuild_file = "cloudbuild.yml",
   git_email = "googlecloudrunner@r.com",
   keyring = "my-keyring",
   key = "github-key",
   env = NULL,
-  substitutions = NULL,
   cipher = "id_rsa.enc",
   build_image = "gcr.io/gcer-public/packagetools:master"
 )
 }
 \arguments{
-\item{trigger}{The trigger source which will be a \link{RepoSource} or a \link{GitHubEventsConfig}}
-
 \item{steps}{extra steps to run before the pkgdown website steps run}
+
+\item{cloudbuild_file}{The cloudbuild yaml file to write to}
 
 \item{git_email}{The email the git commands will be identifying as}
 
@@ -29,14 +28,12 @@ cr_deploy_pkgdown(
 
 \item{env}{A character vector of env arguments to set for all steps}
 
-\item{substitutions}{A named list of Custom Build macros that can be substituted for values in the build steps.  Will be added to an existing default substitution \code{_$GIT_REPO} which holds the git repo as deployed in \code{trigger}}
-
 \item{cipher}{The filename of the encrypted git ssh key that has been checked into the repository}
 
 \item{build_image}{A docker image with \code{pkgdown} installed}
 }
 \description{
-This will build a pkgdown website each time the trigger fires and deploy it to git
+This builds a pkgdown website each time the trigger fires and deploys it to git
 }
 \details{
 The trigger repository needs to hold an R package configured to build a pkgdown website.
@@ -47,12 +44,8 @@ The git ssh keys need to be deployed to Google KMS for the deployment of the web
 }
 \examples{
 
-\dontrun{
-
-my_repo <- GitHubEventsConfig("MarkEdmondson1234/googleAnalyticsR")
-cr_deploy_pkgdown(my_repo)
-
-}
+pd <- cr_deploy_pkgdown()
+pd
 }
 \seealso{
 Create your own custom deployment using \link{cr_buildstep_pkgdown} which this function uses with some defaults

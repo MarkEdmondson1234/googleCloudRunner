@@ -422,6 +422,10 @@ test_that("Render BuildStep objects", {
   expect_equal(mg$substitutions$`_MAILGUN_URL`, "blah")
 
 
+  # pkgdown builds
+  pd <- cr_deploy_pkgdown()
+  expect_true(file.exists("cloudbuild.yml"))
+  expect_equal(pd$steps[[1]]$name, "gcr.io/cloud-builders/gcloud")
 
 })
 

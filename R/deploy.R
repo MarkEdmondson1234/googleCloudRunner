@@ -184,14 +184,13 @@ cr_deploy_docker <- function(local,
 
 
 
-#' Deploy a trigger for auto-builds a pkgdown website for an R package
+#' Deploy a cloudbuild.yml for a pkgdown website of an R package
 #'
-#' This will build a pkgdown website each time the trigger fires and deploy it to git
+#' This builds a pkgdown website each time the trigger fires and deploys it to git
 #'
 #' @inheritParams cr_buildstep_pkgdown
-#' @inheritParams cr_buildtrigger
 #' @param steps extra steps to run before the pkgdown website steps run
-#' @param substitutions A named list of Custom Build macros that can be substituted for values in the build steps.  Will be added to an existing default substitution \code{_$GIT_REPO} which holds the git repo as deployed in \code{trigger}
+#' @param cloudbuild_file The cloudbuild yaml file to write to
 #'
 #' @details
 #'
@@ -206,23 +205,17 @@ cr_deploy_docker <- function(local,
 #' @export
 #' @examples
 #'
-#' \dontrun{
-#'
-#' my_repo <- GitHubEventsConfig("MarkEdmondson1234/googleAnalyticsR")
-#' cr_deploy_pkgdown(my_repo)
-#'
-#' }
-cr_deploy_pkgdown <- function(trigger,
-                              steps = NULL,
+#' pd <- cr_deploy_pkgdown()
+#' pd
+cr_deploy_pkgdown <- function(steps = NULL,
+                              cloudbuild_file = "cloudbuild.yml",
                               git_email = "googlecloudrunner@r.com",
                               keyring = "my-keyring",
                               key = "github-key",
                               env = NULL,
-                              substitutions = NULL,
                               cipher = "id_rsa.enc",
                               build_image = 'gcr.io/gcer-public/packagetools:master'){
 
-  github_repo <- extract_repo(trigger)
 
   build_yaml <-
     cr_build_yaml(steps = c(steps,
@@ -233,18 +226,14 @@ cr_deploy_pkgdown <- function(trigger,
 
   build <- cr_build_make(build_yaml)
 
-  pkgdown_name <- paste0("pkgdown-deploy-", tolower(basename(github_repo)))
-  trigger <- cr_buildtrigger(pkgdown_name,
-                             trigger = trigger,
-                             build = build,
-                             description = pkgdown_name,
-                             substitutions = c(list(`_GIT_REPO` = github_repo),
-                                               substitutions))
-  myMessage(paste("pkgdown trigger deployed for repo:", github_repo,
-                  "- ensure git ssh key is on KMS and ", cipher,
-                  "is checked into the repository - after which the website will be built on each commit"),
+  cr_build_write(build, file = cloudbuild_file)
+  myMessage("Now make a build trigger pointing at this file in your repo: ", cloudbuild_file,
+            "\nBuild Trigger settings:",
+            "\nSubstitution variable: _GITHUB_REPO = {your-repo-to-push-to}",
+            "\nIgnored files filter (glob): docs/**",
             level = 3)
-  trigger
+
+  invisible(build)
 
 }
 

@@ -23,26 +23,13 @@ Since almost any code can be called and passed via Docker images, there are a lo
 
 Some [community contributed Cloud Build images are listed here](https://github.com/GoogleCloudPlatform/cloud-builders-community), including [hugo](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo), [make](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make), and [tar](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar).
 
-## Create Docker image of a package
+## Create Docker image of a package each commit
 
-This is what is used to deploy this package as a Docker image to the public `googleComputeEngineR` docker image project, `gcr.io/gcer-public`
+If you just want a one-off Docker image, use `cr_deploy_docker()` or make your own build via `cr_buildstep_docker()`
 
-This builds a Docker image of the Dockerfile in the root directory of the GitHub repo, which is then [mirrored to Google Source Repositories](https://cloud.google.com/source-repositories/docs/mirroring-a-github-repository) via the GitHub app. 
+If you want the Docker image to rebuild each git commit, this is what is used to deploy this package to `gcr.io/gcer-public/googlecloudrunner` - in this case the Dockerfile in the root of the repo is built.  Simply place the Dockerfile in the root of your repo, and then create a Build Trigger with similar settings:
 
-```r
-my_image <- "gcr.io/my-project/my-image"
-
-# this repo mirrored on Google Source repos
-my_repo <- RepoSource("github_markedmondson1234_googlecloudrunner",
-                      branchName="master"))
-
-docker_yaml <- cr_build_yaml(steps = cr_buildstep_docker(my_image))
-
-built_docker <- cr_build(docker_yaml, source = my_repo)
-
-# make a build trigger so it builds on each push to master
-cr_buildtrigger("build-docker", trigger = my_repo, build = built_docker)
-```
+![](build_dockerfile.png)
 
 ## Trigger an R function from pubsub
 
@@ -103,6 +90,30 @@ pub <- function(x){
   cr_build(x, source = my_source)
 }
 ```
+
+## Build an Rmd to HTML each git commit or schedule and host it on Cloud Storage
+
+Cloud Storage can host public HTML files like a website, which can be accessed via public or private viewers.  This can be useful in setting up reporting infrastructure.
+
+The Cloud Build below makes use of Cloud Build artifacts to send the built Rmd files to a public Cloud Storage bucket.  When an Rmd file is committed to git, this is rebuilt.
+
+```r
+rmd_build <- cr_build_yaml(
+  steps = cr_buildstep_r(
+      id="render rmd",
+      r = "rmarkdown::render('scheduled_rmarkdown.Rmd', 
+                             output_file = 'scheduled_rmarkdown.html')",
+      name = "gcr.io/gcer-public/packagetools:master",
+      dir = "inst/scheduled_rmarkdown/"
+    ),
+  artifacts = cr_build_yaml_artifact("inst/scheduled_rmarkdown/scheduled_rmarkdown.html", bucket = "mark-edmondson-public-read")
+  )
+
+# write out build to submit with repo
+cr_build_write(rmd_build, file = "inst/cloudbuild/cloudbuild_rmd.yml")
+```
+
+The Rmd will build upon each commit
 
 ## Build and deploy Rmd files to Cloud Run every Git commit
 

@@ -1,3 +1,41 @@
+#' Setup nginx for Cloud Run in a buildstep
+#'
+#' @param html_folder The folder that will hold the HTML for Cloud Run
+#'
+#' This uses a premade bash script that sets up a Docker container ready for Cloud Run running nginx
+#' @param ... Other arguments passed to \link{cr_buildstep_bash}
+#' @export
+#' @examples
+#' html_folder <- "my_html"
+#' run_image <- "gcr.io/my-project/my-image-for-cloudrun"
+#' cr_build_yaml(
+#'  steps = c(
+#'   cr_buildstep_nginx_setup(html_folder),
+#'   cr_buildstep_docker(run_image, dir = html_folder),
+#'   cr_buildstep_run(name = "running-nginx",
+#'                    image = run_image,
+#'                    concurrency = 80)
+#'                    )
+#'            )
+cr_buildstep_nginx_setup <- function(html_folder, ...){
+
+  # don't allow dot names that would break things
+  dots <- list(...)
+  assert_that(
+    is.null(dots$args),
+    is.null(dots$name),
+    is.null(dots$prefix),
+    is.null(dots$id)
+  )
+
+  bash_script <- system.file("docker", "nginx", "setup.bash",
+                             package = "googleCloudRunner")
+  cr_buildstep_bash(bash_script, dir = html_folder, id = "setup nginx", ...)
+
+}
+
+
+
 #' Send an email in a Cloud Build step via MailGun.org
 #'
 #' This uses Mailgun to send emails.  It calls an R script that posts the message to MailGuns API.
@@ -355,6 +393,7 @@ cr_buildstep_decrypt <- function(cipher,
 #' \dontrun{
 #' docker_yaml <- cr_build_yaml(steps = cr_buildstep_docker(my_image))
 #' built_docker <- cr_build(docker_yaml, source = my_repo)
+#'
 #' # make a build trigger so it builds on each push to master
 #' cr_buildtrigger("build-docker", trigger = my_repo, build = built_docker)
 #' }

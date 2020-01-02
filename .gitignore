@@ -10,3 +10,4 @@ auth/
 .Renviron
 deploy
 inst/doc
+inst/scheduled_rmarkdown/scheduled_rmarkdown.html

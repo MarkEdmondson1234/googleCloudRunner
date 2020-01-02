@@ -38,6 +38,7 @@ my_repo <- RepoSource("github_markedmondson1234_googlecloudrunner",
 \dontrun{
 docker_yaml <- cr_build_yaml(steps = cr_buildstep_docker(my_image))
 built_docker <- cr_build(docker_yaml, source = my_repo)
+
 # make a build trigger so it builds on each push to master
 cr_buildtrigger("build-docker", trigger = my_repo, build = built_docker)
 }

@@ -187,6 +187,7 @@ Using the above build step editing functions, some helpful build steps you can u
 * `cr_buildstep_decrypt()` - for using Google Key management store to decrypt auth files
 * `cr_buildstep_git()` - for setting up and running git commands
 * `cr_buildstep_mailgun()` - send an email with Mailgun.org
+* `cr_buildstep_nginx_setup()` -  setup hosting HTML files with nginx on Cloud Run
 * `cr_buildstep_pkgdown()` - for setting up pkgdown documentation of an R package
 * `cr_buildstep_r()` - for running R code
 
@@ -252,7 +253,42 @@ cr_build(cr_build_yaml(steps=br))
 
 Once you have build steps and possibly a source created, you can either set these up to run on a schedule via `cr_schedule()` or you can use triggers that will run upon certain events.  
 
-These include GitHub commits and pull requests.  These Build Triggers can be setup in the webUI or programatically from R via the `cr_buildtrigger()` functions.
+### Setting up Build Triggers in the Web UI
+
+The quickest way to get going is to use the web UI for Build Triggers (`https://console.cloud.google.com/cloud-build/triggers`)
+
+1. Link your repo (GitHub, Bitbucket or Cloud Repositores) to Google 
+2. Create your Cloud Build using `cr_build_yaml()` etc.
+3. Write out to a `cloudbuild.yml` file in your repository (by default the root directory is checked)
+4. Setup the Build Trigger in the Web UI (`https://console.cloud.google.com/cloud-build/triggers`)
+5. Make a git commit and check the Cloud Build has run in the history (`https://console.cloud.google.com/cloud-build/builds`)
+6. Modify the `cloudbuild.yml` file as you need, recommit to trigger a new build. 
+
+Learn how to set them up at this Google article on [creating and managing build triggers](https://cloud.google.com/cloud-build/docs/running-builds/create-manage-triggers).
+
+From there you get the option of connecting a repository either by mirroring it from GitHub/Bitbucket or using Cloud Source Repositories.
+
+You can setup either Docker builds by just providing the location of the `Dockerfile`, or have more control by providing a `cloudbuild.yml` - by defualt these are looked for in the root directory.
+
+Here are some example for this package's GitHub repo:
+
+![](buildtrigger_screen.png)
+
+* The "do package checks" performs authenticated tests against the package
+* The "git auth and push pkgdown website" rebuilds the website each commit to master branch.
+* "Build a dockerfile for package builds" builds the `gcr.io/gcer-public/packagetools` image
+* "pushGoogleCloudRunnerToGcerPublic" builds the `gcr.io/gcer-public/googlecloudrunner` image
+
+![](buildtrigger_example.png)
+
+
+### Build Triggers via code (Experimental)
+
+> This API is experimental, so may not be reliable for production
+
+Build Triggers can be made via R code using the `cr_buildtrigger()` function.   
+
+Build Triggers include GitHub commits and pull requests.
 
 The example below shows how to set up some of the builds above:
 

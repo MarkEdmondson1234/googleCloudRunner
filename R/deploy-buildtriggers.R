@@ -1,4 +1,4 @@
-#' Deploy Docker build from a GitHub repo
+#' Deploy Docker build from a GitHub repo (Experimental)
 #'
 #' This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit.
 #'
@@ -13,6 +13,10 @@
 #' @param projectId The project to build under
 #' @param timeout timeout for the Docker build
 #' @family Deployment functions
+#' @details
+#'
+#' Build trigger API is experimental so this function is in development.
+#'
 #' @export
 cr_deploy_github_docker <- function(x,
                                     image = x,
@@ -41,7 +45,7 @@ cr_deploy_github_docker <- function(x,
                   build = build_docker)
 }
 
-#' Deploy HTML built from a repo each commit
+#' Deploy HTML built from a repo each commit (Experimental)
 #'
 #' This lets you set up triggers that will update a website each commit. You need to mirror the GitHub/Bitbucket repo onto Google Cloud Repositories for this to work.
 #'
@@ -57,6 +61,8 @@ cr_deploy_github_docker <- function(x,
 #' @family Deployment functions
 #'
 #' @details
+#'
+#' Build trigger API is experimental so this function is in development.
 #'
 #' This default R code is rendered in the rmd_folder:
 #'
@@ -126,10 +132,6 @@ cr_deploy_git_html <- function(x,
     glob <- glob_f(html_folder)
   }
 
-
-  bash_script <- system.file("docker", "nginx", "setup.bash",
-                             package = "googleCloudRunner")
-
   repo_source <- RepoSource(make_github_mirror(x),
                             tagName = github_tag,
                             branchName = branch,
@@ -142,8 +144,7 @@ cr_deploy_git_html <- function(x,
     cr_build_yaml(
       steps = c(
           rmd_step,
-          cr_buildstep_bash(bash_script,
-                            dir = html_folder, id = "setup nginx"),
+          cr_buildstep_nginx_setup(html_folder),
           cr_buildstep_docker(image,
                               tag = image_tag,
                               dir = html_folder,
