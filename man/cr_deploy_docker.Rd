@@ -2,7 +2,7 @@
 % Please edit documentation in R/deploy.R
 \name{cr_deploy_docker}
 \alias{cr_deploy_docker}
-\title{Deploy a Dockerfile to be built on ContainerRegistry}
+\title{Deploy a local Dockerfile to be built on ContainerRegistry}
 \usage{
 cr_deploy_docker(
   local,
@@ -38,11 +38,16 @@ cr_deploy_docker(
 \description{
 If no Dockerfile present in the deployment folder, will attempt to create a Dockerfile to upload via \link{cr_dockerfile_plumber}
 }
+\details{
+This lets you deploy local folders with Dockerfiles, automating saving the source on Google Cloud Storage.
+
+To deploy builds on git triggers and sources such as GitHub, see the examples of \link{cr_buildstep_docker} or the use cases on the website
+}
 \examples{
 
 \dontrun{
 
-cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
+b <- cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
 
 }
 }

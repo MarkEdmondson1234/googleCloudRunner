@@ -251,34 +251,36 @@ run_image <- "scheduled-rmarkdown-cloudrun"
 rmd_folder <- "inst/scheduled_rmarkdown/"
 r_image <- "gcr.io/mark-edmondson-gde/scheduled_rmarkdown:latest"
 
-r <- "rmarkdown::render('inst/scheduled_rmarkdown/scheduled_rmarkdown.Rmd')"
+r <- "rmarkdown::render('scheduled_rmarkdown.Rmd')"
 
 # script to setup nginx 
 bash_script <- system.file("docker", "nginx", "setup.bash",
                            package = "googleCloudRunner")
 
-repo_source <- cr_build_source(RepoSource("github_markedmondson1234_googlecloudrunner",
+repo_name <- paste0("github_markedmondson1234_googlecloudrunner")
+
+repo_source <- cr_build_source(RepoSource(repo_name,
                           branchName = ".*",
                           projectId = cr_project_get()))
                           
-build_me <- cr_build_make(cr_build_yaml(
+build_me <- cr_build_yaml(
       steps = c(
           cr_buildstep_r(r,
                   name = r_image,
-                  dir = rmd_folder,
+                  dir = "inst/scheduled_rmarkdown/",
                   id="render rmd"),
           cr_buildstep_bash(bash_script,
-                            dir = rmd_folder, id = "setup nginx"),
+                            dir = "inst/scheduled_rmarkdown/", 
+                            id = "setup nginx"),
           cr_buildstep_docker(run_image,
                               tag = "latest",
-                              dir = rmd_folder),
+                              dir = "inst/scheduled_rmarkdown/"),
           cr_buildstep_run(name = "scheduled-rmd",
                   image = "gcr.io/mark-edmondson-gde/scheduled-rmarkdown-cloudrun:latest",
                   concurrency = 80)
           )
-    ),
-    source = repo_source)
+    )
     
 
-cr_build(build_me)
+cr_build(build_me, source = repo_source)
 ```

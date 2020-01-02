@@ -63,6 +63,7 @@ reference:
       Functions for creation of triggers that determine when the builds run
     contents:
       - matches("cr_buildtrigger")
+      - matches("cr_sourcerepo")
       - GitHubEventsConfig
       - BuildTrigger
   - title: "Cloud Run functions"
