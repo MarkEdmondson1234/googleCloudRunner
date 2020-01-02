@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deploy a Dockerfile to be built on ContainerRegistry — cr_deploy_docker • googleCloudRunner</title>
+<title>Deploy a local Dockerfile to be built on ContainerRegistry — cr_deploy_docker • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,7 +35,7 @@
 
 
 
-<meta property="og:title" content="Deploy a Dockerfile to be built on ContainerRegistry — cr_deploy_docker" />
+<meta property="og:title" content="Deploy a local Dockerfile to be built on ContainerRegistry — cr_deploy_docker" />
 <meta property="og:description" content="If no Dockerfile present in the deployment folder, will attempt to create a Dockerfile to upload via cr_dockerfile_plumber" />
 <meta name="twitter:card" content="summary" />
 
@@ -149,7 +149,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deploy a Dockerfile to be built on ContainerRegistry</h1>
+    <h1>Deploy a local Dockerfile to be built on ContainerRegistry</h1>
     
     <div class="hidden name"><code>cr_deploy_docker.Rd</code></div>
     </div>
@@ -211,6 +211,10 @@
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>This lets you deploy local folders with Dockerfiles, automating saving the source on Google Cloud Storage.</p>
+<p>To deploy builds on git triggers and sources such as GitHub, see the examples of <a href='cr_buildstep_docker.html'>cr_buildstep_docker</a> or the use cases on the website</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Deployment functions: 
@@ -224,7 +228,7 @@
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 
-<span class='fu'>cr_deploy_docker</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"example/"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"googleCloudRunner"</span>))
+<span class='no'>b</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_docker</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"example/"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"googleCloudRunner"</span>))
 
 }</div></pre>
   </div>
@@ -232,6 +236,7 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#details">Details</a></li>
       <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
