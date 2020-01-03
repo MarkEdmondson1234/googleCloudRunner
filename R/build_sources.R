@@ -183,7 +183,12 @@ is.gar_RepoSource <- function(x){
 #' build2 <- cr_build("cloudbuild.yaml", source = my_gcs_source2)
 #'
 #' }
-StorageSource <- function(object = NULL, bucket = NULL, generation = NULL) {
+StorageSource <- function(object, bucket = NULL, generation = NULL) {
+
+  if(!grepl("tar\\.gz$", object)){
+    stop("Object on Cloud Storage must be a *.tar.gz object. tar.gz a folder using cr_build_upload_gcs()", call. = FALSE)
+  }
+
   structure(rmNullObs(list(bucket = bucket, object = object, generation = generation)),
             class = c("gar_StorageSource","list"))
 }

@@ -4,7 +4,7 @@
 \alias{StorageSource}
 \title{StorageSource Object}
 \usage{
-StorageSource(object = NULL, bucket = NULL, generation = NULL)
+StorageSource(object, bucket = NULL, generation = NULL)
 }
 \arguments{
 \item{object}{Google Cloud Storage object containing the source. This object must be a gzipped archive file (.tar.gz) containing source to build.}
