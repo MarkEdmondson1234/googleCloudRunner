@@ -1,11 +1,9 @@
 steps:
-- name: "gcr.io/gcer-public/packagetools:master"
+- name: gcr.io/gcer-public/packagetools:master
   args:
   - Rscript
   - -e
-  - |2-
-
-    rmarkdown::render('scheduled_rmarkdown.Rmd', output_file = 'scheduled_rmarkdown.html')
+  - rmarkdown::render("scheduled_rmarkdown.Rmd", output_file = "scheduled_rmarkdown.html")
   id: render rmd
   dir: inst/scheduled_rmarkdown/
 artifacts:
