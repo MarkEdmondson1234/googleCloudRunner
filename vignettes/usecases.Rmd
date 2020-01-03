@@ -130,43 +130,50 @@ An example of the rendering Rmd build trigger in the web UI is below:
 
 ![](render_rmd_trigger.png)
 
-## Build and deploy Rmd files to Cloud Run every Git commit
+## Build and deploy Rmd files to Cloud Run on each git commit
 
 Cloud Run scales from 0 to millions of hits, so can be an option for hosting a website.  In particular you may want a private internal website, or have lots of traffic or data that goes over other free hosting options such as GitHub pages. A nginx server configuration is included to host any HTML you provide via `cr_deploy_html()`.  
 
 Coupled to that, a common use case is to render Rmd files and host them on a website.  
 
-This can be achieved using `cr_deploy_git_html()` which will upon your chosen git event trigger run R code on your markdown files that should create HTML pages, and then deploy those to Cloud Run.
+This can be achieved following the below:
 
 1. Mirror your GitHub/Bitbucket repo to Cloud Repositories
-2. Put your markdown files in a directory within your Git repo 
-3. Run the below code to setup a build trigger that will render and deploy the markdown files each commit:
+2. Put your Rmarkdown files in a directory within your Git repo 
+3. Create a build that will:
+  - render the Rmd creating the HTML files
+  - configure nginx for Cloud Run, 
+  - build a Docker image of nginx with your HTML
+  - serve it on Cloud Run.
 
 ```r
-your_repo <- "MarkEdmondson1234/googleCloudRunner"
-markdown_folder <-  "vignettes"
-cr_deploy_git_html(your_repo, rmd_folder = markdown_folder)
+r <- "rmarkdown::render('cloudrun_rmarkdown.Rmd', output_file = 'cloudrun_rmarkdown.html')"
+
+build_rmd <- cr_build_make(
+    cr_build_yaml(
+      steps = c(
+          cr_buildstep_r(
+            id="render rmd",
+            r = r,
+            name = "gcr.io/gcer-public/render_rmd:master",
+            dir = "inst/cloudrun_rmarkdown/"
+          ),
+          cr_buildstep_nginx_setup("inst/cloudrun_rmarkdown/"),
+          cr_buildstep_docker("html-on-cloudrun",
+                              tag = "$BUILD_ID",
+                              dir = "inst/cloudrun_rmarkdown/"),
+          cr_buildstep_run(name = "my-html-on-cloudrun",
+                           image = "gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID")
+          )
+    ),
+    images = "gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID",
+    )
+
+cr_build_write(build_rmd, "inst/cloudrun_rmarkdown/cloudbuild_rmd_run.yml")
 ```
 
-4. If you want to customise how your markdown is rendered (perhaps using pkgdown to render your package website), supply that code in `edit_r` argument:
-
-```r
-your_repo <- "MarkEdmondson1234/googleCloudRunner"
-r <- "devtools::install(); pkgdown::build_site()"
-cr_deploy_git_html(your_repo, 
-                   image = paste0(your_repo, "-pkgdown"), 
-                   rmd_folder = ".", edit_r = r)
-                   
-cr_run_get("markedmondson1234-googlecloudrunner-pkgdown")
-#==CloudRunService==
-#name:  markedmondson1234-googlecloudrunner-pkgdown 
-#location:  europe-west1 
-#lastModifier:  1080525199262@cloudbuild.gserviceaccount.com 
-#containers:  gcr.io/mark-edmondson-gde/markedmondson1234/googlecloudrunner-pkgdown:20d3e18 
-#creationTimestamp:  2019-12-26T19:24:10.789691Z 
-#observedGeneration:  1 
-#url:  https://markedmondson1234-googlecloudrunner-pkgdown-ewjogewawq-ew.a.run.app 
-```
+5. Commit the configured cloudbuild yaml file to your repo
+6. Create a Build Trigger that builds your cloudbuild yaml file
 
 ## Polygot Cloud Builds - integrating R code with other languages
 

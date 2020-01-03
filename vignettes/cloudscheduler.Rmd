@@ -129,10 +129,10 @@ This is if you have your code files within a repo like GitHub and mirrored to Cl
 
 ```r
 schedule_me <- cr_build_yaml(
-  steps = cr_buildstep("your-name", 
-                         "R -e my_r_script.R",
-                         prefix="gcr.io/your-project")
-                         )
+  steps = cr_buildstep("your-r-image", 
+                       "R -e my_r_script.R",
+                       prefix="gcr.io/your-project")
+                      )
                          
 # maybe you want a repo source
 repo_source <- cr_build_source(
@@ -146,17 +146,17 @@ my_build <- cr_build_make(schedule_me, source = repo_source)
 
 This keeps your R code source in a Cloud Storage bucket.
 
-The first method is for lots of files in a folder that you upload:
+The first method uses a tar.gz that has zipped files in a folder that you upload:
 
 ```r
 schedule_me <- cr_build_yaml(
-  steps = cr_buildstep("your-name", 
+  steps = cr_buildstep("your-r-image", 
                        "R -e my_r_script.R",
                         prefix="gcr.io/your-project")
   )
 
 # upload a tar.gz of the files to use as a source:
-gcs_source <- cr_build_upload_gcs("local_folder_containing_r_script")
+gcs_source <- cr_build_upload_gcs("local_folder_with_r_script")
 my_build <- cr_build_make(schedule_me, source = gcs_source)
 ```
 
@@ -172,13 +172,13 @@ schedule_me <- cr_build_yaml(
                "gs://mark-edmondson-public-read/my_r_script.R",
                "/workspace/my_r_script.R")
     ),
-    cr_buildstep("your-name", 
-                 "R -e my_r_script.R",
+    cr_buildstep("your-r-image", 
+                 "R -e /workspace/my_r_script.R",
                  prefix="gcr.io/your-project")
             )
     )
 
-my_build <- cr_build_make(schedule_me, source = gcs_source)
+my_build <- cr_build_make(schedule_me)
 ```
 
 ### Testing
