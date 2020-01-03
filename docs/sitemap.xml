@@ -91,6 +91,9 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildstep_mailgun.html</loc>
   </url>
   <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildstep_nginx_setup.html</loc>
+  </url>
+  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildstep_pkgdown.html</loc>
   </url>
   <url>
@@ -185,6 +188,9 @@
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_schedule_run.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_sourcerepo_list.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/googleCloudRunner.html</loc>

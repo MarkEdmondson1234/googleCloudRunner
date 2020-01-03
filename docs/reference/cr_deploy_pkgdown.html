@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deploy a trigger for auto-builds a pkgdown website for an R package — cr_deploy_pkgdown • googleCloudRunner</title>
+<title>Deploy a cloudbuild.yml for a pkgdown website of an R package — cr_deploy_pkgdown • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Deploy a trigger for auto-builds a pkgdown website for an R package — cr_deploy_pkgdown" />
-<meta property="og:description" content="This will build a pkgdown website each time the trigger fires and deploy it to git" />
+<meta property="og:title" content="Deploy a cloudbuild.yml for a pkgdown website of an R package — cr_deploy_pkgdown" />
+<meta property="og:description" content="This builds a pkgdown website each time the trigger fires and deploys it to git" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,23 +149,22 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deploy a trigger for auto-builds a pkgdown website for an R package</h1>
+    <h1>Deploy a cloudbuild.yml for a pkgdown website of an R package</h1>
     
     <div class="hidden name"><code>cr_deploy_pkgdown.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This will build a pkgdown website each time the trigger fires and deploy it to git</p>
+    <p>This builds a pkgdown website each time the trigger fires and deploys it to git</p>
     </div>
 
     <pre class="usage"><span class='fu'>cr_deploy_pkgdown</span>(
-  <span class='no'>trigger</span>,
   <span class='kw'>steps</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>cloudbuild_file</span> <span class='kw'>=</span> <span class='st'>"cloudbuild.yml"</span>,
   <span class='kw'>git_email</span> <span class='kw'>=</span> <span class='st'>"googlecloudrunner@r.com"</span>,
   <span class='kw'>keyring</span> <span class='kw'>=</span> <span class='st'>"my-keyring"</span>,
   <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"github-key"</span>,
   <span class='kw'>env</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>cipher</span> <span class='kw'>=</span> <span class='st'>"id_rsa.enc"</span>,
   <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>
 )</pre>
@@ -174,12 +173,12 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>trigger</th>
-      <td><p>The trigger source which will be a <a href='RepoSource.html'>RepoSource</a> or a <a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></p></td>
-    </tr>
-    <tr>
       <th>steps</th>
       <td><p>extra steps to run before the pkgdown website steps run</p></td>
+    </tr>
+    <tr>
+      <th>cloudbuild_file</th>
+      <td><p>The cloudbuild yaml file to write to</p></td>
     </tr>
     <tr>
       <th>git_email</th>
@@ -196,10 +195,6 @@
     <tr>
       <th>env</th>
       <td><p>A character vector of env arguments to set for all steps</p></td>
-    </tr>
-    <tr>
-      <th>substitutions</th>
-      <td><p>A named list of Custom Build macros that can be substituted for values in the build steps.  Will be added to an existing default substitution <code>_$GIT_REPO</code> which holds the git repo as deployed in <code>trigger</code></p></td>
     </tr>
     <tr>
       <th>cipher</th>
@@ -228,12 +223,88 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-
-<span class='no'>my_repo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></span>(<span class='st'>"MarkEdmondson1234/googleAnalyticsR"</span>)
-<span class='fu'>cr_deploy_pkgdown</span>(<span class='no'>my_repo</span>)
-
-}</div></pre>
+<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_pkgdown</span>()</div><div class='output co'>#&gt; <span class='message'>2020-01-02 20:45:50&gt; Writing to cloudbuild.yml</span></div><div class='output co'>#&gt; <span class='message'>2020-01-02 20:45:50&gt; Now make a build trigger pointing at this file in your repo: cloudbuild.yml</span>
+#&gt; <span class='message'>Build Trigger settings:</span>
+#&gt; <span class='message'>Substitution variable: _GITHUB_REPO = {your-repo-to-push-to}</span>
+#&gt; <span class='message'>Ignored files filter (glob): docs/**</span></div><div class='input'><span class='no'>pd</span></div><div class='output co'>#&gt; ==CloudBuildObject==
+#&gt; steps:
+#&gt; - name: gcr.io/cloud-builders/gcloud
+#&gt;   args:
+#&gt;   - kms
+#&gt;   - decrypt
+#&gt;   - --ciphertext-file
+#&gt;   - id_rsa.enc
+#&gt;   - --plaintext-file
+#&gt;   - /root/.ssh/id_rsa
+#&gt;   - --location
+#&gt;   - global
+#&gt;   - --keyring
+#&gt;   - my-keyring
+#&gt;   - --key
+#&gt;   - github-key
+#&gt;   volumes:
+#&gt;   - name: ssh
+#&gt;     path: /root/.ssh
+#&gt; - name: gcr.io/cloud-builders/git
+#&gt;   entrypoint: bash
+#&gt;   args:
+#&gt;   - -c
+#&gt;   - |
+#&gt;     chmod 600 /root/.ssh/id_rsa
+#&gt;     cat &lt;&lt;EOF &gt;known_hosts
+#&gt;     github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+#&gt;     EOF
+#&gt;     cat &lt;&lt;EOF &gt;/root/.ssh/config
+#&gt;     Hostname github.com
+#&gt;     IdentityFile /root/.ssh/id_rsa
+#&gt;     EOF
+#&gt;     mv known_hosts /root/.ssh/known_hosts
+#&gt;   volumes:
+#&gt;   - name: ssh
+#&gt;     path: /root/.ssh
+#&gt; - name: gcr.io/cloud-builders/git
+#&gt;   args:
+#&gt;   - clone
+#&gt;   - git@github.com:$_GIT_REPO
+#&gt;   - repo
+#&gt;   volumes:
+#&gt;   - name: ssh
+#&gt;     path: /root/.ssh
+#&gt; - name: gcr.io/gcer-public/packagetools:master
+#&gt;   args:
+#&gt;   - Rscript
+#&gt;   - -e
+#&gt;   - |
+#&gt;     devtools::install()
+#&gt;     list.files()
+#&gt;     pkgdown::build_site()
+#&gt;   dir: repo
+#&gt; - name: gcr.io/cloud-builders/git
+#&gt;   args:
+#&gt;   - add
+#&gt;   - --all
+#&gt;   volumes:
+#&gt;   - name: ssh
+#&gt;     path: /root/.ssh
+#&gt; - name: gcr.io/cloud-builders/git
+#&gt;   args:
+#&gt;   - commit
+#&gt;   - -a
+#&gt;   - -m
+#&gt;   - "[skip travis] Build website from commit ${COMMIT_SHA}: \n$(date +\"%Y%m%dT%H:%M:%S\")"
+#&gt;   volumes:
+#&gt;   - name: ssh
+#&gt;     path: /root/.ssh
+#&gt; - name: gcr.io/cloud-builders/git
+#&gt;   args: status
+#&gt;   volumes:
+#&gt;   - name: ssh
+#&gt;     path: /root/.ssh
+#&gt; - name: gcr.io/cloud-builders/git
+#&gt;   args: push
+#&gt;   volumes:
+#&gt;   - name: ssh
+#&gt;     path: /root/.ssh</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

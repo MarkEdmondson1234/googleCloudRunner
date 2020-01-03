@@ -107,7 +107,7 @@
     <div class="page-header toc-ignore">
       <h1>Serverless batched R scripts via Cloud Build</h1>
             
-            <h4 class="date">2020-01-01</h4>
+            <h4 class="date">2020-01-02</h4>
       
       
       <div class="hidden name"><code>cloudbuild.Rmd</code></div>
@@ -252,6 +252,8 @@
 <li>
 <code><a href="../reference/cr_buildstep_mailgun.html">cr_buildstep_mailgun()</a></code> - send an email with Mailgun.org</li>
 <li>
+<code><a href="../reference/cr_buildstep_nginx_setup.html">cr_buildstep_nginx_setup()</a></code> - setup hosting HTML files with nginx on Cloud Run</li>
+<li>
 <code><a href="../reference/cr_buildstep_pkgdown.html">cr_buildstep_pkgdown()</a></code> - for setting up pkgdown documentation of an R package</li>
 <li>
 <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code> - for running R code</li>
@@ -305,7 +307,39 @@
 <h2 class="hasAnchor">
 <a href="#build-triggers" class="anchor"></a>Build Triggers</h2>
 <p>Once you have build steps and possibly a source created, you can either set these up to run on a schedule via <code><a href="../reference/cr_schedule.html">cr_schedule()</a></code> or you can use triggers that will run upon certain events.</p>
-<p>These include GitHub commits and pull requests. These Build Triggers can be setup in the webUI or programatically from R via the <code><a href="../reference/cr_buildtrigger.html">cr_buildtrigger()</a></code> functions.</p>
+<div id="setting-up-build-triggers-in-the-web-ui" class="section level3">
+<h3 class="hasAnchor">
+<a href="#setting-up-build-triggers-in-the-web-ui" class="anchor"></a>Setting up Build Triggers in the Web UI</h3>
+<p>The quickest way to get going is to use the web UI for Build Triggers (<code>https://console.cloud.google.com/cloud-build/triggers</code>)</p>
+<ol style="list-style-type: decimal">
+<li>Link your repo (GitHub, Bitbucket or Cloud Repositores) to Google</li>
+<li>Create your Cloud Build using <code><a href="../reference/cr_build_yaml.html">cr_build_yaml()</a></code> etc.</li>
+<li>Write out to a <code>cloudbuild.yml</code> file in your repository (by default the root directory is checked)</li>
+<li>Setup the Build Trigger in the Web UI (<code>https://console.cloud.google.com/cloud-build/triggers</code>)</li>
+<li>Make a git commit and check the Cloud Build has run in the history (<code>https://console.cloud.google.com/cloud-build/builds</code>)</li>
+<li>Modify the <code>cloudbuild.yml</code> file as you need, recommit to trigger a new build.</li>
+</ol>
+<p>Learn how to set them up at this Google article on <a href="https://cloud.google.com/cloud-build/docs/running-builds/create-manage-triggers">creating and managing build triggers</a>.</p>
+<p>From there you get the option of connecting a repository either by mirroring it from GitHub/Bitbucket or using Cloud Source Repositories.</p>
+<p>You can setup either Docker builds by just providing the location of the <code>Dockerfile</code>, or have more control by providing a <code>cloudbuild.yml</code> - by defualt these are looked for in the root directory.</p>
+<p>Here are some example for this package’s GitHub repo:</p>
+<p><img src="buildtrigger_screen.png"></p>
+<ul>
+<li>The “do package checks” performs authenticated tests against the package</li>
+<li>The “git auth and push pkgdown website” rebuilds the website each commit to master branch.</li>
+<li>“Build a dockerfile for package builds” builds the <code>gcr.io/gcer-public/packagetools</code> image</li>
+<li>“pushGoogleCloudRunnerToGcerPublic” builds the <code>gcr.io/gcer-public/googlecloudrunner</code> image</li>
+</ul>
+<p><img src="buildtrigger_example.png"></p>
+</div>
+<div id="build-triggers-via-code-experimental" class="section level3">
+<h3 class="hasAnchor">
+<a href="#build-triggers-via-code-experimental" class="anchor"></a>Build Triggers via code (Experimental)</h3>
+<blockquote>
+<p>This API is experimental, so may not be reliable for production</p>
+</blockquote>
+<p>Build Triggers can be made via R code using the <code><a href="../reference/cr_buildtrigger.html">cr_buildtrigger()</a></code> function.</p>
+<p>Build Triggers include GitHub commits and pull requests.</p>
 <p>The example below shows how to set up some of the builds above:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">cloudbuild &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"cloudbuild/cloudbuild.yaml"</span>,</a>
 <a class="sourceLine" id="cb13-2" data-line-number="2">                            <span class="dt">package =</span> <span class="st">"googleCloudRunner"</span>)</a>
@@ -321,6 +355,7 @@
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># create a trigger that will build from the file in the repo</span></a>
 <a class="sourceLine" id="cb15-2" data-line-number="2"><span class="kw"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"trig3"</span>, <span class="dt">trigger =</span> github, <span class="dt">build =</span> <span class="st">"cloudbuild.yaml"</span>)</a></code></pre></div>
 <p>This way you can commit changes to the cloudbuild.yaml file, and they will be reflected in the Build Trigger.</p>
+</div>
 <div id="connecting-to-github" class="section level3">
 <h3 class="hasAnchor">
 <a href="#connecting-to-github" class="anchor"></a>Connecting to GitHub</h3>
