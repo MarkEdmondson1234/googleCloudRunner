@@ -230,11 +230,7 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>my_gcs_source</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Source.html'>Source</a></span>(<span class='kw'>storageSource</span><span class='kw'>=</span><span class='fu'><a href='StorageSource.html'>StorageSource</a></span>(<span class='st'>"gs://my-bucket"</span>, <span class='st'>"my_code.tar.gz"</span>))
-<span class='no'>my_gcs_source</span></div><div class='output co'>#&gt; ==CloudBuildSource==
-#&gt; ==CloudBuildStorageSource==
-#&gt; bucket:  my_code.tar.gz 
-#&gt; object:  gs://my-bucket </div><div class='input'>
+<span class='no'>my_gcs_source</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Source.html'>Source</a></span>(<span class='kw'>storageSource</span><span class='kw'>=</span><span class='fu'><a href='StorageSource.html'>StorageSource</a></span>(<span class='st'>"gs://my-bucket"</span>, <span class='st'>"my_code.tar.gz"</span>))</div><div class='output co'>#&gt; <span class='error'>Error: Object on Cloud Storage must be a *.tar.gz object. tar.gz a folder using cr_build_upload_gcs()</span></div><div class='input'><span class='no'>my_gcs_source</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'my_gcs_source' not found</span></div><div class='input'>
 <span class='no'>my_repo_source</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Source.html'>Source</a></span>(<span class='kw'>repoSource</span><span class='kw'>=</span><span class='fu'><a href='RepoSource.html'>RepoSource</a></span>(<span class='st'>"https://my-repo.com"</span>, <span class='kw'>branchName</span><span class='kw'>=</span><span class='st'>"master"</span>))
 <span class='no'>my_repo_source</span></div><div class='output co'>#&gt; ==CloudBuildSource==
 #&gt; ==CloudBuildRepoSource==

@@ -282,6 +282,15 @@
 <p>Focusing on one buildstep in particular, since this is an R package - you can send in R code into a build trigger using <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>.</p>
 <p>It accepts both inline R code or a file location. This R code is executed in the R environment as specified in argument <code>name</code> - they default to the R images provided by Rocker <a href="https://www.rocker-project.org/">rocker-project.org</a>.</p>
 <p>Or if you want to build your own images (in perhaps another Cloud Build using <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code>) you can use your own R images with custom R packages and resources.</p>
+<p>Some useful R images have been made you could use or refer to their Dockerfiles for:</p>
+<ul>
+<li>
+<code>gcr.io/gcer-public/packagetools</code> - installs: devtools covr rhub pkgdown goodpractice httr plumber rmarkdown</li>
+<li>
+<code>gcr.io/gcer-public/render_rmd</code> - installs: pkgdown rmarkdown flexdashboard blogdown bookdown</li>
+<li>
+<code>gcr.io/gcer-public/googlecloudrunner</code> - installs: containerit, googleCloudStorageR, plumber, googleCloudRunner</li>
+</ul>
 <p>The R code can be created within the Build at build time, or you can refer to an existing R script within the Source.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># create an R buildstep inline</span></a>
 <a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"paste('1+1=', 1+1)"</span>, <span class="st">"sessionInfo()"</span>))</a>
