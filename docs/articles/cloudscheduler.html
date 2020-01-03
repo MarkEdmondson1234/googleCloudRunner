@@ -206,32 +206,73 @@
 <h3 class="hasAnchor">
 <a href="#make-the-build-and-optional-source" class="anchor"></a>4. Make the build and optional source</h3>
 <p>You may want your R code to operate on data in Google Cloud Storage or a git repo. Specify that source in your build, then make the build object:</p>
+<div id="repo-source" class="section level4">
+<h4 class="hasAnchor">
+<a href="#repo-source" class="anchor"></a>Repo Source</h4>
+<p>This is if you have your code files within a repo like GitHub and mirrored to Cloud Source repositories.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">schedule_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">  <span class="dt">steps =</span> <span class="kw">cr_build_step</span>(<span class="st">"your-name"</span>, </a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">  <span class="dt">steps =</span> <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(<span class="st">"your-name"</span>, </a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">                         <span class="st">"R -e my_r_script.R"</span>,</a>
 <a class="sourceLine" id="cb7-4" data-line-number="4">                         <span class="dt">prefix=</span><span class="st">"gcr.io/your-project"</span>)</a>
 <a class="sourceLine" id="cb7-5" data-line-number="5">                         )</a>
 <a class="sourceLine" id="cb7-6" data-line-number="6">                         </a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co"># maybe you want a source</span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co"># maybe you want a repo source</span></a>
 <a class="sourceLine" id="cb7-8" data-line-number="8">repo_source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_source.html">cr_build_source</a></span>(</a>
 <a class="sourceLine" id="cb7-9" data-line-number="9">  <span class="kw"><a href="../reference/RepoSource.html">RepoSource</a></span>(<span class="st">"MarkEdmondson1234/googleCloudRunner"</span>,</a>
 <a class="sourceLine" id="cb7-10" data-line-number="10">             <span class="dt">branchName=</span><span class="st">"master"</span>))</a>
 <a class="sourceLine" id="cb7-11" data-line-number="11">             </a>
 <a class="sourceLine" id="cb7-12" data-line-number="12">my_build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_make.html">cr_build_make</a></span>(schedule_me, <span class="dt">source =</span> repo_source)</a></code></pre></div>
+</div>
+<div id="cloud-storage-source" class="section level4">
+<h4 class="hasAnchor">
+<a href="#cloud-storage-source" class="anchor"></a>Cloud Storage Source</h4>
+<p>This keeps your R code source in a Cloud Storage bucket.</p>
+<p>The first method is for lots of files in a folder that you upload:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">schedule_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">  <span class="dt">steps =</span> <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(<span class="st">"your-name"</span>, </a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">                       <span class="st">"R -e my_r_script.R"</span>,</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">                        <span class="dt">prefix=</span><span class="st">"gcr.io/your-project"</span>)</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">  )</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co"># upload a tar.gz of the files to use as a source:</span></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">gcs_source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_upload_gcs.html">cr_build_upload_gcs</a></span>(<span class="st">"local_folder_containing_r_script"</span>)</a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">my_build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_make.html">cr_build_make</a></span>(schedule_me, <span class="dt">source =</span> gcs_source)</a></code></pre></div>
+<p>When only a few files, it may be easiest to include downloading the R file from your bucket first into the /workspace/ via a buildstep using <a href="https://cloud.google.com/storage/docs/gsutil">gsutil</a>, not using source at all:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">schedule_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">  <span class="dt">steps =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">    <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">      <span class="dt">id =</span> <span class="st">"download R file"</span>,</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">      <span class="dt">name =</span> <span class="st">"gsutil"</span>,</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">      <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cp"</span>,</a>
+<a class="sourceLine" id="cb9-7" data-line-number="7">               <span class="st">"gs://mark-edmondson-public-read/my_r_script.R"</span>,</a>
+<a class="sourceLine" id="cb9-8" data-line-number="8">               <span class="st">"/workspace/my_r_script.R"</span>)</a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">    ),</a>
+<a class="sourceLine" id="cb9-10" data-line-number="10">    <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(<span class="st">"your-name"</span>, </a>
+<a class="sourceLine" id="cb9-11" data-line-number="11">                 <span class="st">"R -e my_r_script.R"</span>,</a>
+<a class="sourceLine" id="cb9-12" data-line-number="12">                 <span class="dt">prefix=</span><span class="st">"gcr.io/your-project"</span>)</a>
+<a class="sourceLine" id="cb9-13" data-line-number="13">            )</a>
+<a class="sourceLine" id="cb9-14" data-line-number="14">    )</a>
+<a class="sourceLine" id="cb9-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb9-16" data-line-number="16">my_build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_make.html">cr_build_make</a></span>(schedule_me, <span class="dt">source =</span> gcs_source)</a></code></pre></div>
+</div>
+</div>
+<div id="testing" class="section level3">
+<h3 class="hasAnchor">
+<a href="#testing" class="anchor"></a>Testing</h3>
 <p>You may want to test the build works with a one off build first:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># test your build works</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">schedule_build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(my_build)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># test your build works</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">schedule_build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(my_build)</a></code></pre></div>
 </div>
 <div id="schedule-calling-the-docker-image-using-cloud-scheduler" class="section level3">
 <h3 class="hasAnchor">
 <a href="#schedule-calling-the-docker-image-using-cloud-scheduler" class="anchor"></a>5. Schedule calling the Docker image using Cloud Scheduler</h3>
 <p>Once you have a working build, schedule that build object by passing it to the <code><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http()</a></code> function, which constructs the Cloud Build API call for Cloud Scheduler to call at its scheduled times.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># you can feed the Build result back to the scheduler</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">cloud_build_target &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(schedule_build)</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co"># schedule it</span></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"15 5 * * *"</span>, <span class="dt">name=</span><span class="st">"scheduled_r"</span>,</a>
-<a class="sourceLine" id="cb9-6" data-line-number="6">             <span class="dt">httpTarget =</span> cloud_build_target)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co"># you can feed the Build result back to the scheduler</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">cloud_build_target &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(schedule_build)</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="co"># schedule it</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"15 5 * * *"</span>, <span class="dt">name=</span><span class="st">"scheduled_r"</span>,</a>
+<a class="sourceLine" id="cb11-6" data-line-number="6">             <span class="dt">httpTarget =</span> cloud_build_target)</a></code></pre></div>
 <p>Your R script should now be scheduled and running in its own environment.</p>
 <p>You can automate updates to the script and/or Docker container or schedule separately, by redoing the relevant step above, perhaps adding a <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html#build-triggers">build trigger</a> to do so.</p>
 </div>
