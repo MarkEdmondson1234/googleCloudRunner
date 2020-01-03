@@ -175,9 +175,9 @@ CMD ["api.R"]</code></pre>
 <a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(x, <span class="dt">source =</span> my_source)</a>
 <a class="sourceLine" id="cb5-4" data-line-number="4">}</a></code></pre></div>
 </div>
-<div id="build-an-rmd-to-html-each-git-commit-and-host-it-on-cloud-storage" class="section level2">
+<div id="build-an-rmd-each-git-commit-and-host-its-html-on-cloud-storage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#build-an-rmd-to-html-each-git-commit-and-host-it-on-cloud-storage" class="anchor"></a>Build an Rmd to HTML each git commit and host it on Cloud Storage</h2>
+<a href="#build-an-rmd-each-git-commit-and-host-its-html-on-cloud-storage" class="anchor"></a>Build an Rmd each git commit and host its HTML on Cloud Storage</h2>
 <p>Cloud Storage can host public HTML files like a website, which can be accessed via public or private viewers. This can be useful in setting up reporting infrastructure.</p>
 <p>The Cloud Build below makes use of Cloud Build artifacts to send the built Rmd files to a public Cloud Storage bucket. When an Rmd file is committed to git, this is rebuilt.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">r &lt;-<span class="st"> "rmarkdown::render('scheduled_rmarkdown.Rmd', output_file = 'scheduled_rmarkdown.html')"</span></a>
@@ -196,7 +196,13 @@ CMD ["api.R"]</code></pre>
 <a class="sourceLine" id="cb6-14" data-line-number="14"></a>
 <a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co"># write out build to submit with repo</span></a>
 <a class="sourceLine" id="cb6-16" data-line-number="16"><span class="kw"><a href="../reference/cr_build_write.html">cr_build_write</a></span>(rmd_build, <span class="dt">file =</span> <span class="st">"inst/cloudbuild/cloudbuild_rmd.yml"</span>)</a></code></pre></div>
-<p>The Rmd will build upon each commit</p>
+<p>The Rmd will build upon each commit, adapting to changes in the Rmd file.</p>
+<p>The example Rmd file is build and available on a public Cloud Storage bucket - the above example is available at this <a href="https://storage.googleapis.com/mark-edmondson-public-read/scheduled_rmarkdown.html">link</a></p>
+<p><img src="schedule_markdown_hosted_gcs.png"></p>
+<p>The two buildtriggers then build the Dockerfile to render the image (with all the necessary R libraries installed) and a build trigger to run the actual build upon each commit</p>
+<p><img src="render_rmd_buildtriggers.png"></p>
+<p>An example of the rendering Rmd build trigger in the web UI is below:</p>
+<p><img src="render_rmd_trigger.png"></p>
 </div>
 <div id="build-and-deploy-rmd-files-to-cloud-run-every-git-commit" class="section level2">
 <h2 class="hasAnchor">
@@ -432,7 +438,7 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#create-docker-image-of-a-package-each-commit">Create Docker image of a package each commit</a></li>
       <li><a href="#trigger-an-r-function-from-pubsub">Trigger an R function from pubsub</a></li>
-      <li><a href="#build-an-rmd-to-html-each-git-commit-and-host-it-on-cloud-storage">Build an Rmd to HTML each git commit and host it on Cloud Storage</a></li>
+      <li><a href="#build-an-rmd-each-git-commit-and-host-its-html-on-cloud-storage">Build an Rmd each git commit and host its HTML on Cloud Storage</a></li>
       <li><a href="#build-and-deploy-rmd-files-to-cloud-run-every-git-commit">Build and deploy Rmd files to Cloud Run every Git commit</a></li>
       <li><a href="#polygot-cloud-builds---integrating-r-code-with-other-languages">Polygot Cloud Builds - integrating R code with other languages</a></li>
       <li><a href="#scheduled-update-of-an-rmarkdown-dashboard-from-google-sheets">Scheduled update of an RMarkdown dashboard from Google Sheets</a></li>
