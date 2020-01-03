@@ -74,4 +74,4 @@ steps:
   - managed
   - my-html-on-cloudrun
   id: auth cloudrun
-images: gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID
+images: 'gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID'
