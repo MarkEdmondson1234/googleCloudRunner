@@ -91,7 +91,7 @@ pub <- function(x){
 }
 ```
 
-## Build an Rmd to HTML each git commit and host it on Cloud Storage
+## Build an Rmd each git commit and host its HTML on Cloud Storage
 
 Cloud Storage can host public HTML files like a website, which can be accessed via public or private viewers.  This can be useful in setting up reporting infrastructure.
 
@@ -116,7 +116,19 @@ rmd_build <- cr_build_yaml(
 cr_build_write(rmd_build, file = "inst/cloudbuild/cloudbuild_rmd.yml")
 ```
 
-The Rmd will build upon each commit
+The Rmd will build upon each commit, adapting to changes in the Rmd file.
+
+The example Rmd file is build and available on a public Cloud Storage bucket - the above example is available at this [link](https://storage.googleapis.com/mark-edmondson-public-read/scheduled_rmarkdown.html)
+
+![](schedule_markdown_hosted_gcs.png)
+
+The two buildtriggers then build the Dockerfile to render the image (with all the necessary R libraries installed) and a build trigger to run the actual build upon each commit
+
+![](render_rmd_buildtriggers.png)
+
+An example of the rendering Rmd build trigger in the web UI is below:
+
+![](render_rmd_trigger.png)
 
 ## Build and deploy Rmd files to Cloud Run every Git commit
 
