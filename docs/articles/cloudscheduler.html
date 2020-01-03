@@ -211,10 +211,10 @@
 <a href="#repo-source" class="anchor"></a>Repo Source</h4>
 <p>This is if you have your code files within a repo like GitHub and mirrored to Cloud Source repositories.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">schedule_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">  <span class="dt">steps =</span> <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(<span class="st">"your-name"</span>, </a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">                         <span class="st">"R -e my_r_script.R"</span>,</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">                         <span class="dt">prefix=</span><span class="st">"gcr.io/your-project"</span>)</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">                         )</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">  <span class="dt">steps =</span> <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(<span class="st">"your-r-image"</span>, </a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">                       <span class="st">"R -e my_r_script.R"</span>,</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">                       <span class="dt">prefix=</span><span class="st">"gcr.io/your-project"</span>)</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">                      )</a>
 <a class="sourceLine" id="cb7-6" data-line-number="6">                         </a>
 <a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co"># maybe you want a repo source</span></a>
 <a class="sourceLine" id="cb7-8" data-line-number="8">repo_source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_source.html">cr_build_source</a></span>(</a>
@@ -227,15 +227,15 @@
 <h4 class="hasAnchor">
 <a href="#cloud-storage-source" class="anchor"></a>Cloud Storage Source</h4>
 <p>This keeps your R code source in a Cloud Storage bucket.</p>
-<p>The first method is for lots of files in a folder that you upload:</p>
+<p>The first method uses a tar.gz that has zipped files in a folder that you upload:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">schedule_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">  <span class="dt">steps =</span> <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(<span class="st">"your-name"</span>, </a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">  <span class="dt">steps =</span> <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(<span class="st">"your-r-image"</span>, </a>
 <a class="sourceLine" id="cb8-3" data-line-number="3">                       <span class="st">"R -e my_r_script.R"</span>,</a>
 <a class="sourceLine" id="cb8-4" data-line-number="4">                        <span class="dt">prefix=</span><span class="st">"gcr.io/your-project"</span>)</a>
 <a class="sourceLine" id="cb8-5" data-line-number="5">  )</a>
 <a class="sourceLine" id="cb8-6" data-line-number="6"></a>
 <a class="sourceLine" id="cb8-7" data-line-number="7"><span class="co"># upload a tar.gz of the files to use as a source:</span></a>
-<a class="sourceLine" id="cb8-8" data-line-number="8">gcs_source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_upload_gcs.html">cr_build_upload_gcs</a></span>(<span class="st">"local_folder_containing_r_script"</span>)</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">gcs_source &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_upload_gcs.html">cr_build_upload_gcs</a></span>(<span class="st">"local_folder_with_r_script"</span>)</a>
 <a class="sourceLine" id="cb8-9" data-line-number="9">my_build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_make.html">cr_build_make</a></span>(schedule_me, <span class="dt">source =</span> gcs_source)</a></code></pre></div>
 <p>When only a few files, it may be easiest to include downloading the R file from your bucket first into the /workspace/ via a buildstep using <a href="https://cloud.google.com/storage/docs/gsutil">gsutil</a>, not using source at all:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">schedule_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
@@ -247,13 +247,13 @@
 <a class="sourceLine" id="cb9-7" data-line-number="7">               <span class="st">"gs://mark-edmondson-public-read/my_r_script.R"</span>,</a>
 <a class="sourceLine" id="cb9-8" data-line-number="8">               <span class="st">"/workspace/my_r_script.R"</span>)</a>
 <a class="sourceLine" id="cb9-9" data-line-number="9">    ),</a>
-<a class="sourceLine" id="cb9-10" data-line-number="10">    <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(<span class="st">"your-name"</span>, </a>
-<a class="sourceLine" id="cb9-11" data-line-number="11">                 <span class="st">"R -e my_r_script.R"</span>,</a>
+<a class="sourceLine" id="cb9-10" data-line-number="10">    <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(<span class="st">"your-r-image"</span>, </a>
+<a class="sourceLine" id="cb9-11" data-line-number="11">                 <span class="st">"R -e /workspace/my_r_script.R"</span>,</a>
 <a class="sourceLine" id="cb9-12" data-line-number="12">                 <span class="dt">prefix=</span><span class="st">"gcr.io/your-project"</span>)</a>
 <a class="sourceLine" id="cb9-13" data-line-number="13">            )</a>
 <a class="sourceLine" id="cb9-14" data-line-number="14">    )</a>
 <a class="sourceLine" id="cb9-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb9-16" data-line-number="16">my_build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_make.html">cr_build_make</a></span>(schedule_me, <span class="dt">source =</span> gcs_source)</a></code></pre></div>
+<a class="sourceLine" id="cb9-16" data-line-number="16">my_build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_make.html">cr_build_make</a></span>(schedule_me)</a></code></pre></div>
 </div>
 </div>
 <div id="testing" class="section level3">
