@@ -91,22 +91,25 @@ pub <- function(x){
 }
 ```
 
-## Build an Rmd to HTML each git commit or schedule and host it on Cloud Storage
+## Build an Rmd to HTML each git commit and host it on Cloud Storage
 
 Cloud Storage can host public HTML files like a website, which can be accessed via public or private viewers.  This can be useful in setting up reporting infrastructure.
 
 The Cloud Build below makes use of Cloud Build artifacts to send the built Rmd files to a public Cloud Storage bucket.  When an Rmd file is committed to git, this is rebuilt.
 
 ```r
+r <- "rmarkdown::render('scheduled_rmarkdown.Rmd', output_file = 'scheduled_rmarkdown.html')"
+
 rmd_build <- cr_build_yaml(
   steps = cr_buildstep_r(
       id="render rmd",
-      r = "rmarkdown::render('scheduled_rmarkdown.Rmd', 
-                             output_file = 'scheduled_rmarkdown.html')",
+      r = r,
       name = "gcr.io/gcer-public/packagetools:master",
       dir = "inst/scheduled_rmarkdown/"
     ),
-  artifacts = cr_build_yaml_artifact("inst/scheduled_rmarkdown/scheduled_rmarkdown.html", bucket = "mark-edmondson-public-read")
+  artifacts = cr_build_yaml_artifact(
+                 "inst/scheduled_rmarkdown/scheduled_rmarkdown.html", 
+                 bucket = "mark-edmondson-public-read")
   )
 
 # write out build to submit with repo
