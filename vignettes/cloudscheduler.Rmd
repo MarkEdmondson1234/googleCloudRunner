@@ -123,20 +123,65 @@ Once the image is built successfully, you do not need to build it again for the 
 
 You may want your R code to operate on data in Google Cloud Storage or a git repo.  Specify that source in your build, then make the build object:
 
+#### Repo Source
+
+This is if you have your code files within a repo like GitHub and mirrored to Cloud Source repositories.
+
 ```r
 schedule_me <- cr_build_yaml(
-  steps = cr_build_step("your-name", 
+  steps = cr_buildstep("your-name", 
                          "R -e my_r_script.R",
                          prefix="gcr.io/your-project")
                          )
                          
-# maybe you want a source
+# maybe you want a repo source
 repo_source <- cr_build_source(
   RepoSource("MarkEdmondson1234/googleCloudRunner",
              branchName="master"))
              
 my_build <- cr_build_make(schedule_me, source = repo_source)
 ```
+
+#### Cloud Storage Source
+
+This keeps your R code source in a Cloud Storage bucket.
+
+The first method is for lots of files in a folder that you upload:
+
+```r
+schedule_me <- cr_build_yaml(
+  steps = cr_buildstep("your-name", 
+                       "R -e my_r_script.R",
+                        prefix="gcr.io/your-project")
+  )
+
+# upload a tar.gz of the files to use as a source:
+gcs_source <- cr_build_upload_gcs("local_folder_containing_r_script")
+my_build <- cr_build_make(schedule_me, source = gcs_source)
+```
+
+When only a few files, it may be easiest to include downloading the R file from your bucket first into the /workspace/ via a buildstep using [gsutil](https://cloud.google.com/storage/docs/gsutil), not using source at all:
+
+```r
+schedule_me <- cr_build_yaml(
+  steps = c(
+    cr_buildstep(
+      id = "download R file",
+      name = "gsutil",
+      args = c("cp",
+               "gs://mark-edmondson-public-read/my_r_script.R",
+               "/workspace/my_r_script.R")
+    ),
+    cr_buildstep("your-name", 
+                 "R -e my_r_script.R",
+                 prefix="gcr.io/your-project")
+            )
+    )
+
+my_build <- cr_build_make(schedule_me, source = gcs_source)
+```
+
+### Testing
 
 You may want to test the build works with a one off build first:
 
