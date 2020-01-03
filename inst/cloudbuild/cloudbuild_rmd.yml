@@ -4,7 +4,7 @@ steps:
   - Rscript
   - -e
   - rmarkdown::render("scheduled_rmarkdown.Rmd", output_file = "scheduled_rmarkdown.html")
-  id: render rmd
+ # id: render rmd
   dir: inst/scheduled_rmarkdown/
 artifacts:
   objects:
