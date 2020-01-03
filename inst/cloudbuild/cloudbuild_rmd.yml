@@ -8,5 +8,5 @@ steps:
   dir: inst/scheduled_rmarkdown/
 artifacts:
   objects:
-    location: '''gs://mark-edmondson-public-read'''
-    paths: ['''inst/scheduled_rmarkdown/scheduled_rmarkdown.html''']
+    location: 'gs://mark-edmondson-public-read'
+    paths: ['inst/scheduled_rmarkdown/scheduled_rmarkdown.html']
