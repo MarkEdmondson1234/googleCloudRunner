@@ -1,5 +1,5 @@
 steps:
-- name: gcr.io/gcer-public/packagetools:master
+- name: "gcr.io/gcer-public/packagetools:master"
   args:
   - Rscript
   - -e
