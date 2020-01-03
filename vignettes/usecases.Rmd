@@ -104,7 +104,7 @@ rmd_build <- cr_build_yaml(
   steps = cr_buildstep_r(
       id="render rmd",
       r = r,
-      name = "gcr.io/gcer-public/packagetools:master",
+      name = "gcr.io/gcer-public/render_rmd:master",
       dir = "inst/scheduled_rmarkdown/"
     ),
   artifacts = cr_build_yaml_artifact(

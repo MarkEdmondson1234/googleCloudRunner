@@ -224,6 +224,12 @@ It accepts both inline R code or a file location.  This R code is executed in th
 
 Or if you want to build your own images (in perhaps another Cloud Build using `cr_deploy_docker()`) you can use your own R images with custom R packages and resources. 
 
+Some useful R images have been made you could use or refer to their Dockerfiles for:
+
+* `gcr.io/gcer-public/packagetools` - installs: devtools covr rhub pkgdown goodpractice httr plumber rmarkdown
+* `gcr.io/gcer-public/render_rmd` - installs: pkgdown rmarkdown flexdashboard blogdown bookdown
+* `gcr.io/gcer-public/googlecloudrunner` - installs: containerit, googleCloudStorageR, plumber, googleCloudRunner
+
 The R code can be created within the Build at build time, or you can refer to an existing R script within the Source.
 
 ```r
