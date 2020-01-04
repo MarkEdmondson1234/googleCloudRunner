@@ -216,6 +216,8 @@ built <- cr_build_wait(b)
 You should see a Cloud Run URL in the logs, like this one:
 `https://my-html-on-cloudrun-ewjogewawq-ew.a.run.app/scheduled_rmarkdown.html`
 
+![](rmd-on-cloudrun.png)
+
 6. Schedule the build using cron syntax
 
 ```r
