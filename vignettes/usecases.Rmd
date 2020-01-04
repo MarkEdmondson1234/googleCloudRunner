@@ -130,50 +130,103 @@ An example of the rendering Rmd build trigger in the web UI is below:
 
 ![](render_rmd_trigger.png)
 
-## Build and deploy Rmd files to Cloud Run on each git commit
+## Build and deploy Rmd files to Cloud Run on a schedule
 
-Cloud Run scales from 0 to millions of hits, so can be an option for hosting a website.  In particular you may want a private internal website, or have lots of traffic or data that goes over other free hosting options such as GitHub pages. A nginx server configuration is included to host any HTML you provide via `cr_deploy_html()`.  
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">I have a flexdashboard that shows data from a Google Sheet with ggplotly. What&#39;s the best way to host the dashboard somewhere *and* make it so it shows the latest data? i.e. how should I show dynamic data in an RMarkdown dashboard? Continually reknit? Make a plumber API? <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a></p>&mdash; Andrew Heiss, PhD (@andrewheiss) <a href="https://twitter.com/andrewheiss/status/1212408575684943878?ref_src=twsrc%5Etfw">January 1, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
 
-Coupled to that, a common use case is to render Rmd files and host them on a website.  
+Cloud Run scales from 0 to millions of hits, so can be an option for hosting a website.  In particular you may want a private internal website, have R code executing via a plumber API in the same container, or have lots of traffic or data that goes over other free hosting options such as GitHub pages. A nginx server configuration is included to host any HTML you provide via `cr_deploy_html()`.  
 
-This can be achieved following the below:
+Coupled to that, a common use case is to render Rmd files and host them on a website like the tweet above.  For the above tweet scenario, the Rmd has a setup block that reads from googlesheets via the code below:
 
-1. Mirror your GitHub/Bitbucket repo to Cloud Repositories
-2. Put your Rmarkdown files in a directory within your Git repo 
-3. Create a build that will:
+````markdown
+`r ''````{r setup, include=FALSE}
+library(flexdashboard)
+library(googlesheets4)
+library(ggplot2)
+library(plotly)
+library(dplyr)
+
+# for public Googlesheets.  
+# If private see https://gargle.r-lib.org/articles/non-interactive-auth.html
+sheets_deauth()
+
+# this is the data that may update each time the Rmd is rendered
+gm <- sheets_example("gap") %>% read_sheet()
+
+gm_agg <- gm %>%
+  mutate(gdp=gdpPercap*pop) %>%
+  filter(continent=="Africa") %>%
+  group_by(year) %>%
+  summarize(mean(lifeExp), mean(gdp))
+
+p <- ggplot(gm, aes(gdpPercap, lifeExp)) + theme_minimal() + scale_x_log10()
+```
+````
+
+The build Rmd docker in this case needs all the libraries listed (flexdashboard, googlesheets4 etc.) included in its build - this could be built before hand in another Cloud Build - in this case the libraries are all in `gcr.io/gcer-public/render_rmd`
+
+For this example, the build is not reading from a git repo but the Rmd file is downloaded from a Cloud Storage bucket, that you may have uploaded to manually, via `googleCloudStorageR` or perhaps copied over from a repo in another Cloud Build on a Build Trigger.
+
+The scheduled build then can be enabled via:
+
+1. Uploading your Rmarkdown files to a Cloud Storage bucket
+2. Create a build that will:
+  - download the Rmd file
   - render the Rmd creating the HTML files
   - configure nginx for Cloud Run, 
   - build a Docker image of nginx with your HTML
   - serve it on Cloud Run.
 
 ```r
-r <- "rmarkdown::render('cloudrun_rmarkdown.Rmd', output_file = 'cloudrun_rmarkdown.html')"
+r <- "rmarkdown::render('scheduled_rmarkdown.Rmd', output_file = 'scheduled_rmarkdown.html')"
 
-build_rmd <- cr_build_make(
-    cr_build_yaml(
+build_rmd <- cr_build_yaml(
       steps = c(
-          cr_buildstep_r(
-            id="render rmd",
-            r = r,
-            name = "gcr.io/gcer-public/render_rmd:master",
-            dir = "inst/cloudrun_rmarkdown/"
-          ),
-          cr_buildstep_nginx_setup("inst/cloudrun_rmarkdown/"),
-          cr_buildstep_docker("html-on-cloudrun",
-                              tag = "$BUILD_ID",
-                              dir = "inst/cloudrun_rmarkdown/"),
-          cr_buildstep_run(name = "my-html-on-cloudrun",
-                           image = "gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID")
-          )
-    ),
+        cr_buildstep(
+          id = "download Rmd template",
+          name = "gsutil",
+          args = c("cp",
+                   "gs://mark-edmondson-public-read/scheduled_rmarkdown.Rmd",
+                   "scheduled_rmarkdown.Rmd"),
+        ),
+        cr_buildstep_r(
+          id="render rmd",
+          r = r,
+          name = "gcr.io/gcer-public/render_rmd:master"
+        ),
+        cr_buildstep_nginx_setup("/workspace/"),
+        cr_buildstep_docker("html-on-cloudrun", tag = "$BUILD_ID"),
+        cr_buildstep_run(name = "my-html-on-cloudrun",
+                         image = "gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID")
+        ), 
     images = "gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID",
     )
-
-cr_build_write(build_rmd, "inst/cloudrun_rmarkdown/cloudbuild_rmd_run.yml")
 ```
 
-5. Commit the configured cloudbuild yaml file to your repo
-6. Create a Build Trigger that builds your cloudbuild yaml file
+5. Run a test build to check it works.
+
+```r
+b <- cr_build(build_rmd)
+built <- cr_build_wait(b)
+```
+
+You should see a Cloud Run URL in the logs, like this one:
+`https://my-html-on-cloudrun-ewjogewawq-ew.a.run.app/scheduled_rmarkdown.html`
+
+6. Schedule the build using cron syntax
+
+```r
+schedule_me <- cr_build_schedule_http(built)
+cr_schedule("rmd-on-cloudrun", "15 8 * * *", httpTarget = schedule_me)
+#==CloudScheduleJob==
+#name:  projects/project-name/locations/europe-west1/jobs/rmd-on-cloudrun 
+#state:  ENABLED 
+#httpTarget.uri:  https://cloudbuild.googleapis.com/v1/projects/project-name/builds 
+#httpTarget.httpMethod:  POST 
+#userUpdateTime:  2020-01-04T08:34:42Z 
+#schedule:  15 8 * * * 
+#timezone:  UTC 
+```
 
 ## Polygot Cloud Builds - integrating R code with other languages
 
@@ -205,115 +258,3 @@ This can also be scheduled as described in Cloud Scheduler section on [scheduled
 
 An example of that cloudbuild.yaml is on GitHub [here](https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml).
 
-## Scheduled update of an RMarkdown dashboard from Google Sheets
-
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">I have a flexdashboard that shows data from a Google Sheet with ggplotly. What&#39;s the best way to host the dashboard somewhere *and* make it so it shows the latest data? i.e. how should I show dynamic data in an RMarkdown dashboard? Continually reknit? Make a plumber API? <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a></p>&mdash; Andrew Heiss, PhD (@andrewheiss) <a href="https://twitter.com/andrewheiss/status/1212408575684943878?ref_src=twsrc%5Etfw">January 1, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
-
-This tweet came up as I was looking for use cases.  A solution may be to:
-
-* Create a Docker image to knit the Rmd 
-* Knit the Rmd dashboard using flexdashboard
-* Host the HTML on Cloud Run
-* Set up a schedule for the new data in googlesheets
-
-The solution below assumes that the source is available on a public GitHub, but other sources could be also used such as private repos or Cloud Storage.  
-
-For the example below, this repo is used with the source files in `inst/scheduled_rmarkdown`
-
-### Rmd dashboard
-
-The Rmd can run R code downloading the data within it in its setup block - this should mean little changes are needed from the local version.  
-
-#### Authentication in Rmd
-
-One modification could be if you need to read from a private Googlesheet.  See [gargle's guide on what is necessary for non-interactive auth](https://gargle.r-lib.org/articles/non-interactive-auth.html), which could be adding the Cloud Build auth email as a user to the sheet, or setting up decryption of a token via `cr_buildstep_decrypt()`
-
-For the example, a public Google Sheets URL is assumed and auth is avoided by using `googlesheets4::sheets_deauth()` within the Rmd file.
-
-### Docker image
- 
- For the Rmd these packages were loaded:
- 
-```r
-library(flexdashboard)
-library(googlesheets4)
-library(ggplot2)
-library(plotly)
-library(dplyr)
-```
-
-The R image rendering the Rmd needs these libraries and dependencies installed.
-
-This was done using `containerit`, feeding in the Rmd file to autodetect the dependencies:
-
-```r
-d <- containerit::dockerfile("inst/scheduled_rmarkdown/scheduled_rmarkdown.Rmd")
-containerit::write(d, "inst/scheduled_rmarkdown/Dockerfile")
-```
-
-In this case since some tidyverse packages were used, the `FROM` was change to start from `rocker/verse` to speed up the build. 
-
-This dockerfile was then built into an image that will be used to render the Rmd during build steps.  This builds all the libraries from source and places them in a docker R image you can use for future buildsteps - in this case called `gcr.io/my-project/scheduled_rmarkdown:latest`:
-
-```r
-library(googleCloudRunner)
-cr_deploy_docker("inst/scheduled_rmarkdown/", tag = "latest", timeout = 1200)
-```
-
-If there a lot of libraries it may take a while (>20 mins) to build, you can cancel out of the R session awaiting the build and just follow the online logs if you wish.
-
-Once built, you do not need to build it again unless you want to update the R library versions.
-
-### Create the Cloud Build for scheduling
-
-Since we are using a Git repo and are hosting on Cloud Run, `cr_deploy_git_html()` could be used to automate render the Rmd and hosting the HTML via nginx on Cloud Run.
-
-This will make another Docker image that hosts the HTML and deploy it to Cloud Run, and it will also setup a build trigger to rebuild the image if the Rmd changes in future commits. 
-
-```r
-cr_deploy_git_html("MarkEdmondson1234/googleCloudRunner",
-                   image = "scheduled-rmarkdown-cloudrun",
-                   rmd_folder = "inst/scheduled_rmarkdown/",
-                   r_image = "gcr.io/my-project/scheduled_rmarkdown:latest")
-```
-
-However, since we want to schedule the Cloud Build that renders the Rmd, we will construct our own build using the buildstep templates:
-
-```r
-run_image <- "scheduled-rmarkdown-cloudrun"
-rmd_folder <- "inst/scheduled_rmarkdown/"
-r_image <- "gcr.io/mark-edmondson-gde/scheduled_rmarkdown:latest"
-
-r <- "rmarkdown::render('scheduled_rmarkdown.Rmd')"
-
-# script to setup nginx 
-bash_script <- system.file("docker", "nginx", "setup.bash",
-                           package = "googleCloudRunner")
-
-repo_name <- paste0("github_markedmondson1234_googlecloudrunner")
-
-repo_source <- cr_build_source(RepoSource(repo_name,
-                          branchName = ".*",
-                          projectId = cr_project_get()))
-                          
-build_me <- cr_build_yaml(
-      steps = c(
-          cr_buildstep_r(r,
-                  name = r_image,
-                  dir = "inst/scheduled_rmarkdown/",
-                  id="render rmd"),
-          cr_buildstep_bash(bash_script,
-                            dir = "inst/scheduled_rmarkdown/", 
-                            id = "setup nginx"),
-          cr_buildstep_docker(run_image,
-                              tag = "latest",
-                              dir = "inst/scheduled_rmarkdown/"),
-          cr_buildstep_run(name = "scheduled-rmd",
-                  image = "gcr.io/mark-edmondson-gde/scheduled-rmarkdown-cloudrun:latest",
-                  concurrency = 80)
-          )
-    )
-    
-
-cr_build(build_me, source = repo_source)
-```
