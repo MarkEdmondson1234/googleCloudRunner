@@ -375,9 +375,9 @@
 <p>Mirroring the GitHub repo is necessary if using it for sources of builds.</p>
 <p>Once your repo is mirrored it gives you a CLoud Repository name which is of the form <code>github_username_repo</code> - this you can add to a <code><a href="../reference/RepoSource.html">RepoSource()</a></code>:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co"># this repo mirrored on Google Source repos</span></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2">my_repo &lt;-<span class="st"> </span><span class="kw"><a href="../reference/Source.html">Source</a></span>(</a>
-<a class="sourceLine" id="cb16-3" data-line-number="3">  <span class="dt">repoSource=</span><span class="kw"><a href="../reference/RepoSource.html">RepoSource</a></span>(<span class="st">"github_markedmondson1234_googlecloudrunner"</span>,</a>
-<a class="sourceLine" id="cb16-4" data-line-number="4">                        <span class="dt">branchName=</span><span class="st">"master"</span>))</a></code></pre></div>
+<a class="sourceLine" id="cb16-2" data-line-number="2">my_repo &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_source.html">cr_build_source</a></span>(</a>
+<a class="sourceLine" id="cb16-3" data-line-number="3">  <span class="kw"><a href="../reference/RepoSource.html">RepoSource</a></span>(<span class="st">"github_markedmondson1234_googlecloudrunner"</span>,</a>
+<a class="sourceLine" id="cb16-4" data-line-number="4">             <span class="dt">branchName=</span><span class="st">"master"</span>))</a></code></pre></div>
 </div>
 <div id="cloud-build-github-app" class="section level4">
 <h4 class="hasAnchor">

@@ -224,9 +224,9 @@
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 
-<span class='no'>my_repo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='Source.html'>Source</a></span>(
-  <span class='kw'>repoSource</span><span class='kw'>=</span><span class='fu'>RepoSource</span>(<span class='st'>"github_markedmondson1234_googlecloudrunner"</span>,
-                        <span class='kw'>branchName</span><span class='kw'>=</span><span class='st'>"master"</span>))
+<span class='no'>my_repo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build_source.html'>cr_build_source</a></span>(
+  <span class='fu'>RepoSource</span>(<span class='st'>"github_markedmondson1234_googlecloudrunner"</span>,
+             <span class='kw'>branchName</span><span class='kw'>=</span><span class='st'>"master"</span>))
 
 <span class='no'>build</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(
   <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span>(<span class='kw'>steps</span> <span class='kw'>=</span>

@@ -206,7 +206,63 @@
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
+    <pre class="examples"><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"gcr.io/my-project/my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-01-04 10:41:39&gt; Image to be built: gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: gcr.io/cloud-builders/docker
+#&gt; args:
+#&gt; - build
+#&gt; - -t
+#&gt; - gcr.io/my-project/my-image:$BUILD_ID
+#&gt; - '.'
+#&gt; 
+#&gt; [[2]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: gcr.io/cloud-builders/docker
+#&gt; args:
+#&gt; - push
+#&gt; - gcr.io/my-project/my-image:$BUILD_ID
+#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-01-04 10:41:39&gt; Image to be built: gcr.io/mark-edmondson-gde/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: gcr.io/cloud-builders/docker
+#&gt; args:
+#&gt; - build
+#&gt; - -t
+#&gt; - gcr.io/mark-edmondson-gde/my-image:$BUILD_ID
+#&gt; - '.'
+#&gt; 
+#&gt; [[2]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: gcr.io/cloud-builders/docker
+#&gt; args:
+#&gt; - push
+#&gt; - gcr.io/mark-edmondson-gde/my-image:$BUILD_ID
+#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BRANCH_NAME"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-01-04 10:41:39&gt; Image to be built: gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME</span></div><div class='output co'>#&gt; [[1]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: gcr.io/cloud-builders/docker
+#&gt; args:
+#&gt; - build
+#&gt; - -t
+#&gt; - gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME
+#&gt; - '.'
+#&gt; 
+#&gt; [[2]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: gcr.io/cloud-builders/docker
+#&gt; args:
+#&gt; - push
+#&gt; - gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME
+#&gt; </div><div class='input'>
+<span class='co'># setting up a build to trigger off a Git source:</span>
+<span class='no'>my_image</span> <span class='kw'>&lt;-</span> <span class='st'>"gcr.io/my-project/my-image"</span>
+<span class='no'>my_repo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='RepoSource.html'>RepoSource</a></span>(<span class='st'>"github_markedmondson1234_googlecloudrunner"</span>,
+                      <span class='kw'>branchName</span><span class='kw'>=</span><span class='st'>"master"</span>)
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='no'>docker_yaml</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span>(<span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'>cr_buildstep_docker</span>(<span class='no'>my_image</span>))
+<span class='no'>built_docker</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='no'>docker_yaml</span>, <span class='kw'>source</span> <span class='kw'>=</span> <span class='no'>my_repo</span>)
+
+<span class='co'># make a build trigger so it builds on each push to master</span>
+<span class='fu'><a href='cr_buildtrigger.html'>cr_buildtrigger</a></span>(<span class='st'>"build-docker"</span>, <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='no'>my_repo</span>, <span class='kw'>build</span> <span class='kw'>=</span> <span class='no'>built_docker</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
