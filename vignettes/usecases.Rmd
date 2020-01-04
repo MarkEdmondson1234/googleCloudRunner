@@ -31,6 +31,33 @@ If you want the Docker image to rebuild each git commit, this is what is used to
 
 ![](build_dockerfile.png)
 
+## Migrate an existing scheduled Docker container 
+
+You may have an existing Docker container containing code, that doesn't need a public URL.  
+
+For example, a self-contained R script with `googleAnalyticsR` and `bigQueryR` pre-installed, that downloads data from Google Analytics and uploads it to BigQuery.  This may be running on a VM from `googleComputeEngineR`, Kubernetes or Airflow KubernetesPodOperator.  
+
+If you give the cloud build service email the right permissions, then this can all be done on Cloud Build + Cloud Scheduler.
+
+For example, say your existing container is called `gcr.io/my-project/my-r-script`.  A Cloud Build could look simply like this:
+
+```r
+r_code <- cr_build_yaml(
+  cr_buildstep("gcr.io/my-project/my-r-script", args = "my-script.R")
+)
+build <- cr_build(r_code)
+built <- cr_build_wait(build)
+```
+
+That is, run your container with a CMD pointing at your R script.  You could of course add other steps if you wanted, such as sending an email when done via `cr_buildstep_mailgun()`.
+
+To set this up in a schedule, add it to the scheduler like so:
+
+```r
+schedule_me <- cr_build_schedule_http(built)
+cr_schedule("r-code-example", "15 8 * * *", httpTarget = schedule_me)
+```
+
 ## Trigger an R function from pubsub
 
 This uses `cr_deploy_plumber` to deploy an R API that can then be triggered from pub/sub events, such as Cloud logging events or when files get updated in a Cloud Storage bucket.  This in turn can trigger other Cloud Builds. 
@@ -266,7 +293,12 @@ cr_build_write(polygot)
 # 2019-12-28 19:15:50> Writing to cloudbuild.yaml
 ```
 
-This can also be scheduled as described in Cloud Scheduler section on [scheduled cloud builds](https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html).
+This can then be scheduled as described in Cloud Scheduler section on [scheduled cloud builds](https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html).
+
+```r
+schedule_me <- cr_build_schedule_http(built)
+cr_schedule("polygot-example", "15 8 * * *", httpTarget = schedule_me)
+```
 
 An example of that cloudbuild.yaml is on GitHub [here](https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml).
 
