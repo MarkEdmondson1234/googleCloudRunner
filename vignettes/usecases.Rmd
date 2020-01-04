@@ -27,6 +27,8 @@ Some [community contributed Cloud Build images are listed here](https://github.c
 
 If you just want a one-off Docker image, use `cr_deploy_docker()` or make your own build via `cr_buildstep_docker()`
 
+![](gadget_docker.png)
+
 If you want the Docker image to rebuild each git commit, this is what is used to deploy this package to `gcr.io/gcer-public/googlecloudrunner` - in this case the Dockerfile in the root of the repo is built.  Simply place the Dockerfile in the root of your repo, and then create a Build Trigger with similar settings:
 
 ![](build_dockerfile.png)
@@ -99,6 +101,10 @@ Put both the Dockerfile and the `api.R` script in the same folder then deploy it
 ```r
 cr_deploy_plumber("the_folder")
 ```
+
+Or use the RStudio gadget:
+
+![](gadget_plumber.png)
 
 Once built you will have a pub/sub live that will trigger the function you defined.  You can test pubsub messages via `cr_pubsub()`
 
@@ -259,6 +265,12 @@ cr_schedule("rmd-on-cloudrun", "15 8 * * *", httpTarget = schedule_me)
 #schedule:  15 8 * * * 
 #timezone:  UTC 
 ```
+
+### Do it all in R using cr_deploy_r()
+
+An alternative if you only wanted to do a scheduled deployment would be to put all steps in an R script (downloading, building and uploading to Cloud Storage via `googleCloudStorageR`) and use the RStudio gadget or `cr_deploy_r()`
+
+![](gadget_r.png)
 
 ## Polygot Cloud Builds - integrating R code with other languages
 
