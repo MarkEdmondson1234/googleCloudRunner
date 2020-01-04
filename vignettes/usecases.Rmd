@@ -21,7 +21,7 @@ Since almost any code can be called and passed via Docker images, there are a lo
 * Integrating R with other language applications
 * Public and private Docker image creations on triggers
 
-Some [community contributed Cloud Build images are listed here](https://github.com/GoogleCloudPlatform/cloud-builders-community), including [hugo](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo), [make](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make), and [tar](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar).
+Some [community contributed Cloud Build images are listed here](https://github.com/GoogleCloudPlatform/cloud-builders-community), including [hugo](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo), [make](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make), and [tar](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar)
 
 ## Create Docker image of a package each commit
 
@@ -239,17 +239,24 @@ Since Docker containers can hold any language within them, they offer a universa
 
 An example below uses:
 
-* `gcloud` - [Google's Cloud command line tool](https://cloud.google.com/sdk/gcloud/) to access Google's key management store and download an authentication file
+* `gcloud` - [Google's Cloud command line tool](https://cloud.google.com/sdk/gcloud/) to access Google's key management store and download an authentication file, and pushes to BigQuery
 * `gago` - [A Go package for fast downloads of Google Analytics data](https://github.com/MarkEdmondson1234/gago)
 * `R` - R code to create an Rmd file that will hold interactive forecasts of the Google Analytics data via `cr_buildstep_r()`
 * `nginx` - serve up the Rmd files rendered into HTML and hosted on Cloud Run via `cr_deploy_html()`
 
+And will perform downloading unsampled data from Google Analytics, creating a statistical report of the data and then uploading the raw data to BigQuery for further analysis.
 
 ```{r, code=readLines("polygot.R"), eval=FALSE, echo = TRUE}
 ```
 
 An example of the demo output is on this Cloud Run instance URL:
 `https://polygot-demo-ewjogewawq-ew.a.run.app/polygot.html`
+
+![](polygot-html.png)
+
+It also uploads the data to a BigQuery table:
+
+![](polygot-bq-load.png)
 
 This constructed cloud build can also be used outside of R, by writing out the Cloud Build file via `cr_build_write()`
 

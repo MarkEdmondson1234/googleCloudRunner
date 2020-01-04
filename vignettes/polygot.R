@@ -59,7 +59,20 @@ polygot <- cr_build_yaml(
     cr_buildstep_run(
       name = "polygot-demo",
       image = "gcr.io/gcer-public/polygot_demo",
-      concurrency = 80)
+      concurrency = 80),
+    cr_buildstep(
+      id = "load BigQuery",
+      name = "gcr.io/cloud-builders/gcloud",
+      entrypoint = "bq",
+      args = c("--location=EU",
+               "load",
+               "--autodetect",
+               "--source_format=CSV",
+               "test_EU.polygot",
+               "google_analytics.csv"
+               ),
+      dir = "build"
+    )
   )
 )
 
