@@ -336,9 +336,9 @@ Once your repo is mirrored it gives you a CLoud Repository name which is of the 
 
 ```r
 # this repo mirrored on Google Source repos
-my_repo <- Source(
-  repoSource=RepoSource("github_markedmondson1234_googlecloudrunner",
-                        branchName="master"))
+my_repo <- cr_build_source(
+  RepoSource("github_markedmondson1234_googlecloudrunner",
+             branchName="master"))
 ```
 
 #### Cloud Build GitHub app

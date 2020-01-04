@@ -43,9 +43,9 @@ If you want to use GitHub or BitBucket repos, you need to setup mirroring them v
 
 \dontrun{
 
-my_repo <- Source(
-  repoSource=RepoSource("github_markedmondson1234_googlecloudrunner",
-                        branchName="master"))
+my_repo <- cr_build_source(
+  RepoSource("github_markedmondson1234_googlecloudrunner",
+             branchName="master"))
 
 build <- cr_build(
   cr_build_yaml(steps =

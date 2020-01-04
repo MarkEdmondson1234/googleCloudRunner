@@ -40,10 +40,12 @@ This method returns a long-running `Operation`, which includes the buildID. Pass
 }
 \examples{
 
-my_gcs_source <- Source(storageSource=StorageSource("gs://my-bucket", "my_code.tar.gz"))
+my_gcs_source <- cr_build_source(StorageSource("my_code.tar.gz",
+                                             bucket = "gs://my-bucket"))
 my_gcs_source
 
-my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com", branchName="master"))
+my_repo_source <- cr_build_source(RepoSource("github_username_my-repo.com",
+                                           branchName="master"))
 my_repo_source
 \dontrun{
 

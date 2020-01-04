@@ -79,7 +79,7 @@ cr_build_yaml_artifact <- function(paths,
 
   list(
     objects = list(
-      location = list(location),
+      location = location,
       paths = list(paths)
     )
   )

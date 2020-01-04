@@ -166,8 +166,12 @@ cr_deploy_docker <- function(local,
   myMessage(paste("#Deploy docker build for image: \n", image_tag),
             level = 3)
 
+  remote_tar <- remote
+  if(!grepl("tar\\.gz$", remote)){
+    remote_tar <- paste0(remote, ".tar.gz")
+  }
   gcs_source <- cr_build_upload_gcs(local,
-                                    remote = remote,
+                                    remote = remote_tar,
                                     bucket = bucket)
 
   docker_build <- cr_build(build_yaml,

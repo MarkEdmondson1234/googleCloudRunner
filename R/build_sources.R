@@ -124,9 +124,9 @@ is.gar_SourceRepo <- function(x){
 #'
 #' \dontrun{
 #'
-#' my_repo <- Source(
-#'   repoSource=RepoSource("github_markedmondson1234_googlecloudrunner",
-#'                         branchName="master"))
+#' my_repo <- cr_build_source(
+#'   RepoSource("github_markedmondson1234_googlecloudrunner",
+#'              branchName="master"))
 #'
 #' build <- cr_build(
 #'   cr_build_yaml(steps =
@@ -232,6 +232,10 @@ cr_build_upload_gcs <- function(local,
                                 bucket = cr_bucket_get(),
                                 predefinedAcl="bucketOwnerFullControl",
                                 deploy_folder = "deploy"){
+
+  if(!grepl("tar\\.gz$", remote)){
+    stop("remote argument name needs to end with .tar.gz", call. = FALSE)
+  }
 
   myMessage(paste("#Upload ", local, " to ",
                   paste0("gs://", bucket,"/",remote)),

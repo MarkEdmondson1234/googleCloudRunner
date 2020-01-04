@@ -34,7 +34,7 @@ cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")
 # setting up a build to trigger off a Git source:
 my_image <- "gcr.io/my-project/my-image"
 my_repo <- RepoSource("github_markedmondson1234_googlecloudrunner",
-                      branchName="master"))
+                      branchName="master")
 \dontrun{
 docker_yaml <- cr_build_yaml(steps = cr_buildstep_docker(my_image))
 built_docker <- cr_build(docker_yaml, source = my_repo)
