@@ -136,6 +136,8 @@ An example of the rendering Rmd build trigger in the web UI is below:
 
 Cloud Run scales from 0 to millions of hits, so can be an option for hosting a website.  In particular you may want a private internal website, have R code executing via a plumber API in the same container, or have lots of traffic or data that goes over other free hosting options such as GitHub pages. A nginx server configuration is included to host any HTML you provide via `cr_deploy_html()`.  
 
+You may prefer using Cloud Storage public URLs if you don't need any of Cloud Run's features, like the previous example. 
+
 Coupled to that, a common use case is to render Rmd files and host them on a website like the tweet above.  For the above tweet scenario, the Rmd has a setup block that reads from googlesheets via the code below:
 
 ````markdown
@@ -197,7 +199,8 @@ build_rmd <- cr_build_yaml(
         cr_buildstep_nginx_setup("/workspace/"),
         cr_buildstep_docker("html-on-cloudrun", tag = "$BUILD_ID"),
         cr_buildstep_run(name = "my-html-on-cloudrun",
-                         image = "gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID")
+                         image = "gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID",
+                         concurrency = 80)
         ), 
     images = "gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID",
     )
