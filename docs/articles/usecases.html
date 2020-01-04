@@ -282,6 +282,7 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">b &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(build_rmd)</a>
 <a class="sourceLine" id="cb9-2" data-line-number="2">built &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span>(b)</a></code></pre></div>
 <p>You should see a Cloud Run URL in the logs, like this one: <code>https://my-html-on-cloudrun-ewjogewawq-ew.a.run.app/scheduled_rmarkdown.html</code></p>
+<p><img src="rmd-on-cloudrun.png"></p>
 <ol start="6" style="list-style-type: decimal">
 <li>Schedule the build using cron syntax</li>
 </ol>
