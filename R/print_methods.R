@@ -66,7 +66,11 @@ print.gar_Build <- function(x, ...){
     }
 
   }
-  cat0("images: ", x$images)
+
+  if(!is.null(x$images)){
+    cat("images:\n")
+    str(x$images)
+  }
 
   if(!is.null(x$source)){
     cat("source:\n")

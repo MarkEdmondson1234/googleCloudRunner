@@ -6,12 +6,13 @@
 \usage{
 cr_buildstep(
   name,
-  args,
+  args = NULL,
   id = NULL,
   prefix = "gcr.io/cloud-builders/",
   entrypoint = NULL,
   dir = "",
   env = NULL,
+  waitFor = NULL,
   volumes = NULL
 )
 }
@@ -30,6 +31,8 @@ cr_buildstep(
 
 \item{env}{Environment variables for this step.  A character vector for each assignment}
 
+\item{waitFor}{Whether to wait for previous buildsteps to complete before running.  Default it will wait for previous step.}
+
 \item{volumes}{volumes to connect and write to}
 }
 \description{
@@ -38,6 +41,12 @@ Helper for creating build steps for upload to Cloud Build
 \details{
 
 }
+\section{WaitFor}{
+
+
+By default each buildstep waits for the previous, but if you pass \code{"-"} then it will start immediatly, or if you pass in a list of ids it will wait for previous buildsteps to finish who have that id.  See \href{Configuring Build Step Order}{https://cloud.google.com/cloud-build/docs/configuring-builds/configure-build-step-order} for details.
+}
+
 \section{Build Macros}{
 
 Fields can include the following variables, which will be expanded when the build is created:-

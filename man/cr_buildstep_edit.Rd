@@ -20,6 +20,7 @@ cr_buildstep_edit(x, ...)
     \item{\code{id}}{Optional id for the step}
     \item{\code{env}}{Environment variables for this step.  A character vector for each assignment}
     \item{\code{volumes}}{volumes to connect and write to}
+    \item{\code{waitFor}}{Whether to wait for previous buildsteps to complete before running.  Default it will wait for previous step.}
   }}
 }
 \description{

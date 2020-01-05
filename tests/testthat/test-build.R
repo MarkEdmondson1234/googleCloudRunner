@@ -265,7 +265,7 @@ test_that("Building Build Objects", {
                                             "--image", image), dir="deploy")),
      images = image)
 
-  expect_equal(run_yaml$images, image)
+  expect_equal(run_yaml$images[[1]], image)
   expect_equal(run_yaml$steps[[1]]$dir, "deploy")
   expect_equal(run_yaml$steps[[1]]$args[[3]],
                "gcr.io/my-project/my-image:$BUILD_ID")
@@ -276,7 +276,7 @@ test_that("Building Build Objects", {
 
   scheduler <- cr_build_schedule_http(cr_build_make(run_yaml))
 
-  expect_equal(scheduler$body, "eyJzdGVwcyI6W3sibmFtZSI6Imdjci5pby9jbG91ZC1idWlsZGVycy9kb2NrZXIiLCJhcmdzIjpbImJ1aWxkIiwiLXQiLCJnY3IuaW8vbXktcHJvamVjdC9teS1pbWFnZTokQlVJTERfSUQiLCIuIl0sImRpciI6ImRlcGxveSJ9LHsibmFtZSI6Imdjci5pby9jbG91ZC1idWlsZGVycy9kb2NrZXIiLCJhcmdzIjpbInB1c2giLCJnY3IuaW8vbXktcHJvamVjdC9teS1pbWFnZTokQlVJTERfSUQiXSwiZGlyIjoiZGVwbG95In0seyJuYW1lIjoiZ2NyLmlvL2Nsb3VkLWJ1aWxkZXJzL2djbG91ZCIsImFyZ3MiOlsiYmV0YSIsInJ1biIsImRlcGxveSIsInRlc3QxIiwiLS1pbWFnZSIsImdjci5pby9teS1wcm9qZWN0L215LWltYWdlIl0sImRpciI6ImRlcGxveSJ9XSwiaW1hZ2VzIjoiZ2NyLmlvL215LXByb2plY3QvbXktaW1hZ2UifQ==")
+  expect_equal(scheduler$body, "eyJzdGVwcyI6W3sibmFtZSI6Imdjci5pby9jbG91ZC1idWlsZGVycy9kb2NrZXIiLCJhcmdzIjpbImJ1aWxkIiwiLXQiLCJnY3IuaW8vbXktcHJvamVjdC9teS1pbWFnZTokQlVJTERfSUQiLCIuIl0sImRpciI6ImRlcGxveSJ9LHsibmFtZSI6Imdjci5pby9jbG91ZC1idWlsZGVycy9kb2NrZXIiLCJhcmdzIjpbInB1c2giLCJnY3IuaW8vbXktcHJvamVjdC9teS1pbWFnZTokQlVJTERfSUQiXSwiZGlyIjoiZGVwbG95In0seyJuYW1lIjoiZ2NyLmlvL2Nsb3VkLWJ1aWxkZXJzL2djbG91ZCIsImFyZ3MiOlsiYmV0YSIsInJ1biIsImRlcGxveSIsInRlc3QxIiwiLS1pbWFnZSIsImdjci5pby9teS1wcm9qZWN0L215LWltYWdlIl0sImRpciI6ImRlcGxveSJ9XSwiaW1hZ2VzIjpbImdjci5pby9teS1wcm9qZWN0L215LWltYWdlIl19")
 
   cr_build_write(run_yaml, file = "cloudbuild_test.yaml")
   expect_true(file.exists("cloudbuild_test.yaml"))
@@ -341,7 +341,7 @@ test_that("Render BuildStep objects", {
                   stringsAsFactors = FALSE)
   bsy <- cr_buildstep_df(y)
   expect_equal(bsy[[1]]$name, "gcr.io/cloud-builders/docker")
-  expect_equal(bsy[[1]]$args, "version")
+  expect_equal(bsy[[1]]$args[[1]], "version")
   expect_equal(bsy[[2]]$name, "alpine")
   expect_equal(bsy[[2]]$args[[1]], "echo")
   expect_equal(bsy[[2]]$id, "Hello Cloud Build")
@@ -360,7 +360,7 @@ test_that("Render BuildStep objects", {
   edit4 <- cr_buildstep_edit(bp2, dir = "blah")
 
   expect_equal(edit1[[1]]$name, "gcr.io/cloud-builders/blah")
-  expect_equal(edit2[[1]]$args, "blah")
+  expect_equal(edit2[[1]]$args[[1]], "blah")
   expect_equal(edit3[[1]]$name, "gcr.io/blah")
   expect_equal(edit4[[1]]$dir, "blah")
 

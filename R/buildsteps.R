@@ -232,6 +232,6 @@ cr_buildstep_edit <- function(x,
 
   dots$name <- the_name
 
-  do.call(cr_buildstep, args = dots)
+  do.call(cr_buildstep, args = modifyList(xx, dots))
 
 }
