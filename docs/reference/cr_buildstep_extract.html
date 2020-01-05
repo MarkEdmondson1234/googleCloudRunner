@@ -209,7 +209,8 @@
 #&gt;   - paste0('1 + 1 = ', 1+1)</div><div class='input'><span class='fu'>cr_buildstep_extract</span>(<span class='no'>build</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
-#&gt; args: version
+#&gt; args:
+#&gt; - version
 #&gt; id: Docker Version
 #&gt; </div><div class='input'><span class='fu'>cr_buildstep_extract</span>(<span class='no'>build</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==

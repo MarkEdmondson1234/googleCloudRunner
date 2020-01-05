@@ -223,7 +223,7 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_pkgdown</span>()</div><div class='output co'>#&gt; <span class='message'>2020-01-05 06:08:04&gt; Writing to cloudbuild.yml</span></div><div class='output co'>#&gt; <span class='message'>2020-01-05 06:08:04&gt; NOTE: You may need to insert quotes around certain fields in the .yml file until the Cloud Build parser is fixed to accept valid yaml.</span></div><div class='output co'>#&gt; <span class='message'>2020-01-05 06:08:04&gt; Now make a build trigger pointing at this file in your repo: cloudbuild.yml</span>
+<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_pkgdown</span>()</div><div class='output co'>#&gt; <span class='message'>2020-01-05 06:36:39&gt; Writing to cloudbuild.yml</span></div><div class='output co'>#&gt; <span class='message'>2020-01-05 06:36:39&gt; Now make a build trigger pointing at this file in your repo: cloudbuild.yml</span>
 #&gt; <span class='message'>Build Trigger settings:</span>
 #&gt; <span class='message'>Substitution variable: _GITHUB_REPO = {your-repo-to-push-to}</span>
 #&gt; <span class='message'>Ignored files filter (glob): docs/**</span></div><div class='input'><span class='no'>pd</span></div><div class='output co'>#&gt; ==CloudBuildObject==
@@ -246,7 +246,8 @@
 #&gt;   - name: ssh
 #&gt;     path: /root/.ssh
 #&gt; - name: gcr.io/cloud-builders/git
-#&gt;   entrypoint: bash
+#&gt;   entrypoint:
+#&gt;   - bash
 #&gt;   args:
 #&gt;   - -c
 #&gt;   - |
@@ -271,13 +272,6 @@
 #&gt;   - name: ssh
 #&gt;     path: /root/.ssh
 #&gt; - name: gcr.io/gcer-public/packagetools:master
-#&gt;   args:
-#&gt;   - Rscript
-#&gt;   - -e
-#&gt;   - |
-#&gt;     devtools::install()
-#&gt;     list.files()
-#&gt;     pkgdown::build_site()
 #&gt;   dir: repo
 #&gt; - name: gcr.io/cloud-builders/git
 #&gt;   args:
@@ -296,12 +290,14 @@
 #&gt;   - name: ssh
 #&gt;     path: /root/.ssh
 #&gt; - name: gcr.io/cloud-builders/git
-#&gt;   args: status
+#&gt;   args:
+#&gt;   - status
 #&gt;   volumes:
 #&gt;   - name: ssh
 #&gt;     path: /root/.ssh
 #&gt; - name: gcr.io/cloud-builders/git
-#&gt;   args: push
+#&gt;   args:
+#&gt;   - push
 #&gt;   volumes:
 #&gt;   - name: ssh
 #&gt;     path: /root/.ssh</div></pre>

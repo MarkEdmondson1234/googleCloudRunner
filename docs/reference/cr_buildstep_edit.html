@@ -219,7 +219,8 @@
 #&gt;   - paste0('1 + 1 = ', 1+1)</div><div class='input'><span class='fu'><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a></span>(<span class='no'>build</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
-#&gt; args: version
+#&gt; args:
+#&gt; - version
 #&gt; id: Docker Version
 #&gt; </div><div class='input'><span class='fu'><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a></span>(<span class='no'>build</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
@@ -233,15 +234,9 @@
 <span class='fu'>cr_buildstep_edit</span>(<span class='no'>edit_me</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"blah"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/blah
-#&gt; args:
-#&gt; - echo
-#&gt; - Hello Cloud Build
 #&gt; </div><div class='input'><span class='fu'>cr_buildstep_edit</span>(<span class='no'>edit_me</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"gcr.io/blah"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/blah
-#&gt; args:
-#&gt; - echo
-#&gt; - Hello Cloud Build
 #&gt; </div><div class='input'><span class='fu'>cr_buildstep_edit</span>(<span class='no'>edit_me</span>, <span class='kw'>args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"blah1"</span>,<span class='st'>"blah2"</span>), <span class='kw'>dir</span> <span class='kw'>=</span> <span class='st'>"meh"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/alpine

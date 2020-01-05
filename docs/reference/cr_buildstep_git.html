@@ -246,7 +246,8 @@ This creates steps to use git with an ssh created key." />
 #&gt;   - name: ssh
 #&gt;     path: /root/.ssh
 #&gt; - name: gcr.io/cloud-builders/git
-#&gt;   entrypoint: bash
+#&gt;   entrypoint:
+#&gt;   - bash
 #&gt;   args:
 #&gt;   - -c
 #&gt;   - |

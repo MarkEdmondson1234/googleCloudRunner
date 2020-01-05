@@ -245,7 +245,8 @@
 #&gt; [[2]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/git
-#&gt; entrypoint: bash
+#&gt; entrypoint:
+#&gt; - bash
 #&gt; args:
 #&gt; - -c
 #&gt; - |
@@ -276,13 +277,6 @@
 #&gt; [[4]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/gcer-public/packagetools:master
-#&gt; args:
-#&gt; - Rscript
-#&gt; - -e
-#&gt; - |
-#&gt;   devtools::install()
-#&gt;   list.files()
-#&gt;   pkgdown::build_site()
 #&gt; dir: repo
 #&gt; 
 #&gt; [[5]]
@@ -310,7 +304,8 @@
 #&gt; [[7]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/git
-#&gt; args: status
+#&gt; args:
+#&gt; - status
 #&gt; volumes:
 #&gt; - name: ssh
 #&gt;   path: /root/.ssh
@@ -318,7 +313,8 @@
 #&gt; [[8]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/git
-#&gt; args: push
+#&gt; args:
+#&gt; - push
 #&gt; volumes:
 #&gt; - name: ssh
 #&gt;   path: /root/.ssh

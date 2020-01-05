@@ -17,7 +17,8 @@ steps:
       - name: ssh
         path: /root/.ssh
   - name: gcr.io/cloud-builders/git
-    entrypoint: bash
+    entrypoint:
+      - bash
     args:
       - -c
       - |
@@ -42,13 +43,6 @@ steps:
       - name: ssh
         path: /root/.ssh
   - name: gcr.io/gcer-public/packagetools:master
-    args:
-      - Rscript
-      - -e
-      - |
-        devtools::install()
-        list.files()
-        pkgdown::build_site()
     dir: repo
   - name: gcr.io/cloud-builders/git
     args:
@@ -67,12 +61,14 @@ steps:
       - name: ssh
         path: /root/.ssh
   - name: gcr.io/cloud-builders/git
-    args: status
+    args:
+      - status
     volumes:
       - name: ssh
         path: /root/.ssh
   - name: gcr.io/cloud-builders/git
-    args: push
+    args:
+      - push
     volumes:
       - name: ssh
         path: /root/.ssh
