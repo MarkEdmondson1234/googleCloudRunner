@@ -23,14 +23,13 @@ cr_dockerfile_plumber <- function(deploy_folder, ...){
       offline = FALSE,
       cmd = containerit::Cmd("api.R"),
       maintainer = NULL,
+      copy = list("./"),
       container_workdir = NULL,
       entrypoint = containerit::Entrypoint("R",
                        params = list("-e",
                                      "pr <- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))")),
       filter_baseimage_pkgs = FALSE,
       ...))
-
-  containerit::addInstruction(docker) <-containerit:::Copy(".","./")
 
   write_to <- file.path(deploy_folder, "Dockerfile")
   containerit::write(docker, file = write_to)
