@@ -2,7 +2,7 @@ context("Online tests")
 
 test_that("Online auth", {
   skip_on_travis()
-  #skip_on_cran()
+  skip_on_cran()
   # assumes auth and necessary args taken from env args already set
   builds <- cr_buildtrigger_list()
   expect_s3_class(builds, "data.frame")
@@ -11,7 +11,7 @@ test_that("Online auth", {
 
 test_that("[Online] Test deployments", {
   skip_on_travis()
-  #skip_on_cran()
+  skip_on_cran()
   runme <- system.file("example/",
                        package="googleCloudRunner",
                        mustWork=TRUE)
@@ -59,7 +59,7 @@ test_that("[Online] Test deployments", {
 
 test_that("[Online] Test schedule jobs", {
   skip_on_travis()
-  #skip_on_cran()
+  skip_on_cran()
   cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
                             package = "googleCloudRunner")
   build1 <- cr_build_make(cloudbuild)
@@ -99,7 +99,7 @@ test_that("[Online] Test schedule jobs", {
 
 test_that("[Online] Test Build Triggers",{
   skip_on_travis()
-  #skip_on_cran()
+  skip_on_cran()
   cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
                             package = "googleCloudRunner")
 
@@ -189,7 +189,7 @@ test_that("Test Source Repo functions", {
 
 test_that("Test build artifacts", {
   skip_on_travis()
-  #skip_on_cran()
+  skip_on_cran()
   r <- "write.csv(mtcars,file = 'artifact.csv')"
   ba <- cr_build_yaml(
     steps = cr_buildstep_r(r),

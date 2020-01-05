@@ -5,6 +5,7 @@ options:
   - 'CR_BUILD_EMAIL=$_BUILD_EMAIL'
   - 'GCS_DEFAULT_BUCKET=$_BUCKET'
   - 'GCE_AUTH_FILE=/workspace/auth.json'
+  - 'NOT_CRAN=true'
 timeout: "1200s"
 steps:
 - name: 'gcr.io/cloud-builders/gcloud'
