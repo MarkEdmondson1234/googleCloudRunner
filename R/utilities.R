@@ -1,3 +1,10 @@
+string_to_list <- function(x){
+  if(assertthat::is.string(x)){
+    return(list(x))
+  }
+  x
+}
+
 extract_repo <- function(x){
   if(is.gar_RepoSource(x)){
     return(x$repoName)

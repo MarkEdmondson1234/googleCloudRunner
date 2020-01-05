@@ -10,10 +10,15 @@
 #' @param id Optional id for the step
 #' @param env Environment variables for this step.  A character vector for each assignment
 #' @param volumes volumes to connect and write to
+#' @param waitFor Whether to wait for previous buildsteps to complete before running.  Default it will wait for previous step.
 #'
 #' @seealso \href{https://cloud.google.com/cloud-build/docs/create-custom-build-steps}{Creating custom build steps how-to guide}
 #'
 #' @details
+#'
+#' @section WaitFor:
+#'
+#' By default each buildstep waits for the previous, but if you pass \code{"-"} then it will start immediatly, or if you pass in a list of ids it will wait for previous buildsteps to finish who have that id.  See \href{Configuring Build Step Order}{https://cloud.google.com/cloud-build/docs/configuring-builds/configure-build-step-order} for details.
 #'
 #' @section Build Macros:
 #' Fields can include the following variables, which will be expanded when the build is created:-
@@ -68,12 +73,13 @@
 #' cr_buildstep("test", "ls", volumes = list(list(name = "ssh", path = "/root/.ssh")))
 #'
 cr_buildstep <- function(name,
-                         args,
+                         args = NULL,
                          id = NULL,
                          prefix = "gcr.io/cloud-builders/",
                          entrypoint = NULL,
                          dir = "",
                          env = NULL,
+                         waitFor = NULL,
                          volumes = NULL){
 
   if(is.null(prefix) || is.na(prefix)){
@@ -89,12 +95,13 @@ cr_buildstep <- function(name,
   list(structure(
     rmNullObs(list(
       name = paste0(prefix, name),
-      entrypoint = entrypoint,
-      args = args,
+      entrypoint = string_to_list(entrypoint),
+      args = string_to_list(args),
       id = id,
       dir = dir,
       env = env,
-      volumes = volumes
+      volumes = volumes,
+      waitFor = string_to_list(waitFor)
     )), class = c("cr_buildstep","list")))
 }
 
@@ -125,7 +132,7 @@ is.cr_buildstep <- function(x){
 cr_buildstep_df <- function(x){
   assert_that(
     is.data.frame(x),
-    all(c('name', 'args') %in% names(x))
+    all(c('name') %in% names(x))
   )
 
   if(is.null(x$prefix)){
@@ -144,7 +151,8 @@ cr_buildstep_df <- function(x){
                         "entrypoint",
                         "dir",
                         "env",
-                        "volumes"), names(x))]
+                        "volumes",
+                        "waitFor"), names(x))]
 
   apply(xx, 1, function(row){
     cr_buildstep(name = row[["name"]],
@@ -154,6 +162,7 @@ cr_buildstep_df <- function(x){
                  entrypoint = row[["entrypoint"]],
                  env = row[["env"]],
                  volumes = row[["volumes"]],
+                 waitFor = row[["waitFor"]],
                  dir = row[["dir"]])[[1]]
   })
 
@@ -182,8 +191,7 @@ cr_buildstep_extract <- function(x, step = NULL){
   the_step <- x$steps[[step]]
   the_step$prefix <- ""
 
-  do.call(cr_buildstep,
-          args = the_step)
+  do.call(cr_buildstep, args = the_step)
 
 }
 
@@ -222,13 +230,7 @@ cr_buildstep_edit <- function(x,
     the_name <- xx$name
   }
 
-  the_args <- dots$args
-  if(is.null(the_args)){
-    the_args <- xx$args
-  }
-
   dots$name <- the_name
-  dots$args <- the_args
 
   do.call(cr_buildstep, args = dots)
 

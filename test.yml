@@ -49,7 +49,6 @@ steps:
       - gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID
   - name: gcr.io/cloud-builders/gcloud
     args:
-      - beta
       - run
       - deploy
       - my-html-on-cloudrun
@@ -65,7 +64,6 @@ steps:
     id: deploy cloudrun
   - name: gcr.io/cloud-builders/gcloud
     args:
-      - beta
       - run
       - services
       - add-iam-policy-binding
@@ -77,4 +75,5 @@ steps:
       - managed
       - my-html-on-cloudrun
     id: auth cloudrun
-images: gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID
+images:
+  - gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID

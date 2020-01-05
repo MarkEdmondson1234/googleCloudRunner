@@ -40,12 +40,13 @@ cr_build_yaml <- function(steps,
     logsBucket = logsBucket,
     options = options,
     substitutions = substitutions,
-    tags = tags,
+    tags = string_to_list(tags),
     secrets = secrets,
-    images = images,
+    images = string_to_list(images),
     artifacts = artifacts
   )
 }
+
 
 #' Add an artifact for cloudbuild.yaml
 #'
@@ -80,7 +81,7 @@ cr_build_yaml_artifact <- function(paths,
   list(
     objects = list(
       location = location,
-      paths = list(paths)
+      paths = string_to_list(paths)
     )
   )
 }
@@ -188,7 +189,6 @@ cr_build_write.gar_Build <- function(x, file = "cloudbuild.yaml"){
 #' @export
 #' @importFrom yaml write_yaml
 cr_build_write.cr_yaml <- function(x, file = "cloudbuild.yaml"){
-  myMessage("NOTE: You may need to insert quotes around certain fields in the .yml file until the Cloud Build parser is fixed to accept valid yaml.", level = 3)
   write_yaml(x, file = file, indent.mapping.sequence = TRUE)
 }
 

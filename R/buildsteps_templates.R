@@ -137,7 +137,7 @@ cr_buildstep_run <- function(name,
     auth_calls <- "--allow-unauthenticated"
     #sometimes unauth fails, so attempt to fix as per warning suggestion
     auth_step <- cr_buildstep("gcloud",
-                              c("beta", "run", "services", "add-iam-policy-binding",
+                              c("run", "services", "add-iam-policy-binding",
                                 "--region", region,
                                 "--member=allUsers",
                                 "--role=roles/run.invoker",
@@ -153,7 +153,7 @@ cr_buildstep_run <- function(name,
 
   c(
     cr_buildstep("gcloud",
-                   c("beta","run","deploy", name,
+                   c("run","deploy", name,
                      "--image", image,
                      "--region", region,
                      "--platform", "managed",
