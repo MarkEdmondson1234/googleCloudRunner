@@ -133,6 +133,7 @@
 <h2 class="hasAnchor">
 <a href="#create-docker-image-of-a-package-each-commit" class="anchor"></a>Create Docker image of a package each commit</h2>
 <p>If you just want a one-off Docker image, use <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> or make your own build via <code><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker()</a></code></p>
+<p><img src="gadget_docker.png"></p>
 <p>If you want the Docker image to rebuild each git commit, this is what is used to deploy this package to <code>gcr.io/gcer-public/googlecloudrunner</code> - in this case the Dockerfile in the root of the repo is built. Simply place the Dockerfile in the root of your repo, and then create a Build Trigger with similar settings:</p>
 <p><img src="build_dockerfile.png"></p>
 </div>
@@ -181,6 +182,8 @@ ENTRYPOINT ["R", "-e", "pr &lt;- plumber::plumb(commandArgs()[4]); pr$run(host='
 CMD ["api.R"]</code></pre>
 <p>Put both the Dockerfile and the <code>api.R</code> script in the same folder then deploy it to Cloud Run:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span>(<span class="st">"the_folder"</span>)</a></code></pre></div>
+<p>Or use the RStudio gadget:</p>
+<p><img src="gadget_plumber.png"></p>
 <p>Once built you will have a pub/sub live that will trigger the function you defined. You can test pubsub messages via <code><a href="../reference/cr_pubsub.html">cr_pubsub()</a></code></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">test_url &lt;-<span class="st"> "http://your-cloudrun-api.com/pubsub"</span></a>
 <a class="sourceLine" id="cb6-2" data-line-number="2"></a>
@@ -313,6 +316,12 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <a class="sourceLine" id="cb12-8" data-line-number="8"><span class="co">#userUpdateTime:  2020-01-04T08:34:42Z </span></a>
 <a class="sourceLine" id="cb12-9" data-line-number="9"><span class="co">#schedule:  15 8 * * * </span></a>
 <a class="sourceLine" id="cb12-10" data-line-number="10"><span class="co">#timezone:  UTC </span></a></code></pre></div>
+<div id="do-it-all-in-r-using-cr_deploy_r" class="section level3">
+<h3 class="hasAnchor">
+<a href="#do-it-all-in-r-using-cr_deploy_r" class="anchor"></a>Do it all in R using cr_deploy_r()</h3>
+<p>An alternative if you only wanted to do a scheduled deployment would be to put all steps in an R script (downloading, building and uploading to Cloud Storage via <code>googleCloudStorageR</code>) and use the RStudio gadget or <code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code></p>
+<p><img src="gadget_r.png"></p>
+</div>
 </div>
 <div id="polygot-cloud-builds---integrating-r-code-with-other-languages" class="section level2">
 <h2 class="hasAnchor">
