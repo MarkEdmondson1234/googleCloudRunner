@@ -12,6 +12,15 @@ home:
   links:
   - text: Mark Edmondson's Code Blog
     href: https://code.markedmondson.me
+  - text: Cloud Run
+    href: https://cloud.run
+    icon: fa-running
+  - text: Cloud Build
+    href: https://cloud.google.com/cloud-build/
+    icon: fa-shapes
+  - text: Cloud Scheduler
+    href: https://cloud.google.com/scheduler/
+    icon: fa-clock
 navbar:
   title: googleCloudRunner
   inverse: false
@@ -42,13 +51,14 @@ reference:
       Functions for deploying useful applications
     contents:
       - matches("cr_deploy")
+      - matches("cr_dockerfile")
   - title: "Cloud Build functions"
     desc: >
       Functions for working with Cloud Build
     contents:
       - cr_build
       - matches("cr_build_")
-      - matches("cr_dockerfile")
+      - matches("cr_sourcerepo")
       - Build
       - Source
       - RepoSource
@@ -58,6 +68,7 @@ reference:
       Functions for creation of cloudbuild.yaml files and build steps
     contents:
       - matches("cr_buildstep")
+      - matches("cr_build_yaml")
   - title: "Cloud Build Trigger functions"
     desc: >
       Functions for creation of triggers that determine when the builds run
