@@ -1,13 +1,80 @@
 steps:
+  - name: gcr.io/cloud-builders/gsutil
+    args:
+      - cp
+      - gs://mark-edmondson-public-read/scheduled_rmarkdown.Rmd
+      - scheduled_rmarkdown.Rmd
+    id: download Rmd template
   - name: gcr.io/gcer-public/render_rmd:master
     args:
       - Rscript
       - -e
       - rmarkdown::render('scheduled_rmarkdown.Rmd', output_file = 'scheduled_rmarkdown.html')
     id: render rmd
-    dir: inst/scheduled_rmarkdown/
-artifacts:
-  objects:
-    location: gs://mark-edmondson-public-read
-    paths:
-      - inst/scheduled_rmarkdown/scheduled_rmarkdown.html
+  - name: ubuntu
+    args:
+      - bash
+      - -c
+      - |-
+        echo "
+        server {
+            listen       \$${PORT};
+            server_name  localhost;
+            location / {
+                root   /usr/share/nginx/html;
+                index  index.html index.htm;
+            }
+        }" > default.template
+
+        cat <<EOF >Dockerfile
+        FROM nginx
+        COPY . /usr/share/nginx/html
+        COPY default.template /etc/nginx/conf.d/default.template
+        CMD envsubst < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'
+        EOF
+
+        cat default.template
+        cat Dockerfile
+    id: setup nginx
+    dir: /workspace/
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID
+      - '.'
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - beta
+      - run
+      - deploy
+      - my-html-on-cloudrun
+      - --image
+      - gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID
+      - --region
+      - europe-west1
+      - --platform
+      - managed
+      - --concurrency
+      - '80'
+      - --allow-unauthenticated
+    id: deploy cloudrun
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - beta
+      - run
+      - services
+      - add-iam-policy-binding
+      - --region
+      - europe-west1
+      - --member=allUsers
+      - --role=roles/run.invoker
+      - --platform
+      - managed
+      - my-html-on-cloudrun
+    id: auth cloudrun
+images: gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID
