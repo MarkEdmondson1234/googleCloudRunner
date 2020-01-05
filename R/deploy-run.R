@@ -14,6 +14,8 @@
 #' @family Deployment functions
 #' @details
 #'
+#' These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.
+#'
 #' @export
 #' @examples
 #'

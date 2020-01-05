@@ -16,6 +16,8 @@
 #'
 #' @details
 #'
+#' This uses R to make building steps for cloudbuild.yml files harder to make mistakes with, and also means you can program creation of cloud build steps for use in R or other languages.  Various templates with common use cases of buildsteps are also available that wrap this function, refer to the "See Also" section.
+#'
 #' @section WaitFor:
 #'
 #' By default each buildstep waits for the previous, but if you pass \code{"-"} then it will start immediatly, or if you pass in a list of ids it will wait for previous buildsteps to finish who have that id.  See \href{Configuring Build Step Order}{https://cloud.google.com/cloud-build/docs/configuring-builds/configure-build-step-order} for details.
@@ -215,6 +217,7 @@ cr_buildstep_extract <- function(x, step = NULL){
 #' cr_buildstep_edit(edit_me, name = "blah")
 #' cr_buildstep_edit(edit_me, name = "gcr.io/blah")
 #' cr_buildstep_edit(edit_me, args = c("blah1","blah2"), dir = "meh")
+#' @importFrom utils modifyList
 cr_buildstep_edit <- function(x,
                               ...){
   #buildsteps are in a list()
