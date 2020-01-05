@@ -21,7 +21,9 @@ Since almost any code can be called and passed via Docker images, there are a lo
 * Integrating R with other language applications
 * Public and private Docker image creations on triggers
 
-Some [community contributed Cloud Build images are listed here](https://github.com/GoogleCloudPlatform/cloud-builders-community), including [hugo](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo), [make](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make), and [tar](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar)
+Some [community contributed Cloud Build images are listed here](https://github.com/GoogleCloudPlatform/cloud-builders-community), including [hugo](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo), [make](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make), and [tar](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar).
+
+You can use any public Docker image if you know which arguments etc. to send to it, for example the Slack messages are using [`technosophos/slack-notify`](https://github.com/technosophos/slack-notify).
 
 ## Create Docker image of a package each commit
 
@@ -45,13 +47,22 @@ For example, say your existing container is called `gcr.io/my-project/my-r-scrip
 
 ```r
 r_code <- cr_build_yaml(
-  cr_buildstep("gcr.io/my-project/my-r-script", args = "my-script.R")
+  cr_buildstep("gcr.io/my-project/my-r-script")
 )
 build <- cr_build(r_code)
 built <- cr_build_wait(build)
 ```
 
-That is, run your container with a CMD pointing at your R script.  You could of course add other steps if you wanted, such as sending an email when done via `cr_buildstep_mailgun()`.
+You could add other steps if you wanted, such as sending an email when done via `cr_buildstep_mailgun()` or `cr_buildstep_slack()`:
+
+```r
+r_code <- cr_build_yaml(
+  cr_buildstep("gcr.io/my-project/my-r-script"),
+  cr_buildstep_slack("The script run ok")
+)
+build <- cr_build(r_code, `_SLACK_WEBHOOK` = "https://your_slack_webhook")
+built <- cr_build_wait(build)
+```
 
 To set this up in a schedule, add it to the scheduler like so:
 

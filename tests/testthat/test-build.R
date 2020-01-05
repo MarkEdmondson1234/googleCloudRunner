@@ -427,6 +427,12 @@ test_that("Render BuildStep objects", {
   expect_true(file.exists("cloudbuild.yml"))
   expect_equal(pd$steps[[1]]$name, "gcr.io/cloud-builders/gcloud")
 
+  # slack messages
+  bs <- cr_buildstep_slack("hello")
+  expect_equal(bs[[1]]$name, "technosophos/slack-notify")
+  expect_equal(bs[[1]]$env[[1]], "SLACK_WEBHOOK=$_SLACK_WEBHOOK")
+  expect_equal(bs[[1]]$env[[2]], "SLACK_MESSAGE='hello'")
+
 })
 
 

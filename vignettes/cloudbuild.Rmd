@@ -190,6 +190,7 @@ Using the above build step editing functions, some helpful build steps you can u
 * `cr_buildstep_nginx_setup()` -  setup hosting HTML files with nginx on Cloud Run
 * `cr_buildstep_pkgdown()` - for setting up pkgdown documentation of an R package
 * `cr_buildstep_r()` - for running R code
+* `cr_buildstep_slack()` - send a Slack webhook message
 
 If you have any requests for others, please [raise an issue on GitHub](https://github.com/MarkEdmondson1234/googleCloudRunner/issues). 
 

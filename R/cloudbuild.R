@@ -51,6 +51,8 @@
 #' # will trigger build2 again
 #' cr_build(build2)
 #'
+#' # a build with substitutions (Cloud Build macros)
+#' cr_build(build2, substitutions = list(`_SUB` = "yo"))
 #'
 #' }
 cr_build <- function(x,

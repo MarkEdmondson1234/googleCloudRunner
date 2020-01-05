@@ -1,9 +1,76 @@
+#' Send a Slack message to a channel from a Cloud Build step
+#'
+#' This uses https://github.com/technosophos/slack-notify to send Slack messages
+#'
+#' @param webhook The Slack webhook to send to
+#' @param icon A URL to an icon (squares between 512px and 2000px)
+#' @param channel The channel to send the message to (if omitted, use Slack-configured default)
+#' @param title The title of the message
+#' @param message The body of the message
+#' @param colour The RGB colour for message formatting
+#' @param username The name of the sender of the message. Does not need to be a "real" username
+#'
+#' @details
+#'
+#' You will need to set up a Slack webhook first, via this \href{https://api.slack.com/messaging/webhooks}{Slack guide on using incoming webhooks}.
+#'
+#' Once set, the default is to set this webhook to a Build macro called \code{_SLACK_WEBHOOK}, or supply it to the webhook argument.
+#'
+#' @examples
+#' # send a message to googleAuthRverse Slack
+#' webhook <-
+#'  "https://hooks.slack.com/services/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"
+#' cr_buildstep_slack("Hello Slack", webhook = webhook)
+#'
+#' \dontrun{
+#'
+#' bs <- cr_build_yaml(steps = cr_buildstep_slack("Hello Slack"))
+#'
+#' cr_build(bs, substitutions = list(`_SLACK_WEBHOOK` = webhook))
+#'
+#' }
+#'
+#' @family Cloud Buildsteps
+#' @export
+cr_buildstep_slack <- function(message,
+                               title = "CloudBuild - $BUILD_ID",
+                               channel = NULL,
+                               username = "googleCloudRunnerBot",
+                               webhook = "$_SLACK_WEBHOOK",
+                               icon = NULL,
+                               colour = "#efefef"){
+
+  envs <- c(sprintf("SLACK_WEBHOOK=%s", webhook),
+            sprintf("SLACK_MESSAGE='%s'", message),
+            sprintf("SLACK_TITLE='%s'", title),
+            sprintf("SLACK_COLOR='%s'", colour),
+            sprintf("SLACK_USERNAME='%s'", username))
+
+  if(!is.null(channel)){
+    envs <- c(envs, sprintf("SLACK_CHANNEL=%s", channel))
+  }
+
+  if(!is.null(icon)){
+    envs <- c(envs, sprintf("SLACK_ICON=%s", icon))
+  }
+
+  cr_buildstep(
+    "technosophos/slack-notify",
+    prefix = "",
+    env = envs
+  )
+
+}
+
+
 #' Setup nginx for Cloud Run in a buildstep
 #'
 #' @param html_folder The folder that will hold the HTML for Cloud Run
 #'
 #' This uses a premade bash script that sets up a Docker container ready for Cloud Run running nginx
 #' @param ... Other arguments passed to \link{cr_buildstep_bash}
+#'
+#' @family Cloud Buildsteps
 #' @export
 #' @examples
 #' html_folder <- "my_html"
@@ -53,7 +120,7 @@ cr_buildstep_nginx_setup <- function(html_folder, ...){
 #' Requires an account at Mailgun: https://mailgun.com
 #' Pre-verification you can only send to a whitelist of emails you configure - see Mailgun website for details.
 #'
-#'
+#' @family Cloud Buildsteps
 #' @export
 #' @examples
 #'
