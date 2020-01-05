@@ -43,6 +43,14 @@ steps:
       - name: ssh
         path: /root/.ssh
   - name: gcr.io/gcer-public/packagetools:master
+    args:
+      - Rscript
+      - -e
+      - |
+        devtools::install()
+        list.files()
+        pkgdown::build_site()
+    id: Build website
     dir: repo
   - name: gcr.io/cloud-builders/git
     args:

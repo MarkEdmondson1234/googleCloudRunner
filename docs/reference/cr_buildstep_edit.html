@@ -178,6 +178,7 @@
     <dt><code>id</code></dt><dd><p>Optional id for the step</p></dd>
     <dt><code>env</code></dt><dd><p>Environment variables for this step.  A character vector for each assignment</p></dd>
     <dt><code>volumes</code></dt><dd><p>volumes to connect and write to</p></dd>
+    <dt><code>waitFor</code></dt><dd><p>Whether to wait for previous buildsteps to complete before running.  Default it will wait for previous step.</p></dd>
   
 </dl></td>
     </tr>
@@ -234,15 +235,24 @@
 <span class='fu'>cr_buildstep_edit</span>(<span class='no'>edit_me</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"blah"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/blah
+#&gt; args:
+#&gt; - echo
+#&gt; - Hello Cloud Build
+#&gt; id: Hello Cloud Build
 #&gt; </div><div class='input'><span class='fu'>cr_buildstep_edit</span>(<span class='no'>edit_me</span>, <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"gcr.io/blah"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/blah
+#&gt; args:
+#&gt; - echo
+#&gt; - Hello Cloud Build
+#&gt; id: Hello Cloud Build
 #&gt; </div><div class='input'><span class='fu'>cr_buildstep_edit</span>(<span class='no'>edit_me</span>, <span class='kw'>args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"blah1"</span>,<span class='st'>"blah2"</span>), <span class='kw'>dir</span> <span class='kw'>=</span> <span class='st'>"meh"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/alpine
 #&gt; args:
 #&gt; - blah1
 #&gt; - blah2
+#&gt; id: Hello Cloud Build
 #&gt; dir: meh
 #&gt; </div></pre>
   </div>

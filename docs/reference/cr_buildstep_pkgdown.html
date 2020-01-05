@@ -277,6 +277,14 @@
 #&gt; [[4]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/gcer-public/packagetools:master
+#&gt; args:
+#&gt; - Rscript
+#&gt; - -e
+#&gt; - |
+#&gt;   devtools::install()
+#&gt;   list.files()
+#&gt;   pkgdown::build_site()
+#&gt; id: Build website
 #&gt; dir: repo
 #&gt; 
 #&gt; [[5]]
