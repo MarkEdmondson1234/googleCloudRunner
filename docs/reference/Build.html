@@ -158,32 +158,14 @@
     <p>Build Object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>Build</span>(
-  <span class='kw'>Build.substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>Build.timing</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>results</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>logsBucket</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>steps</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>buildTriggerId</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>startTime</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>timing</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>sourceProvenance</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>createTime</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>images</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>logUrl</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>finishTime</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>source</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>options</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>status</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>statusDetail</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>artifacts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>secrets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>Build</span>(<span class='kw'>Build.substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>Build.timing</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>results</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>logsBucket</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>steps</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>buildTriggerId</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>startTime</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>timing</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sourceProvenance</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>createTime</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>images</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>logUrl</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>finishTime</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>source</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>options</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>status</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>statusDetail</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>artifacts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>secrets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -310,19 +292,16 @@
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Cloud Build functions: 
-<code><a href='RepoSource.html'>RepoSource</a>()</code>,
-<code><a href='Source.html'>Source</a>()</code>,
-<code><a href='StorageSource.html'>StorageSource</a>()</code>,
-<code><a href='cr_build_artifacts.html'>cr_build_artifacts</a>()</code>,
-<code><a href='cr_build_make.html'>cr_build_make</a>()</code>,
-<code><a href='cr_build_status.html'>cr_build_status</a>()</code>,
-<code><a href='cr_build_upload_gcs.html'>cr_build_upload_gcs</a>()</code>,
-<code><a href='cr_build_wait.html'>cr_build_wait</a>()</code>,
-<code><a href='cr_build_write.html'>cr_build_write</a>()</code>,
-<code><a href='cr_build_yaml_artifact.html'>cr_build_yaml_artifact</a>()</code>,
-<code><a href='cr_build_yaml.html'>cr_build_yaml</a>()</code>,
-<code><a href='cr_build.html'>cr_build</a>()</code></p></div>
+    <div class='dont-index'><p>Other Cloud Build functions: <code><a href='RepoSource.html'>RepoSource</a></code>,
+  <code><a href='Source.html'>Source</a></code>, <code><a href='StorageSource.html'>StorageSource</a></code>,
+  <code><a href='cr_build_artifacts.html'>cr_build_artifacts</a></code>,
+  <code><a href='cr_build_make.html'>cr_build_make</a></code>,
+  <code><a href='cr_build_status.html'>cr_build_status</a></code>,
+  <code><a href='cr_build_upload_gcs.html'>cr_build_upload_gcs</a></code>,
+  <code><a href='cr_build_wait.html'>cr_build_wait</a></code>,
+  <code><a href='cr_build_write.html'>cr_build_write</a></code>,
+  <code><a href='cr_build_yaml_artifact.html'>cr_build_yaml_artifact</a></code>,
+  <code><a href='cr_build_yaml.html'>cr_build_yaml</a></code>, <code><a href='cr_build.html'>cr_build</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

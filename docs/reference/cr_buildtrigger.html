@@ -158,18 +158,10 @@
     <p>Creates a new `BuildTrigger`.This API is experimental.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildtrigger</span>(
-  <span class='no'>name</span>,
-  <span class='no'>trigger</span>,
-  <span class='no'>build</span>,
-  <span class='kw'>description</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"cr_buildtrigger: "</span>, <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>()),
-  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>disabled</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ignoredFiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>includedFiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
-)</pre>
+    <pre class="usage"><span class='fu'>cr_buildtrigger</span>(<span class='no'>name</span>, <span class='no'>trigger</span>, <span class='no'>build</span>,
+  <span class='kw'>description</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"cr_buildtrigger: "</span>, <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>()), <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>disabled</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ignoredFiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>includedFiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>())</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -218,15 +210,14 @@
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other BuildTrigger functions: 
-<code><a href='BuildTrigger.html'>BuildTrigger</a>()</code>,
-<code><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a>()</code>,
-<code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a>()</code>,
-<code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a>()</code>,
-<code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a>()</code>,
-<code><a href='cr_buildtrigger_list.html'>cr_buildtrigger_list</a>()</code>,
-<code><a href='cr_buildtrigger_make.html'>cr_buildtrigger_make</a>()</code>,
-<code><a href='cr_buildtrigger_run.html'>cr_buildtrigger_run</a>()</code></p></div>
+    <div class='dont-index'><p>Other BuildTrigger functions: <code><a href='BuildTrigger.html'>BuildTrigger</a></code>,
+  <code><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></code>,
+  <code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a></code>,
+  <code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a></code>,
+  <code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a></code>,
+  <code><a href='cr_buildtrigger_list.html'>cr_buildtrigger_list</a></code>,
+  <code><a href='cr_buildtrigger_make.html'>cr_buildtrigger_make</a></code>,
+  <code><a href='cr_buildtrigger_run.html'>cr_buildtrigger_run</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>

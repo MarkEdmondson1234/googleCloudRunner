@@ -158,14 +158,8 @@
     <p>Create buildsteps to deploy to Cloud Run</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildstep_run</span>(
-  <span class='no'>name</span>,
-  <span class='no'>image</span>,
-  <span class='kw'>allowUnauthenticated</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  <span class='kw'>concurrency</span> <span class='kw'>=</span> <span class='fl'>80</span>,
-  <span class='no'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>cr_buildstep_run</span>(<span class='no'>name</span>, <span class='no'>image</span>, <span class='kw'>allowUnauthenticated</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(), <span class='kw'>concurrency</span> <span class='kw'>=</span> <span class='fl'>80</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -198,20 +192,19 @@
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Cloud Buildsteps: 
-<code><a href='cr_buildstep_bash.html'>cr_buildstep_bash</a>()</code>,
-<code><a href='cr_buildstep_decrypt.html'>cr_buildstep_decrypt</a>()</code>,
-<code><a href='cr_buildstep_df.html'>cr_buildstep_df</a>()</code>,
-<code><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a>()</code>,
-<code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a>()</code>,
-<code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a>()</code>,
-<code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a>()</code>,
-<code><a href='cr_buildstep_mailgun.html'>cr_buildstep_mailgun</a>()</code>,
-<code><a href='cr_buildstep_nginx_setup.html'>cr_buildstep_nginx_setup</a>()</code>,
-<code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a>()</code>,
-<code><a href='cr_buildstep_r.html'>cr_buildstep_r</a>()</code>,
-<code><a href='cr_buildstep_slack.html'>cr_buildstep_slack</a>()</code>,
-<code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
+    <div class='dont-index'><p>Other Cloud Buildsteps: <code><a href='cr_buildstep_bash.html'>cr_buildstep_bash</a></code>,
+  <code><a href='cr_buildstep_decrypt.html'>cr_buildstep_decrypt</a></code>,
+  <code><a href='cr_buildstep_df.html'>cr_buildstep_df</a></code>,
+  <code><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a></code>,
+  <code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a></code>,
+  <code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a></code>,
+  <code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a></code>,
+  <code><a href='cr_buildstep_mailgun.html'>cr_buildstep_mailgun</a></code>,
+  <code><a href='cr_buildstep_nginx_setup.html'>cr_buildstep_nginx_setup</a></code>,
+  <code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a></code>,
+  <code><a href='cr_buildstep_r.html'>cr_buildstep_r</a></code>,
+  <code><a href='cr_buildstep_slack.html'>cr_buildstep_slack</a></code>,
+  <code><a href='cr_buildstep.html'>cr_buildstep</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

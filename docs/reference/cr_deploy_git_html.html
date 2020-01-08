@@ -158,21 +158,12 @@
     <p>This lets you set up triggers that will update a website each commit. You need to mirror the GitHub/Bitbucket repo onto Google Cloud Repositories for this to work.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_git_html</span>(
-  <span class='no'>x</span>,
-  <span class='kw'>image</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>x</span>, <span class='st'>"-html"</span>),
-  <span class='kw'>rmd_folder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>html_folder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>,
-  <span class='kw'>image_tag</span> <span class='kw'>=</span> <span class='st'>"$SHORT_SHA"</span>,
-  <span class='kw'>github_tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
-  <span class='kw'>edit_r</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>cr_deploy_git_html</span>(<span class='no'>x</span>, <span class='kw'>image</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>x</span>, <span class='st'>"-html"</span>), <span class='kw'>rmd_folder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>html_folder</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>, <span class='kw'>image_tag</span> <span class='kw'>=</span> <span class='st'>"$SHORT_SHA"</span>,
+  <span class='kw'>github_tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>, <span class='kw'>edit_r</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>r_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>,
-  <span class='kw'>allowUnauthenticated</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
-)</pre>
+  <span class='kw'>allowUnauthenticated</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
+  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>())</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -241,12 +232,10 @@
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='cr_deploy_run.html'>cr_deploy_html</a> that lets you deploy HTML files</p>
-<p>Other Deployment functions: 
-<code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
-<code><a href='cr_deploy_github_docker.html'>cr_deploy_github_docker</a>()</code>,
-<code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a>()</code>,
-<code><a href='cr_deploy_run.html'>cr_deploy_run</a>()</code>,
-<code><a href='cr_deploy_r.html'>cr_deploy_r</a>()</code></p></div>
+<p>Other Deployment functions: <code><a href='cr_deploy_docker.html'>cr_deploy_docker</a></code>,
+  <code><a href='cr_deploy_github_docker.html'>cr_deploy_github_docker</a></code>,
+  <code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a></code>,
+  <code><a href='cr_deploy_run.html'>cr_deploy_run</a></code>, <code><a href='cr_deploy_r.html'>cr_deploy_r</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>

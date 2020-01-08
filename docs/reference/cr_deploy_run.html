@@ -158,43 +158,20 @@
     <p>Deploy R api plumber scripts, HTML files or other images create the Docker image, add the build to Cloud Build and deploy to Cloud Run</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_run</span>(
-  <span class='no'>local</span>,
-  <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>local</span>),
-  <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>,
-  <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>,
-  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(),
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
-  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>
-)
+    <pre class="usage"><span class='fu'>cr_deploy_run</span>(<span class='no'>local</span>, <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>local</span>), <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>, <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
+  <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(), <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
+  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(), <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>)
 
-<span class='fu'>cr_deploy_html</span>(
-  <span class='no'>html_folder</span>,
-  <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>html_folder</span>),
-  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>,
-  <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>,
-  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(),
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
-  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>
-)
+<span class='fu'>cr_deploy_html</span>(<span class='no'>html_folder</span>, <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>html_folder</span>),
+  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>, <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
+  <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(), <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
+  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(), <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>)
 
-<span class='fu'>cr_deploy_plumber</span>(
-  <span class='no'>api</span>,
-  <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>api</span>),
-  <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>,
-  <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>,
-  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(),
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
-  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>
-)</pre>
+<span class='fu'>cr_deploy_plumber</span>(<span class='no'>api</span>, <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>api</span>), <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>, <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
+  <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(), <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
+  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(), <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -251,9 +228,7 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    
-
-
+    <p>These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.</p>
 
 
 
@@ -276,12 +251,11 @@ From that api.R you can source or call other resources in the same folder, using
 <p>It will call <a href='cr_deploy_docker.html'>cr_deploy_docker</a> to create the Docker image to deploy on Cloud Run</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Deployment functions: 
-<code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
-<code><a href='cr_deploy_git_html.html'>cr_deploy_git_html</a>()</code>,
-<code><a href='cr_deploy_github_docker.html'>cr_deploy_github_docker</a>()</code>,
-<code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a>()</code>,
-<code><a href='cr_deploy_r.html'>cr_deploy_r</a>()</code></p></div>
+    <div class='dont-index'><p>Other Deployment functions: <code><a href='cr_deploy_docker.html'>cr_deploy_docker</a></code>,
+  <code><a href='cr_deploy_git_html.html'>cr_deploy_git_html</a></code>,
+  <code><a href='cr_deploy_github_docker.html'>cr_deploy_github_docker</a></code>,
+  <code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a></code>,
+  <code><a href='cr_deploy_r.html'>cr_deploy_r</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
