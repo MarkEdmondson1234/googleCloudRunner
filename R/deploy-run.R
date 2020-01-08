@@ -130,8 +130,6 @@ cr_deploy_html <- function(html_folder,
 #'
 #' The function will create a local folder called "deploy" and a tar.gz of that folder which is what is being uploaded to Google Cloud Storage
 #'
-#' It will call \link{cr_deploy_docker} to create the Docker image to deploy on Cloud Run
-#'
 #' @export
 #' @examples
 #'
