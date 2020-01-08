@@ -4,11 +4,8 @@
 \alias{cr_build_schedule_http}
 \title{Create a Cloud Scheduler HTTP target from a Cloud Build object}
 \usage{
-cr_build_schedule_http(
-  build,
-  email = cr_email_get(),
-  projectId = cr_project_get()
-)
+cr_build_schedule_http(build, email = cr_email_get(),
+  projectId = cr_project_get())
 }
 \arguments{
 \item{build}{A \link{Build} object created via \link{cr_build_make} or \link{cr_build}}

@@ -4,17 +4,9 @@
 \alias{cr_buildstep}
 \title{Create a yaml build step}
 \usage{
-cr_buildstep(
-  name,
-  args = NULL,
-  id = NULL,
-  prefix = "gcr.io/cloud-builders/",
-  entrypoint = NULL,
-  dir = "",
-  env = NULL,
-  waitFor = NULL,
-  volumes = NULL
-)
+cr_buildstep(name, args = NULL, id = NULL,
+  prefix = "gcr.io/cloud-builders/", entrypoint = NULL, dir = "",
+  env = NULL, waitFor = NULL, volumes = NULL)
 }
 \arguments{
 \item{name}{name of docker image to call appended to \code{prefix}}
@@ -39,7 +31,7 @@ cr_buildstep(
 Helper for creating build steps for upload to Cloud Build
 }
 \details{
-
+This uses R to make building steps for cloudbuild.yml files harder to make mistakes with, and also means you can program creation of cloud build steps for use in R or other languages.  Various templates with common use cases of buildsteps are also available that wrap this function, refer to the "See Also" section.
 }
 \section{WaitFor}{
 
@@ -103,19 +95,18 @@ cr_buildstep("test", "ls", volumes = list(list(name = "ssh", path = "/root/.ssh"
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/create-custom-build-steps}{Creating custom build steps how-to guide}
 
-Other Cloud Buildsteps: 
-\code{\link{cr_buildstep_bash}()},
-\code{\link{cr_buildstep_decrypt}()},
-\code{\link{cr_buildstep_df}()},
-\code{\link{cr_buildstep_docker}()},
-\code{\link{cr_buildstep_edit}()},
-\code{\link{cr_buildstep_extract}()},
-\code{\link{cr_buildstep_gitsetup}()},
-\code{\link{cr_buildstep_mailgun}()},
-\code{\link{cr_buildstep_nginx_setup}()},
-\code{\link{cr_buildstep_pkgdown}()},
-\code{\link{cr_buildstep_run}()},
-\code{\link{cr_buildstep_r}()},
-\code{\link{cr_buildstep_slack}()}
+Other Cloud Buildsteps: \code{\link{cr_buildstep_bash}},
+  \code{\link{cr_buildstep_decrypt}},
+  \code{\link{cr_buildstep_df}},
+  \code{\link{cr_buildstep_docker}},
+  \code{\link{cr_buildstep_edit}},
+  \code{\link{cr_buildstep_extract}},
+  \code{\link{cr_buildstep_gitsetup}},
+  \code{\link{cr_buildstep_mailgun}},
+  \code{\link{cr_buildstep_nginx_setup}},
+  \code{\link{cr_buildstep_pkgdown}},
+  \code{\link{cr_buildstep_run}},
+  \code{\link{cr_buildstep_r}},
+  \code{\link{cr_buildstep_slack}}
 }
 \concept{Cloud Buildsteps}

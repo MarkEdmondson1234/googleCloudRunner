@@ -4,14 +4,8 @@
 \alias{cr_buildstep_run}
 \title{Create buildsteps to deploy to Cloud Run}
 \usage{
-cr_buildstep_run(
-  name,
-  image,
-  allowUnauthenticated = TRUE,
-  region = cr_region_get(),
-  concurrency = 80,
-  ...
-)
+cr_buildstep_run(name, image, allowUnauthenticated = TRUE,
+  region = cr_region_get(), concurrency = 80, ...)
 }
 \arguments{
 \item{name}{Name for deployment on Cloud Run}
@@ -30,19 +24,18 @@ cr_buildstep_run(
 Create buildsteps to deploy to Cloud Run
 }
 \seealso{
-Other Cloud Buildsteps: 
-\code{\link{cr_buildstep_bash}()},
-\code{\link{cr_buildstep_decrypt}()},
-\code{\link{cr_buildstep_df}()},
-\code{\link{cr_buildstep_docker}()},
-\code{\link{cr_buildstep_edit}()},
-\code{\link{cr_buildstep_extract}()},
-\code{\link{cr_buildstep_gitsetup}()},
-\code{\link{cr_buildstep_mailgun}()},
-\code{\link{cr_buildstep_nginx_setup}()},
-\code{\link{cr_buildstep_pkgdown}()},
-\code{\link{cr_buildstep_r}()},
-\code{\link{cr_buildstep_slack}()},
-\code{\link{cr_buildstep}()}
+Other Cloud Buildsteps: \code{\link{cr_buildstep_bash}},
+  \code{\link{cr_buildstep_decrypt}},
+  \code{\link{cr_buildstep_df}},
+  \code{\link{cr_buildstep_docker}},
+  \code{\link{cr_buildstep_edit}},
+  \code{\link{cr_buildstep_extract}},
+  \code{\link{cr_buildstep_gitsetup}},
+  \code{\link{cr_buildstep_mailgun}},
+  \code{\link{cr_buildstep_nginx_setup}},
+  \code{\link{cr_buildstep_pkgdown}},
+  \code{\link{cr_buildstep_r}},
+  \code{\link{cr_buildstep_slack}},
+  \code{\link{cr_buildstep}}
 }
 \concept{Cloud Buildsteps}

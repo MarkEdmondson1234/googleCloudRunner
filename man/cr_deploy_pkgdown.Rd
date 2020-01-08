@@ -4,16 +4,10 @@
 \alias{cr_deploy_pkgdown}
 \title{Deploy a cloudbuild.yml for a pkgdown website of an R package}
 \usage{
-cr_deploy_pkgdown(
-  steps = NULL,
-  cloudbuild_file = "cloudbuild.yml",
-  git_email = "googlecloudrunner@r.com",
-  keyring = "my-keyring",
-  key = "github-key",
-  env = NULL,
-  cipher = "id_rsa.enc",
-  build_image = "gcr.io/gcer-public/packagetools:master"
-)
+cr_deploy_pkgdown(steps = NULL, cloudbuild_file = "cloudbuild.yml",
+  git_email = "googlecloudrunner@r.com", keyring = "my-keyring",
+  key = "github-key", env = NULL, cipher = "id_rsa.enc",
+  build_image = "gcr.io/gcer-public/packagetools:master")
 }
 \arguments{
 \item{steps}{extra steps to run before the pkgdown website steps run}
@@ -50,11 +44,9 @@ pd
 \seealso{
 Create your own custom deployment using \link{cr_buildstep_pkgdown} which this function uses with some defaults
 
-Other Deployment functions: 
-\code{\link{cr_deploy_docker}()},
-\code{\link{cr_deploy_git_html}()},
-\code{\link{cr_deploy_github_docker}()},
-\code{\link{cr_deploy_run}()},
-\code{\link{cr_deploy_r}()}
+Other Deployment functions: \code{\link{cr_deploy_docker}},
+  \code{\link{cr_deploy_git_html}},
+  \code{\link{cr_deploy_github_docker}},
+  \code{\link{cr_deploy_run}}, \code{\link{cr_deploy_r}}
 }
 \concept{Deployment functions}

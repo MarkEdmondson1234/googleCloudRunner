@@ -6,43 +6,20 @@
 \alias{cr_deploy_plumber}
 \title{Deploy to Cloud Run}
 \usage{
-cr_deploy_run(
-  local,
-  remote = basename(local),
-  dockerfile = NULL,
-  image_name = remote,
-  tag = "$BUILD_ID",
-  region = cr_region_get(),
-  bucket = cr_bucket_get(),
-  projectId = cr_project_get(),
-  launch_browser = interactive(),
-  timeout = 600L
-)
+cr_deploy_run(local, remote = basename(local), dockerfile = NULL,
+  image_name = remote, tag = "$BUILD_ID", region = cr_region_get(),
+  bucket = cr_bucket_get(), projectId = cr_project_get(),
+  launch_browser = interactive(), timeout = 600L)
 
-cr_deploy_html(
-  html_folder,
-  remote = basename(html_folder),
-  image_name = remote,
-  tag = "$BUILD_ID",
-  region = cr_region_get(),
-  bucket = cr_bucket_get(),
-  projectId = cr_project_get(),
-  launch_browser = interactive(),
-  timeout = 600L
-)
+cr_deploy_html(html_folder, remote = basename(html_folder),
+  image_name = remote, tag = "$BUILD_ID", region = cr_region_get(),
+  bucket = cr_bucket_get(), projectId = cr_project_get(),
+  launch_browser = interactive(), timeout = 600L)
 
-cr_deploy_plumber(
-  api,
-  remote = basename(api),
-  dockerfile = NULL,
-  image_name = remote,
-  tag = "$BUILD_ID",
-  region = cr_region_get(),
-  bucket = cr_bucket_get(),
-  projectId = cr_project_get(),
-  launch_browser = interactive(),
-  timeout = 600L
-)
+cr_deploy_plumber(api, remote = basename(api), dockerfile = NULL,
+  image_name = remote, tag = "$BUILD_ID", region = cr_region_get(),
+  bucket = cr_bucket_get(), projectId = cr_project_get(),
+  launch_browser = interactive(), timeout = 600L)
 }
 \arguments{
 \item{local}{A folder containing the scripts and Dockerfile to deploy to Cloud Run}
@@ -73,7 +50,7 @@ cr_deploy_plumber(
 Deploy R api plumber scripts, HTML files or other images create the Docker image, add the build to Cloud Build and deploy to Cloud Run
 }
 \details{
-
+These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.
 
 
 
@@ -120,11 +97,10 @@ cr_deploy_plumber(system.file("example/", package = "googleCloudRunner"))
 }
 }
 \seealso{
-Other Deployment functions: 
-\code{\link{cr_deploy_docker}()},
-\code{\link{cr_deploy_git_html}()},
-\code{\link{cr_deploy_github_docker}()},
-\code{\link{cr_deploy_pkgdown}()},
-\code{\link{cr_deploy_r}()}
+Other Deployment functions: \code{\link{cr_deploy_docker}},
+  \code{\link{cr_deploy_git_html}},
+  \code{\link{cr_deploy_github_docker}},
+  \code{\link{cr_deploy_pkgdown}},
+  \code{\link{cr_deploy_r}}
 }
 \concept{Deployment functions}

@@ -44,9 +44,7 @@ function(message=NULL){
 \seealso{
 \href{https://cloud.google.com/run/docs/tutorials/pubsub}{Google Pub/Sub tutorial for Cloud Run}
 
-Other Cloud Run functions: 
-\code{\link{cr_run_get}()},
-\code{\link{cr_run_list}()},
-\code{\link{cr_run}()}
+Other Cloud Run functions: \code{\link{cr_run_get}},
+  \code{\link{cr_run_list}}, \code{\link{cr_run}}
 }
 \concept{Cloud Run functions}

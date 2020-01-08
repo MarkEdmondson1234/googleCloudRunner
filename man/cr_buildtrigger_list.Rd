@@ -13,14 +13,13 @@ cr_buildtrigger_list(projectId = cr_project_get())
 Lists existing `BuildTrigger`s.This API is experimental.
 }
 \seealso{
-Other BuildTrigger functions: 
-\code{\link{BuildTrigger}()},
-\code{\link{GitHubEventsConfig}()},
-\code{\link{cr_buildtrigger_delete}()},
-\code{\link{cr_buildtrigger_edit}()},
-\code{\link{cr_buildtrigger_get}()},
-\code{\link{cr_buildtrigger_make}()},
-\code{\link{cr_buildtrigger_run}()},
-\code{\link{cr_buildtrigger}()}
+Other BuildTrigger functions: \code{\link{BuildTrigger}},
+  \code{\link{GitHubEventsConfig}},
+  \code{\link{cr_buildtrigger_delete}},
+  \code{\link{cr_buildtrigger_edit}},
+  \code{\link{cr_buildtrigger_get}},
+  \code{\link{cr_buildtrigger_make}},
+  \code{\link{cr_buildtrigger_run}},
+  \code{\link{cr_buildtrigger}}
 }
 \concept{BuildTrigger functions}

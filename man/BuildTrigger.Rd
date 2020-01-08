@@ -4,19 +4,10 @@
 \alias{BuildTrigger}
 \title{BuildTrigger Object}
 \usage{
-BuildTrigger(
-  filename = NULL,
-  name = NULL,
-  tags = NULL,
-  build = NULL,
-  ignoredFiles = NULL,
-  github = NULL,
-  substitutions = NULL,
-  includedFiles = NULL,
-  disabled = NULL,
-  triggerTemplate = NULL,
-  description = NULL
-)
+BuildTrigger(filename = NULL, name = NULL, tags = NULL,
+  build = NULL, ignoredFiles = NULL, github = NULL,
+  substitutions = NULL, includedFiles = NULL, disabled = NULL,
+  triggerTemplate = NULL, description = NULL)
 }
 \arguments{
 \item{filename}{Path, from the source root, to a file whose contents is used for the}
@@ -50,14 +41,13 @@ Configuration for an automated build in response to source repositorychanges.
 \seealso{
 \url{https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.triggers}
 
-Other BuildTrigger functions: 
-\code{\link{GitHubEventsConfig}()},
-\code{\link{cr_buildtrigger_delete}()},
-\code{\link{cr_buildtrigger_edit}()},
-\code{\link{cr_buildtrigger_get}()},
-\code{\link{cr_buildtrigger_list}()},
-\code{\link{cr_buildtrigger_make}()},
-\code{\link{cr_buildtrigger_run}()},
-\code{\link{cr_buildtrigger}()}
+Other BuildTrigger functions: \code{\link{GitHubEventsConfig}},
+  \code{\link{cr_buildtrigger_delete}},
+  \code{\link{cr_buildtrigger_edit}},
+  \code{\link{cr_buildtrigger_get}},
+  \code{\link{cr_buildtrigger_list}},
+  \code{\link{cr_buildtrigger_make}},
+  \code{\link{cr_buildtrigger_run}},
+  \code{\link{cr_buildtrigger}}
 }
 \concept{BuildTrigger functions}

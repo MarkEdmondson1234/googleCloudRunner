@@ -4,21 +4,12 @@
 \alias{cr_deploy_git_html}
 \title{Deploy HTML built from a repo each commit (Experimental)}
 \usage{
-cr_deploy_git_html(
-  x,
-  image = paste0(x, "-html"),
-  rmd_folder = NULL,
-  html_folder = NULL,
-  branch = ".*",
-  image_tag = "$SHORT_SHA",
-  github_tag = NULL,
-  timeout = 600L,
-  edit_r = NULL,
+cr_deploy_git_html(x, image = paste0(x, "-html"), rmd_folder = NULL,
+  html_folder = NULL, branch = ".*", image_tag = "$SHORT_SHA",
+  github_tag = NULL, timeout = 600L, edit_r = NULL,
   r_image = "gcr.io/gcer-public/packagetools:master",
-  allowUnauthenticated = TRUE,
-  region = cr_region_get(),
-  projectId = cr_project_get()
-)
+  allowUnauthenticated = TRUE, region = cr_region_get(),
+  projectId = cr_project_get())
 }
 \arguments{
 \item{x}{The GitHub repo e.g. \code{MarkEdmondson1234/googleCloudRunner}}
@@ -79,11 +70,9 @@ cr_deploy_git_html(your_repo,
 \seealso{
 \link{cr_deploy_html} that lets you deploy HTML files
 
-Other Deployment functions: 
-\code{\link{cr_deploy_docker}()},
-\code{\link{cr_deploy_github_docker}()},
-\code{\link{cr_deploy_pkgdown}()},
-\code{\link{cr_deploy_run}()},
-\code{\link{cr_deploy_r}()}
+Other Deployment functions: \code{\link{cr_deploy_docker}},
+  \code{\link{cr_deploy_github_docker}},
+  \code{\link{cr_deploy_pkgdown}},
+  \code{\link{cr_deploy_run}}, \code{\link{cr_deploy_r}}
 }
 \concept{Deployment functions}

@@ -5,17 +5,11 @@
 \alias{cr_buildstep_git}
 \title{Create a build step for authenticating with Git}
 \usage{
-cr_buildstep_gitsetup(
-  keyring = "my-keyring",
-  key = "github-key",
-  cipher = "id_rsa.enc",
-  ...
-)
+cr_buildstep_gitsetup(keyring = "my-keyring", key = "github-key",
+  cipher = "id_rsa.enc", ...)
 
-cr_buildstep_git(
-  git_args = c("clone", "git@github.com:[GIT-USERNAME]/[REPOSITORY]", "."),
-  ...
-)
+cr_buildstep_git(git_args = c("clone",
+  "git@github.com:[GIT-USERNAME]/[REPOSITORY]", "."), ...)
 }
 \arguments{
 \item{keyring}{The Key Management Store keyring containing the git ssh key}
@@ -55,19 +49,18 @@ cr_build_yaml(
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/access-private-github-repos}{Accessing private GitHub repositories using Cloud Build (google article)}
 
-Other Cloud Buildsteps: 
-\code{\link{cr_buildstep_bash}()},
-\code{\link{cr_buildstep_decrypt}()},
-\code{\link{cr_buildstep_df}()},
-\code{\link{cr_buildstep_docker}()},
-\code{\link{cr_buildstep_edit}()},
-\code{\link{cr_buildstep_extract}()},
-\code{\link{cr_buildstep_mailgun}()},
-\code{\link{cr_buildstep_nginx_setup}()},
-\code{\link{cr_buildstep_pkgdown}()},
-\code{\link{cr_buildstep_run}()},
-\code{\link{cr_buildstep_r}()},
-\code{\link{cr_buildstep_slack}()},
-\code{\link{cr_buildstep}()}
+Other Cloud Buildsteps: \code{\link{cr_buildstep_bash}},
+  \code{\link{cr_buildstep_decrypt}},
+  \code{\link{cr_buildstep_df}},
+  \code{\link{cr_buildstep_docker}},
+  \code{\link{cr_buildstep_edit}},
+  \code{\link{cr_buildstep_extract}},
+  \code{\link{cr_buildstep_mailgun}},
+  \code{\link{cr_buildstep_nginx_setup}},
+  \code{\link{cr_buildstep_pkgdown}},
+  \code{\link{cr_buildstep_run}},
+  \code{\link{cr_buildstep_r}},
+  \code{\link{cr_buildstep_slack}},
+  \code{\link{cr_buildstep}}
 }
 \concept{Cloud Buildsteps}

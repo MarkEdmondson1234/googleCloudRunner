@@ -9,19 +9,18 @@ cr_buildstep_edit(x, ...)
 \arguments{
 \item{x}{A buildstep created previously}
 
-\item{...}{
-  Arguments passed on to \code{\link[=cr_buildstep]{cr_buildstep}}
-  \describe{
-    \item{\code{name}}{name of docker image to call appended to \code{prefix}}
-    \item{\code{args}}{character vector of arguments}
-    \item{\code{prefix}}{prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io}
-    \item{\code{entrypoint}}{change the entrypoint for the docker container}
-    \item{\code{dir}}{The directory to use, relative to /workspace e.g. /workspace/deploy/}
-    \item{\code{id}}{Optional id for the step}
-    \item{\code{env}}{Environment variables for this step.  A character vector for each assignment}
-    \item{\code{volumes}}{volumes to connect and write to}
-    \item{\code{waitFor}}{Whether to wait for previous buildsteps to complete before running.  Default it will wait for previous step.}
-  }}
+\item{...}{Arguments passed on to \code{cr_buildstep}
+\describe{
+  \item{name}{name of docker image to call appended to \code{prefix}}
+  \item{args}{character vector of arguments}
+  \item{prefix}{prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io}
+  \item{entrypoint}{change the entrypoint for the docker container}
+  \item{dir}{The directory to use, relative to /workspace e.g. /workspace/deploy/}
+  \item{id}{Optional id for the step}
+  \item{env}{Environment variables for this step.  A character vector for each assignment}
+  \item{volumes}{volumes to connect and write to}
+  \item{waitFor}{Whether to wait for previous buildsteps to complete before running.  Default it will wait for previous step.}
+}}
 }
 \description{
 Useful for editing existing buildsteps
@@ -40,19 +39,18 @@ cr_buildstep_edit(edit_me, name = "gcr.io/blah")
 cr_buildstep_edit(edit_me, args = c("blah1","blah2"), dir = "meh")
 }
 \seealso{
-Other Cloud Buildsteps: 
-\code{\link{cr_buildstep_bash}()},
-\code{\link{cr_buildstep_decrypt}()},
-\code{\link{cr_buildstep_df}()},
-\code{\link{cr_buildstep_docker}()},
-\code{\link{cr_buildstep_extract}()},
-\code{\link{cr_buildstep_gitsetup}()},
-\code{\link{cr_buildstep_mailgun}()},
-\code{\link{cr_buildstep_nginx_setup}()},
-\code{\link{cr_buildstep_pkgdown}()},
-\code{\link{cr_buildstep_run}()},
-\code{\link{cr_buildstep_r}()},
-\code{\link{cr_buildstep_slack}()},
-\code{\link{cr_buildstep}()}
+Other Cloud Buildsteps: \code{\link{cr_buildstep_bash}},
+  \code{\link{cr_buildstep_decrypt}},
+  \code{\link{cr_buildstep_df}},
+  \code{\link{cr_buildstep_docker}},
+  \code{\link{cr_buildstep_extract}},
+  \code{\link{cr_buildstep_gitsetup}},
+  \code{\link{cr_buildstep_mailgun}},
+  \code{\link{cr_buildstep_nginx_setup}},
+  \code{\link{cr_buildstep_pkgdown}},
+  \code{\link{cr_buildstep_run}},
+  \code{\link{cr_buildstep_r}},
+  \code{\link{cr_buildstep_slack}},
+  \code{\link{cr_buildstep}}
 }
 \concept{Cloud Buildsteps}

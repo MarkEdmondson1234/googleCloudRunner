@@ -4,16 +4,9 @@
 \alias{cr_run}
 \title{Create a CloudRun service.}
 \usage{
-cr_run(
-  image,
-  name = basename(image),
-  allowUnauthenticated = TRUE,
-  concurrency = 1,
-  timeout = 600L,
-  region = cr_region_get(),
-  projectId = cr_project_get(),
-  launch_browser = interactive()
-)
+cr_run(image, name = basename(image), allowUnauthenticated = TRUE,
+  concurrency = 1, timeout = 600L, region = cr_region_get(),
+  projectId = cr_project_get(), launch_browser = interactive())
 }
 \arguments{
 \item{image}{The name of the image to create or use in deployment - \code{gcr.io}}
@@ -51,9 +44,7 @@ Use \link{cr_deploy_docker} or similar to create image, \link{cr_deploy_run} to 
 
 \href{https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run}{Deploying Cloud Run using Cloud Build}
 
-Other Cloud Run functions: 
-\code{\link{cr_plumber_pubsub}()},
-\code{\link{cr_run_get}()},
-\code{\link{cr_run_list}()}
+Other Cloud Run functions: \code{\link{cr_plumber_pubsub}},
+  \code{\link{cr_run_get}}, \code{\link{cr_run_list}}
 }
 \concept{Cloud Run functions}

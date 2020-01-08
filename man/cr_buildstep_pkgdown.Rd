@@ -4,15 +4,9 @@
 \alias{cr_buildstep_pkgdown}
 \title{Create buildsteps for deploying an R pkgdown website to GitHub}
 \usage{
-cr_buildstep_pkgdown(
-  github_repo,
-  git_email,
-  keyring = "my-keyring",
-  key = "github-key",
-  env = NULL,
-  cipher = "id_rsa.enc",
-  build_image = "gcr.io/gcer-public/packagetools:master"
-)
+cr_buildstep_pkgdown(github_repo, git_email, keyring = "my-keyring",
+  key = "github-key", env = NULL, cipher = "id_rsa.enc",
+  build_image = "gcr.io/gcer-public/packagetools:master")
 }
 \arguments{
 \item{github_repo}{The GitHub repo to deploy pkgdown website from and to.}
@@ -50,19 +44,18 @@ my_source <- cr_build_source(RepoSource("my_repo", branch="master"))
 build <- cr_build_make(build_yaml, source = my_source)
 }
 \seealso{
-Other Cloud Buildsteps: 
-\code{\link{cr_buildstep_bash}()},
-\code{\link{cr_buildstep_decrypt}()},
-\code{\link{cr_buildstep_df}()},
-\code{\link{cr_buildstep_docker}()},
-\code{\link{cr_buildstep_edit}()},
-\code{\link{cr_buildstep_extract}()},
-\code{\link{cr_buildstep_gitsetup}()},
-\code{\link{cr_buildstep_mailgun}()},
-\code{\link{cr_buildstep_nginx_setup}()},
-\code{\link{cr_buildstep_run}()},
-\code{\link{cr_buildstep_r}()},
-\code{\link{cr_buildstep_slack}()},
-\code{\link{cr_buildstep}()}
+Other Cloud Buildsteps: \code{\link{cr_buildstep_bash}},
+  \code{\link{cr_buildstep_decrypt}},
+  \code{\link{cr_buildstep_df}},
+  \code{\link{cr_buildstep_docker}},
+  \code{\link{cr_buildstep_edit}},
+  \code{\link{cr_buildstep_extract}},
+  \code{\link{cr_buildstep_gitsetup}},
+  \code{\link{cr_buildstep_mailgun}},
+  \code{\link{cr_buildstep_nginx_setup}},
+  \code{\link{cr_buildstep_run}},
+  \code{\link{cr_buildstep_r}},
+  \code{\link{cr_buildstep_slack}},
+  \code{\link{cr_buildstep}}
 }
 \concept{Cloud Buildsteps}

@@ -4,7 +4,8 @@
 \alias{cr_schedule_get}
 \title{Gets a scheduler job.}
 \usage{
-cr_schedule_get(name, region = cr_region_get(), projectId = cr_project_get())
+cr_schedule_get(name, region = cr_region_get(),
+  projectId = cr_project_get())
 }
 \arguments{
 \item{name}{Required}
@@ -26,13 +27,10 @@ cr_schedule_get("cloud-build-test1")
 \seealso{
 \href{https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/get}{Google Documentation}
 
-Other Cloud Scheduler functions: 
-\code{\link{HttpTarget}()},
-\code{\link{Job}()},
-\code{\link{cr_schedule_delete}()},
-\code{\link{cr_schedule_list}()},
-\code{\link{cr_schedule_pause}()},
-\code{\link{cr_schedule_run}()},
-\code{\link{cr_schedule}()}
+Other Cloud Scheduler functions: \code{\link{HttpTarget}},
+  \code{\link{Job}}, \code{\link{cr_schedule_delete}},
+  \code{\link{cr_schedule_list}},
+  \code{\link{cr_schedule_pause}},
+  \code{\link{cr_schedule_run}}, \code{\link{cr_schedule}}
 }
 \concept{Cloud Scheduler functions}

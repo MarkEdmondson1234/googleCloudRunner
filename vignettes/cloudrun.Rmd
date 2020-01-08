@@ -17,7 +17,18 @@ If you want to run scripts that can be triggered one time, setup to trigger on G
 ## Quickstart - plumber API
 
 1. Make an R API via [plumber](https://www.rplumber.io/) that contains entry file api.R.  You can use the demo example in `system.file("example", package="cloudRunner")` if you like.
-2. Deploy via the `cr_deploy_plumber()` function:
+2. Create a Dockerfile for the API - see bottom of page for how to do this automatically with https://o2r.info/containerit/
+
+The example folder has this Dockerfile:
+
+```
+FROM gcr.io/gcer-public/googlecloudrunner:master
+COPY ["./", "./"]
+ENTRYPOINT ["R", "-e", "pr <- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))"]
+CMD ["api.R"]
+```
+
+3. Deploy via the `cr_deploy_plumber()` function:
 
 ```r
 library(googleCloudRunner)
@@ -43,7 +54,7 @@ cr <- cr_deploy_plumber(my_plumber_folder)
 #url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app 
 ```
 
-3. Enjoy your API
+4. Enjoy your API
 
 ### RStudio Gadget - deploy plumber script
 
@@ -59,9 +70,8 @@ This sets up a Shiny UI to help smooth out deployments as pictured:
 
 Deployment via `cr_deploy_plumber()` automated these steps:
 
-1. Creates a Dockerfile for your R script if necessary using [`containerit`](https://o2r.info/containerit/index.html)
-2. Uploads the Dockerfile and your api.R file to your Google Cloud Storage bucket
-3. Creates a Cloud Build job for building the files uploaded to the GCS bucket, and pushes the Docker images to Google Container Registry
+1. Uploads the Dockerfile and your api.R file to your Google Cloud Storage bucket
+2. Creates a Cloud Build job for building the files uploaded to the GCS bucket, and pushes the Docker images to Google Container Registry
 3. Deploys that container to Cloud Run
 
 It will launch a browser showing the build on Cloud Build, or you can wait for progress in your local R sesion.  Upon successfully deployment it gives you a `CloudRunService` object with details of the deployment. 
@@ -98,3 +108,46 @@ cr_run("gcr.io/my-project/my-image")
 
 * `cr_deploy_html()` adds steps to deploy a nginx web server ready to serve the HTML files you supply.
 
+## Creating a Dockerfile with containerit
+
+`containerit` is not yet on CRAN so can't be packaged with the CRAN version of `googleCloudRunner` but its a useful package to work with since it auto-creates Dockerfiles from R files.
+
+To install it use `remotes::install_github("o2r-project/containerit")`
+
+[See `containerit`s website for more details](https://o2r.info/containerit/) on how to use it.
+
+An example of using it to help create plumber Dockerfiles is below:
+
+```r
+library(containerit)
+cr_dockerfile_plumber <- function(deploy_folder, ...){
+  docker <- dockerfile(
+      deploy_folder,
+      image = "trestletech/plumber",
+      offline = FALSE,
+      cmd = Cmd("api.R"),
+      maintainer = NULL,
+      copy = list("./"),
+      container_workdir = NULL,
+      entrypoint = Entrypoint("R",
+                       params = list(
+        "-e",
+       "pr <- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))")
+       ),
+      filter_baseimage_pkgs = FALSE,
+      ...))
+
+  write_to <- file.path(deploy_folder, "Dockerfile")
+  
+  write(docker, file = write_to)
+
+  assert_that(
+    is.readable(write_to)
+  )
+
+  myMessage("Written Dockerfile to ", write_to, level = 3)
+  print(docker)
+  docker
+
+}
+```

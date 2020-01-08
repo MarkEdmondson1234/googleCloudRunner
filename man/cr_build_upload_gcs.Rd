@@ -4,13 +4,9 @@
 \alias{cr_build_upload_gcs}
 \title{Create a StorageSource}
 \usage{
-cr_build_upload_gcs(
-  local,
-  remote = paste0(local, format(Sys.time(), "\%Y\%m\%d\%H\%M\%S"), ".tar.gz"),
-  bucket = cr_bucket_get(),
-  predefinedAcl = "bucketOwnerFullControl",
-  deploy_folder = "deploy"
-)
+cr_build_upload_gcs(local, remote = paste0(local, format(Sys.time(),
+  "\%Y\%m\%d\%H\%M\%S"), ".tar.gz"), bucket = cr_bucket_get(),
+  predefinedAcl = "bucketOwnerFullControl", deploy_folder = "deploy")
 }
 \arguments{
 \item{local}{Local directory containing the Dockerfile etc. you wish to deploy}
@@ -42,18 +38,15 @@ build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 }
 }
 \seealso{
-Other Cloud Build functions: 
-\code{\link{Build}()},
-\code{\link{RepoSource}()},
-\code{\link{Source}()},
-\code{\link{StorageSource}()},
-\code{\link{cr_build_artifacts}()},
-\code{\link{cr_build_make}()},
-\code{\link{cr_build_status}()},
-\code{\link{cr_build_wait}()},
-\code{\link{cr_build_write}()},
-\code{\link{cr_build_yaml_artifact}()},
-\code{\link{cr_build_yaml}()},
-\code{\link{cr_build}()}
+Other Cloud Build functions: \code{\link{Build}},
+  \code{\link{RepoSource}}, \code{\link{Source}},
+  \code{\link{StorageSource}},
+  \code{\link{cr_build_artifacts}},
+  \code{\link{cr_build_make}},
+  \code{\link{cr_build_status}},
+  \code{\link{cr_build_wait}},
+  \code{\link{cr_build_write}},
+  \code{\link{cr_build_yaml_artifact}},
+  \code{\link{cr_build_yaml}}, \code{\link{cr_build}}
 }
 \concept{Cloud Build functions}

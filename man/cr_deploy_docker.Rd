@@ -4,17 +4,10 @@
 \alias{cr_deploy_docker}
 \title{Deploy a local Dockerfile to be built on ContainerRegistry}
 \usage{
-cr_deploy_docker(
-  local,
-  image_name = remote,
-  dockerfile = NULL,
-  remote = basename(local),
-  tag = "$BUILD_ID",
-  timeout = 600L,
-  bucket = cr_bucket_get(),
-  projectId = cr_project_get(),
-  launch_browser = interactive()
-)
+cr_deploy_docker(local, image_name = remote, dockerfile = NULL,
+  remote = basename(local), tag = "$BUILD_ID", timeout = 600L,
+  bucket = cr_bucket_get(), projectId = cr_project_get(),
+  launch_browser = interactive())
 }
 \arguments{
 \item{local}{The folder containing the Dockerfile to build}
@@ -52,11 +45,9 @@ b <- cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
 }
 }
 \seealso{
-Other Deployment functions: 
-\code{\link{cr_deploy_git_html}()},
-\code{\link{cr_deploy_github_docker}()},
-\code{\link{cr_deploy_pkgdown}()},
-\code{\link{cr_deploy_run}()},
-\code{\link{cr_deploy_r}()}
+Other Deployment functions: \code{\link{cr_deploy_git_html}},
+  \code{\link{cr_deploy_github_docker}},
+  \code{\link{cr_deploy_pkgdown}},
+  \code{\link{cr_deploy_run}}, \code{\link{cr_deploy_r}}
 }
 \concept{Deployment functions}

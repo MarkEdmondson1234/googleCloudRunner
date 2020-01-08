@@ -4,15 +4,9 @@
 \alias{cr_schedule}
 \title{Creates or updates a Cloud Scheduler job.}
 \usage{
-cr_schedule(
-  name,
-  schedule = NULL,
-  httpTarget = NULL,
-  description = NULL,
-  overwrite = FALSE,
-  region = cr_region_get(),
-  projectId = cr_project_get()
-)
+cr_schedule(name, schedule = NULL, httpTarget = NULL,
+  description = NULL, overwrite = FALSE, region = cr_region_get(),
+  projectId = cr_project_get())
 }
 \arguments{
 \item{name}{Optionally caller-specified in CreateJob, after}
@@ -57,13 +51,11 @@ cr_schedule("cloud-build-test2", "12 6 * * *", overwrite=TRUE)
 \seealso{
 \href{https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/create}{Google Documentation for Cloud Scheduler}
 
-Other Cloud Scheduler functions: 
-\code{\link{HttpTarget}()},
-\code{\link{Job}()},
-\code{\link{cr_schedule_delete}()},
-\code{\link{cr_schedule_get}()},
-\code{\link{cr_schedule_list}()},
-\code{\link{cr_schedule_pause}()},
-\code{\link{cr_schedule_run}()}
+Other Cloud Scheduler functions: \code{\link{HttpTarget}},
+  \code{\link{Job}}, \code{\link{cr_schedule_delete}},
+  \code{\link{cr_schedule_get}},
+  \code{\link{cr_schedule_list}},
+  \code{\link{cr_schedule_pause}},
+  \code{\link{cr_schedule_run}}
 }
 \concept{Cloud Scheduler functions}
