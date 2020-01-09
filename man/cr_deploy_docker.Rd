@@ -29,7 +29,7 @@ cr_deploy_docker(local, image_name = remote, dockerfile = NULL,
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
 }
 \description{
-If no Dockerfile present in the deployment folder, will attempt to create a Dockerfile to upload via \link{cr_dockerfile_plumber}
+Build a local Dockerfile in the cloud. See googleCloudRunner website for help how to generate Dockerfiles.
 }
 \details{
 This lets you deploy local folders with Dockerfiles, automating saving the source on Google Cloud Storage.
