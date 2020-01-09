@@ -203,7 +203,7 @@
   <code><a href='cr_buildstep.html'>cr_buildstep</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"gcr.io/my-project/my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-01-09 15:17:15&gt; Image to be built: gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
+    <pre class="examples"><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"gcr.io/my-project/my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-01-09 15:32:55&gt; Image to be built: gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
@@ -218,7 +218,7 @@
 #&gt; args:
 #&gt; - push
 #&gt; - gcr.io/my-project/my-image:$BUILD_ID
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-01-09 15:17:15&gt; Image to be built: gcr.io/mark-edmondson-gde/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
+#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-01-09 15:32:55&gt; Image to be built: gcr.io/mark-edmondson-gde/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
@@ -233,7 +233,7 @@
 #&gt; args:
 #&gt; - push
 #&gt; - gcr.io/mark-edmondson-gde/my-image:$BUILD_ID
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BRANCH_NAME"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-01-09 15:17:15&gt; Image to be built: gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME</span></div><div class='output co'>#&gt; [[1]]
+#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BRANCH_NAME"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-01-09 15:32:55&gt; Image to be built: gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME</span></div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
