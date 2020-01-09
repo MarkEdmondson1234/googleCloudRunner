@@ -104,7 +104,7 @@ cr_deploy_r <- function(r,
 
 #' Deploy a local Dockerfile to be built on ContainerRegistry
 #'
-#' If no Dockerfile present in the deployment folder, will attempt to create a Dockerfile to upload via \link{cr_dockerfile_plumber}
+#' Build a local Dockerfile in the cloud. See googleCloudRunner website for help how to generate Dockerfiles.
 #'
 #' @param local The folder containing the Dockerfile to build
 #' @param remote The folder on Google Cloud Storage
