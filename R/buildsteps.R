@@ -20,7 +20,7 @@
 #'
 #' @section WaitFor:
 #'
-#' By default each buildstep waits for the previous, but if you pass \code{"-"} then it will start immediatly, or if you pass in a list of ids it will wait for previous buildsteps to finish who have that id.  See \href{Configuring Build Step Order}{https://cloud.google.com/cloud-build/docs/configuring-builds/configure-build-step-order} for details.
+#' By default each buildstep waits for the previous, but if you pass \code{"-"} then it will start immediately, or if you pass in a list of ids it will wait for previous buildsteps to finish who have that id.  See \href{Configuring Build Step Order}{https://cloud.google.com/cloud-build/docs/configuring-builds/configure-build-step-order} for details.
 #'
 #' @section Build Macros:
 #' Fields can include the following variables, which will be expanded when the build is created:-

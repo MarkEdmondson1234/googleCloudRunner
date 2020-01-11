@@ -153,7 +153,7 @@ read.csv("artifact.csv")
 
 ## Creating cloudbuild.yml build steps 
 
-Instead of using seperate `cloudbuild.yml` files, you can also choose to make your own cloudbuild.yaml files in R via `cr_build_yaml()` and `cr_buildstep()`
+Instead of using separate `cloudbuild.yml` files, you can also choose to make your own cloudbuild.yaml files in R via `cr_build_yaml()` and `cr_buildstep()`
 
 Lets say you don't want to write a cloudbuild.yaml file - instead you can create all the features of the yaml files in R.  Refer to the [cloudbuild.yml config spec](https://cloud.google.com/cloud-build/docs/build-config) on what it expected in the files or functions. 
 
@@ -264,7 +264,7 @@ Once you have build steps and possibly a source created, you can either set thes
 
 The quickest way to get going is to use the web UI for Build Triggers (`https://console.cloud.google.com/cloud-build/triggers`)
 
-1. Link your repo (GitHub, Bitbucket or Cloud Repositores) to Google 
+1. Link your repo (GitHub, Bitbucket or Cloud Repositories) to Google 
 2. Create your Cloud Build using `cr_build_yaml()` etc.
 3. Write out to a `cloudbuild.yml` file in your repository (by default the root directory is checked)
 4. Setup the Build Trigger in the Web UI (`https://console.cloud.google.com/cloud-build/triggers`)
@@ -275,7 +275,7 @@ Learn how to set them up at this Google article on [creating and managing build 
 
 From there you get the option of connecting a repository either by mirroring it from GitHub/Bitbucket or using Cloud Source Repositories.
 
-You can setup either Docker builds by just providing the location of the `Dockerfile`, or have more control by providing a `cloudbuild.yml` - by defualt these are looked for in the root directory.
+You can setup either Docker builds by just providing the location of the `Dockerfile`, or have more control by providing a `cloudbuild.yml` - by default these are looked for in the root directory.
 
 Here are some example for this package's GitHub repo:
 
@@ -333,7 +333,7 @@ You can connect via the [Source Repository mirroring service](https://cloud.goog
 
 Mirroring the GitHub repo is necessary if using it for sources of builds.  
 
-Once your repo is mirrored it gives you a CLoud Repository name which is of the form `github_username_repo` - this you can add to a `RepoSource()`:
+Once your repo is mirrored it gives you a Cloud Repository name which is of the form `github_username_repo` - this you can add to a `RepoSource()`:
 
 ```r
 # this repo mirrored on Google Source repos

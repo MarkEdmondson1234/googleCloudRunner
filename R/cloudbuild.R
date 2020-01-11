@@ -243,7 +243,7 @@ cr_build_status <- function(id = .Last.value,
 #' @param path_regex A regex of files to fetch from the artifact bucket location.  This is due to not being able to support the path globs
 #'
 #' @details
-#' If your artifacts are using file glob (e.g. \code{myfolder/**}) to decide which workspace files are uploaded to Cloud Storage, you will need to create a path_regex of similar functionality (\code{"^myfolder/"}).  This is not needed if you use absolete path names such as \code{"myfile.csv"}
+#' If your artifacts are using file glob (e.g. \code{myfolder/**}) to decide which workspace files are uploaded to Cloud Storage, you will need to create a path_regex of similar functionality (\code{"^myfolder/"}).  This is not needed if you use absolute path names such as \code{"myfile.csv"}
 #'
 #' @export
 #' @family Cloud Build functions

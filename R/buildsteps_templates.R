@@ -237,6 +237,7 @@ cr_buildstep_run <- function(name,
 #' Run a bash script in a Cloud Build step
 #'
 #' Helper to run a supplied bash script, that will be copied in-line
+#'
 #' @param bash_script bash code to run or a filepath to a file containing bash code that ends with .bash or .sh
 #' @param name The image that will run the R code
 #' @param bash_source Whether the code will be from a runtime file within the source or at build time copying over from a local file in your session
@@ -246,7 +247,7 @@ cr_buildstep_run <- function(name,
 #'
 #' @details
 #'
-#' If you need to escape build parameters in bash scripts, you need to escpae CloudBuild's substitution via \code{$$} and bash's substitution via \code{\$} e.g. \code{\$$PARAM}
+#' If you need to escape build parameters in bash scripts, you need to escape CloudBuild's substitution via \code{$$} and bash's substitution via \code{\$} e.g. \code{\$$PARAM}
 #'
 #' @examples
 #'

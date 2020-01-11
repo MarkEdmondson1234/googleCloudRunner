@@ -24,7 +24,7 @@ cr_build_artifacts(
 If a completed build includes artifact files this downloads them to local files
 }
 \details{
-If your artifacts are using file glob (e.g. \code{myfolder/**}) to decide which workspace files are uploaded to Cloud Storage, you will need to create a path_regex of similar functionality (\code{"^myfolder/"}).  This is not needed if you use absolete path names such as \code{"myfile.csv"}
+If your artifacts are using file glob (e.g. \code{myfolder/**}) to decide which workspace files are uploaded to Cloud Storage, you will need to create a path_regex of similar functionality (\code{"^myfolder/"}).  This is not needed if you use absolute path names such as \code{"myfile.csv"}
 }
 \examples{
 

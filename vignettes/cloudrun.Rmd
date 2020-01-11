@@ -74,7 +74,7 @@ Deployment via `cr_deploy_plumber()` automated these steps:
 2. Creates a Cloud Build job for building the files uploaded to the GCS bucket, and pushes the Docker images to Google Container Registry
 3. Deploys that container to Cloud Run
 
-It will launch a browser showing the build on Cloud Build, or you can wait for progress in your local R sesion.  Upon successfully deployment it gives you a `CloudRunService` object with details of the deployment. 
+It will launch a browser showing the build on Cloud Build, or you can wait for progress in your local R session.  Upon successfully deployment it gives you a `CloudRunService` object with details of the deployment. 
 
 All the above stages can be customised for your own purposes, using the functions explained below.
 

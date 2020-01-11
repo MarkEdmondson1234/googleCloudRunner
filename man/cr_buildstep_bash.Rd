@@ -24,7 +24,7 @@ cr_buildstep_bash(
 Helper to run a supplied bash script, that will be copied in-line
 }
 \details{
-If you need to escape build parameters in bash scripts, you need to escpae CloudBuild's substitution via \code{$$} and bash's substitution via \code{\$} e.g. \code{\$$PARAM}
+If you need to escape build parameters in bash scripts, you need to escape CloudBuild's substitution via \code{$$} and bash's substitution via \code{\$} e.g. \code{\$$PARAM}
 }
 \examples{
 

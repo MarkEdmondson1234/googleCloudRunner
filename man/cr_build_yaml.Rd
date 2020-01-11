@@ -19,7 +19,7 @@ cr_build_yaml(
 \arguments{
 \item{steps}{A vector of \link{cr_buildstep}}
 
-\item{timeout}{How long the entrie build will run. If not set will be 10mins}
+\item{timeout}{How long the entire build will run. If not set will be 10mins}
 
 \item{logsBucket}{Where logs are written.  If you don't set this field, Cloud Build will use a default bucket to store your build logs.}
 

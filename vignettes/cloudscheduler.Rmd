@@ -87,7 +87,7 @@ This sets up a Shiny UI to help smooth out deployments as pictured:
 
 If you want to customise deployments, then the steps covered by `cr_deploy_r()` are covered below.
 
-To schedue an R script the steps are:
+To schedule an R script the steps are:
 
 1. Create your R script 
 2. Select or build an R enabled Dockerfile to run the R code

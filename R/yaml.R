@@ -3,7 +3,7 @@
 #' This can be written to disk or used directly with functions such as \link{cr_build}
 #'
 #' @param steps A vector of \link{cr_buildstep}
-#' @param timeout How long the entrie build will run. If not set will be 10mins
+#' @param timeout How long the entire build will run. If not set will be 10mins
 #' @param logsBucket Where logs are written.  If you don't set this field, Cloud Build will use a default bucket to store your build logs.
 #' @param options A named list of options
 #' @param substitutions Build macros that will replace entries in other elements
