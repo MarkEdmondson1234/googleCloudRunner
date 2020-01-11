@@ -18,3 +18,4 @@
 ^cb_rsa\.enc$
 ^auth\.json\.enc$
 ^auth\.json$
+^cran-comments\.md$
