@@ -194,7 +194,7 @@
     </tr>
     <tr>
       <th>r_image</th>
-      <td><p>The R docker environment exectuting the R code</p></td>
+      <td><p>The R docker environment executing the R code</p></td>
     </tr>
     <tr>
       <th>pre_steps</th>
@@ -231,7 +231,7 @@
     <p>If scheduling then a <a href='Job.html'>Job</a>, if building immediately then a <a href='Build.html'>Build</a></p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If <code>schedule=NULL</code> then the R script will be run immediatly on Cloud Build via <a href='cr_build.html'>cr_build</a>.</p>
+    <p>If <code>schedule=NULL</code> then the R script will be run immediately on Cloud Build via <a href='cr_build.html'>cr_build</a>.</p>
 <p>If <code>schedule</code> carries a cron job string (e.g. <code>"15 5 * * *"</code>) then the build will be scheduled via Cloud Scheduler to run as described in <a href='cr_build_schedule_http.html'>cr_build_schedule_http</a></p>
 <p>The R script will execute within the root directory of which <a href='Source.html'>Source</a> you supply, usually created via <a href='cr_build_source.html'>cr_build_source</a>.  Bear in mind if the source changes then the code scheduled may need updating.</p>
 <p>The <code>r_image</code> dictates what R libraries the R environment executing the code of <code>r</code> will have, via the underlying Docker container usually supplied by rocker-project.org.  If you want custom R libraries beyond the default, create a docker container with those R libraries installed (perhaps via <a href='cr_deploy_docker.html'>cr_deploy_docker</a>)</p>
