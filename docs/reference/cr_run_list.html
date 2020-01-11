@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleCloudRunner</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9005</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -158,8 +158,12 @@
     <p>List the Cloud Run services you have access to</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_run_list</span>(<span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(), <span class='kw'>labelSelector</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>limit</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>summary</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_run_list</span>(
+  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
+  <span class='kw'>labelSelector</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>limit</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>summary</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -185,8 +189,10 @@
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='https://cloud.run'>Google Documentation for Cloud Run</a></p>
-<p>Other Cloud Run functions: <code><a href='cr_plumber_pubsub.html'>cr_plumber_pubsub</a></code>,
-  <code><a href='cr_run_get.html'>cr_run_get</a></code>, <code><a href='cr_run.html'>cr_run</a></code></p></div>
+<p>Other Cloud Run functions: 
+<code><a href='cr_plumber_pubsub.html'>cr_plumber_pubsub</a>()</code>,
+<code><a href='cr_run_get.html'>cr_run_get</a>()</code>,
+<code><a href='cr_run.html'>cr_run</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
