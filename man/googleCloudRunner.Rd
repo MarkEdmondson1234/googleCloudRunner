@@ -3,7 +3,6 @@
 \docType{package}
 \name{googleCloudRunner}
 \alias{googleCloudRunner}
-\alias{googleCloudRunner-package}
 \title{Launch R scripts into the Google Cloud via Cloud Build, Cloud Run and Cloud Scheduler}
 \description{
 Launch R scripts into the Google Cloud via Cloud Build, Cloud Run and Cloud Scheduler

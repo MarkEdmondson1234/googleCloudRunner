@@ -4,9 +4,16 @@
 \alias{cr_build_make}
 \title{Make a Cloud Build object out of a cloudbuild.yml file}
 \usage{
-cr_build_make(yaml, source = NULL, timeout = NULL, images = NULL,
-  artifacts = NULL, options = NULL, substitutions = NULL,
-  projectId = cr_project_get())
+cr_build_make(
+  yaml,
+  source = NULL,
+  timeout = NULL,
+  images = NULL,
+  artifacts = NULL,
+  options = NULL,
+  substitutions = NULL,
+  projectId = cr_project_get()
+)
 }
 \arguments{
 \item{yaml}{A \code{Yaml} object created from \link{cr_build_yaml} or a file location of a .yaml/.yml cloud build file}
@@ -36,15 +43,18 @@ cr_build_make(cloudbuild, projectId = "test-project")
 \seealso{
 https://cloud.google.com/cloud-build/docs/build-config
 
-Other Cloud Build functions: \code{\link{Build}},
-  \code{\link{RepoSource}}, \code{\link{Source}},
-  \code{\link{StorageSource}},
-  \code{\link{cr_build_artifacts}},
-  \code{\link{cr_build_status}},
-  \code{\link{cr_build_upload_gcs}},
-  \code{\link{cr_build_wait}},
-  \code{\link{cr_build_write}},
-  \code{\link{cr_build_yaml_artifact}},
-  \code{\link{cr_build_yaml}}, \code{\link{cr_build}}
+Other Cloud Build functions: 
+\code{\link{Build}()},
+\code{\link{RepoSource}()},
+\code{\link{Source}()},
+\code{\link{StorageSource}()},
+\code{\link{cr_build_artifacts}()},
+\code{\link{cr_build_status}()},
+\code{\link{cr_build_upload_gcs}()},
+\code{\link{cr_build_wait}()},
+\code{\link{cr_build_write}()},
+\code{\link{cr_build_yaml_artifact}()},
+\code{\link{cr_build_yaml}()},
+\code{\link{cr_build}()}
 }
 \concept{Cloud Build functions}

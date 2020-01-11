@@ -4,9 +4,15 @@
 \alias{cr_buildstep_slack}
 \title{Send a Slack message to a channel from a Cloud Build step}
 \usage{
-cr_buildstep_slack(message, title = "CloudBuild - $BUILD_ID",
-  channel = NULL, username = "googleCloudRunnerBot",
-  webhook = "$_SLACK_WEBHOOK", icon = NULL, colour = "#efefef")
+cr_buildstep_slack(
+  message,
+  title = "CloudBuild - $BUILD_ID",
+  channel = NULL,
+  username = "googleCloudRunnerBot",
+  webhook = "$_SLACK_WEBHOOK",
+  icon = NULL,
+  colour = "#efefef"
+)
 }
 \arguments{
 \item{message}{The body of the message}
@@ -47,17 +53,19 @@ cr_build(bs, substitutions = list(`_SLACK_WEBHOOK` = webhook))
 
 }
 \seealso{
-Other Cloud Buildsteps: \code{\link{cr_buildstep_bash}},
-  \code{\link{cr_buildstep_decrypt}},
-  \code{\link{cr_buildstep_df}},
-  \code{\link{cr_buildstep_docker}},
-  \code{\link{cr_buildstep_edit}},
-  \code{\link{cr_buildstep_extract}},
-  \code{\link{cr_buildstep_gitsetup}},
-  \code{\link{cr_buildstep_mailgun}},
-  \code{\link{cr_buildstep_nginx_setup}},
-  \code{\link{cr_buildstep_pkgdown}},
-  \code{\link{cr_buildstep_run}},
-  \code{\link{cr_buildstep_r}}, \code{\link{cr_buildstep}}
+Other Cloud Buildsteps: 
+\code{\link{cr_buildstep_bash}()},
+\code{\link{cr_buildstep_decrypt}()},
+\code{\link{cr_buildstep_df}()},
+\code{\link{cr_buildstep_docker}()},
+\code{\link{cr_buildstep_edit}()},
+\code{\link{cr_buildstep_extract}()},
+\code{\link{cr_buildstep_gitsetup}()},
+\code{\link{cr_buildstep_mailgun}()},
+\code{\link{cr_buildstep_nginx_setup}()},
+\code{\link{cr_buildstep_pkgdown}()},
+\code{\link{cr_buildstep_run}()},
+\code{\link{cr_buildstep_r}()},
+\code{\link{cr_buildstep}()}
 }
 \concept{Cloud Buildsteps}

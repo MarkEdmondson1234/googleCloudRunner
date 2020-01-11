@@ -4,9 +4,17 @@
 \alias{cr_build_yaml}
 \title{Create a cloudbuild Yaml object in R}
 \usage{
-cr_build_yaml(steps, timeout = NULL, logsBucket = NULL,
-  options = NULL, substitutions = NULL, tags = NULL,
-  secrets = NULL, images = NULL, artifacts = NULL)
+cr_build_yaml(
+  steps,
+  timeout = NULL,
+  logsBucket = NULL,
+  options = NULL,
+  substitutions = NULL,
+  tags = NULL,
+  secrets = NULL,
+  images = NULL,
+  artifacts = NULL
+)
 }
 \arguments{
 \item{steps}{A vector of \link{cr_buildstep}}
@@ -41,16 +49,18 @@ cr_build_yaml(steps = c(
 \seealso{
 \href{Build configuration overview for cloudbuild.yaml}{https://cloud.google.com/cloud-build/docs/build-config}
 
-Other Cloud Build functions: \code{\link{Build}},
-  \code{\link{RepoSource}}, \code{\link{Source}},
-  \code{\link{StorageSource}},
-  \code{\link{cr_build_artifacts}},
-  \code{\link{cr_build_make}},
-  \code{\link{cr_build_status}},
-  \code{\link{cr_build_upload_gcs}},
-  \code{\link{cr_build_wait}},
-  \code{\link{cr_build_write}},
-  \code{\link{cr_build_yaml_artifact}},
-  \code{\link{cr_build}}
+Other Cloud Build functions: 
+\code{\link{Build}()},
+\code{\link{RepoSource}()},
+\code{\link{Source}()},
+\code{\link{StorageSource}()},
+\code{\link{cr_build_artifacts}()},
+\code{\link{cr_build_make}()},
+\code{\link{cr_build_status}()},
+\code{\link{cr_build_upload_gcs}()},
+\code{\link{cr_build_wait}()},
+\code{\link{cr_build_write}()},
+\code{\link{cr_build_yaml_artifact}()},
+\code{\link{cr_build}()}
 }
 \concept{Cloud Build functions}

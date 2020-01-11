@@ -4,8 +4,12 @@
 \alias{cr_buildstep_bash}
 \title{Run a bash script in a Cloud Build step}
 \usage{
-cr_buildstep_bash(bash_script, name = "ubuntu",
-  bash_source = c("local", "runtime"), ...)
+cr_buildstep_bash(
+  bash_script,
+  name = "ubuntu",
+  bash_source = c("local", "runtime"),
+  ...
+)
 }
 \arguments{
 \item{bash_script}{bash code to run or a filepath to a file containing bash code that ends with .bash or .sh}
@@ -33,18 +37,19 @@ cr_build(bs)
 }
 }
 \seealso{
-Other Cloud Buildsteps: \code{\link{cr_buildstep_decrypt}},
-  \code{\link{cr_buildstep_df}},
-  \code{\link{cr_buildstep_docker}},
-  \code{\link{cr_buildstep_edit}},
-  \code{\link{cr_buildstep_extract}},
-  \code{\link{cr_buildstep_gitsetup}},
-  \code{\link{cr_buildstep_mailgun}},
-  \code{\link{cr_buildstep_nginx_setup}},
-  \code{\link{cr_buildstep_pkgdown}},
-  \code{\link{cr_buildstep_run}},
-  \code{\link{cr_buildstep_r}},
-  \code{\link{cr_buildstep_slack}},
-  \code{\link{cr_buildstep}}
+Other Cloud Buildsteps: 
+\code{\link{cr_buildstep_decrypt}()},
+\code{\link{cr_buildstep_df}()},
+\code{\link{cr_buildstep_docker}()},
+\code{\link{cr_buildstep_edit}()},
+\code{\link{cr_buildstep_extract}()},
+\code{\link{cr_buildstep_gitsetup}()},
+\code{\link{cr_buildstep_mailgun}()},
+\code{\link{cr_buildstep_nginx_setup}()},
+\code{\link{cr_buildstep_pkgdown}()},
+\code{\link{cr_buildstep_run}()},
+\code{\link{cr_buildstep_r}()},
+\code{\link{cr_buildstep_slack}()},
+\code{\link{cr_buildstep}()}
 }
 \concept{Cloud Buildsteps}

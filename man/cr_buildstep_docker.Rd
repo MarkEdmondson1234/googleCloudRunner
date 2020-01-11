@@ -4,8 +4,13 @@
 \alias{cr_buildstep_docker}
 \title{Create a build step to build and push a docker image}
 \usage{
-cr_buildstep_docker(image, tag = "$BUILD_ID", location = ".",
-  projectId = cr_project_get(), ...)
+cr_buildstep_docker(
+  image,
+  tag = "$BUILD_ID",
+  location = ".",
+  projectId = cr_project_get(),
+  ...
+)
 }
 \arguments{
 \item{image}{The image tag that will be pushed, starting with gcr.io or created by combining with \code{projectId} if not starting with gcr.io}
@@ -39,18 +44,19 @@ cr_buildtrigger("build-docker", trigger = my_repo, build = built_docker)
 }
 }
 \seealso{
-Other Cloud Buildsteps: \code{\link{cr_buildstep_bash}},
-  \code{\link{cr_buildstep_decrypt}},
-  \code{\link{cr_buildstep_df}},
-  \code{\link{cr_buildstep_edit}},
-  \code{\link{cr_buildstep_extract}},
-  \code{\link{cr_buildstep_gitsetup}},
-  \code{\link{cr_buildstep_mailgun}},
-  \code{\link{cr_buildstep_nginx_setup}},
-  \code{\link{cr_buildstep_pkgdown}},
-  \code{\link{cr_buildstep_run}},
-  \code{\link{cr_buildstep_r}},
-  \code{\link{cr_buildstep_slack}},
-  \code{\link{cr_buildstep}}
+Other Cloud Buildsteps: 
+\code{\link{cr_buildstep_bash}()},
+\code{\link{cr_buildstep_decrypt}()},
+\code{\link{cr_buildstep_df}()},
+\code{\link{cr_buildstep_edit}()},
+\code{\link{cr_buildstep_extract}()},
+\code{\link{cr_buildstep_gitsetup}()},
+\code{\link{cr_buildstep_mailgun}()},
+\code{\link{cr_buildstep_nginx_setup}()},
+\code{\link{cr_buildstep_pkgdown}()},
+\code{\link{cr_buildstep_run}()},
+\code{\link{cr_buildstep_r}()},
+\code{\link{cr_buildstep_slack}()},
+\code{\link{cr_buildstep}()}
 }
 \concept{Cloud Buildsteps}

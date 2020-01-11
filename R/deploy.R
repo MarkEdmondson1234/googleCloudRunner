@@ -111,6 +111,7 @@ cr_deploy_r <- function(r,
 #' @param dockerfile An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"
 #' @param bucket The GCS bucker that will be used to deploy code source
 #' @param image_name The name of the docker image to be built either full name starting with gcr.io or constructed from the image_name and projectId via \code{gcr.io/{projectId}/{image_name}}
+#' @param ... Other arguments passed to \link{cr_buildstep_docker}
 #' @inheritParams cr_buildstep_docker
 #' @inheritParams cr_build
 #' @export
@@ -137,7 +138,8 @@ cr_deploy_docker <- function(local,
                              timeout = 600L,
                              bucket = cr_bucket_get(),
                              projectId = cr_project_get(),
-                             launch_browser = interactive()){
+                             launch_browser = interactive(),
+                             ...){
   assert_that(
     dir.exists(local)
   )
@@ -159,7 +161,8 @@ cr_deploy_docker <- function(local,
                                 tag = tag,
                                 location = ".",
                                 dir=paste0("deploy/", remote),
-                                projectId = projectId),
+                                projectId = projectId,
+                                ...),
     images = image)
 
   image_tag <- paste0(image, ":", tag)

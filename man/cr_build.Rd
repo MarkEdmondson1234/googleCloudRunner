@@ -4,9 +4,17 @@
 \alias{cr_build}
 \title{Starts a build with the specified configuration.}
 \usage{
-cr_build(x, source = NULL, timeout = NULL, images = NULL,
-  substitutions = NULL, artifacts = NULL, options = NULL,
-  projectId = cr_project_get(), launch_browser = interactive())
+cr_build(
+  x,
+  source = NULL,
+  timeout = NULL,
+  images = NULL,
+  substitutions = NULL,
+  artifacts = NULL,
+  options = NULL,
+  projectId = cr_project_get(),
+  launch_browser = interactive()
+)
 }
 \arguments{
 \item{x}{A cloudbuild.yaml file location or an R object that will be turned into yaml via \link[yaml]{as.yaml} or a \link{Build} object created by \link{cr_build_make} or from a previous build you want to rerun.}
@@ -75,16 +83,18 @@ cr_build(build2, substitutions = list(`_SUB` = "yo"))
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/}{Google Documentation for Cloud Build}
 
-Other Cloud Build functions: \code{\link{Build}},
-  \code{\link{RepoSource}}, \code{\link{Source}},
-  \code{\link{StorageSource}},
-  \code{\link{cr_build_artifacts}},
-  \code{\link{cr_build_make}},
-  \code{\link{cr_build_status}},
-  \code{\link{cr_build_upload_gcs}},
-  \code{\link{cr_build_wait}},
-  \code{\link{cr_build_write}},
-  \code{\link{cr_build_yaml_artifact}},
-  \code{\link{cr_build_yaml}}
+Other Cloud Build functions: 
+\code{\link{Build}()},
+\code{\link{RepoSource}()},
+\code{\link{Source}()},
+\code{\link{StorageSource}()},
+\code{\link{cr_build_artifacts}()},
+\code{\link{cr_build_make}()},
+\code{\link{cr_build_status}()},
+\code{\link{cr_build_upload_gcs}()},
+\code{\link{cr_build_wait}()},
+\code{\link{cr_build_write}()},
+\code{\link{cr_build_yaml_artifact}()},
+\code{\link{cr_build_yaml}()}
 }
 \concept{Cloud Build functions}

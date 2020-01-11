@@ -4,8 +4,7 @@
 \alias{cr_buildtrigger_edit}
 \title{Updates a `BuildTrigger` by its project ID and trigger ID.This API is experimental.}
 \usage{
-cr_buildtrigger_edit(BuildTrigger, triggerId,
-  projectId = cr_project_get())
+cr_buildtrigger_edit(BuildTrigger, triggerId, projectId = cr_project_get())
 }
 \arguments{
 \item{BuildTrigger}{The \link{BuildTrigger} object to update to}
@@ -40,13 +39,14 @@ edited <- cr_buildtrigger_edit(bt3, triggerId = bt2)
 
 }
 \seealso{
-Other BuildTrigger functions: \code{\link{BuildTrigger}},
-  \code{\link{GitHubEventsConfig}},
-  \code{\link{cr_buildtrigger_delete}},
-  \code{\link{cr_buildtrigger_get}},
-  \code{\link{cr_buildtrigger_list}},
-  \code{\link{cr_buildtrigger_make}},
-  \code{\link{cr_buildtrigger_run}},
-  \code{\link{cr_buildtrigger}}
+Other BuildTrigger functions: 
+\code{\link{BuildTrigger}()},
+\code{\link{GitHubEventsConfig}()},
+\code{\link{cr_buildtrigger_delete}()},
+\code{\link{cr_buildtrigger_get}()},
+\code{\link{cr_buildtrigger_list}()},
+\code{\link{cr_buildtrigger_make}()},
+\code{\link{cr_buildtrigger_run}()},
+\code{\link{cr_buildtrigger}()}
 }
 \concept{BuildTrigger functions}

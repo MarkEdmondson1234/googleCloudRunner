@@ -5,11 +5,9 @@
 \alias{cr_schedule_resume}
 \title{Pauses and resumes a scheduled job.}
 \usage{
-cr_schedule_pause(x, region = cr_region_get(),
-  projectId = cr_project_get())
+cr_schedule_pause(x, region = cr_region_get(), projectId = cr_project_get())
 
-cr_schedule_resume(x, region = cr_region_get(),
-  projectId = cr_project_get())
+cr_schedule_resume(x, region = cr_region_get(), projectId = cr_project_get())
 }
 \arguments{
 \item{x}{The name of the scheduled job or a \link{Job} object}
@@ -37,10 +35,13 @@ cr_schedule_resume("cloud-build-test1")
 
 \href{https://cloud.google.com/scheduler/}{cloudscheduler.projects.locations.jobs.resume}
 
-Other Cloud Scheduler functions: \code{\link{HttpTarget}},
-  \code{\link{Job}}, \code{\link{cr_schedule_delete}},
-  \code{\link{cr_schedule_get}},
-  \code{\link{cr_schedule_list}},
-  \code{\link{cr_schedule_run}}, \code{\link{cr_schedule}}
+Other Cloud Scheduler functions: 
+\code{\link{HttpTarget}()},
+\code{\link{Job}()},
+\code{\link{cr_schedule_delete}()},
+\code{\link{cr_schedule_get}()},
+\code{\link{cr_schedule_list}()},
+\code{\link{cr_schedule_run}()},
+\code{\link{cr_schedule}()}
 }
 \concept{Cloud Scheduler functions}
