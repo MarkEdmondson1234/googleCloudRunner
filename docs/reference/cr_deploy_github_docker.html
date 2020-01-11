@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleCloudRunner</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9005</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -158,9 +158,16 @@
     <p>This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_github_docker</span>(<span class='no'>x</span>, <span class='kw'>image</span> <span class='kw'>=</span> <span class='no'>x</span>, <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>,
-  <span class='kw'>image_tag</span> <span class='kw'>=</span> <span class='st'>"$SHORT_SHA"</span>, <span class='kw'>dockerfile_location</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>github_tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>, <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>())</pre>
+    <pre class="usage"><span class='fu'>cr_deploy_github_docker</span>(
+  <span class='no'>x</span>,
+  <span class='kw'>image</span> <span class='kw'>=</span> <span class='no'>x</span>,
+  <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>,
+  <span class='kw'>image_tag</span> <span class='kw'>=</span> <span class='st'>"$SHORT_SHA"</span>,
+  <span class='kw'>dockerfile_location</span> <span class='kw'>=</span> <span class='st'>"."</span>,
+  <span class='kw'>github_tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
+  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -205,10 +212,12 @@
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='cr_deploy_docker.html'>cr_deploy_docker</a> which lets you build Dockerfiles for more generic use cases</p>
-<p>Other Deployment functions: <code><a href='cr_deploy_docker.html'>cr_deploy_docker</a></code>,
-  <code><a href='cr_deploy_git_html.html'>cr_deploy_git_html</a></code>,
-  <code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a></code>,
-  <code><a href='cr_deploy_run.html'>cr_deploy_run</a></code>, <code><a href='cr_deploy_r.html'>cr_deploy_r</a></code></p></div>
+<p>Other Deployment functions: 
+<code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
+<code><a href='cr_deploy_git_html.html'>cr_deploy_git_html</a>()</code>,
+<code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a>()</code>,
+<code><a href='cr_deploy_run.html'>cr_deploy_run</a>()</code>,
+<code><a href='cr_deploy_r.html'>cr_deploy_r</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

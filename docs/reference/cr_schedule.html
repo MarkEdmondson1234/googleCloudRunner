@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleCloudRunner</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9005</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -158,9 +158,15 @@
     <p>Creates or updates a Cloud Scheduler job.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_schedule</span>(<span class='no'>name</span>, <span class='kw'>schedule</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>httpTarget</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>())</pre>
+    <pre class="usage"><span class='fu'>cr_schedule</span>(
+  <span class='no'>name</span>,
+  <span class='kw'>schedule</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>httpTarget</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
+  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -198,12 +204,14 @@
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/create'>Google Documentation for Cloud Scheduler</a></p>
-<p>Other Cloud Scheduler functions: <code><a href='HttpTarget.html'>HttpTarget</a></code>,
-  <code><a href='Job.html'>Job</a></code>, <code><a href='cr_schedule_delete.html'>cr_schedule_delete</a></code>,
-  <code><a href='cr_schedule_get.html'>cr_schedule_get</a></code>,
-  <code><a href='cr_schedule_list.html'>cr_schedule_list</a></code>,
-  <code><a href='cr_schedule_pause.html'>cr_schedule_pause</a></code>,
-  <code><a href='cr_schedule_run.html'>cr_schedule_run</a></code></p></div>
+<p>Other Cloud Scheduler functions: 
+<code><a href='HttpTarget.html'>HttpTarget</a>()</code>,
+<code><a href='Job.html'>Job</a>()</code>,
+<code><a href='cr_schedule_delete.html'>cr_schedule_delete</a>()</code>,
+<code><a href='cr_schedule_get.html'>cr_schedule_get</a>()</code>,
+<code><a href='cr_schedule_list.html'>cr_schedule_list</a>()</code>,
+<code><a href='cr_schedule_pause.html'>cr_schedule_pause</a>()</code>,
+<code><a href='cr_schedule_run.html'>cr_schedule_run</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"></pre>
