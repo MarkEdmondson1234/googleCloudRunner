@@ -1,11 +1,6 @@
 ---
 title: "Serverless batched R scripts via Cloud Build"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Serverless batched R scripts via Cloud Build}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 Cloud Build uses [Docker containers](https://www.docker.com/resources/what-container) to run everything.  This means it can run almost any language/program or application including R. Having an easy way to create and trigger these builds from R means R can serve as a UI or gateway to any other program e.g. R can trigger a Cloud Build using `gcloud` to deploy Cloud Run applications.

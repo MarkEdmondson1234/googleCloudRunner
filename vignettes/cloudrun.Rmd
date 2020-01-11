@@ -1,11 +1,6 @@
 ---
 title: "R on Cloud Run"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{R on Cloud Run}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 [Cloud Run](https://cloud.run) is a service that lets you deploy container images without worrying about the underlying servers or infrastructure.  It is called with `cr_run()`, or you can automate a deployment via `cr_deploy_run()`.

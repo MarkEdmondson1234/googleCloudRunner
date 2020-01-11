@@ -1,11 +1,6 @@
 ---
 title: "Scheduled R scripts via Cloud Scheduler"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Scheduled R scripts via Cloud Scheduler}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 [Cloud Scheduler](https://cloud.google.com/scheduler/) is a scheduler service in the Google Cloud that uses cron like syntax to schedule tasks.  It can trigger HTTP or Pub/Sub jobs via `cr_schedule()`

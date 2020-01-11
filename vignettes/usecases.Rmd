@@ -1,11 +1,6 @@
 ---
 title: "Example Use Cases for googleCloudRunner"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Example Use Cases for googleCloudRunner}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 Here will be some example use cases you can use googleCloudRunner for.
