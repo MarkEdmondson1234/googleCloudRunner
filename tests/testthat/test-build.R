@@ -181,7 +181,8 @@ test_that("[Online] Test Build Triggers",{
 
 test_that("Test Source Repo functions", {
   skip_on_travis()
-  #skip_on_cran()
+  skip_on_cran()
+
   sr <- cr_sourcerepo_list()
 
   expect_s3_class(sr, "data.frame")

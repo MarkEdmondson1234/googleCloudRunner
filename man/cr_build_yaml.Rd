@@ -47,7 +47,7 @@ cr_build_yaml(steps = c(
   images = image)
 }
 \seealso{
-\href{Build configuration overview for cloudbuild.yaml}{https://cloud.google.com/cloud-build/docs/build-config}
+\href{https://cloud.google.com/cloud-build/docs/build-config}{Build configuration overview for cloudbuild.yaml}
 
 Other Cloud Build functions: 
 \code{\link{Build}()},

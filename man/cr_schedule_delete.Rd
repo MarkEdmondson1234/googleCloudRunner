@@ -29,6 +29,7 @@ cr_schedule_delete("cloud-build-test1")
 Other Cloud Scheduler functions: 
 \code{\link{HttpTarget}()},
 \code{\link{Job}()},
+\code{\link{cr_build_schedule_http}()},
 \code{\link{cr_schedule_get}()},
 \code{\link{cr_schedule_list}()},
 \code{\link{cr_schedule_pause}()},

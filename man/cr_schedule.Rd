@@ -60,6 +60,7 @@ cr_schedule("cloud-build-test2", "12 6 * * *", overwrite=TRUE)
 Other Cloud Scheduler functions: 
 \code{\link{HttpTarget}()},
 \code{\link{Job}()},
+\code{\link{cr_build_schedule_http}()},
 \code{\link{cr_schedule_delete}()},
 \code{\link{cr_schedule_get}()},
 \code{\link{cr_schedule_list}()},

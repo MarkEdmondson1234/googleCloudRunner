@@ -30,6 +30,7 @@ Ensure you have a service email with \link{cr_email_set} of format \code{service
 cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
 build1 <- cr_build_make(cloudbuild)
 build1
+
 \dontrun{
 cr_schedule("15 5 * * *", name="cloud-build-test1",
             httpTarget = cr_build_schedule_http(build1))
@@ -46,5 +47,15 @@ cr_schedule("15 5 * * *", name="itworks-schedule",
 }
 \seealso{
 https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/create
+
+Other Cloud Scheduler functions: 
+\code{\link{HttpTarget}()},
+\code{\link{Job}()},
+\code{\link{cr_schedule_delete}()},
+\code{\link{cr_schedule_get}()},
+\code{\link{cr_schedule_list}()},
+\code{\link{cr_schedule_pause}()},
+\code{\link{cr_schedule_run}()},
+\code{\link{cr_schedule}()}
 }
-\concept{Cloud Scheduler functions, Cloud Build functions}
+\concept{Cloud Scheduler functions}

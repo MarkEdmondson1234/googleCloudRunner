@@ -12,7 +12,7 @@
 #' @param images What images will be build from this cloudbuild
 #' @param artifacts What artifacts may be built from this cloudbuild
 #'
-#' @seealso \href{Build configuration overview for cloudbuild.yaml}{https://cloud.google.com/cloud-build/docs/build-config}
+#' @seealso \href{https://cloud.google.com/cloud-build/docs/build-config}{Build configuration overview for cloudbuild.yaml}
 #' @export
 #' @family Cloud Build functions
 #' @examples
@@ -62,7 +62,7 @@ cr_build_yaml <- function(steps,
 #' r <- "write.csv(mtcars,file = 'artifact.csv')"
 #' cr_build_yaml(
 #'   steps = cr_buildstep_r(r),
-#'   artifacts = cr_build_yaml_artifact('artifact.csv')
+#'   artifacts = cr_build_yaml_artifact('artifact.csv', bucket = "my-bucket")
 #'   )
 cr_build_yaml_artifact <- function(paths,
                                    bucket_dir = NULL,

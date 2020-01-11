@@ -44,7 +44,7 @@ This uses R to make building steps for cloudbuild.yml files harder to make mista
 \section{WaitFor}{
 
 
-By default each buildstep waits for the previous, but if you pass \code{"-"} then it will start immediately, or if you pass in a list of ids it will wait for previous buildsteps to finish who have that id.  See \href{Configuring Build Step Order}{https://cloud.google.com/cloud-build/docs/configuring-builds/configure-build-step-order} for details.
+By default each buildstep waits for the previous, but if you pass \code{"-"} then it will start immediately, or if you pass in a list of ids it will wait for previous buildsteps to finish who have that id.  See \href{https://cloud.google.com/cloud-build/docs/configuring-builds/configure-build-step-order}{Configuring Build Step Order} for details.
 }
 
 \section{Build Macros}{

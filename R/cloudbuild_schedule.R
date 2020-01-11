@@ -14,12 +14,13 @@
 #'
 #' @export
 #' @import assertthat
-#' @family Cloud Scheduler functions, Cloud Build functions
+#' @family Cloud Scheduler functions
 #'
 #' @examples
 #' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
 #' build1 <- cr_build_make(cloudbuild)
 #' build1
+#'
 #' \dontrun{
 #' cr_schedule("15 5 * * *", name="cloud-build-test1",
 #'             httpTarget = cr_build_schedule_http(build1))

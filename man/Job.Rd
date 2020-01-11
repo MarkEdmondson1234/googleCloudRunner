@@ -62,6 +62,7 @@ Configuration for a job.The maximum allowed size for a job is 100KB.
 \seealso{
 Other Cloud Scheduler functions: 
 \code{\link{HttpTarget}()},
+\code{\link{cr_build_schedule_http}()},
 \code{\link{cr_schedule_delete}()},
 \code{\link{cr_schedule_get}()},
 \code{\link{cr_schedule_list}()},

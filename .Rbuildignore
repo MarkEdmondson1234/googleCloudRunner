@@ -9,7 +9,6 @@
 ^\.travis\.yml$
 ^deploy$
 ^cloudbuild\.yaml$
-^build$
 ^Dockerfile$
 ^_pkgdown\.yml$
 ^docs$
@@ -19,3 +18,4 @@
 ^auth\.json\.enc$
 ^auth\.json$
 ^cran-comments\.md$
+^CRAN-RELEASE$

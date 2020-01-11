@@ -31,7 +31,7 @@ If your artifacts are using file glob (e.g. \code{myfolder/**}) to decide which 
 r <- "write.csv(mtcars,file = 'artifact.csv')"
 ba <- cr_build_yaml(
     steps = cr_buildstep_r(r),
-    artifacts = cr_build_yaml_artifact('artifact.csv')
+    artifacts = cr_build_yaml_artifact('artifact.csv', bucket = "my-bucket")
     )
 ba
 \dontrun{
@@ -43,7 +43,7 @@ cr_build_artifacts(built)
 
 }
 \seealso{
-\href{Storing images and artifacts}{https://cloud.google.com/cloud-build/docs/configuring-builds/store-images-artifacts}
+\href{https://cloud.google.com/cloud-build/docs/configuring-builds/store-images-artifacts}{Storing images and artifacts}
 
 Other Cloud Build functions: 
 \code{\link{Build}()},
