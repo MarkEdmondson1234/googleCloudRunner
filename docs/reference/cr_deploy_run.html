@@ -283,18 +283,26 @@ From that api.R you can source or call other resources in the same folder, using
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-
+<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
+<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span>(<span class='st'>"europe-west1"</span>)
+<span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
 <span class='fu'>cr_deploy_run</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"example/"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>))
 
 }
 
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
+<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span>(<span class='st'>"europe-west1"</span>)
+<span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
 
 <span class='fu'>cr_deploy_html</span>(<span class='st'>"my_folder"</span>)
 
 }
 
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
+<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span>(<span class='st'>"europe-west1"</span>)
+<span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
 
 <span class='fu'>cr_deploy_plumber</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"example/"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>))
 

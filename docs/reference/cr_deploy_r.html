@@ -255,6 +255,10 @@
                                      <span class='kw'>branchName</span> <span class='kw'>=</span> <span class='st'>"master"</span>))
 
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
+<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span>(<span class='st'>"europe-west1"</span>)
+<span class='fu'><a href='cr_email_set.html'>cr_email_set</a></span>(<span class='st'>"123456@projectid.iam.gserviceaccount.com"</span>)
+
 <span class='co'># check the script runs ok</span>
 <span class='fu'>cr_deploy_r</span>(<span class='no'>r_lines</span>, <span class='kw'>source</span> <span class='kw'>=</span> <span class='no'>source</span>)
 
