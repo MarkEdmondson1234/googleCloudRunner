@@ -23,13 +23,18 @@ run_yaml <- cr_build_yaml(steps = c(
     cr_buildstep("docker", c("push",image)),
     cr_buildstep("gcloud", c("beta","run","deploy", "test1", "--image", image))),
   images = image)
+
+\dontrun{
 cr_build_write(run_yaml)
+}
 
 # write from a Build object
 build <- cr_build_make(system.file("cloudbuild/cloudbuild.yaml",
                                    package = "googleCloudRunner"))
-cr_build_write(build)
 
+\dontrun{
+cr_build_write(build)
+}
 }
 \seealso{
 Other Cloud Build functions: 

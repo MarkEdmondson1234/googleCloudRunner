@@ -166,13 +166,18 @@ get_cr_yaml <- function(x){
 #'     cr_buildstep("docker", c("push",image)),
 #'     cr_buildstep("gcloud", c("beta","run","deploy", "test1", "--image", image))),
 #'   images = image)
+#'
+#' \dontrun{
 #' cr_build_write(run_yaml)
+#' }
 #'
 #' # write from a Build object
 #' build <- cr_build_make(system.file("cloudbuild/cloudbuild.yaml",
 #'                                    package = "googleCloudRunner"))
-#' cr_build_write(build)
 #'
+#' \dontrun{
+#' cr_build_write(build)
+#' }
 cr_build_write <- function(x, file = "cloudbuild.yaml"){
   myMessage("Writing to ", file, level = 3)
   UseMethod("cr_build_write", x)

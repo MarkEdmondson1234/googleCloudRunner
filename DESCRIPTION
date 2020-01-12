@@ -2,7 +2,7 @@ Package: googleCloudRunner
 Type: Package
 Title: R Scripts in the Google Cloud via 
   Cloud Run <https://cloud.run>, Cloud Build <https://cloud.google.com/cloud-build/> 
-  and Cloud Scheduler <https://cloud.google.com/scheduler/>
+  and Cloud Scheduler <https://cloud.google.com/scheduler/>
 Version: 0.1.0
 Authors@R: c(person("Mark", "Edmondson", email = "r@sunholo.com",
                   role = c("aut", "cre"),
@@ -29,6 +29,7 @@ Imports:
 Suggests: 
     knitr,
     miniUI,
+    plumber, 
     rmarkdown,
     shiny,
     testthat (>= 2.1.0)

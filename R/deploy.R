@@ -221,7 +221,10 @@ cr_deploy_docker <- function(local,
 #' @examples
 #'
 #' pd <- cr_deploy_pkgdown()
-#' pd
+#' file.exists("cloudbuild.yml")
+#'
+#' unlink("cloudbuild.yml")
+#'
 cr_deploy_pkgdown <- function(steps = NULL,
                               cloudbuild_file = "cloudbuild.yml",
                               git_email = "googlecloudrunner@r.com",

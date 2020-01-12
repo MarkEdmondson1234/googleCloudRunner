@@ -19,6 +19,8 @@ Setup nginx for Cloud Run in a buildstep
 \examples{
 cr_project_set("my-project")
 cr_bucket_set("my-bucket")
+cr_region_set("europe-west1")
+
 html_folder <- "my_html"
 run_image <- "gcr.io/my-project/my-image-for-cloudrun"
 cr_build_yaml(

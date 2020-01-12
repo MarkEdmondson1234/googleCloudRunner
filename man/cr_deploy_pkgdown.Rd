@@ -45,7 +45,10 @@ The git ssh keys need to be deployed to Google KMS for the deployment of the web
 \examples{
 
 pd <- cr_deploy_pkgdown()
-pd
+file.exists("cloudbuild.yml")
+
+unlink("cloudbuild.yml")
+
 }
 \seealso{
 Create your own custom deployment using \link{cr_buildstep_pkgdown} which this function uses with some defaults
