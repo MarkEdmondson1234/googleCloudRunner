@@ -1,16 +1,16 @@
 Package: googleCloudRunner
 Type: Package
-Title: R Scripts in the Google Cloud via 
-  Cloud Run <https://cloud.run>, Cloud Build <https://cloud.google.com/cloud-build/> 
-  and Cloud Scheduler <https://cloud.google.com/scheduler/>
+Title: R Scripts in the Google Cloud via Cloud Run, Cloud Build 
+  and Cloud Scheduler
 Version: 0.1.0
 Authors@R: c(person("Mark", "Edmondson", email = "r@sunholo.com",
                   role = c("aut", "cre"),
                   comment = c(ORCID = "0000-0002-8434-3881")))
 Description: Tools to easily enable R scripts in the Google Cloud Platform.
-  Utilise cloud services such as Cloud Run for R over HTTP, Cloud Build
-  for Continuous Delivery and Integration services via Docker and
-  Cloud Scheduler for scheduled scripts.
+  Utilise cloud services such as Cloud Run <https://cloud.run> for R over HTTP, 
+  Cloud Build <https://cloud.google.com/cloud-build/> for Continuous Delivery 
+  and Integration services and 
+  Cloud Scheduler <https://cloud.google.com/scheduler/> for scheduled scripts.
 URL: https://code.markedmondson.me/googleCloudRunner
 BugReports: https://github.com/MarkEdmondson1234/googleCloudRunner/issues
 Depends:

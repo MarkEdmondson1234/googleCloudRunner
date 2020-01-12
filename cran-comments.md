@@ -5,8 +5,9 @@
 
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
+0 errors | 0 warnings | 1 notes
 
 * This is a new release.
-* The Title field should be in title case. 
-The suggested title tag changes are made to the URLs, which causes them to 404.
+
+* Based on previous feedback by Uwe, the service URLs were moved from Title to 
+the description.
