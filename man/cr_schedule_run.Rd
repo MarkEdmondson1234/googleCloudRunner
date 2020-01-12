@@ -19,7 +19,8 @@ When this method is called, Cloud Scheduler will dispatch the job, even if the j
 \examples{
 
 \dontrun{
-
+cr_project_set("my-project")
+cr_region_set("europe-west1")
 cr_schedule_run("cloud-build-test1")
 }
 }

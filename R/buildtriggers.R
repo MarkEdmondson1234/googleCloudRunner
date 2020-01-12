@@ -134,7 +134,8 @@ parse_buildtrigger_list <- function(x){
 #' @family BuildTrigger functions
 #' @export
 #' @examples
-#'
+#' cr_project_set("my-project")
+#' cr_bucket_set("my-bucket")
 #' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
 #'                            package = "googleCloudRunner")
 #' bb <- cr_build_make(cloudbuild, projectId = "test-project")

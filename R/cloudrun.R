@@ -26,6 +26,8 @@
 #' @examples
 #'
 #' \dontrun{
+#' cr_project_set("my-project")
+#' cr_region_set("europe-west1")
 #' cr_run("gcr.io/my-project/my-image")
 #' }
 cr_run <- function(image,

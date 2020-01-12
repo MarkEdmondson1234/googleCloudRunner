@@ -36,6 +36,10 @@
 #'                                      branchName = "master"))
 #'
 #' \dontrun{
+#' cr_project_set("my-project")
+#' cr_region_set("europe-west1")
+#' cr_email_set("123456@projectid.iam.gserviceaccount.com")
+#'
 #' # check the script runs ok
 #' cr_deploy_r(r_lines, source = source)
 #'
@@ -126,6 +130,10 @@ cr_deploy_r <- function(r,
 #' @examples
 #'
 #' \dontrun{
+#' cr_project_set("my-project")
+#' cr_region_set("europe-west1")
+#' cr_email_set("123456@projectid.iam.gserviceaccount.com")
+#' cr_bucket_set("my-bucket")
 #'
 #' b <- cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
 #'

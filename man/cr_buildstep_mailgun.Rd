@@ -37,7 +37,8 @@ Requires an account at Mailgun: https://mailgun.com
 Pre-verification you can only send to a whitelist of emails you configure - see Mailgun website for details.
 }
 \examples{
-
+cr_project_set("my-project")
+cr_bucket_set("my-bucket")
 mailgun_url <- "https://api.mailgun.net/v3/sandboxXXX.mailgun.org"
 mailgun_key <- "key-XXXX"
 

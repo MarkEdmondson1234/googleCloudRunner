@@ -1,9 +1,3 @@
-options:
-  env:
-  - 'CR_REGION=$_REGION'
-  - 'GCE_DEFAULT_PROJECT_ID=$PROJECT_ID'
-  - 'CR_BUILD_EMAIL=$_BUILD_EMAIL'
-  - 'GCS_DEFAULT_BUCKET=$_BUCKET'
 steps:
 - name: 'gcr.io/cloud-builders/gcloud'
   id: decrypt gitkey

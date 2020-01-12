@@ -39,7 +39,7 @@ cr_build(
 This method returns a long-running `Operation`, which includes the buildID. Pass the build ID to \link{cr_build_status} to determine the build status (such as `SUCCESS` or `FAILURE`).
 }
 \examples{
-
+cr_project_set("my-project")
 my_gcs_source <- cr_build_source(StorageSource("my_code.tar.gz",
                                              bucket = "gs://my-bucket"))
 my_gcs_source

@@ -100,18 +100,26 @@ The function will create a local folder called "deploy" and a tar.gz of that fol
 \examples{
 
 \dontrun{
-
+cr_project_set("my-project")
+cr_region_set("europe-west1")
+cr_bucket_set("my-bucket")
 cr_deploy_run(system.file("example/", package = "googleCloudRunner"))
 
 }
 
 \dontrun{
+cr_project_set("my-project")
+cr_region_set("europe-west1")
+cr_bucket_set("my-bucket")
 
 cr_deploy_html("my_folder")
 
 }
 
 \dontrun{
+cr_project_set("my-project")
+cr_region_set("europe-west1")
+cr_bucket_set("my-bucket")
 
 cr_deploy_plumber(system.file("example/", package = "googleCloudRunner"))
 

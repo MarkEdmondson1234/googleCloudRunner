@@ -35,6 +35,8 @@ Creates or updates a Cloud Scheduler job.
 \examples{
 
 \dontrun{
+cr_project_set("my-project")
+cr_region_set("europe-west1")
 cr_schedule("test",
       "* * * * *",
       httpTarget = HttpTarget(uri="https://code.markedmondson.me"))

@@ -20,7 +20,9 @@
 #' @examples
 #'
 #' \dontrun{
-#'
+#' cr_project_set("my-project")
+#' cr_region_set("europe-west1")
+#' cr_bucket_set("my-bucket")
 #' cr_deploy_run(system.file("example/", package = "googleCloudRunner"))
 #'
 #' }
@@ -84,6 +86,9 @@ cr_deploy_run <- function(local,
 #' @examples
 #'
 #' \dontrun{
+#' cr_project_set("my-project")
+#' cr_region_set("europe-west1")
+#' cr_bucket_set("my-bucket")
 #'
 #' cr_deploy_html("my_folder")
 #'
@@ -134,6 +139,9 @@ cr_deploy_html <- function(html_folder,
 #' @examples
 #'
 #' \dontrun{
+#' cr_project_set("my-project")
+#' cr_region_set("europe-west1")
+#' cr_bucket_set("my-bucket")
 #'
 #' cr_deploy_plumber(system.file("example/", package = "googleCloudRunner"))
 #'

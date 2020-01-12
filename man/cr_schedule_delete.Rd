@@ -19,7 +19,8 @@ Deletes a scheduled job.
 \examples{
 
 \dontrun{
-
+cr_project_set("my-project")
+cr_region_set("europe-west1")
 cr_schedule_delete("cloud-build-test1")
 }
 }

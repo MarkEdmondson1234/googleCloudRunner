@@ -40,7 +40,8 @@ Only one of commitSha, branchName or tagName are allowed.
 If you want to use GitHub or BitBucket repos, you need to setup mirroring them via Cloud Source Repositories https://source.cloud.google.com/
 }
 \examples{
-
+cr_project_set("my-project")
+cr_bucket_set("my-bucket")
 \dontrun{
 
 my_repo <- cr_build_source(

@@ -49,6 +49,10 @@ To deploy builds on git triggers and sources such as GitHub, see the examples of
 \examples{
 
 \dontrun{
+cr_project_set("my-project")
+cr_region_set("europe-west1")
+cr_email_set("123456@projectid.iam.gserviceaccount.com")
+cr_bucket_set("my-bucket")
 
 b <- cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
 

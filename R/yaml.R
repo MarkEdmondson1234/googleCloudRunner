@@ -16,6 +16,7 @@
 #' @export
 #' @family Cloud Build functions
 #' @examples
+#' cr_project_set("my-project")
 #' image <- "gcr.io/my-project/my-image"
 #' cr_build_yaml(steps = c(
 #'     cr_buildstep("docker", c("build","-t",image,".")),
@@ -58,7 +59,7 @@ cr_build_yaml <- function(steps,
 #' @family Cloud Build functions
 #' @export
 #' @examples
-#'
+#' cr_project_set("my-project")
 #' r <- "write.csv(mtcars,file = 'artifact.csv')"
 #' cr_build_yaml(
 #'   steps = cr_buildstep_r(r),
@@ -113,8 +114,8 @@ check_timeout <- function(timeout){
 #' @noRd
 #' @family Cloud Build functions, yaml functions
 #' @examples
-#'
-#'Yaml(steps = c(
+#' cr_project_set("my-project")
+#' Yaml(steps = c(
 #'       cr_buildstep("docker", "version"),
 #'       cr_buildstep("gcloud", "version")),
 #'     images = "gcr.io/my-project/my-image",
@@ -157,7 +158,7 @@ get_cr_yaml <- function(x){
 #' @export
 #' @family Cloud Build functions
 #' @examples
-#'
+#' cr_project_set("my-project")
 #' # write from creating a Yaml object
 #' image = "gcr.io/my-project/my-image$BUILD_ID"
 #' run_yaml <- cr_build_yaml(steps = c(

@@ -22,7 +22,8 @@ Location of the source in a supported storage service.
 }
 \examples{
 
-
+cr_project_set("my-project")
+cr_bucket_set("my-bucket")
 my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
                                                     "gs://my-bucket"))
 my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com",

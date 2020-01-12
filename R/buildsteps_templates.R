@@ -73,6 +73,8 @@ cr_buildstep_slack <- function(message,
 #' @family Cloud Buildsteps
 #' @export
 #' @examples
+#' cr_project_set("my-project")
+#' cr_bucket_set("my-bucket")
 #' html_folder <- "my_html"
 #' run_image <- "gcr.io/my-project/my-image-for-cloudrun"
 #' cr_build_yaml(
@@ -123,7 +125,8 @@ cr_buildstep_nginx_setup <- function(html_folder, ...){
 #' @family Cloud Buildsteps
 #' @export
 #' @examples
-#'
+#' cr_project_set("my-project")
+#' cr_bucket_set("my-bucket")
 #' mailgun_url <- "https://api.mailgun.net/v3/sandboxXXX.mailgun.org"
 #' mailgun_key <- "key-XXXX"
 #'
@@ -250,7 +253,7 @@ cr_buildstep_run <- function(name,
 #' If you need to escape build parameters in bash scripts, you need to escape CloudBuild's substitution via \code{$$} and bash's substitution via \code{\$} e.g. \code{\$$PARAM}
 #'
 #' @examples
-#'
+#' cr_project_set("my-project")
 #' bs <- cr_build_yaml(
 #'   steps = cr_buildstep_bash("echo 'Hello'")
 #'  )
@@ -301,6 +304,8 @@ cr_buildstep_bash <- function(bash_script,
 #' If \code{r_source="local"} then it will copy over from a character string or local file into the build step directly.
 #'
 #' @examples
+#' cr_project_set("my-project")
+#' cr_bucket_set("my-bucket")
 #'
 #' # create an R buildstep inline
 #' cr_buildstep_r(c("paste('1+1=', 1+1)", "sessionInfo()"))
@@ -410,7 +415,8 @@ read_buildstep_file <- function(x,
 #' @family Cloud Buildsteps
 #' @export
 #' @examples
-#'
+#' cr_project_set("my-project")
+#' cr_bucket_set("my-bucket")
 #' cr_buildstep_decrypt("secret.json.enc",
 #'                      plain = "secret.json",
 #'                      keyring = "my_keyring",
@@ -450,6 +456,9 @@ cr_buildstep_decrypt <- function(cipher,
 #' @export
 #' @import assertthat
 #' @examples
+#' cr_project_set("my-project")
+#' cr_bucket_set("my-bucket")
+#'
 #' cr_buildstep_docker("gcr.io/my-project/my-image")
 #' cr_buildstep_docker("my-image")
 #' cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")
@@ -514,6 +523,8 @@ cr_buildstep_docker <- function(image,
 #' @rdname cr_buildstep_git
 #' @export
 #' @examples
+#' cr_project_set("my-project")
+#' cr_bucket_set("my-bucket")
 #'
 #' # assumes you have previously saved git ssh key via KMS called "git_key"
 #' cr_build_yaml(
@@ -600,7 +611,8 @@ cr_buildstep_git <- function(
 #' @export
 #' @family Cloud Buildsteps
 #' @examples
-#'
+#' cr_project_set("my-project")
+#' cr_bucket_set("my-bucket")
 #' # github repo set via build trigger macro _GITHUB_REPO
 #' cr_buildstep_pkgdown("$_GITHUB_REPO",
 #'                      "cloudbuild@google.com")

@@ -1,6 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^example\.tar\.gz$
 ^googleCloudRunner\.Rcheck$
 ^googleCloudRunner.*\.tar\.gz$
 ^googleCloudRunner.*\.tgz$
@@ -19,3 +18,4 @@
 ^auth\.json$
 ^cran-comments\.md$
 ^CRAN-RELEASE$
+^vignettes$

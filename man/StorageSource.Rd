@@ -25,7 +25,8 @@ Location of the source in an archive file in Google Cloud Storage.
 \examples{
 
 \dontrun{
-
+cr_project_set("my-project")
+cr_bucket_set("my-bucket")
 # construct Source object
 my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
                                                     "gs://my-bucket"))

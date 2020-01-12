@@ -19,7 +19,8 @@ Gets a scheduler job.
 \examples{
 
 \dontrun{
-
+cr_project_set("my-project")
+cr_region_set("europe-west1")
 cr_schedule_get("cloud-build-test1")
 }
 }

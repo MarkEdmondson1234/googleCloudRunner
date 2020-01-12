@@ -13,6 +13,8 @@
 #' @examples
 #'
 #' \dontrun{
+#' cr_project_set("my-project")
+#' cr_region_set("europe-west1")
 #' cr_schedule("test",
 #'       "* * * * *",
 #'       httpTarget = HttpTarget(uri="https://code.markedmondson.me"))
@@ -126,7 +128,8 @@ retry_update_failed <- function(job, f) {
 #' @examples
 #'
 #' \dontrun{
-#'
+#' cr_project_set("my-project")
+#' cr_region_set("europe-west1")
 #' cr_schedule_list()
 #'
 #' }
@@ -172,7 +175,8 @@ parse_schedule_list <- function(x){
 #' @examples
 #'
 #' \dontrun{
-#'
+#' cr_project_set("my-project")
+#' cr_region_set("europe-west1")
 #' cr_schedule_delete("cloud-build-test1")
 #' }
 cr_schedule_delete <- function(x,
@@ -224,7 +228,8 @@ extract_schedule_name <- function(x){
 #' @examples
 #'
 #' \dontrun{
-#'
+#' cr_project_set("my-project")
+#' cr_region_set("europe-west1")
 #' cr_schedule_get("cloud-build-test1")
 #' }
 cr_schedule_get <- function(name,
@@ -258,7 +263,8 @@ cr_schedule_get <- function(name,
 #' @examples
 #'
 #' \dontrun{
-#'
+#' cr_project_set("my-project")
+#' cr_region_set("europe-west1")
 #' cr_schedule_run("cloud-build-test1")
 #' }
 cr_schedule_run <- function(x,
@@ -298,7 +304,8 @@ cr_schedule_run <- function(x,
 #' @examples
 #'
 #' \dontrun{
-#'
+#' cr_project_set("my-project")
+#' cr_region_set("europe-west1")
 #' cr_schedule_pause("cloud-build-test1")
 #' cr_schedule_resume("cloud-build-test1")
 #' }

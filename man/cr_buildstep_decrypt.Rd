@@ -32,7 +32,8 @@ You will need to set up the \href{https://cloud.google.com/cloud-build/docs/secu
 }
 
 \examples{
-
+cr_project_set("my-project")
+cr_bucket_set("my-bucket")
 cr_buildstep_decrypt("secret.json.enc",
                      plain = "secret.json",
                      keyring = "my_keyring",

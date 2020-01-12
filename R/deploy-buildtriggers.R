@@ -75,6 +75,8 @@ cr_deploy_github_docker <- function(x,
 #' @examples
 #'
 #' \dontrun{
+#' cr_project_set("my-project")
+#' cr_region_set("europe-west1")
 #' your_repo <- "MarkEdmondson1234/googleCloudRunner"
 #' cr_deploy_git_html(your_repo, rmd_folder = "vignettes")
 #'

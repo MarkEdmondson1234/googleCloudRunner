@@ -27,7 +27,7 @@ Helper to run a supplied bash script, that will be copied in-line
 If you need to escape build parameters in bash scripts, you need to escape CloudBuild's substitution via \code{$$} and bash's substitution via \code{\$} e.g. \code{\$$PARAM}
 }
 \examples{
-
+cr_project_set("my-project")
 bs <- cr_build_yaml(
   steps = cr_buildstep_bash("echo 'Hello'")
  )

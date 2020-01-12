@@ -53,7 +53,8 @@ cr_build_source.gar_StorageSource <- function(x){
 #' @export
 #' @examples
 #'
-#'
+#' cr_project_set("my-project")
+#' cr_bucket_set("my-bucket")
 #' my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
 #'                                                     "gs://my-bucket"))
 #' my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com",
@@ -121,7 +122,8 @@ is.gar_SourceRepo <- function(x){
 #' @family Cloud Build functions
 #' @export
 #' @examples
-#'
+#' cr_project_set("my-project")
+#' cr_bucket_set("my-bucket")
 #' \dontrun{
 #'
 #' my_repo <- cr_build_source(
@@ -172,7 +174,8 @@ is.gar_RepoSource <- function(x){
 #' @examples
 #'
 #' \dontrun{
-#'
+#' cr_project_set("my-project")
+#' cr_bucket_set("my-bucket")
 #' # construct Source object
 #' my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
 #'                                                     "gs://my-bucket"))
@@ -218,7 +221,8 @@ is.gar_StorageSource <- function(x){
 #' @examples
 #'
 #' \dontrun{
-#'
+#' cr_project_set("my-project")
+#' cr_bucket_set("my-bucket")
 #' my_gcs_source <- cr_build_upload_gcs("my_folder")
 #' build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 #'

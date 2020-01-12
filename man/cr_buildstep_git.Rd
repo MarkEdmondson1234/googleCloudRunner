@@ -41,6 +41,8 @@ By default the encrypted key should then be at the root of your \link{Source} ob
 \code{cr_buildstep} must come after \code{cr_buildstep_gitsetup}
 }
 \examples{
+cr_project_set("my-project")
+cr_bucket_set("my-bucket")
 
 # assumes you have previously saved git ssh key via KMS called "git_key"
 cr_build_yaml(

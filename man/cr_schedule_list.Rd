@@ -17,7 +17,8 @@ Lists cloud scheduler jobs including targeting, schedule and authentication
 \examples{
 
 \dontrun{
-
+cr_project_set("my-project")
+cr_region_set("europe-west1")
 cr_schedule_list()
 
 }

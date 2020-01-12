@@ -17,6 +17,8 @@ This uses a premade bash script that sets up a Docker container ready for Cloud 
 Setup nginx for Cloud Run in a buildstep
 }
 \examples{
+cr_project_set("my-project")
+cr_bucket_set("my-bucket")
 html_folder <- "my_html"
 run_image <- "gcr.io/my-project/my-image-for-cloudrun"
 cr_build_yaml(

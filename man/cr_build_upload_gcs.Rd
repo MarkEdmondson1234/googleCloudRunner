@@ -35,7 +35,8 @@ It copies the files into a folder call "deploy" in your working directory, then 
 \examples{
 
 \dontrun{
-
+cr_project_set("my-project")
+cr_bucket_set("my-bucket")
 my_gcs_source <- cr_build_upload_gcs("my_folder")
 build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 

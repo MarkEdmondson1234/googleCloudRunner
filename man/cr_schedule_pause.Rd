@@ -25,7 +25,8 @@ The state of the job is stored in state; if paused it will be set to Job.State.P
 \examples{
 
 \dontrun{
-
+cr_project_set("my-project")
+cr_region_set("europe-west1")
 cr_schedule_pause("cloud-build-test1")
 cr_schedule_resume("cloud-build-test1")
 }

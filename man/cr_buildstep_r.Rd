@@ -32,6 +32,8 @@ If \code{r_source="runtime"} then \code{r} should be the location of that file w
 If \code{r_source="local"} then it will copy over from a character string or local file into the build step directly.
 }
 \examples{
+cr_project_set("my-project")
+cr_bucket_set("my-bucket")
 
 # create an R buildstep inline
 cr_buildstep_r(c("paste('1+1=', 1+1)", "sessionInfo()"))

@@ -40,7 +40,8 @@
 #' @export
 #' @family Cloud Buildsteps
 #' @examples
-#'
+#' cr_project_set("my-project")
+#' cr_bucket_set("my-bucket")
 #' # creating yaml for use in deploying cloud run
 #' image = "gcr.io/my-project/my-image:$BUILD_ID"
 #' cr_build_yaml(
@@ -124,7 +125,6 @@ is.cr_buildstep <- function(x){
 #' @export
 #' @family Cloud Buildsteps
 #' @examples
-
 #' y <- data.frame(name = c("docker", "alpine"),
 #'                 args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
 #'                 id = c("Docker Version", "Hello Cloud Build"),

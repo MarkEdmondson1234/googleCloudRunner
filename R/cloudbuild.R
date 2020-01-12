@@ -15,7 +15,7 @@
 #' @family Cloud Build functions
 #' @export
 #' @examples
-#'
+#' cr_project_set("my-project")
 #' my_gcs_source <- cr_build_source(StorageSource("my_code.tar.gz",
 #'                                              bucket = "gs://my-bucket"))
 #' my_gcs_source

@@ -65,7 +65,8 @@ Or you can add your own custom variables, set in the Build Trigger.  Custom vari
 }
 
 \examples{
-
+cr_project_set("my-project")
+cr_bucket_set("my-bucket")
 # creating yaml for use in deploying cloud run
 image = "gcr.io/my-project/my-image:$BUILD_ID"
 cr_build_yaml(

@@ -49,5 +49,5 @@ steps:
     library(covr)
     cv <- package_coverage()
     print(cv);
-    codecov(coverage=cv, exclusions = list("R/options.R", "R/utilities.R", "R/print_methods.R", "R/rstudio_gadget.R"), commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
+    codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
 

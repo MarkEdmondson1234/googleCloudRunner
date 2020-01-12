@@ -27,6 +27,9 @@ cr_buildstep_docker(
 Create a build step to build and push a docker image
 }
 \examples{
+cr_project_set("my-project")
+cr_bucket_set("my-bucket")
+
 cr_buildstep_docker("gcr.io/my-project/my-image")
 cr_buildstep_docker("my-image")
 cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")

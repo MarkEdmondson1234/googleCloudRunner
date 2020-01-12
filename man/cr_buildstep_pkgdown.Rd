@@ -36,7 +36,8 @@ Create buildsteps for deploying an R pkgdown website to GitHub
 Its convenient to set some of the above via \link{Build} macros, such as \code{github_repo=$_GITHUB_REPO} and \code{git_email=$_BUILD_EMAIL} in the Build Trigger web UI
 }
 \examples{
-
+cr_project_set("my-project")
+cr_bucket_set("my-bucket")
 # github repo set via build trigger macro _GITHUB_REPO
 cr_buildstep_pkgdown("$_GITHUB_REPO",
                      "cloudbuild@google.com")

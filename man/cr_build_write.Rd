@@ -15,7 +15,7 @@ cr_build_write(x, file = "cloudbuild.yaml")
 Write out a Build object to cloudbuild.yaml
 }
 \examples{
-
+cr_project_set("my-project")
 # write from creating a Yaml object
 image = "gcr.io/my-project/my-image$BUILD_ID"
 run_yaml <- cr_build_yaml(steps = c(

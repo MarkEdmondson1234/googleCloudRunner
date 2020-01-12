@@ -39,6 +39,7 @@ cr_build_yaml(
 This can be written to disk or used directly with functions such as \link{cr_build}
 }
 \examples{
+cr_project_set("my-project")
 image <- "gcr.io/my-project/my-image"
 cr_build_yaml(steps = c(
     cr_buildstep("docker", c("build","-t",image,".")),
