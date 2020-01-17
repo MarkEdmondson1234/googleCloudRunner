@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/MarkEdmondson1234/googleCloudRunner.svg?branch=master)](https://travis-ci.org/MarkEdmondson1234/googleCloudRunner)
 [![codecov](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner/branch/master/graph/badge.svg)](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner)
+![CRAN](http://www.r-pkg.org/badges/version/googleCloudRunner)
 
 As easy as possible R scripts in the cloud, via Cloud Run, Cloud Build and Cloud Scheduler.  Continuous Development and Integration tools on Google Cloud Platform.
 
