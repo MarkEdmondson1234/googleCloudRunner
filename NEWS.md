@@ -1,3 +1,3 @@
-# googleCloudRunner 0.1.0
+# googleCloudRunner 0.1.1
 
 * Initial release

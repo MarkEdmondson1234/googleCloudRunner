@@ -5,7 +5,8 @@ Title: R Scripts in the Google Cloud via Cloud Run, Cloud Build
 Version: 0.1.1
 Authors@R: c(person("Mark", "Edmondson", email = "r@sunholo.com",
                   role = c("aut", "cre"),
-                  comment = c(ORCID = "0000-0002-8434-3881")))
+                  comment = c(ORCID = "0000-0002-8434-3881")),
+              person("Sunholo Ltd", role = "cph"))
 Description: Tools to easily enable R scripts in the Google Cloud Platform.
   Utilise cloud services such as Cloud Run <https://cloud.run> for R over HTTP, 
   Cloud Build <https://cloud.google.com/cloud-build/> for Continuous Delivery 

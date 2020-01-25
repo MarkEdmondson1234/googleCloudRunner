@@ -318,5 +318,5 @@ schedule_me <- cr_build_schedule_http(built)
 cr_schedule("polygot-example", "15 8 * * *", httpTarget = schedule_me)
 ```
 
-An example of that cloudbuild.yaml is on GitHub [here](https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml).
+An example of the cloudbuild.yaml is on GitHub [here](https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml).
 
