@@ -107,7 +107,7 @@
     <div class="page-header toc-ignore">
       <h1>Example Use Cases for googleCloudRunner</h1>
             
-            <h4 class="date">2020-01-17</h4>
+            <h4 class="date">2020-01-25</h4>
       
       
       <div class="hidden name"><code>usecases.Rmd</code></div>
@@ -441,7 +441,7 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <p>This can then be scheduled as described in Cloud Scheduler section on <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html">scheduled cloud builds</a>.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">schedule_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(built)</a>
 <a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"polygot-example"</span>, <span class="st">"15 8 * * *"</span>, <span class="dt">httpTarget =</span> schedule_me)</a></code></pre></div>
-<p>An example of that cloudbuild.yaml is on GitHub <a href="https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml">here</a>.</p>
+<p>An example of the cloudbuild.yaml is on GitHub <a href="https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml">here</a>.</p>
 </div>
   </div>
 
