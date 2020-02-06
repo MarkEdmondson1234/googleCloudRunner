@@ -20,6 +20,14 @@ Have R code react to events such as GitHub pushes, pub/sub messages and Cloud St
 
 ## Install
 
+Get the CRAN stable version via 
+
+```r
+install.packages("googleCloudRunner")
+```
+
+Or the development version via:
+
 ```r
 remotes::install_github("MarkEdmondson1234/googleCloudRunner")
 ```
