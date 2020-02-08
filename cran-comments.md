@@ -11,3 +11,4 @@
 
 * Based on previous feedback by Uwe, the service URLs were moved from Title to 
 the description.
+* Based on Martina's feedback, I have added my company Sunholo Ltd as a copyright holder in the DESCRIPTION file.

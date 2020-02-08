@@ -24,10 +24,9 @@ steps:
   - "-e"
   - |
     message("cran mirror: ", getOption("repos"))
-    library(devtools)
-    install_dev_deps(upgrade="always")
-    check()
-    install()
+    devtools::install_dev_deps()
+    devtools::install()
+    devtools::check()
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: Good Practices
   args:
