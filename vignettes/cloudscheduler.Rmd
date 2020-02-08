@@ -68,6 +68,8 @@ cr_deploy_r(r_lines,
             r_image = "gcr.io/my-project/my-image:dev")
 ```
 
+The logs of the scheduled scripts are in the history section of Cloud Build - each scheduled run is creating a new Cloud Build.
+
 ### RStudio Gadget - schedule R scripts
 
 If you are using RStudio, installing the library will enable an [RStudio Addin](https://rstudio.github.io/rstudioaddins/) that can be called after you have setup the library as per the setup page. 

@@ -16,7 +16,7 @@ date: "`r Sys.Date()`"
 "europe-west1",
 "us-east1"
 ```
-* New environment argument `CR_BUILD_EMAIL` that is your cloudbuild service email
+* New environment argument `CR_BUILD_EMAIL` that is a Google service email
 
 e.g. your `.Renviron` should look like:
 
@@ -25,7 +25,7 @@ GCE_AUTH_FILE="/Users/me/auth/auth.json"
 GCE_DEFAULT_PROJECT_ID="my-project"
 GCS_DEFAULT_BUCKET="my-bucket"
 CR_REGION="europe-west1"
-CR_BUILD_EMAIL=my-project-number@cloudbuild.gserviceaccount.com
+CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com
 ```
 
 You can also set the above in the R scripts via:
@@ -43,14 +43,76 @@ googleAuthR::gar_service_auth("my_auth_json.com")
 
 ## GCP settings
 
-Its easiest if you create a new service key in your GCP project.
+### Authentication background
 
-* A service auth key needs Cloud Storage Admin, Cloud Build Editor, Cloud Run Admin, Cloud Scheduler Admin roles to use all the functions in the package - this key can be downloaded and used for auth via `GCE_AUTH_FILE`
-* Ensure you have the Cloud Build, Cloud Run, Cloud Storage and Cloud Scheduler APIs on in your GCP project
+The package uses several interacting Google Cloud services so setup needs to cover authentication both for yourself and the services interacting on your behalf.
+
+There are three types of authentication to keep track of:
+
+1. Authenticating your local R session so it can submit jobs
+2. Authenticating Cloud Build so it can do the script you have submitted
+3. Authenticating services such as Cloud Scheduler so they can trigger builds on your behalf.
+
+Its simplest if you use the same authentication key for 1 and 3, and the default Cloud Build service email for 2. 
+
+Confusion can occur if you use the Cloud Build service email from 2 for 1 or 3.
+
+### Suggested setup
+
+The suggested setup is only required once per GCP project instance.  Following the below instructions will mean:
+
+1. You can use all R functions in the package to trigger builds locally with a dedicated service key
+2. You can reuse the Cloud Build service email to authenticate build services (such as gcloud and BigQuery)
+3. Scheduled builds will reuse the key you use locally
+
+Follow these steps:
+
+#### Local auth email
+
+1. Log in to your Google Cloud Project with billing enabled
+2. Go to `IAM & Admin > Service accounts`
+3. Click "Create Service Account"
+4. Create a service account ID - see suggested example here:
+
+![](cr_service_email.png)
+
+5. Set the roles of the service account on the next screen to these:
+
+![](service-roles.png)
+
+* Cloud Build Service Account
+* Cloud Scheduler Admin
+* Service Account User
+* Cloud Run Admin
+* Storage Object Admin
+
+6. Give yourself access as a user to the service account, then click "Create key" and select "JSON"
+7. Download the auth json key and put it in a folder separate from all R projects or git commits.  **This file should be guarded as it grants access to your projects**
+8. Set your `.Renviron` file in your project or R home to point at your file and use the email for scheduled builds e.g.:
+
+```
+GCE_AUTH_FILE="/Users/me/auth/auth.json"
+CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com
+```
+
+9. Ensure you have the Cloud Build, Cloud Run, Cloud Storage and Cloud Scheduler APIs turned on in your GCP project via the `GCP console > APIs & Services`
+
+The above could be modified to make the local auth file also give access to compute engine VMs etc. if say you wanted to reuse it for `googleComputeEngineR` but this should be the minimal access you need for `googleCloudRunner`.  
+
+You could also change the email to yet another service account in `CR_BUILD_EMAIL` to one with less permissions (such as Cloud Run Invoker, not Cloud Run Admin)
+
+#### The Cloud Build service account
+
+This is the service account for Cloud Build when it is running on your project.  It looks like `{project-number}@cloudbuild.gserviceaccount.com`
+
 * The Cloud Build service account needs permissions if you want it to deploy to Cloud Run: This can be set [here](https://console.cloud.google.com/cloud-build/settings) where you enable `Cloud Run Admin` and `Service Account User` roles.  More details found at this [Google reference article](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run). 
-* If you get the error using Cloud Scheduler with a HTTP target of "Request contains an invalid argument" then ensure you have a service email with `service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com` with Cloud Scheduler Service Agent role.  This is only needed if you created the project before March 2019.  This only needs to exist in the GCP project, it is not used in deployment - create another service key for that. See [here](https://cloud.google.com/scheduler/docs/http-target-auth#add)
-* If you want to use GitHub or BitBucket repos, you need to setup mirroring them via Cloud Source Repositories https://source.cloud.google.com/
-* To use Cloud Scheduler you may need to initiate an App Engine application https://console.developers.google.com/appengine - you only need to set the region (one allowed per GCP project) and you don't need to create an app
+* Ensure you have a service email in your IAM section with `service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com` with Cloud Scheduler Service Agent role.  This is only needed if you created the project before March 2019.  This only needs to exist in the GCP project, it is not used in deployment - create another service key for that. See [here](https://cloud.google.com/scheduler/docs/http-target-auth#add)
 * If you want to use the decryption service such as from `cr_buildstep_decrypt()` then your Cloud Build service account (`{project-number}@cloudbuild.gserviceaccount.com`) needs to have at least Cloud KMS CryptoKey Decrypter role. See [granting access to CryptoKey](https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials#grant_the_product_name_short_service_account_access_to_the_cryptokey) article.
 * If you want to use BigQuery services in your builds, give your build email BigQuery IAM access
+
+#### Misc
+
+* If you want to use GitHub or BitBucket repos, you need to setup mirroring them via Cloud Source Repositories https://source.cloud.google.com/
+* To use Cloud Scheduler you may need to initiate an App Engine application https://console.developers.google.com/appengine - you only need to set the region (one allowed per GCP project) and you don't need to create an app
+
 
