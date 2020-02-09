@@ -107,7 +107,7 @@
     <div class="page-header toc-ignore">
       <h1>Setup</h1>
             
-            <h4 class="date">2020-02-08</h4>
+            <h4 class="date">2020-02-09</h4>
       
       
       <div class="hidden name"><code>setup.Rmd</code></div>
@@ -131,7 +131,7 @@
 "europe-west1",
 "us-east1"</code></pre>
 <ul>
-<li>New environment argument <code>CR_BUILD_EMAIL</code> that is a Google service email</li>
+<li>New environment argument <code>CR_BUILD_EMAIL</code> that is a Google service email (see GCP setup)</li>
 </ul>
 <p>e.g. your <code>.Renviron</code> should look like:</p>
 <pre><code>GCE_AUTH_FILE="/Users/me/auth/auth.json"
@@ -139,6 +139,7 @@ GCE_DEFAULT_PROJECT_ID="my-project"
 GCS_DEFAULT_BUCKET="my-bucket"
 CR_REGION="europe-west1"
 CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com</code></pre>
+<p>This <code>.Renviron</code> file can be placed in the root of your project or as per what is described in <code><a href="https://rdrr.io/r/base/Startup.html">?Startup</a></code>.</p>
 <p>You can also set the above in the R scripts via:</p>
 <ul>
 <li><code><a href="../reference/cr_region_set.html">cr_region_set()</a></code></li>
@@ -168,7 +169,7 @@ CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com</code></pr
 <div id="suggested-setup" class="section level3">
 <h3 class="hasAnchor">
 <a href="#suggested-setup" class="anchor"></a>Suggested setup</h3>
-<p>The suggested setup is only required once per GCP project instance. Following the below instructions will mean:</p>
+<p>The suggested setup is only required once per GCP project. Following the below instructions will mean:</p>
 <ol style="list-style-type: decimal">
 <li>You can use all R functions in the package to trigger builds locally with a dedicated service key</li>
 <li>You can reuse the Cloud Build service email to authenticate build services (such as gcloud and BigQuery)</li>
@@ -199,9 +200,9 @@ CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com</code></pr
 </ul>
 <ol start="6" style="list-style-type: decimal">
 <li>Give yourself access as a user to the service account, then click “Create key” and select “JSON”</li>
-<li>Download the auth json key and put it in a folder separate from all R projects or git commits. <strong>This file should be guarded as it grants access to your projects</strong>
+<li>Download the auth json key and put it in a folder separate from all R projects or git commits. <strong>This file should be guarded as it grants access to sensitive operations</strong>
 </li>
-<li>Set your <code>.Renviron</code> file in your project or R home to point at your file and use the email for scheduled builds e.g.:</li>
+<li>Set your <code>.Renviron</code> file to point at the JSON file you just downloaded, and use its service email for scheduled builds e.g.:</li>
 </ol>
 <pre><code>GCE_AUTH_FILE="/Users/me/auth/auth.json"
 CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com</code></pre>
@@ -209,19 +210,17 @@ CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com</code></pr
 <li>Ensure you have the Cloud Build, Cloud Run, Cloud Storage and Cloud Scheduler APIs turned on in your GCP project via the <code>GCP console &gt; APIs &amp; Services</code>
 </li>
 </ol>
-<p>The above could be modified to make the local auth file also give access to compute engine VMs etc. if say you wanted to reuse it for <code>googleComputeEngineR</code> but this should be the minimal access you need for <code>googleCloudRunner</code>.</p>
-<p>You could also change the email to yet another service account in <code>CR_BUILD_EMAIL</code> to one with less permissions (such as Cloud Run Invoker, not Cloud Run Admin)</p>
 </div>
 <div id="the-cloud-build-service-account" class="section level4">
 <h4 class="hasAnchor">
 <a href="#the-cloud-build-service-account" class="anchor"></a>The Cloud Build service account</h4>
-<p>This is the service account for Cloud Build when it is running on your project. It looks like <code>{project-number}@cloudbuild.gserviceaccount.com</code></p>
+<p>This is the service account for Cloud Build when it is running on your project. It is created automatically, and should look like <code>{project-number}@cloudbuild.gserviceaccount.com</code> when you examine your IAM console.</p>
 <ul>
 <li>The Cloud Build service account needs permissions if you want it to deploy to Cloud Run: This can be set <a href="https://console.cloud.google.com/cloud-build/settings">here</a> where you enable <code>Cloud Run Admin</code> and <code>Service Account User</code> roles. More details found at this <a href="https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run">Google reference article</a>.</li>
-<li>Ensure you have a service email in your IAM section with <code>service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com</code> with Cloud Scheduler Service Agent role. This is only needed if you created the project before March 2019. This only needs to exist in the GCP project, it is not used in deployment - create another service key for that. See <a href="https://cloud.google.com/scheduler/docs/http-target-auth#add">here</a>
+<li>Ensure you also have a service email in your IAM section called <code>service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com</code> with Cloud Scheduler Service Agent role. This is only needed if you created the project before March 2019. This only needs to exist in the GCP project, it is not used in deployment. See <a href="https://cloud.google.com/scheduler/docs/http-target-auth#add">here</a>
 </li>
 <li>If you want to use the decryption service such as from <code><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt()</a></code> then your Cloud Build service account (<code>{project-number}@cloudbuild.gserviceaccount.com</code>) needs to have at least Cloud KMS CryptoKey Decrypter role. See <a href="https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials#grant_the_product_name_short_service_account_access_to_the_cryptokey">granting access to CryptoKey</a> article.</li>
-<li>If you want to use BigQuery services in your builds, give your build email BigQuery IAM access</li>
+<li>Likewise with other GCP services the Cloud Build will use - i.e. if you want to use BigQuery services in your builds, give your build email BigQuery IAM access</li>
 </ul>
 </div>
 <div id="misc" class="section level4">
@@ -232,6 +231,12 @@ CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com</code></pr
 </li>
 <li>To use Cloud Scheduler you may need to initiate an App Engine application <a href="https://console.developers.google.com/appengine" class="uri">https://console.developers.google.com/appengine</a> - you only need to set the region (one allowed per GCP project) and you don’t need to create an app</li>
 </ul>
+</div>
+<div id="customise" class="section level4">
+<h4 class="hasAnchor">
+<a href="#customise" class="anchor"></a>Customise?</h4>
+<p>The above should give you the minimal access required for <code>googleCloudRunner</code>. It could be modified to increase the amount of services the local auth file has access to such as Compute Engine VMs etc. (if say you wanted to reuse it for <code>googleComputeEngineR</code>)</p>
+<p>You could also change the build email set in <code>CR_BUILD_EMAIL</code> to be yet another service account, perhaps one with less permissions (such as Cloud Run Invoker, not Cloud Run Admin)</p>
 </div>
 </div>
 </div>
