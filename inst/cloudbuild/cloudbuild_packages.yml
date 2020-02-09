@@ -25,7 +25,7 @@ steps:
   - |
     message("cran mirror: ", getOption("repos"))
     remotes::install_deps()
-    rcmdcheck::check()
+    rcmdcheck::rcmdcheck()
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: Good Practices
   args:
