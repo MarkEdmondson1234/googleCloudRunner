@@ -24,9 +24,8 @@ steps:
   - "-e"
   - |
     message("cran mirror: ", getOption("repos"))
-    devtools::install_dev_deps()
-    devtools::install()
-    devtools::check()
+    remotes::install_deps()
+    rcmdcheck::check()
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: Good Practices
   args:
@@ -43,8 +42,6 @@ steps:
   - "Rscript"
   - "-e"
   - |
-    devtools::install_dev_deps()
-    devtools::install()
     library(covr)
     cv <- package_coverage()
     print(cv);
