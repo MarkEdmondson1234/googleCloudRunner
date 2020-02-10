@@ -22,9 +22,7 @@ Imports:
     googleCloudStorageR (>= 0.5.1),
     httr (>= 1.4.1),
     jsonlite (>= 1.5),
-    methods,
     openssl (>= 1.4.1),
-    stats,
     utils,
     yaml (>= 2.2.0)
 Suggests: 
