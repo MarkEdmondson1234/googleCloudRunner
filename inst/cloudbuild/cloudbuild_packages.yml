@@ -24,8 +24,8 @@ steps:
   - "-e"
   - |
     message("cran mirror: ", getOption("repos"))
-    remotes::install_deps()
-    rcmdcheck::rcmdcheck()
+    remotes::install_deps(dependencies = TRUE)
+    rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'warning')
 - name: 'gcr.io/gcer-public/packagetools:master'
   id: Good Practices
   args:
@@ -42,8 +42,9 @@ steps:
   - "Rscript"
   - "-e"
   - |
-    library(covr)
-    cv <- package_coverage()
+    remotes::install_deps(dependencies = TRUE)
+    remotes::install()
+    cv <- covr::package_coverage()
     print(cv);
-    codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
+    covr::codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME', function_exclusions = c("print\\.", "\\.onLoad"))
 
