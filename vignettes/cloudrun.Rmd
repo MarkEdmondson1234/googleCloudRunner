@@ -11,7 +11,48 @@ If you want to run scripts that can be triggered one time, setup to trigger on G
 
 ## Quickstart - plumber API
 
-1. Make an R API via [plumber](https://www.rplumber.io/) that contains entry file api.R.  You can use the demo example in `system.file("example", package="cloudRunner")` if you like.
+1. Make an R API via [plumber](https://www.rplumber.io/) that contains entry file api.R.  You can use the demo example in `system.file("example", package="cloudRunner")` if you like, which is reproduced below:
+
+```r
+#' @get /
+#' @html
+function(){
+  "<html><h1>It works!</h1></html>"
+}
+
+
+#' @get /hello
+#' @html
+function(){
+  "<html><h1>hello world</h1></html>"
+}
+
+#' Echo the parameter that was sent in
+#' @param msg The message to echo back.
+#' @get /echo
+function(msg=""){
+  list(msg = paste0("The message is: '", msg, "'"))
+}
+
+#' Plot out data from the iris dataset
+#' @param spec If provided, filter the data to only this species (e.g. 'setosa')
+#' @get /plot
+#' @png
+function(spec){
+  myData <- iris
+  title <- "All Species"
+
+  # Filter if the species was specified
+  if (!missing(spec)){
+    title <- paste0("Only the '", spec, "' Species")
+    myData <- subset(iris, Species == spec)
+  }
+
+  plot(myData$Sepal.Length, myData$Petal.Length,
+       main=title, xlab="Sepal Length", ylab="Petal Length")
+}
+```
+
 2. Create a Dockerfile for the API - see bottom of page for how to do this automatically with https://o2r.info/containerit/
 
 The example folder has this Dockerfile:
@@ -102,6 +143,25 @@ cr_run("gcr.io/my-project/my-image")
 * `cr_deploy_plumber()` adds checks for plumber API files.  You need to make sure you have an `api.R` file in the deployment folder you provide, that will hold plumber code.
 
 * `cr_deploy_html()` adds steps to deploy a nginx web server ready to serve the HTML files you supply.
+
+## Pub/Sub
+
+Pub/Sub is a messaging service used throughout GCP to transfer messages to services.  For instance, Cloud Storage objects being created, logging filter conditions, BigQuery table updates.  It is useful to be able to react to these messages with R code which Cloud Run + Plumber enables by providing a HTTP endpoint for push Pub/Sub subscriptions. 
+
+A helper function is included with `googleCloudRunner` that decodes the standard pub/sub message into an R object.  To use place the below function into your plumber script and deploy:
+
+```r
+pub <- function(x){paste("Echo:", x)}
+
+#' Recieve pub/sub message
+#' @post /pubsub
+#' @param message a pub/sub message
+function(message=NULL){
+  googleCloudRunner::cr_plumber_pubsub(message, pub)
+}
+```
+
+The `pub()` function can be any R code you like, so you can change it to trigger an analysis or other R tasks.  The data within a pubsub message can also be used as a parameter to your code, such as an object name or timestamp of when the event fired. An example if also in the [use case section of the website](https://code.markedmondson.me/googleCloudRunner/articles/usecases.html#trigger-an-r-function-from-pubsub)
 
 ## Creating a Dockerfile with containerit
 
