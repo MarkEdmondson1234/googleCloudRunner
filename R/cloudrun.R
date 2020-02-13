@@ -8,6 +8,7 @@
 #' @param image The name of the image to create or use in deployment - \code{gcr.io}
 #' @param name Name for deployment on Cloud Run
 #' @param concurrency How many connections each image can serve. Can be up to 80.
+#' @param port Container port to receive requests at. Also sets the $PORT environment variable. Must be a number between 1 and 65535, inclusive. To unset this field, pass the special value "default".
 #' @param region The endpoint region for deployment
 #' @param projectId The GCP project from which the services should be listed
 #' @param allowUnauthenticated TRUE if can be reached from public HTTP address.
@@ -34,6 +35,7 @@ cr_run <- function(image,
                    name = basename(image),
                    allowUnauthenticated = TRUE,
                    concurrency = 1,
+                   port = NULL,
                    timeout=600L,
                    region = cr_region_get(),
                    projectId = cr_project_get(),
@@ -48,7 +50,8 @@ cr_run <- function(image,
                              image = image,
                              allowUnauthenticated = allowUnauthenticated,
                              region = region,
-                             concurrency = concurrency)
+                             concurrency = concurrency,
+                             port = port)
   )
 
   build <- cr_build(run_yaml,

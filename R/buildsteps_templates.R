@@ -194,6 +194,7 @@ cr_buildstep_run <- function(name,
                              allowUnauthenticated = TRUE,
                              region = cr_region_get(),
                              concurrency = 80,
+                             port = NULL,
                              ...){
 
   # don't allow dot names that would break things
@@ -222,6 +223,9 @@ cr_buildstep_run <- function(name,
     auth_step <- NULL
   }
 
+  if(!is.null(port)){
+    port <- "default"
+  }
 
   c(
     cr_buildstep("gcloud",
@@ -230,6 +234,7 @@ cr_buildstep_run <- function(name,
                      "--region", region,
                      "--platform", "managed",
                      "--concurrency", concurrency,
+                     "--port", port,
                      auth_calls
                    ),
                    id = "deploy cloudrun",
