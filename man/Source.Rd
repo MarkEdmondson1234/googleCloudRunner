@@ -7,9 +7,11 @@
 Source(storageSource = NULL, repoSource = NULL)
 }
 \arguments{
-\item{storageSource}{If provided via \link{StorageSource}, get the source from this location in Google Cloud Storage}
+\item{storageSource}{If provided via \link{StorageSource}, get the source
+from this location in Google Cloud Storage}
 
-\item{repoSource}{If provided via \link{RepoSource}, get the source from this location in a Cloud Source}
+\item{repoSource}{If provided via \link{RepoSource}, get the source from
+this location in a Cloud Source}
 }
 \value{
 Source object

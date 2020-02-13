@@ -30,7 +30,8 @@ A Source object
 This creates a \link{StorageSource} object after uploading to Google Cloud Storage
 }
 \details{
-It copies the files into a folder call "deploy" in your working directory, then tars it for upload
+It copies the files into a folder call "deploy" in your working directory,
+  then tars it for upload
 }
 \examples{
 

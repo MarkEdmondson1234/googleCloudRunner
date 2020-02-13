@@ -7,11 +7,13 @@
 StorageSource(object, bucket = NULL, generation = NULL)
 }
 \arguments{
-\item{object}{Google Cloud Storage object containing the source. This object must be a gzipped archive file (.tar.gz) containing source to build.}
+\item{object}{Google Cloud Storage object containing the source. This object
+must be a gzipped archive file (.tar.gz) containing source to build.}
 
 \item{bucket}{Google Cloud Storage bucket containing the source}
 
-\item{generation}{Google Cloud Storage generation for the object.  If the generation is omitted, the latest generation will be used.}
+\item{generation}{Google Cloud Storage generation for the object.
+If the generation is omitted, the latest generation will be used.}
 }
 \value{
 StorageSource object

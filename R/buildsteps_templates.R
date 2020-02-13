@@ -640,22 +640,16 @@ cr_buildstep_pkgdown <- function(
            cipher = "id_rsa.enc",
            build_image = 'gcr.io/gcer-public/packagetools:master'){
 
-  pd <- system.file("cloudbuild/cloudbuild_pkgdown.yml",
-                    package = "googleCloudRunner")
-
-  # In yaml.load: NAs introduced by coercion: . is not a real
-  pdb <- suppressWarnings(cr_build_make(pd))
-
   repo <- paste0("git@github.com:", github_repo)
-  pkg <- cr_buildstep_extract(pdb, 4)
-  pkg_env <- cr_buildstep_edit(pkg, env = env, dir = "repo")
 
   c(
     cr_buildstep_gitsetup(keyring = keyring,
                           key = key,
                           cipher = cipher),
     cr_buildstep_git(c("clone",repo, "repo")),
-    pkg_env,
+    cr_buildstep_r(c("devtools::install()", "pkgdown::build_site()"),
+                   dir = "repo",
+                   env = env),
     cr_buildstep_git(c("add", "--all"), dir = "repo"),
     cr_buildstep_git(c("commit", "-a", "-m",
                        "[skip travis] Build website from commit ${COMMIT_SHA}: \

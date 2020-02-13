@@ -37,7 +37,8 @@ Location of the source in a Google Cloud Source Repository.
 
 Only one of commitSha, branchName or tagName are allowed.
 
-If you want to use GitHub or BitBucket repos, you need to setup mirroring them via Cloud Source Repositories https://source.cloud.google.com/
+If you want to use GitHub or BitBucket repos, you need to setup mirroring
+  them via Cloud Source Repositories https://source.cloud.google.com/
 }
 \examples{
 cr_project_set("my-project")
