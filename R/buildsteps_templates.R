@@ -648,6 +648,7 @@ cr_buildstep_pkgdown <- function(
                           cipher = cipher),
     cr_buildstep_git(c("clone",repo, "repo")),
     cr_buildstep_r(c("devtools::install()", "pkgdown::build_site()"),
+                   name = build_image,
                    dir = "repo",
                    env = env),
     cr_buildstep_git(c("add", "--all"), dir = "repo"),
