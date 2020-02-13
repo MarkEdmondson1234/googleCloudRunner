@@ -395,7 +395,7 @@ test_that("Render BuildStep objects", {
   expect_equal(pkgdown_steps[[1]]$volumes[[1]]$path, "/root/.ssh")
 
   expect_equal(pkgdown_steps[[4]]$args[[3]],
-               "devtools::install()\npkgdown::build_site()\n")
+               "devtools::install()\npkgdown::build_site()")
 
   gh <- GitHubEventsConfig("mark/repo")
   expect_equal(gh$owner, "mark")
