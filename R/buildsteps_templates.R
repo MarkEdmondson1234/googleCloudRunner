@@ -229,7 +229,7 @@ cr_buildstep_run <- function(name,
 
   c(
     cr_buildstep("gcloud",
-                   c("run","deploy", name,
+                   c("beta","run","deploy", name,
                      "--image", image,
                      "--region", region,
                      "--platform", "managed",
