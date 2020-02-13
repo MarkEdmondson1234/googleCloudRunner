@@ -164,6 +164,7 @@
   <span class='kw'>allowUnauthenticated</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
   <span class='kw'>concurrency</span> <span class='kw'>=</span> <span class='fl'>80</span>,
+  <span class='kw'>port</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -189,6 +190,10 @@
     <tr>
       <th>concurrency</th>
       <td><p>How many connections each image can serve. Can be up to 80.</p></td>
+    </tr>
+    <tr>
+      <th>port</th>
+      <td><p>Container port to receive requests at. Also sets the $PORT environment variable. Must be a number between 1 and 65535, inclusive. To unset this field, pass the special value "default".</p></td>
     </tr>
     <tr>
       <th>...</th>
