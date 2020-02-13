@@ -44,8 +44,10 @@ cr_build_source.gar_StorageSource <- function(x){
 #' @details
 #' Location of the source in a supported storage service.
 #'
-#' @param repoSource If provided via \link{RepoSource}, get the source from this location in a Cloud Source
-#' @param storageSource If provided via \link{StorageSource}, get the source from this location in Google Cloud Storage
+#' @param repoSource If provided via \link{RepoSource}, get the source from
+#'   this location in a Cloud Source
+#' @param storageSource If provided via \link{StorageSource}, get the source
+#'   from this location in Google Cloud Storage
 #'
 #' @return Source object
 #'
@@ -69,7 +71,8 @@ cr_build_source.gar_StorageSource <- function(x){
 Source <- function(storageSource = NULL, repoSource = NULL) {
 
   if(!xor(is.null(repoSource),is.null(storageSource))){
-    stop("Only one of repoSource or storageSource can be supplied", call. = FALSE)
+    stop("Only one of repoSource or storageSource can be supplied",
+         call. = FALSE)
   }
 
   if(!is.null(repoSource)){
@@ -79,7 +82,8 @@ Source <- function(storageSource = NULL, repoSource = NULL) {
   if(!is.null(storageSource)){
     assert_that(is.gar_StorageSource(storageSource))
   }
-  structure(rmNullObs(list(repoSource = repoSource, storageSource = storageSource)),
+  structure(rmNullObs(list(repoSource = repoSource,
+                           storageSource = storageSource)),
             class = c("gar_Source","list"))
 }
 
@@ -108,7 +112,8 @@ is.gar_SourceRepo <- function(x){
 #'
 #' Only one of commitSha, branchName or tagName are allowed.
 #'
-#' If you want to use GitHub or BitBucket repos, you need to setup mirroring them via Cloud Source Repositories https://source.cloud.google.com/
+#' If you want to use GitHub or BitBucket repos, you need to setup mirroring
+#'   them via Cloud Source Repositories https://source.cloud.google.com/
 #'
 #' @param tagName Regex matching tags to build
 #' @param projectId ID of the project that owns the Cloud Source Repository
@@ -149,8 +154,12 @@ RepoSource <- function(repoName = NULL,
   if(!is.null(branchName)) assert_that(is.null(commitSha), is.null(tagName))
   if(!is.null(tagName)) assert_that(is.null(branchName), is.null(commitSha))
 
-  structure(rmNullObs(list(tagName = tagName, projectId = projectId, repoName = repoName,
-                           commitSha = commitSha, branchName = branchName, dir = dir)),
+  structure(rmNullObs(list(tagName = tagName,
+                           projectId = projectId,
+                           repoName = repoName,
+                           commitSha = commitSha,
+                           branchName = branchName,
+                           dir = dir)),
             class = c("gar_RepoSource","list"))
 }
 
@@ -164,8 +173,10 @@ is.gar_RepoSource <- function(x){
 #' Location of the source in an archive file in Google Cloud Storage.
 #'
 #' @param bucket Google Cloud Storage bucket containing the source
-#' @param object Google Cloud Storage object containing the source. This object must be a gzipped archive file (.tar.gz) containing source to build.
-#' @param generation Google Cloud Storage generation for the object.  If the generation is omitted, the latest generation will be used.
+#' @param object Google Cloud Storage object containing the source. This object
+#'   must be a gzipped archive file (.tar.gz) containing source to build.
+#' @param generation Google Cloud Storage generation for the object.
+#'   If the generation is omitted, the latest generation will be used.
 #'
 #' @return StorageSource object
 #'
@@ -189,10 +200,13 @@ is.gar_RepoSource <- function(x){
 StorageSource <- function(object, bucket = NULL, generation = NULL) {
 
   if(!grepl("tar\\.gz$", object)){
-    stop("Object on Cloud Storage must be a *.tar.gz object. tar.gz a folder using cr_build_upload_gcs()", call. = FALSE)
+    stop("Object on Cloud Storage must be a *.tar.gz object.
+         tar.gz a folder using cr_build_upload_gcs()", call. = FALSE)
   }
 
-  structure(rmNullObs(list(bucket = bucket, object = object, generation = generation)),
+  structure(rmNullObs(list(bucket = bucket,
+                           object = object,
+                           generation = generation)),
             class = c("gar_StorageSource","list"))
 }
 
@@ -212,7 +226,8 @@ is.gar_StorageSource <- function(x){
 #'
 #' @details
 #'
-#' It copies the files into a folder call "deploy" in your working directory, then tars it for upload
+#' It copies the files into a folder call "deploy" in your working directory,
+#'   then tars it for upload
 #'
 #' @export
 #' @importFrom googleCloudStorageR gcs_upload

@@ -141,7 +141,7 @@ cr_schedule_list <- function(region = cr_region_get(),
             projectId, region)
 
   # cloudscheduler.projects.locations.jobs.list
-  pars = list(pageToken = "", pageSize = 500)
+  pars <- list(pageToken = "", pageSize = 500)
   f <- gar_api_generator(url, "GET", pars_args = rmNullObs(pars),
                          data_parse_function = parse_schedule_list)
 

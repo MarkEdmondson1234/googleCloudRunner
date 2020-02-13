@@ -223,7 +223,7 @@ cr_buildstep_run <- function(name,
     auth_step <- NULL
   }
 
-  if(!is.null(port)){
+  if(is.null(port)){
     port <- "default"
   }
 

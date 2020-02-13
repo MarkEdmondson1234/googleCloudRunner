@@ -259,7 +259,7 @@ test_that("Building Build Objects", {
   expect_equal(bq2$source$repoSource$branchName, "master")
 
   # write from creating a Yaml object
-  image = "gcr.io/my-project/my-image"
+  image <- "gcr.io/my-project/my-image"
   run_yaml <- cr_build_yaml(steps = c(cr_buildstep_docker(image, dir = "deploy"),
                              cr_buildstep("gcloud",
                                           c("beta","run","deploy", "test1",
