@@ -10,6 +10,7 @@ cr_buildstep_run(
   allowUnauthenticated = TRUE,
   region = cr_region_get(),
   concurrency = 80,
+  port = NULL,
   ...
 )
 }
@@ -23,6 +24,8 @@ cr_buildstep_run(
 \item{region}{The endpoint region for deployment}
 
 \item{concurrency}{How many connections each image can serve. Can be up to 80.}
+
+\item{port}{Container port to receive requests at. Also sets the $PORT environment variable. Must be a number between 1 and 65535, inclusive. To unset this field, pass the special value "default".}
 
 \item{...}{passed on to \link{cr_buildstep}}
 }
