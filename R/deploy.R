@@ -297,9 +297,9 @@ cr_deploy_packagetests <- function(
                               test_script = test_script,
                               codecov_script = codecov_script,
                               codecov_token = codecov_token,
-                              build_image = build_image)
-                            ),
-                  env = env
+                              build_image = build_image,
+                              env = env)
+                            )
                   )
 
   build <- cr_build_make(build_yaml)

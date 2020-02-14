@@ -426,9 +426,15 @@ test_that("Render BuildStep objects", {
 
   # pkgdown builds
   pd <- cr_deploy_pkgdown()
-  expect_true(file.exists("cloudbuild.yml"))
+  expect_true(file.exists("cloudbuild-pkgdown.yml"))
   expect_equal(pd$steps[[1]]$name, "gcr.io/cloud-builders/gcloud")
-  unlink("cloudbuild.yml")
+  unlink("cloudbuild-pkgdown.yml")
+
+  # package test builds
+  pt <- cr_deploy_packagetests()
+  expect_true(file.exists("cloudbuild-tests.yml"))
+  expect_equal(pt$steps[[1]]$env, "NOT_CRAN=true")
+  unlink("cloudbuild-tests.yml")
 
   # slack messages
   bs <- cr_buildstep_slack("hello")
