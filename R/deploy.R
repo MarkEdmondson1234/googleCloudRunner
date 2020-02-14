@@ -269,7 +269,7 @@ cr_deploy_pkgdown <- function(steps = NULL,
 #'
 #' For GitHub, the repository will need to be linked to the project you are building within, via \url{https://console.cloud.google.com/cloud-build/triggers/connect}
 #'
-#' If your tests needs authentication details, add these via \link{cr_buildstep_decrypt} to the \code{steps} argument, which will prepend decrypting the authentication file before running the tests.
+#' If your tests need authentication details, add these via \link{cr_buildstep_decrypt} to the \code{steps} argument, which will prepend decrypting the authentication file before running the tests.
 #'
 #' If you want codecov to ignore some files then also deploy a .covrignore file to your repository - see covr website at \url{https://covr.r-lib.org/} for details.
 #'

@@ -20,6 +20,47 @@ Some [community contributed Cloud Build images are listed here](https://github.c
 
 You can use any public Docker image if you know which arguments etc. to send to it, for example the Slack messages are using [`technosophos/slack-notify`](https://github.com/technosophos/slack-notify).
 
+## Deploy a pkgdown website for your R package
+
+When creating an R package [pkgdown](https://pkgdown.r-lib.org/) is a fantastic resource for creating a package website from your R function's documentation and vignettes.  
+
+This workflow uses Google's Key Management Store to securely hold your Git ssh login details, then use those details to commit a built website on each Git commit.  This means you do not have to build the website locally.
+
+Each commit you make, a background task will build the website with your changes and commit it back to the repo - see example for this website:
+
+![](pkgdown-commit.png)
+
+A suggested setup workflow to do this is below:
+
+1. Encrypt your git SSH key with gcloud [using these instructions](https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials), noting your keyring and key for the next steps.  
+2. This will create an encrypted file - add it to your R package's directory.
+3. Use `cr_deploy_pkgdown()` to create a cloudbuild.yml file in your R package's directory, giving it your decryption details from step 1.
+
+```{r}
+cr_deploy_pkgdown(keyring = "your-keyring", key = "github-key")
+```
+
+```{r include=FALSE}
+unlink("cloudbuild-pkgdown.yml")
+```
+
+4. Add and commit the cloudbuild.yml file to your git repository
+5. Go to [GCP console > Cloud Build > Triggers](https://console.cloud.google.com/cloud-build/triggers) and link your git repo to Cloud Build.
+6. Create a Build Trigger for your git repository: 
+
+* point at the cloudbuild.yml file you commited (e.g. cloudbuild-pkgdown.yml)
+* Make sure to exclude the `docs/**` folder in the build trigger else the trigger will retrigger when the website is built and pushed to the repo!
+* You may also want to exclude other folders such as tests/**
+* Add a substitution variable `_GITHUB_REPO` with your Git address you want to push to e.g. MarkEdmondson1234/googleCloudRunner
+
+The below is an example for `googleCloudRunner`'s website:
+
+![](pkgdown-build-trigger.png)
+
+The example above also adds other substitution variables to help run some of the examples. 
+
+You can customise the deployment more by using `cr_buildstep_pkgdown()` in your own custom build files. For instance, you could download other auth keys using `cr_buildstep_decrypt()` again, so that your website has working authenticated examples. 
+
 ## Create Docker image of a package each commit
 
 If you just want a one-off Docker image, use `cr_deploy_docker()` or make your own build via `cr_buildstep_docker()`
