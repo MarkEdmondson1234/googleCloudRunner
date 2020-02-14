@@ -44,7 +44,6 @@ steps:
   - |
     remotes::install_deps(dependencies = TRUE)
     remotes::install_local()
-    cv <- covr::package_coverage()
+    cv <- covr::package_coverage(function_exclusions = c("print\\.", "\\.onLoad"))
     print(cv);
-    covr::codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME', function_exclusions = c("print\\.", "\\.onLoad"))
-
+    covr::codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')

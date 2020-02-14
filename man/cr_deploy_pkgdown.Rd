@@ -6,7 +6,7 @@
 \usage{
 cr_deploy_pkgdown(
   steps = NULL,
-  cloudbuild_file = "cloudbuild.yml",
+  cloudbuild_file = "cloudbuild-pkgdown.yml",
   git_email = "googlecloudrunner@r.com",
   keyring = "my-keyring",
   key = "github-key",
@@ -45,9 +45,9 @@ The git ssh keys need to be deployed to Google KMS for the deployment of the web
 \examples{
 
 pd <- cr_deploy_pkgdown()
-file.exists("cloudbuild.yml")
-
-unlink("cloudbuild.yml")
+pd
+file.exists("cloudbuild-pkgdown.yml")
+unlink("cloudbuild-pkgdown.yml")
 
 }
 \seealso{
@@ -57,6 +57,7 @@ Other Deployment functions:
 \code{\link{cr_deploy_docker}()},
 \code{\link{cr_deploy_git_html}()},
 \code{\link{cr_deploy_github_docker}()},
+\code{\link{cr_deploy_packagetests}()},
 \code{\link{cr_deploy_run}()},
 \code{\link{cr_deploy_r}()}
 }

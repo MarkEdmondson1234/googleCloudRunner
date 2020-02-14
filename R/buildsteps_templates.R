@@ -1,3 +1,53 @@
+#' Do R package tests and upload to Codecov
+#'
+#' This lets you run R package tests and is intended to be used in a trigger when you push to a repository so you can monitor code quality.
+#'
+#' @param codecov_token If using codecov, supply your codecov token here. Default assumes you add it to the Cloud Build substitution macros, which is more secure and recommended.
+#' @param test_script The script that will run first making tests.  If \code{NULL} a default script it used
+#' @param codecov_script The script that will run first making tests.  If \code{NULL} a default script it used
+#' @param build_image The docker image that will be used to run the R code for the test scripts
+#' @param env Environment arguments to be set during the test script runs
+#'
+#' @export
+#'
+#' @examples
+#'
+#' cr_buildstep_packagetests()
+#'
+cr_buildstep_packagetests <- function(test_script = NULL,
+                                      codecov_script = NULL,
+                                      codecov_token = "$_CODECOV_TOKEN",
+                                      build_image = "gcr.io/gcer-public/packagetools:master",
+                                      env = c("NOT_CRAN=true")){
+
+  if(is.null(test_script)){
+    test_script <- system.file("r_buildsteps", "devtools_tests.R",
+                               package = "googleCloudRunner",
+                               mustWork = TRUE)
+  }
+
+
+  test_bs <- cr_buildstep_r(
+    test_script,
+    name = build_image,
+    env = env
+  )
+
+  codecov_bs <- NULL
+  if(!is.null(codecov_token)){
+    codecov_bs <- cr_buildstep_r(
+      system.file("r_buildsteps", "codecov_tests.R",
+                  package = "googleCloudRunner", mustWork = TRUE),
+      name = build_image,
+      env = c(env, paste0("CODECOV_TOKEN=", codecov_token))
+    )
+  }
+
+  c(test_bs, codecov_bs)
+
+}
+
+
 #' Send a Slack message to a channel from a Cloud Build step
 #'
 #' This uses https://github.com/technosophos/slack-notify to send Slack messages
@@ -394,6 +444,10 @@ read_buildstep_file <- function(x,
   } else if(code_source == "runtime"){
     #filepath in source, not much we can do to check it
     myMessage("Will read code in source from filepath ", rchars, level = 3)
+  }
+
+  if(nchar(rchars) == 0){
+    stop("No code found to input into buildstep", call. = FALSE)
   }
 
   rchars

@@ -221,12 +221,12 @@ cr_deploy_docker <- function(local,
 #' @examples
 #'
 #' pd <- cr_deploy_pkgdown()
-#' file.exists("cloudbuild.yml")
-#'
-#' unlink("cloudbuild.yml")
+#' pd
+#' file.exists("cloudbuild-pkgdown.yml")
+#' unlink("cloudbuild-pkgdown.yml")
 #'
 cr_deploy_pkgdown <- function(steps = NULL,
-                              cloudbuild_file = "cloudbuild.yml",
+                              cloudbuild_file = "cloudbuild-pkgdown.yml",
                               git_email = "googlecloudrunner@r.com",
                               keyring = "my-keyring",
                               key = "github-key",
@@ -254,5 +254,66 @@ cr_deploy_pkgdown <- function(steps = NULL,
   invisible(build)
 
 }
+
+#' Deploy a cloudbuild.yml for R package tests and upload to Codecov
+#'
+#' This tests an R package each time you commit, and uploads the test coverage results to Codecov
+#'
+#' @inheritParams cr_buildstep_packagetests
+#' @param steps extra steps to run before the \link{cr_buildstep_packagetests} steps run (such as decryption of auth files)
+#' @param cloudbuild_file The cloudbuild yaml file to write to
+#'
+#' @details
+#'
+#' The trigger repository needs to hold an R package configured to do tests upon.
+#'
+#' For GitHub, the repository will need to be linked to the project you are building within, via \url{https://console.cloud.google.com/cloud-build/triggers/connect}
+#'
+#' If your tests needs authentication details, add these via \link{cr_buildstep_decrypt} to the \code{steps} argument, which will prepend decrypting the authentication file before running the tests.
+#'
+#' @seealso Create your own custom deployment using \link{cr_buildstep_packagetests} which this function uses with some defaults
+#' @family Deployment functions
+#' @export
+#' @examples
+#'
+#' pd <- cr_deploy_packagetests()
+#' pd
+#' file.exists("cloudbuild-tests.yml")
+#' unlink("cloudbuild-tests.yml")
+#'
+cr_deploy_packagetests <- function(
+  steps = NULL,
+  cloudbuild_file = "cloudbuild-tests.yml",
+  env = c("NOT_CRAN=true"),
+  test_script = NULL,
+  codecov_script = NULL,
+  codecov_token = "$_CODECOV_TOKEN",
+  build_image = 'gcr.io/gcer-public/packagetools:master'){
+
+
+  build_yaml <-
+    cr_build_yaml(steps = c(steps,
+                            cr_buildstep_packagetests(
+                              test_script = test_script,
+                              codecov_script = codecov_script,
+                              codecov_token = codecov_token,
+                              build_image = build_image)
+                            ),
+                  env = env
+                  )
+
+  build <- cr_build_make(build_yaml)
+
+  cr_build_write(build, file = cloudbuild_file)
+  myMessage("Now make a build trigger pointing at this file in your repo: ", cloudbuild_file,
+            "\nBuild Trigger settings:",
+            "\nSubstitution variable: _CODECOV_TOKEN = {your-codecov-token}",
+            "\nIgnored files filter (glob): docs/** and vignettes/**",
+            level = 3)
+
+  invisible(build)
+
+}
+
 
 
