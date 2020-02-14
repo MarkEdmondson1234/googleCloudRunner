@@ -271,6 +271,8 @@ cr_deploy_pkgdown <- function(steps = NULL,
 #'
 #' If your tests needs authentication details, add these via \link{cr_buildstep_decrypt} to the \code{steps} argument, which will prepend decrypting the authentication file before running the tests.
 #'
+#' If you want codecov to ignore some files then also deploy a .covrignore file to your repository - see covr website at \url{https://covr.r-lib.org/} for details.
+#'
 #' @seealso Create your own custom deployment using \link{cr_buildstep_packagetests} which this function uses with some defaults
 #' @family Deployment functions
 #' @export
@@ -278,7 +280,14 @@ cr_deploy_pkgdown <- function(steps = NULL,
 #'
 #' pd <- cr_deploy_packagetests()
 #' pd
-#' file.exists("cloudbuild-tests.yml")
+#'
+#' # add a decryption step for an auth file
+#' cr_deploy_packagetests(
+#'   steps = cr_buildstep_decrypt("auth.json.enc", "auth.json",
+#'                                keyring = "my-keyring", key = "my-key"),
+#'   env = c("NOT_CRAN=true", "MY_AUTH_FILE=auth.json")
+#' )
+#'
 #' unlink("cloudbuild-tests.yml")
 #'
 cr_deploy_packagetests <- function(
