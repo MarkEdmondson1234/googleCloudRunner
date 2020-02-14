@@ -219,7 +219,33 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_packagetests</span>()</div><div class='output co'>#&gt; <span class='error'>Error in cr_build_yaml(steps = c(steps, cr_buildstep_packagetests(test_script = test_script,     codecov_script = codecov_script, codecov_token = codecov_token,     build_image = build_image)), env = env): unused argument (env = env)</span></div><div class='input'><span class='no'>pd</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'pd' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='st'>"cloudbuild-tests.yml"</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span>(<span class='st'>"cloudbuild-tests.yml"</span>)</div></pre>
+<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_packagetests</span>()</div><div class='output co'>#&gt; <span class='message'>2020-02-14 10:53:40&gt; Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; <span class='message'>2020-02-14 10:53:40&gt; Now make a build trigger pointing at this file in your repo: cloudbuild-tests.yml</span>
+#&gt; <span class='message'>Build Trigger settings:</span>
+#&gt; <span class='message'>Substitution variable: _CODECOV_TOKEN = {your-codecov-token}</span>
+#&gt; <span class='message'>Ignored files filter (glob): docs/** and vignettes/**</span></div><div class='input'><span class='no'>pd</span></div><div class='output co'>#&gt; ==CloudBuildObject==
+#&gt; steps:
+#&gt; - name: gcr.io/gcer-public/packagetools:master
+#&gt;   args:
+#&gt;   - Rscript
+#&gt;   - -e
+#&gt;   - |-
+#&gt;     message("cran mirror: ", getOption("repos"))
+#&gt;     remotes::install_deps(dependencies = TRUE)
+#&gt;     rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'warning')
+#&gt;   env: NOT_CRAN=true
+#&gt; - name: gcr.io/gcer-public/packagetools:master
+#&gt;   args:
+#&gt;   - Rscript
+#&gt;   - -e
+#&gt;   - |-
+#&gt;     remotes::install_deps(dependencies = TRUE)
+#&gt;     remotes::install_local()
+#&gt;     cv &lt;- covr::package_coverage()
+#&gt;     print(cv)
+#&gt;     covr::codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
+#&gt;   env:
+#&gt;   - NOT_CRAN=true
+#&gt;   - CODECOV_TOKEN=$_CODECOV_TOKEN</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='st'>"cloudbuild-tests.yml"</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span>(<span class='st'>"cloudbuild-tests.yml"</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
