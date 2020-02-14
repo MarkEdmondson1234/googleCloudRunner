@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Deploy Docker build from a GitHub repo (Experimental) — cr_deploy_github_docker • googleCloudRunner</title>
+<title>Do R package tests and upload to Codecov — cr_buildstep_packagetests • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Deploy Docker build from a GitHub repo (Experimental) — cr_deploy_github_docker" />
-<meta property="og:description" content="This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit." />
+<meta property="og:title" content="Do R package tests and upload to Codecov — cr_buildstep_packagetests" />
+<meta property="og:description" content="This lets you run R package tests and is intended to be used in a trigger when you push to a repository so you can monitor code quality." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,84 +149,86 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Deploy Docker build from a GitHub repo (Experimental)</h1>
+    <h1>Do R package tests and upload to Codecov</h1>
     
-    <div class="hidden name"><code>cr_deploy_github_docker.Rd</code></div>
+    <div class="hidden name"><code>cr_buildstep_packagetests.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit.</p>
+    <p>This lets you run R package tests and is intended to be used in a trigger when you push to a repository so you can monitor code quality.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_github_docker</span>(
-  <span class='no'>x</span>,
-  <span class='kw'>image</span> <span class='kw'>=</span> <span class='no'>x</span>,
-  <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>,
-  <span class='kw'>image_tag</span> <span class='kw'>=</span> <span class='st'>"$SHORT_SHA"</span>,
-  <span class='kw'>dockerfile_location</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>github_tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
+    <pre class="usage"><span class='fu'>cr_buildstep_packagetests</span>(
+  <span class='kw'>test_script</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>codecov_script</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>codecov_token</span> <span class='kw'>=</span> <span class='st'>"$_CODECOV_TOKEN"</span>,
+  <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>,
+  <span class='kw'>env</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NOT_CRAN=true"</span>)
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>The GitHub repo e.g. <code>MarkEdmondson1234/googleCloudRunner</code></p></td>
+      <th>test_script</th>
+      <td><p>The script that will run first making tests.  If <code>NULL</code> a default script it used</p></td>
     </tr>
     <tr>
-      <th>image</th>
-      <td><p>The name of the image you want to build</p></td>
+      <th>codecov_script</th>
+      <td><p>The script that will run first making tests.  If <code>NULL</code> a default script it used</p></td>
     </tr>
     <tr>
-      <th>branch</th>
-      <td><p>A regex of the GitHub branches that will trigger a build</p></td>
+      <th>codecov_token</th>
+      <td><p>If using codecov, supply your codecov token here. Default assumes you add it to the Cloud Build substitution macros, which is more secure and recommended.</p></td>
     </tr>
     <tr>
-      <th>image_tag</th>
-      <td><p>What to tag the build docker image</p></td>
+      <th>build_image</th>
+      <td><p>The docker image that will be used to run the R code for the test scripts</p></td>
     </tr>
     <tr>
-      <th>dockerfile_location</th>
-      <td><p>Where the Dockerfile sits within the GitHub repo</p></td>
-    </tr>
-    <tr>
-      <th>github_tag</th>
-      <td><p>Regexes matching what tags to build. If not NULL then argument branch will be ignored</p></td>
-    </tr>
-    <tr>
-      <th>timeout</th>
-      <td><p>timeout for the Docker build</p></td>
-    </tr>
-    <tr>
-      <th>projectId</th>
-      <td><p>The project to build under</p></td>
+      <th>env</th>
+      <td><p>Environment arguments to be set during the test script runs</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Build trigger API is experimental so this function is in development.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><a href='cr_deploy_docker.html'>cr_deploy_docker</a> which lets you build Dockerfiles for more generic use cases</p>
-<p>Other Deployment functions: 
-<code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
-<code><a href='cr_deploy_git_html.html'>cr_deploy_git_html</a>()</code>,
-<code><a href='cr_deploy_packagetests.html'>cr_deploy_packagetests</a>()</code>,
-<code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a>()</code>,
-<code><a href='cr_deploy_run.html'>cr_deploy_run</a>()</code>,
-<code><a href='cr_deploy_r.html'>cr_deploy_r</a>()</code></p></div>
-
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='fu'>cr_buildstep_packagetests</span>()</div><div class='output co'>#&gt; [[1]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: gcr.io/gcer-public/packagetools:master
+#&gt; args:
+#&gt; - Rscript
+#&gt; - -e
+#&gt; - |-
+#&gt;   message("cran mirror: ", getOption("repos"))
+#&gt;   remotes::install_deps(dependencies = TRUE)
+#&gt;   rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'warning')
+#&gt; env: NOT_CRAN=true
+#&gt; 
+#&gt; [[2]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: gcr.io/gcer-public/packagetools:master
+#&gt; args:
+#&gt; - Rscript
+#&gt; - -e
+#&gt; - |-
+#&gt;   remotes::install_deps(dependencies = TRUE)
+#&gt;   remotes::install_local()
+#&gt;   cv &lt;- covr::package_coverage()
+#&gt;   print(cv)
+#&gt;   covr::codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
+#&gt; env:
+#&gt; - NOT_CRAN=true
+#&gt; - CODECOV_TOKEN=$_CODECOV_TOKEN
+#&gt; </div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

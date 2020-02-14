@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Run an R script in a Cloud Build R step — cr_buildstep_r • googleCloudRunner</title>
+<title>Deploy a cloudbuild.yml for R package tests and upload to Codecov — cr_deploy_packagetests • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Run an R script in a Cloud Build R step — cr_buildstep_r" />
-<meta property="og:description" content="Helper to run R code within build steps, from either an existing local R file or within the source of the build." />
+<meta property="og:title" content="Deploy a cloudbuild.yml for R package tests and upload to Codecov — cr_deploy_packagetests" />
+<meta property="og:description" content="This tests an R package each time you commit, and uploads the test coverage results to Codecov" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -149,110 +149,77 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Run an R script in a Cloud Build R step</h1>
+    <h1>Deploy a cloudbuild.yml for R package tests and upload to Codecov</h1>
     
-    <div class="hidden name"><code>cr_buildstep_r.Rd</code></div>
+    <div class="hidden name"><code>cr_deploy_packagetests.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Helper to run R code within build steps, from either an existing local R file or within the source of the build.</p>
+    <p>This tests an R package each time you commit, and uploads the test coverage results to Codecov</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildstep_r</span>(
-  <span class='no'>r</span>,
-  <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"r-base"</span>,
-  <span class='kw'>r_source</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"local"</span>, <span class='st'>"runtime"</span>),
-  <span class='kw'>prefix</span> <span class='kw'>=</span> <span class='st'>"rocker/"</span>,
-  <span class='no'>...</span>
+    <pre class="usage"><span class='fu'>cr_deploy_packagetests</span>(
+  <span class='kw'>steps</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>cloudbuild_file</span> <span class='kw'>=</span> <span class='st'>"cloudbuild-tests.yml"</span>,
+  <span class='kw'>env</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NOT_CRAN=true"</span>),
+  <span class='kw'>test_script</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>codecov_script</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>codecov_token</span> <span class='kw'>=</span> <span class='st'>"$_CODECOV_TOKEN"</span>,
+  <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>r</th>
-      <td><p>R code to run or a file containing R code ending with .R</p></td>
+      <th>steps</th>
+      <td><p>extra steps to run before the <a href='cr_buildstep_packagetests.html'>cr_buildstep_packagetests</a> steps run (such as decryption of auth files)</p></td>
     </tr>
     <tr>
-      <th>name</th>
-      <td><p>The docker image that will run the R code, usually from rocker-project.org</p></td>
+      <th>cloudbuild_file</th>
+      <td><p>The cloudbuild yaml file to write to</p></td>
     </tr>
     <tr>
-      <th>r_source</th>
-      <td><p>Whether the R code will be from a runtime file within the source or at build time copying over from a local R file in your session</p></td>
+      <th>env</th>
+      <td><p>Environment arguments to be set during the test script runs</p></td>
     </tr>
     <tr>
-      <th>prefix</th>
-      <td><p>prefixed to name - set to "" to suppress.  Will be suppressed if <code>name</code> starts with gcr.io</p></td>
+      <th>test_script</th>
+      <td><p>The script that will run first making tests.  If <code>NULL</code> a default script it used</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>Other arguments passed to <a href='cr_buildstep.html'>cr_buildstep</a></p></td>
+      <th>codecov_script</th>
+      <td><p>The script that will run first making tests.  If <code>NULL</code> a default script it used</p></td>
+    </tr>
+    <tr>
+      <th>codecov_token</th>
+      <td><p>If using codecov, supply your codecov token here. Default assumes you add it to the Cloud Build substitution macros, which is more secure and recommended.</p></td>
+    </tr>
+    <tr>
+      <th>build_image</th>
+      <td><p>The docker image that will be used to run the R code for the test scripts</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If <code>r_source="runtime"</code> then <code>r</code> should be the location of that file within the source or <code>image</code> that will be run by the R code from <code>image</code></p>
-<p>If <code>r_source="local"</code> then it will copy over from a character string or local file into the build step directly.</p>
+    <p>The trigger repository needs to hold an R package configured to do tests upon.</p>
+<p>For GitHub, the repository will need to be linked to the project you are building within, via <a href='https://console.cloud.google.com/cloud-build/triggers/connect'>https://console.cloud.google.com/cloud-build/triggers/connect</a></p>
+<p>If your tests needs authentication details, add these via <a href='cr_buildstep_decrypt.html'>cr_buildstep_decrypt</a> to the <code>steps</code> argument, which will prepend decrypting the authentication file before running the tests.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Cloud Buildsteps: 
-<code><a href='cr_buildstep_bash.html'>cr_buildstep_bash</a>()</code>,
-<code><a href='cr_buildstep_decrypt.html'>cr_buildstep_decrypt</a>()</code>,
-<code><a href='cr_buildstep_df.html'>cr_buildstep_df</a>()</code>,
-<code><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a>()</code>,
-<code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a>()</code>,
-<code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a>()</code>,
-<code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a>()</code>,
-<code><a href='cr_buildstep_mailgun.html'>cr_buildstep_mailgun</a>()</code>,
-<code><a href='cr_buildstep_nginx_setup.html'>cr_buildstep_nginx_setup</a>()</code>,
-<code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a>()</code>,
-<code><a href='cr_buildstep_run.html'>cr_buildstep_run</a>()</code>,
-<code><a href='cr_buildstep_slack.html'>cr_buildstep_slack</a>()</code>,
-<code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
+    <div class='dont-index'><p>Create your own custom deployment using <a href='cr_buildstep_packagetests.html'>cr_buildstep_packagetests</a> which this function uses with some defaults</p>
+<p>Other Deployment functions: 
+<code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
+<code><a href='cr_deploy_git_html.html'>cr_deploy_git_html</a>()</code>,
+<code><a href='cr_deploy_github_docker.html'>cr_deploy_github_docker</a>()</code>,
+<code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a>()</code>,
+<code><a href='cr_deploy_run.html'>cr_deploy_run</a>()</code>,
+<code><a href='cr_deploy_r.html'>cr_deploy_r</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-02-14 10:32:38&gt; ProjectId set to my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-02-14 10:32:38&gt; Bucket set to my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
-<span class='co'># create an R buildstep inline</span>
-<span class='fu'>cr_buildstep_r</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"paste('1+1=', 1+1)"</span>, <span class='st'>"sessionInfo()"</span>))</div><div class='output co'>#&gt; [[1]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: rocker/r-base
-#&gt; args:
-#&gt; - Rscript
-#&gt; - -e
-#&gt; - |-
-#&gt;   paste('1+1=', 1+1)
-#&gt;   sessionInfo()
-#&gt; </div><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-
-<span class='co'># create an R buildstep from a local file</span>
-<span class='fu'>cr_buildstep_r</span>(<span class='st'>"my-r-file.R"</span>)
-
-<span class='co'># create an R buildstep from a file within the source of the Build</span>
-<span class='fu'>cr_buildstep_r</span>(<span class='st'>"inst/schedule/schedule.R"</span>, <span class='kw'>r_source</span> <span class='kw'>=</span> <span class='st'>"runtime"</span>)
-
-}
-
-<span class='co'># use a different Rocker image e.g. rocker/verse</span>
-<span class='fu'>cr_buildstep_r</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"library(dplyr)"</span>,
-                 <span class='st'>"mtcars %&gt;% select(mpg)"</span>,
-                 <span class='st'>"sessionInfo()"</span>),
-               <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"verse"</span>)</div><div class='output co'>#&gt; [[1]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: rocker/verse
-#&gt; args:
-#&gt; - Rscript
-#&gt; - -e
-#&gt; - |-
-#&gt;   library(dplyr)
-#&gt;   mtcars %&gt;% select(mpg)
-#&gt;   sessionInfo()
-#&gt; </div><div class='input'>
-<span class='co'># use your own R image with custom R</span>
-<span class='no'>my_r</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"devtools::install()"</span>, <span class='st'>"pkgdown::build_site()"</span>)
-<span class='no'>br</span> <span class='kw'>&lt;-</span>  <span class='fu'>cr_buildstep_r</span>(<span class='no'>my_r</span>, <span class='kw'>name</span><span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>)</div></pre>
+    <pre class="examples"><div class='input'>
+<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_packagetests</span>()</div><div class='output co'>#&gt; <span class='error'>Error in cr_build_yaml(steps = c(steps, cr_buildstep_packagetests(test_script = test_script,     codecov_script = codecov_script, codecov_token = codecov_token,     build_image = build_image)), env = env): unused argument (env = env)</span></div><div class='input'><span class='no'>pd</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'pd' not found</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='st'>"cloudbuild-tests.yml"</span>)</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span>(<span class='st'>"cloudbuild-tests.yml"</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
