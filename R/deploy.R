@@ -215,7 +215,7 @@ cr_deploy_docker <- function(local,
 #'
 #' The git ssh keys need to be deployed to Google KMS for the deployment of the website - see \link{cr_buildstep_git} - this only needs to be done once per Git account.  You then need to commit the encrypted ssh key (by default called \code{id_rsa.enc})
 #'
-#' @seealso Create your own custom deployment using \link{cr_buildstep_pkgdown} which this function uses with some defaults
+#' @seealso Create your own custom deployment using \link{cr_buildstep_pkgdown} which this function uses with some defaults.
 #' @family Deployment functions
 #' @export
 #' @examples
