@@ -200,6 +200,16 @@
 <p>Use the resulting cloudbuild.yml file in the same manner as unauthenticated tests.</p>
 </div>
 </div>
+<div id="run-r-code-in-a-background-task" class="section level2">
+<h2 class="hasAnchor">
+<a href="#run-r-code-in-a-background-task" class="anchor"></a>Run R code in a background task</h2>
+<p>Sometimes you just want to have some R code running whilst you get on with something else. In this case you can use <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code> to run your R code even after you have turned your computer off, since its running in the cloud.</p>
+<p>When running R code, it needs to run in an environment that has the packages and resources it needs. If those are covered by images such as <code>rocker/verse</code> (the tidyverse) then you can commit it straight away. Otherwise you can first make a custom Docker file with the R packages you need in it, and then run your code against that.</p>
+<p>Once you have your R code and chosen the Docker image, then you can use <code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code> to point at your R file and Docker image, set the timeout to what you need (the maximum is 24 hours).</p>
+<p>An RStudio gadget is also available to help you deploy:</p>
+<p><img src="gadget_r.png"></p>
+<p>If you want help creating the Docker image, try <a href="https://o2r.info/containerit/"><code>containerit</code></a> to generate your Dockerfile, then use <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> to build it.</p>
+</div>
 <div id="create-docker-image-of-a-package-each-commit" class="section level2">
 <h2 class="hasAnchor">
 <a href="#create-docker-image-of-a-package-each-commit" class="anchor"></a>Create Docker image of a package each commit</h2>
@@ -523,6 +533,7 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#deploy-a-pkgdown-website-for-your-r-package">Deploy a pkgdown website for your R package</a></li>
       <li><a href="#run-package-tests-and-code-coverage">Run package tests and code coverage</a></li>
+      <li><a href="#run-r-code-in-a-background-task">Run R code in a background task</a></li>
       <li><a href="#create-docker-image-of-a-package-each-commit">Create Docker image of a package each commit</a></li>
       <li><a href="#migrate-an-existing-scheduled-docker-container">Migrate an existing scheduled Docker container</a></li>
       <li><a href="#trigger-an-r-function-from-pubsub">Trigger an R function from pubsub</a></li>
