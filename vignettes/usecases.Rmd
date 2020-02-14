@@ -36,12 +36,8 @@ A suggested setup workflow to do this is below:
 2. This will create an encrypted file - add it to your R package's directory.
 3. Use `cr_deploy_pkgdown()` to create a cloudbuild.yml file in your R package's directory, giving it your decryption details from step 1.
 
-```{r}
+```r
 cr_deploy_pkgdown(keyring = "your-keyring", key = "github-key")
-```
-
-```{r include=FALSE}
-unlink("cloudbuild-pkgdown.yml")
 ```
 
 4. Add and commit the cloudbuild.yml file to your git repository
@@ -60,6 +56,54 @@ The below is an example for `googleCloudRunner`'s website:
 The example above also adds other substitution variables to help run some of the examples. 
 
 You can customise the deployment more by using `cr_buildstep_pkgdown()` in your own custom build files. For instance, you could download other auth keys using `cr_buildstep_decrypt()` again, so that your website has working authenticated examples. 
+
+## Run package tests and code coverage
+
+This workflow will run the package tests you have upon each commit to your git repo.  
+
+You can also optionally submit those test results to [codecov](https://codecov.io) via the excellent [covr R package](https://covr.r-lib.org/), helping you see which code your tests actually test. This is what creates this badge for this package:
+
+[![codecov](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner/branch/master/graph/badge.svg)](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner)
+
+If you do not need online authentication for your tests, then this is only a case of deploying the premade default cloudbuild.yml file via `cr_deploy_packagetests()`.
+
+The below assumes you have created tests for your package.
+
+1. If you want to use Codecov, [generate a Codecov token](https://docs.codecov.io/reference) on its website and link it to your git repository
+2. Create the tests cloudbuild.yml file via `cr_deploy_packagetests()`
+3. Add and commit the cloudbuild.yml file to your git repository
+4. Go to [GCP console > Cloud Build > Triggers](https://console.cloud.google.com/cloud-build/triggers) and link your git repo to Cloud Build.
+5. Create a Build Trigger for your git repository: 
+
+* point at the cloudbuild.yml file you commited (e.g. cloudbuild-tests.yml)
+* Exclude any folders such as the `docs/**` folder where changes should not trigger a recheck
+* Add a substitution variable `_CODECOV_TOKEN` if you are using it
+
+The below is an example for `googleCloudRunner`'s website:
+
+![](pkgchecks-trigger.png)
+
+The example above also adds other substitution variables to help run some of the examples. 
+
+### Authenticated tests
+
+You can customise the deployment more by using `cr_buildstep_packagetests()` in your own custom build files. 
+
+For `googleCloudRunner` and API packages in general, an authentication key is needed to run online tests.  This authentication key can be encrypted via `gcloud` and added to [Google Cloud KMS](https://cloud.google.com/kms) by adding a decryption step to your tests via `cr_buildstep_decrypt()`.
+
+In that case, the decryption step needs to occur before the tests run, which you can do by supplying `cr_buildstep_decrypt()` to `cr_deploy_packagetests()`.  
+
+You will also want to use that auth file somehow, in the below example it is placed in an environment argument that your tests use to find the authentication file:
+
+```r
+cr_deploy_packagetests(
+  steps = cr_buildstep_decrypt("auth.json.enc", "auth.json",
+                               keyring = "my-keyring", key = "my-key"),
+  env = c("NOT_CRAN=true", "MY_AUTH_FILE=auth.json")
+)
+```
+
+Use the resulting cloudbuild.yml file in the same manner as unauthenticated tests. 
 
 ## Create Docker image of a package each commit
 
