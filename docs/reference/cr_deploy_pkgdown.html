@@ -213,7 +213,7 @@
 <p>The git ssh keys need to be deployed to Google KMS for the deployment of the website - see <a href='cr_buildstep_git.html'>cr_buildstep_git</a> - this only needs to be done once per Git account.  You then need to commit the encrypted ssh key (by default called <code>id_rsa.enc</code>)</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Create your own custom deployment using <a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a> which this function uses with some defaults</p>
+    <div class='dont-index'><p>Create your own custom deployment using <a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a> which this function uses with some defaults.</p>
 <p>Other Deployment functions: 
 <code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
 <code><a href='cr_deploy_git_html.html'>cr_deploy_git_html</a>()</code>,
@@ -224,7 +224,7 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_pkgdown</span>()</div><div class='output co'>#&gt; <span class='message'>2020-02-14 13:26:55&gt; Writing to cloudbuild-pkgdown.yml</span></div><div class='output co'>#&gt; <span class='message'>2020-02-14 13:26:55&gt; Now make a build trigger pointing at this file in your repo: cloudbuild-pkgdown.yml</span>
+<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_pkgdown</span>()</div><div class='output co'>#&gt; <span class='message'>2020-02-15 19:08:19&gt; Writing to cloudbuild-pkgdown.yml</span></div><div class='output co'>#&gt; <span class='message'>2020-02-15 19:08:19&gt; Now make a build trigger pointing at this file in your repo: cloudbuild-pkgdown.yml</span>
 #&gt; <span class='message'>Build Trigger settings:</span>
 #&gt; <span class='message'>Substitution variable: _GITHUB_REPO = {your-repo-to-push-to}</span>
 #&gt; <span class='message'>Ignored files filter (glob): docs/**</span></div><div class='input'><span class='no'>pd</span></div><div class='output co'>#&gt; ==CloudBuildObject==
