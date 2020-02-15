@@ -20,6 +20,8 @@ This function is intended to be used within \link[plumber]{plumb} API scripts.  
 \code{pass_f} should be a function you create that accepts one argument, the data from the pubsub \code{message$data} field.  It is unencoded for you.
 
 The Docker container for the API will need to include \code{googleCloudRunner} installed in its R environment to run this function.  This is available in the public \code{gcr.io/gcer-public/cloudrunner} image.
+
+Use \link{cr_pubsub} to test this function once deployed.
 }
 \examples{
 
@@ -42,7 +44,7 @@ function(message=NULL){
 }
 }
 \seealso{
-\href{https://cloud.google.com/run/docs/tutorials/pubsub}{Google Pub/Sub tutorial for Cloud Run}
+\href{https://cloud.google.com/run/docs/tutorials/pubsub}{Google Pub/Sub tutorial for Cloud Run}.  You can set up Pub/Sub messages from Google Cloud Storage buckets via \link[googleCloudStorageR]{gcs_create_pubsub}
 
 Other Cloud Run functions: 
 \code{\link{cr_run_get}()},

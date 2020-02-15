@@ -51,7 +51,7 @@ unlink("cloudbuild-pkgdown.yml")
 
 }
 \seealso{
-Create your own custom deployment using \link{cr_buildstep_pkgdown} which this function uses with some defaults
+Create your own custom deployment using \link{cr_buildstep_pkgdown} which this function uses with some defaults.
 
 Other Deployment functions: 
 \code{\link{cr_deploy_docker}()},

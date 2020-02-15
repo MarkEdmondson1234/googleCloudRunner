@@ -13,6 +13,7 @@
 #'
 #' The Docker container for the API will need to include \code{googleCloudRunner} installed in its R environment to run this function.  This is available in the public \code{gcr.io/gcer-public/cloudrunner} image.
 #'
+#' Use \link{cr_pubsub} to test this function once deployed.
 #'
 #' @export
 #' @examples
@@ -34,7 +35,7 @@
 #'   }
 #'
 #' }
-#' @seealso \href{https://cloud.google.com/run/docs/tutorials/pubsub}{Google Pub/Sub tutorial for Cloud Run}
+#' @seealso \href{https://cloud.google.com/run/docs/tutorials/pubsub}{Google Pub/Sub tutorial for Cloud Run}.  You can set up Pub/Sub messages from Google Cloud Storage buckets via \link[googleCloudStorageR]{gcs_create_pubsub}
 #' @family Cloud Run functions
 cr_plumber_pubsub <- function(message=NULL,
                               pass_f=function(x) x){

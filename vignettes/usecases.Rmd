@@ -119,6 +119,35 @@ An RStudio gadget is also available to help you deploy:
 
 If you want help creating the Docker image, try [`containerit`](https://o2r.info/containerit/) to generate your Dockerfile, then use `cr_deploy_docker()` to build it.
 
+### Authentication within the R script on Cloud Build
+
+The default metadata of the Cloud Build server is the same as `googleComputeEngineR`, so you can use `googleAuthR::gar_gce_auth("default", scopes = "https://www.googleapis.com/auth/cloud-platform")`.  You can also use the Cloud Build email (the one that looks like `{project-number@cloudbuild.gserviceaccount.com}`) if its given the right access in Cloud IAM, authentication in your R script will look like `googleAuthR::gar_gce_auth("{project-number@cloudbuild.gserviceaccount.com}", scopes = "https://www.googleapis.com/auth/cloud-platform")`
+
+This enables you in the R script to download authentication files from Cloud Storage, for example.  A minimal example is shown below:
+
+```r
+library(googleCloudStorageR)
+library(googleAuthR)
+gar_gce_auth("default", scopes = "https://www.googleapis.com/auth/cloud-platform")
+
+## or if using the build email..
+# gar_gce_auth("{project-number@cloudbuild.gserviceaccount.com}", 
+#                scopes = "https://www.googleapis.com/auth/cloud-platform")
+
+gcs_list_buckets("my_project")
+auth_file <- gcs_get_object("auth.json", bucket = "my-bucket")
+
+...do something with the auth file...
+```
+
+This would then be saved to an R script and deployed via the gadget or:
+
+```r
+cr_deploy_r("the_script.R", r_image = "gcr.io/gcer-public/googleauthr-verse")
+```
+
+...where the docker R image is one with googleCloudStorageR installed.
+
 ## Create Docker image of a package each commit
 
 If you just want a one-off Docker image, use `cr_deploy_docker()` or make your own build via `cr_buildstep_docker()`
@@ -228,6 +257,8 @@ pub <- function(x){
   cr_build(x, source = my_source)
 }
 ```
+
+If you would like to trigger a pub/sub message when a file arrives on Google Cloud Storage, use `googleCloudStorageR::gcs_create_pubsub()` 
 
 ## Build an Rmd each git commit and host its HTML on Cloud Storage
 
