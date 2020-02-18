@@ -7,6 +7,10 @@ test_that("Online auth", {
   builds <- cr_buildtrigger_list()
   expect_s3_class(builds, "data.frame")
 
+  # tests auth on cloud build
+  cr_deploy_r(system.file("schedule/test_auth.R", package = "googleCloudRunner"),
+              r_image = "gcr.io/gcer-public/googleauthr-verse")
+
 })
 
 test_that("[Online] Test deployments", {
