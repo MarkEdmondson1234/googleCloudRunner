@@ -6,7 +6,7 @@ options:
   - 'GCS_DEFAULT_BUCKET=$_BUCKET'
   - 'GCE_AUTH_FILE=/workspace/auth.json'
   - 'NOT_CRAN=true'
-timeout: "1200s"
+timeout: "2400s"
 steps:
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
@@ -42,7 +42,6 @@ steps:
   - "Rscript"
   - "-e"
   - |
-    remotes::install_deps(dependencies = TRUE)
     remotes::install_local()
     cv <- covr::package_coverage()
     print(cv);
