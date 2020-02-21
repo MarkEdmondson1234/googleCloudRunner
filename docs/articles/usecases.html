@@ -309,7 +309,7 @@ CMD ["api.R"]</code></pre>
 <a href="#run-r-code-when-a-pubsub-message-is-created-from-a-new-file-in-google-cloud-storage" class="anchor"></a>Run R code when a pub/sub message is created from a new file in Google Cloud Storage</h2>
 <p>This is a demo to show how to make use of <a href="https://cloud.google.com/pubsub/docs/overview">Pub/Sub messages</a>. Pub/Sub messages are used throughout the Google Cloud Platform, for this example we will use one for when a new object is created in a Google Cloud Storage bucket.</p>
 <p>A video walkthrough of the below is available <a href="https://www.youtube.com/watch?v=MoKHsFr1B88">here</a></p>
-<iframe width="560" height="315" src="http://www.youtube.com/embed/MoKHsFr1B88?rel=0" frameborder="0" allowfullscreen>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/MoKHsFr1B88" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 <div id="the-plumber-api-with-pubsub" class="section level3">
 <h3 class="hasAnchor">
@@ -394,8 +394,8 @@ CMD ["api.R"]</code></pre>
 <h2 class="hasAnchor">
 <a href="#build-an-rmd-on-a-schedule-and-host-its-html-on-cloud-storage" class="anchor"></a>Build an Rmd on a schedule and host its HTML on Cloud Storage</h2>
 <p>Cloud Storage can host public HTML files like a website, which can be accessed via public or private viewers. This can be useful in setting up reporting infrastructure.</p>
-<p>A video of the below workflow is [here] (<a href="https://www.youtube.com/watch?v=YcHLBnLRnRs" class="uri">https://www.youtube.com/watch?v=YcHLBnLRnRs</a>):</p>
-<iframe width="560" height="315" src="http://www.youtube.com/embed/YcHLBnLRnRs?rel=0" frameborder="0" allowfullscreen>
+<p>A video of the below workflow is <a href="https://www.youtube.com/watch?v=YcHLBnLRnRs">here</a>:</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/YcHLBnLRnRs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 <p>The Cloud Build below makes use of Cloud Build artifacts to send the built Rmd files to a public Cloud Storage bucket. The Rmd is built on a schedule to pull in new data from a Google Sheet:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">rmd_build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>

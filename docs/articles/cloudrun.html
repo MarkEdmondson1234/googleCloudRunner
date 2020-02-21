@@ -260,7 +260,7 @@ CMD ["api.R"]</code></pre>
 <h2 class="hasAnchor">
 <a href="#creating-a-dockerfile-with-containerit" class="anchor"></a>Creating a Dockerfile with containerit</h2>
 <p><code>containerit</code> is not yet on CRAN so can’t be packaged with the CRAN version of <code>googleCloudRunner</code> but its a useful package to work with since it auto-creates Dockerfiles from R files.</p>
-<p>To install it use <code><a href="https://rdrr.io/pkg/remotes/man/install_github.html">remotes::install_github("o2r-project/containerit")</a></code></p>
+<p>To install it use <code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github("o2r-project/containerit")</a></code></p>
 <p><a href="https://o2r.info/containerit/">See <code>containerit</code>s website for more details</a> on how to use it.</p>
 <p>An example of using it to help create plumber Dockerfiles is below:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(containerit)</a>
