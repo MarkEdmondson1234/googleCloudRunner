@@ -86,7 +86,7 @@ Follow these steps:
 * Cloud Scheduler Admin
 * Service Account User
 * Cloud Run Admin
-* Storage Object Admin
+* Storage Object Admin (or Storage Admin to setup pub/sub)
 
 6. Give yourself access as a user to the service account, then click "Create key" and select "JSON"
 7. Download the auth json key and put it in a folder separate from all R projects or git commits.  **This file should be guarded as it grants access to sensitive operations**

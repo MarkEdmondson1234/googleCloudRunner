@@ -4,10 +4,10 @@ library(gargle)
 test_f <- function(token, x){
   tryCatch({
     googleAuthR::gar_auth(token = token)
-    message(paste(x, " worked"))
+    message(paste(x, "worked"))
     gcs_list_buckets("mark-edmondson-gde")
   }, error = function(ex) {
-    message(paste(x, " failed"))
+    message(paste(x, "failed"))
     message("error: ", ex)
   })
 }

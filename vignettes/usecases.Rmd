@@ -260,44 +260,155 @@ pub <- function(x){
 
 If you would like to trigger a pub/sub message when a file arrives on Google Cloud Storage, use `googleCloudStorageR::gcs_create_pubsub()` 
 
-## Build an Rmd each git commit and host its HTML on Cloud Storage
+## Run R code when a pub/sub message is created from a new file in Google Cloud Storage
+
+This is a demo to show how to make use of [Pub/Sub messages](https://cloud.google.com/pubsub/docs/overview).  Pub/Sub messages are used throughout the Google Cloud Platform, for this example we will use one for when a new object is created in a Google Cloud Storage bucket.
+
+A video walkthrough of the below is available [here](https://www.youtube.com/watch?v=MoKHsFr1B88)
+
+<iframe width="560" height="315" src="http://www.youtube.com/embed/MoKHsFr1B88?rel=0" frameborder="0" allowfullscreen></iframe>
+
+### The plumber API with pub/sub
+
+The API endpoint in plumber needs an endpoint to recieve Pub/Sub messages, then an R function to process and do what you want with that message.  In this case we shall email the file name to an end user.  This could be expanded to do some R analysis, or what ever you need.
+
+```r
+#' Send an email via mailgun
+send_email <- function(message){
+  message("sending email with message: ", message)
+
+  httr::POST(paste0(Sys.getenv("MAILGUN_URL"),"/messages"),
+             httr::authenticate("api", Sys.getenv("MAILGUN_KEY")),
+             encode = "form",
+             body = list(
+               from="googlecloudrunner@you.me",
+               to="test@you.me",
+               subject="Message from Pub/Sub",
+               text=message
+             ))
+
+  TRUE
+}
+
+#' Recieve pub/sub message
+#' @post /pubsub
+#' @param message a pub/sub message
+function(message=NULL){
+
+  pub <- function(x){
+    o <- jsonlite::fromJSON(x)
+    message("Echo:", o)
+    send_email(paste("We got this file: ", o$name))
+  }
+
+  googleCloudRunner::cr_plumber_pubsub(message, pub)
+
+}
+```
+
+The above script relies on two environment arguments with the Mailgun keys, which can be set in the Cloud Run interface once a deployment is live.  The environment arguments persist inbetween versions so you only need to set this up once.
+
+For this example, the Dockerfile is a standard one with plumber and googleCloudRunner installed - you may need to add your own dependencies:
+
+```
+FROM gcr.io/gcer-public/googlecloudrunner:master
+COPY ["./", "./"]
+ENTRYPOINT ["R", "-e", "pr <- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))"]
+CMD ["api.R"]
+```
+
+### Deployment
+
+This can be deployed via the RStudio Addin, or via the code below:
+
+```r
+cr_deploy_plumber("folder/with-api/", 
+                  image_name = "gcs-pubsub")
+```
+
+After the first deployment, go to the web UI and `Deploy New Revision` - keep everything the same but update the environment arguments.  These will persist for future revisions:
+
+![](cloudrun-environment-args.png)
+
+You can test the Pub/Sub API is working from R with the below code:
+
+```r
+cr_pubsub("https://your-cloudendpoint.run.app/pubsub",
+          jsonlite::toJSON(list(name = "test_file_from_r")))
+```
+
+### Setup Pub/Sub
+
+To activate Pub/Sub messages from a Google Cloud Storage bucket, use a service account with Cloud Storage Admin rights (note not Cloud Storage Object Admin).  In the Web UI of Pub/Sub set up a Topic:
+
+![](pubsub-topic.png)
+
+Each topic can have many subscriptions.  One of these will push to the Cloud Run URL set up in the previous step:
+
+![](pubsub-sub.png)
+
+### Add files to Google Cloud Storage
+
+Now when a new file arrives into the bucket, it will:
+
+1. Trigger a Pub/Sub to the Subscription
+2. Pass on to the Pub/Sub Topic
+3. Push to Cloud Run
+4. Execute the plumber R code to send an email
+5. Arrive in your inbox
+
+You can test it by uploading files either in the web UI or via 
+
+```r
+googleCloudStorageR::gcs_upload(mtcars, bucket = "your-bucket", 
+                                name = paste(Sys.time(), "test"))
+```
+
+You will need to setup mailgun to stop it appearing in your spam folder, by verifying your domain etc. 
+
+## Build an Rmd on a schedule and host its HTML on Cloud Storage
 
 Cloud Storage can host public HTML files like a website, which can be accessed via public or private viewers.  This can be useful in setting up reporting infrastructure.
 
-The Cloud Build below makes use of Cloud Build artifacts to send the built Rmd files to a public Cloud Storage bucket.  When an Rmd file is committed to git, this is rebuilt.
+A video of the below workflow is [here] (https://www.youtube.com/watch?v=YcHLBnLRnRs):
+
+<iframe width="560" height="315" src="http://www.youtube.com/embed/YcHLBnLRnRs?rel=0" frameborder="0" allowfullscreen></iframe>
+
+The Cloud Build below makes use of Cloud Build artifacts to send the built Rmd files to a public Cloud Storage bucket.  The Rmd is built on a schedule to pull in new data from a Google Sheet:
 
 ```r
-r <- "rmarkdown::render('scheduled_rmarkdown.Rmd', output_file = 'scheduled_rmarkdown.html')"
-
 rmd_build <- cr_build_yaml(
-  steps = cr_buildstep_r(
-      id="render rmd",
-      r = r,
-      name = "gcr.io/gcer-public/render_rmd:master",
-      dir = "inst/scheduled_rmarkdown/"
-    ),
+  steps = c(
+    cr_buildstep(
+      "gsutil",
+      args = c("cp",
+               "gs://mark-edmondson-public-read/scheduled_rmarkdown.Rmd",
+               "scheduled_rmarkdown.Rmd")),
+    cr_buildstep_r(
+      "gcr.io/gcer-public/render_rmd:master",
+      r = "rmarkdown::render('scheduled_rmarkdown.Rmd',
+               output_file = 'scheduled_rmarkdown_2020.html')",
+  )),
   artifacts = cr_build_yaml_artifact(
-                 "inst/scheduled_rmarkdown/scheduled_rmarkdown.html", 
-                 bucket = "mark-edmondson-public-read")
-  )
+    "scheduled_rmarkdown_2020.html",
+    bucket = "mark-edmondson-public-read")
+)
 
-# write out build to submit with repo
-cr_build_write(rmd_build, file = "inst/cloudbuild/cloudbuild_rmd.yml")
+# test the build
+built <- cr_build(rmd_build)
 ```
 
-The Rmd will build upon each commit, adapting to changes in the Rmd file.
+Once the build is tested, we now schedule the Rmd to build each morning, adapting to changes in the source data file.
 
-The example Rmd file is build and available on a public Cloud Storage bucket - the above example is available at this [link](https://storage.googleapis.com/mark-edmondson-public-read/scheduled_rmarkdown.html)
+```r
+# schedule the build
+cr_schedule("rmd-demo", schedule = "15 5 * * *",
+            httpTarget = cr_build_schedule_http(built))
+```
+
+The example Rmd file is built and available on a public Cloud Storage bucket - the above example is available at this [link](https://storage.googleapis.com/mark-edmondson-public-read/scheduled_rmarkdown.html)
 
 ![](schedule_markdown_hosted_gcs.png)
-
-The two buildtriggers then build the Dockerfile to render the image (with all the necessary R libraries installed) and a build trigger to run the actual build upon each commit
-
-![](render_rmd_buildtriggers.png)
-
-An example of the rendering Rmd build trigger in the web UI is below:
-
-![](render_rmd_trigger.png)
 
 ## Build and deploy Rmd files to Cloud Run on a schedule
 

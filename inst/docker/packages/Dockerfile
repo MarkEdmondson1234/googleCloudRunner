@@ -5,6 +5,7 @@ RUN install2.r --error \
     covr \
     goodpractice \
     httr \
+    lintr \
     pkgdown \
     plumber \
     rcmdcheck \
