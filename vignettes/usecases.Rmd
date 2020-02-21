@@ -194,7 +194,7 @@ schedule_me <- cr_build_schedule_http(built)
 cr_schedule("r-code-example", "15 8 * * *", httpTarget = schedule_me)
 ```
 
-## Trigger an R function from pubsub
+## Trigger an R function from pub/sub
 
 This uses `cr_deploy_plumber` to deploy an R API that can then be triggered from pub/sub events, such as Cloud logging events or when files get updated in a Cloud Storage bucket.  This in turn can trigger other Cloud Builds. 
 
@@ -339,9 +339,18 @@ cr_pubsub("https://your-cloudendpoint.run.app/pubsub",
 
 ### Setup Pub/Sub
 
-To activate Pub/Sub messages from a Google Cloud Storage bucket, use a service account with Cloud Storage Admin rights (note not Cloud Storage Object Admin).  In the Web UI of Pub/Sub set up a Topic:
+To activate Pub/Sub messages from a Google Cloud Storage bucket, use a service account with Cloud Storage Admin rights (note not Cloud Storage Object Admin).  
+
+In the Web UI of Pub/Sub set up a Topic:
 
 ![](pubsub-topic.png)
+
+You can only setup cloud storage pub/sub messages to this topic using the API, which can be done using `googleCloudStorageR::gce_create_pubsub()`:
+
+```r
+library(googleCloudStorageR)
+gcs_create_pubsub("your-topic", "your-project", "your-bucket")
+```
 
 Each topic can have many subscriptions.  One of these will push to the Cloud Run URL set up in the previous step:
 
