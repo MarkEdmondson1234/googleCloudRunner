@@ -107,7 +107,7 @@
     <div class="page-header toc-ignore">
       <h1>Example Use Cases for googleCloudRunner</h1>
             
-            <h4 class="date">2020-02-15</h4>
+            <h4 class="date">2020-02-21</h4>
       
       
       <div class="hidden name"><code>usecases.Rmd</code></div>
@@ -304,34 +304,125 @@ CMD ["api.R"]</code></pre>
 <a class="sourceLine" id="cb12-4" data-line-number="4">}</a></code></pre></div>
 <p>If you would like to trigger a pub/sub message when a file arrives on Google Cloud Storage, use <code><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_create_pubsub.html">googleCloudStorageR::gcs_create_pubsub()</a></code></p>
 </div>
-<div id="build-an-rmd-each-git-commit-and-host-its-html-on-cloud-storage" class="section level2">
+<div id="run-r-code-when-a-pubsub-message-is-created-from-a-new-file-in-google-cloud-storage" class="section level2">
 <h2 class="hasAnchor">
-<a href="#build-an-rmd-each-git-commit-and-host-its-html-on-cloud-storage" class="anchor"></a>Build an Rmd each git commit and host its HTML on Cloud Storage</h2>
-<p>Cloud Storage can host public HTML files like a website, which can be accessed via public or private viewers. This can be useful in setting up reporting infrastructure.</p>
-<p>The Cloud Build below makes use of Cloud Build artifacts to send the built Rmd files to a public Cloud Storage bucket. When an Rmd file is committed to git, this is rebuilt.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">r &lt;-<span class="st"> "rmarkdown::render('scheduled_rmarkdown.Rmd', output_file = 'scheduled_rmarkdown.html')"</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">rmd_build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
-<a class="sourceLine" id="cb13-4" data-line-number="4">  <span class="dt">steps =</span> <span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(</a>
-<a class="sourceLine" id="cb13-5" data-line-number="5">      <span class="dt">id=</span><span class="st">"render rmd"</span>,</a>
-<a class="sourceLine" id="cb13-6" data-line-number="6">      <span class="dt">r =</span> r,</a>
-<a class="sourceLine" id="cb13-7" data-line-number="7">      <span class="dt">name =</span> <span class="st">"gcr.io/gcer-public/render_rmd:master"</span>,</a>
-<a class="sourceLine" id="cb13-8" data-line-number="8">      <span class="dt">dir =</span> <span class="st">"inst/scheduled_rmarkdown/"</span></a>
-<a class="sourceLine" id="cb13-9" data-line-number="9">    ),</a>
-<a class="sourceLine" id="cb13-10" data-line-number="10">  <span class="dt">artifacts =</span> <span class="kw"><a href="../reference/cr_build_yaml_artifact.html">cr_build_yaml_artifact</a></span>(</a>
-<a class="sourceLine" id="cb13-11" data-line-number="11">                 <span class="st">"inst/scheduled_rmarkdown/scheduled_rmarkdown.html"</span>, </a>
-<a class="sourceLine" id="cb13-12" data-line-number="12">                 <span class="dt">bucket =</span> <span class="st">"mark-edmondson-public-read"</span>)</a>
-<a class="sourceLine" id="cb13-13" data-line-number="13">  )</a>
+<a href="#run-r-code-when-a-pubsub-message-is-created-from-a-new-file-in-google-cloud-storage" class="anchor"></a>Run R code when a pub/sub message is created from a new file in Google Cloud Storage</h2>
+<p>This is a demo to show how to make use of <a href="https://cloud.google.com/pubsub/docs/overview">Pub/Sub messages</a>. Pub/Sub messages are used throughout the Google Cloud Platform, for this example we will use one for when a new object is created in a Google Cloud Storage bucket.</p>
+<p>A video walkthrough of the below is available <a href="https://www.youtube.com/watch?v=MoKHsFr1B88">here</a></p>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/MoKHsFr1B88?rel=0" frameborder="0" allowfullscreen>
+</iframe>
+<div id="the-plumber-api-with-pubsub" class="section level3">
+<h3 class="hasAnchor">
+<a href="#the-plumber-api-with-pubsub" class="anchor"></a>The plumber API with pub/sub</h3>
+<p>The API endpoint in plumber needs an endpoint to recieve Pub/Sub messages, then an R function to process and do what you want with that message. In this case we shall email the file name to an end user. This could be expanded to do some R analysis, or what ever you need.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co">#' Send an email via mailgun</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">send_email &lt;-<span class="st"> </span><span class="cf">function</span>(message){</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">  <span class="kw"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"sending email with message: "</span>, message)</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">  httr<span class="op">::</span><span class="kw"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"MAILGUN_URL"</span>),<span class="st">"/messages"</span>),</a>
+<a class="sourceLine" id="cb13-6" data-line-number="6">             httr<span class="op">::</span><span class="kw"><a href="https://httr.r-lib.org/reference/authenticate.html">authenticate</a></span>(<span class="st">"api"</span>, <span class="kw"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"MAILGUN_KEY"</span>)),</a>
+<a class="sourceLine" id="cb13-7" data-line-number="7">             <span class="dt">encode =</span> <span class="st">"form"</span>,</a>
+<a class="sourceLine" id="cb13-8" data-line-number="8">             <span class="dt">body =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(</a>
+<a class="sourceLine" id="cb13-9" data-line-number="9">               <span class="dt">from=</span><span class="st">"googlecloudrunner@you.me"</span>,</a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">               <span class="dt">to=</span><span class="st">"test@you.me"</span>,</a>
+<a class="sourceLine" id="cb13-11" data-line-number="11">               <span class="dt">subject=</span><span class="st">"Message from Pub/Sub"</span>,</a>
+<a class="sourceLine" id="cb13-12" data-line-number="12">               <span class="dt">text=</span>message</a>
+<a class="sourceLine" id="cb13-13" data-line-number="13">             ))</a>
 <a class="sourceLine" id="cb13-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb13-15" data-line-number="15"><span class="co"># write out build to submit with repo</span></a>
-<a class="sourceLine" id="cb13-16" data-line-number="16"><span class="kw"><a href="../reference/cr_build_write.html">cr_build_write</a></span>(rmd_build, <span class="dt">file =</span> <span class="st">"inst/cloudbuild/cloudbuild_rmd.yml"</span>)</a></code></pre></div>
-<p>The Rmd will build upon each commit, adapting to changes in the Rmd file.</p>
-<p>The example Rmd file is build and available on a public Cloud Storage bucket - the above example is available at this <a href="https://storage.googleapis.com/mark-edmondson-public-read/scheduled_rmarkdown.html">link</a></p>
+<a class="sourceLine" id="cb13-15" data-line-number="15">  <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb13-16" data-line-number="16">}</a>
+<a class="sourceLine" id="cb13-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb13-18" data-line-number="18"><span class="co">#' Recieve pub/sub message</span></a>
+<a class="sourceLine" id="cb13-19" data-line-number="19"><span class="co">#' @post /pubsub</span></a>
+<a class="sourceLine" id="cb13-20" data-line-number="20"><span class="co">#' @param message a pub/sub message</span></a>
+<a class="sourceLine" id="cb13-21" data-line-number="21"><span class="cf">function</span>(<span class="dt">message=</span><span class="ot">NULL</span>){</a>
+<a class="sourceLine" id="cb13-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb13-23" data-line-number="23">  pub &lt;-<span class="st"> </span><span class="cf">function</span>(x){</a>
+<a class="sourceLine" id="cb13-24" data-line-number="24">    o &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw"><a href="https://jeroen.cran.dev/jsonlite/reference/fromJSON.html">fromJSON</a></span>(x)</a>
+<a class="sourceLine" id="cb13-25" data-line-number="25">    <span class="kw"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"Echo:"</span>, o)</a>
+<a class="sourceLine" id="cb13-26" data-line-number="26">    <span class="kw">send_email</span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"We got this file: "</span>, o<span class="op">$</span>name))</a>
+<a class="sourceLine" id="cb13-27" data-line-number="27">  }</a>
+<a class="sourceLine" id="cb13-28" data-line-number="28"></a>
+<a class="sourceLine" id="cb13-29" data-line-number="29">  googleCloudRunner<span class="op">::</span><span class="kw"><a href="https://code.markedmondson.me/googleCloudRunner/reference/cr_plumber_pubsub.html">cr_plumber_pubsub</a></span>(message, pub)</a>
+<a class="sourceLine" id="cb13-30" data-line-number="30"></a>
+<a class="sourceLine" id="cb13-31" data-line-number="31">}</a></code></pre></div>
+<p>The above script relies on two environment arguments with the Mailgun keys, which can be set in the Cloud Run interface once a deployment is live. The environment arguments persist inbetween versions so you only need to set this up once.</p>
+<p>For this example, the Dockerfile is a standard one with plumber and googleCloudRunner installed - you may need to add your own dependencies:</p>
+<pre><code>FROM gcr.io/gcer-public/googlecloudrunner:master
+COPY ["./", "./"]
+ENTRYPOINT ["R", "-e", "pr &lt;- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))"]
+CMD ["api.R"]</code></pre>
+</div>
+<div id="deployment" class="section level3">
+<h3 class="hasAnchor">
+<a href="#deployment" class="anchor"></a>Deployment</h3>
+<p>This can be deployed via the RStudio Addin, or via the code below:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span>(<span class="st">"folder/with-api/"</span>, </a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">                  <span class="dt">image_name =</span> <span class="st">"gcs-pubsub"</span>)</a></code></pre></div>
+<p>After the first deployment, go to the web UI and <code>Deploy New Revision</code> - keep everything the same but update the environment arguments. These will persist for future revisions:</p>
+<p><img src="cloudrun-environment-args.png"></p>
+<p>You can test the Pub/Sub API is working from R with the below code:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="../reference/cr_pubsub.html">cr_pubsub</a></span>(<span class="st">"https://your-cloudendpoint.run.app/pubsub"</span>,</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">          jsonlite<span class="op">::</span><span class="kw"><a href="https://jeroen.cran.dev/jsonlite/reference/fromJSON.html">toJSON</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">name =</span> <span class="st">"test_file_from_r"</span>)))</a></code></pre></div>
+</div>
+<div id="setup-pubsub" class="section level3">
+<h3 class="hasAnchor">
+<a href="#setup-pubsub" class="anchor"></a>Setup Pub/Sub</h3>
+<p>To activate Pub/Sub messages from a Google Cloud Storage bucket, use a service account with Cloud Storage Admin rights (note not Cloud Storage Object Admin). In the Web UI of Pub/Sub set up a Topic:</p>
+<p><img src="pubsub-topic.png"></p>
+<p>Each topic can have many subscriptions. One of these will push to the Cloud Run URL set up in the previous step:</p>
+<p><img src="pubsub-sub.png"></p>
+</div>
+<div id="add-files-to-google-cloud-storage" class="section level3">
+<h3 class="hasAnchor">
+<a href="#add-files-to-google-cloud-storage" class="anchor"></a>Add files to Google Cloud Storage</h3>
+<p>Now when a new file arrives into the bucket, it will:</p>
+<ol style="list-style-type: decimal">
+<li>Trigger a Pub/Sub to the Subscription</li>
+<li>Pass on to the Pub/Sub Topic</li>
+<li>Push to Cloud Run</li>
+<li>Execute the plumber R code to send an email</li>
+<li>Arrive in your inbox</li>
+</ol>
+<p>You can test it by uploading files either in the web UI or via</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">googleCloudStorageR<span class="op">::</span><span class="kw"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_upload.html">gcs_upload</a></span>(mtcars, <span class="dt">bucket =</span> <span class="st">"your-bucket"</span>, </a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">                                <span class="dt">name =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>(), <span class="st">"test"</span>))</a></code></pre></div>
+<p>You will need to setup mailgun to stop it appearing in your spam folder, by verifying your domain etc.</p>
+</div>
+</div>
+<div id="build-an-rmd-on-a-schedule-and-host-its-html-on-cloud-storage" class="section level2">
+<h2 class="hasAnchor">
+<a href="#build-an-rmd-on-a-schedule-and-host-its-html-on-cloud-storage" class="anchor"></a>Build an Rmd on a schedule and host its HTML on Cloud Storage</h2>
+<p>Cloud Storage can host public HTML files like a website, which can be accessed via public or private viewers. This can be useful in setting up reporting infrastructure.</p>
+<p>A video of the below workflow is [here] (<a href="https://www.youtube.com/watch?v=YcHLBnLRnRs" class="uri">https://www.youtube.com/watch?v=YcHLBnLRnRs</a>):</p>
+<iframe width="560" height="315" src="http://www.youtube.com/embed/YcHLBnLRnRs?rel=0" frameborder="0" allowfullscreen>
+</iframe>
+<p>The Cloud Build below makes use of Cloud Build artifacts to send the built Rmd files to a public Cloud Storage bucket. The Rmd is built on a schedule to pull in new data from a Google Sheet:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">rmd_build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">  <span class="dt">steps =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">    <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">      <span class="st">"gsutil"</span>,</a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">      <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cp"</span>,</a>
+<a class="sourceLine" id="cb18-6" data-line-number="6">               <span class="st">"gs://mark-edmondson-public-read/scheduled_rmarkdown.Rmd"</span>,</a>
+<a class="sourceLine" id="cb18-7" data-line-number="7">               <span class="st">"scheduled_rmarkdown.Rmd"</span>)),</a>
+<a class="sourceLine" id="cb18-8" data-line-number="8">    <span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(</a>
+<a class="sourceLine" id="cb18-9" data-line-number="9">      <span class="st">"gcr.io/gcer-public/render_rmd:master"</span>,</a>
+<a class="sourceLine" id="cb18-10" data-line-number="10">      <span class="dt">r =</span> <span class="st">"rmarkdown::render('scheduled_rmarkdown.Rmd',</span></a>
+<a class="sourceLine" id="cb18-11" data-line-number="11"><span class="st">               output_file = 'scheduled_rmarkdown_2020.html')"</span>,</a>
+<a class="sourceLine" id="cb18-12" data-line-number="12">  )),</a>
+<a class="sourceLine" id="cb18-13" data-line-number="13">  <span class="dt">artifacts =</span> <span class="kw"><a href="../reference/cr_build_yaml_artifact.html">cr_build_yaml_artifact</a></span>(</a>
+<a class="sourceLine" id="cb18-14" data-line-number="14">    <span class="st">"scheduled_rmarkdown_2020.html"</span>,</a>
+<a class="sourceLine" id="cb18-15" data-line-number="15">    <span class="dt">bucket =</span> <span class="st">"mark-edmondson-public-read"</span>)</a>
+<a class="sourceLine" id="cb18-16" data-line-number="16">)</a>
+<a class="sourceLine" id="cb18-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb18-18" data-line-number="18"><span class="co"># test the build</span></a>
+<a class="sourceLine" id="cb18-19" data-line-number="19">built &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(rmd_build)</a></code></pre></div>
+<p>Once the build is tested, we now schedule the Rmd to build each morning, adapting to changes in the source data file.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co"># schedule the build</span></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"rmd-demo"</span>, <span class="dt">schedule =</span> <span class="st">"15 5 * * *"</span>,</a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">            <span class="dt">httpTarget =</span> <span class="kw"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(built))</a></code></pre></div>
+<p>The example Rmd file is built and available on a public Cloud Storage bucket - the above example is available at this <a href="https://storage.googleapis.com/mark-edmondson-public-read/scheduled_rmarkdown.html">link</a></p>
 <p><img src="schedule_markdown_hosted_gcs.png"></p>
-<p>The two buildtriggers then build the Dockerfile to render the image (with all the necessary R libraries installed) and a build trigger to run the actual build upon each commit</p>
-<p><img src="render_rmd_buildtriggers.png"></p>
-<p>An example of the rendering Rmd build trigger in the web UI is below:</p>
-<p><img src="render_rmd_trigger.png"></p>
 </div>
 <div id="build-and-deploy-rmd-files-to-cloud-run-on-a-schedule" class="section level2">
 <h2 class="hasAnchor">
@@ -345,28 +436,28 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><p>Cloud Run scales from 0 to millions of hits, so can be an option for hosting a website. In particular you may want a private internal website, have R code executing via a plumber API in the same container, or have lots of traffic or data that goes over other free hosting options such as GitHub pages. A nginx server configuration is included to host any HTML you provide via <code><a href="../reference/cr_deploy_run.html">cr_deploy_html()</a></code>.</p>
 <p>You may prefer using Cloud Storage public URLs if you don’t need any of Cloud Run’s features, like the previous example.</p>
 <p>Coupled to that, a common use case is to render Rmd files and host them on a website like the tweet above. For the above tweet scenario, the Rmd has a setup block that reads from googlesheets via the code below:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode markdown"><code class="sourceCode markdown"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="bn">```{r setup, include=FALSE}</span></a>
-<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="bn">library(flexdashboard)</span></a>
-<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="bn">library(googlesheets4)</span></a>
-<a class="sourceLine" id="cb14-4" data-line-number="4"><span class="bn">library(ggplot2)</span></a>
-<a class="sourceLine" id="cb14-5" data-line-number="5"><span class="bn">library(plotly)</span></a>
-<a class="sourceLine" id="cb14-6" data-line-number="6"><span class="bn">library(dplyr)</span></a>
-<a class="sourceLine" id="cb14-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb14-8" data-line-number="8"><span class="bn"># for public Googlesheets.  </span></a>
-<a class="sourceLine" id="cb14-9" data-line-number="9"><span class="bn"># If private see https://gargle.r-lib.org/articles/non-interactive-auth.html</span></a>
-<a class="sourceLine" id="cb14-10" data-line-number="10"><span class="bn">sheets_deauth()</span></a>
-<a class="sourceLine" id="cb14-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb14-12" data-line-number="12"><span class="bn"># this is the data that may update each time the Rmd is rendered</span></a>
-<a class="sourceLine" id="cb14-13" data-line-number="13"><span class="bn">gm &lt;- sheets_example("gap") %&gt;% read_sheet()</span></a>
-<a class="sourceLine" id="cb14-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb14-15" data-line-number="15"><span class="bn">gm_agg &lt;- gm %&gt;%</span></a>
-<a class="sourceLine" id="cb14-16" data-line-number="16"><span class="bn">  mutate(gdp=gdpPercap*pop) %&gt;%</span></a>
-<a class="sourceLine" id="cb14-17" data-line-number="17"><span class="bn">  filter(continent=="Africa") %&gt;%</span></a>
-<a class="sourceLine" id="cb14-18" data-line-number="18"><span class="bn">  group_by(year) %&gt;%</span></a>
-<a class="sourceLine" id="cb14-19" data-line-number="19"><span class="bn">  summarize(mean(lifeExp), mean(gdp))</span></a>
-<a class="sourceLine" id="cb14-20" data-line-number="20"></a>
-<a class="sourceLine" id="cb14-21" data-line-number="21"><span class="bn">p &lt;- ggplot(gm, aes(gdpPercap, lifeExp)) + theme_minimal() + scale_x_log10()</span></a>
-<a class="sourceLine" id="cb14-22" data-line-number="22"><span class="bn">```</span></a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode markdown"><code class="sourceCode markdown"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="bn">```{r setup, include=FALSE}</span></a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="bn">library(flexdashboard)</span></a>
+<a class="sourceLine" id="cb20-3" data-line-number="3"><span class="bn">library(googlesheets4)</span></a>
+<a class="sourceLine" id="cb20-4" data-line-number="4"><span class="bn">library(ggplot2)</span></a>
+<a class="sourceLine" id="cb20-5" data-line-number="5"><span class="bn">library(plotly)</span></a>
+<a class="sourceLine" id="cb20-6" data-line-number="6"><span class="bn">library(dplyr)</span></a>
+<a class="sourceLine" id="cb20-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb20-8" data-line-number="8"><span class="bn"># for public Googlesheets.  </span></a>
+<a class="sourceLine" id="cb20-9" data-line-number="9"><span class="bn"># If private see https://gargle.r-lib.org/articles/non-interactive-auth.html</span></a>
+<a class="sourceLine" id="cb20-10" data-line-number="10"><span class="bn">sheets_deauth()</span></a>
+<a class="sourceLine" id="cb20-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb20-12" data-line-number="12"><span class="bn"># this is the data that may update each time the Rmd is rendered</span></a>
+<a class="sourceLine" id="cb20-13" data-line-number="13"><span class="bn">gm &lt;- sheets_example("gap") %&gt;% read_sheet()</span></a>
+<a class="sourceLine" id="cb20-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb20-15" data-line-number="15"><span class="bn">gm_agg &lt;- gm %&gt;%</span></a>
+<a class="sourceLine" id="cb20-16" data-line-number="16"><span class="bn">  mutate(gdp=gdpPercap*pop) %&gt;%</span></a>
+<a class="sourceLine" id="cb20-17" data-line-number="17"><span class="bn">  filter(continent=="Africa") %&gt;%</span></a>
+<a class="sourceLine" id="cb20-18" data-line-number="18"><span class="bn">  group_by(year) %&gt;%</span></a>
+<a class="sourceLine" id="cb20-19" data-line-number="19"><span class="bn">  summarize(mean(lifeExp), mean(gdp))</span></a>
+<a class="sourceLine" id="cb20-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb20-21" data-line-number="21"><span class="bn">p &lt;- ggplot(gm, aes(gdpPercap, lifeExp)) + theme_minimal() + scale_x_log10()</span></a>
+<a class="sourceLine" id="cb20-22" data-line-number="22"><span class="bn">```</span></a></code></pre></div>
 <p>The build Rmd docker in this case needs all the libraries listed (flexdashboard, googlesheets4 etc.) included in its build - this could be built before hand in another Cloud Build - in this case the libraries are all in <code>gcr.io/gcer-public/render_rmd</code></p>
 <p>For this example, the build is not reading from a git repo but the Rmd file is downloaded from a Cloud Storage bucket, that you may have uploaded to manually, via <code>googleCloudStorageR</code> or perhaps copied over from a repo in another Cloud Build on a Build Trigger.</p>
 <p>The scheduled build then can be enabled via:</p>
@@ -381,50 +472,50 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <li>build a Docker image of nginx with your HTML</li>
 <li>serve it on Cloud Run.</li>
 </ul>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">r &lt;-<span class="st"> "rmarkdown::render('scheduled_rmarkdown.Rmd', output_file = 'scheduled_rmarkdown.html')"</span></a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb15-3" data-line-number="3">build_rmd &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
-<a class="sourceLine" id="cb15-4" data-line-number="4">      <span class="dt">steps =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
-<a class="sourceLine" id="cb15-5" data-line-number="5">        <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(</a>
-<a class="sourceLine" id="cb15-6" data-line-number="6">          <span class="dt">id =</span> <span class="st">"download Rmd template"</span>,</a>
-<a class="sourceLine" id="cb15-7" data-line-number="7">          <span class="dt">name =</span> <span class="st">"gsutil"</span>,</a>
-<a class="sourceLine" id="cb15-8" data-line-number="8">          <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cp"</span>,</a>
-<a class="sourceLine" id="cb15-9" data-line-number="9">                   <span class="st">"gs://mark-edmondson-public-read/scheduled_rmarkdown.Rmd"</span>,</a>
-<a class="sourceLine" id="cb15-10" data-line-number="10">                   <span class="st">"scheduled_rmarkdown.Rmd"</span>),</a>
-<a class="sourceLine" id="cb15-11" data-line-number="11">        ),</a>
-<a class="sourceLine" id="cb15-12" data-line-number="12">        <span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(</a>
-<a class="sourceLine" id="cb15-13" data-line-number="13">          <span class="dt">id=</span><span class="st">"render rmd"</span>,</a>
-<a class="sourceLine" id="cb15-14" data-line-number="14">          <span class="dt">r =</span> r,</a>
-<a class="sourceLine" id="cb15-15" data-line-number="15">          <span class="dt">name =</span> <span class="st">"gcr.io/gcer-public/render_rmd:master"</span></a>
-<a class="sourceLine" id="cb15-16" data-line-number="16">        ),</a>
-<a class="sourceLine" id="cb15-17" data-line-number="17">        <span class="kw"><a href="../reference/cr_buildstep_nginx_setup.html">cr_buildstep_nginx_setup</a></span>(<span class="st">"/workspace/"</span>),</a>
-<a class="sourceLine" id="cb15-18" data-line-number="18">        <span class="kw"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(<span class="st">"html-on-cloudrun"</span>, <span class="dt">tag =</span> <span class="st">"$BUILD_ID"</span>),</a>
-<a class="sourceLine" id="cb15-19" data-line-number="19">        <span class="kw"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span>(<span class="dt">name =</span> <span class="st">"my-html-on-cloudrun"</span>,</a>
-<a class="sourceLine" id="cb15-20" data-line-number="20">                         <span class="dt">image =</span> <span class="st">"gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID"</span>,</a>
-<a class="sourceLine" id="cb15-21" data-line-number="21">                         <span class="dt">concurrency =</span> <span class="dv">80</span>)</a>
-<a class="sourceLine" id="cb15-22" data-line-number="22">        ), </a>
-<a class="sourceLine" id="cb15-23" data-line-number="23">    <span class="dt">images =</span> <span class="st">"gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID"</span>,</a>
-<a class="sourceLine" id="cb15-24" data-line-number="24">    )</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">r &lt;-<span class="st"> "rmarkdown::render('scheduled_rmarkdown.Rmd', output_file = 'scheduled_rmarkdown.html')"</span></a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">build_rmd &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">      <span class="dt">steps =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
+<a class="sourceLine" id="cb21-5" data-line-number="5">        <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(</a>
+<a class="sourceLine" id="cb21-6" data-line-number="6">          <span class="dt">id =</span> <span class="st">"download Rmd template"</span>,</a>
+<a class="sourceLine" id="cb21-7" data-line-number="7">          <span class="dt">name =</span> <span class="st">"gsutil"</span>,</a>
+<a class="sourceLine" id="cb21-8" data-line-number="8">          <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cp"</span>,</a>
+<a class="sourceLine" id="cb21-9" data-line-number="9">                   <span class="st">"gs://mark-edmondson-public-read/scheduled_rmarkdown.Rmd"</span>,</a>
+<a class="sourceLine" id="cb21-10" data-line-number="10">                   <span class="st">"scheduled_rmarkdown.Rmd"</span>),</a>
+<a class="sourceLine" id="cb21-11" data-line-number="11">        ),</a>
+<a class="sourceLine" id="cb21-12" data-line-number="12">        <span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(</a>
+<a class="sourceLine" id="cb21-13" data-line-number="13">          <span class="dt">id=</span><span class="st">"render rmd"</span>,</a>
+<a class="sourceLine" id="cb21-14" data-line-number="14">          <span class="dt">r =</span> r,</a>
+<a class="sourceLine" id="cb21-15" data-line-number="15">          <span class="dt">name =</span> <span class="st">"gcr.io/gcer-public/render_rmd:master"</span></a>
+<a class="sourceLine" id="cb21-16" data-line-number="16">        ),</a>
+<a class="sourceLine" id="cb21-17" data-line-number="17">        <span class="kw"><a href="../reference/cr_buildstep_nginx_setup.html">cr_buildstep_nginx_setup</a></span>(<span class="st">"/workspace/"</span>),</a>
+<a class="sourceLine" id="cb21-18" data-line-number="18">        <span class="kw"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(<span class="st">"html-on-cloudrun"</span>, <span class="dt">tag =</span> <span class="st">"$BUILD_ID"</span>),</a>
+<a class="sourceLine" id="cb21-19" data-line-number="19">        <span class="kw"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span>(<span class="dt">name =</span> <span class="st">"my-html-on-cloudrun"</span>,</a>
+<a class="sourceLine" id="cb21-20" data-line-number="20">                         <span class="dt">image =</span> <span class="st">"gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID"</span>,</a>
+<a class="sourceLine" id="cb21-21" data-line-number="21">                         <span class="dt">concurrency =</span> <span class="dv">80</span>)</a>
+<a class="sourceLine" id="cb21-22" data-line-number="22">        ), </a>
+<a class="sourceLine" id="cb21-23" data-line-number="23">    <span class="dt">images =</span> <span class="st">"gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID"</span>,</a>
+<a class="sourceLine" id="cb21-24" data-line-number="24">    )</a></code></pre></div>
 <ol start="5" style="list-style-type: decimal">
 <li>Run a test build to check it works.</li>
 </ol>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">b &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(build_rmd)</a>
-<a class="sourceLine" id="cb16-2" data-line-number="2">built &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span>(b)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">b &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(build_rmd)</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">built &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span>(b)</a></code></pre></div>
 <p>You should see a Cloud Run URL in the logs, like this one: <code>https://my-html-on-cloudrun-ewjogewawq-ew.a.run.app/scheduled_rmarkdown.html</code></p>
 <p><img src="rmd-on-cloudrun.png"></p>
 <ol start="6" style="list-style-type: decimal">
 <li>Schedule the build using cron syntax</li>
 </ol>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">schedule_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(built)</a>
-<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"rmd-on-cloudrun"</span>, <span class="st">"15 8 * * *"</span>, <span class="dt">httpTarget =</span> schedule_me)</a>
-<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="co">#==CloudScheduleJob==</span></a>
-<a class="sourceLine" id="cb17-4" data-line-number="4"><span class="co">#name:  projects/project-name/locations/europe-west1/jobs/rmd-on-cloudrun </span></a>
-<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="co">#state:  ENABLED </span></a>
-<a class="sourceLine" id="cb17-6" data-line-number="6"><span class="co">#httpTarget.uri:  https://cloudbuild.googleapis.com/v1/projects/project-name/builds </span></a>
-<a class="sourceLine" id="cb17-7" data-line-number="7"><span class="co">#httpTarget.httpMethod:  POST </span></a>
-<a class="sourceLine" id="cb17-8" data-line-number="8"><span class="co">#userUpdateTime:  2020-01-04T08:34:42Z </span></a>
-<a class="sourceLine" id="cb17-9" data-line-number="9"><span class="co">#schedule:  15 8 * * * </span></a>
-<a class="sourceLine" id="cb17-10" data-line-number="10"><span class="co">#timezone:  UTC </span></a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">schedule_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(built)</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"rmd-on-cloudrun"</span>, <span class="st">"15 8 * * *"</span>, <span class="dt">httpTarget =</span> schedule_me)</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3"><span class="co">#==CloudScheduleJob==</span></a>
+<a class="sourceLine" id="cb23-4" data-line-number="4"><span class="co">#name:  projects/project-name/locations/europe-west1/jobs/rmd-on-cloudrun </span></a>
+<a class="sourceLine" id="cb23-5" data-line-number="5"><span class="co">#state:  ENABLED </span></a>
+<a class="sourceLine" id="cb23-6" data-line-number="6"><span class="co">#httpTarget.uri:  https://cloudbuild.googleapis.com/v1/projects/project-name/builds </span></a>
+<a class="sourceLine" id="cb23-7" data-line-number="7"><span class="co">#httpTarget.httpMethod:  POST </span></a>
+<a class="sourceLine" id="cb23-8" data-line-number="8"><span class="co">#userUpdateTime:  2020-01-04T08:34:42Z </span></a>
+<a class="sourceLine" id="cb23-9" data-line-number="9"><span class="co">#schedule:  15 8 * * * </span></a>
+<a class="sourceLine" id="cb23-10" data-line-number="10"><span class="co">#timezone:  UTC </span></a></code></pre></div>
 <div id="do-it-all-in-r-using-cr_deploy_r" class="section level3">
 <h3 class="hasAnchor">
 <a href="#do-it-all-in-r-using-cr_deploy_r" class="anchor"></a>Do it all in R using cr_deploy_r()</h3>
@@ -451,98 +542,98 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 </li>
 </ul>
 <p>And will perform downloading unsampled data from Google Analytics, creating a statistical report of the data and then uploading the raw data to BigQuery for further analysis.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleCloudRunner)</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">polygot &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
-<a class="sourceLine" id="cb18-3" data-line-number="3">  <span class="dt">steps =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
-<a class="sourceLine" id="cb18-4" data-line-number="4">    <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(</a>
-<a class="sourceLine" id="cb18-5" data-line-number="5">      <span class="dt">id =</span> <span class="st">"download encrypted auth file"</span>,</a>
-<a class="sourceLine" id="cb18-6" data-line-number="6">      <span class="dt">name =</span> <span class="st">"gsutil"</span>,</a>
-<a class="sourceLine" id="cb18-7" data-line-number="7">      <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cp"</span>,</a>
-<a class="sourceLine" id="cb18-8" data-line-number="8">               <span class="st">"gs://marks-bucket-of-stuff/auth.json.enc"</span>,</a>
-<a class="sourceLine" id="cb18-9" data-line-number="9">               <span class="st">"/workspace/auth.json.enc"</span>),</a>
-<a class="sourceLine" id="cb18-10" data-line-number="10">    ),</a>
-<a class="sourceLine" id="cb18-11" data-line-number="11">    <span class="kw"><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt</a></span>(</a>
-<a class="sourceLine" id="cb18-12" data-line-number="12">      <span class="dt">id =</span> <span class="st">"decrypt file"</span>,</a>
-<a class="sourceLine" id="cb18-13" data-line-number="13">      <span class="dt">cipher =</span> <span class="st">"/workspace/auth.json.enc"</span>,</a>
-<a class="sourceLine" id="cb18-14" data-line-number="14">      <span class="dt">plain =</span> <span class="st">"/workspace/auth.json"</span>,</a>
-<a class="sourceLine" id="cb18-15" data-line-number="15">      <span class="dt">keyring =</span> <span class="st">"my-keyring"</span>,</a>
-<a class="sourceLine" id="cb18-16" data-line-number="16">      <span class="dt">key =</span> <span class="st">"ga_auth"</span></a>
-<a class="sourceLine" id="cb18-17" data-line-number="17">    ),</a>
-<a class="sourceLine" id="cb18-18" data-line-number="18">    <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(</a>
-<a class="sourceLine" id="cb18-19" data-line-number="19">      <span class="dt">id =</span> <span class="st">"download google analytics"</span>,</a>
-<a class="sourceLine" id="cb18-20" data-line-number="20">      <span class="dt">name =</span> <span class="st">"gcr.io/gcer-public/gago:master"</span>,</a>
-<a class="sourceLine" id="cb18-21" data-line-number="21">      <span class="dt">env =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"GAGO_AUTH=/workspace/auth.json"</span>),</a>
-<a class="sourceLine" id="cb18-22" data-line-number="22">      <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"reports"</span>,</a>
-<a class="sourceLine" id="cb18-23" data-line-number="23">               <span class="st">"--view=81416156"</span>,</a>
-<a class="sourceLine" id="cb18-24" data-line-number="24">               <span class="st">"--dims=ga:date,ga:medium"</span>,</a>
-<a class="sourceLine" id="cb18-25" data-line-number="25">               <span class="st">"--mets=ga:sessions"</span>,</a>
-<a class="sourceLine" id="cb18-26" data-line-number="26">               <span class="st">"--start=2014-01-01"</span>,</a>
-<a class="sourceLine" id="cb18-27" data-line-number="27">               <span class="st">"--end=2019-11-30"</span>,</a>
-<a class="sourceLine" id="cb18-28" data-line-number="28">               <span class="st">"--antisample"</span>,</a>
-<a class="sourceLine" id="cb18-29" data-line-number="29">               <span class="st">"--max=-1"</span>,</a>
-<a class="sourceLine" id="cb18-30" data-line-number="30">               <span class="st">"-o=google_analytics.csv"</span>),</a>
-<a class="sourceLine" id="cb18-31" data-line-number="31">      <span class="dt">dir =</span> <span class="st">"build"</span></a>
-<a class="sourceLine" id="cb18-32" data-line-number="32">    ),</a>
-<a class="sourceLine" id="cb18-33" data-line-number="33">    <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(</a>
-<a class="sourceLine" id="cb18-34" data-line-number="34">      <span class="dt">id =</span> <span class="st">"download Rmd template"</span>,</a>
-<a class="sourceLine" id="cb18-35" data-line-number="35">      <span class="dt">name =</span> <span class="st">"gsutil"</span>,</a>
-<a class="sourceLine" id="cb18-36" data-line-number="36">      <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cp"</span>,</a>
-<a class="sourceLine" id="cb18-37" data-line-number="37">               <span class="st">"gs://mark-edmondson-public-read/polygot.Rmd"</span>,</a>
-<a class="sourceLine" id="cb18-38" data-line-number="38">               <span class="st">"/workspace/build/polygot.Rmd"</span>)</a>
-<a class="sourceLine" id="cb18-39" data-line-number="39">    ),</a>
-<a class="sourceLine" id="cb18-40" data-line-number="40">    <span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(</a>
-<a class="sourceLine" id="cb18-41" data-line-number="41">      <span class="dt">id=</span><span class="st">"render rmd"</span>,</a>
-<a class="sourceLine" id="cb18-42" data-line-number="42">      <span class="dt">r =</span> <span class="st">"lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),</span></a>
-<a class="sourceLine" id="cb18-43" data-line-number="43"><span class="st">             rmarkdown::render, output_format = 'html_document')"</span>,</a>
-<a class="sourceLine" id="cb18-44" data-line-number="44">      <span class="dt">name =</span> <span class="st">"gcr.io/gcer-public/packagetools:master"</span>,</a>
-<a class="sourceLine" id="cb18-45" data-line-number="45">      <span class="dt">dir =</span> <span class="st">"build"</span></a>
-<a class="sourceLine" id="cb18-46" data-line-number="46">      ),</a>
-<a class="sourceLine" id="cb18-47" data-line-number="47">    <span class="kw"><a href="../reference/cr_buildstep_bash.html">cr_buildstep_bash</a></span>(</a>
-<a class="sourceLine" id="cb18-48" data-line-number="48">      <span class="dt">id =</span> <span class="st">"setup nginx"</span>,</a>
-<a class="sourceLine" id="cb18-49" data-line-number="49">      <span class="dt">bash_script =</span> <span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"docker"</span>, <span class="st">"nginx"</span>, <span class="st">"setup.bash"</span>,</a>
-<a class="sourceLine" id="cb18-50" data-line-number="50">                                <span class="dt">package =</span> <span class="st">"googleCloudRunner"</span>),</a>
-<a class="sourceLine" id="cb18-51" data-line-number="51">      <span class="dt">dir =</span> <span class="st">"build"</span></a>
-<a class="sourceLine" id="cb18-52" data-line-number="52">      ),</a>
-<a class="sourceLine" id="cb18-53" data-line-number="53">    <span class="kw"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(</a>
-<a class="sourceLine" id="cb18-54" data-line-number="54">      <span class="co"># change to your own container registry</span></a>
-<a class="sourceLine" id="cb18-55" data-line-number="55">      <span class="dt">image =</span> <span class="st">"gcr.io/gcer-public/polygot_demo"</span>,</a>
-<a class="sourceLine" id="cb18-56" data-line-number="56">      <span class="dt">tag =</span> <span class="st">"latest"</span>,</a>
-<a class="sourceLine" id="cb18-57" data-line-number="57">      <span class="dt">dir =</span> <span class="st">"build"</span></a>
-<a class="sourceLine" id="cb18-58" data-line-number="58">      ),</a>
-<a class="sourceLine" id="cb18-59" data-line-number="59">    <span class="kw"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span>(</a>
-<a class="sourceLine" id="cb18-60" data-line-number="60">      <span class="dt">name =</span> <span class="st">"polygot-demo"</span>,</a>
-<a class="sourceLine" id="cb18-61" data-line-number="61">      <span class="dt">image =</span> <span class="st">"gcr.io/gcer-public/polygot_demo"</span>,</a>
-<a class="sourceLine" id="cb18-62" data-line-number="62">      <span class="dt">concurrency =</span> <span class="dv">80</span>),</a>
-<a class="sourceLine" id="cb18-63" data-line-number="63">    <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(</a>
-<a class="sourceLine" id="cb18-64" data-line-number="64">      <span class="dt">id =</span> <span class="st">"load BigQuery"</span>,</a>
-<a class="sourceLine" id="cb18-65" data-line-number="65">      <span class="dt">name =</span> <span class="st">"gcr.io/cloud-builders/gcloud"</span>,</a>
-<a class="sourceLine" id="cb18-66" data-line-number="66">      <span class="dt">entrypoint =</span> <span class="st">"bq"</span>,</a>
-<a class="sourceLine" id="cb18-67" data-line-number="67">      <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"--location=EU"</span>,</a>
-<a class="sourceLine" id="cb18-68" data-line-number="68">               <span class="st">"load"</span>,</a>
-<a class="sourceLine" id="cb18-69" data-line-number="69">               <span class="st">"--autodetect"</span>,</a>
-<a class="sourceLine" id="cb18-70" data-line-number="70">               <span class="st">"--source_format=CSV"</span>,</a>
-<a class="sourceLine" id="cb18-71" data-line-number="71">               <span class="st">"test_EU.polygot"</span>,</a>
-<a class="sourceLine" id="cb18-72" data-line-number="72">               <span class="st">"google_analytics.csv"</span></a>
-<a class="sourceLine" id="cb18-73" data-line-number="73">               ),</a>
-<a class="sourceLine" id="cb18-74" data-line-number="74">      <span class="dt">dir =</span> <span class="st">"build"</span></a>
-<a class="sourceLine" id="cb18-75" data-line-number="75">    )</a>
-<a class="sourceLine" id="cb18-76" data-line-number="76">  )</a>
-<a class="sourceLine" id="cb18-77" data-line-number="77">)</a>
-<a class="sourceLine" id="cb18-78" data-line-number="78"></a>
-<a class="sourceLine" id="cb18-79" data-line-number="79"><span class="co"># build the polygot cloud build steps</span></a>
-<a class="sourceLine" id="cb18-80" data-line-number="80">build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(polygot)</a>
-<a class="sourceLine" id="cb18-81" data-line-number="81">built &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span>(build)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleCloudRunner)</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">polygot &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
+<a class="sourceLine" id="cb24-3" data-line-number="3">  <span class="dt">steps =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
+<a class="sourceLine" id="cb24-4" data-line-number="4">    <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(</a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">      <span class="dt">id =</span> <span class="st">"download encrypted auth file"</span>,</a>
+<a class="sourceLine" id="cb24-6" data-line-number="6">      <span class="dt">name =</span> <span class="st">"gsutil"</span>,</a>
+<a class="sourceLine" id="cb24-7" data-line-number="7">      <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cp"</span>,</a>
+<a class="sourceLine" id="cb24-8" data-line-number="8">               <span class="st">"gs://marks-bucket-of-stuff/auth.json.enc"</span>,</a>
+<a class="sourceLine" id="cb24-9" data-line-number="9">               <span class="st">"/workspace/auth.json.enc"</span>),</a>
+<a class="sourceLine" id="cb24-10" data-line-number="10">    ),</a>
+<a class="sourceLine" id="cb24-11" data-line-number="11">    <span class="kw"><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt</a></span>(</a>
+<a class="sourceLine" id="cb24-12" data-line-number="12">      <span class="dt">id =</span> <span class="st">"decrypt file"</span>,</a>
+<a class="sourceLine" id="cb24-13" data-line-number="13">      <span class="dt">cipher =</span> <span class="st">"/workspace/auth.json.enc"</span>,</a>
+<a class="sourceLine" id="cb24-14" data-line-number="14">      <span class="dt">plain =</span> <span class="st">"/workspace/auth.json"</span>,</a>
+<a class="sourceLine" id="cb24-15" data-line-number="15">      <span class="dt">keyring =</span> <span class="st">"my-keyring"</span>,</a>
+<a class="sourceLine" id="cb24-16" data-line-number="16">      <span class="dt">key =</span> <span class="st">"ga_auth"</span></a>
+<a class="sourceLine" id="cb24-17" data-line-number="17">    ),</a>
+<a class="sourceLine" id="cb24-18" data-line-number="18">    <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(</a>
+<a class="sourceLine" id="cb24-19" data-line-number="19">      <span class="dt">id =</span> <span class="st">"download google analytics"</span>,</a>
+<a class="sourceLine" id="cb24-20" data-line-number="20">      <span class="dt">name =</span> <span class="st">"gcr.io/gcer-public/gago:master"</span>,</a>
+<a class="sourceLine" id="cb24-21" data-line-number="21">      <span class="dt">env =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"GAGO_AUTH=/workspace/auth.json"</span>),</a>
+<a class="sourceLine" id="cb24-22" data-line-number="22">      <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"reports"</span>,</a>
+<a class="sourceLine" id="cb24-23" data-line-number="23">               <span class="st">"--view=81416156"</span>,</a>
+<a class="sourceLine" id="cb24-24" data-line-number="24">               <span class="st">"--dims=ga:date,ga:medium"</span>,</a>
+<a class="sourceLine" id="cb24-25" data-line-number="25">               <span class="st">"--mets=ga:sessions"</span>,</a>
+<a class="sourceLine" id="cb24-26" data-line-number="26">               <span class="st">"--start=2014-01-01"</span>,</a>
+<a class="sourceLine" id="cb24-27" data-line-number="27">               <span class="st">"--end=2019-11-30"</span>,</a>
+<a class="sourceLine" id="cb24-28" data-line-number="28">               <span class="st">"--antisample"</span>,</a>
+<a class="sourceLine" id="cb24-29" data-line-number="29">               <span class="st">"--max=-1"</span>,</a>
+<a class="sourceLine" id="cb24-30" data-line-number="30">               <span class="st">"-o=google_analytics.csv"</span>),</a>
+<a class="sourceLine" id="cb24-31" data-line-number="31">      <span class="dt">dir =</span> <span class="st">"build"</span></a>
+<a class="sourceLine" id="cb24-32" data-line-number="32">    ),</a>
+<a class="sourceLine" id="cb24-33" data-line-number="33">    <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(</a>
+<a class="sourceLine" id="cb24-34" data-line-number="34">      <span class="dt">id =</span> <span class="st">"download Rmd template"</span>,</a>
+<a class="sourceLine" id="cb24-35" data-line-number="35">      <span class="dt">name =</span> <span class="st">"gsutil"</span>,</a>
+<a class="sourceLine" id="cb24-36" data-line-number="36">      <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cp"</span>,</a>
+<a class="sourceLine" id="cb24-37" data-line-number="37">               <span class="st">"gs://mark-edmondson-public-read/polygot.Rmd"</span>,</a>
+<a class="sourceLine" id="cb24-38" data-line-number="38">               <span class="st">"/workspace/build/polygot.Rmd"</span>)</a>
+<a class="sourceLine" id="cb24-39" data-line-number="39">    ),</a>
+<a class="sourceLine" id="cb24-40" data-line-number="40">    <span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(</a>
+<a class="sourceLine" id="cb24-41" data-line-number="41">      <span class="dt">id=</span><span class="st">"render rmd"</span>,</a>
+<a class="sourceLine" id="cb24-42" data-line-number="42">      <span class="dt">r =</span> <span class="st">"lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),</span></a>
+<a class="sourceLine" id="cb24-43" data-line-number="43"><span class="st">             rmarkdown::render, output_format = 'html_document')"</span>,</a>
+<a class="sourceLine" id="cb24-44" data-line-number="44">      <span class="dt">name =</span> <span class="st">"gcr.io/gcer-public/packagetools:master"</span>,</a>
+<a class="sourceLine" id="cb24-45" data-line-number="45">      <span class="dt">dir =</span> <span class="st">"build"</span></a>
+<a class="sourceLine" id="cb24-46" data-line-number="46">      ),</a>
+<a class="sourceLine" id="cb24-47" data-line-number="47">    <span class="kw"><a href="../reference/cr_buildstep_bash.html">cr_buildstep_bash</a></span>(</a>
+<a class="sourceLine" id="cb24-48" data-line-number="48">      <span class="dt">id =</span> <span class="st">"setup nginx"</span>,</a>
+<a class="sourceLine" id="cb24-49" data-line-number="49">      <span class="dt">bash_script =</span> <span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"docker"</span>, <span class="st">"nginx"</span>, <span class="st">"setup.bash"</span>,</a>
+<a class="sourceLine" id="cb24-50" data-line-number="50">                                <span class="dt">package =</span> <span class="st">"googleCloudRunner"</span>),</a>
+<a class="sourceLine" id="cb24-51" data-line-number="51">      <span class="dt">dir =</span> <span class="st">"build"</span></a>
+<a class="sourceLine" id="cb24-52" data-line-number="52">      ),</a>
+<a class="sourceLine" id="cb24-53" data-line-number="53">    <span class="kw"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(</a>
+<a class="sourceLine" id="cb24-54" data-line-number="54">      <span class="co"># change to your own container registry</span></a>
+<a class="sourceLine" id="cb24-55" data-line-number="55">      <span class="dt">image =</span> <span class="st">"gcr.io/gcer-public/polygot_demo"</span>,</a>
+<a class="sourceLine" id="cb24-56" data-line-number="56">      <span class="dt">tag =</span> <span class="st">"latest"</span>,</a>
+<a class="sourceLine" id="cb24-57" data-line-number="57">      <span class="dt">dir =</span> <span class="st">"build"</span></a>
+<a class="sourceLine" id="cb24-58" data-line-number="58">      ),</a>
+<a class="sourceLine" id="cb24-59" data-line-number="59">    <span class="kw"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span>(</a>
+<a class="sourceLine" id="cb24-60" data-line-number="60">      <span class="dt">name =</span> <span class="st">"polygot-demo"</span>,</a>
+<a class="sourceLine" id="cb24-61" data-line-number="61">      <span class="dt">image =</span> <span class="st">"gcr.io/gcer-public/polygot_demo"</span>,</a>
+<a class="sourceLine" id="cb24-62" data-line-number="62">      <span class="dt">concurrency =</span> <span class="dv">80</span>),</a>
+<a class="sourceLine" id="cb24-63" data-line-number="63">    <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(</a>
+<a class="sourceLine" id="cb24-64" data-line-number="64">      <span class="dt">id =</span> <span class="st">"load BigQuery"</span>,</a>
+<a class="sourceLine" id="cb24-65" data-line-number="65">      <span class="dt">name =</span> <span class="st">"gcr.io/cloud-builders/gcloud"</span>,</a>
+<a class="sourceLine" id="cb24-66" data-line-number="66">      <span class="dt">entrypoint =</span> <span class="st">"bq"</span>,</a>
+<a class="sourceLine" id="cb24-67" data-line-number="67">      <span class="dt">args =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"--location=EU"</span>,</a>
+<a class="sourceLine" id="cb24-68" data-line-number="68">               <span class="st">"load"</span>,</a>
+<a class="sourceLine" id="cb24-69" data-line-number="69">               <span class="st">"--autodetect"</span>,</a>
+<a class="sourceLine" id="cb24-70" data-line-number="70">               <span class="st">"--source_format=CSV"</span>,</a>
+<a class="sourceLine" id="cb24-71" data-line-number="71">               <span class="st">"test_EU.polygot"</span>,</a>
+<a class="sourceLine" id="cb24-72" data-line-number="72">               <span class="st">"google_analytics.csv"</span></a>
+<a class="sourceLine" id="cb24-73" data-line-number="73">               ),</a>
+<a class="sourceLine" id="cb24-74" data-line-number="74">      <span class="dt">dir =</span> <span class="st">"build"</span></a>
+<a class="sourceLine" id="cb24-75" data-line-number="75">    )</a>
+<a class="sourceLine" id="cb24-76" data-line-number="76">  )</a>
+<a class="sourceLine" id="cb24-77" data-line-number="77">)</a>
+<a class="sourceLine" id="cb24-78" data-line-number="78"></a>
+<a class="sourceLine" id="cb24-79" data-line-number="79"><span class="co"># build the polygot cloud build steps</span></a>
+<a class="sourceLine" id="cb24-80" data-line-number="80">build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build.html">cr_build</a></span>(polygot)</a>
+<a class="sourceLine" id="cb24-81" data-line-number="81">built &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span>(build)</a></code></pre></div>
 <p>An example of the demo output is on this Cloud Run instance URL: <code>https://polygot-demo-ewjogewawq-ew.a.run.app/polygot.html</code></p>
 <p><img src="polygot-html.png"></p>
 <p>It also uploads the data to a BigQuery table:</p>
 <p><img src="polygot-bq-load.png"></p>
 <p>This constructed cloud build can also be used outside of R, by writing out the Cloud Build file via <code><a href="../reference/cr_build_write.html">cr_build_write()</a></code></p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co"># write out to cloudbuild.yaml for other languages</span></a>
-<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="kw"><a href="../reference/cr_build_write.html">cr_build_write</a></span>(polygot)</a>
-<a class="sourceLine" id="cb19-3" data-line-number="3"><span class="co"># 2019-12-28 19:15:50&gt; Writing to cloudbuild.yaml</span></a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="co"># write out to cloudbuild.yaml for other languages</span></a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="kw"><a href="../reference/cr_build_write.html">cr_build_write</a></span>(polygot)</a>
+<a class="sourceLine" id="cb25-3" data-line-number="3"><span class="co"># 2019-12-28 19:15:50&gt; Writing to cloudbuild.yaml</span></a></code></pre></div>
 <p>This can then be scheduled as described in Cloud Scheduler section on <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html">scheduled cloud builds</a>.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">schedule_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(built)</a>
-<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"polygot-example"</span>, <span class="st">"15 8 * * *"</span>, <span class="dt">httpTarget =</span> schedule_me)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">schedule_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(built)</a>
+<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"polygot-example"</span>, <span class="st">"15 8 * * *"</span>, <span class="dt">httpTarget =</span> schedule_me)</a></code></pre></div>
 <p>An example of the cloudbuild.yaml is on GitHub <a href="https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml">here</a>.</p>
 </div>
   </div>
@@ -559,7 +650,8 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
       <li><a href="#create-docker-image-of-a-package-each-commit">Create Docker image of a package each commit</a></li>
       <li><a href="#migrate-an-existing-scheduled-docker-container">Migrate an existing scheduled Docker container</a></li>
       <li><a href="#trigger-an-r-function-from-pubsub">Trigger an R function from pubsub</a></li>
-      <li><a href="#build-an-rmd-each-git-commit-and-host-its-html-on-cloud-storage">Build an Rmd each git commit and host its HTML on Cloud Storage</a></li>
+      <li><a href="#run-r-code-when-a-pubsub-message-is-created-from-a-new-file-in-google-cloud-storage">Run R code when a pub/sub message is created from a new file in Google Cloud Storage</a></li>
+      <li><a href="#build-an-rmd-on-a-schedule-and-host-its-html-on-cloud-storage">Build an Rmd on a schedule and host its HTML on Cloud Storage</a></li>
       <li><a href="#build-and-deploy-rmd-files-to-cloud-run-on-a-schedule">Build and deploy Rmd files to Cloud Run on a schedule</a></li>
       <li><a href="#polygot-cloud-builds---integrating-r-code-with-other-languages">Polygot Cloud Builds - integrating R code with other languages</a></li>
       </ul>
