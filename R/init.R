@@ -5,6 +5,10 @@
 #' @param region Region for the endpoint
 #' @import assertthat
 #' @export
+#'
+#' @examples
+#'
+#' cr_region_get()
 cr_region_set <- function(region = c("europe-west1",
                                      "us-central1",
                                      "asia-northeast1",
@@ -44,6 +48,9 @@ cr_region_get <- function(){
 #' @param projectId The projectId
 #' @import assertthat
 #' @export
+#' @examples
+#'
+#' cr_project_get()
 cr_project_set <- function(projectId){
 
   .cr_env$project <- projectId
@@ -79,6 +86,9 @@ cr_project_get <- function(){
 #' @param bucket The GCS bucket
 #' @import assertthat
 #' @export
+#' @examples
+#'
+#' cr_bucket_get()
 cr_bucket_set <- function(bucket){
 
   .cr_env$bucket <- bucket
@@ -131,6 +141,9 @@ cr_email_get <- function(){
 #'
 #' @export
 #' @param cloudbuildEmail The Cloud Build service email
+#' @examples
+#'
+#' cr_email_get()
 cr_email_set <- function(cloudbuildEmail){
   .cr_env$cloudbuildEmail <- cloudbuildEmail
 
