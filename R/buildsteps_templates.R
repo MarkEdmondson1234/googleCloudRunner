@@ -347,7 +347,7 @@ cr_buildstep_bash <- function(bash_script,
 #'
 #' Helper to run R code within build steps, from either an existing local R file or within the source of the build.
 #'
-#' @param r R code to run or a file containing R code ending with .R
+#' @param r R code to run or a file containing R code ending with .R, or the gs:// location on Cloud Storage of the R file you want to run
 #' @param name The docker image that will run the R code, usually from rocker-project.org
 #' @param r_source Whether the R code will be from a runtime file within the source or at build time copying over from a local R file in your session
 #' @param ... Other arguments passed to \link{cr_buildstep}
@@ -359,6 +359,8 @@ cr_buildstep_bash <- function(bash_script,
 #' If \code{r_source="runtime"} then \code{r} should be the location of that file within the source or \code{image} that will be run by the R code from \code{image}
 #'
 #' If \code{r_source="local"} then it will copy over from a character string or local file into the build step directly.
+#'
+#' If the R code location starts with \code{gs://} then an extra buildstep will be added that will download the R script from that location then run it as per \code{r_source="runtime"}.  This will consequently override your setting of \code{r_source}
 #'
 #' @examples
 #' cr_project_set("my-project")
@@ -410,6 +412,29 @@ cr_buildstep_r <- function(r,
     is.null(dots$name),
     is.null(dots$prefix)
   )
+
+  # ability to call R scripts from Cloud Storage
+  if(grepl("^gs://", r)){
+    r_here <- paste0("/workspace/", basename(r))
+    myMessage(paste0("Buildstep will download R script from ", r,
+              " and execute in build runtime via ", r_here),
+              level = 3)
+    gs <- c(
+      cr_buildstep(
+        "gsutil",
+        id = paste("download r script"),
+        args = c("cp", r, r_here)
+      ),
+      cr_buildstep_r(
+        r_here,
+        r_source = "runtime",
+        name = name
+      )
+    )
+
+    return(gs)
+
+  }
 
   rchars <- read_buildstep_file(r,
                                 code_source = r_source,

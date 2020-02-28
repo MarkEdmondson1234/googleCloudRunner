@@ -20,7 +20,7 @@ cr_deploy_r(
 )
 }
 \arguments{
-\item{r}{R code to run or a file containing R code ending with .R}
+\item{r}{R code to run or a file containing R code ending with .R, or the gs:// location on Cloud Storage of the R file you want to run}
 
 \item{schedule}{A cron schedule e.g. \code{"15 5 * * *"}}
 

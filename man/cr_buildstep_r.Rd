@@ -13,7 +13,7 @@ cr_buildstep_r(
 )
 }
 \arguments{
-\item{r}{R code to run or a file containing R code ending with .R}
+\item{r}{R code to run or a file containing R code ending with .R, or the gs:// location on Cloud Storage of the R file you want to run}
 
 \item{name}{The docker image that will run the R code, usually from rocker-project.org}
 
@@ -30,6 +30,8 @@ Helper to run R code within build steps, from either an existing local R file or
 If \code{r_source="runtime"} then \code{r} should be the location of that file within the source or \code{image} that will be run by the R code from \code{image}
 
 If \code{r_source="local"} then it will copy over from a character string or local file into the build step directly.
+
+If the R code location starts with \code{gs://} then an extra buildstep will be added that will download the R script from that location then run it as per \code{r_source="runtime"}.  This will consequently override your setting of \code{r_source}
 }
 \examples{
 cr_project_set("my-project")
