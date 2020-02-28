@@ -171,7 +171,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>r</th>
-      <td><p>R code to run or a file containing R code ending with .R</p></td>
+      <td><p>R code to run or a file containing R code ending with .R, or the gs:// location on Cloud Storage of the R file you want to run</p></td>
     </tr>
     <tr>
       <th>name</th>
@@ -195,6 +195,7 @@
 
     <p>If <code>r_source="runtime"</code> then <code>r</code> should be the location of that file within the source or <code>image</code> that will be run by the R code from <code>image</code></p>
 <p>If <code>r_source="local"</code> then it will copy over from a character string or local file into the build step directly.</p>
+<p>If the R code location starts with <code>gs://</code> then an extra buildstep will be added that will download the R script from that location then run it as per <code>r_source="runtime"</code>.  This will consequently override your setting of <code>r_source</code></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Cloud Buildsteps: 
@@ -213,9 +214,9 @@
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-02-28 14:47:14&gt; ProjectId set to my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-02-28 14:47:14&gt; Bucket set to my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-02-28 15:15:37&gt; ProjectId set to my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-02-28 15:15:37&gt; Bucket set to my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
 <span class='co'># create an R buildstep inline</span>
-<span class='fu'>cr_buildstep_r</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"paste('1+1=', 1+1)"</span>, <span class='st'>"sessionInfo()"</span>))</div><div class='output co'>#&gt; [[1]]
+<span class='fu'>cr_buildstep_r</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"paste('1+1=', 1+1)"</span>, <span class='st'>"sessionInfo()"</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: the condition has length &gt; 1 and only the first element will be used</span></div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: rocker/r-base
 #&gt; args:
@@ -239,7 +240,7 @@
 <span class='fu'>cr_buildstep_r</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"library(dplyr)"</span>,
                  <span class='st'>"mtcars %&gt;% select(mpg)"</span>,
                  <span class='st'>"sessionInfo()"</span>),
-               <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"verse"</span>)</div><div class='output co'>#&gt; [[1]]
+               <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"verse"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: the condition has length &gt; 1 and only the first element will be used</span></div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: rocker/verse
 #&gt; args:
@@ -252,7 +253,10 @@
 #&gt; </div><div class='input'>
 <span class='co'># use your own R image with custom R</span>
 <span class='no'>my_r</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"devtools::install()"</span>, <span class='st'>"pkgdown::build_site()"</span>)
-<span class='no'>br</span> <span class='kw'>&lt;-</span>  <span class='fu'>cr_buildstep_r</span>(<span class='no'>my_r</span>, <span class='kw'>name</span><span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>)</div></pre>
+<span class='no'>br</span> <span class='kw'>&lt;-</span>  <span class='fu'>cr_buildstep_r</span>(<span class='no'>my_r</span>, <span class='kw'>name</span><span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: the condition has length &gt; 1 and only the first element will be used</span></div><div class='input'>
+
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
