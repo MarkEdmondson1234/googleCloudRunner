@@ -255,7 +255,7 @@
 <code><a href='cr_buildstep_slack.html'>cr_buildstep_slack</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-02-23 12:21:54&gt; ProjectId set to my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-02-23 12:21:54&gt; Bucket set to my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='co'># creating yaml for use in deploying cloud run</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-02-28 14:47:13&gt; ProjectId set to my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-02-28 14:47:13&gt; Bucket set to my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='co'># creating yaml for use in deploying cloud run</span>
 <span class='no'>image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/my-project/my-image:$BUILD_ID"</span>
 <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span>(
     <span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
@@ -293,7 +293,7 @@
                      <span class='kw'>args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"beta"</span>,<span class='st'>"run"</span>,<span class='st'>"deploy"</span>,
                               <span class='st'>"test1"</span>,<span class='st'>"--image"</span>, <span class='no'>image</span>))
              ),
-    <span class='kw'>images</span> <span class='kw'>=</span> <span class='no'>image</span>)</div><div class='output co'>#&gt; <span class='message'>2020-02-23 12:21:54&gt; Image to be built: gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; ==cloudRunnerYaml==
+    <span class='kw'>images</span> <span class='kw'>=</span> <span class='no'>image</span>)</div><div class='output co'>#&gt; <span class='message'>2020-02-28 14:47:13&gt; Image to be built: gcr.io/my-project/my-image:$BUILD_ID</span></div><div class='output co'>#&gt; ==cloudRunnerYaml==
 #&gt; steps:
 #&gt; - name: gcr.io/cloud-builders/docker
 #&gt;   args:

@@ -176,7 +176,7 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function is intended to be used within <a href='https://rdrr.io/pkg/plumber/man/plumber.html'>plumb</a> API scripts.  It needs to be annotated with a <code>@post</code> URL route and a <code>@param message The pubsub message</code> as per the plumber documentation.</p>
-<p><code>pass_f</code> should be a function you create that accepts one argument, the data from the pubsub <code>message$data</code> field.  It is unencoded for you.</p>
+<p><code>pass_f</code> should be a function you create that accepts one argument, the data from the pubsub <code>message$data</code> field.  It is unencoded for you.  Make sure the function returns a 200 response otherwise pub/sub will keep resending the message!  <code><a href='https://rdrr.io/r/base/function.html'>return(TRUE)</a></code> is adequete</p>
 <p>The Docker container for the API will need to include <code>googleCloudRunner</code> installed in its R environment to run this function.  This is available in the public <code>gcr.io/gcer-public/cloudrunner</code> image.</p>
 <p>Use <a href='cr_pubsub.html'>cr_pubsub</a> to test this function once deployed.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
