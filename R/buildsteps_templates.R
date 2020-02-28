@@ -416,8 +416,7 @@ cr_buildstep_r <- function(r,
   # ability to call R scripts from Cloud Storage
   if(grepl("^gs://", r)){
     r_here <- paste0("/workspace/", basename(r))
-    myMessage(paste0("Buildstep will download R script from ", r,
-              " and execute in build runtime via ", r_here),
+    myMessage(paste0("Buildstep will download R script from ", r),
               level = 3)
     gs <- c(
       cr_buildstep(
@@ -427,8 +426,10 @@ cr_buildstep_r <- function(r,
       ),
       cr_buildstep_r(
         r_here,
+        name = name,
         r_source = "runtime",
-        name = name
+        prefix = prefix,
+        ...
       )
     )
 
