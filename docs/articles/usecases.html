@@ -107,7 +107,7 @@
     <div class="page-header toc-ignore">
       <h1>Example Use Cases for googleCloudRunner</h1>
             
-            <h4 class="date">2020-02-23</h4>
+            <h4 class="date">2020-02-28</h4>
       
       
       <div class="hidden name"><code>usecases.Rmd</code></div>
@@ -398,8 +398,8 @@ CMD ["api.R"]</code></pre>
 <h2 class="hasAnchor">
 <a href="#build-an-rmd-on-a-schedule-and-host-its-html-on-cloud-storage" class="anchor"></a>Build an Rmd on a schedule and host its HTML on Cloud Storage</h2>
 <p>Cloud Storage can host public HTML files like a website, which can be accessed via public or private viewers. This can be useful in setting up reporting infrastructure.</p>
-<p>A video of the below workflow is <a href="https://www.youtube.com/watch?v=YcHLBnLRnRs">here</a>:</p>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/YcHLBnLRnRs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+<p>A video of the below workflow is <a href="https://www.youtube.com/watch?v=BainmerWVb0">here</a>:</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BainmerWVb0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 <p>The Cloud Build below makes use of Cloud Build artifacts to send the built Rmd files to a public Cloud Storage bucket. The Rmd is built on a schedule to pull in new data from a Google Sheet:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">rmd_build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
