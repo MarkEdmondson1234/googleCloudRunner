@@ -15,3 +15,7 @@ cr_bucket_get()
 \description{
 Can also use environment arg GCS_DEFAULT_BUCKET
 }
+\examples{
+
+cr_bucket_get()
+}

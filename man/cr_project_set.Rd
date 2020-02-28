@@ -15,3 +15,7 @@ cr_project_get()
 \description{
 Can also use environment argument GCE_DEFAULT_PROJECT_ID
 }
+\examples{
+
+cr_project_get()
+}

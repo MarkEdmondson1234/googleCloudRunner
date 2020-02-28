@@ -379,9 +379,9 @@ You will need to setup mailgun to stop it appearing in your spam folder, by veri
 
 Cloud Storage can host public HTML files like a website, which can be accessed via public or private viewers.  This can be useful in setting up reporting infrastructure.
 
-A video of the below workflow is [here](https://www.youtube.com/watch?v=YcHLBnLRnRs):
+A video of the below workflow is [here](https://www.youtube.com/watch?v=BainmerWVb0):
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/YcHLBnLRnRs" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BainmerWVb0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 The Cloud Build below makes use of Cloud Build artifacts to send the built Rmd files to a public Cloud Storage bucket.  The Rmd is built on a schedule to pull in new data from a Google Sheet:
 

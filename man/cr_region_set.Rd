@@ -17,3 +17,7 @@ cr_region_get()
 \description{
 Can also use environment argument CR_REGION
 }
+\examples{
+
+cr_region_get()
+}

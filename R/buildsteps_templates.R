@@ -415,8 +415,14 @@ cr_buildstep_r <- function(r,
                                 code_source = r_source,
                                 file_grep = "\\.R$")
 
+  if(r_source == "local"){
+    r_args <- c("Rscript", "-e", rchars)
+  } else if(r_source == "runtime"){
+    r_args <- c("Rscript", rchars)
+  }
+
   cr_buildstep(name = name,
-               args = c("Rscript", "-e", rchars),
+               args = r_args,
                prefix = prefix,
                ...)
 
@@ -426,6 +432,7 @@ cr_buildstep_r <- function(r,
 read_buildstep_file <- function(x,
                                 code_source = c("local","runtime"),
                                 file_grep = ".*") {
+
   code_source <- match.arg(code_source)
   rchars <- x
   if(code_source == "local"){

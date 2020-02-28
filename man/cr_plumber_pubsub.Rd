@@ -17,7 +17,7 @@ A function to use in plumber scripts to accept Pub/Sub messages
 \details{
 This function is intended to be used within \link[plumber]{plumb} API scripts.  It needs to be annotated with a \code{@post} URL route and a \code{@param message The pubsub message} as per the plumber documentation.
 
-\code{pass_f} should be a function you create that accepts one argument, the data from the pubsub \code{message$data} field.  It is unencoded for you.
+\code{pass_f} should be a function you create that accepts one argument, the data from the pubsub \code{message$data} field.  It is unencoded for you.  Make sure the function returns a 200 response otherwise pub/sub will keep resending the message!  \code{return(TRUE)} is adequete
 
 The Docker container for the API will need to include \code{googleCloudRunner} installed in its R environment to run this function.  This is available in the public \code{gcr.io/gcer-public/cloudrunner} image.
 

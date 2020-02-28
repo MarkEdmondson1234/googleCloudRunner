@@ -15,6 +15,10 @@ cr_email_set(cloudbuildEmail)
 \description{
 Needed so Cloud Scheduler can run Cloud Build jobs - can also set via environment argument CR_BUILD_EMAIL
 }
+\examples{
+
+cr_email_get()
+}
 \seealso{
 https://console.cloud.google.com/cloud-build/settings
 }
