@@ -119,6 +119,25 @@ An RStudio gadget is also available to help you deploy:
 
 If you want help creating the Docker image, try [`containerit`](https://o2r.info/containerit/) to generate your Dockerfile, then use `cr_deploy_docker()` to build it.
 
+### Execute R scripts directly from Cloud Storage
+
+In some cases you may hit character limits of the cloudbuild file in which case you will need to execute the R code from a file.  The easiest way to do this is to upload your R code to a Cloud Storage bucket and then supply the `gs://` URI to `cr_buildstep_r()`:
+
+The below example uses a public bucket and R image, for your use case you would change to your own private one that your Cloud Build service email has access to:
+
+```r
+library(googleCloudRunner)
+
+large_r_job <- cr_build_yaml(
+  steps = c(
+    cr_buildstep_r("gs://mark-edmondson-public-read/schedule.R", 
+                   name = "gcr.io/gcer-public/googleauthr-verse:latest")
+  )
+)
+cr_build(large_r_job)
+```
+
+
 ### Authentication within the R script on Cloud Build
 
 The default metadata of the Cloud Build server is the same as `googleComputeEngineR`, so you can use `googleAuthR::gar_gce_auth("default", scopes = "https://www.googleapis.com/auth/cloud-platform")`.  You can also use the Cloud Build email (the one that looks like `{project-number@cloudbuild.gserviceaccount.com}`) if its given the right access in Cloud IAM, authentication in your R script will look like `googleAuthR::gar_gce_auth("{project-number@cloudbuild.gserviceaccount.com}", scopes = "https://www.googleapis.com/auth/cloud-platform")`
