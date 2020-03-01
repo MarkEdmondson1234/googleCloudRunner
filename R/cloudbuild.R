@@ -162,11 +162,16 @@ cr_build_make <- function(yaml,
     is.string(projectId)
   )
 
-  timeout <- check_timeout(timeout)
-
   stepsy <- get_cr_yaml(yaml)
   if(is.null(stepsy$steps)){
     stop("Invalid cloudbuild yaml - 'steps:' not found.", call. = FALSE)
+  }
+
+  timeout <- check_timeout(timeout)
+  if(is.null(timeout)){
+    if(!is.null(stepsy$timeout)){
+      timeout <- stepsy$timeout
+    }
   }
 
   if(!is.null(source)){
