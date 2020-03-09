@@ -42,3 +42,15 @@ Browse the [googleCloudRunner website](https://code.markedmondson.me/googleCloud
 * [Scheduled R in GCP using Cloud Scheduler](https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html)
 * [Use Cases](https://code.markedmondson.me/googleCloudRunner/articles/usecases.html)
 * [Function Reference](https://code.markedmondson.me/googleCloudRunner/reference/index.html)
+
+## Resources
+
+Read the blog [introducing the googleCloudRunner package](https://code.markedmondson.me/googleCloudRunner-intro/) that goes into some background.
+
+A talk at R's 20th anniversary was performed at celebRation in Copenhagen on 29th Feb, 2020.  The [slides from the talk are here](https://code.markedmondson.me/r-20.html) and a [video of it is here](https://www.youtube.com/watch?v=YRvejW9FSJ4&list=PLAMHKI_J4xv1urCanNbTCm44CxXnoejdr&index=3):
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/YRvejW9FSJ4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+A [googleCloudRunner YouTube playlist](https://www.youtube.com/playlist?list=PLAMHKI_J4xv1urCanNbTCm44CxXnoejdr) of the demos is here.
+
+If you blog anything interesting about the package let me know and I will list it here.
