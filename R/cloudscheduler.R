@@ -151,6 +151,8 @@ cr_schedule_list <- function(region = cr_region_get(),
                page_arg = "pageToken")
 
   Reduce(rbind, o)
+
+
 }
 
 parse_schedule_list <- function(x){
@@ -158,7 +160,11 @@ parse_schedule_list <- function(x){
     return(data.frame())
   }
 
-  x$jobs
+  x$jobs[, c("name","userUpdateTime",
+             "state", "scheduleTime",
+             "lastAttemptTime",
+             "schedule","timeZone",
+             "attemptDeadline")]
 }
 
 #' Deletes a scheduled job.
