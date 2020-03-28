@@ -572,6 +572,7 @@ cr_buildstep_docker <- function(image,
                                 tag = "$BUILD_ID",
                                 location = ".",
                                 projectId = cr_project_get(),
+                                dockerfile = "Dockerfile",
                                 ...){
   # don't allow dot names that would break things
   dots <- list(...)
@@ -594,7 +595,11 @@ cr_buildstep_docker <- function(image,
   myMessage("Image to be built: ", the_image, level = 3)
 
   c(
-    cr_buildstep("docker", c("build","-t",the_image,location), ...),
+    cr_buildstep("docker",
+                 c("build",
+                   "-f", dockerfile,
+                   "-t",the_image,location),
+                 ...),
     cr_buildstep("docker", c("push", the_image), ...)
   )
 }

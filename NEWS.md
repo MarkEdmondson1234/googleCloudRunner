@@ -7,6 +7,8 @@
 * Let `timeout` be specified within `cr_build_yaml()` (#43 - thanks @dmoimpact)
 * Correct print method for build substitutions
 * Update `cr_schedule_list()` to only return non-nested data
+* Allow specification of Dockerfile name in `cr_buildstep_docker()`
+* Easier parsing of env arguments in `cr_buildstep()`
 
 # googleCloudRunner 0.1.1
 

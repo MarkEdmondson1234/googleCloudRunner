@@ -102,7 +102,7 @@ cr_buildstep <- function(name,
       args = string_to_list(args),
       id = id,
       dir = dir,
-      env = env,
+      env = string_to_list(env),
       volumes = volumes,
       waitFor = string_to_list(waitFor)
     )), class = c("cr_buildstep","list")))

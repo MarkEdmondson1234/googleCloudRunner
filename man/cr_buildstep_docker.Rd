@@ -9,6 +9,7 @@ cr_buildstep_docker(
   tag = "$BUILD_ID",
   location = ".",
   projectId = cr_project_get(),
+  dockerfile = "Dockerfile",
   ...
 )
 }
