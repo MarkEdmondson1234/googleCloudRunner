@@ -204,7 +204,8 @@
 #&gt;   message("cran mirror: ", getOption("repos"))
 #&gt;   remotes::install_deps(dependencies = TRUE)
 #&gt;   rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'warning')
-#&gt; env: NOT_CRAN=true
+#&gt; env:
+#&gt; - NOT_CRAN=true
 #&gt; 
 #&gt; [[2]]
 #&gt; ==cloudRunnerBuildStep==
