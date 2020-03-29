@@ -221,7 +221,7 @@ This creates steps to use git with an ssh created key." />
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-03-28 05:52:13&gt; ProjectId set to my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-03-28 05:52:13&gt; Bucket set to my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-03-29 14:45:35&gt; ProjectId set to my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-03-29 14:45:35&gt; Bucket set to my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
 <span class='co'># assumes you have previously saved git ssh key via KMS called "git_key"</span>
 <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span>(
      <span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
@@ -229,50 +229,7 @@ This creates steps to use git with an ssh created key." />
           <span class='fu'>cr_buildstep_git</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"clone"</span>,
                              <span class='st'>"git@github.com:github_name/repo_name"</span>))
      )
- )</div><div class='output co'>#&gt; ==cloudRunnerYaml==
-#&gt; steps:
-#&gt; - name: gcr.io/cloud-builders/gcloud
-#&gt;   args:
-#&gt;   - kms
-#&gt;   - decrypt
-#&gt;   - --ciphertext-file
-#&gt;   - id_rsa.enc
-#&gt;   - --plaintext-file
-#&gt;   - /root/.ssh/id_rsa
-#&gt;   - --location
-#&gt;   - global
-#&gt;   - --keyring
-#&gt;   - my_keyring
-#&gt;   - --key
-#&gt;   - git_key
-#&gt;   volumes:
-#&gt;   - name: ssh
-#&gt;     path: /root/.ssh
-#&gt; - name: gcr.io/cloud-builders/git
-#&gt;   entrypoint:
-#&gt;   - bash
-#&gt;   args:
-#&gt;   - -c
-#&gt;   - |
-#&gt;     chmod 600 /root/.ssh/id_rsa
-#&gt;     cat &lt;&lt;EOF &gt;known_hosts
-#&gt;     github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
-#&gt;     EOF
-#&gt;     cat &lt;&lt;EOF &gt;/root/.ssh/config
-#&gt;     Hostname github.com
-#&gt;     IdentityFile /root/.ssh/id_rsa
-#&gt;     EOF
-#&gt;     mv known_hosts /root/.ssh/known_hosts
-#&gt;   volumes:
-#&gt;   - name: ssh
-#&gt;     path: /root/.ssh
-#&gt; - name: gcr.io/cloud-builders/git
-#&gt;   args:
-#&gt;   - clone
-#&gt;   - git@github.com:github_name/repo_name
-#&gt;   volumes:
-#&gt;   - name: ssh
-#&gt;     path: /root/.ssh</div><div class='input'>
+ )</div><div class='output co'>#&gt; <span class='error'>Error: env is not a string (a length one character vector).</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
