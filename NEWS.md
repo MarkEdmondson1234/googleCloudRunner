@@ -9,6 +9,7 @@
 * Update `cr_schedule_list()` to only return non-nested data
 * Allow specification of Dockerfile name in `cr_buildstep_docker()`
 * Easier parsing of env arguments in `cr_buildstep()`
+* Entrypoint in `cr_buildstep()` accepts one argument only
 
 # googleCloudRunner 0.1.1
 
