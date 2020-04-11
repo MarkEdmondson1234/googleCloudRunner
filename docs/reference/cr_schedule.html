@@ -164,6 +164,7 @@
   <span class='kw'>httpTarget</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>timeZone</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/timezones.html'>Sys.timezone</a></span>(),
   <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
   <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
 )</pre>
@@ -190,6 +191,10 @@
     <tr>
       <th>overwrite</th>
       <td><p>If TRUE and an existing job with the same name exists, will overwrite it with the new parameters</p></td>
+    </tr>
+    <tr>
+      <th>timeZone</th>
+      <td><p>Specifies the time zone to be used in interpreting schedule. If set to <code>NULL</code> will be "UTC". Note that some time zones include a provision for daylight savings time.</p></td>
     </tr>
     <tr>
       <th>region</th>
