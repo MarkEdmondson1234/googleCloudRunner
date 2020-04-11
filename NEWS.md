@@ -10,6 +10,7 @@
 * Allow specification of Dockerfile name in `cr_buildstep_docker()`
 * Easier parsing of env arguments in `cr_buildstep()`
 * Entrypoint in `cr_buildstep()` accepts one argument only
+* Allow specification of timezone in `cr_schedule()` (#49 - thanks @samterfa)
 
 # googleCloudRunner 0.1.1
 

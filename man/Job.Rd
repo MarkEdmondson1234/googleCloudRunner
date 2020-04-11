@@ -28,7 +28,7 @@ Job(
 
 \item{httpTarget}{A HTTP target object \link{HttpTarget}}
 
-\item{timeZone}{Specifies the time zone to be used in interpreting}
+\item{timeZone}{Specifies the time zone to be used in interpreting schedule. If set to \code{NULL} will be "UTC". Note that some time zones include a provision for daylight savings time.}
 
 \item{description}{Optionally caller-specified in CreateJob or}
 

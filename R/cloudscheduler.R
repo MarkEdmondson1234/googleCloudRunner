@@ -32,12 +32,17 @@
 #'
 #' # update a schedule with the same name - only supply what you want to change
 #' cr_schedule("cloud-build-test2", "12 6 * * *", overwrite=TRUE)
+#'
+#' # By default will use the timezone as specified by Sys.timezone() - change
+#' # this by supplying it directly
+#' cr_schedule("timzone-utc", "12 2 * * *", timeZone = "UTC")
 #' }
 cr_schedule <- function(name,
                         schedule=NULL,
                         httpTarget=NULL,
                         description=NULL,
                         overwrite=FALSE,
+                        timeZone=Sys.timezone(),
                         region = cr_region_get(),
                         projectId = cr_project_get()
                         ) {
@@ -52,7 +57,8 @@ cr_schedule <- function(name,
   job <- Job(schedule=schedule,
              name = the_name,
              httpTarget = httpTarget,
-             description = description)
+             description = description,
+             timeZone = timeZone)
 
   if(overwrite){
     scheds <- cr_schedule_list(region = region, projectId = projectId)
@@ -408,7 +414,7 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
 #' @param attemptDeadline The deadline for job attempts
 #' @param pubsubTarget Pub/Sub target
 #' @param httpTarget A HTTP target object \link{HttpTarget}
-#' @param timeZone Specifies the time zone to be used in interpreting
+#' @param timeZone Specifies the time zone to be used in interpreting schedule. If set to \code{NULL} will be "UTC". Note that some time zones include a provision for daylight savings time.
 #' @param description Optionally caller-specified in CreateJob or
 #' @param appEngineHttpTarget App Engine HTTP target
 #' @param status Output only

@@ -10,6 +10,7 @@ cr_schedule(
   httpTarget = NULL,
   description = NULL,
   overwrite = FALSE,
+  timeZone = Sys.timezone(),
   region = cr_region_get(),
   projectId = cr_project_get()
 )
@@ -24,6 +25,8 @@ cr_schedule(
 \item{description}{Optionally caller-specified in CreateJob or}
 
 \item{overwrite}{If TRUE and an existing job with the same name exists, will overwrite it with the new parameters}
+
+\item{timeZone}{Specifies the time zone to be used in interpreting schedule. If set to \code{NULL} will be "UTC". Note that some time zones include a provision for daylight savings time.}
 
 \item{region}{The region usually set with \link{cr_region_set}}
 
@@ -54,6 +57,10 @@ cr_schedule("cloud-build-test2", "15 5 * * *",
 
 # update a schedule with the same name - only supply what you want to change
 cr_schedule("cloud-build-test2", "12 6 * * *", overwrite=TRUE)
+
+# By default will use the timezone as specified by Sys.timezone() - change
+# this by supplying it directly
+cr_schedule("timzone-utc", "12 2 * * *", timeZone = "UTC")
 }
 }
 \seealso{
