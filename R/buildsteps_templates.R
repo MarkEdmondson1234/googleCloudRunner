@@ -409,7 +409,8 @@ cr_buildstep_r <- function(r,
   dots <- list(...)
   assert_that(
     is.null(dots$args),
-    is.null(dots$name)
+    is.null(dots$name),
+    is.null(dots$prefix)
   )
 
   # ability to call R scripts from Cloud Storage

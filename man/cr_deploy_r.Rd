@@ -13,6 +13,7 @@ cr_deploy_r(
   pre_steps = NULL,
   post_steps = NULL,
   timeout = 600L,
+  ...,
   email = cr_email_get(),
   region = cr_region_get(),
   projectId = cr_project_get(),
@@ -35,6 +36,8 @@ cr_deploy_r(
 \item{post_steps}{Other \link{cr_buildstep} to run after the R code executes}
 
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
+
+\item{...}{Other arguments passed through to \link{cr_buildstep_r}}
 
 \item{email}{The email that will authenticate the job set via \link{cr_email_set}}
 

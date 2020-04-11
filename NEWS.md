@@ -11,7 +11,7 @@
 * Easier parsing of env arguments in `cr_buildstep()`
 * Entrypoint in `cr_buildstep()` accepts one argument only
 * Allow specification of timezone in `cr_schedule()` (#49 - thanks @samterfa)
-* Fix `cr_buildstep_r()` not passing through prefix (#50 - thanks @samterfa)
+* Let `cr_deploy_r()` pass through arguments to `cr_buildstep_r()` (#50 - thanks @samterfa)
 
 # googleCloudRunner 0.1.1
 
