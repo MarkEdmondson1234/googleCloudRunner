@@ -546,6 +546,7 @@ cr_buildstep_decrypt <- function(cipher,
 #' @param location Where the Dockerfile to build is in relation to \code{dir}
 #' @param ... Further arguments passed in to \link{cr_buildstep}
 #' @param projectId The projectId
+#' @param dockerfile Specify the name of the Dockerfile found at \code{location}
 #' @family Cloud Buildsteps
 #' @export
 #' @import assertthat

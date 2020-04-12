@@ -22,6 +22,8 @@ cr_buildstep_docker(
 
 \item{projectId}{The projectId}
 
+\item{dockerfile}{Specify the name of the Dockerfile found at \code{location}}
+
 \item{...}{Further arguments passed in to \link{cr_buildstep}}
 }
 \description{
