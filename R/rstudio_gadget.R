@@ -170,7 +170,7 @@ cr_deploy_gadget <- function(){
                       source = source,
                       run_name = input$name,
                       r_image = image_split[[2]],
-                      prefix = image_split[[1]],
+                      prefix = paste0(image_split[[1]],"/"),
                       timeout = input$rTimeout,
                       launch_browser=input$interactive)
         )
