@@ -336,7 +336,7 @@ test_that("Render BuildStep objects", {
 
   bsd <- cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")
   expect_equal(bsd[[1]]$name, "gcr.io/cloud-builders/docker")
-  expect_equal(bsd[[1]]$args[[3]], "gcr.io/test-project/my-image:$BRANCH_NAME")
+  expect_equal(bsd[[1]]$args[[5]], "gcr.io/test-project/my-image:$BRANCH_NAME")
   expect_equal(bsd[[2]]$name,  "gcr.io/cloud-builders/docker")
   expect_equal(bsd[[2]]$args[[1]], "push")
 
@@ -437,7 +437,7 @@ test_that("Render BuildStep objects", {
   # package test builds
   pt <- cr_deploy_packagetests()
   expect_true(file.exists("cloudbuild-tests.yml"))
-  expect_equal(pt$steps[[1]]$env, "NOT_CRAN=true")
+  expect_equal(pt$steps[[1]]$env[[1]], "NOT_CRAN=true")
   unlink("cloudbuild-tests.yml")
 
   # slack messages
