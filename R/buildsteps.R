@@ -90,7 +90,7 @@ cr_buildstep <- function(name,
   }
 
   if(!is.null(entrypoint)){
-    assert_that(is.string(env))
+    assert_that(is.string(entrypoint))
   }
 
   if(dir %in% c("",NA)) dir <- NULL
