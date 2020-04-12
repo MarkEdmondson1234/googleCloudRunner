@@ -162,12 +162,15 @@ cr_deploy_gadget <- function(){
                                                        object = input$source2)))
         the_file <- input$rFile
 
+        image_split <- strsplit(input$rImage, "/")[[1]]
+
         shiny::stopApp(
           cr_deploy_r(the_file$datapath,
                       schedule = if(input$rSchedule =="") NULL else input$rSchedule,
                       source = source,
                       run_name = input$name,
-                      r_image = input$rImage,
+                      r_image = image_split[[2]],
+                      prefix = image_split[[1]],
                       timeout = input$rTimeout,
                       launch_browser=input$interactive)
         )
