@@ -13,6 +13,7 @@
 * Allow specification of timezone in `cr_schedule()` (#49 - thanks @samterfa)
 * Let `cr_deploy_r()` pass through arguments to `cr_buildstep_r()` (#50 - thanks @samterfa)
 * Modify `cr_deploy_packagetests()` so it can pass through dot arguments to `cr_build_yaml()` such as `timeout`
+* Add `cr_buildstep_secret()` using Secret Manager (#52)
 
 # googleCloudRunner 0.1.1
 

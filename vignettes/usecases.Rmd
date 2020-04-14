@@ -55,7 +55,7 @@ The below is an example for `googleCloudRunner`'s website:
 
 The example above also adds other substitution variables to help run some of the examples. 
 
-You can customise the deployment more by using `cr_buildstep_pkgdown()` in your own custom build files. For instance, you could download other auth keys using `cr_buildstep_decrypt()` again, so that your website has working authenticated examples. 
+You can customise the deployment more by using `cr_buildstep_pkgdown()` in your own custom build files. For instance, you could download other auth keys using `cr_buildstep_secret()` again, so that your website has working authenticated examples. 
 
 ## Run package tests and code coverage
 
@@ -89,16 +89,15 @@ The example above also adds other substitution variables to help run some of the
 
 You can customise the deployment more by using `cr_buildstep_packagetests()` in your own custom build files. 
 
-For `googleCloudRunner` and API packages in general, an authentication key is needed to run online tests.  This authentication key can be encrypted via `gcloud` and added to [Google Cloud KMS](https://cloud.google.com/kms) by adding a decryption step to your tests via `cr_buildstep_decrypt()`.
+For `googleCloudRunner` and API packages in general, an authentication key is needed to run online tests.  This authentication key can be encrypted via [Google Secret Manager](https://cloud.google.com/secret-manager) by adding a decryption step to your tests via `cr_buildstep_secret()`.
 
-In that case, the decryption step needs to occur before the tests run, which you can do by supplying `cr_buildstep_decrypt()` to `cr_deploy_packagetests()`.  
+In that case, the decryption step needs to occur before the tests run, which you can do by supplying `cr_buildstep_secret()` to `cr_deploy_packagetests()`.  
 
 You will also want to use that auth file somehow, in the below example it is placed in an environment argument that your tests use to find the authentication file:
 
 ```r
 cr_deploy_packagetests(
-  steps = cr_buildstep_decrypt("auth.json.enc", "auth.json",
-                               keyring = "my-keyring", key = "my-key"),
+  steps = cr_buildstep_secret("my_secret", "auth.json"),
   env = c("NOT_CRAN=true", "MY_AUTH_FILE=auth.json")
 )
 ```

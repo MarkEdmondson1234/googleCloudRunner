@@ -20,7 +20,8 @@ cr_buildstep_decrypt(cipher, plain, keyring, key, location = "global", ...)
 \item{...}{Further arguments passed in to \link{cr_buildstep}}
 }
 \description{
-Create a build step to decrypt files using CryptoKey from Cloud Key Management Service
+Create a build step to decrypt files using CryptoKey from Cloud Key Management Service.
+Usually you will prefer to use \link{cr_buildstep_secret}
 }
 \details{
 Key Management Store can encrypt secret files for use within your later buildsteps.
@@ -28,7 +29,7 @@ Key Management Store can encrypt secret files for use within your later buildste
 \section{Setup}{
 
 
-You will need to set up the \href{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials}{encrypted key using gcloud} following the link from Google
+You will need to set up the \href{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials#encrypt_credentials}{encrypted key using gcloud} following the link from Google
 }
 
 \examples{
@@ -52,6 +53,7 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_pkgdown}()},
 \code{\link{cr_buildstep_run}()},
 \code{\link{cr_buildstep_r}()},
+\code{\link{cr_buildstep_secret}()},
 \code{\link{cr_buildstep_slack}()},
 \code{\link{cr_buildstep}()}
 }

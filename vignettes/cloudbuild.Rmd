@@ -152,6 +152,7 @@ Using the above build step editing functions, some helpful build steps you can u
 
 * `cr_buildstep_bash()` - for including bash scripts
 * `cr_buildstep_docker()` - for building and pushing Docker images
+* `cr_buildstep_secret()` - storing secrets in the cloud and decrypting them
 * `cr_buildstep_decrypt()` - for using Google Key management store to decrypt auth files
 * `cr_buildstep_git()` - for setting up and running git commands
 * `cr_buildstep_mailgun()` - send an email with Mailgun.org
@@ -169,7 +170,7 @@ cr_build_yaml(
       steps = c(
         cr_buildstep("gcloud","version"),
         cr_buildstep_docker("my-image", tag="dev"),
-        cr_buildstep_decrypt("secret","auth.json","keyring","key"),
+        cr_buildstep_secret("my_secret","auth.json"),
         cr_buildstep_r("sessionInfo()")),
       images = "gcr.io/my-project/my-image")
 ```

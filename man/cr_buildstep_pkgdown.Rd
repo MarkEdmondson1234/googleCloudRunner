@@ -63,6 +63,7 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_nginx_setup}()},
 \code{\link{cr_buildstep_run}()},
 \code{\link{cr_buildstep_r}()},
+\code{\link{cr_buildstep_secret}()},
 \code{\link{cr_buildstep_slack}()},
 \code{\link{cr_buildstep}()}
 }

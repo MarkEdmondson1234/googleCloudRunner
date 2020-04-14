@@ -446,6 +446,12 @@ test_that("Render BuildStep objects", {
   expect_equal(bs[[1]]$env[[1]], "SLACK_WEBHOOK=$_SLACK_WEBHOOK")
   expect_equal(bs[[1]]$env[[2]], "SLACK_MESSAGE='hello'")
 
+  # secrets
+  ss <- cr_buildstep_secret("my_secret","secret.json")
+  expect_equal(ss[[1]]$name, "gcr.io/cloud-builders/gcloud")
+  expect_equal(ss[[1]]$entrypoint, "bash")
+  expect_equal(ss[[1]]$args[[2]], "gcloud secrets versions access latest --secret=my_secret > secret.json")
+
 })
 
 

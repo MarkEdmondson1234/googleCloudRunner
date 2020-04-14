@@ -490,7 +490,8 @@ read_buildstep_file <- function(x,
 
 #' Create a build step for decrypting files via KMS
 #'
-#' Create a build step to decrypt files using CryptoKey from Cloud Key Management Service
+#' Create a build step to decrypt files using CryptoKey from Cloud Key Management Service.
+#' Usually you will prefer to use \link{cr_buildstep_secret}
 #'
 #' @param cipher The file that has been encrypted
 #' @param plain The file location to decrypt to
@@ -504,7 +505,7 @@ read_buildstep_file <- function(x,
 #'
 #' @section Setup:
 #'
-#' You will need to set up the \href{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials}{encrypted key using gcloud} following the link from Google
+#' You will need to set up the \href{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials#encrypt_credentials}{encrypted key using gcloud} following the link from Google
 #'
 #' @family Cloud Buildsteps
 #' @export
@@ -538,6 +539,51 @@ cr_buildstep_decrypt <- function(cipher,
                         "--key", key),
                ...)
 }
+
+#' Create a buildstep for using Secret Manager
+#'
+#' This is the preferred way to manage secrets, rather than
+#'   \link{cr_buildstep_decrypt}, as it stores the encrypted file in the cloud
+#'   rather than in your project workspace.
+#'
+#' @seealso How to set up secrets using \href{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials}{Secret Manager}
+#'
+#' @param secret The secret data name in Secret Manager
+#' @param decrypted The name of the file the secret will be decrypted into
+#' @param version The version of the secret
+#' @param ... Other arguments sent to \link{cr_buildstep_bash}
+#'
+#' @details
+#'
+#' This is for downloading encrypted files from Google Secret Manager.  You will need to add the
+#'   Secret Accessor Cloud IAM role to the Cloud Build service account to use it.
+#' Once you have uploaded your secret file and named it, it is available for Cloud
+#'   Build to use.
+#' @family Cloud Buildsteps
+#' @export
+#' @examples
+#' cr_buildstep_secret("my_secret", decrypted = "/workspace/secret.json")
+#'
+cr_buildstep_secret <- function(secret,
+                                decrypted,
+                                version = "latest",
+                                ...){
+
+  script <- sprintf("gcloud secrets versions access %s --secret=%s > %s",
+    version, secret, decrypted
+  )
+
+  cr_buildstep(
+    args = c("-c", script),
+    name = "gcr.io/cloud-builders/gcloud",
+    entrypoint = "bash",
+    ...
+  )
+
+}
+
+
+
 
 #' Create a build step to build and push a docker image
 #'

@@ -287,8 +287,7 @@ cr_deploy_pkgdown <- function(steps = NULL,
 #'
 #' # add a decryption step for an auth file
 #' cr_deploy_packagetests(
-#'   steps = cr_buildstep_decrypt("auth.json.enc", "auth.json",
-#'                                keyring = "my-keyring", key = "my-key"),
+#'   steps = cr_buildstep_secret("my_secret", "auth.json"),
 #'   env = c("NOT_CRAN=true", "MY_AUTH_FILE=auth.json"),
 #'   timeout = 1200
 #' )
