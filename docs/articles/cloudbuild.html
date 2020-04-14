@@ -222,6 +222,8 @@
 <li>
 <code><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker()</a></code> - for building and pushing Docker images</li>
 <li>
+<code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> - storing secrets in the cloud and decrypting them</li>
+<li>
 <code><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt()</a></code> - for using Google Key management store to decrypt auth files</li>
 <li>
 <code><a href="../reference/cr_buildstep_git.html">cr_buildstep_git()</a></code> - for setting up and running git commands</li>
@@ -242,7 +244,7 @@
 <a class="sourceLine" id="cb10-2" data-line-number="2">      <span class="dt">steps =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3">        <span class="kw"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(<span class="st">"gcloud"</span>,<span class="st">"version"</span>),</a>
 <a class="sourceLine" id="cb10-4" data-line-number="4">        <span class="kw"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(<span class="st">"my-image"</span>, <span class="dt">tag=</span><span class="st">"dev"</span>),</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">        <span class="kw"><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt</a></span>(<span class="st">"secret"</span>,<span class="st">"auth.json"</span>,<span class="st">"keyring"</span>,<span class="st">"key"</span>),</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">        <span class="kw"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span>(<span class="st">"my_secret"</span>,<span class="st">"auth.json"</span>),</a>
 <a class="sourceLine" id="cb10-6" data-line-number="6">        <span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(<span class="st">"sessionInfo()"</span>)),</a>
 <a class="sourceLine" id="cb10-7" data-line-number="7">      <span class="dt">images =</span> <span class="st">"gcr.io/my-project/my-image"</span>)</a></code></pre></div>
 </div>
