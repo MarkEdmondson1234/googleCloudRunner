@@ -165,7 +165,8 @@
   <span class='kw'>test_script</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>codecov_script</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>codecov_token</span> <span class='kw'>=</span> <span class='st'>"$_CODECOV_TOKEN"</span>,
-  <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>
+  <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>,
+  <span class='no'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -199,6 +200,10 @@
       <th>build_image</th>
       <td><p>The docker image that will be used to run the R code for the test scripts</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments passed to <a href='cr_build_make.html'>cr_build_make</a></p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -220,10 +225,10 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_packagetests</span>()</div><div class='output co'>#&gt; <span class='message'>2020-04-12 19:20:49&gt; Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; <span class='message'>2020-04-12 19:20:49&gt; Now make a build trigger pointing at this file in your repo: cloudbuild-tests.yml</span>
+<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_packagetests</span>()</div><div class='output co'>#&gt; <span class='message'>2020-04-14 07:25:44&gt; Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; <span class='message'>2020-04-14 07:25:44&gt; Now make a build trigger pointing at this file in your repo: cloudbuild-tests.yml</span>
 #&gt; <span class='message'>Build Trigger settings:</span>
 #&gt; <span class='message'>Substitution variable: _CODECOV_TOKEN = {your-codecov-token}</span>
-#&gt; <span class='message'>Ignored files filter (glob): docs/** and vignettes/**</span></div><div class='input'><span class='no'>pd</span></div><div class='output co'>#&gt; ==CloudBuildObject==
+#&gt; <span class='message'>Ignored files filter (glob): docs/** and vignettes/**</span></div><div class='input'><span class='no'>pd</span></div><div class='output co'>#&gt; ==cloudRunnerYaml==
 #&gt; steps:
 #&gt; - name: gcr.io/gcer-public/packagetools:master
 #&gt;   args:
@@ -252,8 +257,9 @@
 <span class='fu'>cr_deploy_packagetests</span>(
   <span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='cr_buildstep_decrypt.html'>cr_buildstep_decrypt</a></span>(<span class='st'>"auth.json.enc"</span>, <span class='st'>"auth.json"</span>,
                                <span class='kw'>keyring</span> <span class='kw'>=</span> <span class='st'>"my-keyring"</span>, <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"my-key"</span>),
-  <span class='kw'>env</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NOT_CRAN=true"</span>, <span class='st'>"MY_AUTH_FILE=auth.json"</span>)
-)</div><div class='output co'>#&gt; <span class='message'>2020-04-12 19:20:49&gt; Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; <span class='message'>2020-04-12 19:20:49&gt; Now make a build trigger pointing at this file in your repo: cloudbuild-tests.yml</span>
+  <span class='kw'>env</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NOT_CRAN=true"</span>, <span class='st'>"MY_AUTH_FILE=auth.json"</span>),
+  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>1200</span>
+)</div><div class='output co'>#&gt; <span class='message'>2020-04-14 07:25:44&gt; Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; <span class='message'>2020-04-14 07:25:44&gt; Now make a build trigger pointing at this file in your repo: cloudbuild-tests.yml</span>
 #&gt; <span class='message'>Build Trigger settings:</span>
 #&gt; <span class='message'>Substitution variable: _CODECOV_TOKEN = {your-codecov-token}</span>
 #&gt; <span class='message'>Ignored files filter (glob): docs/** and vignettes/**</span></div><div class='input'>
