@@ -189,7 +189,8 @@
 <h3 class="hasAnchor">
 <a href="#authenticated-tests" class="anchor"></a>Authenticated tests</h3>
 <p>You can customise the deployment more by using <code><a href="../reference/cr_buildstep_packagetests.html">cr_buildstep_packagetests()</a></code> in your own custom build files.</p>
-<p>For <code>googleCloudRunner</code> and API packages in general, an authentication key is needed to run online tests. This authentication key can be encrypted via <a href="https://cloud.google.com/secret-manager">Google Secret Manager</a> by adding a decryption step to your tests via <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code>.</p>
+<p>For <code>googleCloudRunner</code> and API packages in general, an authentication key is needed to run online tests. This authentication key can be encrypted via <a href="https://cloud.google.com/secret-manager">Google Secret Manager</a> by adding a decryption step to your tests via <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> - its usually only a case of uploading your auth file:</p>
+<p><img src="secret-ui.png"></p>
 <p>In that case, the decryption step needs to occur before the tests run, which you can do by supplying <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> to <code><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests()</a></code>.</p>
 <p>You will also want to use that auth file somehow, in the below example it is placed in an environment argument that your tests use to find the authentication file:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests</a></span>(</a>
