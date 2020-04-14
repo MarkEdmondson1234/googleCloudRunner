@@ -89,7 +89,9 @@ The example above also adds other substitution variables to help run some of the
 
 You can customise the deployment more by using `cr_buildstep_packagetests()` in your own custom build files. 
 
-For `googleCloudRunner` and API packages in general, an authentication key is needed to run online tests.  This authentication key can be encrypted via [Google Secret Manager](https://cloud.google.com/secret-manager) by adding a decryption step to your tests via `cr_buildstep_secret()`.
+For `googleCloudRunner` and API packages in general, an authentication key is needed to run online tests.  This authentication key can be encrypted via [Google Secret Manager](https://cloud.google.com/secret-manager) by adding a decryption step to your tests via `cr_buildstep_secret()` - its usually only a case of uploading your auth file:
+
+![](secret-ui.png)
 
 In that case, the decryption step needs to occur before the tests run, which you can do by supplying `cr_buildstep_secret()` to `cr_deploy_packagetests()`.  
 
