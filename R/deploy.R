@@ -265,6 +265,7 @@ cr_deploy_pkgdown <- function(steps = NULL,
 #' @inheritParams cr_buildstep_packagetests
 #' @param steps extra steps to run before the \link{cr_buildstep_packagetests} steps run (such as decryption of auth files)
 #' @param cloudbuild_file The cloudbuild yaml file to write to
+#' @param ... Other arguments passed to \link{cr_build_make}
 #'
 #' @details
 #'
@@ -288,7 +289,8 @@ cr_deploy_pkgdown <- function(steps = NULL,
 #' cr_deploy_packagetests(
 #'   steps = cr_buildstep_decrypt("auth.json.enc", "auth.json",
 #'                                keyring = "my-keyring", key = "my-key"),
-#'   env = c("NOT_CRAN=true", "MY_AUTH_FILE=auth.json")
+#'   env = c("NOT_CRAN=true", "MY_AUTH_FILE=auth.json"),
+#'   timeout = 1200
 #' )
 #'
 #' unlink("cloudbuild-tests.yml")
@@ -300,7 +302,8 @@ cr_deploy_packagetests <- function(
   test_script = NULL,
   codecov_script = NULL,
   codecov_token = "$_CODECOV_TOKEN",
-  build_image = 'gcr.io/gcer-public/packagetools:master'){
+  build_image = 'gcr.io/gcer-public/packagetools:master',
+  ...){
 
 
   build_yaml <-
@@ -311,19 +314,18 @@ cr_deploy_packagetests <- function(
                               codecov_token = codecov_token,
                               build_image = build_image,
                               env = env)
-                            )
+                            ),
+                  ...
                   )
 
-  build <- cr_build_make(build_yaml)
-
-  cr_build_write(build, file = cloudbuild_file)
+  cr_build_write(build_yaml, file = cloudbuild_file)
   myMessage("Now make a build trigger pointing at this file in your repo: ", cloudbuild_file,
             "\nBuild Trigger settings:",
             "\nSubstitution variable: _CODECOV_TOKEN = {your-codecov-token}",
             "\nIgnored files filter (glob): docs/** and vignettes/**",
             level = 3)
 
-  invisible(build)
+  invisible(build_yaml)
 
 }
 

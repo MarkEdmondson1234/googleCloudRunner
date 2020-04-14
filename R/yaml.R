@@ -187,7 +187,14 @@ cr_build_write <- function(x, file = "cloudbuild.yaml"){
 cr_build_write.gar_Build <- function(x, file = "cloudbuild.yaml"){
   o <- rmNullObs(cr_build_yaml(
     steps = x$steps,
-    images = x$images
+    images = x$images,
+    timeout = x$timeout,
+    logsBucket = x$logsBucket,
+    options = x$options,
+    substitutions = x$substitutions,
+    tags = x$tags,
+    secrets = x$secrets,
+    artifacts = x$artifacts
   ))
   cr_build_write.cr_yaml(o, file)
 }

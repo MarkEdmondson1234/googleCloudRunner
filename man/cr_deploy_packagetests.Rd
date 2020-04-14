@@ -11,7 +11,8 @@ cr_deploy_packagetests(
   test_script = NULL,
   codecov_script = NULL,
   codecov_token = "$_CODECOV_TOKEN",
-  build_image = "gcr.io/gcer-public/packagetools:master"
+  build_image = "gcr.io/gcer-public/packagetools:master",
+  ...
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ cr_deploy_packagetests(
 \item{codecov_token}{If using codecov, supply your codecov token here. Default assumes you add it to the Cloud Build substitution macros, which is more secure and recommended.}
 
 \item{build_image}{The docker image that will be used to run the R code for the test scripts}
+
+\item{...}{Other arguments passed to \link{cr_build_make}}
 }
 \description{
 This tests an R package each time you commit, and uploads the test coverage results to Codecov
@@ -50,7 +53,8 @@ pd
 cr_deploy_packagetests(
   steps = cr_buildstep_decrypt("auth.json.enc", "auth.json",
                                keyring = "my-keyring", key = "my-key"),
-  env = c("NOT_CRAN=true", "MY_AUTH_FILE=auth.json")
+  env = c("NOT_CRAN=true", "MY_AUTH_FILE=auth.json"),
+  timeout = 1200
 )
 
 unlink("cloudbuild-tests.yml")

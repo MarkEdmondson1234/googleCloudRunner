@@ -12,6 +12,7 @@
 * Entrypoint in `cr_buildstep()` accepts one argument only
 * Allow specification of timezone in `cr_schedule()` (#49 - thanks @samterfa)
 * Let `cr_deploy_r()` pass through arguments to `cr_buildstep_r()` (#50 - thanks @samterfa)
+* Modify `cr_deploy_packagetests()` so it can pass through dot arguments to `cr_build_yaml()` such as `timeout`
 
 # googleCloudRunner 0.1.1
 
