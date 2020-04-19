@@ -7,3 +7,5 @@ Hostname github.com
 IdentityFile /root/.ssh/id_rsa
 EOF
 mv known_hosts /root/.ssh/known_hosts
+git config --global user.name "googleCloudRunner"
+git config --global user.email "googleCloudRunner@r.com"
