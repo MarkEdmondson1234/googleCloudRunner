@@ -724,7 +724,7 @@ cr_buildstep_git <- function(
   git_args = c("clone",
                "git@github.com:[GIT-USERNAME]/[REPOSITORY]",
                "."),
-                             ...){
+  ...){
   # don't allow dot names that would break things
   dots <- list(...)
   assert_that(
@@ -737,7 +737,8 @@ cr_buildstep_git <- function(
   cr_buildstep(
     "git",
     args = git_args,
-    volumes = git_volume()
+    volumes = git_volume(),
+    ...
   )
 }
 
