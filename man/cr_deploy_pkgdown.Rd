@@ -6,29 +6,23 @@
 \usage{
 cr_deploy_pkgdown(
   steps = NULL,
+  secret,
   cloudbuild_file = "cloudbuild-pkgdown.yml",
   git_email = "googlecloudrunner@r.com",
-  keyring = "my-keyring",
-  key = "github-key",
   env = NULL,
-  cipher = "id_rsa.enc",
   build_image = "gcr.io/gcer-public/packagetools:master"
 )
 }
 \arguments{
 \item{steps}{extra steps to run before the pkgdown website steps run}
 
+\item{secret}{The name of the secret on Google Secret Manager for the git ssh private key}
+
 \item{cloudbuild_file}{The cloudbuild yaml file to write to}
 
 \item{git_email}{The email the git commands will be identifying as}
 
-\item{keyring}{The Key Management Store keyring containing the git ssh key}
-
-\item{key}{The Key Management Store key containing the gitssh key}
-
 \item{env}{A character vector of env arguments to set for all steps}
-
-\item{cipher}{The filename of the encrypted git ssh key that has been checked into the repository}
 
 \item{build_image}{A docker image with \code{pkgdown} installed}
 }

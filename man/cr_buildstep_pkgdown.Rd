@@ -7,10 +7,8 @@
 cr_buildstep_pkgdown(
   github_repo,
   git_email,
-  keyring = "my-keyring",
-  key = "github-key",
+  secret,
   env = NULL,
-  cipher = "id_rsa.enc",
   build_image = "gcr.io/gcer-public/packagetools:master"
 )
 }
@@ -19,13 +17,9 @@ cr_buildstep_pkgdown(
 
 \item{git_email}{The email the git commands will be identifying as}
 
-\item{keyring}{The Key Management Store keyring containing the git ssh key}
-
-\item{key}{The Key Management Store key containing the gitssh key}
+\item{secret}{The name of the secret on Google Secret Manager for the git ssh private key}
 
 \item{env}{A character vector of env arguments to set for all steps}
-
-\item{cipher}{The filename of the encrypted git ssh key that has been checked into the repository}
 
 \item{build_image}{A docker image with \code{pkgdown} installed}
 }
@@ -34,21 +28,33 @@ Create buildsteps for deploying an R pkgdown website to GitHub
 }
 \details{
 Its convenient to set some of the above via \link{Build} macros, such as \code{github_repo=$_GITHUB_REPO} and \code{git_email=$_BUILD_EMAIL} in the Build Trigger web UI
+
+To commit the website to git, \link{cr_buildstep_gitsetup} is used for which
+  you will need to add your git ssh private key to Google Secret Manager
+
+The R package is installed via \link[devtools]{install} before
+  running \link[pkgdown]{build_site}
 }
 \examples{
 cr_project_set("my-project")
 cr_bucket_set("my-bucket")
+
+# set github repo directly to write it out via cr_build_write()
+cr_buildstep_pkgdown("MarkEdmondson1234/googleCloudRunner",
+                     git_email = "cloudbuild@google.com",
+                     secret = "github-ssh")
+
 # github repo set via build trigger macro _GITHUB_REPO
 cr_buildstep_pkgdown("$_GITHUB_REPO",
-                     "cloudbuild@google.com")
+                     git_email = "cloudbuild@google.com",
+                     secret = "github-ssh")
 
 # example including environment arguments for pkgdown build step
-steps <- cr_buildstep_pkgdown("$_GITHUB_REPO",
-                     "cloudbuild@google.com",
+cr_buildstep_pkgdown("$_GITHUB_REPO",
+                     git_email = "cloudbuild@google.com",
+                     secret = "github-ssh",
                      env = c("MYVAR=$_MY_VAR", "PROJECT=$PROJECT_ID"))
-build_yaml <- cr_build_yaml(steps = steps)
-my_source <- cr_build_source(RepoSource("my_repo", branch="master"))
-build <- cr_build_make(build_yaml, source = my_source)
+
 }
 \seealso{
 Other Cloud Buildsteps: 

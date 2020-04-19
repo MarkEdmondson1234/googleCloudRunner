@@ -23,6 +23,7 @@ Imports:
     httr (>= 1.4.1),
     jsonlite (>= 1.5),
     openssl (>= 1.4.1),
+    usethis (>= 1.6.0),
     utils,
     yaml (>= 2.2.0)
 Suggests: 
@@ -35,4 +36,4 @@ Suggests:
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
