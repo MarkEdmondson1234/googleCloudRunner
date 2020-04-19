@@ -173,8 +173,7 @@
   <span class='kw'>images</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>artifacts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>options</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
+  <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -208,10 +207,6 @@
       <th>substitutions</th>
       <td><p>Substitutions data for `Build` resource</p></td>
     </tr>
-    <tr>
-      <th>projectId</th>
-      <td><p>ID of the project</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -234,7 +229,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>cloudbuild</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"cloudbuild/cloudbuild.yaml"</span>,
                            <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>)
-<span class='fu'>cr_build_make</span>(<span class='no'>cloudbuild</span>, <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='st'>"test-project"</span>)</div><div class='output co'>#&gt; ==CloudBuildObject==
+<span class='fu'>cr_build_make</span>(<span class='no'>cloudbuild</span>)</div><div class='output co'>#&gt; ==CloudBuildObject==
 #&gt; steps:
 #&gt; - name: gcr.io/cloud-builders/docker
 #&gt;   id: Docker Version
