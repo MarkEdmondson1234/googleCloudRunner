@@ -11,8 +11,7 @@ cr_build_make(
   images = NULL,
   artifacts = NULL,
   options = NULL,
-  substitutions = NULL,
-  projectId = cr_project_get()
+  substitutions = NULL
 )
 }
 \arguments{
@@ -29,8 +28,6 @@ cr_build_make(
 \item{options}{Options}
 
 \item{substitutions}{Substitutions data for `Build` resource}
-
-\item{projectId}{ID of the project}
 }
 \description{
 This creates a \link{Build} object via the standard cloudbuild.yaml format
@@ -38,7 +35,7 @@ This creates a \link{Build} object via the standard cloudbuild.yaml format
 \examples{
 cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
                            package = "googleCloudRunner")
-cr_build_make(cloudbuild, projectId = "test-project")
+cr_build_make(cloudbuild)
 }
 \seealso{
 https://cloud.google.com/cloud-build/docs/build-config

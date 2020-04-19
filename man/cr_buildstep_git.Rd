@@ -5,12 +5,7 @@
 \alias{cr_buildstep_git}
 \title{Create a build step for authenticating with Git}
 \usage{
-cr_buildstep_gitsetup(
-  keyring = "my-keyring",
-  key = "github-key",
-  cipher = "id_rsa.enc",
-  ...
-)
+cr_buildstep_gitsetup(secret, post_setup = NULL)
 
 cr_buildstep_git(
   git_args = c("clone", "git@github.com:[GIT-USERNAME]/[REPOSITORY]", "."),
@@ -18,15 +13,13 @@ cr_buildstep_git(
 )
 }
 \arguments{
-\item{keyring}{The Key Management Store keyring containing the git ssh key}
+\item{secret}{The name of the secret on Google Secret Manager for the git ssh private key}
 
-\item{key}{The Key Management Store key containing the gitssh key}
-
-\item{cipher}{The filename of the encrypted git ssh key that has been checked into the repository}
+\item{git_args}{The arguments to send to git}
 
 \item{...}{Further arguments passed in to \link{cr_buildstep}}
 
-\item{git_args}{The arguments to send to git}
+\item{post_step}{A \link{cr_buildstep} to run after the default git setup}
 }
 \description{
 This creates steps to configure git to use an ssh created key.
@@ -34,9 +27,7 @@ This creates steps to configure git to use an ssh created key.
 This creates steps to use git with an ssh created key.
 }
 \details{
-The key should be encrypted offline using \code{gcloud kms} or similar first.  See \link{cr_buildstep_decrypt} for details.
-
-By default the encrypted key should then be at the root of your \link{Source} object called "id_rsa.enc"
+The ssh private key should be uploaded to Google Secret Manager first
 
 \code{cr_buildstep} must come after \code{cr_buildstep_gitsetup}
 }
@@ -44,10 +35,10 @@ By default the encrypted key should then be at the root of your \link{Source} ob
 cr_project_set("my-project")
 cr_bucket_set("my-bucket")
 
-# assumes you have previously saved git ssh key via KMS called "git_key"
+# assumes you have previously saved git ssh key called "github-ssh"
 cr_build_yaml(
      steps = c(
-          cr_buildstep_gitsetup("my_keyring", "git_key"),
+          cr_buildstep_gitsetup("github-ssh"),
           cr_buildstep_git(c("clone",
                              "git@github.com:github_name/repo_name"))
      )

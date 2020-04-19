@@ -1,0 +1,51 @@
+---
+title: "googleCloudRunner and git (GitHub, GitLab, BitBucket etc.)"
+date: "`r Sys.Date()`"
+---
+
+A lot of the features of Cloud Build rely on connection with git workflows.
+
+Connecting Cloud Build and git allows you to create workflows that automate tasks upon each git commit.
+
+A rundown on some common workflows and connections are detailed here.
+
+## Cloud Build Triggers and GitHub App
+
+Cloud Builds can be triggered via Build Triggers, and those Build Triggers can be initiated by GitHub, Bitbucket or Cloud Repostiory events such as commits or pull requests.
+
+A common use case is triggering R package tests upon each commit. 
+
+## Authorization for Cloud Build to commit to git
+
+This is useful if you want your Cloud Build to modify or commit to a git repo.  
+
+Common use cases are to build a website via `pkgdown` and then commit that website version back to GitHub to auto-build R documentation websites.  
+
+It also allows you to work with other git repos perhaps not connected to Cloud Build via Build Triggers.
+
+To do so, Cloud Build needs permission to commit to git, so the first step is to create an ssh key secret that it will use to work on your behalf.  This is recommended to be done via `cr_buildstep_secret` as you can then reuse the secret across multiple builds, since the ssh key is kept securely within your Google Project.  
+
+The guide is for GitHub, adapt it if you use another git provider:
+
+1. Create or use an SSH key for your git account.  On GitHub use this guide: `https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh`
+2. Add the **public** key (filename ending with `.pub`) to GitHub's SSH keys 
+3. Upload the **private** key (filename not ending with `.pub`) to Google Secret Manager - `https://console.cloud.google.com/security/secret-manager` and call it a name such as `github-ssh`
+4. Ensure you have `Secret Manager Secret Accessor` [IAM role](https://console.cloud.google.com/iam-admin/iam) assigned to the cloudbuild service email (`{project-number}@cloudbuild.gserviceaccount.com`)
+5. Use in your buildsteps by calling and using the git secret via:
+
+```r
+# assumes you have previously saved git ssh key called "github-ssh"
+cr_build_yaml(
+      steps = c(
+           cr_buildstep_gitsetup("github-ssh"),
+           cr_buildstep_git(c("clone",
+                              "git@github.com:github_name/repo_name"))
+      )
+  )
+```
+
+## Duplicating git repos to Cloud Source repostiories
+
+You can also use Google Cloud Platform's git repostory system directly, name Cloud Source Repositories.  Even if you don't use them day to day, you can set them up as duplicate of your preferred Git service, which then enables you to use workflows that only work from Cloud Source Repositories.
+
+This enables you to create Builds that rely on Source objects under git control, an alternative to Cloud Storage buckets. 

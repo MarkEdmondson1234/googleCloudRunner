@@ -372,15 +372,15 @@ test_that("Render BuildStep objects", {
 
   git_yaml <- cr_build_yaml(
     steps = c(
-      cr_buildstep_gitsetup("my_keyring", "git_key"),
+      cr_buildstep_gitsetup("github-ssh"),
       cr_buildstep_git(c("clone", "git@github.com:github_name/repo_name"))
     )
   )
 
   expect_equal(git_yaml$steps[[1]]$name, "gcr.io/cloud-builders/gcloud")
-  expect_equal(git_yaml$steps[[1]]$args[[1]], "kms")
-  expect_equal(git_yaml$steps[[1]]$args[[4]], "id_rsa.enc")
-  expect_equal(git_yaml$steps[[1]]$args[[10]], "my_keyring")
+  expect_equal(git_yaml$steps[[1]]$args[[1]], "-c")
+  expect_equal(git_yaml$steps[[1]]$args[[2]],
+               "gcloud secrets versions access latest --secret=github-ssh > /root/.ssh/id_rsa")
   expect_equal(git_yaml$steps[[1]]$volumes[[1]]$name, "ssh")
   expect_equal(git_yaml$steps[[1]]$volumes[[1]]$path, "/root/.ssh")
 

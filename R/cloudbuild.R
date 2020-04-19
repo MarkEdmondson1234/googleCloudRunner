@@ -148,19 +148,14 @@ extract_logs <- function(o){
 #' @examples
 #' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
 #'                            package = "googleCloudRunner")
-#' cr_build_make(cloudbuild, projectId = "test-project")
+#' cr_build_make(cloudbuild)
 cr_build_make <- function(yaml,
                           source = NULL,
                           timeout=NULL,
                           images=NULL,
                           artifacts = NULL,
                           options = NULL,
-                          substitutions = NULL,
-                          projectId = cr_project_get()){
-
-  assert_that(
-    is.string(projectId)
-  )
+                          substitutions = NULL){
 
   stepsy <- get_cr_yaml(yaml)
   if(is.null(stepsy$steps)){

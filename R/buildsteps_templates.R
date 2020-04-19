@@ -337,9 +337,15 @@ cr_buildstep_bash <- function(bash_script,
                                 code_source = bash_source,
                                 file_grep = "\\.(bash|sh)$")
 
+  # avoid having two bashes
+  arg <- c("bash","-c", bchars)
+  if(dots$entrypoint == "bash"){
+    arg <- c("-c", bchars)
+  }
+
   cr_buildstep(name = name,
                prefix = "",
-               args = c("bash","-c", bchars),
+               args = arg,
                ...)
 }
 
@@ -414,7 +420,7 @@ cr_buildstep_r <- function(r,
   )
 
   # ability to call R scripts from Cloud Storage
-  if(grepl("^gs://", r)){
+  if(grepl("^gs://", r[[1]])){
     r_here <- paste0("/workspace/", basename(r))
     myMessage(paste0("Buildstep will download R script from ", r),
               level = 3)
@@ -655,14 +661,11 @@ cr_buildstep_docker <- function(image,
 #'
 #' This creates steps to configure git to use an ssh created key.
 #'
-#' @param keyring The Key Management Store keyring containing the git ssh key
-#' @param key The Key Management Store key containing the gitssh key
-#' @param cipher The filename of the encrypted git ssh key that has been checked into the repository
+#' @param post_step A \link{cr_buildstep} to run after the default git setup
+#' @param secret The name of the secret on Google Secret Manager for the git ssh private key
 #' @details
 #'
-#' The key should be encrypted offline using \code{gcloud kms} or similar first.  See \link{cr_buildstep_decrypt} for details.
-#'
-#' By default the encrypted key should then be at the root of your \link{Source} object called "id_rsa.enc"
+#' The ssh private key should be uploaded to Google Secret Manager first
 #'
 #' @seealso \href{https://cloud.google.com/cloud-build/docs/access-private-github-repos}{Accessing private GitHub repositories using Cloud Build (google article)}
 #'
@@ -672,39 +675,30 @@ cr_buildstep_docker <- function(image,
 #' cr_project_set("my-project")
 #' cr_bucket_set("my-bucket")
 #'
-#' # assumes you have previously saved git ssh key via KMS called "git_key"
+#' # assumes you have previously saved git ssh key called "github-ssh"
 #' cr_build_yaml(
 #'      steps = c(
-#'           cr_buildstep_gitsetup("my_keyring", "git_key"),
+#'           cr_buildstep_gitsetup("github-ssh"),
 #'           cr_buildstep_git(c("clone",
 #'                              "git@github.com:github_name/repo_name"))
 #'      )
 #'  )
 #'
-cr_buildstep_gitsetup <- function(keyring = "my-keyring",
-                                  key = "github-key",
-                                  cipher = "id_rsa.enc", ...){
-  # don't allow dot names that would break things
-  dots <- list(...)
-  assert_that(
-    is.null(dots$name),
-    is.null(dots$args),
-    is.null(dots$prefix),
-    is.null(dots$entrypoint)
-  )
+cr_buildstep_gitsetup <- function(secret, post_setup = NULL){
 
-  cb <- system.file("cloudbuild/cloudbuild_git.yml",
-                    package = "googleCloudRunner")
-  bs <- cr_build_make(cb)
-
-
+  github_setup <- system.file("ssh", "github_setup.sh",
+                              package = "googleCloudRunner")
   c(
-    cr_buildstep_decrypt(cipher = cipher,
-                         plain = "/root/.ssh/id_rsa",
-                         keyring = keyring,
-                         key = key,
-                         volumes = git_volume()),
-    cr_buildstep_extract(bs, 2)
+    cr_buildstep_secret(secret = secret,
+                        decrypted = "/root/.ssh/id_rsa",
+                        volumes = git_volume(),
+                        id = "git secret"),
+    cr_buildstep_bash(github_setup,
+                      name = "gcr.io/cloud-builders/git",
+                      entrypoint = "bash",
+                      volumes = git_volume(),
+                      id = "git setup script"),
+    post_setup
   )
 }
 
@@ -720,6 +714,7 @@ cr_buildstep_gitsetup <- function(keyring = "my-keyring",
 #' \code{cr_buildstep} must come after \code{cr_buildstep_gitsetup}
 #' @family Cloud Buildsteps
 #' @export
+#' @import assertthat
 cr_buildstep_git <- function(
   git_args = c("clone",
                "git@github.com:[GIT-USERNAME]/[REPOSITORY]",
@@ -750,54 +745,68 @@ cr_buildstep_git <- function(
 #' @param env A character vector of env arguments to set for all steps
 #' @param git_email The email the git commands will be identifying as
 #' @param build_image A docker image with \code{pkgdown} installed
+#' @param post_clone A \link{cr_buildstep} that occurs after the repo is cloned
 #'
 #' @details
 #'
 #' Its convenient to set some of the above via \link{Build} macros, such as \code{github_repo=$_GITHUB_REPO} and \code{git_email=$_BUILD_EMAIL} in the Build Trigger web UI
+#'
+#' To commit the website to git, \link{cr_buildstep_gitsetup} is used for which
+#'   you will need to add your git ssh private key to Google Secret Manager
+#'
+#' The R package is installed via \link[devtools]{install} before
+#'   running \link[pkgdown]{build_site}
 #'
 #' @export
 #' @family Cloud Buildsteps
 #' @examples
 #' cr_project_set("my-project")
 #' cr_bucket_set("my-bucket")
+#'
+#' # set github repo directly to write it out via cr_build_write()
+#' cr_buildstep_pkgdown("MarkEdmondson1234/googleCloudRunner",
+#'                      git_email = "cloudbuild@google.com",
+#'                      secret = "github-ssh")
+#'
 #' # github repo set via build trigger macro _GITHUB_REPO
 #' cr_buildstep_pkgdown("$_GITHUB_REPO",
-#'                      "cloudbuild@google.com")
+#'                      git_email = "cloudbuild@google.com",
+#'                      secret = "github-ssh")
 #'
 #' # example including environment arguments for pkgdown build step
-#' steps <- cr_buildstep_pkgdown("$_GITHUB_REPO",
-#'                      "cloudbuild@google.com",
+#' cr_buildstep_pkgdown("$_GITHUB_REPO",
+#'                      git_email = "cloudbuild@google.com",
+#'                      secret = "github-ssh",
 #'                      env = c("MYVAR=$_MY_VAR", "PROJECT=$PROJECT_ID"))
-#' build_yaml <- cr_build_yaml(steps = steps)
-#' my_source <- cr_build_source(RepoSource("my_repo", branch="master"))
-#' build <- cr_build_make(build_yaml, source = my_source)
+#'
 cr_buildstep_pkgdown <- function(
            github_repo,
            git_email,
-           keyring = "my-keyring",
-           key = "github-key",
+           secret,
            env = NULL,
-           cipher = "id_rsa.enc",
-           build_image = 'gcr.io/gcer-public/packagetools:master'){
+           build_image = "gcr.io/gcer-public/packagetools:master",
+           post_setup = NULL,
+           post_clone = NULL){
 
   repo <- paste0("git@github.com:", github_repo)
 
   c(
-    cr_buildstep_gitsetup(keyring = keyring,
-                          key = key,
-                          cipher = cipher),
-    cr_buildstep_git(c("clone",repo, "repo")),
-    cr_buildstep_r(c("devtools::install()", "pkgdown::build_site()"),
+    cr_buildstep_gitsetup(secret, post_setup = post_setup),
+    cr_buildstep_git(c("clone",repo, "repo"), id = "clone to repo dir"),
+    post_clone,
+    cr_buildstep_r(c("devtools::install()",
+                     "pkgdown::build_site()"),
                    name = build_image,
                    dir = "repo",
-                   env = env),
+                   env = env,
+                   id = "build pkgdown"),
     cr_buildstep_git(c("add", "--all"), dir = "repo"),
     cr_buildstep_git(c("commit", "-a", "-m",
                        "[skip travis] Build website from commit ${COMMIT_SHA}: \
 $(date +\"%Y%m%dT%H:%M:%S\")"),
                      dir = "repo"),
-    cr_buildstep_git(c("status"), dir = "repo"),
-    cr_buildstep_git("push", repo, dir = "repo")
+    cr_buildstep_git("status", dir = "repo"),
+    cr_buildstep_git("push", dir = "repo")
   )
 
 }

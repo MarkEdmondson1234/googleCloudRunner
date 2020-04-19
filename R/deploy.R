@@ -207,6 +207,7 @@ cr_deploy_docker <- function(local,
 #' This builds a pkgdown website each time the trigger fires and deploys it to git
 #'
 #' @inheritParams cr_buildstep_pkgdown
+#' @inheritParams cr_buildstep_gitsetup
 #' @param steps extra steps to run before the pkgdown website steps run
 #' @param cloudbuild_file The cloudbuild yaml file to write to
 #'
@@ -229,30 +230,44 @@ cr_deploy_docker <- function(local,
 #' unlink("cloudbuild-pkgdown.yml")
 #'
 cr_deploy_pkgdown <- function(steps = NULL,
+                              secret,
+                              github_repo = "$_GITHUB_REPO",
                               cloudbuild_file = "cloudbuild-pkgdown.yml",
                               git_email = "googlecloudrunner@r.com",
-                              keyring = "my-keyring",
-                              key = "github-key",
                               env = NULL,
-                              cipher = "id_rsa.enc",
-                              build_image = 'gcr.io/gcer-public/packagetools:master'){
+                              build_image = 'gcr.io/gcer-public/packagetools:master',
+                              post_setup = NULL,
+                              post_clone = NULL){
 
 
   build_yaml <-
     cr_build_yaml(steps = c(steps,
-                   cr_buildstep_pkgdown("$_GIT_REPO",
+                   cr_buildstep_pkgdown(github_repo,
                                       git_email = git_email,
-                                      env = env))
+                                      secret = secret,
+                                      env = env,
+                                      build_image = build_image,
+                                      post_setup = post_setup,
+                                      post_clone = post_clone))
          )
 
   build <- cr_build_make(build_yaml)
 
   cr_build_write(build, file = cloudbuild_file)
-  myMessage("Now make a build trigger pointing at this file in your repo: ", cloudbuild_file,
-            "\nBuild Trigger settings:",
-            "\nSubstitution variable: _GITHUB_REPO = {your-repo-to-push-to}",
-            "\nIgnored files filter (glob): docs/**",
-            level = 3)
+  usethis::ui_line()
+  usethis::ui_info("Complete deployment of pkgdown Cloud Build yaml:")
+  usethis::ui_todo(c(
+            "Go to https://console.cloud.google.com/cloud-build/triggers and
+            make a build trigger pointing at this file in your repo:
+            {cloudbuild_file} "))
+
+  if(grepl("^\\$_",github_repo)){
+    usethis::ui_info(c("Build Trigger substitution variable settings:",
+                       "_GITHUB_REPO = username/repo"))
+  }
+
+  usethis::ui_info(c("Ignored files filter (glob): docs/**"))
+
 
   invisible(build)
 
@@ -318,11 +333,16 @@ cr_deploy_packagetests <- function(
                   )
 
   cr_build_write(build_yaml, file = cloudbuild_file)
-  myMessage("Now make a build trigger pointing at this file in your repo: ", cloudbuild_file,
-            "\nBuild Trigger settings:",
-            "\nSubstitution variable: _CODECOV_TOKEN = {your-codecov-token}",
-            "\nIgnored files filter (glob): docs/** and vignettes/**",
-            level = 3)
+
+  usethis::ui_line()
+  usethis::ui_info("Complete deployment of tests Cloud Build yaml:")
+  usethis::ui_todo(c(
+    "Go to https://console.cloud.google.com/cloud-build/triggers and
+            make a build trigger pointing at this file in your repo:
+            {cloudbuild_file} "))
+  usethis::ui_info(c("Build Trigger substitution variable settings:",
+                     "_CODECOV_TOKEN = your-codecov-token",
+                     "Ignored files filter (glob): docs/** and vignettes/**"))
 
   invisible(build_yaml)
 
