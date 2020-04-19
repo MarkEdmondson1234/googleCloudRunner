@@ -230,6 +230,7 @@ cr_deploy_docker <- function(local,
 #'
 cr_deploy_pkgdown <- function(steps = NULL,
                               secret,
+                              github_repo = "$_GITHUB_REPO",
                               cloudbuild_file = "cloudbuild-pkgdown.yml",
                               git_email = "googlecloudrunner@r.com",
                               env = NULL,
@@ -238,7 +239,7 @@ cr_deploy_pkgdown <- function(steps = NULL,
 
   build_yaml <-
     cr_build_yaml(steps = c(steps,
-                   cr_buildstep_pkgdown("$_GIT_REPO",
+                   cr_buildstep_pkgdown(github_repo,
                                       git_email = git_email,
                                       secret = secret,
                                       env = env,
@@ -254,9 +255,14 @@ cr_deploy_pkgdown <- function(steps = NULL,
             "Go to https://console.cloud.google.com/cloud-build/triggers and
             make a build trigger pointing at this file in your repo:
             {cloudbuild_file} "))
-  usethis::ui_info(c("Build Trigger substitution variable settings:",
-                     "_GITHUB_REPO = username/repo",
-                     "Ignored files filter (glob): docs/**"))
+
+  if(grepl("^\\$_",github_repo)){
+    usethis::ui_info(c("Build Trigger substitution variable settings:",
+                       "_GITHUB_REPO = username/repo"))
+  }
+
+  usethis::ui_info(c("Ignored files filter (glob): docs/**"))
+
 
   invisible(build)
 

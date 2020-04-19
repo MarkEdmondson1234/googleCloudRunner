@@ -7,6 +7,7 @@
 cr_deploy_pkgdown(
   steps = NULL,
   secret,
+  github_repo = "$_GITHUB_REPO",
   cloudbuild_file = "cloudbuild-pkgdown.yml",
   git_email = "googlecloudrunner@r.com",
   env = NULL,
@@ -17,6 +18,8 @@ cr_deploy_pkgdown(
 \item{steps}{extra steps to run before the pkgdown website steps run}
 
 \item{secret}{The name of the secret on Google Secret Manager for the git ssh private key}
+
+\item{github_repo}{The GitHub repo to deploy pkgdown website from and to.}
 
 \item{cloudbuild_file}{The cloudbuild yaml file to write to}
 

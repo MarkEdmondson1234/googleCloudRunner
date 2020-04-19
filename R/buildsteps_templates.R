@@ -337,9 +337,15 @@ cr_buildstep_bash <- function(bash_script,
                                 code_source = bash_source,
                                 file_grep = "\\.(bash|sh)$")
 
+  # avoid having two bashes
+  arg <- c("bash","-c", bchars)
+  if(dots$entrypoint == "bash"){
+    arg <- c("-c", bchars)
+  }
+
   cr_buildstep(name = name,
                prefix = "",
-               args = c("bash","-c", bchars),
+               args = arg,
                ...)
 }
 
@@ -778,7 +784,7 @@ cr_buildstep_pkgdown <- function(
 
   c(
     cr_buildstep_gitsetup(secret),
-    cr_buildstep_git(c("clone",repo, "repo")),
+    cr_buildstep_git(c("clone",repo), dir = "repo"),
     cr_buildstep_r(c("devtools::install()",
                      "pkgdown::build_site()"),
                    name = build_image,
@@ -789,7 +795,7 @@ cr_buildstep_pkgdown <- function(
                        "[skip travis] Build website from commit ${COMMIT_SHA}: \
 $(date +\"%Y%m%dT%H:%M:%S\")"),
                      dir = "repo"),
-    cr_buildstep_git(c("status"), dir = "repo"),
+    cr_buildstep_git("status", dir = "repo"),
     cr_buildstep_git("push", repo, dir = "repo")
   )
 
