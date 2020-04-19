@@ -11,7 +11,9 @@ cr_deploy_pkgdown(
   cloudbuild_file = "cloudbuild-pkgdown.yml",
   git_email = "googlecloudrunner@r.com",
   env = NULL,
-  build_image = "gcr.io/gcer-public/packagetools:master"
+  build_image = "gcr.io/gcer-public/packagetools:master",
+  post_setup = NULL,
+  post_clone = NULL
 )
 }
 \arguments{
@@ -28,6 +30,8 @@ cr_deploy_pkgdown(
 \item{env}{A character vector of env arguments to set for all steps}
 
 \item{build_image}{A docker image with \code{pkgdown} installed}
+
+\item{post_clone}{A \link{cr_buildstep} that occurs after the repo is cloned}
 }
 \description{
 This builds a pkgdown website each time the trigger fires and deploys it to git

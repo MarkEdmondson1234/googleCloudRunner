@@ -5,7 +5,7 @@
 \alias{cr_buildstep_git}
 \title{Create a build step for authenticating with Git}
 \usage{
-cr_buildstep_gitsetup(secret)
+cr_buildstep_gitsetup(secret, post_setup = NULL)
 
 cr_buildstep_git(
   git_args = c("clone", "git@github.com:[GIT-USERNAME]/[REPOSITORY]", "."),
@@ -18,6 +18,8 @@ cr_buildstep_git(
 \item{git_args}{The arguments to send to git}
 
 \item{...}{Further arguments passed in to \link{cr_buildstep}}
+
+\item{post_step}{A \link{cr_buildstep} to run after the default git setup}
 }
 \description{
 This creates steps to configure git to use an ssh created key.

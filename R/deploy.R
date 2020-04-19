@@ -207,6 +207,7 @@ cr_deploy_docker <- function(local,
 #' This builds a pkgdown website each time the trigger fires and deploys it to git
 #'
 #' @inheritParams cr_buildstep_pkgdown
+#' @inheritParams cr_buildstep_gitsetup
 #' @param steps extra steps to run before the pkgdown website steps run
 #' @param cloudbuild_file The cloudbuild yaml file to write to
 #'
@@ -234,7 +235,9 @@ cr_deploy_pkgdown <- function(steps = NULL,
                               cloudbuild_file = "cloudbuild-pkgdown.yml",
                               git_email = "googlecloudrunner@r.com",
                               env = NULL,
-                              build_image = 'gcr.io/gcer-public/packagetools:master'){
+                              build_image = 'gcr.io/gcer-public/packagetools:master',
+                              post_setup = NULL,
+                              post_clone = NULL){
 
 
   build_yaml <-
@@ -243,7 +246,9 @@ cr_deploy_pkgdown <- function(steps = NULL,
                                       git_email = git_email,
                                       secret = secret,
                                       env = env,
-                                      build_image = build_image))
+                                      build_image = build_image,
+                                      post_setup = post_setup,
+                                      post_clone = post_clone))
          )
 
   build <- cr_build_make(build_yaml)

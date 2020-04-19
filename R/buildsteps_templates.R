@@ -661,6 +661,7 @@ cr_buildstep_docker <- function(image,
 #'
 #' This creates steps to configure git to use an ssh created key.
 #'
+#' @param post_step A \link{cr_buildstep} to run after the default git setup
 #' @param secret The name of the secret on Google Secret Manager for the git ssh private key
 #' @details
 #'
@@ -683,18 +684,21 @@ cr_buildstep_docker <- function(image,
 #'      )
 #'  )
 #'
-cr_buildstep_gitsetup <- function(secret){
+cr_buildstep_gitsetup <- function(secret, post_setup = NULL){
 
   github_setup <- system.file("ssh", "github_setup.sh",
                               package = "googleCloudRunner")
   c(
     cr_buildstep_secret(secret = secret,
                         decrypted = "/root/.ssh/id_rsa",
-                        volumes = git_volume()),
+                        volumes = git_volume(),
+                        id = "git secret"),
     cr_buildstep_bash(github_setup,
                       name = "gcr.io/cloud-builders/git",
                       entrypoint = "bash",
-                      volumes = git_volume())
+                      volumes = git_volume(),
+                      id = "git setup script"),
+    post_setup
   )
 }
 
@@ -715,7 +719,7 @@ cr_buildstep_git <- function(
   git_args = c("clone",
                "git@github.com:[GIT-USERNAME]/[REPOSITORY]",
                "."),
-                             ...){
+  ...){
   # don't allow dot names that would break things
   dots <- list(...)
   assert_that(
@@ -728,7 +732,8 @@ cr_buildstep_git <- function(
   cr_buildstep(
     "git",
     args = git_args,
-    volumes = git_volume()
+    volumes = git_volume(),
+    ...
   )
 }
 
@@ -740,6 +745,7 @@ cr_buildstep_git <- function(
 #' @param env A character vector of env arguments to set for all steps
 #' @param git_email The email the git commands will be identifying as
 #' @param build_image A docker image with \code{pkgdown} installed
+#' @param post_clone A \link{cr_buildstep} that occurs after the repo is cloned
 #'
 #' @details
 #'
@@ -778,26 +784,29 @@ cr_buildstep_pkgdown <- function(
            git_email,
            secret,
            env = NULL,
-           build_image = "gcr.io/gcer-public/packagetools:master"){
+           build_image = "gcr.io/gcer-public/packagetools:master",
+           post_setup = NULL,
+           post_clone = NULL){
 
   repo <- paste0("git@github.com:", github_repo)
 
   c(
-    cr_buildstep_gitsetup(secret),
+    cr_buildstep_gitsetup(secret, post_setup = post_setup),
     cr_buildstep_git(c("clone",repo, "repo"), id = "clone to repo dir"),
-    cr_buildstep_r(c("list.files()",
-                     "devtools::install()",
+    post_clone,
+    cr_buildstep_r(c("devtools::install()",
                      "pkgdown::build_site()"),
                    name = build_image,
                    dir = "repo",
-                   env = env),
+                   env = env,
+                   id = "build pkgdown"),
     cr_buildstep_git(c("add", "--all"), dir = "repo"),
     cr_buildstep_git(c("commit", "-a", "-m",
                        "[skip travis] Build website from commit ${COMMIT_SHA}: \
 $(date +\"%Y%m%dT%H:%M:%S\")"),
                      dir = "repo"),
     cr_buildstep_git("status", dir = "repo"),
-    cr_buildstep_git("push", repo, dir = "repo")
+    cr_buildstep_git("push", dir = "repo")
   )
 
 }

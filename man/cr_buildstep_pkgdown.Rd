@@ -9,7 +9,9 @@ cr_buildstep_pkgdown(
   git_email,
   secret,
   env = NULL,
-  build_image = "gcr.io/gcer-public/packagetools:master"
+  build_image = "gcr.io/gcer-public/packagetools:master",
+  post_setup = NULL,
+  post_clone = NULL
 )
 }
 \arguments{
@@ -22,6 +24,8 @@ cr_buildstep_pkgdown(
 \item{env}{A character vector of env arguments to set for all steps}
 
 \item{build_image}{A docker image with \code{pkgdown} installed}
+
+\item{post_clone}{A \link{cr_buildstep} that occurs after the repo is cloned}
 }
 \description{
 Create buildsteps for deploying an R pkgdown website to GitHub
