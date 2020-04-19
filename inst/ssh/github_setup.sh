@@ -8,4 +8,4 @@ IdentityFile /root/.ssh/id_rsa
 EOF
 mv known_hosts /root/.ssh/known_hosts
 git config --global user.name "googleCloudRunner"
-git config --global user.email "googleCloudRunner@r.com"
+git config --global user.email "cr_buildstep_gitsetup@googleCloudRunner.com"
