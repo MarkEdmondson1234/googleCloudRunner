@@ -108,7 +108,7 @@ test_that("[Online] Test Build Triggers",{
   cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
                             package = "googleCloudRunner")
 
-  bb <- cr_build_make(cloudbuild, projectId = "test-project")
+  bb <- cr_build_make(cloudbuild)
 
   github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner",
                                branch = "master")

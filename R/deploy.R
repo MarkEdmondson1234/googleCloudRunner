@@ -80,8 +80,7 @@ cr_deploy_r <- function(r,
 
   br <- cr_build_make(build,
                       source = source,
-                      timeout = timeout,
-                      projectId = projectId)
+                      timeout = timeout)
 
   if(!is.null(schedule)){
     # a cloud build you would like to schedule

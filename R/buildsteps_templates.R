@@ -339,7 +339,7 @@ cr_buildstep_bash <- function(bash_script,
 
   # avoid having two bashes
   arg <- c("bash","-c", bchars)
-  if(dots$entrypoint == "bash"){
+  if(!is.null(dots$entrypoint) && dots$entrypoint == "bash"){
     arg <- c("-c", bchars)
   }
 
