@@ -89,8 +89,7 @@ cr_build <- function(x,
                            images = images,
                            artifacts = artifacts,
                            options = options,
-                           substitutions = substitutions,
-                           projectId = projectId)
+                           substitutions = substitutions)
   }
 
 

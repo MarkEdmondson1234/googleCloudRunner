@@ -46,7 +46,7 @@ cr_project_set("my-project")
 cr_bucket_set("my-bucket")
 cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
                            package = "googleCloudRunner")
-bb <- cr_build_make(cloudbuild, projectId = "test-project")
+bb <- cr_build_make(cloudbuild)
 github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner",
                              branch = "master")
 # creates a trigger with named subtitutions

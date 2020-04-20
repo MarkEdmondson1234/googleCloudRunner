@@ -18,7 +18,7 @@
 #'
 #' @examples
 #' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
-#' build1 <- cr_build_make(cloudbuild, projectId = "my-project")
+#' build1 <- cr_build_make(cloudbuild)
 #' build1
 #'
 #' \dontrun{

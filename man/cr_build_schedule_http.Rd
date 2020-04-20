@@ -28,7 +28,7 @@ Ensure you have a service email with \link{cr_email_set} of format \code{service
 }
 \examples{
 cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
-build1 <- cr_build_make(cloudbuild, projectId = "my-project")
+build1 <- cr_build_make(cloudbuild)
 build1
 
 \dontrun{

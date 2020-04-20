@@ -15,6 +15,7 @@
 * Modify `cr_deploy_packagetests()` so it can pass through dot arguments to `cr_build_yaml()` such as `timeout`
 * Add `cr_buildstep_secret()` using Secret Manager (#52)
 * Update `cr_deploy_pkgdown()` to use Secret Manager (#54)
+* Remove uncessary `projectId` argument from `cr_build_make()` (#57)
 
 # googleCloudRunner 0.1.1
 
