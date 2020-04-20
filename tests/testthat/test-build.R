@@ -242,8 +242,7 @@ test_that("Building Build Objects", {
   bq <- cr_build_make(yaml = yaml,
                 source = my_gcs_source,
                 timeout = 10,
-                images = "gcr.io/my-project/demo",
-                projectId = "dummy-project")
+                images = "gcr.io/my-project/demo")
   expect_true(googleCloudRunner:::is.gar_Build(bq))
   expect_equal(bq$images, "gcr.io/my-project/demo")
   expect_equal(bq$timeout, "10s")
@@ -254,8 +253,7 @@ test_that("Building Build Objects", {
   bq2 <- cr_build_make(yaml = yaml,
                       source = my_repo_source,
                       timeout = "11s",
-                      images = "gcr.io/my-project/demo",
-                      projectId = "dummy-project")
+                      images = "gcr.io/my-project/demo")
   expect_true(googleCloudRunner:::is.gar_Build(bq2))
   expect_equal(bq2$images, "gcr.io/my-project/demo")
   expect_equal(bq2$timeout, "11s")
@@ -389,17 +387,31 @@ test_that("Render BuildStep objects", {
   expect_equal(git_yaml$steps[[2]]$volumes[[1]]$path, "/root/.ssh")
 
   pkgdown_steps <- cr_buildstep_pkgdown("$_GITHUB_REPO",
-                                        "cloudbuild@google.com")
+                                        "cloudbuild@google.com",
+                                        "my_secret")
 
-  expect_equal(pkgdown_steps[[1]]$name, "gcr.io/cloud-builders/gcloud")
-  expect_equal(pkgdown_steps[[1]]$args[[1]], "kms")
-  expect_equal(pkgdown_steps[[1]]$args[[4]], "id_rsa.enc")
-  expect_equal(pkgdown_steps[[1]]$args[[10]], "my-keyring")
-  expect_equal(pkgdown_steps[[1]]$volumes[[1]]$name, "ssh")
-  expect_equal(pkgdown_steps[[1]]$volumes[[1]]$path, "/root/.ssh")
+  expect_equal(pkgdown_steps[[1]]$name,
+               "gcr.io/cloud-builders/gcloud")
+  expect_equal(pkgdown_steps[[1]]$args[[2]],
+               "gcloud secrets versions access latest --secret=my_secret > /root/.ssh/id_rsa")
+  expect_equal(pkgdown_steps[[2]]$id, "git setup script")
+  expect_equal(pkgdown_steps[[3]]$args[[1]], "clone")
+  expect_equal(pkgdown_steps[[3]]$volumes[[1]]$name, "ssh")
+  expect_equal(pkgdown_steps[[3]]$volumes[[1]]$path, "/root/.ssh")
 
   expect_equal(pkgdown_steps[[4]]$args[[3]],
                "devtools::install()\npkgdown::build_site()")
+
+  expect_equal(pkgdown_steps[[5]]$args[[1]],
+               "add")
+  expect_equal(pkgdown_steps[[6]]$args[[1]],
+               "commit")
+  expect_equal(pkgdown_steps[[6]]$args[[4]],
+               "[skip travis] Build website from commit ${COMMIT_SHA}: \n$(date +\"%Y%m%dT%H:%M:%S\")")
+  expect_equal(pkgdown_steps[[7]]$args[[1]],
+               "status")
+  expect_equal(pkgdown_steps[[8]]$args[[1]],
+               "push")
 
   gh <- GitHubEventsConfig("mark/repo")
   expect_equal(gh$owner, "mark")
