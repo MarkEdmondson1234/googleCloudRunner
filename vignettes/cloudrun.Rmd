@@ -11,7 +11,7 @@ If you want to run scripts that can be triggered one time, setup to trigger on G
 
 ## Quickstart - plumber API
 
-1. Make an R API via [plumber](https://www.rplumber.io/) that contains entry file api.R.  You can use the demo example in `system.file("example", package="cloudRunner")` if you like, which is reproduced below:
+1. Make an R API via [plumber](https://www.rplumber.io/) that contains entry file api.R.  You can use the demo example in `system.file("example", package="googleCloudRunner")` if you like, which is reproduced below:
 
 ```r
 #' @get /
@@ -69,7 +69,7 @@ CMD ["api.R"]
 ```r
 library(googleCloudRunner)
 
-my_plumber_folder <- system.file("example", package="cloudRunner")
+my_plumber_folder <- system.file("example", package="googleCloudRunner")
 cr <- cr_deploy_plumber(my_plumber_folder)
 #2019-11-12 10:34:29 -- File size detected as 903 bytes
 #2019-11-12 10:34:31> Cloud Build started - logs: 
@@ -200,7 +200,7 @@ cr_dockerfile_plumber <- function(deploy_folder, ...){
     is.readable(write_to)
   )
 
-  myMessage("Written Dockerfile to ", write_to, level = 3)
+  message("Written Dockerfile to ", write_to, level = 3)
   print(docker)
   docker
 
