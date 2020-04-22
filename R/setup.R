@@ -5,7 +5,8 @@
 #' @import usethis
 cr_setup <- function(){
 
-  ui_info(c("==Welcome to googleCloudRunner setup=="))
+  ui_info(sprintf("==Welcome to googleCloudRunner v%s setup==",
+                    packageVersion("googleCloudRunner")))
 
   if(!interactive()){
     stop("Can only be used in an interactive R session", call. = FALSE)
