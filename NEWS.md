@@ -16,6 +16,7 @@
 * Add `cr_buildstep_secret()` using Secret Manager (#52)
 * Update `cr_deploy_pkgdown()` to use Secret Manager (#54)
 * Remove uncessary `projectId` argument from `cr_build_make()` (#57)
+* Add `cr_setup()` to help setup a googleCloudRunner environment (#53)
 
 # googleCloudRunner 0.1.1
 

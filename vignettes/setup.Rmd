@@ -5,6 +5,29 @@ date: "`r Sys.Date()`"
 
 ## R Settings
 
+### googleCloudRunner setup wizard cr_setup()
+
+There is a setup function to help you configure the package.  Get started via the commands below:
+
+```r
+library(googleCloudRunner)
+cr_setup()
+#ℹ ==Welcome to googleCloudRunner setup==
+#This wizard will scan your system for setup options and help you setup any that are missing.
+#Hit 0 or ESC to cancel.
+#
+#1: Configure/check all googleCloudRunner settings
+#2: Configure GCP Project Id
+#3: Configure Authentication JSON file
+#4: Configure Cloud Storage bucket
+#5: Configure Cloud Run region
+#6: Configure Cloud Scheduler build email
+```
+
+It will walk you through the details below.  You can also use it to check your settings.
+
+### R environment arguments to set:
+
 * Reuses environment argument `GCE_AUTH_FILE` from [googleComputeEngineR](https://cloudyr.github.io/googleComputeEngineR) which holds location of your service auth JSON
 * Reuses environment argument `GCE_DEFAULT_PROJECT_ID` from googleComputeEngineR
 * Reuses environment argument `GCS_DEFAULT_BUCKET` from [googleCloudStorageR](http://code.markedmondson.me/googleCloudStorageR/)
@@ -37,7 +60,7 @@ You can also set the above in the R scripts via:
 * `cr_bucket_set()`
 * `cr_email_set()`
 
-Or auth via
+Or authenticate via
 
 ```r
 googleAuthR::gar_service_auth("my_auth_json.com")
