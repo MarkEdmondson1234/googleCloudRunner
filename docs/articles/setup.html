@@ -114,7 +114,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Setup</h1>
             
-            <h4 class="date">2020-04-21</h4>
+            <h4 class="date">2020-04-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/setup.Rmd"><code>vignettes/setup.Rmd</code></a></small>
       <div class="hidden name"><code>setup.Rmd</code></div>
@@ -126,6 +126,27 @@
 <div id="r-settings" class="section level2">
 <h2 class="hasAnchor">
 <a href="#r-settings" class="anchor"></a>R Settings</h2>
+<div id="googlecloudrunner-setup-wizard-cr_setup" class="section level3">
+<h3 class="hasAnchor">
+<a href="#googlecloudrunner-setup-wizard-cr_setup" class="anchor"></a>googleCloudRunner setup wizard cr_setup()</h3>
+<p>There is a setup function to help you configure the package. Get started via the commands below:</p>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleCloudRunner</span>)
+<span class="fu"><a href="../reference/cr_setup.html">cr_setup</a></span>()
+<span class="co">#ℹ ==Welcome to googleCloudRunner setup==</span>
+<span class="co">#This wizard will scan your system for setup options and help you setup any that are missing.</span>
+<span class="co">#Hit 0 or ESC to cancel.</span>
+<span class="co">#</span>
+<span class="co">#1: Configure/check all googleCloudRunner settings</span>
+<span class="co">#2: Configure GCP Project Id</span>
+<span class="co">#3: Configure Authentication JSON file</span>
+<span class="co">#4: Configure Cloud Storage bucket</span>
+<span class="co">#5: Configure Cloud Run region</span>
+<span class="co">#6: Configure Cloud Scheduler build email</span></pre></body></html></div>
+<p>It will walk you through the details below. You can also use it to check your settings.</p>
+</div>
+<div id="r-environment-arguments-to-set" class="section level3">
+<h3 class="hasAnchor">
+<a href="#r-environment-arguments-to-set" class="anchor"></a>R environment arguments to set:</h3>
 <ul>
 <li>Reuses environment argument <code>GCE_AUTH_FILE</code> from <a href="https://cloudyr.github.io/googleComputeEngineR">googleComputeEngineR</a> which holds location of your service auth JSON</li>
 <li>Reuses environment argument <code>GCE_DEFAULT_PROJECT_ID</code> from googleComputeEngineR</li>
@@ -154,8 +175,9 @@ CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com</code></pr
 <li><code><a href="../reference/cr_bucket_set.html">cr_bucket_set()</a></code></li>
 <li><code><a href="../reference/cr_email_set.html">cr_email_set()</a></code></li>
 </ul>
-<p>Or auth via</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="kw pkg">googleAuthR</span><span class="kw ns">::</span><span class="fu">gar_service_auth</span>(<span class="st">"my_auth_json.com"</span>)</pre></body></html></div>
+<p>Or authenticate via</p>
+<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="kw pkg">googleAuthR</span><span class="kw ns">::</span><span class="fu">gar_service_auth</span>(<span class="st">"my_auth_json.com"</span>)</pre></body></html></div>
+</div>
 </div>
 <div id="gcp-settings" class="section level2">
 <h2 class="hasAnchor">
