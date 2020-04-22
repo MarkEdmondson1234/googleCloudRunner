@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>RepoSource Object — RepoSource • googleCloudRunner</title>
+<title>A helper setup function for setting up use with googleCloudRunner — cr_setup • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="RepoSource Object — RepoSource" />
-<meta property="og:description" content="RepoSource Object" />
+<meta property="og:title" content="A helper setup function for setting up use with googleCloudRunner — cr_setup" />
+<meta property="og:description" content="A helper setup function for setting up use with googleCloudRunner" />
 
 
 
@@ -157,93 +157,19 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>RepoSource Object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/build_sources.R'><code>R/build_sources.R</code></a></small>
-    <div class="hidden name"><code>RepoSource.Rd</code></div>
+    <h1>A helper setup function for setting up use with googleCloudRunner</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/setup.R'><code>R/setup.R</code></a></small>
+    <div class="hidden name"><code>cr_setup.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>RepoSource Object</p>
+    <p>A helper setup function for setting up use with googleCloudRunner</p>
     </div>
 
-    <pre class="usage"><span class='fu'>RepoSource</span>(
-  <span class='kw'>repoName</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tagName</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>commitSha</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>branchName</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>dir</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>cr_setup</span>()</pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>repoName</th>
-      <td><p>Name of the Cloud Source Repository</p></td>
-    </tr>
-    <tr>
-      <th>tagName</th>
-      <td><p>Regex matching tags to build</p></td>
-    </tr>
-    <tr>
-      <th>commitSha</th>
-      <td><p>Explicit commit SHA to build</p></td>
-    </tr>
-    <tr>
-      <th>branchName</th>
-      <td><p>Regex matching branches to build e.g. ".*"</p></td>
-    </tr>
-    <tr>
-      <th>dir</th>
-      <td><p>Directory, relative to the source root, in which to run the build</p></td>
-    </tr>
-    <tr>
-      <th>projectId</th>
-      <td><p>ID of the project that owns the Cloud Source Repository</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>RepoSource object</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Location of the source in a Google Cloud Source Repository.</p>
-<p>Only one of commitSha, branchName or tagName are allowed.</p>
-<p>If you want to use GitHub or BitBucket repos, you need to setup mirroring
-  them via Cloud Source Repositories https://source.cloud.google.com/</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other Cloud Build functions: 
-<code><a href='Build.html'>Build</a>()</code>,
-<code><a href='Source.html'>Source</a>()</code>,
-<code><a href='StorageSource.html'>StorageSource</a>()</code>,
-<code><a href='cr_build_artifacts.html'>cr_build_artifacts</a>()</code>,
-<code><a href='cr_build_make.html'>cr_build_make</a>()</code>,
-<code><a href='cr_build_status.html'>cr_build_status</a>()</code>,
-<code><a href='cr_build_upload_gcs.html'>cr_build_upload_gcs</a>()</code>,
-<code><a href='cr_build_wait.html'>cr_build_wait</a>()</code>,
-<code><a href='cr_build_write.html'>cr_build_write</a>()</code>,
-<code><a href='cr_build_yaml_artifact.html'>cr_build_yaml_artifact</a>()</code>,
-<code><a href='cr_build_yaml.html'>cr_build_yaml</a>()</code>,
-<code><a href='cr_build.html'>cr_build</a>()</code></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-04-22 11:34:36&gt; ProjectId set to my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-04-22 11:34:36&gt; Bucket set to my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-
-<span class='no'>my_repo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build_source.html'>cr_build_source</a></span>(
-  <span class='fu'>RepoSource</span>(<span class='st'>"github_markedmondson1234_googlecloudrunner"</span>,
-             <span class='kw'>branchName</span><span class='kw'>=</span><span class='st'>"master"</span>))
-
-<span class='no'>build</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(
-  <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span>(<span class='kw'>steps</span> <span class='kw'>=</span>
-    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span>(<span class='st'>"gcloud"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"-c"</span>,<span class='st'>"ls -la"</span>),
-                  <span class='kw'>entrypoint</span> <span class='kw'>=</span> <span class='st'>"bash"</span>,
-                  <span class='kw'>dir</span> <span class='kw'>=</span> <span class='st'>""</span>)),
- <span class='kw'>source</span> <span class='kw'>=</span> <span class='no'>my_repo</span>)
-
-}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
