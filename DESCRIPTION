@@ -18,6 +18,7 @@ Depends:
     R (>= 3.3.0)
 Imports:
     assertthat (>= 0.2.0),
+    cli (>= 2.0.2),
     googleAuthR (>= 1.1.1),
     googleCloudStorageR (>= 0.5.1),
     httr (>= 1.4.1),
