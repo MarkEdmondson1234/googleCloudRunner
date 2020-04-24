@@ -25,54 +25,56 @@ cr_setup <- function(){
   if(ready == 0){
     return(invisible(""))
   }
-
+  cli_rule()
   project_id <- NULL
   if(ready %in% c(1,2)){
     project_id <- do_env_check("GCE_DEFAULT_PROJECT_ID",
                                get_project_setup(),
                                ready)
-    if(is.null(project_id) && ready > 1) return(invisible(""))
+    if(is.null(project_id) || ready > 1) return(invisible(""))
   }
-
+  cli_rule()
   auth_file <- NULL
   if(ready %in% c(1,3)){
     auth_file  <- do_env_check("GCE_AUTH_FILE",
                                get_auth_setup(),
                                ready)
-    if(is.null(auth_file) && ready > 1) return(invisible(""))
+    if(is.null(auth_file) || ready > 1) return(invisible(""))
   }
-
+  cli_rule()
   bucket <- NULL
   if(ready %in% c(1,4)){
     bucket     <- do_env_check("GCS_DEFAULT_BUCKET",
                                get_bucket_setup(),
                                ready)
   }
-
+  cli_rule()
   region <- NULL
   if(ready %in% c(1,5)){
     region     <- do_env_check("CR_REGION",
                                get_region_setup(),
                                ready)
   }
-
+  cli_rule()
   email <- NULL
   if(ready %in% c(1,6)){
     email      <- do_env_check("CR_BUILD_EMAIL",
-                               get_email_setup(auth_file$auth_file),
+                               get_email_setup(),
                                ready)
   }
+  cli_rule()
+  to_paste <- as.character(c(project_id,
+                             auth_file,
+                             bucket,
+                             region,
+                             email))
+  # only paste entries with characters, not TRUE or NULL
+  to_paste <- to_paste[to_paste != "TRUE"]
 
-  to_paste <- c(project_id,
-                auth_file$env_arg,
-                bucket,
-                region,
-                email)
+  if(length(to_paste) > 0){
 
-  if(!is.null(to_paste)){
-    cli_ul("Include this code in your .Renviron to set for all future R sessions")
-    cli_code(to_paste)
-    usethis::edit_r_environ()
+    edit_renviron(to_paste)
+
     cli_ul("Rerun cr_setup() once complete to check settings")
     return(invisible(""))
   }
@@ -81,17 +83,20 @@ cr_setup <- function(){
 
 }
 
-get_email_setup <- function(auth_file){
+
+
+get_email_setup <- function(){
   email <- usethis::ui_yeah("Do you want to setup a Cloud Scheduler email?")
   if(email){
-    reuse_auth <- usethis::ui_yeah("Do you want to use the email from your JSON service account auth key?")
+    reuse_auth <- usethis::ui_yeah("Do you want to use the email from your JSON service account auth key?",
+                                   yes = "Yes (Recommended)", no = "No")
     if(reuse_auth){
       if(Sys.getenv("GCE_AUTH_FILE") == ""){
         cli_alert_info("You need to setup the auth environment argument before configuring an email from it.  Rerun the wizard once it is setup")
         return(NULL)
       }
 
-      the_email <- jsonlite::fromJSON(auth_file)$client_email
+      the_email <- jsonlite::fromJSON(Sys.getenv("GCE_AUTH_FILE"))$client_email
     } else {
       the_email <- readline("Enter the service email you wish to use")
     }
@@ -143,10 +148,19 @@ get_bucket_setup <- function(){
     return(NULL)
   }
 
+  if(Sys.getenv("GCE_DEFAULT_PROJECT_ID") == ""){
+    cli_alert_info("You need to setup the project-id environment argument before configuring a bucket.  Rerun the wizard once it is setup")
+    return(NULL)
+  }
+
   bucket <- usethis::ui_yeah("Do you want to setup a Cloud Storage bucket?")
   if(bucket){
     has_bucket <- usethis::ui_yeah("Do you have an existing Cloud Storage bucket you want to use?")
     if(has_bucket){
+      cli_alert_info(paste("Fetching your buckets under the project-id: ",
+                     Sys.getenv("GCE_DEFAULT_PROJECT_ID")))
+      bucks <- googleCloudStorageR::gcs_list_buckets(Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
+      print(bucks[ , c("name", "location")])
       the_bucket <- readline("What is the name of your bucket? e.g. my-bucket-name: ")
       check_bucket <- tryCatch(
         googleCloudStorageR::gcs_get_bucket(the_bucket),
@@ -171,7 +185,7 @@ get_bucket_setup <- function(){
         }
         make_bucket_name <- readline(
     paste("What name will the bucket be? It will be created in your project: ",
-          cr_project_get())
+          Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
           )
         new_bucket <- googleCloudStorageR::gcs_create_bucket(
           make_bucket_name, projectId = cr_project_get()
@@ -197,8 +211,14 @@ get_auth_setup <- function(){
 
   auth <- cr_setup_auth()
 
+  # aborted setup auth
+  if(is.null(auth)) return(NULL)
+
   if(auth){
-    cli_ul("Browse to the file to be used for authentication")
+    fs <- usethis::ui_yeah("Ready to browse to the file to be used for authentication?",
+                     yes = "Ready", no = "Cancel")
+    if(!fs) return(NULL)
+
     auth_file <- file.choose()
     check_file <- tryCatch(jsonlite::fromJSON(auth_file),
                            error = function(err){
@@ -208,8 +228,7 @@ get_auth_setup <- function(){
        check_file$type == "service_account" &&
        !is.null(check_file$private_key)){
       cli_alert_success("Validated authentication JSON file")
-      return(list(env_arg = paste0("GCE_AUTH_FILE=", auth_file),
-                  auth_file = auth_file))
+      return(paste0("GCE_AUTH_FILE=", auth_file))
     }
 
     cli_alert_danger("Checked {auth_file} and it was not a valid JSON file? Confirm file is JSON service account auth key - see website https://code.markedmondson.me/googleCloudRunner/articles/setup.html#local-auth-email")
@@ -225,7 +244,8 @@ get_auth_setup <- function(){
 }
 
 get_project_setup <- function(){
-  project <- usethis::ui_yeah("Do you have a Google Cloud project-id to use?")
+  project <- usethis::ui_yeah("Do you have a Google Cloud project-id to use?",
+                              yes = "Yes", no = "No")
   if(project){
     project_id <- readline("project-id: ")
     cli_alert_success("Selected project-id: {project_id}")
@@ -251,8 +271,8 @@ do_env_check <- function(env_arg,
     return(not_present)
   } else {
     cli_alert_success("Found: {env_arg}={arg}")
+    return(TRUE)
   }
-  NULL
 }
 
 #' Create a service account for googleCloudRunner
@@ -269,51 +289,57 @@ do_env_check <- function(env_arg,
 #' @importFrom googleAuthR gar_service_provision
 #' @import cli
 cr_setup_auth <- function(email = Sys.getenv("GARGLE_EMAIL"),
-                          file = "googlecloudrunner-auth-key.json",
-                          accountId = "googlecloudrunner"){
+                          file = "googlecloudrunner-auth-key.json"){
 
   if(Sys.getenv("GAR_CLIENT_JSON") == ""){
     cli_alert_info("Could not find a OAuth 2.0 Client ID via GAR_CLIENT_JSON")
 
-    client_id <- usethis::ui_yeah("Have you downloaded a JSON Client ID from your GCP?")
+    client_id <- usethis::ui_yeah("Have you downloaded a Client ID file?",
+                                  yes = "Yes", no = "No")
 
     if(!client_id){
-      cli_alert_info("Download via https://console.cloud.google.com/apis/credentials")
-      cli_ul(c("Sidebar Menu >",
+      cli_alert_warning("You must have a client ID file to proceed.")
+      cli_alert_info("Download via https://console.cloud.google.com/apis/credentials :")
+      cli_li(c("GCP Console Sidebar Menu >",
                     "APIs & Services >",
                     "Credentials >",
                     "+ Create Credentials",
                     "OAuth client ID >",
                     "Other >",
                     "Download to your PC"))
+      cli_rule()
       cli_alert_info("Rerun this wizard once you have your Client ID file")
-      return(FALSE)
+      return(NULL)
     }
 
-    cli_alert_info("Where is your client ID file?")
+    ff <- usethis::ui_yeah("Select location of your client ID file:",
+                           yes = "Ready", no = "Cancel")
+
+    if(!ff){
+      return(NULL)
+    }
+
     json <- file.choose()
     valid <- validate_json(json)
 
     if(valid){
-      cli_alert_success(
-          "Validated Client ID file {json} for project: {validated$installed$project_id}")
-      cli_ul("Include this code in your .Renviron to set client ID for all future R sessions")
-      cli_code(paste0("GAR_CLIENT_JSON=",json))
-      usethis::edit_r_environ()
-        cli_ul("Rerun this wizard once .Renviron is updated and R restarted")
+      edit_renviron(paste0("GAR_CLIENT_JSON=",json))
     }
     # we always return that cr_setup() needs to be rerun
-    return(FALSE)
+    return(NULL)
 
   }
 
   cli_alert_info("Using Client ID via GAR_CLIENT_JSON")
+  cli_rule()
   json <- Sys.getenv("GAR_CLIENT_JSON")
   if(!validate_json(json)){
-    return(FALSE)
+    return(NULL)
   }
 
-  create_service <- usethis::ui_yeah("Do you want to provision a service account?")
+  create_service <- usethis::ui_yeah("Client ID present but no service authentication file is configured.  Do you want to provision a service account for your project?",
+                                     yes = "Yes, I need a service account key",
+                                     no = "No, I already have one downloaded")
 
   if(!create_service){
     cli_alert_danger("No service account provisioned")
@@ -327,10 +353,16 @@ cr_setup_auth <- function(email = Sys.getenv("GARGLE_EMAIL"),
              "roles/run.admin",
              "roles/storage.admin")
 
-  cli_alert_info("Creating service key file")
+  cli_alert_info("Creating service key file - choose service account name (Push enter for default 'googlecloudrunner')")
+  account_id <- readline("service account name: ")
+  if(account_id == ""){
+    account_id <- "googlecloudrunner"
+  }
+
+  cli_alert_info("Creating service account {account_id}")
 
   gar_service_provision(
-        accountId,
+        account_id,
         roles = roles,
         json = json,
         file = file,
@@ -340,10 +372,10 @@ cr_setup_auth <- function(email = Sys.getenv("GARGLE_EMAIL"),
   moved <- usethis::ui_yeah("Have you moved the file?")
   if(!moved){
     cli_alert_danger("Beware! Authentication files can be used to compromise your GCP account. Do not check into git or otherwise share the file")
-    return(FALSE)
+    return(NULL)
   }
 
-  cli_alert_success("Service JSON key is now provisioned")
+  cli_alert_success("Service JSON key is now created")
   cli_alert_info("Now set up GCE_AUTH_FILE to point at file via cr_setup()")
 
   TRUE
@@ -357,8 +389,8 @@ validate_json <- function(json){
         return(FALSE)
       })
   if(!is.null(validated$installed$client_id)){
-    cli::cli_alert_success(
-      "Validated Client ID file {json} for project: {validated$installed$project_id}")
+    cli::cli_alert_success("Validated Client ID file {json}")
+    cli::cli_alert_success("Found Client ID project: {validated$installed$project_id}")
     return(TRUE)
   } else {
     cli::cli_alert_danger("Could not read details from client ID file - is it the right one?")
@@ -367,3 +399,17 @@ validate_json <- function(json){
 
 }
 
+edit_renviron <- function(to_paste){
+  session_user <- menu(title = "Do you want to configure for all R sessions or just this project?",
+                       choices = c("All R sessions (Recommended)", "Project only"))
+  if(session_user == 1){
+    scope <- "user"
+  } else if(session_user == 2){
+    scope <- "project"
+  } else {
+    stop("User cancelled setup", call. = FALSE)
+  }
+  cli_ul("Include this code in your .Renviron to set for all future R sessions")
+  usethis::ui_code_block(to_paste)
+  usethis::edit_r_environ(scope = scope)
+}

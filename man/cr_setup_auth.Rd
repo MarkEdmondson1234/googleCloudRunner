@@ -6,8 +6,7 @@
 \usage{
 cr_setup_auth(
   email = Sys.getenv("GARGLE_EMAIL"),
-  file = "googlecloudrunner-auth-key.json",
-  accountId = "googlecloudrunner"
+  file = "googlecloudrunner-auth-key.json"
 )
 }
 \arguments{
