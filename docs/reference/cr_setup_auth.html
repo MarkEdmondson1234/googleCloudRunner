@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a build step for decrypting files via KMS — cr_buildstep_decrypt • googleCloudRunner</title>
+<title>Create a service account for googleCloudRunner — cr_setup_auth • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Create a build step for decrypting files via KMS — cr_buildstep_decrypt" />
-<meta property="og:description" content="Create a build step to decrypt files using CryptoKey from Cloud Key Management Service.
-Usually you will prefer to use cr_buildstep_secret" />
+<meta property="og:title" content="Create a service account for googleCloudRunner — cr_setup_auth" />
+<meta property="og:description" content="This will use your Google OAuth2 user to create a suitable service account" />
 
 
 
@@ -158,95 +157,41 @@ Usually you will prefer to use cr_buildstep_secret" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a build step for decrypting files via KMS</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/buildsteps_templates.R'><code>R/buildsteps_templates.R</code></a></small>
-    <div class="hidden name"><code>cr_buildstep_decrypt.Rd</code></div>
+    <h1>Create a service account for googleCloudRunner</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/setup.R'><code>R/setup.R</code></a></small>
+    <div class="hidden name"><code>cr_setup_auth.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create a build step to decrypt files using CryptoKey from Cloud Key Management Service.
-Usually you will prefer to use <a href='cr_buildstep_secret.html'>cr_buildstep_secret</a></p>
+    <p>This will use your Google OAuth2 user to create a suitable service account</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildstep_decrypt</span>(<span class='no'>cipher</span>, <span class='no'>plain</span>, <span class='no'>keyring</span>, <span class='no'>key</span>, <span class='kw'>location</span> <span class='kw'>=</span> <span class='st'>"global"</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_setup_auth</span>(
+  <span class='kw'>email</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"GARGLE_EMAIL"</span>),
+  <span class='kw'>file</span> <span class='kw'>=</span> <span class='st'>"googlecloudrunner-auth-key.json"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>cipher</th>
-      <td><p>The file that has been encrypted</p></td>
+      <th>email</th>
+      <td><p>What email to open OAuth2 with</p></td>
     </tr>
     <tr>
-      <th>plain</th>
-      <td><p>The file location to decrypt to</p></td>
+      <th>file</th>
+      <td><p>Where to save the authentication file</p></td>
     </tr>
     <tr>
-      <th>keyring</th>
-      <td><p>The KMS keyring to use</p></td>
-    </tr>
-    <tr>
-      <th>key</th>
-      <td><p>The KMS key to use</p></td>
-    </tr>
-    <tr>
-      <th>location</th>
-      <td><p>The KMS location</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Further arguments passed in to <a href='cr_buildstep.html'>cr_buildstep</a></p></td>
+      <th>accountId</th>
+      <td><p>Name of the service account in GCP IAM</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Key Management Store can encrypt secret files for use within your later buildsteps.</p>
-    <h2 class="hasAnchor" id="setup"><a class="anchor" href="#setup"></a>Setup</h2>
+    <p>TRUE if the file is ready to be setup by <a href='cr_setup.html'>cr_setup</a></p>
 
-    
-
-
-<p>You will need to set up the <a href='https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials#encrypt_credentials'>encrypted key using gcloud</a> following the link from Google</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other Cloud Buildsteps: 
-<code><a href='cr_buildstep_bash.html'>cr_buildstep_bash</a>()</code>,
-<code><a href='cr_buildstep_df.html'>cr_buildstep_df</a>()</code>,
-<code><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a>()</code>,
-<code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a>()</code>,
-<code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a>()</code>,
-<code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a>()</code>,
-<code><a href='cr_buildstep_mailgun.html'>cr_buildstep_mailgun</a>()</code>,
-<code><a href='cr_buildstep_nginx_setup.html'>cr_buildstep_nginx_setup</a>()</code>,
-<code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a>()</code>,
-<code><a href='cr_buildstep_run.html'>cr_buildstep_run</a>()</code>,
-<code><a href='cr_buildstep_r.html'>cr_buildstep_r</a>()</code>,
-<code><a href='cr_buildstep_secret.html'>cr_buildstep_secret</a>()</code>,
-<code><a href='cr_buildstep_slack.html'>cr_buildstep_slack</a>()</code>,
-<code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-04-24 19:01:26&gt; ProjectId set to my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>2020-04-24 19:01:26&gt; Bucket set to my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='fu'>cr_buildstep_decrypt</span>(<span class='st'>"secret.json.enc"</span>,
-                     <span class='kw'>plain</span> <span class='kw'>=</span> <span class='st'>"secret.json"</span>,
-                     <span class='kw'>keyring</span> <span class='kw'>=</span> <span class='st'>"my_keyring"</span>,
-                     <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"my_key"</span>)</div><div class='output co'>#&gt; [[1]]
-#&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/cloud-builders/gcloud
-#&gt; args:
-#&gt; - kms
-#&gt; - decrypt
-#&gt; - --ciphertext-file
-#&gt; - secret.json.enc
-#&gt; - --plaintext-file
-#&gt; - secret.json
-#&gt; - --location
-#&gt; - global
-#&gt; - --keyring
-#&gt; - my_keyring
-#&gt; - --key
-#&gt; - my_key
-#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
