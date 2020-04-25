@@ -158,7 +158,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create a service account for googleCloudRunner</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/setup.R'><code>R/setup.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/setup_auth.R'><code>R/setup_auth.R</code></a></small>
     <div class="hidden name"><code>cr_setup_auth.Rd</code></div>
     </div>
 
@@ -168,7 +168,8 @@
 
     <pre class="usage"><span class='fu'>cr_setup_auth</span>(
   <span class='kw'>email</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"GARGLE_EMAIL"</span>),
-  <span class='kw'>file</span> <span class='kw'>=</span> <span class='st'>"googlecloudrunner-auth-key.json"</span>
+  <span class='kw'>file</span> <span class='kw'>=</span> <span class='st'>"googlecloudrunner-auth-key.json"</span>,
+  <span class='kw'>session_user</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -190,7 +191,7 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>TRUE if the file is ready to be setup by <a href='cr_setup.html'>cr_setup</a></p>
+    <p>TRUE if the file is ready to be setup by <a href='cr_setup.html'>cr_setup</a>, FALSE if need to stop</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
