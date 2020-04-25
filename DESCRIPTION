@@ -32,6 +32,7 @@ Suggests:
     miniUI,
     plumber, 
     rmarkdown,
+    rstudioapi,
     shiny,
     testthat (>= 2.1.0)
 License: MIT + file LICENSE
