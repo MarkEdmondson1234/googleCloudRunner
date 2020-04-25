@@ -16,8 +16,7 @@ cr_setup_auth <- function(email = Sys.getenv("GARGLE_EMAIL"),
                           session_user = NULL){
 
   if(is.null(session_user)){
-    session_user <- menu(title = "Do you want to configure for all R sessions or just this project?",
-                         choices = c("All R sessions (Recommended)", "Project only"))
+    session_user <- check_session()
   }
 
   if(Sys.getenv("GAR_CLIENT_JSON") == ""){

@@ -26,8 +26,7 @@ cr_setup <- function(){
     return(invisible(""))
   }
   cli_rule()
-  session_user <- menu(title = "Do you want to configure for all R sessions or just this project?",
-                       choices = c("All R sessions (Recommended)", "Project only"))
+  session_user <- check_session()
 
   cli_rule()
   project_id <- NULL
@@ -144,8 +143,12 @@ add_renviron <- function(scope = c("user", "project"), line){
   the_file <- switch(
     scope,
     user = file.path(Sys.getenv("HOME"), ".Renviron"),
-    project = file.path(getwd(), ".Renviron")
+    project = file.path(rstudioapi::getActiveProject(), ".Renviron")
   )
+
+  if(!file.exists(the_file)){
+    file.create(the_file)
+  }
 
   add_line(line, the_file)
 }
@@ -167,4 +170,18 @@ add_line <- function(line, path, quiet = TRUE) {
   lines <- c(lines, line)
   writeLines(lines, path)
   TRUE
+}
+
+check_session <- function(){
+  session_user <- menu(title = "Do you want to configure for all R sessions or just this project?",
+                       choices = c("All R sessions (Recommended)", "Project only"))
+  if(session_user == 2){
+    local_file <- file.path(rstudioapi::getActiveProject(), ".Renviron")
+    if(!file.exists(local_file)){
+      file.create(local_file)
+      stop("Restart R to enable local project .Renviron", call. = FALSE)
+    }
+  }
+
+  session_user
 }
