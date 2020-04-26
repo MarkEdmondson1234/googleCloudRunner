@@ -114,7 +114,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Setup</h1>
             
-            <h4 class="date">2020-04-25</h4>
+            <h4 class="date">2020-04-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/setup.Rmd"><code>vignettes/setup.Rmd</code></a></small>
       <div class="hidden name"><code>setup.Rmd</code></div>
@@ -126,9 +126,9 @@
 <div id="r-settings" class="section level2">
 <h2 class="hasAnchor">
 <a href="#r-settings" class="anchor"></a>R Settings</h2>
-<div id="googlecloudrunner-setup-wizard-cr_setup" class="section level3">
+<div id="setup-wizard-cr_setup" class="section level3">
 <h3 class="hasAnchor">
-<a href="#googlecloudrunner-setup-wizard-cr_setup" class="anchor"></a>googleCloudRunner setup wizard cr_setup()</h3>
+<a href="#setup-wizard-cr_setup" class="anchor"></a>Setup wizard cr_setup()</h3>
 <p>There is a setup function to help you configure the package. Get started via the commands below:</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleCloudRunner</span>)
 <span class="fu"><a href="../reference/cr_setup.html">cr_setup</a></span>()
@@ -143,6 +143,17 @@
 <span class="co">#5: Configure Cloud Run region</span>
 <span class="co">#6: Configure Cloud Scheduler build email</span></pre></body></html></div>
 <p>It will walk you through the details below. You can also use it to check your settings.</p>
+</div>
+<div id="cr_setup_auth-and-cr_setup_service" class="section level3">
+<h3 class="hasAnchor">
+<a href="#cr_setup_auth-and-cr_setup_service" class="anchor"></a>cr_setup_auth() and cr_setup_service()</h3>
+<p>You can configure authentication separately, as its usually the trickest bit. The <code><a href="../reference/cr_setup_auth.html">cr_setup_auth()</a></code> function attempts to help you walk through the authentication and after running it and restarting R a couple of times you should only need to download a client ID from your project to have it all configured for you.</p>
+<p>If you are customising things then <code><a href="../reference/cr_setup_service.html">cr_setup_service()</a></code> may be useful, which lets you add common roles to the service account emails. The other setup functions call it to set things up for you, but you may want more control, or have special needs for your cloudbuild email for example, which needs roles assigned for certain services you want to build.</p>
+</div>
+<div id="cr_setup_tests" class="section level3">
+<h3 class="hasAnchor">
+<a href="#cr_setup_tests" class="anchor"></a>cr_setup_tests()</h3>
+<p>Once you get all green ticks in <code><a href="../reference/cr_setup.html">cr_setup()</a></code> then you should be able to run the subset of the package unit tests via <code>cr_setup_tests()</code>. Should those all complete then you should be able to run any of the functions in the package!</p>
 </div>
 <div id="r-environment-arguments-to-set" class="section level3">
 <h3 class="hasAnchor">
@@ -250,6 +261,8 @@ CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com</code></pr
 </li>
 <li>To use <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> for <a href="https://cloud.google.com/secret-manager">Google Secret Manager</a> you need the Secret Manager Secret Accessor role assigned to the build service email (<code>{project-number}@cloudbuild.gserviceaccount.com</code>). See <a href="https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials">using encryupted secrets and credentials</a> Google help page. If you want to use the decryption service such as from <code><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt()</a></code> then your Cloud Build service account needs to have at least Cloud KMS CryptoKey Decrypter role.</li>
 <li>Likewise with other GCP services the Cloud Build will use - i.e. if you want to use BigQuery services in your builds, give your build email BigQuery IAM access</li>
+<li>For Cloud Run you need <code>iam.serviceaccounts.actAs</code> permission on the <code>{project-number}-compute@developer.gserviceaccount.com</code> service email that should be there by default. Simiarly, <code>service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com</code> should have the role <code>Cloud Run Service Agent</code>
+</li>
 </ul>
 </div>
 <div id="misc" class="section level4">

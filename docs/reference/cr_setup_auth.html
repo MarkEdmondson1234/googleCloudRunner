@@ -184,14 +184,20 @@
       <td><p>Where to save the authentication file</p></td>
     </tr>
     <tr>
-      <th>accountId</th>
-      <td><p>Name of the service account in GCP IAM</p></td>
+      <th>session_user</th>
+      <td><p>1 for user level, 2 for project level, leave <code>NULL</code> to be prompted</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>TRUE if the file is ready to be setup by <a href='cr_setup.html'>cr_setup</a>, FALSE if need to stop</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other setup functions: 
+<code><a href='cr_setup_service.html'>cr_setup_service</a>()</code>,
+<code><a href='cr_setup_test.html'>cr_setup_test</a>()</code>,
+<code><a href='cr_setup.html'>cr_setup</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
