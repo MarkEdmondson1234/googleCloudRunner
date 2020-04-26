@@ -9,3 +9,10 @@ cr_setup()
 \description{
 A helper setup function for setting up use with googleCloudRunner
 }
+\seealso{
+Other setup functions: 
+\code{\link{cr_setup_auth}()},
+\code{\link{cr_setup_service}()},
+\code{\link{cr_setup_test}()}
+}
+\concept{setup functions}

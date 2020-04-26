@@ -24,7 +24,8 @@ test_that("[Online] Test deployments", {
   expect_equal(cd$status,"SUCCESS")
 
   # why fail?
-  cr <- cr_deploy_plumber(runme, dockerfile = paste0(runme, "Dockerfile"))
+  cr <- cr_deploy_plumber(runme,
+                          dockerfile = paste0(runme, "Dockerfile"))
 
   expect_equal(cr$kind, "Service")
   expect_true(grepl("^gcr.io/.+/example:.+",

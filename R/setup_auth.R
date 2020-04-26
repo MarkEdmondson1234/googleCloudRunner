@@ -4,13 +4,14 @@
 #'
 #' @param email What email to open OAuth2 with
 #' @param file Where to save the authentication file
-#' @param accountId Name of the service account in GCP IAM
+#' @param session_user 1 for user level, 2 for project level, leave \code{NULL} to be prompted
 #'
 #' @return TRUE if the file is ready to be setup by \link{cr_setup}, FALSE if need to stop
 #'
 #' @export
 #' @importFrom googleAuthR gar_service_provision
 #' @import cli
+#' @family setup functions
 cr_setup_auth <- function(email = Sys.getenv("GARGLE_EMAIL"),
                           file = "googlecloudrunner-auth-key.json",
                           session_user = NULL){
@@ -35,7 +36,7 @@ cr_setup_auth <- function(email = Sys.getenv("GARGLE_EMAIL"),
       cli_rule()
       cli_alert_info("Rerun this wizard once you have your Client ID file")
       if(usethis::ui_yeah("Open up service credentials URL?")){
-        browseURL("https://console.cloud.google.com/apis/credentials/oauthclient")
+        utils::browseURL("https://console.cloud.google.com/apis/credentials/oauthclient")
       }
       return(FALSE)
     }
@@ -74,12 +75,7 @@ cr_setup_auth <- function(email = Sys.getenv("GARGLE_EMAIL"),
     return(TRUE)
   }
 
-  roles <- c("roles/cloudbuild.builds.builder",
-             "roles/secretmanager.secretAccessor",
-             "roles/cloudscheduler.admin",
-             "roles/iam.serviceAccountUser",
-             "roles/run.admin",
-             "roles/storage.admin")
+  roles <- cr_setup_role_lookup("local")
 
   cli_alert_info("Creating service key file - choose service account name (Push enter for default 'googlecloudrunner')")
   account_id <- readline("service account name: ")
@@ -125,4 +121,8 @@ validate_json <- function(json){
     return(FALSE)
   }
 
+}
+
+extract_project_number <- function(json = Sys.getenv("GAR_CLIENT_JSON")){
+  gsub("^([0-9]+?)\\-(.+)\\.apps.+","\\1",json$installed$client_id)
 }

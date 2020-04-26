@@ -661,8 +661,8 @@ cr_buildstep_docker <- function(image,
 #'
 #' This creates steps to configure git to use an ssh created key.
 #'
-#' @param post_step A \link{cr_buildstep} to run after the default git setup
 #' @param secret The name of the secret on Google Secret Manager for the git ssh private key
+#' @param post_setup Steps that occur after git setup
 #' @details
 #'
 #' The ssh private key should be uploaded to Google Secret Manager first

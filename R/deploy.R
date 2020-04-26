@@ -223,7 +223,7 @@ cr_deploy_docker <- function(local,
 #' @export
 #' @examples
 #'
-#' pd <- cr_deploy_pkgdown()
+#' pd <- cr_deploy_pkgdown(secret = "my_git_secret")
 #' pd
 #' file.exists("cloudbuild-pkgdown.yml")
 #' unlink("cloudbuild-pkgdown.yml")

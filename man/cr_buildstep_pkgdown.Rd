@@ -25,6 +25,8 @@ cr_buildstep_pkgdown(
 
 \item{build_image}{A docker image with \code{pkgdown} installed}
 
+\item{post_setup}{Steps that occur after git setup}
+
 \item{post_clone}{A \link{cr_buildstep} that occurs after the repo is cloned}
 }
 \description{

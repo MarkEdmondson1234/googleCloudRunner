@@ -15,11 +15,11 @@ cr_buildstep_git(
 \arguments{
 \item{secret}{The name of the secret on Google Secret Manager for the git ssh private key}
 
+\item{post_setup}{Steps that occur after git setup}
+
 \item{git_args}{The arguments to send to git}
 
 \item{...}{Further arguments passed in to \link{cr_buildstep}}
-
-\item{post_step}{A \link{cr_buildstep} to run after the default git setup}
 }
 \description{
 This creates steps to configure git to use an ssh created key.
