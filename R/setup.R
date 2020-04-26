@@ -21,7 +21,8 @@ cr_setup <- function(){
                   "Configure Authentication JSON file",
                   "Configure Cloud Storage bucket",
                   "Configure Cloud Run region",
-                  "Configure Cloud Scheduler build email"
+                  "Configure Cloud Scheduler build email",
+                  "Configure Cloud Build service account"
                 ))
 
   if(ready == 0){
@@ -78,9 +79,17 @@ cr_setup <- function(){
   }
   cli_rule()
 
-  if(all(email, region, bucket, auth_file, project_id)){
-    cli_alert_success("Setup complete!")
+  if(ready %in% c(1,7)){
+    service_email <- do_build_service_setup()
   }
+  cli_rule()
+
+  if(all(email, region, bucket, auth_file, project_id, service_email)){
+    cli_alert_success("Setup complete! You can test it with cr_setup_test()")
+  }
+
+  cli_alert_info("Some setup still to complete.
+                 Restart R and/or rerun cr_setup() when ready")
 
 }
 

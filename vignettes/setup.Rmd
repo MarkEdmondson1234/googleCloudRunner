@@ -3,9 +3,7 @@ title: "Setup"
 date: "`r Sys.Date()`"
 ---
 
-## R Settings
-
-### Setup wizard cr_setup()
+## Setup wizard cr_setup()
 
 There is a setup function to help you configure the package.  Get started via the commands below:
 
@@ -34,7 +32,10 @@ If you are customising things then `cr_setup_service()` may be useful, which let
 
 ### cr_setup_tests()
 
-Once you get all green ticks in `cr_setup()` then you should be able to run the subset of the package unit tests via `cr_setup_tests()`.  Should those all complete then you should be able to run any of the functions in the package!
+Once you get all green ticks in `cr_setup()` then you should be able to run the subset of the package unit tests via `cr_setup_test()`.  Should those all complete then you should be able to run any of the functions in the package!
+
+## R Settings
+
 
 ### R environment arguments to set:
 
