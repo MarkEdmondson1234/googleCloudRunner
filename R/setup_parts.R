@@ -30,6 +30,7 @@ get_email_setup <- function(){
 
 #' @noRd
 #' @return NULL if no changes, ENV_ARG="blah" if change
+#' @importFrom utils menu
 get_region_setup <- function(){
   region <- usethis::ui_yeah("Do you want to setup a Cloud Run region?")
   if(region){

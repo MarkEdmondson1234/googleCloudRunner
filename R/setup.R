@@ -3,6 +3,8 @@
 #'
 #' @export
 #' @import cli
+#' @importFrom utils menu packageVersion
+#' @family setup functions
 cr_setup <- function(){
 
   cli_alert_info(sprintf("==Welcome to googleCloudRunner v%s setup==",

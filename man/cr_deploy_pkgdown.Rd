@@ -31,6 +31,8 @@ cr_deploy_pkgdown(
 
 \item{build_image}{A docker image with \code{pkgdown} installed}
 
+\item{post_setup}{Steps that occur after git setup}
+
 \item{post_clone}{A \link{cr_buildstep} that occurs after the repo is cloned}
 }
 \description{
@@ -45,7 +47,7 @@ The git ssh keys need to be deployed to Google KMS for the deployment of the web
 }
 \examples{
 
-pd <- cr_deploy_pkgdown()
+pd <- cr_deploy_pkgdown(secret = "my_git_secret")
 pd
 file.exists("cloudbuild-pkgdown.yml")
 unlink("cloudbuild-pkgdown.yml")

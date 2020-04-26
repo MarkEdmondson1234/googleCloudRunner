@@ -46,6 +46,15 @@ navbar:
       href: reference/index.html
       icon: fa-question
 reference:
+  - title: "Setup functions"
+    desc: >
+      Functions setting up your GCP configuration
+    contents:
+      - matches("cr_setup")
+      - matches("cr_bucket")
+      - matches("cr_email")
+      - matches("cr_project")
+      - matches("cr_region")
   - title: "Deployment functions"
     desc: >
       Functions for deploying useful applications
@@ -93,12 +102,4 @@ reference:
       - cr_build_schedule_http
       - Job
       - HttpTarget
-  - title: "Setup functions"
-    desc: >
-      Functions setting up your GCP configuration
-    contents:
-      - matches("cr_bucket")
-      - matches("cr_email")
-      - matches("cr_project")
-      - matches("cr_region")
 

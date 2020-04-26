@@ -15,7 +15,7 @@ cr_setup_auth(
 
 \item{file}{Where to save the authentication file}
 
-\item{accountId}{Name of the service account in GCP IAM}
+\item{session_user}{1 for user level, 2 for project level, leave \code{NULL} to be prompted}
 }
 \value{
 TRUE if the file is ready to be setup by \link{cr_setup}, FALSE if need to stop
@@ -23,3 +23,10 @@ TRUE if the file is ready to be setup by \link{cr_setup}, FALSE if need to stop
 \description{
 This will use your Google OAuth2 user to create a suitable service account
 }
+\seealso{
+Other setup functions: 
+\code{\link{cr_setup_service}()},
+\code{\link{cr_setup_test}()},
+\code{\link{cr_setup}()}
+}
+\concept{setup functions}
