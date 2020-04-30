@@ -11,7 +11,7 @@ A rundown on some common workflows and connections are detailed here.
 
 ## Cloud Build Triggers and GitHub App
 
-Cloud Builds can be triggered via Build Triggers, and those Build Triggers can be initiated by GitHub, Bitbucket or Cloud Repostiory events such as commits or pull requests.
+Cloud Builds can be triggered via Build Triggers, and those Build Triggers can be initiated by GitHub, Bitbucket or Cloud Repository events such as commits or pull requests.
 
 A common use case is triggering R package tests upon each commit. 
 
@@ -44,7 +44,7 @@ cr_build_yaml(
   )
 ```
 
-## Duplicating git repos to Cloud Source repostiories
+## Duplicating git repos to Cloud Source repositories
 
 You can also use Google Cloud Platform's git repostory system directly, name Cloud Source Repositories.  Even if you don't use them day to day, you can set them up as duplicate of your preferred Git service, which then enables you to use workflows that only work from Cloud Source Repositories.
 

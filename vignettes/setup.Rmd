@@ -26,7 +26,7 @@ It will walk you through the details below.  You can also use it to check your s
 
 ### cr_setup_auth() and cr_setup_service()
 
-You can configure authentication separately, as its usually the trickest bit.  The `cr_setup_auth()` function attempts to help you walk through the authentication and after running it and restarting R a couple of times you should only need to download a client ID from your project to have it all configured for you.
+You can configure authentication separately, as its usually the trickiest bit.  The `cr_setup_auth()` function attempts to help you walk through the authentication and after running it and restarting R a couple of times you should only need to download a client ID from your project to have it all configured for you.
 
 If you are customising things then `cr_setup_service()` may be useful, which lets you add common roles to the service account emails. The other setup functions call it to set things up for you, but you may want more control, or have special needs for your cloudbuild email for example, which needs roles assigned for certain services you want to build.
 
@@ -139,9 +139,9 @@ This is the service account for Cloud Build when it is running on your project. 
 
 * The Cloud Build service account needs permissions if you want it to deploy to Cloud Run: This can be set [here](https://console.cloud.google.com/cloud-build/settings) where you enable `Cloud Run Admin` and `Service Account User` roles.  More details found at this [Google reference article](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run). 
 * Ensure you also have a service email in your IAM section called `service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com` with Cloud Scheduler Service Agent role.  This is only needed if you created the project before March 2019.  This only needs to exist in the GCP project, it is not used in deployment.  See [here](https://cloud.google.com/scheduler/docs/http-target-auth#add)
-* To use `cr_buildstep_secret()` for [Google Secret Manager](https://cloud.google.com/secret-manager) you need the Secret Manager Secret Accessor role assigned to the build service email (`{project-number}@cloudbuild.gserviceaccount.com`).  See [using encryupted secrets and credentials](https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials) Google help page.  If you want to use the decryption service such as from `cr_buildstep_decrypt()` then your Cloud Build service account needs to have at least Cloud KMS CryptoKey Decrypter role.
+* To use `cr_buildstep_secret()` for [Google Secret Manager](https://cloud.google.com/secret-manager) you need the Secret Manager Secret Accessor role assigned to the build service email (`{project-number}@cloudbuild.gserviceaccount.com`).  See [using encrypted secrets and credentials](https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials) Google help page.  If you want to use the decryption service such as from `cr_buildstep_decrypt()` then your Cloud Build service account needs to have at least Cloud KMS CryptoKey Decrypter role.
 * Likewise with other GCP services the Cloud Build will use - i.e. if you want to use BigQuery services in your builds, give your build email BigQuery IAM access
-* For Cloud Run you need `iam.serviceaccounts.actAs` permission on the `{project-number}-compute@developer.gserviceaccount.com` service email that should be there by default. Simiarly, `service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com` should have the role `Cloud Run Service Agent`
+* For Cloud Run you need `iam.serviceaccounts.actAs` permission on the `{project-number}-compute@developer.gserviceaccount.com` service email that should be there by default. Similarly, `service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com` should have the role `Cloud Run Service Agent`
 
 #### Misc
 
