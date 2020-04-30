@@ -1,4 +1,4 @@
-# googleCloudRunner 0.1.1.9000
+# googleCloudRunner 0.2.0
 
 * Add `port` argument to Cloud Run deployments via `cr_buildstep_run()`
 * Add `cr_deploy_pkgdown` and `cr_deploy_packagetests` add subsequent buildsteps to aid R package development.
