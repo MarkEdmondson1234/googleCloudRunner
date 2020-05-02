@@ -25,8 +25,9 @@ cr_setup_service <- function(account_email,
                           roles = roles,
                           projectId = projectId)
 
-  cli_alert_success("Configured {account_email} with roles: {the_roles}",
-                    the_roles = paste(roles, collapse = " "))
+  the_roles <- NULL
+  the_roles <- paste(roles, collapse = " ")
+  cli_alert_success("Configured {account_email} with roles: {the_roles}")
 }
 
 

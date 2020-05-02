@@ -16,7 +16,7 @@ cr_email_set(cloudbuildEmail)
 Needed so Cloud Scheduler can run Cloud Build jobs - can also set via environment argument CR_BUILD_EMAIL
 }
 \examples{
-
+cr_email_set("myemail@domain.com")
 cr_email_get()
 }
 \seealso{

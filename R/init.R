@@ -142,7 +142,7 @@ cr_email_get <- function(){
 #' @export
 #' @param cloudbuildEmail The Cloud Build service email
 #' @examples
-#'
+#' cr_email_set("myemail@domain.com")
 #' cr_email_get()
 cr_email_set <- function(cloudbuildEmail){
   .cr_env$cloudbuildEmail <- cloudbuildEmail
