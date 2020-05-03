@@ -19,7 +19,7 @@ Depends:
 Imports:
     assertthat (>= 0.2.0),
     cli (>= 2.0.2),
-    googleAuthR (>= 1.2.1),
+    googleAuthR (>= 1.2.1.9000),
     googleCloudStorageR (>= 0.5.1),
     httr (>= 1.4.1),
     jsonlite (>= 1.5),
@@ -39,3 +39,4 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
+Remotes: MarkEdmondson1234/googleAuthR
