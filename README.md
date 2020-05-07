@@ -54,3 +54,6 @@ A talk at R's 20th anniversary was performed at celebRation in Copenhagen on 29t
 A [googleCloudRunner YouTube playlist](https://www.youtube.com/playlist?list=PLAMHKI_J4xv1urCanNbTCm44CxXnoejdr) of the demos is here.
 
 If you blog anything interesting about the package let me know and I will list it here.
+
+* Ander has a guide on using googleCloudRunner to [schedule an R script on GCP](https://anderfernandez.com/automatizar-script-r-google-cloud/) [Spanish]
+
