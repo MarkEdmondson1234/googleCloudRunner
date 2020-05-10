@@ -2,3 +2,8 @@ R/utilities.R
 R/print_methods.R
 R/rstudio_gadget.R
 R/deploy-buildtriggers.R
+R/setup.R
+R/setup_auth.R
+R/setup_buildemail.R
+R/setup_parts.R
+R/setup_tests.R
