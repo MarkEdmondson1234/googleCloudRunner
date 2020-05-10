@@ -56,4 +56,7 @@ A [googleCloudRunner YouTube playlist](https://www.youtube.com/playlist?list=PLA
 If you blog anything interesting about the package let me know and I will list it here.
 
 * Ander has a guide on using googleCloudRunner to [schedule an R script on GCP](https://anderfernandez.com/automatizar-script-r-google-cloud/) [Spanish]
+* Arben documents his experience on how he got started [scheduling BigQuery uploads using Docker and R](https://arbenkqiku.github.io/create-docker-image-with-r-and-deploy-as-cron-job-on-google-cloud)
+* Michał Ludwicki was a huge help in mentoring Arben for the post above - he also has created a GitHub repo of some [useful example files for googleCloudRunner scripts](https://github.com/MLud/GCP_Rscheduler)
+
 
