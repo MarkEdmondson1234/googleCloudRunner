@@ -30,7 +30,7 @@ cr_deploy_docker(
 
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
 
-\item{bucket}{The GCS bucker that will be used to deploy code source}
+\item{bucket}{The GCS bucket that will be used to deploy code source}
 
 \item{projectId}{The projectId}
 

@@ -12,3 +12,4 @@ deploy
 inst/doc
 inst/scheduled_rmarkdown/scheduled_rmarkdown.html
 cloudbuild-pkgdown.yml
+googlecloudrunner-auth-key.json

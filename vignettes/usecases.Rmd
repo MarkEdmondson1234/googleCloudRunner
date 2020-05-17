@@ -44,7 +44,7 @@ cr_deploy_pkgdown(keyring = "your-keyring", key = "github-key")
 5. Go to [GCP console > Cloud Build > Triggers](https://console.cloud.google.com/cloud-build/triggers) and link your git repo to Cloud Build.
 6. Create a Build Trigger for your git repository: 
 
-* point at the cloudbuild.yml file you commited (e.g. cloudbuild-pkgdown.yml)
+* point at the cloudbuild.yml file you committed (e.g. cloudbuild-pkgdown.yml)
 * Make sure to exclude the `docs/**` folder in the build trigger else the trigger will retrigger when the website is built and pushed to the repo!
 * You may also want to exclude other folders such as tests/**
 * Add a substitution variable `_GITHUB_REPO` with your Git address you want to push to e.g. MarkEdmondson1234/googleCloudRunner
@@ -75,7 +75,7 @@ The below assumes you have created tests for your package.
 4. Go to [GCP console > Cloud Build > Triggers](https://console.cloud.google.com/cloud-build/triggers) and link your git repo to Cloud Build.
 5. Create a Build Trigger for your git repository: 
 
-* point at the cloudbuild.yml file you commited (e.g. cloudbuild-tests.yml)
+* point at the cloudbuild.yml file you committed (e.g. cloudbuild-tests.yml)
 * Exclude any folders such as the `docs/**` folder where changes should not trigger a recheck
 * Add a substitution variable `_CODECOV_TOKEN` if you are using it
 
@@ -229,7 +229,7 @@ pub <- function(x){
   paste("Echo:", x)
 }
 
-#' Recieve pub/sub message
+#' Receive pub/sub message
 #' @post /pubsub
 #' @param message a pub/sub message
 function(message=NULL){

@@ -35,6 +35,10 @@ cr_setup <- function(){
 
   cli_rule()
 
+  session_user <- check_session()
+
+  cli_rule()
+
   auth_file <- gar_setup_menu_do(op,
                                  trigger = c(1,3),
                                  do_function = gar_setup_env_check,
@@ -80,17 +84,21 @@ cr_setup <- function(){
   cli_rule()
 
   gar_setup_menu_do(op,trigger = 7,do_function = do_build_service_setup)
+
   if(we_edit) return(invisible(""))
   cli_rule()
 
+
   if(all(email, region, bucket, auth_file, project_id)){
     cli_alert_success("Setup complete! You can test it with cr_setup_test()")
+    cli_rule()
     return(invisible(""))
   }
 
   cli_alert_info("Some setup still to complete.
                  Restart R and/or rerun cr_setup() when ready")
 
+  cli_rule()
 
 }
 

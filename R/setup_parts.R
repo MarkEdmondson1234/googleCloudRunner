@@ -1,4 +1,53 @@
 #' @noRd
+do_build_service_setup <- function(){
+
+  build_email <- paste0(extract_project_number(),
+                        "@cloudbuild.gserviceaccount.com")
+
+  cli_alert_info("The Cloud Build service account ({build_email}) will need permissions during builds for certain operations calling other APIs.  This is distinct from the local authentication file you have setup.")
+  do_it <- menu(title = "What services do you want to setup for the Cloud Build service account? (Esc or 0 to skip)",
+                choices = c("Something not listed below",
+                            "All of the below",
+                            "Cloud Run deployments",
+                            "Secret Manager",
+                            "BigQuery operations",
+                            "Cloud Storage operations"))
+  if(do_it == 0){
+    cli_alert_danger("Cloud Build service account will need permissions to complete certain operations.")
+    return(NULL)
+  }
+
+  if(do_it == 1){
+    cli_alert_danger("You will need to configure this yourself using cr_setup_service(), giving the build email {build_email} access to the role you require.")
+    return(NULL)
+  }
+
+  if(do_it %in% c(2,3)){
+    cli_alert_info("Configuring {build_email} for Cloud Run deployments")
+    cr_setup_service(build_email, roles = cr_setup_role_lookup("cloudrun"))
+  }
+
+  if(do_it %in% c(2,4)){
+    cli_alert_info("Configuring {build_email} to be able to access Secret Manager")
+    cr_setup_service(build_email, roles = cr_setup_role_lookup("secrets"))
+  }
+
+  if(do_it %in% c(2,5)){
+    cli_alert_info("Configuring {build_email} for BigQuery API tasks")
+    cr_setup_service(build_email, roles = cr_setup_role_lookup("bigquery"))
+  }
+
+  if(do_it %in% c(2,6)){
+    cli_alert_info("Configuring {build_email} for Cloud Storage API tasks")
+    cr_setup_service(build_email, roles = cr_setup_role_lookup("cloudstorage"))
+  }
+
+  TRUE
+
+}
+
+
+#' @noRd
 #' @return NULL if no changes, ENV_ARG="blah" if change
 get_email_setup <- function(){
   email <- usethis::ui_yeah("Do you want to setup a Cloud Scheduler email?")

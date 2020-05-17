@@ -124,5 +124,5 @@ validate_json <- function(json){
 }
 
 extract_project_number <- function(json = Sys.getenv("GAR_CLIENT_JSON")){
-  gsub("^([0-9]+?)\\-(.+)\\.apps.+","\\1",json$installed$client_id)
+  gsub("^([0-9]+?)\\-(.+)\\.apps.+","\\1",jsonlite::fromJSON(json)$installed$client_id)
 }

@@ -2,7 +2,7 @@ Package: googleCloudRunner
 Type: Package
 Title: R Scripts in the Google Cloud via Cloud Run, Cloud Build 
   and Cloud Scheduler
-Version: 0.1.1.9000
+Version: 0.2.0.9000
 Authors@R: c(person("Mark", "Edmondson", email = "r@sunholo.com",
                   role = c("aut", "cre"),
                   comment = c(ORCID = "0000-0002-8434-3881")),
@@ -19,7 +19,7 @@ Depends:
 Imports:
     assertthat (>= 0.2.0),
     cli (>= 2.0.2),
-    googleAuthR (>= 1.2.0),
+    googleAuthR (>= 1.2.1.9000),
     googleCloudStorageR (>= 0.5.1),
     httr (>= 1.4.1),
     jsonlite (>= 1.5),
@@ -39,5 +39,4 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
-Remotes:
-  MarkEdmondson1234/googleAuthR
+Remotes: MarkEdmondson1234/googleAuthR

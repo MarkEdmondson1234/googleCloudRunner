@@ -7,7 +7,7 @@
 cr_setup_test()
 }
 \description{
-This allows you to check if your setup works
+This allows you to check if your setup works - run \link{cr_setup} first.
 }
 \seealso{
 Other setup functions: 

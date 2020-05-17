@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleCloudRunner</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9000</span>
       </span>
     </div>
 
@@ -114,7 +114,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example Use Cases for googleCloudRunner</h1>
             
-            <h4 class="date">2020-04-26</h4>
+            <h4 class="date">2020-05-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecases.Rmd"><code>vignettes/usecases.Rmd</code></a></small>
       <div class="hidden name"><code>usecases.Rmd</code></div>
@@ -158,7 +158,7 @@
 <li>Create a Build Trigger for your git repository:</li>
 </ol>
 <ul>
-<li>point at the cloudbuild.yml file you commited (e.g. cloudbuild-pkgdown.yml)</li>
+<li>point at the cloudbuild.yml file you committed (e.g. cloudbuild-pkgdown.yml)</li>
 <li>Make sure to exclude the <code>docs/**</code> folder in the build trigger else the trigger will retrigger when the website is built and pushed to the repo!</li>
 <li>You may also want to exclude other folders such as tests/**</li>
 <li>Add a substitution variable <code>_GITHUB_REPO</code> with your Git address you want to push to e.g. MarkEdmondson1234/googleCloudRunner</li>
@@ -185,7 +185,7 @@
 <li>Create a Build Trigger for your git repository:</li>
 </ol>
 <ul>
-<li>point at the cloudbuild.yml file you commited (e.g. cloudbuild-tests.yml)</li>
+<li>point at the cloudbuild.yml file you committed (e.g. cloudbuild-tests.yml)</li>
 <li>Exclude any folders such as the <code>docs/**</code> folder where changes should not trigger a recheck</li>
 <li>Add a substitution variable <code>_CODECOV_TOKEN</code> if you are using it</li>
 </ul>
@@ -296,7 +296,7 @@ auth_file &lt;- gcs_get_object("auth.json", bucket = "my-bucket")
   <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"Echo:"</span>, <span class="no">x</span>)
 }
 
-<span class="co">#' Recieve pub/sub message</span>
+<span class="co">#' Receive pub/sub message</span>
 <span class="co">#' @post /pubsub</span>
 <span class="co">#' @param message a pub/sub message</span>
 <span class="kw">function</span>(<span class="no">message</span><span class="kw">=</span><span class="kw">NULL</span>){

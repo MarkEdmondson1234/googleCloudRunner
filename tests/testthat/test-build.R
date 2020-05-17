@@ -442,9 +442,11 @@ test_that("Render BuildStep objects", {
 
 
   # pkgdown builds
-  pd <- cr_deploy_pkgdown()
+  pd <- cr_deploy_pkgdown(secret = "my_github")
   expect_true(file.exists("cloudbuild-pkgdown.yml"))
   expect_equal(pd$steps[[1]]$name, "gcr.io/cloud-builders/gcloud")
+  expect_equal(pd$steps[[1]]$args[[2]],
+    "gcloud secrets versions access latest --secret=my_github > /root/.ssh/id_rsa")
   unlink("cloudbuild-pkgdown.yml")
 
   # package test builds

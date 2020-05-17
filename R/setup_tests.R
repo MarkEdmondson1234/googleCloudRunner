@@ -1,6 +1,6 @@
 #' Run tests over your setup
 #'
-#' This allows you to check if your setup works
+#' This allows you to check if your setup works - run \link{cr_setup} first.
 #'
 #' @export
 #' @family setup functions

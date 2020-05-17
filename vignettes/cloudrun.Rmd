@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 
 [Cloud Run](https://cloud.run) is a service that lets you deploy container images without worrying about the underlying servers or infrastructure.  It is called with `cr_run()`, or you can automate a deployment via `cr_deploy_run()`.
 
-If you would like to have your R code react in realtime to events such as HTTP or sub/sub events, such as a website or API endpoint, Cloud Run is a good fit.  
+If you would like to have your R code react in realtime to events such as HTTP or Pub/Sub events, such as a website or API endpoint, Cloud Run is a good fit.  
 
 If you want to run scripts that can be triggered one time, setup to trigger on GitHub events or pub/sub, or scheduled using Cloud Scheduler then [Cloud Build](https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html) is more suited to your use case. 
 
