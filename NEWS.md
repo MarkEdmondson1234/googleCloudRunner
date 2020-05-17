@@ -1,4 +1,8 @@
-# googleCloudRunner 0.1.1.9000
+# googleCloudRunner 0.2.0.9000
+
+* Move the setup wizard functions from `googleCloudRunner` to `googleAuthR` so they are available for all packages.
+
+# googleCloudRunner 0.2.0
 
 * Add `port` argument to Cloud Run deployments via `cr_buildstep_run()`
 * Add `cr_deploy_pkgdown` and `cr_deploy_packagetests` add subsequent buildsteps to aid R package development.

@@ -2,85 +2,95 @@
 #'
 #'
 #' @export
-#' @import cli
+#' @import cli googleAuthR
 #' @importFrom utils menu packageVersion
 #' @family setup functions
 cr_setup <- function(){
 
-  cli_alert_info(sprintf("==Welcome to googleCloudRunner v%s setup==",
-                  packageVersion("googleCloudRunner")))
+  op <- gar_setup_menu(choices = c(
+      "Configure/check all googleCloudRunner settings",
+      "Configure GCP Project Id",
+      "Configure Authentication JSON file",
+      "Configure Cloud Storage bucket",
+      "Configure Cloud Run region",
+      "Configure Cloud Scheduler build email",
+      "Configure Cloud Build service account"),
+    package_name = "googleCloudRunner"
+  )
 
-  if(!interactive()){
-    stop("Can only be used in an interactive R session", call. = FALSE)
-  }
+  session_user <- gar_setup_check_session()
 
-  ready <- menu(title = "This wizard will scan your system for setup options and help you with any that are missing. \nHit 0 or ESC to cancel.",
-                choices = c(
-                  "Configure/check all googleCloudRunner settings",
-                  "Configure GCP Project Id",
-                  "Configure Authentication JSON file",
-                  "Configure Cloud Storage bucket",
-                  "Configure Cloud Run region",
-                  "Configure Cloud Scheduler build email"
-                ))
+  we_edit <- op != 1
+  project_id <- gar_setup_menu_do(op,
+                                  trigger = c(1,2),
+                                  do_function = gar_setup_env_check,
+                                  stop = TRUE,
+                                  env_arg = "GCE_DEFAULT_PROJECT_ID",
+                                  set_to = get_project_setup(),
+                                  edit_option = we_edit,
+                                  session_user = session_user)
 
-  if(ready == 0){
-    return(invisible(""))
-  }
-  cli_rule()
-  session_user <- check_session()
 
-  cli_rule()
-  project_id <- NULL
-  if(ready %in% c(1,2)){
-    project_id <- do_env_check("GCE_DEFAULT_PROJECT_ID",
-                               not_present = get_project_setup(),
-                               ready = ready,
-                               session_user = session_user)
-    # stop if project_id not configured
-    if(ready > 1 || !project_id) return(invisible(""))
-  }
+  if(we_edit) return(invisible(""))
 
   cli_rule()
-  auth_file <- NULL
-  if(ready %in% c(1,3)){
-    auth_file  <- do_env_check("GCE_AUTH_FILE",
-                               not_present = get_auth_setup(session_user),
-                               ready = ready,
-                               session_user = session_user)
-    # stop if auth_file not configured
-    if(ready > 1 || !auth_file) return(invisible(""))
-  }
+
+  auth_file <- gar_setup_menu_do(op,
+                                 trigger = c(1,3),
+                                 do_function = gar_setup_env_check,
+                                 env_arg = "GCE_AUTH_FILE",
+                                 set_to = get_auth_setup,
+                                 edit_option = we_edit,
+                                 stop = TRUE,
+                                 session_user = session_user)
+
+  if(we_edit) return(invisible(""))
 
   cli_rule()
-  bucket <- NULL
-  if(ready %in% c(1,4)){
-    bucket     <- do_env_check("GCS_DEFAULT_BUCKET",
-                               not_present = get_bucket_setup(),
-                               ready = ready,
-                               session_user = session_user)
-  }
+
+  bucket <- gar_setup_menu_do(op,
+                              trigger = c(1,4),
+                              do_function = gar_setup_env_check,
+                              env_arg = "GCS_DEFAULT_BUCKET",
+                              set_to = get_bucket_setup(),
+                              edit_option = we_edit,
+                              session_user = session_user
+                              )
+  if(we_edit) return(invisible(""))
   cli_rule()
-  region <- NULL
-  if(ready %in% c(1,5)){
-    region     <- do_env_check("CR_REGION",
-                               not_present = get_region_setup(),
-                               ready = ready,
-                               session_user = session_user)
-  }
+
+  region <- gar_setup_menu_do(op,
+                              trigger = c(1,5),
+                              do_function = gar_setup_env_check,
+                              env_arg = "CR_REGION",
+                              set_to = get_region_setup(),
+                              edit_option = we_edit,
+                              session_user = session_user)
+  if(we_edit) return(invisible(""))
   cli_rule()
-  email <- NULL
-  if(ready %in% c(1,6)){
-    email      <- do_env_check("CR_BUILD_EMAIL",
-                               not_present = get_email_setup(),
-                               ready = ready,
-                               session_user = session_user)
-  }
+
+  email <- gar_setup_menu_do(op,
+                             trigger = c(1,6),
+                             do_function = gar_setup_env_check,
+                             env_arg = "CR_BUILD_EMAIL",
+                             set_to = get_email_setup(),
+                             edit_option = we_edit,
+                             session_user = session_user)
+  if(we_edit) return(invisible(""))
+  cli_rule()
+
+  gar_setup_menu_do(op,trigger = 7,do_function = do_build_service_setup)
+  if(we_edit) return(invisible(""))
   cli_rule()
 
   if(all(email, region, bucket, auth_file, project_id)){
-    cli_alert_success("Setup complete!")
+    cli_alert_success("Setup complete! You can test it with cr_setup_test()")
+    return(invisible(""))
   }
+
+  cli_alert_info("Some setup still to complete.
+                 Restart R and/or rerun cr_setup() when ready")
+
 
 }
 
