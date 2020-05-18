@@ -1,3 +1,8 @@
+extract_project_number <- function(json = Sys.getenv("GAR_CLIENT_JSON")){
+  gsub("^([0-9]+?)\\-(.+)\\.apps.+","\\1",jsonlite::fromJSON(json)$installed$client_id)
+}
+
+
 #' @noRd
 do_build_service_setup <- function(){
 
@@ -6,20 +11,20 @@ do_build_service_setup <- function(){
 
   cli_alert_info("The Cloud Build service account ({build_email}) will need permissions during builds for certain operations calling other APIs.  This is distinct from the local authentication file you have setup.")
   do_it <- menu(title = "What services do you want to setup for the Cloud Build service account? (Esc or 0 to skip)",
-                choices = c("Something not listed below",
-                            "All of the below",
+                choices = c("Skip or something not listed below",
+                            "All of the below (Recommended)",
                             "Cloud Run deployments",
                             "Secret Manager",
                             "BigQuery operations",
                             "Cloud Storage operations"))
   if(do_it == 0){
     cli_alert_danger("Cloud Build service account will need permissions to complete certain operations.")
-    return(NULL)
+    return(FALSE)
   }
 
   if(do_it == 1){
-    cli_alert_danger("You will need to configure this yourself using cr_setup_service(), giving the build email {build_email} access to the role you require.")
-    return(NULL)
+    cli_alert_danger("You will need to configure this yourself using cr_setup_service() or in the GCP web console, giving the build email {build_email} access to the role you require.")
+    return(FALSE)
   }
 
   if(do_it %in% c(2,3)){
@@ -181,36 +186,7 @@ get_bucket_setup <- function(){
   NULL
 }
 
-#' @noRd
-#' @return NULL if no changes, ENV_ARG="blah" if change
-get_auth_setup <- function(session_user){
 
-  auth <- cr_setup_auth(session_user = session_user)
-
-  if(auth){
-    fs <- usethis::ui_yeah("Ready to browse to the file to be used for authentication?",
-                           yes = "Ready", no = "Cancel")
-    if(!fs) return(NULL)
-
-    auth_file <- file.choose()
-    check_file <- tryCatch(jsonlite::fromJSON(auth_file),
-                           error = function(err){
-                             cli_alert_danger("Could not read JSON file: {auth_file}")
-                             NULL})
-    if(!is.null(check_file$type) &&
-       check_file$type == "service_account" &&
-       !is.null(check_file$private_key)){
-      cli_alert_success("Validated authentication JSON file")
-      return(paste0("GCE_AUTH_FILE=", auth_file))
-    }
-
-    cli_alert_danger("Checked {auth_file} and it was not a valid JSON file? Confirm file is JSON service account auth key - see website https://code.markedmondson.me/googleCloudRunner/articles/setup.html#local-auth-email")
-
-  }
-
-  NULL
-
-}
 
 #' @noRd
 #' @return NULL if no changes, ENV_ARG="blah" if change

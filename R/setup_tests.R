@@ -9,6 +9,8 @@ cr_setup_test <- function(){
 
   cli_alert_info("Perform deployments to test your setup is working. Takes around 5mins.  ESC or 0 to skip.")
 
+  gar_setup_auth_check("GCE_AUTH_FILE")
+
   run_tests <- utils::menu(
     title = "Select which deployments to test",
     choices = c("All tests",
