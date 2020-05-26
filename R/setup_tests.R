@@ -57,14 +57,12 @@ cr_setup_test <- function(){
                "library(dplyr)",
                "mtcars %>% select(mpg)",
                "sessionInfo()")
-  source <- cr_build_source(RepoSource("googleCloudStorageR",
-                                       branchName = "master"))
 
   if(run_tests %in% c(1,4)){
     cli_alert_info("Testing Cloud Build R scripts deployments via cr_deploy_r()")
 
     # check the script runs ok
-    rb <- cr_deploy_r(r_lines, source = source)
+    rb <- cr_deploy_r(r_lines)
     if(is.null(rb$status) || rb$status != "SUCCESS"){
       cli_alert_danger("Something is wrong with Cloud Build R scripts")
     }
@@ -75,7 +73,7 @@ cr_setup_test <- function(){
     cli_alert_info("Testing scheduling R script deployments via cr_deploy_r(schedule = '* * * * *')")
 
     # schedule the script
-    rs <- cr_deploy_r(r_lines, schedule = "15 21 * * *", source = source)
+    rs <- cr_deploy_r(r_lines, schedule = "15 21 * * *")
 
     if(is.null(rs$state) || rs$state != "ENABLED"){
       cli_alert_danger("Something is wrong with scheduled Cloud Build R scripts")
