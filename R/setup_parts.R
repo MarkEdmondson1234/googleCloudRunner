@@ -65,6 +65,12 @@ get_email_setup <- function(){
       the_email <- readline("Enter the service email you wish to use")
     }
 
+    #ensure cloud scheduler service agent role present
+    schedule_email <- paste0("service-",
+                             extract_project_number(),
+                             "@gcp-sa-cloudscheduler.iam.gserviceaccount.com")
+    cr_setup_service(schedule_email, roles = cr_setup_role_lookup("schedule_agent"))
+
     cli_alert_info("Using email: {the_email}")
     return(paste0("CR_BUILD_EMAIL=", the_email))
 
