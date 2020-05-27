@@ -37,6 +37,35 @@ cr_schedule("my-webhook", "12 6 * * *", overwrite=TRUE)
 
 A common use case is scheduling an R script.  This is provided by `cr_deploy_r()`
 
+A minimal example is:
+
+```r
+# create an r script that will echo the time
+the_build <- cr_build_yaml(cr_buildstep_r("cat(Sys.time())"))
+
+# construct a Cloud Build API call to call that build
+build_call <- cr_build_schedule_http(the_build)
+
+# schedule the API call for every minute
+cr_schedule("test1", "* * * * *", httpTarget = build_call)
+
+# you should return a scheduler object
+test_schedule <- cr_schedule_get("test1")
+
+# once finished, delete the schedule
+cr_schedule_delete("test1")
+```
+
+After it triggers you should see a "SUCCESS" in the [Cloud Scheduler console](https://console.cloud.google.com/cloudscheduler) and associated builds in the [Cloud Build web UI](https://console.cloud.google.com/cloud-build/builds).
+
+The above assumes you have followed the recommended authentication setup using `cr_setup()` and `cr_setup_tests()` all work.
+
+In particular you can check the email that the API call will run under on Cloud Scheduler in `test_schedule$httpTarget$oauthToken$serviceAccountEmail`
+
+### A more complicated R script example
+
+This example shows running R scripts across a source such as GitHub or Cloud Respositories.  This is used for builds such as package checks and website builds. This uses the helper deployment function, `cr_deploy_r()` which is also available as an RStudio gadget. 
+
 ```r
 # this can be an R filepath or lines of R read in from a script
 r_lines <- c("list.files()",
@@ -55,7 +84,15 @@ cr_deploy_r(r_lines, source = source)
 cr_deploy_r(r_lines, schedule = "15 21 * * *", source = source)
 ```
 
-You may want to customise the R docker image you run code from - in this case build your docker image first with your R libraries installed, then specify that image in your R deployment:
+### Supplying your own Docker image
+
+The examples above are all using the default of `rocker/r-base` for the R environment.  If you have package depdencies for your script you would need to install them within the script.
+
+An alternative is to customise the Docker image so it includes the R packages you need.  For instance, `rocker/tidyverse` would load the Tidyverse packages.
+
+You may also want to customise the R docker image further - in this case you can build your docker image first with your R libraries installed, then specify that image in your R deployment.
+
+Once you have your R Docker file, supply it to `cr_deploy_r()` via its `r_image` argument.
 
 ```r
 cr_deploy_docker("my_folder_with_dockerfile", 
@@ -192,8 +229,8 @@ schedule_build <- cr_build(my_build)
 Once you have a working build, schedule that build object by passing it to the `cr_build_schedule_http()` function, which constructs the Cloud Build API call for Cloud Scheduler to call at its scheduled times.
 
 ```r
-# you can feed the Build result back to the scheduler
-cloud_build_target <- cr_build_schedule_http(schedule_build)
+# create a scheduler http endpoint that will trigger your build
+cloud_build_target <- cr_build_schedule_http(my_build)
 
 # schedule it
 cr_schedule("15 5 * * *", name="scheduled_r",

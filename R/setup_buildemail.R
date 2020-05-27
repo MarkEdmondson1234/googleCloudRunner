@@ -40,7 +40,8 @@ cr_setup_role_lookup <- function(type = c(
   "bigquery",
   "secrets",
   "cloudbuild",
-  "cloudstorage"
+  "cloudstorage",
+  "schedule_agent"
 )){
 
   type <- match.arg(type)
@@ -59,7 +60,8 @@ cr_setup_role_lookup <- function(type = c(
          secrets = "roles/secretmanager.secretAccessor",
          cloudbuild = c("roles/cloudbuild.builds.builder",
                         "roles/iam.serviceAccountUser"),
-         cloudstorage = "roles/storage.admin"
+         cloudstorage = "roles/storage.admin",
+         schedule_agent = "roles/cloudscheduler.serviceAgent"
          )
 
 
