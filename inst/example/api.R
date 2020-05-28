@@ -1,3 +1,5 @@
+if(Sys.getenv("PORT") == "") Sys.setenv(PORT = 8000)
+
 #' @get /
 #' @html
 function(){
