@@ -26,7 +26,7 @@ cr_deploy_docker(
 
 \item{remote}{The folder on Google Cloud Storage}
 
-\item{tag}{The tag to attached to the pushed image - can use \code{Build} macros}
+\item{tag}{The tag or tags to be attached to the pushed image - can use \code{Build} macros}
 
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
 

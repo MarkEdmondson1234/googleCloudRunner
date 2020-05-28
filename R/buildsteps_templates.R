@@ -594,7 +594,7 @@ cr_buildstep_secret <- function(secret,
 #' Create a build step to build and push a docker image
 #'
 #' @param image The image tag that will be pushed, starting with gcr.io or created by combining with \code{projectId} if not starting with gcr.io
-#' @param tag The tag to attached to the pushed image - can use \code{Build} macros
+#' @param tag The tag or tags to be attached to the pushed image - can use \code{Build} macros
 #' @param location Where the Dockerfile to build is in relation to \code{dir}
 #' @param ... Further arguments passed in to \link{cr_buildstep}
 #' @param projectId The projectId
@@ -622,7 +622,7 @@ cr_buildstep_secret <- function(secret,
 #' cr_buildtrigger("build-docker", trigger = my_repo, build = built_docker)
 #' }
 cr_buildstep_docker <- function(image,
-                                tag = "$BUILD_ID",
+                                tag = c("latest","$BUILD_ID"),
                                 location = ".",
                                 projectId = cr_project_get(),
                                 dockerfile = "Dockerfile",
@@ -644,14 +644,16 @@ cr_buildstep_docker <- function(image,
     the_image <- paste0("gcr.io/", projectId, "/", image)
   }
 
-  the_image <- paste0(the_image, ":", tag)
   myMessage("Image to be built: ", the_image, level = 3)
+
+  the_image_tagged <- paste0("-t ", the_image, ":", tag)
 
   c(
     cr_buildstep("docker",
                  c("build",
                    "-f", dockerfile,
-                   "-t",the_image,location),
+                   the_image_tagged,
+                   location),
                  ...),
     cr_buildstep("docker", c("push", the_image), ...)
   )

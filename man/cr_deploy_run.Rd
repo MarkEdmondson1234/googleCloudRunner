@@ -53,7 +53,7 @@ cr_deploy_plumber(
 
 \item{image_name}{The gcr.io image name that will be deployed and/or built}
 
-\item{tag}{The tag to attached to the pushed image - can use \code{Build} macros}
+\item{tag}{The tag or tags to be attached to the pushed image - can use \code{Build} macros}
 
 \item{region}{The Cloud Run endpoint set by CR_REGION env arg}
 

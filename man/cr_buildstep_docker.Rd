@@ -6,7 +6,7 @@
 \usage{
 cr_buildstep_docker(
   image,
-  tag = "$BUILD_ID",
+  tag = c("latest", "$BUILD_ID"),
   location = ".",
   projectId = cr_project_get(),
   dockerfile = "Dockerfile",
@@ -16,7 +16,7 @@ cr_buildstep_docker(
 \arguments{
 \item{image}{The image tag that will be pushed, starting with gcr.io or created by combining with \code{projectId} if not starting with gcr.io}
 
-\item{tag}{The tag to attached to the pushed image - can use \code{Build} macros}
+\item{tag}{The tag or tags to be attached to the pushed image - can use \code{Build} macros}
 
 \item{location}{Where the Dockerfile to build is in relation to \code{dir}}
 

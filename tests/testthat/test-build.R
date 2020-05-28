@@ -274,7 +274,7 @@ test_that("Building Build Objects", {
   expect_equal(run_yaml$steps[[1]]$dir, "deploy")
   expect_equal(run_yaml$steps[[1]]$args[[5]],
                "gcr.io/my-project/my-image:$BUILD_ID")
-  expect_equal(run_yaml$steps[[2]]$name, "gcr.io/cloud-builders/docker")
+  expect_equal(run_yaml$steps[[2]]$name, "-t gcr.io/cloud-builders/docker")
   expect_equal(run_yaml$steps[[2]]$args[[2]],
                "gcr.io/my-project/my-image:$BUILD_ID")
   expect_equal(run_yaml$steps[[3]]$args[[1]], "beta")
@@ -335,7 +335,7 @@ test_that("Render BuildStep objects", {
 
   bsd <- cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")
   expect_equal(bsd[[1]]$name, "gcr.io/cloud-builders/docker")
-  expect_equal(bsd[[1]]$args[[5]], "gcr.io/test-project/my-image:$BRANCH_NAME")
+  expect_equal(bsd[[1]]$args[[5]], "-t gcr.io/test-project/my-image:$BRANCH_NAME")
   expect_equal(bsd[[2]]$name,  "gcr.io/cloud-builders/docker")
   expect_equal(bsd[[2]]$args[[1]], "push")
 
