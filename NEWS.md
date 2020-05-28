@@ -2,7 +2,10 @@
 
 * Move the setup wizard functions from `googleCloudRunner` to `googleAuthR` so they are available for all packages.
 * Check for Cloud Scheduler Service Agent is present for scheduler to work (#73)
-* `cr_build_upload_gcs()` will now clean up the files it makes when the function exits (#68)
+* `cr_build_upload_gcs()` will now clean up the files it makes when the function exits (#68 - thanks @MLud)
+* Support local testing in plumber example (#66 - thanks @samterfa)
+* Support multiple tags in Docker builds (#75)
+* Fix being able to pass built Cloud Build objects to schedule via `cr_build_schedule_http()` (#47)
 
 # googleCloudRunner 0.2.0
 

@@ -22,14 +22,14 @@
 #' build1
 #'
 #' \dontrun{
-#' cr_schedule("15 5 * * *", name="cloud-build-test1",
+#' cr_schedule("cloud-build-test1", schedule="15 5 * * *",
 #'             httpTarget = cr_build_schedule_http(build1))
 #'
 #' # a cloud build you would like to schedule
 #' itworks <- cr_build("cloudbuild.yaml", launch_browser = FALSE)
 #'
 #' # once working, pass in the build to the scheduler
-#' cr_schedule("15 5 * * *", name="itworks-schedule",
+#' cr_schedule("itworks-schedule", schedule = "15 5 * * *",
 #'             httpTarget = cr_build_schedule_http(itworks))
 #'
 #' }

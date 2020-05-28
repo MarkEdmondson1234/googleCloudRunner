@@ -225,11 +225,30 @@ cr_build_status <- function(id = .Last.value,
 
   url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds/%s",
                  projectId, the_id)
+
+
   # cloudbuild.projects.builds.get
   f <- gar_api_generator(url, "GET",
-                         data_parse_function = function(x) as.gar_Build(x))
+                         data_parse_function = parse_build_status)
+
   f()
 
+}
+
+parse_build_status <- function(o){
+  yml <- cr_build_yaml(
+    steps = unname(cr_buildstep_df(o$steps)),
+    timeout = o$timeout,
+    logsBucket = o$logsBucket,
+    options = o$options,
+    substitutions = o$substitutions,
+    tags = o$tags,
+    secrets = o$secrets,
+    images = o$images,
+    artifacts = o$artifacts
+  )
+
+  cr_build_make(yml)
 }
 
 #' Download artifacts from a build
