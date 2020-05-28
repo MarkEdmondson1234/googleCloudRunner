@@ -228,14 +228,14 @@
 #&gt;   - -e
 #&gt;   - paste0('1 + 1 = ', 1+1)</div><div class='input'>
 <span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='cr_schedule.html'>cr_schedule</a></span>(<span class='st'>"15 5 * * *"</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='st'>"cloud-build-test1"</span>,
+<span class='fu'><a href='cr_schedule.html'>cr_schedule</a></span>(<span class='st'>"cloud-build-test1"</span>, <span class='kw'>schedule</span><span class='kw'>=</span><span class='st'>"15 5 * * *"</span>,
             <span class='kw'>httpTarget</span> <span class='kw'>=</span> <span class='fu'>cr_build_schedule_http</span>(<span class='no'>build1</span>))
 
 <span class='co'># a cloud build you would like to schedule</span>
 <span class='no'>itworks</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='st'>"cloudbuild.yaml"</span>, <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
 <span class='co'># once working, pass in the build to the scheduler</span>
-<span class='fu'><a href='cr_schedule.html'>cr_schedule</a></span>(<span class='st'>"15 5 * * *"</span>, <span class='kw'>name</span><span class='kw'>=</span><span class='st'>"itworks-schedule"</span>,
+<span class='fu'><a href='cr_schedule.html'>cr_schedule</a></span>(<span class='st'>"itworks-schedule"</span>, <span class='kw'>schedule</span> <span class='kw'>=</span> <span class='st'>"15 5 * * *"</span>,
             <span class='kw'>httpTarget</span> <span class='kw'>=</span> <span class='fu'>cr_build_schedule_http</span>(<span class='no'>itworks</span>))
 
 }</div></pre>
