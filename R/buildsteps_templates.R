@@ -646,7 +646,11 @@ cr_buildstep_docker <- function(image,
 
   myMessage("Image to be built: ", the_image, level = 3)
 
-  the_image_tagged <- paste0("-t ", the_image, ":", tag)
+  the_image_tagged <- c(vapply(tag,
+                               function(x) c("--tag", paste0(the_image, ":", x)),
+                               character(2),
+                               USE.NAMES = FALSE)
+                        )
 
   c(
     cr_buildstep("docker",

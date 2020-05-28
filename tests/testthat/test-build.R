@@ -16,6 +16,7 @@ test_that("Online auth", {
 test_that("[Online] Test deployments", {
   skip_on_travis()
   skip_on_cran()
+
   runme <- system.file("example/",
                        package="googleCloudRunner",
                        mustWork=TRUE)
@@ -98,6 +99,20 @@ test_that("[Online] Test schedule jobs", {
   expect_true(deleteme)
   newer_list <- cr_schedule_list()
   expect_true(!s4$name %in% newer_list$name)
+
+})
+
+test_that("[Online] Test building from build object", {
+  skip_on_travis()
+  skip_on_cran()
+
+  built <- cr_build("inst/cloudbuild/cloudbuild.yaml")
+  sched_built <- cr_schedule("test1","* * * * *",
+                             httpTarget = cr_build_schedule_http(built) )
+  expect_equal(sched_built$state, "ENABLED")
+  sched_list <- cr_schedule_list()
+  expect_true(sched_built$name %in% sched_list$name)
+  cr_schedule_delete("test1")
 
 })
 
