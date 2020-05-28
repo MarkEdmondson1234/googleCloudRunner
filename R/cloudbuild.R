@@ -229,27 +229,13 @@ cr_build_status <- function(id = .Last.value,
 
   # cloudbuild.projects.builds.get
   f <- gar_api_generator(url, "GET",
-                         data_parse_function = parse_build_status)
+                         data_parse_function = as.gar_Build)
 
   f()
 
 }
 
-parse_build_status <- function(o){
-  yml <- cr_build_yaml(
-    steps = unname(cr_buildstep_df(o$steps)),
-    timeout = o$timeout,
-    logsBucket = o$logsBucket,
-    options = o$options,
-    substitutions = o$substitutions,
-    tags = o$tags,
-    secrets = o$secrets,
-    images = o$images,
-    artifacts = o$artifacts
-  )
 
-  cr_build_make(yml)
-}
 
 #' Download artifacts from a build
 #'
@@ -413,10 +399,27 @@ extract_build_id <- function(op){
   the_id
 }
 
+parse_build_meta_to_obj <- function(o){
+  yml <- cr_build_yaml(
+    steps = unname(cr_buildstep_df(o$steps)),
+    timeout = o$timeout,
+    logsBucket = o$logsBucket,
+    options = o$options,
+    substitutions = o$substitutions,
+    tags = o$tags,
+    secrets = o$secrets,
+    images = o$images,
+    artifacts = o$artifacts
+  )
+
+  cr_build_make(yml)
+}
+
 as.gar_Build <- function(x){
   if(is.BuildOperationMetadata(x)){
-    o <- cr_build_status(extract_build_id(x),
+    bb <- cr_build_status(extract_build_id(x),
                          projectId = x$metadata$build$projectId)
+    o <- parse_build_meta_to_obj(bb)
   } else if (is.gar_Build(x)) {
     o <- x # maybe more here later...
   } else {
