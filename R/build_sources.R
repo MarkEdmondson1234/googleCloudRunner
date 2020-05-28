@@ -274,12 +274,16 @@ cr_build_upload_gcs <- function(local,
       files = deploy_folder,
       compression = "gzip")
 
-  unlink(deploy_folder, recursive = TRUE)
+  on.exit(unlink(tar_file))
+  on.exit(unlink(deploy_folder, recursive = TRUE))
+
   myMessage(paste("Uploading",
                   tar_file, "to", paste0(bucket,"/", remote)),
             level = 3)
   gcs_upload(tar_file, bucket = bucket, name = remote,
              predefinedAcl = predefinedAcl)
+
+
 
   cr_build_source(StorageSource(bucket = bucket,
                                 object = remote))
