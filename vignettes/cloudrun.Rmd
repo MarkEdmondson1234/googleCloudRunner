@@ -206,3 +206,15 @@ cr_dockerfile_plumber <- function(deploy_folder, ...){
 
 }
 ```
+
+## Deploying from another Google Cloud project
+
+By default the build will only allow deployments from the same Google Cloud Project - if you want to deploy container images from other projects you need to give the Cloud Run Service Agent for the Cloud Run project access to the source project.  See this [Google help file](https://cloud.google.com/run/docs/deploying#other-projects).
+
+This is available via the `cr_setup_service()` function, using the role lookup `cr_setup_role_lookup("run_agent")`:
+
+```r
+cr_setup_service("service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com"
+                 roles = cr_setup_role_lookup("run_agent"))
+```
+
