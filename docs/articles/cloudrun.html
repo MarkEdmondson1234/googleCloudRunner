@@ -114,7 +114,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>R on Cloud Run</h1>
             
-            <h4 class="date">2020-05-27</h4>
+            <h4 class="date">2020-05-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudrun.Rmd"><code>vignettes/cloudrun.Rmd</code></a></small>
       <div class="hidden name"><code>cloudrun.Rmd</code></div>
@@ -301,6 +301,14 @@ cr_dockerfile_plumber &lt;- function(deploy_folder, ...){
   docker
 
 }</pre></body></html></div>
+</div>
+<div id="deploying-from-another-google-cloud-project" class="section level2">
+<h2 class="hasAnchor">
+<a href="#deploying-from-another-google-cloud-project" class="anchor"></a>Deploying from another Google Cloud project</h2>
+<p>By default the build will only allow deployments from the same Google Cloud Project - if you want to deploy container images from other projects you need to give the Cloud Run Service Agent for the Cloud Run project access to the source project. See this <a href="https://cloud.google.com/run/docs/deploying#other-projects">Google help file</a>.</p>
+<p>This is available via the <code><a href="../reference/cr_setup_service.html">cr_setup_service()</a></code> function, using the role lookup <code><a href="../reference/cr_setup_service.html">cr_setup_role_lookup("run_agent")</a></code>:</p>
+<div class="sourceCode" id="cb8"><html><body><pre class="r">cr_setup_service("service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com"
+                 roles = cr_setup_role_lookup("run_agent"))</pre></body></html></div>
 </div>
   </div>
 
