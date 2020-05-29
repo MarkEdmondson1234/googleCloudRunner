@@ -176,7 +176,7 @@ cr_deploy_docker <- function(local,
     images = image)
 
   image_tag <- paste0(image, ":", tag)
-  myMessage(paste("#Deploy docker build for image: \n", image_tag),
+  myMessage(paste("#Deploy docker build for image: \n", paste(image_tag, sep = " and ")),
             level = 3)
 
   remote_tar <- remote

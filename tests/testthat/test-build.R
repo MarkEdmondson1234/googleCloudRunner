@@ -105,13 +105,16 @@ test_that("[Online] Test schedule jobs", {
 test_that("[Online] Test building from build object", {
   skip_on_travis()
   skip_on_cran()
-
-  built <- cr_build("inst/cloudbuild/cloudbuild.yaml")
+  cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
+                            package = "googleCloudRunner")
+  built <- cr_build(cloudbuild)
   sched_built <- cr_schedule("test1","* * * * *",
                              httpTarget = cr_build_schedule_http(built) )
   expect_equal(sched_built$state, "ENABLED")
   sched_list <- cr_schedule_list()
-  expect_true(sched_built$name %in% sched_list$name)
+  test_name <- sprintf("projects/%s/locations/%s/jobs/test1",
+                       cr_project_get(), cr_region_get())
+  expect_true(test_name %in% sched_list$name)
   cr_schedule_delete("test1")
 
 })
@@ -288,7 +291,7 @@ test_that("Building Build Objects", {
   expect_equal(run_yaml$images[[1]], image)
   expect_equal(run_yaml$steps[[1]]$dir, "deploy")
   expect_equal(run_yaml$steps[[1]]$args[[5]],
-               "-t gcr.io/my-project/my-image:$BUILD_ID")
+               "gcr.io/my-project/my-image:latest")
   expect_equal(run_yaml$steps[[2]]$name, "gcr.io/cloud-builders/docker")
   expect_equal(run_yaml$steps[[2]]$args[[2]],
                "gcr.io/my-project/my-image")
@@ -296,7 +299,7 @@ test_that("Building Build Objects", {
 
   scheduler <- cr_build_schedule_http(cr_build_make(run_yaml))
 
-  expect_equal(scheduler$body, "eyJzdGVwcyI6W3sibmFtZSI6Imdjci5pby9jbG91ZC1idWlsZGVycy9kb2NrZXIiLCJhcmdzIjpbImJ1aWxkIiwiLWYiLCJEb2NrZXJmaWxlIiwiLXQgZ2NyLmlvL215LXByb2plY3QvbXktaW1hZ2U6bGF0ZXN0IiwiLXQgZ2NyLmlvL215LXByb2plY3QvbXktaW1hZ2U6JEJVSUxEX0lEIiwiLiJdLCJkaXIiOiJkZXBsb3kifSx7Im5hbWUiOiJnY3IuaW8vY2xvdWQtYnVpbGRlcnMvZG9ja2VyIiwiYXJncyI6WyJwdXNoIiwiZ2NyLmlvL215LXByb2plY3QvbXktaW1hZ2UiXSwiZGlyIjoiZGVwbG95In0seyJuYW1lIjoiZ2NyLmlvL2Nsb3VkLWJ1aWxkZXJzL2djbG91ZCIsImFyZ3MiOlsiYmV0YSIsInJ1biIsImRlcGxveSIsInRlc3QxIiwiLS1pbWFnZSIsImdjci5pby9teS1wcm9qZWN0L215LWltYWdlIl0sImRpciI6ImRlcGxveSJ9XSwiaW1hZ2VzIjpbImdjci5pby9teS1wcm9qZWN0L215LWltYWdlIl19")
+  expect_equal(scheduler$body, "eyJzdGVwcyI6W3sibmFtZSI6Imdjci5pby9jbG91ZC1idWlsZGVycy9kb2NrZXIiLCJhcmdzIjpbImJ1aWxkIiwiLWYiLCJEb2NrZXJmaWxlIiwiLS10YWciLCJnY3IuaW8vbXktcHJvamVjdC9teS1pbWFnZTpsYXRlc3QiLCItLXRhZyIsImdjci5pby9teS1wcm9qZWN0L215LWltYWdlOiRCVUlMRF9JRCIsIi4iXSwiZGlyIjoiZGVwbG95In0seyJuYW1lIjoiZ2NyLmlvL2Nsb3VkLWJ1aWxkZXJzL2RvY2tlciIsImFyZ3MiOlsicHVzaCIsImdjci5pby9teS1wcm9qZWN0L215LWltYWdlIl0sImRpciI6ImRlcGxveSJ9LHsibmFtZSI6Imdjci5pby9jbG91ZC1idWlsZGVycy9nY2xvdWQiLCJhcmdzIjpbImJldGEiLCJydW4iLCJkZXBsb3kiLCJ0ZXN0MSIsIi0taW1hZ2UiLCJnY3IuaW8vbXktcHJvamVjdC9teS1pbWFnZSJdLCJkaXIiOiJkZXBsb3kifV0sImltYWdlcyI6WyJnY3IuaW8vbXktcHJvamVjdC9teS1pbWFnZSJdfQ==")
 
   cr_build_write(run_yaml, file = "cloudbuild_test.yaml")
   expect_true(file.exists("cloudbuild_test.yaml"))
@@ -350,7 +353,7 @@ test_that("Render BuildStep objects", {
 
   bsd <- cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")
   expect_equal(bsd[[1]]$name, "gcr.io/cloud-builders/docker")
-  expect_equal(bsd[[1]]$args[[4]], "-t gcr.io/test-project/my-image:$BRANCH_NAME")
+  expect_equal(bsd[[1]]$args[[4]], "--tag")
   expect_equal(bsd[[2]]$name,  "gcr.io/cloud-builders/docker")
   expect_equal(bsd[[2]]$args[[1]], "push")
 
