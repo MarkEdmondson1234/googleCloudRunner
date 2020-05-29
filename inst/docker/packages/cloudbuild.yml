@@ -7,7 +7,7 @@ steps:
       - --tag
       - gcr.io/gcer-public/packagetools:latest
       - --tag
-      - gcr.io/gcer-public/packagetools:$BRANCH_ID
+      - gcr.io/gcer-public/packagetools:$BRANCH_NAME
       - '.'
   - name: gcr.io/cloud-builders/docker
     args:
