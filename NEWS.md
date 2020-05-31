@@ -6,6 +6,7 @@
 * Support local testing in plumber example (#66 - thanks @samterfa)
 * Support multiple tags in Docker builds (#75)
 * Fix being able to pass built Cloud Build objects to schedule via `cr_build_schedule_http()` (#47)
+* Add progress for Cloud builds via library(progress) (#29)
 
 # googleCloudRunner 0.2.0
 

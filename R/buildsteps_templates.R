@@ -599,6 +599,12 @@ cr_buildstep_secret <- function(secret,
 #' @param ... Further arguments passed in to \link{cr_buildstep}
 #' @param projectId The projectId
 #' @param dockerfile Specify the name of the Dockerfile found at \code{location}
+#' @param kaniko_cache If greater than 0 will use kaniko cache for Docker builds.  Time in hours for the cache e.g. \code{kaniko_cache=6} will cache Docker layers for 6 hours.
+#'
+#' @details
+#'
+#' Setting \code{kaniko_cache != 0L} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{Using Kaniko cache}{https://cloud.google.com/cloud-build/docs/kaniko-cache}
+#'
 #' @family Cloud Buildsteps
 #' @export
 #' @import assertthat
@@ -626,6 +632,7 @@ cr_buildstep_docker <- function(image,
                                 location = ".",
                                 projectId = cr_project_get(),
                                 dockerfile = "Dockerfile",
+                                kaniko_cache = 0L,
                                 ...){
   # don't allow dot names that would break things
   dots <- list(...)
@@ -652,15 +659,34 @@ cr_buildstep_docker <- function(image,
                                USE.NAMES = FALSE)
                         )
 
-  c(
-    cr_buildstep("docker",
-                 c("build",
-                   "-f", dockerfile,
-                   the_image_tagged,
-                   location),
-                 ...),
-    cr_buildstep("docker", c("push", the_image), ...)
-  )
+  if(kaniko_cache == 0L){
+    return(c(
+      cr_buildstep("docker",
+                   c("build",
+                     "-f", dockerfile,
+                     the_image_tagged,
+                     location),
+                   ...),
+      cr_buildstep("docker", c("push", the_image), ...)
+    ))
+  }
+
+  assert_that(is.integer(kaniko_cache))
+
+  # kaniko cache
+  vapply(tag,
+         function(x){
+           cr_buildstep(
+             name = "gcr.io/kaniko-project/executor:latest",
+             args = c(
+               "--destination", paste0(the_image,":",x),
+               "--cache=true",
+               sprintf("--cache-ttl=%sh", kaniko_cache)
+             ))
+         },
+         FUN.VALUE = list(length(tag)),
+         USE.NAMES = FALSE)
+
 }
 
 #' Create a build step for authenticating with Git
