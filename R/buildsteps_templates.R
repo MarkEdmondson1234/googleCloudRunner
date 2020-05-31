@@ -679,10 +679,12 @@ cr_buildstep_docker <- function(image,
            cr_buildstep(
              name = "gcr.io/kaniko-project/executor:latest",
              args = c(
+               "-f",dockerfile,
                "--destination", paste0(the_image,":",x),
                "--cache=true",
                sprintf("--cache-ttl=%sh", kaniko_cache)
-             ))
+             ),
+             ...)
          },
          FUN.VALUE = list(length(tag)),
          USE.NAMES = FALSE)

@@ -10,6 +10,7 @@ cr_buildstep_docker(
   location = ".",
   projectId = cr_project_get(),
   dockerfile = "Dockerfile",
+  kaniko_cache = 0L,
   ...
 )
 }
@@ -24,10 +25,15 @@ cr_buildstep_docker(
 
 \item{dockerfile}{Specify the name of the Dockerfile found at \code{location}}
 
+\item{kaniko_cache}{If greater than 0 will use kaniko cache for Docker builds.  Time in hours for the cache e.g. \code{kaniko_cache=6} will cache Docker layers for 6 hours.}
+
 \item{...}{Further arguments passed in to \link{cr_buildstep}}
 }
 \description{
 Create a build step to build and push a docker image
+}
+\details{
+Setting \code{kaniko_cache != 0L} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{Using Kaniko cache}{https://cloud.google.com/cloud-build/docs/kaniko-cache}
 }
 \examples{
 cr_project_set("my-project")
