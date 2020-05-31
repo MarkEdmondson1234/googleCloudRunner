@@ -126,15 +126,17 @@ If you have an existing image you want to deploy on Cloud Run (usually one that 
 cr_run("gcr.io/my-project/my-image")
 ```
 
-Cloud Run needs [specific ports available in your container](https://cloud.google.com/run/docs/deploying), so you may want to consult the documentation if you do.
+Cloud Run needs [specific ports available in your container](https://cloud.google.com/run/docs/deploying), so you may want to consult the documentation if you do - in particular look at the [container contract](https://cloud.google.com/run/docs/reference/container-contract) which specifies what the Docker container requirements are. 
 
-However, if you want to do the common use case of building the container first as well, you can do so by using the helper `cr_deploy_docker()`:
+If you want to do the common use case of building the container first before deployment to Cloud Run, you can do so by using the helper `cr_deploy_docker()`:
 
 ```r
 cr_deploy_docker("my-image")
 
 cr_run("gcr.io/my-project/my-image")
 ```
+
+If you want this in the same Cloud Build, then this is available via the buildsteps `cr_buildstep_docker()` and `cr_buildstep_run()`.
 
 ## Cloud Run deployment functions
 

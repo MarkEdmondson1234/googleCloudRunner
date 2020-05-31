@@ -341,19 +341,31 @@ wait_f <- function(init, projectId){
   op <- init
   wait <- TRUE
 
-  cat("\nWaiting for build to finish:\n |=")
+  myMessage("Waiting for Cloud Build...", level = 3)
 
+  timeout <- extract_timeout(op)
+
+  pbf <- sprintf("(:spin) Build time: [:elapsedfull] (:percent of timeout: %ss)",
+                 timeout)
+  pb <- progress::progress_bar$new(
+    total = extract_timeout(op),
+    format = pbf,
+    clear = FALSE
+  )
+
+  pb$tick(0)
   while(wait){
     status <- cr_build_status(op, projectId = projectId)
-    cat("=")
+    pb$tick()
     if(!status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
        wait <- FALSE
     }
     op <- status
     Sys.sleep(5)
   }
-  cat("| Build finished\n")
-  myMessage("Build finished with status: ", status$status, level = 3)
+  pb$terminate()
+
+  myMessage("Build finished with status:", status$status, level = 3)
 
   status
 }

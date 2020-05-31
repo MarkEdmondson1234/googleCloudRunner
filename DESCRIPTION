@@ -24,6 +24,7 @@ Imports:
     httr (>= 1.4.1),
     jsonlite (>= 1.5),
     openssl (>= 1.4.1),
+    progress (>=1.2.2),
     usethis (>= 1.6.0),
     utils,
     yaml (>= 2.2.0)
