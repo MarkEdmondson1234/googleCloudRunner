@@ -210,7 +210,16 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments passed to <a href='cr_build_make.html'>cr_build_make</a></p></td>
+      <td><p>Arguments passed on to <code><a href='cr_build_make.html'>cr_build_make</a></code></p><dl'>
+    <dt><code>yaml</code></dt><dd><p>A <code>Yaml</code> object created from <a href='cr_build_yaml.html'>cr_build_yaml</a> or a file location of a .yaml/.yml cloud build file</p></dd>
+    <dt><code>artifacts</code></dt><dd><p>Artifacts that may be built via <a href='cr_build_yaml_artifact.html'>cr_build_yaml_artifact</a></p></dd>
+    <dt><code>options</code></dt><dd><p>Options</p></dd>
+    <dt><code>source</code></dt><dd><p>A <a href='Source.html'>Source</a> object specifying the location of the source files to build, usually created by <a href='cr_build_source.html'>cr_build_source</a></p></dd>
+    <dt><code>timeout</code></dt><dd><p>Amount of time that this build should be allowed to run, to second</p></dd>
+    <dt><code>images</code></dt><dd><p>A list of images to be pushed upon the successful completion of all build</p></dd>
+    <dt><code>substitutions</code></dt><dd><p>Substitutions data for `Build` resource</p></dd>
+  
+</dl></td>
     </tr>
     </table>
 
@@ -233,7 +242,7 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_packagetests</span>()</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:06:22 &gt; Writing to  cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>ℹ Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'>● Go to https://console.cloud.google.com/cloud-build/triggers and</span>
+<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_packagetests</span>()</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:27:01 &gt; Writing to  cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>ℹ Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'>● Go to https://console.cloud.google.com/cloud-build/triggers and</span>
 #&gt; <span class='message'>  make a build trigger pointing at this file in your repo:</span>
 #&gt; <span class='message'>  cloudbuild-tests.yml </span></div><div class='output co'>#&gt; <span class='message'>ℹ Build Trigger substitution variable settings:</span>
 #&gt; <span class='message'>  _CODECOV_TOKEN = your-codecov-token</span>
@@ -267,7 +276,7 @@
   <span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='cr_buildstep_secret.html'>cr_buildstep_secret</a></span>(<span class='st'>"my_secret"</span>, <span class='st'>"auth.json"</span>),
   <span class='kw'>env</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NOT_CRAN=true"</span>, <span class='st'>"MY_AUTH_FILE=auth.json"</span>),
   <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>1200</span>
-)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:06:22 &gt; Writing to  cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>ℹ Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'>● Go to https://console.cloud.google.com/cloud-build/triggers and</span>
+)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:27:01 &gt; Writing to  cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>ℹ Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'>● Go to https://console.cloud.google.com/cloud-build/triggers and</span>
 #&gt; <span class='message'>  make a build trigger pointing at this file in your repo:</span>
 #&gt; <span class='message'>  cloudbuild-tests.yml </span></div><div class='output co'>#&gt; <span class='message'>ℹ Build Trigger substitution variable settings:</span>
 #&gt; <span class='message'>  _CODECOV_TOKEN = your-codecov-token</span>

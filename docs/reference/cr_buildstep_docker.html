@@ -172,7 +172,7 @@
   <span class='kw'>location</span> <span class='kw'>=</span> <span class='st'>"."</span>,
   <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
   <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='st'>"Dockerfile"</span>,
-  <span class='kw'>kaniko_cache</span> <span class='kw'>=</span> <span class='fl'>0L</span>,
+  <span class='kw'>kaniko_cache</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -201,7 +201,7 @@
     </tr>
     <tr>
       <th>kaniko_cache</th>
-      <td><p>If greater than 0 will use kaniko cache for Docker builds.  Time in hours for the cache e.g. <code>kaniko_cache=6</code> will cache Docker layers for 6 hours.</p></td>
+      <td><p>If TRUE will use kaniko cache for Docker builds.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -211,7 +211,7 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Setting <code>kaniko_cache != 0L</code> will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See <a href='Using Kaniko cache'>https://cloud.google.com/cloud-build/docs/kaniko-cache</a></p>
+    <p>Setting <code>kaniko_cache = TRUE</code> will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See <a href='Using Kaniko cache'>https://cloud.google.com/cloud-build/docs/kaniko-cache</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Cloud Buildsteps: 
@@ -231,8 +231,8 @@
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:06:19 &gt; ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:06:19 &gt; Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
-<span class='fu'>cr_buildstep_docker</span>(<span class='st'>"gcr.io/my-project/my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:06:19 &gt; Image to be built:  gcr.io/my-project/my-image</span></div><div class='output co'>#&gt; [[1]]
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:26:58 &gt; ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:26:58 &gt; Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
+<span class='fu'>cr_buildstep_docker</span>(<span class='st'>"gcr.io/my-project/my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:26:58 &gt; Image to be built:  gcr.io/my-project/my-image</span></div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
@@ -251,7 +251,7 @@
 #&gt; args:
 #&gt; - push
 #&gt; - gcr.io/my-project/my-image
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:06:19 &gt; Image to be built:  gcr.io/my-project/my-image</span></div><div class='output co'>#&gt; [[1]]
+#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:26:58 &gt; Image to be built:  gcr.io/my-project/my-image</span></div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
@@ -270,7 +270,7 @@
 #&gt; args:
 #&gt; - push
 #&gt; - gcr.io/my-project/my-image
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BRANCH_NAME"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:06:19 &gt; Image to be built:  gcr.io/my-project/my-image</span></div><div class='output co'>#&gt; [[1]]
+#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BRANCH_NAME"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:26:58 &gt; Image to be built:  gcr.io/my-project/my-image</span></div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
@@ -298,7 +298,29 @@
 
 <span class='co'># make a build trigger so it builds on each push to master</span>
 <span class='fu'><a href='cr_buildtrigger.html'>cr_buildtrigger</a></span>(<span class='st'>"build-docker"</span>, <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='no'>my_repo</span>, <span class='kw'>build</span> <span class='kw'>=</span> <span class='no'>built_docker</span>)
-}</div></pre>
+}
+
+<span class='co'># add a cache to your docker build to speed up repeat builds</span>
+<span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>, <span class='kw'>kaniko_cache</span> <span class='kw'>=</span> <span class='fl'>6L</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-05-31 17:26:58 &gt; Image to be built:  gcr.io/my-project/my-image</span></div><div class='output co'>#&gt; [[1]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: gcr.io/kaniko-project/executor:latest
+#&gt; args:
+#&gt; - -f
+#&gt; - Dockerfile
+#&gt; - --destination
+#&gt; - gcr.io/my-project/my-image:latest
+#&gt; - --cache=true
+#&gt; 
+#&gt; [[2]]
+#&gt; ==cloudRunnerBuildStep==
+#&gt; name: gcr.io/kaniko-project/executor:latest
+#&gt; args:
+#&gt; - -f
+#&gt; - Dockerfile
+#&gt; - --destination
+#&gt; - gcr.io/my-project/my-image:$BUILD_ID
+#&gt; - --cache=true
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

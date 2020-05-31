@@ -220,7 +220,12 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Other arguments passed to <a href='cr_buildstep_docker.html'>cr_buildstep_docker</a></p></td>
+      <td><p>Arguments passed on to <code><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a></code></p><dl'>
+    <dt><code>image</code></dt><dd><p>The image tag that will be pushed, starting with gcr.io or created by combining with <code>projectId</code> if not starting with gcr.io</p></dd>
+    <dt><code>location</code></dt><dd><p>Where the Dockerfile to build is in relation to <code>dir</code></p></dd>
+    <dt><code>kaniko_cache</code></dt><dd><p>If TRUE will use kaniko cache for Docker builds.</p></dd>
+  
+</dl></td>
     </tr>
     </table>
 
