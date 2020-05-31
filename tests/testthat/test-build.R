@@ -108,12 +108,14 @@ test_that("[Online] Test schedule jobs", {
   expect_equal(s4$state, "ENABLED")
   s5 <- cr_schedule_run(s4)
   expect_equal(s5$state, "ENABLED")
+  Sys.sleep(10) # pause to allow time for schedule list to update
   new_list <- cr_schedule_list()
   expect_true(s4$name %in% new_list$name)
   s6 <- cr_schedule(name=id, description = "edited", overwrite = TRUE)
   expect_equal(s6$description, "edited")
   deleteme <- cr_schedule_delete(id)
   expect_true(deleteme)
+  Sys.sleep(10) # pause to allow time for schedule list to update
   newer_list <- cr_schedule_list()
   expect_true(!s4$name %in% newer_list$name)
 
@@ -503,11 +505,12 @@ test_that("Render BuildStep objects", {
   expect_equal(ss[[1]]$args[[2]], "gcloud secrets versions access latest --secret=my_secret > secret.json")
 
   # kaniko
-  kaniko <- cr_buildstep_docker("my-image", kaniko_cache = TRUE)
+  kaniko <- cr_buildstep_docker("my-image", kaniko_cache = TRUE,
+                                projectId = "test-project")
   expect_equal(kaniko[[1]]$name, "gcr.io/kaniko-project/executor:latest")
   expect_equal(kaniko[[2]]$name, "gcr.io/kaniko-project/executor:latest")
   expect_equal(kaniko[[2]]$args[[4]],
-               "gcr.io/mark-edmondson-gde/my-image:$BUILD_ID")
+               "gcr.io/test-project/my-image:$BUILD_ID")
   expect_equal(kaniko[[1]]$args[[5]], "--cache=true")
 })
 
