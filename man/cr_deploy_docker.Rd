@@ -36,7 +36,13 @@ cr_deploy_docker(
 
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
 
-\item{...}{Other arguments passed to \link{cr_buildstep_docker}}
+\item{...}{
+  Arguments passed on to \code{\link[=cr_buildstep_docker]{cr_buildstep_docker}}
+  \describe{
+    \item{\code{image}}{The image tag that will be pushed, starting with gcr.io or created by combining with \code{projectId} if not starting with gcr.io}
+    \item{\code{location}}{Where the Dockerfile to build is in relation to \code{dir}}
+    \item{\code{kaniko_cache}}{If TRUE will use kaniko cache for Docker builds.}
+  }}
 }
 \description{
 Build a local Dockerfile in the cloud. See googleCloudRunner website for help how to generate Dockerfiles.

@@ -599,11 +599,11 @@ cr_buildstep_secret <- function(secret,
 #' @param ... Further arguments passed in to \link{cr_buildstep}
 #' @param projectId The projectId
 #' @param dockerfile Specify the name of the Dockerfile found at \code{location}
-#' @param kaniko_cache If greater than 0 will use kaniko cache for Docker builds.  Time in hours for the cache e.g. \code{kaniko_cache=6} will cache Docker layers for 6 hours.
+#' @param kaniko_cache If TRUE will use kaniko cache for Docker builds.
 #'
 #' @details
 #'
-#' Setting \code{kaniko_cache != 0L} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{Using Kaniko cache}{https://cloud.google.com/cloud-build/docs/kaniko-cache}
+#' Setting \code{kaniko_cache = TRUE} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{Using Kaniko cache}{https://cloud.google.com/cloud-build/docs/kaniko-cache}
 #'
 #' @family Cloud Buildsteps
 #' @export
@@ -627,12 +627,15 @@ cr_buildstep_secret <- function(secret,
 #' # make a build trigger so it builds on each push to master
 #' cr_buildtrigger("build-docker", trigger = my_repo, build = built_docker)
 #' }
+#'
+#' # add a cache to your docker build to speed up repeat builds
+#' cr_buildstep_docker("my-image", kaniko_cache = 6L)
 cr_buildstep_docker <- function(image,
                                 tag = c("latest","$BUILD_ID"),
                                 location = ".",
                                 projectId = cr_project_get(),
                                 dockerfile = "Dockerfile",
-                                kaniko_cache = 0L,
+                                kaniko_cache = FALSE,
                                 ...){
   # don't allow dot names that would break things
   dots <- list(...)
@@ -659,7 +662,7 @@ cr_buildstep_docker <- function(image,
                                USE.NAMES = FALSE)
                         )
 
-  if(kaniko_cache == 0L){
+  if(!kaniko_cache){
     return(c(
       cr_buildstep("docker",
                    c("build",
@@ -671,8 +674,6 @@ cr_buildstep_docker <- function(image,
     ))
   }
 
-  assert_that(is.integer(kaniko_cache))
-
   # kaniko cache
   vapply(tag,
          function(x){
@@ -681,8 +682,7 @@ cr_buildstep_docker <- function(image,
              args = c(
                "-f",dockerfile,
                "--destination", paste0(the_image,":",x),
-               "--cache=true",
-               sprintf("--cache-ttl=%sh", kaniko_cache)
+               "--cache=true"
              ),
              ...)
          },

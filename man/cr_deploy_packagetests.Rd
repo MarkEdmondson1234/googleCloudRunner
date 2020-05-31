@@ -30,7 +30,17 @@ cr_deploy_packagetests(
 
 \item{build_image}{The docker image that will be used to run the R code for the test scripts}
 
-\item{...}{Other arguments passed to \link{cr_build_make}}
+\item{...}{
+  Arguments passed on to \code{\link[=cr_build_make]{cr_build_make}}
+  \describe{
+    \item{\code{yaml}}{A \code{Yaml} object created from \link{cr_build_yaml} or a file location of a .yaml/.yml cloud build file}
+    \item{\code{artifacts}}{Artifacts that may be built via \link{cr_build_yaml_artifact}}
+    \item{\code{options}}{Options}
+    \item{\code{source}}{A \link{Source} object specifying the location of the source files to build, usually created by \link{cr_build_source}}
+    \item{\code{timeout}}{Amount of time that this build should be allowed to run, to second}
+    \item{\code{images}}{A list of images to be pushed upon the successful completion of all build}
+    \item{\code{substitutions}}{Substitutions data for `Build` resource}
+  }}
 }
 \description{
 This tests an R package each time you commit, and uploads the test coverage results to Codecov

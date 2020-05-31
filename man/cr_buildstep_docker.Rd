@@ -10,7 +10,7 @@ cr_buildstep_docker(
   location = ".",
   projectId = cr_project_get(),
   dockerfile = "Dockerfile",
-  kaniko_cache = 0L,
+  kaniko_cache = FALSE,
   ...
 )
 }
@@ -25,7 +25,7 @@ cr_buildstep_docker(
 
 \item{dockerfile}{Specify the name of the Dockerfile found at \code{location}}
 
-\item{kaniko_cache}{If greater than 0 will use kaniko cache for Docker builds.  Time in hours for the cache e.g. \code{kaniko_cache=6} will cache Docker layers for 6 hours.}
+\item{kaniko_cache}{If TRUE will use kaniko cache for Docker builds.}
 
 \item{...}{Further arguments passed in to \link{cr_buildstep}}
 }
@@ -33,7 +33,7 @@ cr_buildstep_docker(
 Create a build step to build and push a docker image
 }
 \details{
-Setting \code{kaniko_cache != 0L} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{Using Kaniko cache}{https://cloud.google.com/cloud-build/docs/kaniko-cache}
+Setting \code{kaniko_cache = TRUE} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{Using Kaniko cache}{https://cloud.google.com/cloud-build/docs/kaniko-cache}
 }
 \examples{
 cr_project_set("my-project")
@@ -54,6 +54,9 @@ built_docker <- cr_build(docker_yaml, source = my_repo)
 # make a build trigger so it builds on each push to master
 cr_buildtrigger("build-docker", trigger = my_repo, build = built_docker)
 }
+
+# add a cache to your docker build to speed up repeat builds
+cr_buildstep_docker("my-image", kaniko_cache = 6L)
 }
 \seealso{
 Other Cloud Buildsteps: 

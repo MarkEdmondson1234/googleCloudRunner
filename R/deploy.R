@@ -11,6 +11,7 @@
 #' @param pre_steps Other \link{cr_buildstep} to run before the R code executes
 #' @param post_steps Other \link{cr_buildstep} to run after the R code executes
 #' @param ... Other arguments passed through to \link{cr_buildstep_r}
+#' @inheritDotParams cr_buildstep_r
 #' @details
 #'
 #' If \code{schedule=NULL} then the R script will be run immediately on Cloud Build via \link{cr_build}.
@@ -120,6 +121,7 @@ cr_deploy_r <- function(r,
 #' @param ... Other arguments passed to \link{cr_buildstep_docker}
 #' @inheritParams cr_buildstep_docker
 #' @inheritParams cr_build
+#' @inheritDotParams cr_buildstep_docker
 #' @export
 #' @family Deployment functions
 #'
@@ -289,6 +291,7 @@ cr_deploy_pkgdown <- function(steps = NULL,
 #' @param steps extra steps to run before the \link{cr_buildstep_packagetests} steps run (such as decryption of auth files)
 #' @param cloudbuild_file The cloudbuild yaml file to write to
 #' @param ... Other arguments passed to \link{cr_build_make}
+#' @inheritDotParams cr_build_make
 #'
 #' @details
 #'
