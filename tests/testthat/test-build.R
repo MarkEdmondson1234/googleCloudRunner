@@ -73,6 +73,10 @@ test_that("[Online] Test deployments", {
   expect_equal(httr::GET(paste0(ws$status$url,"/blah"))$status_code, 404)
   expect_equal(httr::GET(paste0(ws$status$url,"/NEWS.html"))$status_code, 200)
 
+  # test kaniko_cache
+  ccd <- cr_deploy_docker(system.file("example/", package="googleCloudRunner"),
+                         kaniko_cache = 6L)
+  expect_equal(ccd$status,"SUCCESS")
 
 
 })

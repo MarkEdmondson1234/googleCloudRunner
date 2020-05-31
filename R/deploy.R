@@ -154,6 +154,8 @@ cr_deploy_docker <- function(local,
     dir.exists(local)
   )
 
+  dots <- list(...)
+
   myMessage("Building ", local, " folder for Docker image: ",
             image_name, level = 3)
 
@@ -166,6 +168,13 @@ cr_deploy_docker <- function(local,
 
   image <- make_image_name(image_name, projectId = projectId)
 
+  #kaniko_cache will push image for you
+  if(!is.null(dots$kaniko_cache) && dots$kaniko_cache > 0){
+    push_image <- NULL
+  } else {
+    push_image <- image
+  }
+
   build_yaml <- cr_build_yaml(
     steps = cr_buildstep_docker(image,
                                 tag = tag,
@@ -173,7 +182,7 @@ cr_deploy_docker <- function(local,
                                 dir=paste0("deploy/", remote),
                                 projectId = projectId,
                                 ...),
-    images = image)
+    images = push_image)
 
   image_tag <- paste0(image, ":", tag)
   myMessage(paste("#Deploy docker build for image: \n", paste(image_tag, sep = " and ")),
