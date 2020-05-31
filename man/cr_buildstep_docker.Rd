@@ -33,7 +33,7 @@ cr_buildstep_docker(
 Create a build step to build and push a docker image
 }
 \details{
-Setting \code{kaniko_cache = TRUE} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{Using Kaniko cache}{https://cloud.google.com/cloud-build/docs/kaniko-cache}
+Setting \code{kaniko_cache = TRUE} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{https://cloud.google.com/cloud-build/docs/kaniko-cache}{Using Kaniko cache}
 }
 \examples{
 cr_project_set("my-project")
