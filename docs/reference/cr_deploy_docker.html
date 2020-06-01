@@ -176,6 +176,7 @@
   <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(),
   <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
   <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
+  <span class='kw'>kaniko_cache</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -219,11 +220,14 @@
       <td><p>Whether to launch the logs URL in a browser once deployed</p></td>
     </tr>
     <tr>
+      <th>kaniko_cache</th>
+      <td><p>If TRUE will use kaniko cache for Docker builds.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Arguments passed on to <code><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a></code></p><dl'>
     <dt><code>image</code></dt><dd><p>The image tag that will be pushed, starting with gcr.io or created by combining with <code>projectId</code> if not starting with gcr.io</p></dd>
     <dt><code>location</code></dt><dd><p>Where the Dockerfile to build is in relation to <code>dir</code></p></dd>
-    <dt><code>kaniko_cache</code></dt><dd><p>If TRUE will use kaniko cache for Docker builds.</p></dd>
   
 </dl></td>
     </tr>
