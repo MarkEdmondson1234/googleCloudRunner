@@ -57,12 +57,16 @@ cr_deploy_run <- function(local,
                             launch_browser = launch_browser,
                             timeout=timeout,
                             kaniko_cache=TRUE)
+
   if(built$status != "SUCCESS"){
     myMessage("Error building Dockerfile", level = 3)
     return(built)
   }
 
-  cr_run(built$results$images$name,
+  built_image <- built$results$images$name
+  myMessage("Built Docker image: ", built_image, level = 3)
+
+  cr_run(built_image,
          name = lower_alpha_dash(remote),
          region = region,
          projectId = projectId,

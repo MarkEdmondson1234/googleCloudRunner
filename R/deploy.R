@@ -157,10 +157,10 @@ cr_deploy_docker <- function(local,
     dir.exists(local)
   )
 
-  myMessage("Building ", local, " folder for Docker image: ",
-            image_name, level = 3)
+  myMessage("Building", local, "folder for Docker image: ",
+            image_name, level = 2)
 
-  myMessage(paste("Configuring Dockerfile"), level = 3)
+  myMessage(paste("Configuring Dockerfile"), level = 2)
   find_dockerfile(local, dockerfile = dockerfile)
 
   assert_that(
@@ -187,7 +187,8 @@ cr_deploy_docker <- function(local,
     images = push_image)
 
   image_tag <- paste0(image, ":", tag)
-  myMessage(paste("#Deploy docker build for image: \n", paste(image_tag, sep = " and ")),
+  myMessage(paste("#Deploy docker build for image: ",
+                  paste(image_tag, sep = " and ")),
             level = 3)
 
   remote_tar <- remote
@@ -206,6 +207,11 @@ cr_deploy_docker <- function(local,
   b <- cr_build_wait(docker_build, projectId = projectId)
 
   myMessage(image_tag, level = 3)
+
+  # to make it the same as non-kaniko docker builds
+  if(kaniko_cache){
+    b$results$images$name <- b$steps$args[[1]][[4]]
+  }
 
   b
 }

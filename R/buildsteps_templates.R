@@ -654,7 +654,7 @@ cr_buildstep_docker <- function(image,
     the_image <- paste0("gcr.io/", projectId, "/", image)
   }
 
-  myMessage("Image to be built: ", the_image, level = 3)
+  myMessage("Image to be built: ", the_image, level = 2)
 
   the_image_tagged <- c(vapply(tag,
                                function(x) c("--tag", paste0(the_image, ":", x)),
