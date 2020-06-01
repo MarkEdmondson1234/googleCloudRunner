@@ -166,11 +166,14 @@ parse_schedule_list <- function(x){
     return(data.frame())
   }
 
-  x$jobs[, c("name","userUpdateTime",
-             "state", "scheduleTime",
-             "lastAttemptTime",
-             "schedule","timeZone",
-             "attemptDeadline")]
+  df <- x$jobs
+  cols <- intersect(names(df), c("name","userUpdateTime",
+                             "state", "scheduleTime",
+                             "lastAttemptTime",
+                             "schedule","timeZone",
+                             "attemptDeadline"))
+
+  df[, cols]
 }
 
 #' Deletes a scheduled job.
