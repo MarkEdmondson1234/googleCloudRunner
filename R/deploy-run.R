@@ -55,7 +55,8 @@ cr_deploy_run <- function(local,
                             bucket = bucket,
                             projectId = projectId,
                             launch_browser = launch_browser,
-                            timeout=timeout)
+                            timeout=timeout,
+                            kaniko_cache=TRUE)
   if(built$status != "SUCCESS"){
     myMessage("Error building Dockerfile", level = 3)
     return(built)

@@ -14,6 +14,7 @@ cr_deploy_docker(
   bucket = cr_bucket_get(),
   projectId = cr_project_get(),
   launch_browser = interactive(),
+  kaniko_cache = TRUE,
   ...
 )
 }
@@ -36,12 +37,13 @@ cr_deploy_docker(
 
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
 
+\item{kaniko_cache}{If TRUE will use kaniko cache for Docker builds.}
+
 \item{...}{
   Arguments passed on to \code{\link[=cr_buildstep_docker]{cr_buildstep_docker}}
   \describe{
     \item{\code{image}}{The image tag that will be pushed, starting with gcr.io or created by combining with \code{projectId} if not starting with gcr.io}
     \item{\code{location}}{Where the Dockerfile to build is in relation to \code{dir}}
-    \item{\code{kaniko_cache}}{If TRUE will use kaniko cache for Docker builds.}
   }}
 }
 \description{

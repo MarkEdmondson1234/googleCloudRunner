@@ -46,7 +46,12 @@ cr_deploy_gadget <- function(){
                          max = 3600, width = "100px"),
       shiny::textInput("dockerProject", label = "projectId",
                        value = cr_project_get()),
-      shiny::checkboxInput("interactive", "Launch logs in browser", value = TRUE)
+      shiny::column(width = 6,
+        shiny::h5("Logging"),
+        shiny::checkboxInput("interactive", "Launch logs in browser", value = TRUE),
+        shiny::br()
+      )
+
       ),
       miniUI::miniTabPanel("R script", icon = shiny::icon("r-project"),
         miniUI::miniContentPanel(
@@ -100,7 +105,8 @@ cr_deploy_gadget <- function(){
                              placeholder = "my-image"),
           shiny::textInput("dockerTag", label = "Docker tag",
                            value = "$BUILD_ID"),
-          shiny::helpText(shiny::textOutput("dockerGCRIO"))
+          shiny::helpText(shiny::textOutput("dockerGCRIO")),
+          shiny::checkboxInput("kaniko_cache", "Kaniko Cache", value = TRUE)
           )
       )
     )
@@ -122,7 +128,6 @@ cr_deploy_gadget <- function(){
                         dockerTag = input$apiTag)
     })
 
-    ## Your reactive logic goes here.
     output$rSourceDyn <- shiny::renderUI({
       shiny::req(input$rSource)
 
@@ -186,12 +191,6 @@ cr_deploy_gadget <- function(){
           dockerProject = input$dockerProject,
           dockerTag = NULL)
 
-        # if(input$apiName == ""){
-        #   apiName <- gsub("[^A-Za-z0-9_-]","",basename(folder))
-        # } else {
-        #   apiName <- input$apiName
-        # }
-
         if(input$apiDockerfile == ""){
           dockerfile <- NULL
         } else {
@@ -222,7 +221,8 @@ cr_deploy_gadget <- function(){
           cr_deploy_docker(folder,
                            image_name = image_name,
                            tag = input$dockerTag,
-                           launch_browser=input$interactive)
+                           launch_browser=input$interactive,
+                           kaniko_cache=input$kaniko_cache)
           )
       }
 

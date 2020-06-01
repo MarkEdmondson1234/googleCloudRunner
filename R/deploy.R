@@ -151,12 +151,11 @@ cr_deploy_docker <- function(local,
                              bucket = cr_bucket_get(),
                              projectId = cr_project_get(),
                              launch_browser = interactive(),
+                             kaniko_cache=TRUE,
                              ...){
   assert_that(
     dir.exists(local)
   )
-
-  dots <- list(...)
 
   myMessage("Building ", local, " folder for Docker image: ",
             image_name, level = 3)
@@ -171,7 +170,7 @@ cr_deploy_docker <- function(local,
   image <- make_image_name(image_name, projectId = projectId)
 
   #kaniko_cache will push image for you
-  if(!is.null(dots$kaniko_cache) && dots$kaniko_cache > 0){
+  if(kaniko_cache){
     push_image <- NULL
   } else {
     push_image <- image
@@ -183,6 +182,7 @@ cr_deploy_docker <- function(local,
                                 location = ".",
                                 dir=paste0("deploy/", remote),
                                 projectId = projectId,
+                                kaniko_cache = kaniko_cache,
                                 ...),
     images = push_image)
 
