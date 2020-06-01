@@ -502,7 +502,8 @@ test_that("Render BuildStep objects", {
   ss <- cr_buildstep_secret("my_secret","secret.json")
   expect_equal(ss[[1]]$name, "gcr.io/cloud-builders/gcloud")
   expect_equal(ss[[1]]$entrypoint, "bash")
-  expect_equal(ss[[1]]$args[[2]], "gcloud secrets versions access latest --secret=my_secret > secret.json")
+  expect_equal(ss[[1]]$args[[2]],
+      "gcloud secrets versions access latest --secret=my_secret > secret.json")
 
   # kaniko
   kaniko <- cr_buildstep_docker("my-image", kaniko_cache = TRUE,
@@ -511,7 +512,8 @@ test_that("Render BuildStep objects", {
   expect_equal(kaniko[[2]]$name, "gcr.io/kaniko-project/executor:latest")
   expect_equal(kaniko[[2]]$args[[4]],
                "gcr.io/test-project/my-image:$BUILD_ID")
-  expect_equal(kaniko[[1]]$args[[5]], "--cache=true")
+  expect_equal(kaniko[[1]]$args[[5]], "--context=dir:///workspace/")
+  expect_equal(kaniko[[1]]$args[[6]], "--cache=true")
 })
 
 
