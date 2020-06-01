@@ -675,6 +675,12 @@ cr_buildstep_docker <- function(image,
   }
 
   # kaniko cache
+  build_context <- "dir:///workspace/"
+  dots <- list(...)
+  if(!is.null(dots$dir)){
+    build_context <- paste0(build_context, dots$dir)
+  }
+
   vapply(tag,
          function(x){
            cr_buildstep(
@@ -682,12 +688,14 @@ cr_buildstep_docker <- function(image,
              args = c(
                "-f",dockerfile,
                "--destination", paste0(the_image,":",x),
+               sprintf("--context=%s", build_context),
                "--cache=true"
              ),
              ...)
          },
          FUN.VALUE = list(length(tag)),
          USE.NAMES = FALSE)
+
 
 }
 

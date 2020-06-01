@@ -43,7 +43,7 @@ cr_deploy_run <- function(local,
     is.string(tag)
   )
 
-  myMessage("Uploading ", local, " folder for Cloud Run", level = 3)
+  myMessage("Uploading", local, "folder for Cloud Run", level = 3)
 
   image_name <- make_image_name(image_name, projectId)
 
