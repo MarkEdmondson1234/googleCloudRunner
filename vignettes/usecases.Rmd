@@ -32,12 +32,12 @@ Each commit you make, a background task will build the website with your changes
 
 A suggested setup workflow to do this is below:
 
-1. Encrypt your git SSH key with gcloud [using these instructions](https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials), noting your keyring and key for the next steps.  
-2. This will create an encrypted file - add it to your R package's directory.
-3. Use `cr_deploy_pkgdown()` to create a cloudbuild.yml file in your R package's directory, giving it your decryption details from step 1.
+1. Create a git ssh key to make commits to your repo.  [GitHub has a guide here](https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+2. Upload the ssh key secret to [Google Cloud Secret Manager](https://cloud.google.com/secret-manager) - you can use this secret for all future builds.
+3. Use `cr_deploy_pkgdown()` to create a cloudbuild.yml file in your R package's directory, giving it your secret name from step 2.
 
 ```r
-cr_deploy_pkgdown(keyring = "your-keyring", key = "github-key")
+cr_deploy_pkgdown(secret = "github-key")
 ```
 
 4. Add and commit the cloudbuild.yml file to your git repository
@@ -141,9 +141,15 @@ cr_build(large_r_job)
 
 ### Authentication within the R script on Cloud Build
 
-The default metadata of the Cloud Build server is the same as `googleComputeEngineR`, so you can use `googleAuthR::gar_gce_auth("default", scopes = "https://www.googleapis.com/auth/cloud-platform")`.  You can also use the Cloud Build email (the one that looks like `{project-number@cloudbuild.gserviceaccount.com}`) if its given the right access in Cloud IAM, authentication in your R script will look like `googleAuthR::gar_gce_auth("{project-number@cloudbuild.gserviceaccount.com}", scopes = "https://www.googleapis.com/auth/cloud-platform")`
+The recommended way to use secrets in build is to use `cr_buildstep_secret()`, and upload the sensitive authentication file to [Google Secret Manager](https://cloud.google.com/secret-manager) before hand.
 
-This enables you in the R script to download authentication files from Cloud Storage, for example.  A minimal example is shown below:
+You can also authenticate without uploading any file, if you can use the default service account.  This is usually the case for cloud services such as BigQuery.
+
+The default metadata of the Cloud Build server is the same as `googleComputeEngineR`, so you can use `googleAuthR::gar_gce_auth("default", scopes = "https://www.googleapis.com/auth/cloud-platform")`.  
+
+You can also use the Cloud Build email (the one that looks like `{project-number@cloudbuild.gserviceaccount.com}`) if its given the right access in Cloud IAM, authentication in your R script will look like `googleAuthR::gar_gce_auth("{project-number@cloudbuild.gserviceaccount.com}", scopes = "https://www.googleapis.com/auth/cloud-platform")`
+
+This enables you in the R script to download files from Cloud Storage, for example.  A minimal example is shown below:
 
 ```r
 library(googleCloudStorageR)
@@ -155,9 +161,9 @@ gar_gce_auth("default", scopes = "https://www.googleapis.com/auth/cloud-platform
 #                scopes = "https://www.googleapis.com/auth/cloud-platform")
 
 gcs_list_buckets("my_project")
-auth_file <- gcs_get_object("auth.json", bucket = "my-bucket")
+auth_file <- gcs_get_object("config.json", bucket = "my-bucket")
 
-...do something with the auth file...
+...do something with the config file...
 ```
 
 This would then be saved to an R script and deployed via the gadget or:
@@ -178,6 +184,18 @@ If you want the Docker image to rebuild each git commit, this is what is used to
 
 ![](build_dockerfile.png)
 
+### Kaniko cache
+
+A common workflow is to make lots of repeat builds of Docker images as you update the files and libraries within the Dockerfile.  If this is a heavy operation it can take 20mins+ to build the image.
+
+If it is a long build, consider using the [kaniko cache](https://cloud.google.com/cloud-build/docs/kaniko-cache) option in your Docker builds.  This caches each step of the Dockerfile so only those that are new are built, and can considerably speed up Docker build times. 
+
+To use, select the `kamiko_cache=TRUE` option in your builds:
+
+```r
+cr_deploy_docker("my_folder", kaniko_cache=TRUE)
+```
+
 ## Migrate an existing scheduled Docker container 
 
 You may have an existing Docker container containing code, that doesn't need a public URL.  
@@ -192,8 +210,7 @@ For example, say your existing container is called `gcr.io/my-project/my-r-scrip
 r_code <- cr_build_yaml(
   cr_buildstep("gcr.io/my-project/my-r-script")
 )
-build <- cr_build(r_code)
-built <- cr_build_wait(build)
+cr_build(r_code)
 ```
 
 You could add other steps if you wanted, such as sending an email when done via `cr_buildstep_mailgun()` or `cr_buildstep_slack()`:
@@ -203,13 +220,14 @@ r_code <- cr_build_yaml(
   cr_buildstep("gcr.io/my-project/my-r-script"),
   cr_buildstep_slack("The script run ok")
 )
-build <- cr_build(r_code, `_SLACK_WEBHOOK` = "https://your_slack_webhook")
-built <- cr_build_wait(build)
+cr_build(r_code, `_SLACK_WEBHOOK` = "https://your_slack_webhook")
+
 ```
 
 To set this up in a schedule, add it to the scheduler like so:
 
 ```r
+built <- cr_build(r_code, `_SLACK_WEBHOOK` = "https://your_slack_webhook")
 schedule_me <- cr_build_schedule_http(built)
 cr_schedule("r-code-example", "15 8 * * *", httpTarget = schedule_me)
 ```
