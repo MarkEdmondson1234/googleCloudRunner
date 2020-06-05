@@ -5,9 +5,9 @@
 \title{Creates a new `BuildTrigger`.This API is experimental.}
 \usage{
 cr_buildtrigger(
+  build,
   name,
   trigger,
-  build,
   description = paste("cr_buildtrigger: ", Sys.time()),
   disabled = FALSE,
   substitutions = NULL,
@@ -20,11 +20,11 @@ cr_buildtrigger(
 )
 }
 \arguments{
+\item{build}{The build to trigger created via \link{cr_build_make}, or the file location of the cloudbuild.yaml within the trigger source}
+
 \item{name}{User assigned name of the trigger}
 
 \item{trigger}{The trigger source created via \link{cr_buildstep_repo}}
-
-\item{build}{The build to trigger created via \link{cr_build_make}}
 
 \item{description}{Human-readable description of this trigger}
 
@@ -53,14 +53,16 @@ cr_bucket_set("my-bucket")
 cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
                            package = "googleCloudRunner")
 bb <- cr_build_make(cloudbuild)
-github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner",
-                             branch = "master")
-# creates a trigger with named subtitutions
-ss <- list(`_MYVAR` = "TEST1",
-           `_GITHUB` = "MarkEdmondson1234/googleCloudRunner")
+
+gh_trigger <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
 
 \dontrun{
+# build with in-line build code
+cr_buildtrigger(bb, name = "bt-github-inline", trigger = gh_trigger)
 
+# build pointing to cloudbuild.yaml within the GitHub repo
+cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
+                 name = "bt-github-file", trigger = gh_trigger)
 }
 }
 \seealso{

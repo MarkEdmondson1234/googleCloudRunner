@@ -514,6 +514,13 @@ test_that("Render BuildStep objects", {
                "gcr.io/test-project/my-image:$BUILD_ID")
   expect_equal(kaniko[[1]]$args[[5]], "--context=dir:///workspace/")
   expect_equal(kaniko[[1]]$args[[6]], "--cache=true")
+
+  # build triggers
+  gh_trigger <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner",
+                                     type = "github")
+  expect_s3_class(gh_trigger, "cr_buildtrigger_repo")
+  expect_equal(gh_trigger$type, "github")
+  expect_equal(gh_trigger$repo$name, "googleCloudRunner")
 })
 
 
