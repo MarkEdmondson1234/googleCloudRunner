@@ -177,6 +177,7 @@
   <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
   <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
   <span class='kw'>kaniko_cache</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>predefinedAcl</span> <span class='kw'>=</span> <span class='st'>"bucketOwnerFullControl"</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -222,6 +223,10 @@
     <tr>
       <th>kaniko_cache</th>
       <td><p>If TRUE will use kaniko cache for Docker builds.</p></td>
+    </tr>
+    <tr>
+      <th>predefinedAcl</th>
+      <td><p>Access setting for the bucket used in deployed.  Set to "bucketLevel" if using bucket level access</p></td>
     </tr>
     <tr>
       <th>...</th>
