@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Updates a `BuildTrigger` by its project ID and trigger ID.This API is experimental. — cr_buildtrigger_edit • googleCloudRunner</title>
+<title>Create a buildtrigger repo object — cr_buildtrigger_repo • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Updates a `BuildTrigger` by its project ID and trigger ID.This API is experimental. — cr_buildtrigger_edit" />
-<meta property="og:description" content="Seems not to work at the moment (issue #16)" />
+<meta property="og:title" content="Create a buildtrigger repo object — cr_buildtrigger_repo" />
+<meta property="og:description" content="Create a repository trigger object for use in build triggers" />
 
 
 
@@ -157,31 +157,50 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Updates a `BuildTrigger` by its project ID and trigger ID.This API is experimental.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/buildtriggers.R'><code>R/buildtriggers.R</code></a></small>
-    <div class="hidden name"><code>cr_buildtrigger_edit.Rd</code></div>
+    <h1>Create a buildtrigger repo object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/buildtriggers_github.R'><code>R/buildtriggers_github.R</code></a></small>
+    <div class="hidden name"><code>cr_buildtrigger_repo.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Seems not to work at the moment (issue #16)</p>
+    <p>Create a repository trigger object for use in build triggers</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildtrigger_edit</span>(<span class='no'>BuildTrigger</span>, <span class='no'>triggerId</span>, <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>())</pre>
+    <pre class="usage"><span class='fu'>cr_buildtrigger_repo</span>(
+  <span class='no'>repo_name</span>,
+  <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>".*"</span>,
+  <span class='kw'>tag</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"github"</span>, <span class='st'>"cloud_source"</span>),
+  <span class='kw'>github_secret</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>BuildTrigger</th>
-      <td><p>The <a href='BuildTrigger.html'>BuildTrigger</a> object to update to</p></td>
+      <th>repo_name</th>
+      <td><p>Either the GitHub username/repo_name or the Cloud Source repo_name</p></td>
     </tr>
     <tr>
-      <th>triggerId</th>
-      <td><p>ID of the `BuildTrigger` to edit or a previous <code>BuildTriggerResponse</code> object that will be edited</p></td>
+      <th>branch</th>
+      <td><p>Regex of the branches that will trigger a build.  Ignore if tag is not NULL</p></td>
     </tr>
     <tr>
-      <th>projectId</th>
-      <td><p>ID of the project that owns the trigger</p></td>
+      <th>tag</th>
+      <td><p>Regex of tags that will trigger a build</p></td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td><p>Whether trigger is GitHub or Cloud Source repoistory</p></td>
+    </tr>
+    <tr>
+      <th>github_secret</th>
+      <td><p>If you need to pull from a private GitHub repo, add the github secret from Google Secret Manager which will be used via <a href='cr_buildstep_secret.html'>cr_buildstep_secret</a></p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments passed to either <a href='GitHubEventsConfig.html'>GitHubEventsConfig</a> or <a href='RepoSource.html'>RepoSource</a></p></td>
     </tr>
     </table>
 
@@ -191,32 +210,12 @@
 <code><a href='BuildTrigger.html'>BuildTrigger</a>()</code>,
 <code><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a>()</code>,
 <code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a>()</code>,
+<code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a>()</code>,
 <code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a>()</code>,
 <code><a href='cr_buildtrigger_list.html'>cr_buildtrigger_list</a>()</code>,
-<code><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a>()</code>,
 <code><a href='cr_buildtrigger_run.html'>cr_buildtrigger_run</a>()</code>,
 <code><a href='cr_buildtrigger.html'>cr_buildtrigger</a>()</code></p></div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-
-<span class='no'>github</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
-                            <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>"master"</span>)
-<span class='no'>bt2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger.html'>cr_buildtrigger</a></span>(<span class='st'>"trig2"</span>,
-                       <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='no'>github</span>,
-                       <span class='kw'>build</span> <span class='kw'>=</span> <span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>)
-<span class='no'>bt3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='BuildTrigger.html'>BuildTrigger</a></span>(
-  <span class='kw'>filename</span> <span class='kw'>=</span> <span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>,
-  <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"edited1"</span>,
-  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='st'>"edit"</span>,
-  <span class='kw'>github</span> <span class='kw'>=</span> <span class='no'>github</span>,
-  <span class='kw'>disabled</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>description</span> <span class='kw'>=</span> <span class='st'>"edited trigger"</span>)
-
-<span class='no'>edited</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_buildtrigger_edit</span>(<span class='no'>bt3</span>, <span class='kw'>triggerId</span> <span class='kw'>=</span> <span class='no'>bt2</span>)
-
-}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
