@@ -13,9 +13,7 @@ cr_buildtrigger(
   substitutions = NULL,
   ignoredFiles = NULL,
   includedFiles = NULL,
-  source = NULL,
   trigger_tags = NULL,
-  trigger_source = TRUE,
   projectId = cr_project_get()
 )
 }
@@ -36,16 +34,15 @@ cr_buildtrigger(
 
 \item{includedFiles}{If any of the files altered in the commit pass the ignored_files}
 
-\item{source}{A source the build will use. If left to default NULL will use the trigger's repo as the source.}
-
 \item{trigger_tags}{Tags for the buildtrigger listing}
-
-\item{trigger_source}{Default TRUE will use trigger's repo as source. FALSE will use a source configued in the build object if present. If \code{source=FALSE} and \code{trigger_source=FALSE} then will not use any source.}
 
 \item{projectId}{ID of the project for which to configure automatic builds}
 }
 \description{
 Creates a new `BuildTrigger`.This API is experimental.
+}
+\details{
+Any source specified in the build will be overwritten to use the trigger as a source (GitHub or Cloud Source Repositories)
 }
 \examples{
 cr_project_set("my-project")
@@ -54,15 +51,27 @@ cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
                            package = "googleCloudRunner")
 bb <- cr_build_make(cloudbuild)
 
+# repo hosted on GitHub
 gh_trigger <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+
+# repo mirrored to Cloud Source Repositories
+cs_trigger <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
+                                   type = "cloud_source")
 
 \dontrun{
 # build with in-line build code
 cr_buildtrigger(bb, name = "bt-github-inline", trigger = gh_trigger)
 
+# build with in-line build code using Cloud Source Repository
+cr_buildtrigger(bb, name = "bt-github-inline", trigger = cs_trigger)
+
 # build pointing to cloudbuild.yaml within the GitHub repo
 cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
                  name = "bt-github-file", trigger = gh_trigger)
+
+# build with repo mirror from file
+cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
+                 name = "bt-cs-file", trigger = cs_trigger)
 }
 }
 \seealso{

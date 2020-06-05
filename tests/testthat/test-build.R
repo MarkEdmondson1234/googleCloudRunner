@@ -21,7 +21,8 @@ test_that("[Online] Test deployments", {
                        package="googleCloudRunner",
                        mustWork=TRUE)
 
-  cd <- cr_deploy_docker(runme, launch_browser = FALSE)
+  cd <- cr_deploy_docker(runme, launch_browser = FALSE,
+                         predefinedAcl="bucketLevel")
   expect_equal(cd$status,"SUCCESS")
 
   # why fail?
@@ -152,73 +153,56 @@ test_that("[Online] Test Build Triggers",{
                                branch = "master")
 
 
-  ss <- list(`_MYVAR` = "TEST1",
-             `_GITHUB` = "MarkEdmondson1234/googleCloudRunner")
+  gh_trigger <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+  cs_trigger <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
+                                     type = "cloud_source")
 
-  bt1 <- cr_buildtrigger("trig1",
-                         trigger = github,
-                         build = bb,
-                         substitutions = ss)
-  expect_equal(bt1$name, "trig1")
-  bt11 <- cr_buildtrigger_get(bt1)
-  expect_equal(bt11$name, "trig1")
+  # build with in-line build code
+  gh_inline <- cr_buildtrigger(bb, name = "bt-github-inline", trigger = gh_trigger)
 
-  bt2 <- cr_buildtrigger("trig2",
-                         trigger = github,
-                         build = "inst/cloudbuild/cloudbuild.yaml")
-  expect_equal(bt2$github$owner, "MarkEdmondson1234")
-  expect_equal(bt2$filename, "inst/cloudbuild/cloudbuild.yaml")
+  # build pointing to cloudbuild.yaml within the GitHub repo
+  gh_file <- cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
+                  name = "bt-github-file", trigger = gh_trigger)
 
-  # needs to be mirrored from GitHub or created with Google Cloud Repositories
-  repo <- RepoSource("googleCloudStorageR",
-                     projectId = cr_project_get(),
-                     tagName = "v0.5.1")
-  gcs_repo <- "gcs-repo-test1zzzz"
-  my_build <- cr_build_make(
-    cr_build_yaml(steps = cr_buildstep_r("list.files()"))
-  )
+  cs_file <- cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
+                              name = "bt-cs-file", trigger = cs_trigger)
 
-  bt_repo <- cr_buildtrigger(
-    gcs_repo,
-    trigger = repo,
-    build = my_build
-  )
+  # build inline with trigger source
+  cloudbuild_rmd <- system.file("cloudbuild/cloudbuild_rmd.yml",
+                                 package = "googleCloudRunner")
+  b_rmd <- cr_build_make(cloudbuild_rmd)
+  gh_source_inline <- cr_buildtrigger(b_rmd,
+                                      name = "bt-github-source",
+                                      trigger = gh_trigger)
+  cs_source_inline <- cr_buildtrigger(b_rmd,
+                                      name = "bt-cs-source",
+                                      trigger = cs_trigger)
+  Sys.sleep(5)
+  the_list <- cr_buildtrigger_list()
+  expect_true("bt-github-inline" %in% the_list$name)
+  expect_true("bt-github-file" %in% the_list$name)
+  expect_true("bt-cs-file" %in% the_list$name)
+  expect_true("bt-github-source" %in% the_list$name)
+  expect_true("bt-cs-source" %in% the_list$name)
 
-  new_list <- cr_buildtrigger_list()
+  cr_buildtrigger_delete("bt-github-inline")
+  cr_buildtrigger_delete("bt-github-file")
+  cr_buildtrigger_delete("bt-cs-file")
+  cr_buildtrigger_delete("bt-github-source")
+  cr_buildtrigger_delete("bt-cs-source")
 
-  expect_true(bt1$id %in% new_list$id)
-  expect_true(bt2$id %in% new_list$id)
-  expect_true(bt2$name %in% new_list$name)
-  expect_true(bt_repo$id %in% new_list$id)
+  Sys.sleep(5)
+  the_list2 <- cr_buildtrigger_list()
 
-  my_build2 <- cr_build_make(
-    cr_build_yaml(steps = cr_buildstep_r("list.files(full.names=TRUE)"))
-    )
+  expect_false("bt-github-inline" %in% the_list2$name)
+  expect_false("bt-github-file" %in% the_list2$name)
+  expect_false("bt-cs-file" %in% the_list2$name)
+  expect_false("bt-github-source" %in% the_list2$name)
+  expect_false("bt-cs-source" %in% the_list2$name)
 
-  bt3 <- cr_buildtrigger_make(
-    trigger = repo,
-    build = my_build2,
-    name = "edited1",
-    tags = "edit",
-    disabled = TRUE,
-    description = "edited trigger"
-  )
-  edited <- cr_buildtrigger_edit(bt3, triggerId = bt_repo)
-
-  washup1 <- cr_buildtrigger_delete(bt1)
-  washup2 <- cr_buildtrigger_delete(bt2$id)
-  expect_true(washup1)
-  expect_true(washup2)
-
-  newer_list <- cr_buildtrigger_list()
-
-  expect_true(edited$id %in% newer_list$id)
-  expect_true(!bt1$id %in% newer_list$id)
-  expect_true(!bt2$id %in% newer_list$id)
-  expect_true(!bt2$name %in% newer_list$name)
-
-  washup3 <- cr_buildtrigger_delete(edited)
-  expect_true(washup3)
+  an_id <- the_list2[the_list2$name == "package-checks","id"]
+  info <- cr_buildtrigger_get(an_id)
+  expect_equal(info$name, "package-checks")
 
 })
 

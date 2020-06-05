@@ -129,12 +129,15 @@ parse_buildtrigger_list <- function(x){
 #' @inheritParams BuildTrigger
 #' @param trigger The trigger source created via \link{cr_buildstep_repo}
 #' @param build The build to trigger created via \link{cr_build_make}, or the file location of the cloudbuild.yaml within the trigger source
-#' @param source A source the build will use. If left to default NULL will use the trigger's repo as the source.
-#' @param trigger_source Default TRUE will use trigger's repo as source. FALSE will use a source configued in the build object if present. If \code{source=FALSE} and \code{trigger_source=FALSE} then will not use any source.
 #' @param projectId ID of the project for which to configure automatic builds
 #' @param trigger_tags Tags for the buildtrigger listing
 #' @importFrom googleAuthR gar_api_generator
 #' @family BuildTrigger functions
+#'
+#' @details
+#'
+#' Any source specified in the build will be overwritten to use the trigger as a source (GitHub or Cloud Source Repositories)
+#'
 #' @export
 #' @examples
 #' cr_project_set("my-project")
@@ -143,7 +146,10 @@ parse_buildtrigger_list <- function(x){
 #'                            package = "googleCloudRunner")
 #' bb <- cr_build_make(cloudbuild)
 #'
+#' # repo hosted on GitHub
 #' gh_trigger <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+#'
+#' # repo mirrored to Cloud Source Repositories
 #' cs_trigger <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
 #'                                    type = "cloud_source")
 #'
@@ -151,9 +157,16 @@ parse_buildtrigger_list <- function(x){
 #' # build with in-line build code
 #' cr_buildtrigger(bb, name = "bt-github-inline", trigger = gh_trigger)
 #'
+#' # build with in-line build code using Cloud Source Repository
+#' cr_buildtrigger(bb, name = "bt-github-inline", trigger = cs_trigger)
+#'
 #' # build pointing to cloudbuild.yaml within the GitHub repo
 #' cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
 #'                  name = "bt-github-file", trigger = gh_trigger)
+#'
+#' # build with repo mirror from file
+#' cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
+#'                  name = "bt-cs-file", trigger = cs_trigger)
 #' }
 cr_buildtrigger <- function(build,
                             name,
@@ -163,9 +176,7 @@ cr_buildtrigger <- function(build,
                             substitutions = NULL,
                             ignoredFiles = NULL,
                             includedFiles = NULL,
-                            source = NULL,
                             trigger_tags = NULL,
-                            trigger_source = TRUE,
                             projectId = cr_project_get()) {
 
   assert_that(
@@ -180,10 +191,11 @@ cr_buildtrigger <- function(build,
   } else {
     assert_that(is.gar_Build(build))
     the_filename <- NULL
-    the_build <- resolve_build_source(source = source,
-                                      build = build,
-                                      trigger = trigger,
-                                      trigger_source = trigger_source)
+
+    # remove builds source
+    build$source <- NULL
+    the_build <- cr_build_make(build, source = NULL)
+
   }
 
   trigger_cloudsource <- NULL
@@ -218,63 +230,6 @@ cr_buildtrigger <- function(build,
 
   f(the_body = buildTrigger)
 
-}
-
-resolve_build_source <- function(source, build, trigger, trigger_source){
-
-  if(!is.null(source)){
-    # alter build to use this source
-    assert_that(is.gar_RepoSource(source) || is.gar_StorageSource(source))
-
-    return(cr_build_make(build, source = cr_build_source(source)))
-  }
-
-  if(!trigger_source){
-    return(build)
-  }
-
-  # remove builds source
-  build$source <- NULL
-
-  # alter the build source to use trigger's source
-  if(trigger$type == "github"){
-    github_steps <- NULL
-    if(!is.null(trigger$github_secret)){
-      github_steps <- cr_buildstep_gitsetup(trigger$github_secret)
-    }
-
-    clone_me <- sprintf("git@github.com:%s/%s",
-                        trigger$repo$owner, trigger$repo$name)
-    # prefix git steps
-    new_steps <- c(github_steps,
-                   cr_buildstep_git(
-                     c("clone", clone_me, ".")
-                   ),
-                   build$steps)
-
-    new_yaml <- cr_build_yaml(
-      new_steps,
-      timeout = build$timeout,
-      logsBucket = build$logsBucket,
-      options = build$options,
-      substitutions = build$substitutions,
-      tags = build$tags,
-      secrets = build$secrets,
-      images = build$images,
-      artifacts = build$artifacts
-    )
-    # new build, no source as git is cloned for source
-    the_build <- cr_build_make(new_yaml, source = NULL)
-
-  } else if(trigger$type == "cloud_source"){
-
-    # add the RepoSource of the trigger
-    the_build <- cr_build_make(build,
-                               source = cr_build_source(trigger$repo))
-
-  }
-
-  the_build
 }
 
 as.buildTriggerResponse <- function(x){

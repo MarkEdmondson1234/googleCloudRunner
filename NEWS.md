@@ -8,6 +8,8 @@
 * Fix being able to pass built Cloud Build objects to schedule via `cr_build_schedule_http()` (#47)
 * Add progress for Cloud builds via library(progress) (#29)
 * Add support for Kaniko cache in `cr_buildstep_docker()` and `cr_deploy_docker()` (#46) -should see much quicker repeat builds
+* Let use of bucket level access control when using `cr_deploy_docker()`
+* Added support for creating buildtriggers from R (#78)
 
 # googleCloudRunner 0.2.0
 

@@ -221,7 +221,7 @@ is.gar_StorageSource <- function(x){
 #' @param local Local directory containing the Dockerfile etc. you wish to deploy
 #' @param remote The name of the folder in your bucket
 #' @param bucket The Google Cloud Storage bucket to upload to
-#' @param predefinedAcl The ACL rules for the object uploaded.
+#' @param predefinedAcl The ACL rules for the object uploaded. Set to "bucketLevel" for buckets with bucket level access enabled
 #' @param deploy_folder Which folder to deploy from
 #'
 #' @details

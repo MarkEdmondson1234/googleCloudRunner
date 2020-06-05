@@ -19,7 +19,7 @@ cr_build_upload_gcs(
 
 \item{bucket}{The Google Cloud Storage bucket to upload to}
 
-\item{predefinedAcl}{The ACL rules for the object uploaded.}
+\item{predefinedAcl}{The ACL rules for the object uploaded. Set to "bucketLevel" for buckets with bucket level access enabled}
 
 \item{deploy_folder}{Which folder to deploy from}
 }

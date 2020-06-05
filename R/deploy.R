@@ -118,6 +118,7 @@ cr_deploy_r <- function(r,
 #' @param dockerfile An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"
 #' @param bucket The GCS bucket that will be used to deploy code source
 #' @param image_name The name of the docker image to be built either full name starting with gcr.io or constructed from the image_name and projectId via \code{gcr.io/{projectId}/{image_name}}
+#' @param predefinedAcl Access setting for the bucket used in deployed.  Set to "bucketLevel" if using bucket level access
 #' @param ... Other arguments passed to \link{cr_buildstep_docker}
 #' @inheritParams cr_buildstep_docker
 #' @inheritParams cr_build
@@ -152,6 +153,7 @@ cr_deploy_docker <- function(local,
                              projectId = cr_project_get(),
                              launch_browser = interactive(),
                              kaniko_cache=TRUE,
+                             predefinedAcl="bucketOwnerFullControl",
                              ...){
   assert_that(
     dir.exists(local)
@@ -197,7 +199,8 @@ cr_deploy_docker <- function(local,
   }
   gcs_source <- cr_build_upload_gcs(local,
                                     remote = remote_tar,
-                                    bucket = bucket)
+                                    bucket = bucket,
+                                    predefinedAcl=predefinedAcl)
 
   docker_build <- cr_build(build_yaml,
                            source = gcs_source,

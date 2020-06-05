@@ -15,6 +15,7 @@ cr_deploy_docker(
   projectId = cr_project_get(),
   launch_browser = interactive(),
   kaniko_cache = TRUE,
+  predefinedAcl = "bucketOwnerFullControl",
   ...
 )
 }
@@ -38,6 +39,8 @@ cr_deploy_docker(
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
 
 \item{kaniko_cache}{If TRUE will use kaniko cache for Docker builds.}
+
+\item{predefinedAcl}{Access setting for the bucket used in deployed.  Set to "bucketLevel" if using bucket level access}
 
 \item{...}{
   Arguments passed on to \code{\link[=cr_buildstep_docker]{cr_buildstep_docker}}
