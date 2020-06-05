@@ -144,6 +144,8 @@ parse_buildtrigger_list <- function(x){
 #' bb <- cr_build_make(cloudbuild)
 #'
 #' gh_trigger <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+#' cs_trigger <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
+#'                                    type = "cloud_source")
 #'
 #' \dontrun{
 #' # build with in-line build code

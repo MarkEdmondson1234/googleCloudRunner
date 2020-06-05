@@ -10,12 +10,12 @@ print.cr_buildtrigger_repo <- function(x, ...){
     cat0("Branch: ", x$repo$pull$branch)
     cat0("CommentControl: ", x$repo$pull$commentControl)
   } else {
-    cat0("Source Repository: ", x$repoName)
-    cat0("Project:           ", x$projectId)
-    cat0("Tag:               ", x$tagName)
-    cat0("commitSha:         ", x$commitSha)
-    cat0("Brnach:            ", x$branchName)
-    cat0("Directory:         ", x$dir)
+    cat0("Source Repository: ", x$repo$repoName)
+    cat0("Project:           ", x$repo$projectId)
+    cat0("Tag:               ", x$repo$tagName)
+    cat0("commitSha:         ", x$repo$commitSha)
+    cat0("Brnach:            ", x$repo$branchName)
+    cat0("Directory:         ", x$repo$dir)
   }
 
 }
