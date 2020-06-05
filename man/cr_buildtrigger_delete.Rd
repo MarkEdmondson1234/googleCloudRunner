@@ -21,7 +21,7 @@ Other BuildTrigger functions:
 \code{\link{cr_buildtrigger_edit}()},
 \code{\link{cr_buildtrigger_get}()},
 \code{\link{cr_buildtrigger_list}()},
-\code{\link{cr_buildtrigger_make}()},
+\code{\link{cr_buildtrigger_repo}()},
 \code{\link{cr_buildtrigger_run}()},
 \code{\link{cr_buildtrigger}()}
 }

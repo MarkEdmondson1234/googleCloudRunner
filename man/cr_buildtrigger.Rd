@@ -9,24 +9,24 @@ cr_buildtrigger(
   trigger,
   build,
   description = paste("cr_buildtrigger: ", Sys.time()),
-  tags = NULL,
   disabled = FALSE,
   substitutions = NULL,
   ignoredFiles = NULL,
   includedFiles = NULL,
+  source = NULL,
+  trigger_tags = NULL,
+  trigger_source = TRUE,
   projectId = cr_project_get()
 )
 }
 \arguments{
 \item{name}{User assigned name of the trigger}
 
-\item{trigger}{The trigger source which will be a \link{RepoSource} or a \link{GitHubEventsConfig}}
+\item{trigger}{The trigger source created via \link{cr_buildstep_repo}}
 
-\item{build}{A file location within the trigger source to use for the build steps, or a \link{Build} object}
+\item{build}{The build to trigger created via \link{cr_build_make}}
 
 \item{description}{Human-readable description of this trigger}
-
-\item{tags}{Tags for annotation of a `BuildTrigger`}
 
 \item{disabled}{If true, the trigger will never result in a build}
 
@@ -35,6 +35,12 @@ cr_buildtrigger(
 \item{ignoredFiles}{ignored_files and included_files are file glob matches extended with support for "**".}
 
 \item{includedFiles}{If any of the files altered in the commit pass the ignored_files}
+
+\item{source}{A source the build will use. If left to default NULL will use the trigger's repo as the source.}
+
+\item{trigger_tags}{Tags for the buildtrigger listing}
+
+\item{trigger_source}{Default TRUE will use trigger's repo as source. FALSE will use a source configued in the build object if present. If \code{source=FALSE} and \code{trigger_source=FALSE} then will not use any source.}
 
 \item{projectId}{ID of the project for which to configure automatic builds}
 }
@@ -55,25 +61,6 @@ ss <- list(`_MYVAR` = "TEST1",
 
 \dontrun{
 
-cr_buildtrigger("trig1", trigger = github, build = bb)
-
-cr_buildtrigger("trig2", trigger = github,
-                build = bb,
-                substitutions = ss)
-
-# create a trigger that will build from the file in the repo
-# this is similar to what cr_deploy_docker_github() does
-cr_buildtrigger("trig3", trigger = github,
-                build = "inst/cloudbuild/cloudbuild.yaml")
-
-build_docker <- cr_build_make(
-                    cr_build_yaml(
-                      steps = cr_buildstep_docker("build-dockerfile"),
-                      images = "gcr.io/my-project/my-image"
-                    ))
-
-cr_buildtrigger("trig4", trigger = github,
-                 build = build_docker)
 }
 }
 \seealso{
@@ -84,7 +71,7 @@ Other BuildTrigger functions:
 \code{\link{cr_buildtrigger_edit}()},
 \code{\link{cr_buildtrigger_get}()},
 \code{\link{cr_buildtrigger_list}()},
-\code{\link{cr_buildtrigger_make}()},
+\code{\link{cr_buildtrigger_repo}()},
 \code{\link{cr_buildtrigger_run}()}
 }
 \concept{BuildTrigger functions}

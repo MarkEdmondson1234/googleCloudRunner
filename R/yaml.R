@@ -143,6 +143,9 @@ get_cr_yaml <- function(x){
       is.readable(x),
       grepl("\\.ya?ml$", x, ignore.case = TRUE)
     )
+  } else if(is.gar_Build(x)){
+    # an existing build
+    return(x)
   } else {
     stop("Yaml is not class(yaml) or a filepath - class:", class(x))
   }

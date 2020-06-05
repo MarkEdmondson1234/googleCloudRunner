@@ -6,6 +6,7 @@
 #' @param branch Regex of the branches that will trigger a build.  Ignore if tag is not NULL
 #' @param tag Regex of tags that will trigger a build
 #' @param type Whether trigger is GitHub or Cloud Source repoistory
+#' @param github_secret If you need to pull from a private GitHub repo, add the github secret from Google Secret Manager which will be used via \link{cr_buildstep_secret}
 #' @param ... Other arguments passed to either \link{GitHubEventsConfig} or \link{RepoSource}
 #'
 #' @family BuildTrigger functions
@@ -15,6 +16,7 @@ cr_buildtrigger_repo <- function(repo_name,
                                  branch = ".*",
                                  tag = NULL,
                                  type = c("github","cloud_source"),
+                                 github_secret = NULL,
                                  ...){
 
   assert_that(is.string(repo_name),
@@ -24,15 +26,11 @@ cr_buildtrigger_repo <- function(repo_name,
 
   if(type == "github"){
 
-    assert_that(is.gar_GitHubEventsConfig(repo_name))
-
     repo <- GitHubEventsConfig(repo_name,
                                branch = ".*",
                                tag = NULL,
                                ...)
   } else if(type == "cloud_source"){
-
-    assert_that(is.gar_RepoSource(repo_name))
 
     if(is.null(dots$projectId)){
       projectId <- cr_project_get()
@@ -48,9 +46,15 @@ cr_buildtrigger_repo <- function(repo_name,
 
   }
 
-  structure(list(repo = repo),
+  structure(list(repo = repo,
+                 github_secret = github_secret,
+                 type = type),
             class = c("cr_buildtrigger_repo","list"))
 
+}
+
+is.buildtrigger_repo <- function(x){
+  inherits(x, "cr_buildtrigger_repo")
 }
 
 
