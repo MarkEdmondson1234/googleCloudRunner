@@ -32,30 +32,26 @@ Each commit you make, a background task will build the website with your changes
 
 A suggested setup workflow to do this is below:
 
-1. Create a git ssh key to make commits to your repo.  [GitHub has a guide here](https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
-2. Upload the ssh key secret to [Google Cloud Secret Manager](https://cloud.google.com/secret-manager) - you can use this secret for all future builds.
-3. Use `cr_deploy_pkgdown()` to create a cloudbuild.yml file in your R package's directory, giving it your secret name from step 2.
+1. Go to [GCP console > Cloud Build > Triggers](https://console.cloud.google.com/cloud-build/triggers) and link your git repo to Cloud Build.
+2. Create a git ssh key to make commits to your repo.  [GitHub has a guide here](https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+3. Upload the ssh key secret to [Google Cloud Secret Manager](https://cloud.google.com/secret-manager) - you can use this secret for all future builds.
+4. Use `cr_deploy_pkgdown()` to create a cloudbuild.yml file in your R package's directory, giving it your secret name from step 2.  `create_trigger` can be `file` if you want the cloudbuild.yaml to be within your directory, or `inline` if the build will only be defined in the trigger.
 
 ```r
-cr_deploy_pkgdown(secret = "github-key")
+cr_deploy_pkgdown("MarkEdmondson1234/googleCloudRunner",
+                  secret = "github-key",
+                  create_trigger = "inline")
 ```
 
-4. Add and commit the cloudbuild.yml file to your git repository
-5. Go to [GCP console > Cloud Build > Triggers](https://console.cloud.google.com/cloud-build/triggers) and link your git repo to Cloud Build.
-6. Create a Build Trigger for your git repository: 
+5. Commit to your git repository
 
-* point at the cloudbuild.yml file you committed (e.g. cloudbuild-pkgdown.yml)
-* Make sure to exclude the `docs/**` folder in the build trigger else the trigger will retrigger when the website is built and pushed to the repo!
-* You may also want to exclude other folders such as tests/**
-* Add a substitution variable `_GITHUB_REPO` with your Git address you want to push to e.g. MarkEdmondson1234/googleCloudRunner
+The function will then create a build customised for creating and rendering pkgdown websites, and committing the rendered version to your GitHub /docs folder.
 
 The below is an example for `googleCloudRunner`'s website:
 
 ![](pkgdown-build-trigger.png)
 
-The example above also adds other substitution variables to help run some of the examples. 
-
-You can customise the deployment more by using `cr_buildstep_pkgdown()` in your own custom build files. For instance, you could download other auth keys using `cr_buildstep_secret()` again, so that your website has working authenticated examples. 
+You can customise the deployment further by using `cr_buildstep_pkgdown()` in your own custom build files. For instance, you could download other auth keys using `cr_buildstep_secret()` again, so that your website has working authenticated examples. 
 
 ## Run package tests and code coverage
 
