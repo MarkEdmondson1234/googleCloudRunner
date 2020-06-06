@@ -127,7 +127,7 @@ parse_buildtrigger_list <- function(x){
 #' Creates a new `BuildTrigger`.This API is experimental.
 #'
 #' @inheritParams BuildTrigger
-#' @param trigger The trigger source created via \link{cr_buildstep_repo}
+#' @param trigger The trigger source created via \link{cr_buildtrigger_repo}
 #' @param build The build to trigger created via \link{cr_build_make}, or the file location of the cloudbuild.yaml within the trigger source
 #' @param projectId ID of the project for which to configure automatic builds
 #' @param trigger_tags Tags for the buildtrigger listing

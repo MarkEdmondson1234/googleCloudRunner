@@ -22,7 +22,7 @@ cr_buildtrigger(
 
 \item{name}{User assigned name of the trigger}
 
-\item{trigger}{The trigger source created via \link{cr_buildstep_repo}}
+\item{trigger}{The trigger source created via \link{cr_buildtrigger_repo}}
 
 \item{description}{Human-readable description of this trigger}
 
