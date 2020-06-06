@@ -146,27 +146,22 @@
 <p><img src="pkgdown-commit.png"></p>
 <p>A suggested setup workflow to do this is below:</p>
 <ol style="list-style-type: decimal">
+<li>Go to <a href="https://console.cloud.google.com/cloud-build/triggers">GCP console &gt; Cloud Build &gt; Triggers</a> and link your git repo to Cloud Build.</li>
 <li>Create a git ssh key to make commits to your repo. <a href="https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent">GitHub has a guide here</a>
 </li>
 <li>Upload the ssh key secret to <a href="https://cloud.google.com/secret-manager">Google Cloud Secret Manager</a> - you can use this secret for all future builds.</li>
-<li>Use <code><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown()</a></code> to create a cloudbuild.yml file in your R package’s directory, giving it your secret name from step 2.</li>
+<li>Use <code><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown()</a></code> to create a cloudbuild.yml file in your R package’s directory, giving it your secret name from step 2. <code>create_trigger</code> can be <code>file</code> if you want the cloudbuild.yaml to be within your directory, or <code>inline</code> if the build will only be defined in the trigger.</li>
 </ol>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown</a></span>(<span class="kw">secret</span> <span class="kw">=</span> <span class="st">"github-key"</span>)</pre></body></html></div>
-<ol start="4" style="list-style-type: decimal">
-<li>Add and commit the cloudbuild.yml file to your git repository</li>
-<li>Go to <a href="https://console.cloud.google.com/cloud-build/triggers">GCP console &gt; Cloud Build &gt; Triggers</a> and link your git repo to Cloud Build.</li>
-<li>Create a Build Trigger for your git repository:</li>
+<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown</a></span>(<span class="st">"MarkEdmondson1234/googleCloudRunner"</span>,
+                  <span class="kw">secret</span> <span class="kw">=</span> <span class="st">"github-key"</span>,
+                  <span class="kw">create_trigger</span> <span class="kw">=</span> <span class="st">"inline"</span>)</pre></body></html></div>
+<ol start="5" style="list-style-type: decimal">
+<li>Commit to your git repository</li>
 </ol>
-<ul>
-<li>point at the cloudbuild.yml file you committed (e.g. cloudbuild-pkgdown.yml)</li>
-<li>Make sure to exclude the <code>docs/**</code> folder in the build trigger else the trigger will retrigger when the website is built and pushed to the repo!</li>
-<li>You may also want to exclude other folders such as tests/**</li>
-<li>Add a substitution variable <code>_GITHUB_REPO</code> with your Git address you want to push to e.g. MarkEdmondson1234/googleCloudRunner</li>
-</ul>
+<p>The function will then create a build customised for creating and rendering pkgdown websites, and committing the rendered version to your GitHub /docs folder.</p>
 <p>The below is an example for <code>googleCloudRunner</code>’s website:</p>
 <p><img src="pkgdown-build-trigger.png"></p>
-<p>The example above also adds other substitution variables to help run some of the examples.</p>
-<p>You can customise the deployment more by using <code><a href="../reference/cr_buildstep_pkgdown.html">cr_buildstep_pkgdown()</a></code> in your own custom build files. For instance, you could download other auth keys using <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> again, so that your website has working authenticated examples.</p>
+<p>You can customise the deployment further by using <code><a href="../reference/cr_buildstep_pkgdown.html">cr_buildstep_pkgdown()</a></code> in your own custom build files. For instance, you could download other auth keys using <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> again, so that your website has working authenticated examples.</p>
 </div>
 <div id="run-package-tests-and-code-coverage" class="section level2">
 <h2 class="hasAnchor">
