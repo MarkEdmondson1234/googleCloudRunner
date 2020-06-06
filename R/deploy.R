@@ -147,7 +147,7 @@ cr_deploy_docker <- function(local,
                              image_name = remote,
                              dockerfile = NULL,
                              remote = basename(local),
-                             tag = "$BUILD_ID",
+                             tag = c("latest","$BUILD_ID"),
                              timeout = 600L,
                              bucket = cr_bucket_get(),
                              projectId = cr_project_get(),
@@ -229,6 +229,7 @@ cr_deploy_docker <- function(local,
 #' @inheritParams cr_buildstep_gitsetup
 #' @param steps extra steps to run before the pkgdown website steps run
 #' @param cloudbuild_file The cloudbuild yaml file to write to
+#' @param create_trigger If not "no" then the buildtrigger will be setup for you via \link{cr_buildtrigger}, if "file" will create a buildtrigger pointing at \code{cloudbuild_file}, if "inline" will put the build inline within the trigger (no file created)
 #'
 #' @details
 #'
@@ -236,7 +237,7 @@ cr_deploy_docker <- function(local,
 #'
 #' For GitHub, the repository will also need to be linked to the project you are building within, via \url{https://console.cloud.google.com/cloud-build/triggers/connect}
 #'
-#' The git ssh keys need to be deployed to Google KMS for the deployment of the website - see \link{cr_buildstep_git} - this only needs to be done once per Git account.  You then need to commit the encrypted ssh key (by default called \code{id_rsa.enc})
+#' The git ssh keys need to be deployed to Google Secret Manager for the deployment of the website - see \link{cr_buildstep_git} - this only needs to be done once per Git account.
 #'
 #' @seealso Create your own custom deployment using \link{cr_buildstep_pkgdown} which this function uses with some defaults.
 #' @family Deployment functions
@@ -248,9 +249,10 @@ cr_deploy_docker <- function(local,
 #' file.exists("cloudbuild-pkgdown.yml")
 #' unlink("cloudbuild-pkgdown.yml")
 #'
-cr_deploy_pkgdown <- function(steps = NULL,
+cr_deploy_pkgdown <- function(github_repo,
                               secret,
-                              github_repo = "$_GITHUB_REPO",
+                              steps = NULL,
+                              create_trigger = c("file","inline","no"),
                               cloudbuild_file = "cloudbuild-pkgdown.yml",
                               git_email = "googlecloudrunner@r.com",
                               env = NULL,
@@ -258,6 +260,7 @@ cr_deploy_pkgdown <- function(steps = NULL,
                               post_setup = NULL,
                               post_clone = NULL){
 
+  create_trigger <- match.arg(create_trigger)
 
   build_yaml <-
     cr_build_yaml(steps = c(steps,
@@ -272,23 +275,38 @@ cr_deploy_pkgdown <- function(steps = NULL,
 
   build <- cr_build_make(build_yaml)
 
-  cr_build_write(build, file = cloudbuild_file)
-  usethis::ui_line()
-  usethis::ui_info("Complete deployment of pkgdown Cloud Build yaml:")
-  usethis::ui_todo(c(
-            "Go to https://console.cloud.google.com/cloud-build/triggers and
+  if(create_trigger == "no"){
+    cr_build_write(build, file = cloudbuild_file)
+    usethis::ui_line()
+    usethis::ui_info("Complete deployment of pkgdown Cloud Build yaml:")
+    usethis::ui_todo(c(
+      "Go to https://console.cloud.google.com/cloud-build/triggers and
             make a build trigger pointing at this file in your repo:
             {cloudbuild_file} "))
 
-  if(grepl("^\\$_",github_repo)){
-    usethis::ui_info(c("Build Trigger substitution variable settings:",
-                       "_GITHUB_REPO = username/repo"))
+    usethis::ui_info(c("Ignored files filter (glob): docs/**, inst/**, tests/**"))
+
+    return(invisible(build))
   }
 
-  usethis::ui_info(c("Ignored files filter (glob): docs/**"))
+  myMessage("#Creating pkgdown build trigger for", github_repo, level = 3)
 
+  if(create_trigger == "file"){
+    cr_build_write(build, file = cloudbuild_file)
+    the_build <- cloudbuild_file
+  } else if(create_trigger == "inline"){
+    the_build <- build
+  }
 
-  invisible(build)
+  trig <- cr_buildtrigger_repo(github_repo, branch = "^master$")
+
+  cr_buildtrigger(the_build,
+                  name = paste0("cr-deploy-pkgdown-",format(Sys.Date(),"%Y%m%d")),
+                  trigger = trig,
+                  description = "Build pkgdown website on master branch",
+                  ignoredFiles = c("docs/**",
+                                   "inst/**",
+                                   "tests/**"))
 
 }
 

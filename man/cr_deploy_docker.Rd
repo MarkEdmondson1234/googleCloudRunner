@@ -9,7 +9,7 @@ cr_deploy_docker(
   image_name = remote,
   dockerfile = NULL,
   remote = basename(local),
-  tag = "$BUILD_ID",
+  tag = c("latest", "$BUILD_ID"),
   timeout = 600L,
   bucket = cr_bucket_get(),
   projectId = cr_project_get(),

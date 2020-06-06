@@ -21,8 +21,7 @@ test_that("[Online] Test deployments", {
                        package="googleCloudRunner",
                        mustWork=TRUE)
 
-  cd <- cr_deploy_docker(runme, launch_browser = FALSE,
-                         predefinedAcl="bucketLevel")
+  cd <- cr_deploy_docker(runme, launch_browser = FALSE)
   expect_equal(cd$status,"SUCCESS")
 
   # why fail?
@@ -511,7 +510,7 @@ test_that("Render BuildStep objects", {
 
   expect_s3_class(cs_trigger, "cr_buildtrigger_repo")
   expect_equal(cs_trigger$type, "cloud_source")
-  expect_equal(cs_trigger$repo$repName,
+  expect_equal(cs_trigger$repo$repoName,
                "github_markedmondson1234_googlecloudrunner")
 })
 

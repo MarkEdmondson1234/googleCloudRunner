@@ -5,9 +5,10 @@
 \title{Deploy a cloudbuild.yml for a pkgdown website of an R package}
 \usage{
 cr_deploy_pkgdown(
-  steps = NULL,
+  github_repo,
   secret,
-  github_repo = "$_GITHUB_REPO",
+  steps = NULL,
+  create_trigger = c("file", "inline", "no"),
   cloudbuild_file = "cloudbuild-pkgdown.yml",
   git_email = "googlecloudrunner@r.com",
   env = NULL,
@@ -17,11 +18,13 @@ cr_deploy_pkgdown(
 )
 }
 \arguments{
-\item{steps}{extra steps to run before the pkgdown website steps run}
+\item{github_repo}{The GitHub repo to deploy pkgdown website from and to.}
 
 \item{secret}{The name of the secret on Google Secret Manager for the git ssh private key}
 
-\item{github_repo}{The GitHub repo to deploy pkgdown website from and to.}
+\item{steps}{extra steps to run before the pkgdown website steps run}
+
+\item{create_trigger}{If not "no" then the buildtrigger will be setup for you via \link{cr_buildtrigger}, if "file" will create a buildtrigger pointing at \code{cloudbuild_file}, if "inline" will put the build inline within the trigger (no file created)}
 
 \item{cloudbuild_file}{The cloudbuild yaml file to write to}
 
@@ -43,7 +46,7 @@ The trigger repository needs to hold an R package configured to build a pkgdown 
 
 For GitHub, the repository will also need to be linked to the project you are building within, via \url{https://console.cloud.google.com/cloud-build/triggers/connect}
 
-The git ssh keys need to be deployed to Google KMS for the deployment of the website - see \link{cr_buildstep_git} - this only needs to be done once per Git account.  You then need to commit the encrypted ssh key (by default called \code{id_rsa.enc})
+The git ssh keys need to be deployed to Google Secret Manager for the deployment of the website - see \link{cr_buildstep_git} - this only needs to be done once per Git account.
 }
 \examples{
 

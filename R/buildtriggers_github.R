@@ -27,7 +27,7 @@ cr_buildtrigger_repo <- function(repo_name,
   if(type == "github"){
 
     repo <- GitHubEventsConfig(repo_name,
-                               branch = ".*",
+                               branch = branch,
                                tag = NULL,
                                ...)
   } else if(type == "cloud_source"){
