@@ -186,12 +186,8 @@
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>The GitHub repo e.g. <code>MarkEdmondson1234/googleCloudRunner</code></p></td>
-    </tr>
-    <tr>
       <th>image</th>
-      <td><p>The name of the image you want to build</p></td>
+      <td><p>The name of the image to create or use in deployment - <code>gcr.io</code></p></td>
     </tr>
     <tr>
       <th>rmd_folder</th>
@@ -200,22 +196,6 @@
     <tr>
       <th>html_folder</th>
       <td><p>A folder of html to deploy within GitHub source.  Will be ignored if rmd_folder is not NULL</p></td>
-    </tr>
-    <tr>
-      <th>branch</th>
-      <td><p>A regex of the GitHub branches that will trigger a build</p></td>
-    </tr>
-    <tr>
-      <th>image_tag</th>
-      <td><p>What to tag the build docker image</p></td>
-    </tr>
-    <tr>
-      <th>github_tag</th>
-      <td><p>Regexes matching what tags to build. If not NULL then argument branch will be ignored</p></td>
-    </tr>
-    <tr>
-      <th>timeout</th>
-      <td><p>timeout for the Docker build</p></td>
     </tr>
     <tr>
       <th>edit_r</th>
@@ -233,10 +213,6 @@
       <th>region</th>
       <td><p>The region for cloud run</p></td>
     </tr>
-    <tr>
-      <th>projectId</th>
-      <td><p>The project to build under</p></td>
-    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -250,8 +226,8 @@
 
     <div class='dont-index'><p><a href='cr_deploy_run.html'>cr_deploy_html</a> that lets you deploy HTML files</p>
 <p>Other Deployment functions: 
+<code><a href='cr_deploy_docker_trigger.html'>cr_deploy_docker_trigger</a>()</code>,
 <code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
-<code><a href='cr_deploy_github_docker.html'>cr_deploy_github_docker</a>()</code>,
 <code><a href='cr_deploy_packagetests.html'>cr_deploy_packagetests</a>()</code>,
 <code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a>()</code>,
 <code><a href='cr_deploy_run.html'>cr_deploy_run</a>()</code>,

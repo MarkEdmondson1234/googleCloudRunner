@@ -124,12 +124,13 @@
     
     
 <p>A lot of the features of Cloud Build rely on connection with git workflows.</p>
-<p>Connecting Cloud Build and git allows you to create workflows that automate tasks upon each git commit.</p>
+<p>Connecting Cloud Build and git allows you to create workflows that automate tasks upon each git commit, via Build Triggers.</p>
 <p>A rundown on some common workflows and connections are detailed here.</p>
 <div id="cloud-build-triggers-and-github-app" class="section level2">
 <h2 class="hasAnchor">
 <a href="#cloud-build-triggers-and-github-app" class="anchor"></a>Cloud Build Triggers and GitHub App</h2>
-<p>Cloud Builds can be triggered via Build Triggers, and those Build Triggers can be initiated by GitHub, Bitbucket or Cloud Repository events such as commits or pull requests.</p>
+<p>Cloud Builds can be triggered via Build Triggers, and those Build Triggers can be initiated by GitHub, Bitbucket or Cloud Source Repository events such as commits or pull requests.</p>
+<p>For buildtriggers, you create the git settings via <code><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo()</a></code> which specifies if it is a GitHub repo, or a Cloud Source repository (that may be a mirror of another git service)</p>
 <p>A common use case is triggering R package tests upon each commit.</p>
 </div>
 <div id="authorization-for-cloud-build-to-commit-to-git" class="section level2">
@@ -137,7 +138,6 @@
 <a href="#authorization-for-cloud-build-to-commit-to-git" class="anchor"></a>Authorization for Cloud Build to commit to git</h2>
 <p>This is useful if you want your Cloud Build to modify or commit to a git repo.</p>
 <p>Common use cases are to build a website via <code>pkgdown</code> and then commit that website version back to GitHub to auto-build R documentation websites.</p>
-<p>It also allows you to work with other git repos perhaps not connected to Cloud Build via Build Triggers.</p>
 <p>To do so, Cloud Build needs permission to commit to git, so the first step is to create an ssh key secret that it will use to work on your behalf. This is recommended to be done via <code>cr_buildstep_secret</code> as you can then reuse the secret across multiple builds, since the ssh key is kept securely within your Google Project.</p>
 <p>The guide is for GitHub, adapt it if you use another git provider:</p>
 <ol style="list-style-type: decimal">
@@ -146,9 +146,14 @@
 <li>Add the <strong>public</strong> key (filename ending with <code>.pub</code>) to GitHub’s SSH keys</li>
 <li>Upload the <strong>private</strong> key (filename not ending with <code>.pub</code>) to Google Secret Manager - <code>https://console.cloud.google.com/security/secret-manager</code> and call it a name such as <code>github-ssh</code>
 </li>
-<li>Ensure you have <code>Secret Manager Secret Accessor</code> <a href="https://console.cloud.google.com/iam-admin/iam">IAM role</a> assigned to the cloudbuild service email (<code>{project-number}@cloudbuild.gserviceaccount.com</code>)</li>
-<li>Use in your buildsteps by calling and using the git secret via:</li>
 </ol>
+<p><img src="secret-ui.png"></p>
+<ol start="4" style="list-style-type: decimal">
+<li>Ensure you have <code>Secret Manager Secret Accessor</code> <a href="https://console.cloud.google.com/iam-admin/iam">IAM role</a> assigned to the cloudbuild service email (<code>{project-number}@cloudbuild.gserviceaccount.com</code>)</li>
+<li>Use in your buildsteps by calling and using the git secret:</li>
+</ol>
+<p>In general the secret can be downloaded via <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> which takes two arguments - the name of the secret and the location of where the decrypted file should be within your workspace.</p>
+<p><code><a href="../reference/cr_buildstep_git.html">cr_buildstep_gitsetup()</a></code> calls <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> when you supply it the Secret Manager name:</p>
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="co"># assumes you have previously saved git ssh key called "github-ssh"</span>
 <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(
       <span class="kw">steps</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
