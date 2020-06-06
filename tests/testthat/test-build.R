@@ -462,7 +462,9 @@ test_that("Render BuildStep objects", {
 
 
   # pkgdown builds
-  pd <- cr_deploy_pkgdown(secret = "my_github")
+  pd <- cr_deploy_pkgdown("MarkEdmondson1234/googleCloudRunner",
+                          secret = "my_github",
+                          create_trigger = "no")
   expect_true(file.exists("cloudbuild-pkgdown.yml"))
   expect_equal(pd$steps[[1]]$name, "gcr.io/cloud-builders/gcloud")
   expect_equal(pd$steps[[1]]$args[[2]],
