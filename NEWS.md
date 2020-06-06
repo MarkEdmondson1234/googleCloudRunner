@@ -10,7 +10,7 @@
 * Add support for Kaniko cache in `cr_buildstep_docker()` and `cr_deploy_docker()` (#46) -should see much quicker repeat builds
 * Let use of bucket level access control when using `cr_deploy_docker()`
 * Added support for creating buildtriggers from R (#78)
-* `cr_deploy_pkgdown()` has option to create the build trigger for you
+* `cr_deploy_pkgdown()`, `cr_deploy_docker_trigger()` and `cr_deploy_packagetests()` now all have an option to create the build trigger for you
 
 # googleCloudRunner 0.2.0
 

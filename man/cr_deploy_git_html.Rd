@@ -21,21 +21,11 @@ cr_deploy_git_html(
 )
 }
 \arguments{
-\item{x}{The GitHub repo e.g. \code{MarkEdmondson1234/googleCloudRunner}}
-
-\item{image}{The name of the image you want to build}
+\item{image}{The name of the image to create or use in deployment - \code{gcr.io}}
 
 \item{rmd_folder}{A folder of Rmd files within GitHub source that will be built into HTML for serving via \link[rmarkdown]{render}}
 
 \item{html_folder}{A folder of html to deploy within GitHub source.  Will be ignored if rmd_folder is not NULL}
-
-\item{branch}{A regex of the GitHub branches that will trigger a build}
-
-\item{image_tag}{What to tag the build docker image}
-
-\item{github_tag}{Regexes matching what tags to build. If not NULL then argument branch will be ignored}
-
-\item{timeout}{timeout for the Docker build}
 
 \item{edit_r}{If you want to change the R code to render the HTML, supply R code via a file or string of R as per \link{cr_buildstep_r}}
 
@@ -44,8 +34,6 @@ cr_deploy_git_html(
 \item{allowUnauthenticated}{TRUE if can be reached from public HTTP address.}
 
 \item{region}{The region for cloud run}
-
-\item{projectId}{The project to build under}
 }
 \description{
 This lets you set up triggers that will update a website each commit. You need to mirror the GitHub/Bitbucket repo onto Google Cloud Repositories for this to work.
@@ -82,8 +70,8 @@ cr_deploy_git_html(your_repo,
 \link{cr_deploy_html} that lets you deploy HTML files
 
 Other Deployment functions: 
+\code{\link{cr_deploy_docker_trigger}()},
 \code{\link{cr_deploy_docker}()},
-\code{\link{cr_deploy_github_docker}()},
 \code{\link{cr_deploy_packagetests}()},
 \code{\link{cr_deploy_pkgdown}()},
 \code{\link{cr_deploy_run}()},

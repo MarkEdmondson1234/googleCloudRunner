@@ -691,6 +691,7 @@ cr_buildstep_docker <- function(image,
                sprintf("--context=%s", build_context),
                "--cache=true"
              ),
+             waitFor = "-", # build concurrent tags
              ...)
          },
          FUN.VALUE = list(length(tag)),

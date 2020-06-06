@@ -12,13 +12,15 @@ cr_deploy_packagetests(
   codecov_script = NULL,
   codecov_token = "$_CODECOV_TOKEN",
   build_image = "gcr.io/gcer-public/packagetools:master",
+  create_trigger = c("file", "inline", "no"),
+  trigger_repo = NULL,
   ...
 )
 }
 \arguments{
 \item{steps}{extra steps to run before the \link{cr_buildstep_packagetests} steps run (such as decryption of auth files)}
 
-\item{cloudbuild_file}{The cloudbuild yaml file to write to}
+\item{cloudbuild_file}{The cloudbuild yaml file to write to.  See create_trigger}
 
 \item{env}{Environment arguments to be set during the test script runs}
 
@@ -29,6 +31,10 @@ cr_deploy_packagetests(
 \item{codecov_token}{If using codecov, supply your codecov token here. Default assumes you add it to the Cloud Build substitution macros, which is more secure and recommended.}
 
 \item{build_image}{The docker image that will be used to run the R code for the test scripts}
+
+\item{create_trigger}{If creating a trigger, whether to create it from the cloudbuild_file or inline}
+
+\item{trigger_repo}{If not NULL, a \link{cr_buildtrigger_repo} where a buildtrigger will be created via \link{cr_buildtrigger}}
 
 \item{...}{
   Arguments passed on to \code{\link[=cr_build_make]{cr_build_make}}
@@ -50,7 +56,7 @@ The trigger repository needs to hold an R package configured to do tests upon.
 
 For GitHub, the repository will need to be linked to the project you are building within, via \url{https://console.cloud.google.com/cloud-build/triggers/connect}
 
-If your tests need authentication details, add these via \link{cr_buildstep_decrypt} to the \code{steps} argument, which will prepend decrypting the authentication file before running the tests.
+If your tests need authentication details, add these via \link{cr_buildstep_secret} to the \code{steps} argument, which will prepend decrypting the authentication file before running the tests.
 
 If you want codecov to ignore some files then also deploy a .covrignore file to your repository - see covr website at \url{https://covr.r-lib.org/} for details.
 }
@@ -73,9 +79,9 @@ unlink("cloudbuild-tests.yml")
 Create your own custom deployment using \link{cr_buildstep_packagetests} which this function uses with some defaults
 
 Other Deployment functions: 
+\code{\link{cr_deploy_docker_trigger}()},
 \code{\link{cr_deploy_docker}()},
 \code{\link{cr_deploy_git_html}()},
-\code{\link{cr_deploy_github_docker}()},
 \code{\link{cr_deploy_pkgdown}()},
 \code{\link{cr_deploy_run}()},
 \code{\link{cr_deploy_r}()}

@@ -50,7 +50,7 @@ cr_deploy_docker(
   }}
 }
 \description{
-Build a local Dockerfile in the cloud. See googleCloudRunner website for help how to generate Dockerfiles.
+Build a local Dockerfile in the cloud. See googleCloudRunner website for help how to generate Dockerfiles.  If you want the docker to build on each commit, see also \link{cr_deploy_docker_trigger}
 }
 \details{
 This lets you deploy local folders with Dockerfiles, automating saving the source on Google Cloud Storage.
@@ -70,9 +70,11 @@ b <- cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
 }
 }
 \seealso{
+If you want the docker to build on each commit, see \link{cr_deploy_docker_trigger}
+
 Other Deployment functions: 
+\code{\link{cr_deploy_docker_trigger}()},
 \code{\link{cr_deploy_git_html}()},
-\code{\link{cr_deploy_github_docker}()},
 \code{\link{cr_deploy_packagetests}()},
 \code{\link{cr_deploy_pkgdown}()},
 \code{\link{cr_deploy_run}()},

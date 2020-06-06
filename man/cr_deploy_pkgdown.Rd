@@ -69,9 +69,9 @@ cr_deploy_pkgdown("MarkEdmondson1234/googleCloudRunner",
 Create your own custom deployment using \link{cr_buildstep_pkgdown} which this function uses with some defaults.
 
 Other Deployment functions: 
+\code{\link{cr_deploy_docker_trigger}()},
 \code{\link{cr_deploy_docker}()},
 \code{\link{cr_deploy_git_html}()},
-\code{\link{cr_deploy_github_docker}()},
 \code{\link{cr_deploy_packagetests}()},
 \code{\link{cr_deploy_run}()},
 \code{\link{cr_deploy_r}()}

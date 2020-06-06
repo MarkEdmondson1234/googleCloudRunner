@@ -24,7 +24,7 @@ You can use any public Docker image if you know which arguments etc. to send to 
 
 When creating an R package [pkgdown](https://pkgdown.r-lib.org/) is a fantastic resource for creating a package website from your R function's documentation and vignettes.  
 
-This workflow uses Google's Key Management Store to securely hold your Git ssh login details, then use those details to commit a built website on each Git commit.  This means you do not have to build the website locally.
+This workflow uses Google's Secret Manager to securely hold your Git ssh login details, then use those details to commit a built website on each Git commit.  This means you do not have to build the website locally.
 
 Each commit you make, a background task will build the website with your changes and commit it back to the repo - see example for this website:
 
@@ -176,9 +176,14 @@ If you just want a one-off Docker image, use `cr_deploy_docker()` or make your o
 
 ![](gadget_docker.png)
 
-If you want the Docker image to rebuild each git commit, this is what is used to deploy this package to `gcr.io/gcer-public/googlecloudrunner` - in this case the Dockerfile in the root of the repo is built.  Simply place the Dockerfile in the root of your repo, and then create a Build Trigger with similar settings:
+If you want the Docker image to rebuild each git commit, then you also need a build trigger.  This can be enabled using `cr_deploy_docker_trigger()`
 
-![](build_dockerfile.png)
+The below example builds this package's Dockerfile upon each commit, for a Dockerfile located in the `cloud_build/` folder.
+
+```r
+repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+cr_deploy_docker_trigger(repo, "test3", dir = "cloud_build")
+```
 
 ### Kaniko cache
 

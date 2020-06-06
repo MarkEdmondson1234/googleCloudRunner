@@ -24,7 +24,6 @@ test_that("[Online] Test deployments", {
   cd <- cr_deploy_docker(runme, launch_browser = FALSE)
   expect_equal(cd$status,"SUCCESS")
 
-  # why fail?
   cr <- cr_deploy_plumber(runme,
                           dockerfile = paste0(runme, "Dockerfile"))
 

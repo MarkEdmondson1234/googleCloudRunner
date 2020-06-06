@@ -111,7 +111,10 @@ cr_deploy_r <- function(r,
 
 #' Deploy a local Dockerfile to be built on ContainerRegistry
 #'
-#' Build a local Dockerfile in the cloud. See googleCloudRunner website for help how to generate Dockerfiles.
+#' Build a local Dockerfile in the cloud. See googleCloudRunner website for help how to generate Dockerfiles.  If you want the docker to build on each commit, see also \link{cr_deploy_docker_trigger}
+#'
+#'
+#' @seealso If you want the docker to build on each commit, see \link{cr_deploy_docker_trigger}
 #'
 #' @param local The folder containing the Dockerfile to build
 #' @param remote The folder on Google Cloud Storage
@@ -325,9 +328,11 @@ cr_deploy_pkgdown <- function(github_repo,
 #'
 #' @inheritParams cr_buildstep_packagetests
 #' @param steps extra steps to run before the \link{cr_buildstep_packagetests} steps run (such as decryption of auth files)
-#' @param cloudbuild_file The cloudbuild yaml file to write to
+#' @param cloudbuild_file The cloudbuild yaml file to write to.  See create_trigger
 #' @param ... Other arguments passed to \link{cr_build_make}
 #' @inheritDotParams cr_build_make
+#' @param create_trigger If creating a trigger, whether to create it from the cloudbuild_file or inline
+#' @param trigger_repo If not NULL, a \link{cr_buildtrigger_repo} where a buildtrigger will be created via \link{cr_buildtrigger}
 #'
 #' @details
 #'
@@ -335,7 +340,7 @@ cr_deploy_pkgdown <- function(github_repo,
 #'
 #' For GitHub, the repository will need to be linked to the project you are building within, via \url{https://console.cloud.google.com/cloud-build/triggers/connect}
 #'
-#' If your tests need authentication details, add these via \link{cr_buildstep_decrypt} to the \code{steps} argument, which will prepend decrypting the authentication file before running the tests.
+#' If your tests need authentication details, add these via \link{cr_buildstep_secret} to the \code{steps} argument, which will prepend decrypting the authentication file before running the tests.
 #'
 #' If you want codecov to ignore some files then also deploy a .covrignore file to your repository - see covr website at \url{https://covr.r-lib.org/} for details.
 #'
@@ -364,6 +369,8 @@ cr_deploy_packagetests <- function(
   codecov_script = NULL,
   codecov_token = "$_CODECOV_TOKEN",
   build_image = 'gcr.io/gcer-public/packagetools:master',
+  create_trigger = c("file","inline","no"),
+  trigger_repo = NULL,
   ...){
 
 
@@ -379,19 +386,52 @@ cr_deploy_packagetests <- function(
                   ...
                   )
 
-  cr_build_write(build_yaml, file = cloudbuild_file)
+  if(create_trigger == "no"){
+    cr_build_write(build_yaml, file = cloudbuild_file)
 
-  usethis::ui_line()
-  usethis::ui_info("Complete deployment of tests Cloud Build yaml:")
-  usethis::ui_todo(c(
-    "Go to https://console.cloud.google.com/cloud-build/triggers and
+    usethis::ui_line()
+    usethis::ui_info("Complete deployment of tests Cloud Build yaml:")
+    usethis::ui_todo(c(
+      "Go to https://console.cloud.google.com/cloud-build/triggers and
             make a build trigger pointing at this file in your repo:
             {cloudbuild_file} "))
-  usethis::ui_info(c("Build Trigger substitution variable settings:",
-                     "_CODECOV_TOKEN = your-codecov-token",
-                     "Ignored files filter (glob): docs/** and vignettes/**"))
+    usethis::ui_info(c("Build Trigger substitution variable settings:",
+                       "_CODECOV_TOKEN = your-codecov-token",
+                       "Ignored files filter (glob): docs/** and vignettes/**"))
 
-  invisible(build_yaml)
+    return(build_yaml)
+  }
+
+  # creating a buildtrigger
+  myMessage("#Creating tests build trigger", level = 3)
+  assert_that(is.buildtrigger_repo(trigger_repo))
+
+  if(create_trigger == "file"){
+    cr_build_write(build_yaml, file = cloudbuild_file)
+    the_build <- cloudbuild_file
+  } else if(create_trigger == "inline"){
+    the_build <- build_yaml
+  }
+
+  if(codecov_token == "$_CODECOV_TOKEN"){
+    stop("You must supply a Code Covr token for this repo to use it, or set to NULL")
+  }
+
+  if(is.null(codecov_token)){
+    subs <- NULL
+  } else {
+    assert_that(is.string(codecov_token))
+    subs <- list(`_CODECOV_TOKEN`=codecov_token)
+  }
+
+  cr_buildtrigger(the_build,
+                  name = paste0("cr-deploy-tests-",format(Sys.Date(),"%Y%m%d")),
+                  trigger = trigger_repo,
+                  description = "Tests for package",
+                  substitutions = subs,
+                  ignoredFiles = c("docs/**",
+                                   "vignettes/**"))
+
 
 }
 

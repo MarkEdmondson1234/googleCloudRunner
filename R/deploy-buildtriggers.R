@@ -1,48 +1,49 @@
-#' Deploy Docker build from a GitHub repo (Experimental)
+#' Deploy Docker build from a Git repo
 #'
 #' This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit.
 #'
 #' @seealso \link{cr_deploy_docker} which lets you build Dockerfiles for more generic use cases
 #'
-#' @param x The GitHub repo e.g. \code{MarkEdmondson1234/googleCloudRunner}
+#' @param repo The git repo holding the Dockerfile from \link{cr_buildtrigger_repo}
 #' @param image The name of the image you want to build
-#' @param branch A regex of the GitHub branches that will trigger a build
 #' @param image_tag What to tag the build docker image
-#' @param dockerfile_location Where the Dockerfile sits within the GitHub repo
-#' @param github_tag Regexes matching what tags to build. If not NULL then argument branch will be ignored
+#' @param trigger_name The trigger name
+#' @param ... Other arguments passed to `cr_buildstep_docker`
+#' @inheritDotParams cr_buildstep_docker
 #' @param projectId The project to build under
-#' @param timeout timeout for the Docker build
 #' @family Deployment functions
 #' @details
 #'
-#' Build trigger API is experimental so this function is in development.
+#' This creates a buildtrigger to do a kamiko cache enabled Docker build upon each commit, as defined by your repo settings via \link{cr_buildtrigger_repo}.  It will build all tags concurrently.
 #'
 #' @export
-cr_deploy_github_docker <- function(x,
-                                    image = x,
-                                    branch = ".*",
-                                    image_tag = "$SHORT_SHA",
-                                    dockerfile_location = ".",
-                                    github_tag = NULL,
-                                    timeout = 600L,
-                                    projectId = cr_project_get()){
+#' @examples
+#'
+#' \dontrun{
+#' repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+#' cr_deploy_docker_trigger(repo, "test", dir = "cloud_build")
+#' }
+cr_deploy_docker_trigger <- function(repo,
+                                     image,
+                                     trigger_name = paste0("docker-", image),
+                                     image_tag = c("latest","$SHORT_SHA","$BRANCH_NAME"),
+                                     ...,
+                                     projectId = cr_project_get()){
 
   build_docker <- cr_build_make(
     cr_build_yaml(
       steps = cr_buildstep_docker(image,
                                   tag = image_tag,
-                                  location = dockerfile_location),
-      images = paste0("gcr.io/", projectId, "/", image),
-      timeout = timeout
+                                  ...,
+                                  kaniko_cache = TRUE)
     ))
 
-  github <- GitHubEventsConfig(x, branch = branch, tag = github_tag)
-
-  safe_name <- gsub("[^a-zA-Z1-9]","-", x)
-  cr_buildtrigger(safe_name,
-                  description = safe_name,
-                  trigger = github,
-                  build = build_docker)
+  safe_name <- gsub("[^a-zA-Z1-9]","-", trigger_name)
+  cr_buildtrigger(build_docker,
+                  name = safe_name,
+                  trigger = repo,
+                  description = paste0(safe_name,Sys.time()),
+                  trigger_tags = "docker-build")
 }
 
 #' Deploy HTML built from a repo each commit (Experimental)
