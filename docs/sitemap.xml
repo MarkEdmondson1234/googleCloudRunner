@@ -142,9 +142,6 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_gadget.html</loc>
   </url>
   <url>
-    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_git_html.html</loc>
-  </url>
-  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_packagetests.html</loc>
   </url>
   <url>
@@ -155,6 +152,9 @@
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_run.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_run_website.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_email_set.html</loc>

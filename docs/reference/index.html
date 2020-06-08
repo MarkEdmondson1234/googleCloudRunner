@@ -93,12 +93,22 @@
      
   </a>
 </li>
-<li>
-  <a href="../articles/setup.html">
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fa fa-wrench"></span>
      
     Setup
+     
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/setup.html">R/GCP Setup</a>
+    </li>
+    <li>
+      <a href="../articles/git.html">Git Setup</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
@@ -261,12 +271,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="cr_deploy_git_html.html">cr_deploy_git_html()</a></code> </p>
-        </td>
-        <td><p>Deploy HTML built from a repo each commit (Experimental)</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="cr_deploy_packagetests.html">cr_deploy_packagetests()</a></code> </p>
         </td>
         <td><p>Deploy a cloudbuild.yml for R package tests and upload to Codecov</p></td>
@@ -288,6 +292,12 @@
           <p><code><a href="cr_deploy_run.html">cr_deploy_run()</a></code> <code><a href="cr_deploy_run.html">cr_deploy_html()</a></code> <code><a href="cr_deploy_run.html">cr_deploy_plumber()</a></code> </p>
         </td>
         <td><p>Deploy to Cloud Run</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cr_deploy_run_website.html">cr_deploy_run_website()</a></code> </p>
+        </td>
+        <td><p>Deploy HTML built from a repo each commit (Experimental)</p></td>
       </tr>
     </tbody><tbody>
       <tr>

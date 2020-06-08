@@ -49,12 +49,22 @@
      
   </a>
 </li>
-<li>
-  <a href="../articles/setup.html">
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fa fa-wrench"></span>
      
     Setup
+     
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="../articles/setup.html">R/GCP Setup</a>
+    </li>
+    <li>
+      <a href="../articles/git.html">Git Setup</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
@@ -114,7 +124,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Serverless batched R scripts via Cloud Build</h1>
             
-            <h4 class="date">2020-06-06</h4>
+            <h4 class="date">2020-06-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudbuild.Rmd"><code>vignettes/cloudbuild.Rmd</code></a></small>
       <div class="hidden name"><code>cloudbuild.Rmd</code></div>
@@ -127,9 +137,9 @@
 <p>The first 120 mins per day are free. <a href="https://cloud.google.com/cloud-build/pricing">See here for more priceinfo.</a></p>
 <p>If you want to run scripts that can be triggered one time, batch style, and set them up to trigger on GitHub events or pub/sub, or schedule them using Cloud Scheduler then Cloud Build is suited to your use case.</p>
 <p>If you would also like to have your R code react in realtime to events such as HTTP or sub/sub events, such as a website or API endpoint, consider <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html">Cloud Run</a>.</p>
-<div id="cloudbuild-yaml" class="section level2">
+<div id="the-cloudbuild-yaml-format" class="section level2">
 <h2 class="hasAnchor">
-<a href="#cloudbuild-yaml" class="anchor"></a>cloudbuild.yaml</h2>
+<a href="#the-cloudbuild-yaml-format" class="anchor"></a>The cloudbuild.yaml format</h2>
 <p>Cloud Build is centered around the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yaml format</a> - you can use existing cloudbuild.yaml files or create your own in R using the cloudbuild.yaml helper functions.</p>
 <p>An example cloudbuild.yaml is shown below - this outputs the versions of docker and echos “Hello Cloud Build” and calls an R function:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="fu">steps:</span></a>
@@ -170,8 +180,7 @@
 <h2 class="hasAnchor">
 <a href="#cloud-build-source" class="anchor"></a>Cloud Build source</h2>
 <p>Cloud Builds sometimes need code or data to work on to be useful.</p>
-<p>All cloudbuilds are launched in a serverless environment with a default directory <code>/workspace/</code>. The Source is copied into this workspace before the build steps execute, so steps can share state and files.</p>
-<p>Cloud Build sources are specified by the <code>source</code> argument.</p>
+<p>All cloudbuilds are launched in a serverless environment with a default directory <code>/workspace/</code>. The Source is copied into this workspace before the build steps execute, so steps can share state and files. Cloud Build sources are specified by the <code>source</code> argument.</p>
 <p>A source can be a <a href="https://cloud.google.com/source-repositories/">Cloud Source Repository</a> (perhaps mirrored from GitHub) or a <a href="https://cloud.google.com/storage/">Cloud Storage</a> bucket containing the code/data you want to operate on. An example of specifying both is below:</p>
 <div class="sourceCode" id="cb6"><html><body><pre class="r"><span class="no">gcs_source</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_source.html">cr_build_source</a></span>(
   <span class="fu"><a href="../reference/StorageSource.html">StorageSource</a></span>(<span class="st">"gs://my-bucket"</span>, <span class="st">"my_code.tar.gz"</span>))
@@ -352,28 +361,25 @@
 </ul>
 <p><img src="buildtrigger_example.png"></p>
 </div>
-<div id="build-triggers-via-code-experimental" class="section level3">
+<div id="build-triggers-via-code" class="section level3">
 <h3 class="hasAnchor">
-<a href="#build-triggers-via-code-experimental" class="anchor"></a>Build Triggers via code (Experimental)</h3>
-<blockquote>
-<p>This API is experimental, so may not be reliable for production</p>
-</blockquote>
+<a href="#build-triggers-via-code" class="anchor"></a>Build Triggers via code</h3>
 <p>Build Triggers can be made via R code using the <code><a href="../reference/cr_buildtrigger.html">cr_buildtrigger()</a></code> function.</p>
 <p>Build Triggers include GitHub commits and pull requests.</p>
 <p>The example below shows how to set up some of the builds above:</p>
 <div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="no">cloudbuild</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"cloudbuild/cloudbuild.yaml"</span>,
                             <span class="kw">package</span> <span class="kw">=</span> <span class="st">"googleCloudRunner"</span>)
 <span class="no">bb</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span>(<span class="no">cloudbuild</span>, <span class="kw">projectId</span> <span class="kw">=</span> <span class="st">"test-project"</span>)
-<span class="no">github</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/GitHubEventsConfig.html">GitHubEventsConfig</a></span>(<span class="st">"MarkEdmondson1234/googleCloudRunner"</span>, <span class="kw">branch</span> <span class="kw">=</span> <span class="st">"master"</span>)
+<span class="no">github</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span>(<span class="st">"MarkEdmondson1234/googleCloudRunner"</span>, <span class="kw">branch</span> <span class="kw">=</span> <span class="st">"master"</span>)
 
-<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"trig1"</span>, <span class="kw">trigger</span> <span class="kw">=</span> <span class="no">github</span>, <span class="kw">build</span> <span class="kw">=</span> <span class="no">bb</span>)</pre></body></html></div>
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="no">bb</span>, <span class="kw">name</span> <span class="kw">=</span> <span class="st">"trig1"</span>, <span class="kw">trigger</span> <span class="kw">=</span> <span class="no">github</span>)</pre></body></html></div>
 <p>The Build macros can also be configured by passing in a named list:</p>
 <div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="co"># creates a trigger with named substitutions</span>
 <span class="no">ss</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">`$_MYVAR`</span> <span class="kw">=</span> <span class="st">"TEST1"</span>, <span class="kw">`$_GITHUB`</span> <span class="kw">=</span> <span class="st">"MarkEdmondson1234/googleCloudRunner"</span>)
 <span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"trig2"</span>, <span class="kw">trigger</span> <span class="kw">=</span> <span class="no">github</span>, <span class="kw">build</span> <span class="kw">=</span> <span class="no">bb</span>, <span class="kw">substitutions</span> <span class="kw">=</span> <span class="no">ss</span>)</pre></body></html></div>
 <p>The above examples will create the build step inline within the trigger, but you can also use existing cloudbuild.yaml files by specifying where in the repository the build file will be:</p>
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="co"># create a trigger that will build from the file in the repo</span>
-<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"trig3"</span>, <span class="kw">trigger</span> <span class="kw">=</span> <span class="no">github</span>, <span class="kw">build</span> <span class="kw">=</span> <span class="st">"cloudbuild.yaml"</span>)</pre></body></html></div>
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"cloudbuild.yaml"</span>, <span class="kw">name</span> <span class="kw">=</span> <span class="st">"trig3"</span>, <span class="kw">trigger</span> <span class="kw">=</span> <span class="no">github</span>)</pre></body></html></div>
 <p>This way you can commit changes to the cloudbuild.yaml file, and they will be reflected in the Build Trigger.</p>
 </div>
 <div id="connecting-to-github" class="section level3">
@@ -383,7 +389,6 @@
 <div id="mirroring-github" class="section level4">
 <h4 class="hasAnchor">
 <a href="#mirroring-github" class="anchor"></a>Mirroring GitHub</h4>
-<p>Mirroring the GitHub repo is necessary if using it for sources of builds.</p>
 <p>Once your repo is mirrored it gives you a Cloud Repository name which is of the form <code>github_username_repo</code> - this you can add to a <code><a href="../reference/RepoSource.html">RepoSource()</a></code>:</p>
 <div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="co"># this repo mirrored on Google Source repos</span>
 <span class="no">my_repo</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_source.html">cr_build_source</a></span>(

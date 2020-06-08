@@ -95,12 +95,22 @@ Usually you will prefer to use cr_buildstep_secret" />
      
   </a>
 </li>
-<li>
-  <a href="../articles/setup.html">
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fa fa-wrench"></span>
      
     Setup
+     
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/setup.html">R/GCP Setup</a>
+    </li>
+    <li>
+      <a href="../articles/git.html">Git Setup</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
@@ -227,7 +237,7 @@ Usually you will prefer to use <a href='cr_buildstep_secret.html'>cr_buildstep_s
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-06 20:47:26 &gt; ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-06 20:47:26 &gt; Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='fu'>cr_buildstep_decrypt</span>(<span class='st'>"secret.json.enc"</span>,
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-08 21:11:17 &gt; ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-08 21:11:17 &gt; Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='fu'>cr_buildstep_decrypt</span>(<span class='st'>"secret.json.enc"</span>,
                      <span class='kw'>plain</span> <span class='kw'>=</span> <span class='st'>"secret.json"</span>,
                      <span class='kw'>keyring</span> <span class='kw'>=</span> <span class='st'>"my_keyring"</span>,
                      <span class='kw'>key</span> <span class='kw'>=</span> <span class='st'>"my_key"</span>)</div><div class='output co'>#&gt; [[1]]

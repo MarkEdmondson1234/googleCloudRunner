@@ -94,12 +94,22 @@
      
   </a>
 </li>
-<li>
-  <a href="../articles/setup.html">
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fa fa-wrench"></span>
      
     Setup
+     
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/setup.html">R/GCP Setup</a>
+    </li>
+    <li>
+      <a href="../articles/git.html">Git Setup</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
@@ -218,9 +228,9 @@
     <div class='dont-index'><p><a href='cr_deploy_docker.html'>cr_deploy_docker</a> which lets you build Dockerfiles for more generic use cases</p>
 <p>Other Deployment functions: 
 <code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,
-<code><a href='cr_deploy_git_html.html'>cr_deploy_git_html</a>()</code>,
 <code><a href='cr_deploy_packagetests.html'>cr_deploy_packagetests</a>()</code>,
 <code><a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a>()</code>,
+<code><a href='cr_deploy_run_website.html'>cr_deploy_run_website</a>()</code>,
 <code><a href='cr_deploy_run.html'>cr_deploy_run</a>()</code>,
 <code><a href='cr_deploy_r.html'>cr_deploy_r</a>()</code></p></div>
 
