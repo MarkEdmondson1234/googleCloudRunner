@@ -11,7 +11,7 @@ If you want to run scripts that can be triggered one time, batch style, and set 
 
 If you would also like to have your R code react in realtime to events such as HTTP or sub/sub events, such as a website or API endpoint, consider [Cloud Run](https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html). 
 
-## cloudbuild.yaml
+## The cloudbuild.yaml format
 
 Cloud Build is centered around the [cloudbuild.yaml format](https://cloud.google.com/cloud-build/docs/build-config) - you can use existing cloudbuild.yaml files or create your own in R using the cloudbuild.yaml helper functions.
 
@@ -76,7 +76,6 @@ Any utility that has a Docker image can be used within Cloud Build steps.  Some 
 Cloud Builds sometimes need code or data to work on to be useful.  
 
 All cloudbuilds are launched in a serverless environment with a default directory `/workspace/`.  The Source is copied into this workspace before the build steps execute, so steps can share state and files. 
-
 Cloud Build sources are specified by the `source` argument.
 
 A source can be a [Cloud Source Repository](https://cloud.google.com/source-repositories/) (perhaps mirrored from GitHub) or a [Cloud Storage](https://cloud.google.com/storage/) bucket containing the code/data you want to operate on.  An example of specifying both is below:
@@ -285,9 +284,7 @@ Here are some example for this package's GitHub repo:
 ![](buildtrigger_example.png)
 
 
-### Build Triggers via code (Experimental)
-
-> This API is experimental, so may not be reliable for production
+### Build Triggers via code
 
 Build Triggers can be made via R code using the `cr_buildtrigger()` function.   
 
@@ -299,9 +296,9 @@ The example below shows how to set up some of the builds above:
 cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
                             package = "googleCloudRunner")
 bb <- cr_build_make(cloudbuild, projectId = "test-project")
-github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner", branch = "master")
+github <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner", branch = "master")
 
-cr_buildtrigger("trig1", trigger = github, build = bb)
+cr_buildtrigger(bb, name = "trig1", trigger = github)
 ```
 
 The Build macros can also be configured by passing in a named list:
@@ -316,7 +313,7 @@ The above examples will create the build step inline within the trigger, but you
 
 ```r
 # create a trigger that will build from the file in the repo
-cr_buildtrigger("trig3", trigger = github, build = "cloudbuild.yaml")
+cr_buildtrigger("cloudbuild.yaml", name = "trig3", trigger = github)
 ```
 
 This way you can commit changes to the cloudbuild.yaml file, and they will be reflected in the Build Trigger. 
@@ -326,8 +323,6 @@ This way you can commit changes to the cloudbuild.yaml file, and they will be re
 You can connect via the [Source Repository mirroring service](https://cloud.google.com/source-repositories/docs/mirroring-a-github-repository) or via the [Google Cloud Build GitHub app](https://github.com/marketplace/google-cloud-build). 
 
 #### Mirroring GitHub 
-
-Mirroring the GitHub repo is necessary if using it for sources of builds.  
 
 Once your repo is mirrored it gives you a Cloud Repository name which is of the form `github_username_repo` - this you can add to a `RepoSource()`:
 

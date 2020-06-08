@@ -74,9 +74,9 @@ If you want the docker to build on each commit, see \link{cr_deploy_docker_trigg
 
 Other Deployment functions: 
 \code{\link{cr_deploy_docker_trigger}()},
-\code{\link{cr_deploy_git_html}()},
 \code{\link{cr_deploy_packagetests}()},
 \code{\link{cr_deploy_pkgdown}()},
+\code{\link{cr_deploy_run_website}()},
 \code{\link{cr_deploy_run}()},
 \code{\link{cr_deploy_r}()}
 }

@@ -5,25 +5,51 @@ date: "`r Sys.Date()`"
 
 A lot of the features of Cloud Build rely on connection with git workflows.
 
-Connecting Cloud Build and git allows you to create workflows that automate tasks upon each git commit, via Build Triggers. 
+## Cloud Build
 
-A rundown on some common workflows and connections are detailed here.
+Cloud Build can use two different sources created via `cr_build_source()`
+  - `RepoSource()` is from [Google Cloud Source Repostitories](https://cloud.google.com/source-repositories)
+  - `StorageSource()` is from [Google Cloud Storage](https://cloud.google.com/storage) buckets.
+  
+`RepoSource()` could be a mirror of your GitHub or other git provider.  If you are using a Build Trigger (next section) then the source is automatically configured to be your trigger source.
 
-## Cloud Build Triggers and GitHub App
+Once your repo is mirrored it gives you a Cloud Repository name which is of the form `github_username_repo` - this you can add to a `RepoSource()`:
 
-Cloud Builds can be triggered via Build Triggers, and those Build Triggers can be initiated by GitHub, Bitbucket or Cloud Source Repository events such as commits or pull requests.
+```r
+# this repo mirrored on Google Source repos
+my_repo <- cr_build_source(
+  RepoSource("github_markedmondson1234_googlecloudrunner",
+             branchName="master"))
+```
 
-For buildtriggers, you create the git settings via `cr_buildtrigger_repo()` which specifies if it is a GitHub repo, or a Cloud Source repository (that may be a mirror of another git service)
+## Cloud Build Triggers
 
-A common use case is triggering R package tests upon each commit. 
+Cloud Build triggers let you automate builds based on git pushes or pull requests via `cr_buildtrigger_repo()`
+  - `cr_buildtrigger_repo(type="github")` lets you link to push and pull events on GitHub repositories you have given permission for GCP to access via the [GitHub Cloud Build app](https://github.com/marketplace/google-cloud-build)
+  - `cr_buildtrigger_repo(type="cloud_source")` lets you link to push events to [Google Cloud Source Repostitories](https://cloud.google.com/source-repositories) - this can include a mirror of GitHub or other git providers such as BitBucket
 
-## Authorization for Cloud Build to commit to git
+An example setting up `cr_buildtrigger_repo()` with GitHub is shown below - this will trigger builds when you push to the master branch:
 
-This is useful if you want your Cloud Build to modify or commit to a git repo.  
+```r
+cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
+                           package = "googleCloudRunner")
+bb <- cr_build_make(cloudbuild, projectId = "test-project")
 
-Common use cases are to build a website via `pkgdown` and then commit that website version back to GitHub to auto-build R documentation websites.  
+# setting up the trigger event 
+github <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner", branch = "master")
 
-To do so, Cloud Build needs permission to commit to git, so the first step is to create an ssh key secret that it will use to work on your behalf.  This is recommended to be done via `cr_buildstep_secret` as you can then reuse the secret across multiple builds, since the ssh key is kept securely within your Google Project.  
+cr_buildtrigger(bb, name = "trig1", trigger = github)
+```
+
+## Calling git within buildsteps
+
+By default the above will act via cloning your repo at the start of any build.  You may want to use git further within your cloud build steps, such as commiting the results of your build back to the repository.  
+
+This can be done within your build by using `cr_buildstep_gitsetup()` and `cr_buildstep_git()`.  If you are doing non-public operations (such as committing and pushing) then you will need to set up GitHub authorization for the build to do so - the easiest method is to use [Google Secret Manager](https://cloud.google.com/secret-manager) to save a ssh key for your git securely, and then accessible via `cr_buildstep_secret()`.  This can be set up once and then used for any future builds you create.
+
+### Using Google Secret Manager to manage git ssh keys
+
+Cloud Build needs permission to commit to git, so the first step is to create an ssh key secret that it will use to work on your behalf.
 
 The guide is for GitHub, adapt it if you use another git provider:
 
@@ -38,7 +64,7 @@ The guide is for GitHub, adapt it if you use another git provider:
 
 In general the secret can be downloaded via `cr_buildstep_secret()` which takes two arguments - the name of the secret and the location of where the decrypted file should be within your workspace.
 
-`cr_buildstep_gitsetup()` calls `cr_buildstep_secret()` when you supply it the Secret Manager name:
+`cr_buildstep_gitsetup()` wraps `cr_buildstep_secret()` when you supply it the Secret Manager name:
 
 ```r
 # assumes you have previously saved git ssh key called "github-ssh"
@@ -51,8 +77,39 @@ cr_build_yaml(
   )
 ```
 
-## Duplicating git repos to Cloud Source repositories
+## Examples of Git workflows
 
-You can also use Google Cloud Platform's git repostory system directly, name Cloud Source Repositories.  Even if you don't use them day to day, you can set them up as duplicate of your preferred Git service, which then enables you to use workflows that only work from Cloud Source Repositories.
+A rundown on some common workflows and connections are detailed here.
 
-This enables you to create Builds that rely on Source objects under git control, an alternative to Cloud Storage buckets. 
+### Clone your repo, build and commit back to same repo
+
+A common use case is creating a pkgdown website of your package.  This involves building the website upon each git commit, creating the new pkgdown HTML then committing that back to the GitHub repo so it can display the page using GitHub page hosting. 
+
+1. Connect your GitHub repo via the [GitHub Cloud Build app](https://github.com/marketplace/google-cloud-build)
+2. Setup a git ssh key in Secret Manager using the guide above
+3. Use `cr_deploy_pkgdown()`:
+
+```r
+cr_deploy_pkgdown("MarkEdmondson1234/googleCloudRunner", secret = "my_git_secret")
+```
+4. Commit your changes
+
+By default this will create a cloudbuild-pkgdown.yml file in your repo that holds the buildsteps to build and commit your website, and create the buildtrigger that will run this build upon each commit to the master branch. 
+
+### Create Docker image of repository each commit
+
+If you want the Docker image to rebuild each git commit, then you also need a build trigger.  This can be enabled using `cr_deploy_docker_trigger()`
+
+1. Create your Dockerfile and place it in your repo
+2. Specify the repository the buidl will clone from each commit via `cr_buildtrigger_repo()`
+2. Use `cr_deploy_docker_trigger()` and point it at your Dockerfile folder
+3. Commit to the repository
+
+The `cr_deploy_docker_trigger()` will create a buildtrigger that will build the Dockerfile upon each commit. 
+
+The below example builds this package's GitHub repo and its Dockerfile upon each commit, for a Dockerfile located in the `cloud_build/` folder.
+
+```r
+repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+cr_deploy_docker_trigger(repo, "googleCloudRunner", dir = "cloud_build")
+```

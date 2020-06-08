@@ -81,8 +81,8 @@ Create your own custom deployment using \link{cr_buildstep_packagetests} which t
 Other Deployment functions: 
 \code{\link{cr_deploy_docker_trigger}()},
 \code{\link{cr_deploy_docker}()},
-\code{\link{cr_deploy_git_html}()},
 \code{\link{cr_deploy_pkgdown}()},
+\code{\link{cr_deploy_run_website}()},
 \code{\link{cr_deploy_run}()},
 \code{\link{cr_deploy_r}()}
 }

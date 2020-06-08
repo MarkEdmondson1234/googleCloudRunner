@@ -28,8 +28,12 @@ navbar:
     - href: index.html
       icon: fa-home
     - text: "Setup"
-      href: articles/setup.html
       icon: fa-wrench
+      menu:
+        - text: "R/GCP Setup"
+          href: articles/setup.html
+        - text: "Git Setup"
+          href: articles/git.html
     - text: "Cloud Build"
       href: articles/cloudbuild.html
       icon: fa-shapes

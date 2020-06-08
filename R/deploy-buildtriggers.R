@@ -57,8 +57,9 @@ cr_deploy_docker_trigger <- function(repo,
 #' @param edit_r If you want to change the R code to render the HTML, supply R code via a file or string of R as per \link{cr_buildstep_r}
 #' @param region The region for cloud run
 #' @param r_image The image that will run the R code from \code{edit_r}
-#' @inheritParams cr_deploy_github_docker
+#' @inheritParams cr_deploy_docker_trigger
 #' @inheritParams cr_buildstep_run
+#' @param repo A git repostitory defined in \link{cr_buildtrigger_repo}
 #' @family Deployment functions
 #'
 #' @details
@@ -78,20 +79,20 @@ cr_deploy_docker_trigger <- function(repo,
 #' \dontrun{
 #' cr_project_set("my-project")
 #' cr_region_set("europe-west1")
-#' your_repo <- "MarkEdmondson1234/googleCloudRunner"
-#' cr_deploy_git_html(your_repo, rmd_folder = "vignettes")
+#' your_repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+#' cr_deploy_run_website(your_repo, rmd_folder = "vignettes")
 #'
 #' # change the Rmd rendering to pkgdown
 #' r <- "devtools::install();pkgdown::build_site()"
 #'
-#' cr_deploy_git_html(your_repo,
+#' cr_deploy_run_website(your_repo,
 #'                    image = paste0(your_repo, "-pkgdown"),
 #'                    rmd_folder = ".",
 #'                    edit_r = r)
 #'
 #' }
-cr_deploy_git_html <- function(x,
-                               image = paste0(x,"-html"),
+cr_deploy_run_website <- function(repo,
+                               image = paste0("website-", format(Sys.Date(), "%Y%m%d")),
                                rmd_folder = NULL,
                                html_folder = NULL,
                                branch = ".*",
@@ -105,7 +106,8 @@ cr_deploy_git_html <- function(x,
                                projectId = cr_project_get()){
 
   assert_that(
-    xor(!is.null(rmd_folder), !is.null(html_folder))
+    xor(!is.null(rmd_folder), !is.null(html_folder)),
+    is.buildtrigger_repo(repo)
   )
 
   image <- gsub("[^-a-zA-Z0-9\\/]","",tolower(image))
@@ -135,10 +137,7 @@ cr_deploy_git_html <- function(x,
     glob <- glob_f(html_folder)
   }
 
-  repo_source <- RepoSource(make_github_mirror(x),
-                            tagName = github_tag,
-                            branchName = branch,
-                            projectId = projectId)
+  repo_source <- repo
 
   cr_image <- lower_alpha_dash(image)
   run_image <- sprintf("%s:%s", make_image_name(image, projectId), image_tag)
@@ -151,7 +150,8 @@ cr_deploy_git_html <- function(x,
           cr_buildstep_docker(image,
                               tag = image_tag,
                               dir = html_folder,
-                              projectId = projectId),
+                              projectId = projectId,
+                              kaniko_cache = TRUE),
           cr_buildstep_run(name = cr_image,
                            image = run_image,
                            allowUnauthenticated = allowUnauthenticated,
@@ -160,15 +160,14 @@ cr_deploy_git_html <- function(x,
           )
     ),
     images = run_image,
-    timeout = timeout,
-    source = cr_build_source(repo_source)
+    timeout = timeout
     )
 
   safe_name <- gsub("[^a-zA-Z1-9]","-", image)
-  cr_buildtrigger(safe_name,
+  cr_buildtrigger(build_html,
+                  name = safe_name,
                   description = safe_name,
                   trigger = repo_source,
-                  build = build_html,
                   includedFiles = glob)
 
 

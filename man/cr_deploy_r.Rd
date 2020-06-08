@@ -96,9 +96,9 @@ If you want to run R code upon certain events like GitHub pushes, look at \link{
 Other Deployment functions: 
 \code{\link{cr_deploy_docker_trigger}()},
 \code{\link{cr_deploy_docker}()},
-\code{\link{cr_deploy_git_html}()},
 \code{\link{cr_deploy_packagetests}()},
 \code{\link{cr_deploy_pkgdown}()},
+\code{\link{cr_deploy_run_website}()},
 \code{\link{cr_deploy_run}()}
 }
 \concept{Deployment functions}

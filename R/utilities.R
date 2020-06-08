@@ -26,7 +26,7 @@ make_image_name <- function(name, projectId){
 }
 
 lower_alpha_dash <- function(x){
-  gsub("[^-a-zA-Z1-9]","-", x)
+  gsub("[^-a-zA-Z0-9]","-", x)
 }
 
 
