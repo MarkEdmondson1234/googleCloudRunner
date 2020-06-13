@@ -133,6 +133,9 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildtrigger_run.html</loc>
   </url>
   <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_badger.html</loc>
+  </url>
+  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_docker.html</loc>
   </url>
   <url>

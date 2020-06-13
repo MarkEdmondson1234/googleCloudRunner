@@ -124,7 +124,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Serverless batched R scripts via Cloud Build</h1>
             
-            <h4 class="date">2020-06-08</h4>
+            <h4 class="date">2020-06-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudbuild.Rmd"><code>vignettes/cloudbuild.Rmd</code></a></small>
       <div class="hidden name"><code>cloudbuild.Rmd</code></div>
@@ -174,7 +174,9 @@
 <span class="co"># once working, pass in the build to the scheduler</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"15 5 * * *"</span>, <span class="kw">name</span><span class="kw">=</span><span class="st">"itworks-schedule"</span>,
             <span class="kw">httpTarget</span> <span class="kw">=</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(<span class="no">itworks</span>))</pre></body></html></div>
-<p>Any utility that has a Docker image can be used within Cloud Build steps. Some <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community">community contributed Cloud Build images are listed here</a>, including <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo">hugo</a>, <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make">make</a>, and <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar">tar</a>, or you can configure your own Dockerfile and build what image you need yourself, perhaps by using a previous Cloud Build and <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code></p>
+<p>Any utility that has a Docker image can be used within Cloud Build steps.</p>
+<p>Official Google images for the <code>gcloud</code>, <code>bq</code> and <code>gsutil</code> are here: <a href="https://github.com/GoogleCloudPlatform/cloud-sdk-docker" class="uri">https://github.com/GoogleCloudPlatform/cloud-sdk-docker</a></p>
+<p>Some <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community">community contributed Cloud Build images are listed here</a>, including <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo">hugo</a>, <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make">make</a>, and <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar">tar</a>, or you can configure your own Dockerfile and build what image you need yourself, perhaps by using a previous Cloud Build and <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code></p>
 </div>
 <div id="cloud-build-source" class="section level2">
 <h2 class="hasAnchor">

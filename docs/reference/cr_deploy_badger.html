@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a CloudRun service. — cr_run • googleCloudRunner</title>
+<title>Deploy a Cloud Run app to display build badges — cr_deploy_badger • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Create a CloudRun service. — cr_run" />
-<meta property="og:description" content="Deploys an existing gcr.io image." />
+<meta property="og:title" content="Deploy a Cloud Run app to display build badges — cr_deploy_badger" />
+<meta property="og:description" content="This uses https://github.com/kelseyhightower/badger to create badges you can display in README.md etc. showing the current status of a Cloud Build" />
 
 
 
@@ -167,96 +167,39 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a CloudRun service.</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/cloudrun.R'><code>R/cloudrun.R</code></a></small>
-    <div class="hidden name"><code>cr_run.Rd</code></div>
+    <h1>Deploy a Cloud Run app to display build badges</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/badger.R'><code>R/badger.R</code></a></small>
+    <div class="hidden name"><code>cr_deploy_badger.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Deploys an existing gcr.io image.</p>
+    <p>This uses <a href='https://github.com/kelseyhightower/badger'>https://github.com/kelseyhightower/badger</a> to create badges you can display in README.md etc. showing the current status of a Cloud Build</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_run</span>(
-  <span class='no'>image</span>,
-  <span class='kw'>name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>image</span>),
-  <span class='kw'>allowUnauthenticated</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>concurrency</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>port</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
-  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
-  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
-  <span class='no'>...</span>
+    <pre class="usage"><span class='fu'>cr_deploy_badger</span>(
+  <span class='kw'>badger_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/hightowerlabs/badger:0.0.1"</span>,
+  <span class='kw'>json</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"GAR_CLIENT_JSON"</span>),
+  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>()
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>image</th>
-      <td><p>The name of the image to create or use in deployment - <code>gcr.io</code></p></td>
+      <th>badger_image</th>
+      <td><p>The docker image from the badger project to use</p></td>
     </tr>
     <tr>
-      <th>name</th>
-      <td><p>Name for deployment on Cloud Run</p></td>
-    </tr>
-    <tr>
-      <th>allowUnauthenticated</th>
-      <td><p>TRUE if can be reached from public HTTP address.</p></td>
-    </tr>
-    <tr>
-      <th>concurrency</th>
-      <td><p>How many connections each image can serve. Can be up to 80.</p></td>
-    </tr>
-    <tr>
-      <th>port</th>
-      <td><p>Container port to receive requests at. Also sets the $PORT environment variable. Must be a number between 1 and 65535, inclusive. To unset this field, pass the special value "default".</p></td>
-    </tr>
-    <tr>
-      <th>timeout</th>
-      <td><p>Amount of time that this build should be allowed to run, to second</p></td>
+      <th>json</th>
+      <td><p>The clientId JSON file of the project to create within</p></td>
     </tr>
     <tr>
       <th>region</th>
-      <td><p>The endpoint region for deployment</p></td>
-    </tr>
-    <tr>
-      <th>projectId</th>
-      <td><p>The GCP project from which the services should be listed</p></td>
-    </tr>
-    <tr>
-      <th>launch_browser</th>
-      <td><p>Whether to launch the logs URL in a browser once deployed</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Arguments passed on to <code><a href='cr_buildstep_run.html'>cr_buildstep_run</a></code></p><dl'>
-    <dt><code></code></dt><dd><p></p></dd>
-  
-</dl></td>
+      <td><p>The Cloud Run region</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Uses Cloud Build to deploy an image to Cloud Run</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><a href='https://cloud.google.com/run/'>Google Documentation for Cloud Run</a></p>
-<p>Use <a href='cr_deploy_docker.html'>cr_deploy_docker</a> or similar to create image, <a href='cr_deploy_run.html'>cr_deploy_run</a> to automate building and deploying, <a href='cr_deploy_run.html'>cr_deploy_plumber</a> to deploy plumber APIs.</p>
-<p><a href='https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run'>Deploying Cloud Run using Cloud Build</a></p>
-<p>Other Cloud Run functions: 
-<code><a href='cr_plumber_pubsub.html'>cr_plumber_pubsub</a>()</code>,
-<code><a href='cr_run_get.html'>cr_run_get</a>()</code>,
-<code><a href='cr_run_list.html'>cr_run_list</a>()</code></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
-<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span>(<span class='st'>"europe-west1"</span>)
-<span class='fu'>cr_run</span>(<span class='st'>"gcr.io/my-project/my-image"</span>)
-}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
