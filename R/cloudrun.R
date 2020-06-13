@@ -12,6 +12,8 @@
 #' @param region The endpoint region for deployment
 #' @param projectId The GCP project from which the services should be listed
 #' @param allowUnauthenticated TRUE if can be reached from public HTTP address.
+#' @param ... Other arguments passed to \link{cr_buildstep_run}
+#' @inheritDotParams cr_buildstep_run
 #'
 #' @inheritParams cr_build
 #' @importFrom googleAuthR gar_api_generator
@@ -39,7 +41,8 @@ cr_run <- function(image,
                    timeout=600L,
                    region = cr_region_get(),
                    projectId = cr_project_get(),
-                   launch_browser=interactive()) {
+                   launch_browser=interactive(),
+                   ...) {
 
   myMessage(paste("#> Launching CloudRun image: ",image),
             level = 3)
@@ -51,7 +54,8 @@ cr_run <- function(image,
                              allowUnauthenticated = allowUnauthenticated,
                              region = region,
                              concurrency = concurrency,
-                             port = port)
+                             port = port,
+                             ...)
   )
 
   build <- cr_build(run_yaml,

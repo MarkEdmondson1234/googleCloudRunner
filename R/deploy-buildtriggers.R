@@ -147,6 +147,7 @@ cr_deploy_run_website <- function(repo,
       steps = c(
           rmd_step,
           cr_buildstep_nginx_setup(html_folder),
+          cr_buildstep_bash("ls -la"),
           cr_buildstep_docker(image,
                               tag = image_tag,
                               dir = html_folder,

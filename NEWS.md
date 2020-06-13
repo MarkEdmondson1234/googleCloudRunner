@@ -11,6 +11,7 @@
 * Let use of bucket level access control when using `cr_deploy_docker()`
 * Added support for creating buildtriggers from R (#78)
 * `cr_deploy_pkgdown()`, `cr_deploy_docker_trigger()` and `cr_deploy_packagetests()` now all have an option to create the build trigger for you
+* Add `cr_deploy_badger()` for creating build badges with Cloud Build via https://github.com/kelseyhightower/badger (#15)
 
 # googleCloudRunner 0.2.0
 

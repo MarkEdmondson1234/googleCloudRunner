@@ -13,7 +13,8 @@ cr_run(
   timeout = 600L,
   region = cr_region_get(),
   projectId = cr_project_get(),
-  launch_browser = interactive()
+  launch_browser = interactive(),
+  ...
 )
 }
 \arguments{
@@ -34,6 +35,12 @@ cr_run(
 \item{projectId}{The GCP project from which the services should be listed}
 
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
+
+\item{...}{
+  Arguments passed on to \code{\link[=cr_buildstep_run]{cr_buildstep_run}}
+  \describe{
+    \item{\code{}}{}
+  }}
 }
 \description{
 Deploys an existing gcr.io image.

@@ -471,7 +471,7 @@ test_that("Render BuildStep objects", {
   unlink("cloudbuild-pkgdown.yml")
 
   # package test builds
-  pt <- cr_deploy_packagetests()
+  pt <- cr_deploy_packagetests(create_trigger = "no")
   expect_true(file.exists("cloudbuild-tests.yml"))
   expect_equal(pt$steps[[1]]$env[[1]], "NOT_CRAN=true")
   unlink("cloudbuild-tests.yml")

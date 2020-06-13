@@ -69,7 +69,11 @@ cr_schedule("15 5 * * *", name="itworks-schedule",
             httpTarget = cr_build_schedule_http(itworks))
 ```
 
-Any utility that has a Docker image can be used within Cloud Build steps.  Some [community contributed Cloud Build images are listed here](https://github.com/GoogleCloudPlatform/cloud-builders-community), including [hugo](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo), [make](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make), and [tar](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar), or you can configure your own Dockerfile and build what image you need yourself, perhaps by using a previous Cloud Build and `cr_deploy_docker()`
+Any utility that has a Docker image can be used within Cloud Build steps.  
+
+Official Google images for the `gcloud`, `bq` and `gsutil` are here: https://github.com/GoogleCloudPlatform/cloud-sdk-docker
+
+Some [community contributed Cloud Build images are listed here](https://github.com/GoogleCloudPlatform/cloud-builders-community), including [hugo](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo), [make](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make), and [tar](https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar), or you can configure your own Dockerfile and build what image you need yourself, perhaps by using a previous Cloud Build and `cr_deploy_docker()`
 
 ## Cloud Build source
 
