@@ -349,15 +349,27 @@ cr_deploy_pkgdown <- function(github_repo,
 #' @export
 #' @examples
 #'
-#' pd <- cr_deploy_packagetests()
+#' pd <- cr_deploy_packagetests(create_trigger = "no")
 #' pd
 #'
 #' # add a decryption step for an auth file
 #' cr_deploy_packagetests(
 #'   steps = cr_buildstep_secret("my_secret", "auth.json"),
 #'   env = c("NOT_CRAN=true", "MY_AUTH_FILE=auth.json"),
-#'   timeout = 1200
+#'   timeout = 1200,
+#'   create_trigger = "no"
 #' )
+#'
+#'
+#' # create a buildtrigger as well from trigger_repo
+#' repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner",
+#'                              branch = "master")
+#'
+#' \dontrun{
+#'
+#' cr_deploy_packagetests(create_trigger = "file", trigger_repo = repo)
+#'
+#' }
 #'
 #' unlink("cloudbuild-tests.yml")
 #'
@@ -373,6 +385,8 @@ cr_deploy_packagetests <- function(
   trigger_repo = NULL,
   ...){
 
+
+  create_trigger <- match.arg(create_trigger)
 
   build_yaml <-
     cr_build_yaml(steps = c(steps,
