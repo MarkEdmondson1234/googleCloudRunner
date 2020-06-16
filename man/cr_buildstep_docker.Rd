@@ -34,6 +34,8 @@ Create a build step to build and push a docker image
 }
 \details{
 Setting \code{kaniko_cache = TRUE} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{https://cloud.google.com/cloud-build/docs/kaniko-cache}{Using Kaniko cache}
+
+If building multiple tags they don't have to run sequentially - set \code{waitFor = "-"} to build concurrently
 }
 \examples{
 cr_project_set("my-project")

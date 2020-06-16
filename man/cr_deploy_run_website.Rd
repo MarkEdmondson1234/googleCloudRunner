@@ -2,16 +2,14 @@
 % Please edit documentation in R/deploy-buildtriggers.R
 \name{cr_deploy_run_website}
 \alias{cr_deploy_run_website}
-\title{Deploy HTML built from a repo each commit (Experimental)}
+\title{Deploy HTML built from a repo each commit}
 \usage{
 cr_deploy_run_website(
   repo,
   image = paste0("website-", format(Sys.Date(), "\%Y\%m\%d")),
   rmd_folder = NULL,
   html_folder = NULL,
-  branch = ".*",
   image_tag = "$SHORT_SHA",
-  github_tag = NULL,
   timeout = 600L,
   edit_r = NULL,
   r_image = "gcr.io/gcer-public/packagetools:master",
@@ -31,6 +29,8 @@ cr_deploy_run_website(
 
 \item{image_tag}{What to tag the build docker image}
 
+\item{timeout}{Timeout for the build}
+
 \item{edit_r}{If you want to change the R code to render the HTML, supply R code via a file or string of R as per \link{cr_buildstep_r}}
 
 \item{r_image}{The image that will run the R code from \code{edit_r}}
@@ -42,7 +42,7 @@ cr_deploy_run_website(
 \item{projectId}{The project to build under}
 }
 \description{
-This lets you set up triggers that will update a website each commit. You need to mirror the GitHub/Bitbucket repo onto Google Cloud Repositories for this to work.
+This lets you set up triggers that will update a website each commit.
 }
 \details{
 Build trigger API is experimental so this function is in development.
@@ -51,8 +51,6 @@ This default R code is rendered in the rmd_folder:
 
 \code{lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
       rmarkdown::render, output_format = 'html_document')}
-
-You need to mirror the GitHub/Bitbucket repo onto Google Cloud Repositories for this to work
 }
 \examples{
 

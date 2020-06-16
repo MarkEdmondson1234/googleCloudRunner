@@ -30,8 +30,10 @@ navbar:
     - text: "Setup"
       icon: fa-wrench
       menu:
-        - text: "R/GCP Setup"
+        - text: "R Setup"
           href: articles/setup.html
+        - text: "GCP Setup"
+          href: articles/setup-gcp.html
         - text: "Git Setup"
           href: articles/git.html
     - text: "Cloud Build"

@@ -126,6 +126,8 @@ cr_deploy_plumber(system.file("example/", package = "googleCloudRunner"))
 }
 }
 \seealso{
+\link{cr_deploy_run_website} which has more features like rending Rmd files and deploying upon each git commit
+
 Other Deployment functions: 
 \code{\link{cr_deploy_docker_trigger}()},
 \code{\link{cr_deploy_docker}()},

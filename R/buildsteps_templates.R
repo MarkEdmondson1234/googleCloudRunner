@@ -605,6 +605,8 @@ cr_buildstep_secret <- function(secret,
 #'
 #' Setting \code{kaniko_cache = TRUE} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{https://cloud.google.com/cloud-build/docs/kaniko-cache}{Using Kaniko cache}
 #'
+#' If building multiple tags they don't have to run sequentially - set \code{waitFor = "-"} to build concurrently
+#'
 #' @family Cloud Buildsteps
 #' @export
 #' @import assertthat
@@ -691,7 +693,6 @@ cr_buildstep_docker <- function(image,
                sprintf("--context=%s", build_context),
                "--cache=true"
              ),
-             waitFor = "-", # build concurrent tags
              ...)
          },
          FUN.VALUE = list(length(tag)),

@@ -46,9 +46,9 @@ cr_deploy_docker_trigger <- function(repo,
                   trigger_tags = "docker-build")
 }
 
-#' Deploy HTML built from a repo each commit (Experimental)
+#' Deploy HTML built from a repo each commit
 #'
-#' This lets you set up triggers that will update a website each commit. You need to mirror the GitHub/Bitbucket repo onto Google Cloud Repositories for this to work.
+#' This lets you set up triggers that will update a website each commit.
 #'
 #' @seealso \link{cr_deploy_html} that lets you deploy HTML files
 #'
@@ -60,6 +60,7 @@ cr_deploy_docker_trigger <- function(repo,
 #' @inheritParams cr_deploy_docker_trigger
 #' @inheritParams cr_buildstep_run
 #' @param repo A git repostitory defined in \link{cr_buildtrigger_repo}
+#' @param timeout Timeout for the build
 #' @family Deployment functions
 #'
 #' @details
@@ -71,7 +72,6 @@ cr_deploy_docker_trigger <- function(repo,
 #' \code{lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
 #'       rmarkdown::render, output_format = 'html_document')}
 #'
-#' You need to mirror the GitHub/Bitbucket repo onto Google Cloud Repositories for this to work
 #'
 #' @export
 #' @examples
@@ -95,9 +95,7 @@ cr_deploy_run_website <- function(repo,
                                image = paste0("website-", format(Sys.Date(), "%Y%m%d")),
                                rmd_folder = NULL,
                                html_folder = NULL,
-                               branch = ".*",
                                image_tag = "$SHORT_SHA",
-                               github_tag = NULL,
                                timeout = 600L,
                                edit_r = NULL,
                                r_image = "gcr.io/gcer-public/packagetools:master",
@@ -147,7 +145,7 @@ cr_deploy_run_website <- function(repo,
       steps = c(
           rmd_step,
           cr_buildstep_nginx_setup(html_folder),
-          cr_buildstep_bash("ls -la"),
+          cr_buildstep_r("list.files()", dir = html_folder),
           cr_buildstep_docker(image,
                               tag = image_tag,
                               dir = html_folder,
@@ -160,7 +158,6 @@ cr_deploy_run_website <- function(repo,
                            concurrency = 80)
           )
     ),
-    images = run_image,
     timeout = timeout
     )
 

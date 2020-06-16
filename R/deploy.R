@@ -188,6 +188,7 @@ cr_deploy_docker <- function(local,
                                 dir=paste0("deploy/", remote),
                                 projectId = projectId,
                                 kaniko_cache = kaniko_cache,
+                                waitFor = "-", # build concurrent tags
                                 ...),
     images = push_image)
 
@@ -349,6 +350,7 @@ cr_deploy_pkgdown <- function(github_repo,
 #' @export
 #' @examples
 #'
+#' # create a local cloudbuild.yml file for packagetests
 #' pd <- cr_deploy_packagetests(create_trigger = "no")
 #' pd
 #'
@@ -361,14 +363,18 @@ cr_deploy_pkgdown <- function(github_repo,
 #' )
 #'
 #'
-#' # create a buildtrigger as well from trigger_repo
+#' # creating a buildtrigger repo for trigger_repo
 #' repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner",
 #'                              branch = "master")
 #'
 #' \dontrun{
 #'
+#' # will create the file in the repo, and point a buildtrigger at it
 #' cr_deploy_packagetests(create_trigger = "file", trigger_repo = repo)
 #'
+#'
+#' # will make an inline build within a buildtrigger
+#' cr_deploy_packagetests(create_trigger = "inline", trigger_repo = repo)
 #' }
 #'
 #' unlink("cloudbuild-tests.yml")

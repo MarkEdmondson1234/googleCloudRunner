@@ -86,6 +86,8 @@ cr_deploy_run <- function(local,
 #'
 #' Will add a \code{default.template} file to the html folder that holds the nginx configuration
 #'
+#' @seealso \link{cr_deploy_run_website} which has more features like rending Rmd files and deploying upon each git commit
+#'
 #' @export
 #' @import assertthat
 #' @examples

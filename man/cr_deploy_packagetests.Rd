@@ -62,6 +62,7 @@ If you want codecov to ignore some files then also deploy a .covrignore file to 
 }
 \examples{
 
+# create a local cloudbuild.yml file for packagetests
 pd <- cr_deploy_packagetests(create_trigger = "no")
 pd
 
@@ -74,14 +75,18 @@ cr_deploy_packagetests(
 )
 
 
-# create a buildtrigger as well from trigger_repo
+# creating a buildtrigger repo for trigger_repo
 repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner",
                              branch = "master")
 
 \dontrun{
 
+# will create the file in the repo, and point a buildtrigger at it
 cr_deploy_packagetests(create_trigger = "file", trigger_repo = repo)
 
+
+# will make an inline build within a buildtrigger
+cr_deploy_packagetests(create_trigger = "inline", trigger_repo = repo)
 }
 
 unlink("cloudbuild-tests.yml")
