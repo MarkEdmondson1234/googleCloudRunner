@@ -262,13 +262,89 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_packagetests</span>()</div><div class='output co'>#&gt; <span class='warning'>Warning: the condition has length &gt; 1 and only the first element will be used</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>── #Creating tests build trigger ───────────────────────────────────────────────</span></div><div class='output co'>#&gt; <span class='error'>Error: is.buildtrigger_repo(x = trigger_repo) is not TRUE</span></div><div class='input'><span class='no'>pd</span></div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'pd' not found</span></div><div class='input'>
+<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_packagetests</span>(<span class='kw'>create_trigger</span> <span class='kw'>=</span> <span class='st'>"no"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-16 05:10:29 &gt; Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>ℹ Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'>● Go to https://console.cloud.google.com/cloud-build/triggers and</span>
+#&gt; <span class='message'>  make a build trigger pointing at this file in your repo:</span>
+#&gt; <span class='message'>  cloudbuild-tests.yml </span></div><div class='output co'>#&gt; <span class='message'>ℹ Build Trigger substitution variable settings:</span>
+#&gt; <span class='message'>  _CODECOV_TOKEN = your-codecov-token</span>
+#&gt; <span class='message'>  Ignored files filter (glob): docs/** and vignettes/**</span></div><div class='input'><span class='no'>pd</span></div><div class='output co'>#&gt; ==cloudRunnerYaml==
+#&gt; steps:
+#&gt; - name: gcr.io/gcer-public/packagetools:master
+#&gt;   args:
+#&gt;   - Rscript
+#&gt;   - -e
+#&gt;   - |-
+#&gt;     message("cran mirror: ", getOption("repos"))
+#&gt;     remotes::install_deps(dependencies = TRUE)
+#&gt;     rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'warning')
+#&gt;   env:
+#&gt;   - NOT_CRAN=true
+#&gt; - name: gcr.io/gcer-public/packagetools:master
+#&gt;   args:
+#&gt;   - Rscript
+#&gt;   - -e
+#&gt;   - |-
+#&gt;     remotes::install_deps(dependencies = TRUE)
+#&gt;     remotes::install_local()
+#&gt;     cv &lt;- covr::package_coverage()
+#&gt;     print(cv)
+#&gt;     covr::codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
+#&gt;   env:
+#&gt;   - NOT_CRAN=true
+#&gt;   - CODECOV_TOKEN=$_CODECOV_TOKEN</div><div class='input'>
 <span class='co'># add a decryption step for an auth file</span>
 <span class='fu'>cr_deploy_packagetests</span>(
   <span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='cr_buildstep_secret.html'>cr_buildstep_secret</a></span>(<span class='st'>"my_secret"</span>, <span class='st'>"auth.json"</span>),
   <span class='kw'>env</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NOT_CRAN=true"</span>, <span class='st'>"MY_AUTH_FILE=auth.json"</span>),
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>1200</span>
-)</div><div class='output co'>#&gt; <span class='warning'>Warning: the condition has length &gt; 1 and only the first element will be used</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>── #Creating tests build trigger ───────────────────────────────────────────────</span></div><div class='output co'>#&gt; <span class='error'>Error: is.buildtrigger_repo(x = trigger_repo) is not TRUE</span></div><div class='input'>
+  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>1200</span>,
+  <span class='kw'>create_trigger</span> <span class='kw'>=</span> <span class='st'>"no"</span>
+)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-16 05:10:29 &gt; Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>ℹ Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'>● Go to https://console.cloud.google.com/cloud-build/triggers and</span>
+#&gt; <span class='message'>  make a build trigger pointing at this file in your repo:</span>
+#&gt; <span class='message'>  cloudbuild-tests.yml </span></div><div class='output co'>#&gt; <span class='message'>ℹ Build Trigger substitution variable settings:</span>
+#&gt; <span class='message'>  _CODECOV_TOKEN = your-codecov-token</span>
+#&gt; <span class='message'>  Ignored files filter (glob): docs/** and vignettes/**</span></div><div class='output co'>#&gt; ==cloudRunnerYaml==
+#&gt; steps:
+#&gt; - name: gcr.io/cloud-builders/gcloud
+#&gt;   entrypoint: bash
+#&gt;   args:
+#&gt;   - -c
+#&gt;   - gcloud secrets versions access latest --secret=my_secret &gt; auth.json
+#&gt; - name: gcr.io/gcer-public/packagetools:master
+#&gt;   args:
+#&gt;   - Rscript
+#&gt;   - -e
+#&gt;   - |-
+#&gt;     message("cran mirror: ", getOption("repos"))
+#&gt;     remotes::install_deps(dependencies = TRUE)
+#&gt;     rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'warning')
+#&gt;   env:
+#&gt;   - NOT_CRAN=true
+#&gt;   - MY_AUTH_FILE=auth.json
+#&gt; - name: gcr.io/gcer-public/packagetools:master
+#&gt;   args:
+#&gt;   - Rscript
+#&gt;   - -e
+#&gt;   - |-
+#&gt;     remotes::install_deps(dependencies = TRUE)
+#&gt;     remotes::install_local()
+#&gt;     cv &lt;- covr::package_coverage()
+#&gt;     print(cv)
+#&gt;     covr::codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
+#&gt;   env:
+#&gt;   - NOT_CRAN=true
+#&gt;   - MY_AUTH_FILE=auth.json
+#&gt;   - CODECOV_TOKEN=$_CODECOV_TOKEN
+#&gt; timeout: 1200s</div><div class='input'>
+
+<span class='co'># create a buildtrigger as well from trigger_repo</span>
+<span class='no'>repo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a></span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
+                             <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>"master"</span>)
+
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+
+<span class='fu'>cr_deploy_packagetests</span>(<span class='kw'>create_trigger</span> <span class='kw'>=</span> <span class='st'>"file"</span>, <span class='kw'>trigger_repo</span> <span class='kw'>=</span> <span class='no'>repo</span>)
+
+}
+
 <span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span>(<span class='st'>"cloudbuild-tests.yml"</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
