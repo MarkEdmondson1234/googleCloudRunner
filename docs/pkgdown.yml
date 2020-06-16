@@ -6,9 +6,10 @@ articles:
   cloudrun: cloudrun.html
   cloudscheduler: cloudscheduler.html
   git: git.html
+  setup-gcp: setup-gcp.html
   setup: setup.html
   usecases: usecases.html
-last_built: 2020-06-16T05:10Z
+last_built: 2020-06-16T21:26Z
 urls:
   reference: https://code.markedmondson.me/googleCloudRunner/reference
   article: https://code.markedmondson.me/googleCloudRunner/articles
