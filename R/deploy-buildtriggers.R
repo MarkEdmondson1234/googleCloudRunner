@@ -48,9 +48,9 @@ cr_deploy_docker_trigger <- function(repo,
 
 #' Deploy HTML built from a repo each commit
 #'
-#' This lets you set up triggers that will update a website each commit.
+#' This lets you set up triggers that will update an R generated website each commit.
 #'
-#' @seealso \link{cr_deploy_html} that lets you deploy HTML files
+#' @seealso \link{cr_deploy_html} that lets you deploy just HTML files and \link{cr_deploy_pkgdown} for running pkgdown websites.
 #'
 #' @param rmd_folder A folder of Rmd files within GitHub source that will be built into HTML for serving via \link[rmarkdown]{render}
 #' @param html_folder A folder of html to deploy within GitHub source.  Will be ignored if rmd_folder is not NULL
@@ -65,7 +65,7 @@ cr_deploy_docker_trigger <- function(repo,
 #'
 #' @details
 #'
-#' Build trigger API is experimental so this function is in development.
+#' This lets you render the Rmd (or other R functions that produce HTML) in a folder for your repo, which will then be hosted on a Cloud Run enabled with nginx.  Each time you push to git with modified Rmd code, it will build the new HTML and push an update to the website.
 #'
 #' This default R code is rendered in the rmd_folder:
 #'
@@ -91,17 +91,18 @@ cr_deploy_docker_trigger <- function(repo,
 #'                    edit_r = r)
 #'
 #' }
-cr_deploy_run_website <- function(repo,
-                               image = paste0("website-", format(Sys.Date(), "%Y%m%d")),
-                               rmd_folder = NULL,
-                               html_folder = NULL,
-                               image_tag = "$SHORT_SHA",
-                               timeout = 600L,
-                               edit_r = NULL,
-                               r_image = "gcr.io/gcer-public/packagetools:master",
-                               allowUnauthenticated = TRUE,
-                               region = cr_region_get(),
-                               projectId = cr_project_get()){
+cr_deploy_run_website <- function(
+          repo,
+          image = paste0("website-", format(Sys.Date(), "%Y%m%d")),
+          rmd_folder = NULL,
+          html_folder = NULL,
+          image_tag = "$SHORT_SHA",
+          timeout = 600L,
+          edit_r = NULL,
+          r_image = "gcr.io/gcer-public/packagetools:master",
+          allowUnauthenticated = TRUE,
+          region = cr_region_get(),
+          projectId = cr_project_get()){
 
   assert_that(
     xor(!is.null(rmd_folder), !is.null(html_folder)),
