@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Deploy HTML built from a repo each commit — cr_deploy_run_website" />
-<meta property="og:description" content="This lets you set up triggers that will update a website each commit." />
+<meta property="og:description" content="This lets you set up triggers that will update an R generated website each commit." />
 
 
 
@@ -176,7 +176,7 @@
     </div>
 
     <div class="ref-description">
-    <p>This lets you set up triggers that will update a website each commit.</p>
+    <p>This lets you set up triggers that will update an R generated website each commit.</p>
     </div>
 
     <pre class="usage"><span class='fu'>cr_deploy_run_website</span>(
@@ -244,13 +244,13 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Build trigger API is experimental so this function is in development.</p>
+    <p>This lets you render the Rmd (or other R functions that produce HTML) in a folder for your repo, which will then be hosted on a Cloud Run enabled with nginx.  Each time you push to git with modified Rmd code, it will build the new HTML and push an update to the website.</p>
 <p>This default R code is rendered in the rmd_folder:</p>
 <p><code><a href='https://rdrr.io/r/base/lapply.html'>lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
       rmarkdown::render, output_format = 'html_document')</a></code></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='cr_deploy_run.html'>cr_deploy_html</a> that lets you deploy HTML files</p>
+    <div class='dont-index'><p><a href='cr_deploy_run.html'>cr_deploy_html</a> that lets you deploy just HTML files and <a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a> for running pkgdown websites.</p>
 <p>Other Deployment functions: 
 <code><a href='cr_deploy_docker_trigger.html'>cr_deploy_docker_trigger</a>()</code>,
 <code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,

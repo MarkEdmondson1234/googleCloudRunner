@@ -172,7 +172,7 @@ This creates steps to use git with an ssh created key." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create a build step for authenticating with Git</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/buildsteps_templates.R'><code>R/buildsteps_templates.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/buildstep_templates_git.R'><code>R/buildstep_templates_git.R</code></a></small>
     <div class="hidden name"><code>cr_buildstep_git.Rd</code></div>
     </div>
 
@@ -186,7 +186,9 @@ This creates steps to use git with an ssh created key." />
 <span class='fu'>cr_buildstep_git</span>(
   <span class='kw'>git_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"clone"</span>, <span class='st'>"git@github.com:[GIT-USERNAME]/[REPOSITORY]"</span>, <span class='st'>"."</span>),
   <span class='no'>...</span>
-)</pre>
+)
+
+<span class='fu'>git_volume</span>()</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -213,6 +215,7 @@ This creates steps to use git with an ssh created key." />
 
     <p>The ssh private key should be uploaded to Google Secret Manager first</p>
 <p><code>cr_buildstep</code> must come after <code>cr_buildstep_gitsetup</code></p>
+<p>Use <code>git_volume</code> to add the git credentials folder to other buildsteps</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='https://cloud.google.com/cloud-build/docs/access-private-github-repos'>Accessing private GitHub repositories using Cloud Build (google article)</a></p>
@@ -233,7 +236,7 @@ This creates steps to use git with an ssh created key." />
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-16 21:37:47 &gt; ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-16 21:37:47 &gt; Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-24 12:25:59 &gt; ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-24 12:25:59 &gt; Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
 <span class='co'># assumes you have previously saved git ssh key called "github-ssh"</span>
 <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span>(
      <span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
@@ -279,6 +282,8 @@ This creates steps to use git with an ssh created key." />
 #&gt;   volumes:
 #&gt;   - name: ssh
 #&gt;     path: /root/.ssh</div><div class='input'>
+
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
