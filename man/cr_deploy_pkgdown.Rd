@@ -12,7 +12,7 @@ cr_deploy_pkgdown(
   cloudbuild_file = "cloudbuild-pkgdown.yml",
   git_email = "googlecloudrunner@r.com",
   env = NULL,
-  build_image = "gcr.io/gcer-public/packagetools:master",
+  build_image = "gcr.io/gcer-public/packagetools:latest",
   post_setup = NULL,
   post_clone = NULL
 )

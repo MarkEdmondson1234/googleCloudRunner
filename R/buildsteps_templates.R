@@ -17,7 +17,7 @@
 cr_buildstep_packagetests <- function(test_script = NULL,
                                       codecov_script = NULL,
                                       codecov_token = "$_CODECOV_TOKEN",
-                                      build_image = "gcr.io/gcer-public/packagetools:master",
+                                      build_image = "gcr.io/gcer-public/packagetools:latest",
                                       env = c("NOT_CRAN=true")){
 
   if(is.null(test_script)){
@@ -393,7 +393,7 @@ cr_buildstep_bash <- function(bash_script,
 #'
 #' # use your own R image with custom R
 #' my_r <- c("devtools::install()", "pkgdown::build_site()")
-#' br <-  cr_buildstep_r(my_r, name= "gcr.io/gcer-public/packagetools:master")
+#' br <-  cr_buildstep_r(my_r, name= "gcr.io/gcer-public/packagetools:latest")
 #'
 #'
 #'
@@ -637,7 +637,7 @@ cr_buildstep_pkgdown <- function(
            git_email,
            secret,
            env = NULL,
-           build_image = "gcr.io/gcer-public/packagetools:master",
+           build_image = "gcr.io/gcer-public/packagetools:latest",
            post_setup = NULL,
            post_clone = NULL){
 

@@ -440,7 +440,7 @@ test_that("Render BuildStep objects", {
 
   # use your own R image with custom R
   my_r <- c("devtools::install()", "pkgdown::build_site()")
-  br <-  cr_buildstep_r(my_r, name = "gcr.io/gcer-public/packagetools:master")
+  br <-  cr_buildstep_r(my_r, name = "gcr.io/gcer-public/packagetools:latest")
   expect_equal(br[[1]]$args[[3]], "devtools::install()\npkgdown::build_site()")
 
   bs <- cr_build_yaml(steps = cr_buildstep_bash("echo Hello"))

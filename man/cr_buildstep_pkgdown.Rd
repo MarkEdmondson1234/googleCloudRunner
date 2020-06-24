@@ -9,7 +9,7 @@ cr_buildstep_pkgdown(
   git_email,
   secret,
   env = NULL,
-  build_image = "gcr.io/gcer-public/packagetools:master",
+  build_image = "gcr.io/gcer-public/packagetools:latest",
   post_setup = NULL,
   post_clone = NULL
 )

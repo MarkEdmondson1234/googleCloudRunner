@@ -99,7 +99,7 @@ cr_deploy_run_website <- function(
           image_tag = "$SHORT_SHA",
           timeout = 600L,
           edit_r = NULL,
-          r_image = "gcr.io/gcer-public/packagetools:master",
+          r_image = "gcr.io/gcer-public/packagetools:latest",
           allowUnauthenticated = TRUE,
           region = cr_region_get(),
           projectId = cr_project_get()){

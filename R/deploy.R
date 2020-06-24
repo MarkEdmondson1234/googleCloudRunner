@@ -267,7 +267,7 @@ cr_deploy_pkgdown <- function(github_repo,
                               cloudbuild_file = "cloudbuild-pkgdown.yml",
                               git_email = "googlecloudrunner@r.com",
                               env = NULL,
-                              build_image = 'gcr.io/gcer-public/packagetools:master',
+                              build_image = 'gcr.io/gcer-public/packagetools:latest',
                               post_setup = NULL,
                               post_clone = NULL){
 
@@ -384,7 +384,7 @@ cr_deploy_packagetests <- function(
   test_script = NULL,
   codecov_script = NULL,
   codecov_token = "$_CODECOV_TOKEN",
-  build_image = 'gcr.io/gcer-public/packagetools:master',
+  build_image = 'gcr.io/gcer-public/packagetools:latest',
   create_trigger = c("file","inline","no"),
   trigger_repo = NULL,
   ...){

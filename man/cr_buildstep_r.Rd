@@ -58,7 +58,7 @@ cr_buildstep_r(c("library(dplyr)",
 
 # use your own R image with custom R
 my_r <- c("devtools::install()", "pkgdown::build_site()")
-br <-  cr_buildstep_r(my_r, name= "gcr.io/gcer-public/packagetools:master")
+br <-  cr_buildstep_r(my_r, name= "gcr.io/gcer-public/packagetools:latest")
 
 
 

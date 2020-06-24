@@ -41,7 +41,7 @@ polygot <- cr_build_yaml(
       id="render rmd",
       r = "lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
              rmarkdown::render, output_format = 'html_document')",
-      name = "gcr.io/gcer-public/packagetools:master",
+      name = "gcr.io/gcer-public/packagetools:latest",
       dir = "build"
       ),
     cr_buildstep_bash(

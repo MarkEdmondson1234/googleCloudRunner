@@ -31,7 +31,7 @@ ga <- read.csv("google_analytics.csv", stringsAsFactors = FALSE)
 knitr::kable(head(ga))
 ```
 
-Any R processes can be done with an Rmd file, so long as the calling R image has the correct packages installed - this one is `gcr.io/gcer-public/packagetools:master` which has tidyverse and other package tools installed.  
+Any R processes can be done with an Rmd file, so long as the calling R image has the correct packages installed - this one is `gcr.io/gcer-public/packagetools:latest` which has tidyverse and other package tools installed.  
 
 For this demo, we decompose the data to tease out seasonality and trends:
 
