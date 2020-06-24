@@ -184,7 +184,7 @@
   <span class='no'>git_email</span>,
   <span class='no'>secret</span>,
   <span class='kw'>env</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>,
+  <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>,
   <span class='kw'>post_setup</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>post_clone</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
 )</pre>
@@ -248,7 +248,7 @@
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-24 12:25:59 &gt; ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-24 12:25:59 &gt; Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-24 12:31:17 &gt; ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-06-24 12:31:17 &gt; Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
 <span class='co'># set github repo directly to write it out via cr_build_write()</span>
 <span class='fu'>cr_buildstep_pkgdown</span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
                      <span class='kw'>git_email</span> <span class='kw'>=</span> <span class='st'>"cloudbuild@google.com"</span>,
@@ -301,7 +301,7 @@
 #&gt; 
 #&gt; [[4]]
 #&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/gcer-public/packagetools:master
+#&gt; name: gcr.io/gcer-public/packagetools:latest
 #&gt; args:
 #&gt; - Rscript
 #&gt; - -e
@@ -407,7 +407,7 @@
 #&gt; 
 #&gt; [[4]]
 #&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/gcer-public/packagetools:master
+#&gt; name: gcr.io/gcer-public/packagetools:latest
 #&gt; args:
 #&gt; - Rscript
 #&gt; - -e
@@ -514,7 +514,7 @@
 #&gt; 
 #&gt; [[4]]
 #&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/gcer-public/packagetools:master
+#&gt; name: gcr.io/gcer-public/packagetools:latest
 #&gt; args:
 #&gt; - Rscript
 #&gt; - -e

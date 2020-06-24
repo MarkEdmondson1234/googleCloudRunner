@@ -183,7 +183,7 @@
   <span class='kw'>test_script</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>codecov_script</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>codecov_token</span> <span class='kw'>=</span> <span class='st'>"$_CODECOV_TOKEN"</span>,
-  <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:master"</span>,
+  <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>,
   <span class='kw'>env</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NOT_CRAN=true"</span>)
 )</pre>
 
@@ -217,7 +217,7 @@
     <pre class="examples"><div class='input'>
 <span class='fu'>cr_buildstep_packagetests</span>()</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/gcer-public/packagetools:master
+#&gt; name: gcr.io/gcer-public/packagetools:latest
 #&gt; args:
 #&gt; - Rscript
 #&gt; - -e
@@ -230,7 +230,7 @@
 #&gt; 
 #&gt; [[2]]
 #&gt; ==cloudRunnerBuildStep==
-#&gt; name: gcr.io/gcer-public/packagetools:master
+#&gt; name: gcr.io/gcer-public/packagetools:latest
 #&gt; args:
 #&gt; - Rscript
 #&gt; - -e

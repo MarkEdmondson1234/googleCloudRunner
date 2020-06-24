@@ -332,7 +332,7 @@
 
 <span class="co"># use your own R image with custom R</span>
 <span class="no">my_r</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"devtools::install()"</span>, <span class="st">"pkgdown::build_site()"</span>)
-<span class="no">br</span> <span class="kw">&lt;-</span>  <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(<span class="no">my_r</span>, <span class="kw">name</span><span class="kw">=</span> <span class="st">"gcr.io/gcer-public/packagetools:master"</span>)
+<span class="no">br</span> <span class="kw">&lt;-</span>  <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(<span class="no">my_r</span>, <span class="kw">name</span><span class="kw">=</span> <span class="st">"gcr.io/gcer-public/packagetools:latest"</span>)
 
 <span class="co"># send it for building</span>
 <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(<span class="kw">steps</span><span class="kw">=</span><span class="no">br</span>))</pre></body></html></div>
