@@ -13,6 +13,7 @@
 * `cr_deploy_pkgdown()`, `cr_deploy_docker_trigger()` and `cr_deploy_packagetests()` now all have an option to create the build trigger for you
 * Add `cr_deploy_badger()` for creating build badges with Cloud Build via https://github.com/kelseyhightower/badger (#15)
 * Add `cr_deploy_run_website()` for rendering Rmd files then hosting on an nginx Cloud Run
+* The packagetools docker updates weekly `gcr.io/gcer-public/packagetools:latest` (#55)
 
 # googleCloudRunner 0.2.0
 

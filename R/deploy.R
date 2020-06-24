@@ -193,9 +193,7 @@ cr_deploy_docker <- function(local,
     images = push_image)
 
   image_tag <- paste0(image, ":", tag)
-  myMessage(paste("#Deploy docker build for image: ",
-                  paste(image_tag, sep = " and ")),
-            level = 3)
+  myMessage("#Deploy docker build for image: ", image, level = 3)
 
   remote_tar <- remote
   if(!grepl("tar\\.gz$", remote)){

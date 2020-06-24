@@ -42,10 +42,10 @@ cr_deploy_run_website(
 \item{projectId}{The project to build under}
 }
 \description{
-This lets you set up triggers that will update a website each commit.
+This lets you set up triggers that will update an R generated website each commit.
 }
 \details{
-Build trigger API is experimental so this function is in development.
+This lets you render the Rmd (or other R functions that produce HTML) in a folder for your repo, which will then be hosted on a Cloud Run enabled with nginx.  Each time you push to git with modified Rmd code, it will build the new HTML and push an update to the website.
 
 This default R code is rendered in the rmd_folder:
 
@@ -71,7 +71,7 @@ cr_deploy_run_website(your_repo,
 }
 }
 \seealso{
-\link{cr_deploy_html} that lets you deploy HTML files
+\link{cr_deploy_html} that lets you deploy just HTML files and \link{cr_deploy_pkgdown} for running pkgdown websites.
 
 Other Deployment functions: 
 \code{\link{cr_deploy_docker_trigger}()},
