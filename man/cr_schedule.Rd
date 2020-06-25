@@ -32,6 +32,9 @@ cr_schedule(
 
 \item{projectId}{The GCP project to run within usually set with \link{cr_project_set}}
 }
+\value{
+A \code{gar_scheduleJob} class object
+}
 \description{
 Creates or updates a Cloud Scheduler job.
 }
