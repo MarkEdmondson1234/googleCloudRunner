@@ -422,7 +422,7 @@ All together the git repo folder looks like:
    | - app.R
 ```
  
-As you update the code in `app.R` and push to GitHub, the build trigger builds the Docker image and publishes it to the kubernetes cluster.  The docker is built using kamiko cache, which speeds up repeat builds and deployments.
+As you update the code in `app.R` and push to GitHub, the build trigger builds the Docker image and publishes it to the kubernetes cluster.  The docker is built using kaniko cache, which speeds up repeat builds and deployments.
 
 
 ## Run R code when a pub/sub message is created from a new file in Google Cloud Storage

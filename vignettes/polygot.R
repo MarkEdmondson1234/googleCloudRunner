@@ -62,7 +62,7 @@ polygot <- cr_build_yaml(
       concurrency = 80),
     cr_buildstep(
       id = "load BigQuery",
-      name = "gcr.io/cloud-builders/gcloud",
+      name = "gcr.io/google.com/cloudsdktool/cloud-sdk:alpine",
       entrypoint = "bq",
       args = c("--location=EU",
                "load",
