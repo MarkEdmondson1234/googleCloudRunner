@@ -451,7 +451,7 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 |- Dockerfile
 |- shiny/
    | - app.R</code></pre>
-<p>As you update the code in <code>app.R</code> and push to GitHub, the build trigger builds the Docker image and publishes it to the kubernetes cluster. The docker is built using kamiko cache, which speeds up repeat builds and deployments.</p>
+<p>As you update the code in <code>app.R</code> and push to GitHub, the build trigger builds the Docker image and publishes it to the kubernetes cluster. The docker is built using kaniko cache, which speeds up repeat builds and deployments.</p>
 </div>
 </div>
 <div id="run-r-code-when-a-pubsub-message-is-created-from-a-new-file-in-google-cloud-storage" class="section level2">
@@ -760,7 +760,7 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
       <span class="kw">concurrency</span> <span class="kw">=</span> <span class="fl">80</span>),
     <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(
       <span class="kw">id</span> <span class="kw">=</span> <span class="st">"load BigQuery"</span>,
-      <span class="kw">name</span> <span class="kw">=</span> <span class="st">"gcr.io/cloud-builders/gcloud"</span>,
+      <span class="kw">name</span> <span class="kw">=</span> <span class="st">"gcr.io/google.com/cloudsdktool/cloud-sdk:alpine"</span>,
       <span class="kw">entrypoint</span> <span class="kw">=</span> <span class="st">"bq"</span>,
       <span class="kw">args</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"--location=EU"</span>,
                <span class="st">"load"</span>,
