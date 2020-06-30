@@ -15,6 +15,7 @@
 * Add `cr_deploy_run_website()` for rendering Rmd files then hosting on an nginx Cloud Run
 * The packagetools docker updates weekly `gcr.io/gcer-public/packagetools:latest` (#55)
 * Fix `cr_schedule()` crash of `overwrite=TRUE` but no existing schedule
+* Add deploy Shiny to k8s example use case
 
 # googleCloudRunner 0.2.0
 

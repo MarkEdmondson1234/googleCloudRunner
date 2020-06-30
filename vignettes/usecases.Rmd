@@ -299,6 +299,132 @@ pub <- function(x){
 
 If you would like to trigger a pub/sub message when a file arrives on Google Cloud Storage, use `googleCloudStorageR::gcs_create_pubsub()` 
 
+## Deploy a Shiny app to Google Kubernetes Engine
+
+If you have a Shiny app and a Google Kubernetes Engine (GKE) instance you can automate deployment of that app upon each git commit.
+
+Each commit the buildsteps need to re-build the Docker container with the Shiny app code and environment, then deploy it to the GKE instance.
+
+### Dockerfile
+
+Assuming you have a shiny app in `./shiny/` relative to the Dockerfile, then a Dockerfile could look like:
+
+```
+FROM rocker/shiny
+
+# install R package dependencies
+RUN apt-get update && apt-get install -y \
+    libssl-dev \
+    ## clean up
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/ \
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+## Install packages from CRAN
+RUN install2.r --error \
+    -r 'http://cran.rstudio.com' \
+        remotes \
+        shinyjs \
+    ## install Github packages
+    && installGithub.r MarkEdmondson1234/googleCloudRunner \
+    ## clean up
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+## assume shiny app is in build folder /shiny
+COPY ./shiny/ /srv/shiny-server/my-app/
+```
+
+Depending on how your ingress is setup, this would appear on your Kubernetes cluster at `/my-app/` - see this blog post on details for [setting up R on Kubernetes](https://code.markedmondson.me/r-on-kubernetes-serverless-shiny-r-apis-and-scheduled-scripts/)
+
+### Kubernetes deployment file
+
+You can then also have a deployment file for Kubernetes that will govern its configuration after the new docker image is built.  An example deployment file is below:
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: shiny-your-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: shiny-your-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        run: shiny-your-app
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: generic-compute-pool
+      volumes:
+      - name: varlog
+        emptyDir:
+      containers:
+      - name: shiny-your-app
+        image: gcr.io/your-project/shiny-your-app:latest
+        ports:
+        - containerPort: 3838
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log/shiny-server/
+```
+
+### Cloud Build
+
+Your cloudbuild steps will then build the Dockerfile, then use `gcr.io/cloud-builders/gke-deploy` to deploy it to the cluster - see this [Google guide on deployment to GKE via Cloud Build](https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-gke) for details
+
+```r
+library(googleCloudRunner)
+
+bs <- c(
+  cr_buildstep_docker("shiny-your-app",
+                      tag = c("latest","$SHORT_SHA"),
+                      kaniko_cache = TRUE),
+  cr_buildstep("gke-deploy",
+               args = c("run",
+                        "--filename=deployment-k8s.yml",
+                        "--image=gcr.io/$PROJECT_ID/shiny-your-app:$SHORT_SHA",
+                        "--location=europe-west1-b",
+                        "--cluster=your-k8s-cluster"))
+)
+
+yaml <- cr_build_yaml(steps = bs)
+cr_build_write(yaml, "build/cloudbuild.yml")
+```
+
+In this example we write the cloudbuild.yml to a build folder rather than making an inline build trigger deployment.  This is setup in a Build Trigger upon GitHub commit with the code below:
+
+```r
+repo <- cr_buildtrigger_repo("your-name/your-repo-with-shiny")
+
+# test build by pushing to git after this trigger made
+cr_buildtrigger("build/cloudbuild.yml",
+                name = "deploy-my-shiny-app",
+                trigger = repo)
+
+```
+
+All together the git repo folder looks like:
+
+```
+|
+|- build/
+   | - cloudbuild.yml
+|- deployment-k8s.yml
+|- Dockerfile
+|- shiny/
+   | - app.R
+```
+ 
+As you update the code in `app.R` and push to GitHub, the build trigger builds the Docker image and publishes it to the kubernetes cluster.  The docker is built using kamiko cache, which speeds up repeat builds and deployments.
+
+
 ## Run R code when a pub/sub message is created from a new file in Google Cloud Storage
 
 This is a demo to show how to make use of [Pub/Sub messages](https://cloud.google.com/pubsub/docs/overview).  Pub/Sub messages are used throughout the Google Cloud Platform, for this example we will use one for when a new object is created in a Google Cloud Storage bucket.
