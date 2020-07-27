@@ -63,7 +63,7 @@ myMessage <- function(..., level = 2){
   if(level >= compare_level){
     time <- paste(Sys.time(),">")
     mm <- paste(...)
-    if(grepl("^#", mm)){
+    if(grepl("^#", mm[[1]])){
       cli_h1(mm)
     } else {
       cli_div(theme = list(span.time = list(color = "grey")))

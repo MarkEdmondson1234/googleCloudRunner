@@ -17,7 +17,7 @@ steps:
   - --location=global
   - --keyring=my-keyring
   - --key=gce-auth-file
-- name: 'gcr.io/gcer-public/packagetools:master'
+- name: 'gcr.io/gcer-public/packagetools:latest'
   id: Devtools checks
   args:
   - "Rscript"
@@ -26,7 +26,7 @@ steps:
     message("cran mirror: ", getOption("repos"))
     remotes::install_deps(dependencies = TRUE)
     rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'warning')
-- name: 'gcr.io/gcer-public/packagetools:master'
+- name: 'gcr.io/gcer-public/packagetools:latest'
   id: Good Practices
   args:
   - "Rscript"
@@ -34,7 +34,7 @@ steps:
   - |
     library(goodpractice)
     gp(checks = grep('(rcmdcheck|covr)', all_checks(), invert=TRUE, value=TRUE))
-- name: 'gcr.io/gcer-public/packagetools:master'
+- name: 'gcr.io/gcer-public/packagetools:latest'
   id: codecovr checks
   env:
   - 'CODECOV_TOKEN=$_CODECOV_TOKEN'

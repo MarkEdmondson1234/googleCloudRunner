@@ -248,6 +248,17 @@ cr_run(sprintf("gcr.io/%s/shiny-cloudrun:latest",cr_project_get()),
        memory = "2Gi")
 ```
 
+Or if you have a local Shiny app in `shiny_cloudrun/` with the appropriate Dockerfile and Shiny configuration, the full Docker build and deployment pipeline can be carried out with:
+
+```r
+# deploy the app version from this folder
+cr_deploy_run("shiny_cloudrun/",
+              remote = "shiny-cloudrun2",
+              tag = c("latest","$BUILD_ID"),
+              max_instances = 1, # required for shiny
+              concurrency = 80)
+```
+
 
 ## Deploying from another Google Cloud project
 

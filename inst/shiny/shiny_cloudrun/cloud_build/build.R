@@ -14,5 +14,7 @@ cr_run(sprintf("gcr.io/%s/shiny-cloudrun:latest",cr_project_get()),
 # deploy the app version from this folder
 cr_deploy_run("inst/shiny/shiny_cloudrun/app/",
               remote = "shiny-cloudrun2",
-              tag = c("latest","$BUILD_ID"))
+              tag = c("latest","$BUILD_ID"),
+              max_instances = 1,
+              concurrency = 80)
 

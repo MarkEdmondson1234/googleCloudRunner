@@ -9,6 +9,8 @@
 #' @param projectId The projectId where it all gets deployed to
 #' @param region The Cloud Run endpoint set by CR_REGION env arg
 #' @param bucket The Cloud Storage bucket that will hold the code
+#' @param ... Other arguments passed to \link{cr_buildstep_run}
+#' @inheritDotParams cr_buildstep_run
 #' @inheritParams cr_buildstep_docker
 #' @inheritParams cr_build
 #' @family Deployment functions
@@ -35,7 +37,8 @@ cr_deploy_run <- function(local,
                           bucket = cr_bucket_get(),
                           projectId = cr_project_get(),
                           launch_browser = interactive(),
-                          timeout=600L){
+                          timeout=600L,
+                          ...){
 
   assert_that(
     is.dir(local),
@@ -71,7 +74,8 @@ cr_deploy_run <- function(local,
          region = region,
          projectId = projectId,
          launch_browser=launch_browser,
-         timeout=timeout)
+         timeout=timeout,
+         ...)
 
 }
 
