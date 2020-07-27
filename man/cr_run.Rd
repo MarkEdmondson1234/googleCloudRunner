@@ -10,6 +10,7 @@ cr_run(
   allowUnauthenticated = TRUE,
   concurrency = 1,
   port = NULL,
+  max_instances = "default",
   timeout = 600L,
   region = cr_region_get(),
   projectId = cr_project_get(),
@@ -28,6 +29,8 @@ cr_run(
 
 \item{port}{Container port to receive requests at. Also sets the $PORT environment variable. Must be a number between 1 and 65535, inclusive. To unset this field, pass the special value "default".}
 
+\item{max_instances}{the desired maximum nuimber of container instances. "default" is 1000, you can get more if you requested a quota instance.  For Shiny instances on Cloud Run, this needs to be 1.}
+
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
 
 \item{region}{The endpoint region for deployment}
@@ -41,8 +44,6 @@ cr_run(
   \describe{
     \item{\code{}}{}
   }}
-
-\item{max_instances}{the desired maximum nuimber of container instances. "default" is 1000, you can get more if you requested a quota instance.  For Shiny instances on Cloud Run, this needs to be 1.}
 }
 \description{
 Deploys an existing gcr.io image.

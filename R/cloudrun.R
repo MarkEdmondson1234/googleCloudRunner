@@ -39,6 +39,7 @@ cr_run <- function(image,
                    allowUnauthenticated = TRUE,
                    concurrency = 1,
                    port = NULL,
+                   max_instances = "default",
                    timeout=600L,
                    region = cr_region_get(),
                    projectId = cr_project_get(),
@@ -56,6 +57,7 @@ cr_run <- function(image,
                              region = region,
                              concurrency = concurrency,
                              port = port,
+                             max_instances = max_instances,
                              ...)
   )
 
