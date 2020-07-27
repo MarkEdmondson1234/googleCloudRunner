@@ -246,6 +246,8 @@ cr_buildstep_run <- function(name,
                              concurrency = 80,
                              port = NULL,
                              max_instances = "default",
+                             memory = "256Mi",
+                             cpu = 1,
                              ...){
 
   # don't allow dot names that would break things
@@ -287,6 +289,8 @@ cr_buildstep_run <- function(name,
                      "--concurrency", concurrency,
                      "--port", port,
                      "--max-instances", max_instances,
+                     "--memory", memory,
+                     "--cpu", cpu,
                      auth_calls
                    ),
                    id = "deploy cloudrun",

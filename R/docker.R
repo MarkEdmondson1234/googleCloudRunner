@@ -123,7 +123,7 @@ cr_deploy_docker <- function(local,
     steps = cr_buildstep_docker(image,
                                 tag = tag,
                                 location = ".",
-                                dir=paste0("deploy/", remote),
+                                dir=paste0("deploy/", basename(local)),
                                 projectId = projectId,
                                 kaniko_cache = kaniko_cache,
                                 waitFor = "-", # build concurrent tags

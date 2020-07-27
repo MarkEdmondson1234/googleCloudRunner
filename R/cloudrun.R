@@ -13,6 +13,8 @@
 #' @param projectId The GCP project from which the services should be listed
 #' @param allowUnauthenticated TRUE if can be reached from public HTTP address.
 #' @param max_instances the desired maximum nuimber of container instances. "default" is 1000, you can get more if you requested a quota instance.  For Shiny instances on Cloud Run, this needs to be 1.
+#' @param memory The format for size is a fixed or floating point number followed by a unit: G, M, or K corresponding to gigabyte, megabyte, or kilobyte, respectively, or use the power-of-two equivalents: Gi, Mi, Ki corresponding to gibibyte, mebibyte or kibibyte respectively. The default is 256Mi
+#' @param cpu 1 or 2 CPUs for your instance
 #' @param ... Other arguments passed to \link{cr_buildstep_run}
 #' @inheritDotParams cr_buildstep_run
 #'
@@ -40,6 +42,8 @@ cr_run <- function(image,
                    concurrency = 1,
                    port = NULL,
                    max_instances = "default",
+                   memory = "256Mi",
+                   cpu = 1,
                    timeout=600L,
                    region = cr_region_get(),
                    projectId = cr_project_get(),
@@ -58,6 +62,8 @@ cr_run <- function(image,
                              concurrency = concurrency,
                              port = port,
                              max_instances = max_instances,
+                             memory = memory,
+                             cpu = cpu,
                              ...)
   )
 

@@ -40,7 +40,7 @@ cr_deploy_run <- function(local,
   assert_that(
     is.dir(local),
     is.string(remote),
-    is.string(tag)
+    is.character(tag)
   )
 
   myMessage("Uploading", local, "folder for Cloud Run", level = 3)
