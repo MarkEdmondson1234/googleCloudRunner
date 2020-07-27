@@ -24,7 +24,7 @@ cr_run(
 
 \item{allowUnauthenticated}{TRUE if can be reached from public HTTP address.}
 
-\item{concurrency}{How many connections each image can serve. Can be up to 80.}
+\item{concurrency}{How many connections each container instance can serve. Can be up to 80.}
 
 \item{port}{Container port to receive requests at. Also sets the $PORT environment variable. Must be a number between 1 and 65535, inclusive. To unset this field, pass the special value "default".}
 
@@ -41,6 +41,8 @@ cr_run(
   \describe{
     \item{\code{}}{}
   }}
+
+\item{max_instances}{the desired maximum nuimber of container instances. "default" is 1000, you can get more if you requested a quota instance.  For Shiny instances on Cloud Run, this needs to be 1.}
 }
 \description{
 Deploys an existing gcr.io image.

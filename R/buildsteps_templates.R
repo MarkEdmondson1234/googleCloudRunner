@@ -245,6 +245,7 @@ cr_buildstep_run <- function(name,
                              region = cr_region_get(),
                              concurrency = 80,
                              port = NULL,
+                             max_instances = "default",
                              ...){
 
   # don't allow dot names that would break things
@@ -285,6 +286,7 @@ cr_buildstep_run <- function(name,
                      "--platform", "managed",
                      "--concurrency", concurrency,
                      "--port", port,
+                     "--max-instances", max_instances,
                      auth_calls
                    ),
                    id = "deploy cloudrun",

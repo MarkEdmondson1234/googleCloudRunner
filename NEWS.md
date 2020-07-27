@@ -16,6 +16,7 @@
 * The packagetools docker updates weekly `gcr.io/gcer-public/packagetools:latest` (#55)
 * Fix `cr_schedule()` crash of `overwrite=TRUE` but no existing schedule
 * Add deploy Shiny to k8s example use case
+* Allow max_instances in `cr_run` so it can run Shiny apps (#35)
 
 # googleCloudRunner 0.2.0
 

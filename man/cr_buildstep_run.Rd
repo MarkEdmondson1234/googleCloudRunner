@@ -11,6 +11,7 @@ cr_buildstep_run(
   region = cr_region_get(),
   concurrency = 80,
   port = NULL,
+  max_instances = "default",
   ...
 )
 }
@@ -23,9 +24,11 @@ cr_buildstep_run(
 
 \item{region}{The endpoint region for deployment}
 
-\item{concurrency}{How many connections each image can serve. Can be up to 80.}
+\item{concurrency}{How many connections each container instance can serve. Can be up to 80.}
 
 \item{port}{Container port to receive requests at. Also sets the $PORT environment variable. Must be a number between 1 and 65535, inclusive. To unset this field, pass the special value "default".}
+
+\item{max_instances}{the desired maximum nuimber of container instances. "default" is 1000, you can get more if you requested a quota instance.  For Shiny instances on Cloud Run, this needs to be 1.}
 
 \item{...}{passed on to \link{cr_buildstep}}
 }

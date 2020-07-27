@@ -7,11 +7,12 @@
 #'
 #' @param image The name of the image to create or use in deployment - \code{gcr.io}
 #' @param name Name for deployment on Cloud Run
-#' @param concurrency How many connections each image can serve. Can be up to 80.
+#' @param concurrency How many connections each container instance can serve. Can be up to 80.
 #' @param port Container port to receive requests at. Also sets the $PORT environment variable. Must be a number between 1 and 65535, inclusive. To unset this field, pass the special value "default".
 #' @param region The endpoint region for deployment
 #' @param projectId The GCP project from which the services should be listed
 #' @param allowUnauthenticated TRUE if can be reached from public HTTP address.
+#' @param max_instances the desired maximum nuimber of container instances. "default" is 1000, you can get more if you requested a quota instance.  For Shiny instances on Cloud Run, this needs to be 1.
 #' @param ... Other arguments passed to \link{cr_buildstep_run}
 #' @inheritDotParams cr_buildstep_run
 #'
