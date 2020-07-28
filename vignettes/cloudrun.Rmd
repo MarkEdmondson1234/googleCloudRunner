@@ -259,6 +259,110 @@ cr_deploy_run("shiny_cloudrun/",
               concurrency = 80)
 ```
 
+### Shiny app on Cloud Run with googleAuthR authentication
+
+If you want to have authentication options for the user as they visit the app on Cloud Run, the below is a working example that is deployed here: `https://shiny-cloudrun-sc-ewjogewawq-ew.a.run.app/`
+
+Folder:
+```
+|
+|- app.R
+|- Dockerfile
+|- client.json
+```
+
+#### app.R
+
+```r
+library(shiny)
+library(searchConsoleR)
+library(googleAuthR)
+options(googleAuthR.verbose = 2)
+gar_set_client(web_json = "client.json",
+               scopes = "https://www.googleapis.com/auth/webmasters")
+
+ui <- fluidPage(
+  googleAuth_jsUI('auth', login_text = 'Login to Google'),
+  tableOutput("sc_accounts")
+)
+
+server <- function(input, output, session) {
+  auth <- callModule(googleAuth_js, "auth")
+  # debug
+  observe(print(googleAuth_jsUI('auth', login_text = 'Login to Google')))
+
+  sc_accounts <- reactive({
+    req(auth())
+
+    with_shiny(
+      list_websites,
+      shiny_access_token = auth()
+    )
+
+  })
+
+  output$sc_accounts <- renderTable({
+    sc_accounts()
+  })
+
+
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+#### Dockerfile
+
+```
+FROM rocker/shiny
+
+# install R package dependencies
+RUN apt-get update && apt-get install -y \
+    libcurl4-openssl-dev libssl-dev \
+    ## clean up
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/ \
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+## Install packages from CRAN
+RUN install2.r --error \
+    -r 'http://cran.rstudio.com' \
+    googleAuthR searchConsoleR
+
+COPY client.json /srv/shiny-server/client.json
+COPY app.R /srv/shiny-server/app.R
+
+EXPOSE 8080
+
+USER shiny
+
+# avoid s6 initialization
+# see https://github.com/rocker-org/shiny/issues/79
+CMD ["/usr/bin/shiny-server"]
+```
+
+#### client.id and GCP setup
+
+The client.json was a web client json from my project:
+
+```json
+{"web":{"client_id":"10XXX","project_id":"XXXX","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"XXXXX","redirect_uris":["http://localhost"],"javascript_origins":["https://www.example.com","http://localhost:1221"]}}
+```
+
+You need to add the domain of where the Cloud Run is running in the JavaScript origins within the GCP console, that you get after deploying the app.  In the example case this is `https://shiny-cloudrun-sc-ewjogewawq-ew.a.run.app/`
+
+#### Deploying
+
+You can then deploy similar to the example above, which will build the Dockerfile and then deploy it to Cloud Run.
+
+```r
+# deploy the app version from this folder
+cr_deploy_run("shiny_cloudrun/app/",
+              remote = "shiny-cloudrun-sc",
+              tag = c("latest","$BUILD_ID"),
+              max_instances = 1, # required for shiny
+              concurrency = 80)
+```
 
 ## Deploying from another Google Cloud project
 

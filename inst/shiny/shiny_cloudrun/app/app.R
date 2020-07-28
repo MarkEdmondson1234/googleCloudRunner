@@ -1,40 +1,36 @@
 library(shiny)
+library(searchConsoleR)
+library(googleAuthR)
+options(googleAuthR.verbose = 2)
+gar_set_client(web_json = "mark-edmondson-gde-web-client.json",
+               scopes = "https://www.googleapis.com/auth/webmasters")
 
-# Define UI for application that draws a histogram
 ui <- fluidPage(
-
-  # Application title
-  titlePanel("Old Faithful Geyser Data"),
-
-  # Sidebar with a slider input for number of bins
-  sidebarLayout(
-    sidebarPanel(
-      sliderInput("bins",
-                  "Number of bins:",
-                  min = 1,
-                  max = 50,
-                  value = 30)
-    ),
-
-    # Show a plot of the generated distribution
-    mainPanel(
-      plotOutput("distPlot")
-    )
-  )
+  googleAuth_jsUI('auth', login_text = 'Login to Google'),
+  tableOutput("sc_accounts")
 )
 
-# Define server logic required to draw a histogram
-server <- function(input, output) {
+server <- function(input, output, session) {
+  auth <- callModule(googleAuth_js, "auth")
+  # debug
+  observe(print(googleAuth_jsUI('auth', login_text = 'Login to Google')))
 
-  output$distPlot <- renderPlot({
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2]
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+  sc_accounts <- reactive({
+    req(auth())
 
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white')
+    with_shiny(
+      list_websites,
+      shiny_access_token = auth()
+    )
+
   })
+
+  output$sc_accounts <- renderTable({
+    sc_accounts()
+  })
+
+
 }
 
-# Run the application
 shinyApp(ui = ui, server = server)
+
