@@ -1,4 +1,4 @@
-pandoc: 2.3.1
+pandoc: 2.7.3
 pkgdown: 1.5.1
 pkgdown_sha: ~
 articles:
@@ -9,7 +9,7 @@ articles:
   setup-gcp: setup-gcp.html
   setup: setup.html
   usecases: usecases.html
-last_built: 2020-06-30T14:43Z
+last_built: 2020-07-31T15:26Z
 urls:
   reference: https://code.markedmondson.me/googleCloudRunner/reference
   article: https://code.markedmondson.me/googleCloudRunner/articles

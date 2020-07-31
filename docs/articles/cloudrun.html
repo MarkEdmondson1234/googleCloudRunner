@@ -122,12 +122,12 @@
 
       
 
-      </header><div class="row">
+      </header><script src="cloudrun_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>R on Cloud Run</h1>
             
-            <h4 class="date">2020-06-30</h4>
+            <h4 class="date">2020-07-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudrun.Rmd"><code>vignettes/cloudrun.Rmd</code></a></small>
       <div class="hidden name"><code>cloudrun.Rmd</code></div>
@@ -179,7 +179,7 @@
     <span class="no">myData</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="no">iris</span>, <span class="no">Species</span> <span class="kw">==</span> <span class="no">spec</span>)
   }
 
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(<span class="no">myData</span>$<span class="no">Sepal.Length</span>, <span class="no">myData</span>$<span class="no">Petal.Length</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">myData</span>$<span class="no">Sepal.Length</span>, <span class="no">myData</span>$<span class="no">Petal.Length</span>,
        <span class="kw">main</span><span class="kw">=</span><span class="no">title</span>, <span class="kw">xlab</span><span class="kw">=</span><span class="st">"Sepal Length"</span>, <span class="kw">ylab</span><span class="kw">=</span><span class="st">"Petal Length"</span>)
 }</pre></body></html></div>
 <ol start="2" style="list-style-type: decimal">
@@ -244,7 +244,7 @@ CMD ["api.R"]</code></pre>
 <a href="#customising-cloud-run-deployments" class="anchor"></a>Customising Cloud Run deployments</h2>
 <p>The Cloud Run API is not called directly when deploying - instead a Cloud Build is created for deployment. <code>cr_run</code> creates a cloudbuild that make a cloud build including <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code>.</p>
 <p>You can build the deployment yourself by using <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code> within your own <code><a href="../reference/cr_build.html">cr_build()</a></code>. This may cover things like downloading encrypted resources necessary for a build, running other code etc.</p>
-<p>If you have an existing image you want to deploy on Cloud Run (usually one that serves up HTTP content, such as a website or via <code><a href="https://rdrr.io/pkg/plumber/man">library(plumber)</a></code>) then you only need to supply that image to deploy:</p>
+<p>If you have an existing image you want to deploy on Cloud Run (usually one that serves up HTTP content, such as a website or via <code><a href="https://www.rplumber.io/reference">library(plumber)</a></code>) then you only need to supply that image to deploy:</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="fu"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="st">"gcr.io/my-project/my-image"</span>)</pre></body></html></div>
 <p>Cloud Run needs <a href="https://cloud.google.com/run/docs/deploying">specific ports available in your container</a>, so you may want to consult the documentation if you do - in particular look at the <a href="https://cloud.google.com/run/docs/reference/container-contract">container contract</a> which specifies what the Docker container requirements are.</p>
 <p>If you want to do the common use case of building the container first before deployment to Cloud Run, you can do so by using the helper <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code>:</p>
@@ -316,12 +316,146 @@ cr_dockerfile_plumber &lt;- function(deploy_folder, ...){
 
 }</pre></body></html></div>
 </div>
+<div id="deploying-shiny-to-cloud-run" class="section level2">
+<h2 class="hasAnchor">
+<a href="#deploying-shiny-to-cloud-run" class="anchor"></a>Deploying Shiny to Cloud Run</h2>
+<p>Due to Shiny’s stateful nature, Cloud Run is not a perfect fit for Shiny but it can be configured to run Shiny apps that scale to 0 (e.g. no cost) up to 80 connections at once to one instance. The one instance is necessary to avoid requests being sent to another Shiny container instance and losing the user session. Shiny also needs to have certain websocket features disabled.</p>
+<p>This means you can’t scale to a billion like other Cloud Run apps, and need to keep an eye on the load of the Shiny app (which will depend on your code) to see if 80 connections are too much for the CPU and Memory you assign to the Cloud Run instance. However this should still be a good fit for a lot of data science applications.</p>
+<p>A minimal working example has been created by <span class="citation">@randy3k</span> here: <a href="https://github.com/randy3k/shiny-cloudrun-demo" class="uri">https://github.com/randy3k/shiny-cloudrun-demo</a> which can be deployed to Cloud Run via a fork here:</p>
+<div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleCloudRunner</span>)
+
+<span class="co"># a repo with the Dockerfile template</span>
+<span class="no">repo</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span>(<span class="st">"MarkEdmondson1234/shiny-cloudrun-demo"</span>)
+
+<span class="co"># deploy a cloud build trigger so each commit build the image</span>
+<span class="fu"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span>(
+  <span class="no">repo</span>,
+  <span class="kw">image</span> <span class="kw">=</span> <span class="st">"shiny-cloudrun"</span>
+)
+
+<span class="co"># deploy to Cloud Run</span>
+<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span>()),
+       <span class="kw">name</span> <span class="kw">=</span> <span class="st">"shiny-cloudrun"</span>,
+       <span class="kw">concurrency</span> <span class="kw">=</span> <span class="fl">80</span>,
+       <span class="kw">max_instances</span> <span class="kw">=</span> <span class="fl">1</span>)</pre></body></html></div>
+<p>If you need to change the memory for the one instance, you can use <code>cpu</code> and <code>memory</code> arguments in the <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code> and subsequent functions such as <code><a href="../reference/cr_run.html">cr_run()</a></code>. The maximum allowed is 2 CPUs and 2 gibibytes (<code>2Gi</code>):</p>
+<div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="co"># deploy to Cloud Run with 2GBs of RAM per instance and 2 CPUs</span>
+<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span>()),
+       <span class="kw">name</span> <span class="kw">=</span> <span class="st">"shiny-cloudrun"</span>,
+       <span class="kw">concurrency</span> <span class="kw">=</span> <span class="fl">80</span>,
+       <span class="kw">max_instances</span> <span class="kw">=</span> <span class="fl">1</span>,
+       <span class="kw">cpu</span> <span class="kw">=</span> <span class="fl">2</span>,
+       <span class="kw">memory</span> <span class="kw">=</span> <span class="st">"2Gi"</span>)</pre></body></html></div>
+<p>Or if you have a local Shiny app in <code>shiny_cloudrun/</code> with the appropriate Dockerfile and Shiny configuration, the full Docker build and deployment pipeline can be carried out with:</p>
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># deploy the app version from this folder</span>
+<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span>(<span class="st">"shiny_cloudrun/"</span>,
+              <span class="kw">remote</span> <span class="kw">=</span> <span class="st">"shiny-cloudrun2"</span>,
+              <span class="kw">tag</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span>),
+              <span class="kw">max_instances</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="co"># required for shiny</span>
+              <span class="kw">concurrency</span> <span class="kw">=</span> <span class="fl">80</span>)</pre></body></html></div>
+<div id="shiny-app-on-cloud-run-with-googleauthr-authentication" class="section level3">
+<h3 class="hasAnchor">
+<a href="#shiny-app-on-cloud-run-with-googleauthr-authentication" class="anchor"></a>Shiny app on Cloud Run with googleAuthR authentication</h3>
+<p>If you want to have authentication options for the user as they visit the app on Cloud Run, the below is a working example that is deployed here: <code>https://shiny-cloudrun-sc-ewjogewawq-ew.a.run.app/</code></p>
+<p>Folder:</p>
+<pre><code>|
+|- app.R
+|- Dockerfile
+|- client.json</code></pre>
+<div id="app-r" class="section level4">
+<h4 class="hasAnchor">
+<a href="#app-r" class="anchor"></a>app.R</h4>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">shiny</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">searchConsoleR</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleAuthR</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">googleAuthR.verbose</span> <span class="kw">=</span> <span class="fl">2</span>)
+<span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/gar_set_client.html">gar_set_client</a></span>(<span class="kw">web_json</span> <span class="kw">=</span> <span class="st">"client.json"</span>,
+               <span class="kw">scopes</span> <span class="kw">=</span> <span class="st">"https://www.googleapis.com/auth/webmasters"</span>)
+
+<span class="no">ui</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span>(
+  <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/googleAuth_jsUI.html">googleAuth_jsUI</a></span>(<span class="st">'auth'</span>, <span class="kw">login_text</span> <span class="kw">=</span> <span class="st">'Login to Google'</span>),
+  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tableOutput.html">tableOutput</a></span>(<span class="st">"sc_accounts"</span>)
+)
+
+<span class="no">server</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">input</span>, <span class="no">output</span>, <span class="no">session</span>) {
+  <span class="no">auth</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/callModule.html">callModule</a></span>(<span class="no">googleAuth_js</span>, <span class="st">"auth"</span>)
+  <span class="co"># debug</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observe.html">observe</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/googleAuth_jsUI.html">googleAuth_jsUI</a></span>(<span class="st">'auth'</span>, <span class="kw">login_text</span> <span class="kw">=</span> <span class="st">'Login to Google'</span>)))
+
+  <span class="no">sc_accounts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span>({
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html">req</a></span>(<span class="fu">auth</span>())
+
+    <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/with_shiny.html">with_shiny</a></span>(
+      <span class="no">list_websites</span>,
+      <span class="kw">shiny_access_token</span> <span class="kw">=</span> <span class="fu">auth</span>()
+    )
+
+  })
+
+  <span class="no">output</span>$<span class="no">sc_accounts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderTable.html">renderTable</a></span>({
+    <span class="fu">sc_accounts</span>()
+  })
+
+
+}
+
+<span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span>(<span class="kw">ui</span> <span class="kw">=</span> <span class="no">ui</span>, <span class="kw">server</span> <span class="kw">=</span> <span class="no">server</span>)</pre></body></html></div>
+</div>
+<div id="dockerfile" class="section level4">
+<h4 class="hasAnchor">
+<a href="#dockerfile" class="anchor"></a>Dockerfile</h4>
+<pre><code>FROM rocker/shiny
+
+# install R package dependencies
+RUN apt-get update &amp;&amp; apt-get install -y \
+    libcurl4-openssl-dev libssl-dev \
+    ## clean up
+    &amp;&amp; apt-get clean \
+    &amp;&amp; rm -rf /var/lib/apt/lists/ \
+    &amp;&amp; rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+
+## Install packages from CRAN
+RUN install2.r --error \
+    -r 'http://cran.rstudio.com' \
+    googleAuthR searchConsoleR
+
+COPY client.json /srv/shiny-server/client.json
+COPY app.R /srv/shiny-server/app.R
+
+EXPOSE 8080
+
+USER shiny
+
+# avoid s6 initialization
+# see https://github.com/rocker-org/shiny/issues/79
+CMD ["/usr/bin/shiny-server"]</code></pre>
+</div>
+<div id="client-id-and-gcp-setup" class="section level4">
+<h4 class="hasAnchor">
+<a href="#client-id-and-gcp-setup" class="anchor"></a>client.id and GCP setup</h4>
+<p>The client.json was a web client json from my project:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">{</span><span class="dt">"web"</span><span class="fu">:{</span><span class="dt">"client_id"</span><span class="fu">:</span><span class="st">"10XXX"</span><span class="fu">,</span><span class="dt">"project_id"</span><span class="fu">:</span><span class="st">"XXXX"</span><span class="fu">,</span><span class="dt">"auth_uri"</span><span class="fu">:</span><span class="st">"https://accounts.google.com/o/oauth2/auth"</span><span class="fu">,</span><span class="dt">"token_uri"</span><span class="fu">:</span><span class="st">"https://accounts.google.com/o/oauth2/token"</span><span class="fu">,</span><span class="dt">"auth_provider_x509_cert_url"</span><span class="fu">:</span><span class="st">"https://www.googleapis.com/oauth2/v1/certs"</span><span class="fu">,</span><span class="dt">"client_secret"</span><span class="fu">:</span><span class="st">"XXXXX"</span><span class="fu">,</span><span class="dt">"redirect_uris"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"http://localhost"</span><span class="ot">]</span><span class="fu">,</span><span class="dt">"javascript_origins"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"https://www.example.com"</span><span class="ot">,</span><span class="st">"http://localhost:1221"</span><span class="ot">]</span><span class="fu">}}</span></span></code></pre></div>
+<p>You need to add the domain of where the Cloud Run is running in the JavaScript origins within the GCP console, that you get after deploying the app. In the example case this is <code>https://shiny-cloudrun-sc-ewjogewawq-ew.a.run.app/</code></p>
+</div>
+<div id="deploying" class="section level4">
+<h4 class="hasAnchor">
+<a href="#deploying" class="anchor"></a>Deploying</h4>
+<p>You can then deploy similar to the example above, which will build the Dockerfile and then deploy it to Cloud Run.</p>
+<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="co"># deploy the app version from this folder</span>
+<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span>(<span class="st">"shiny_cloudrun/app/"</span>,
+              <span class="kw">remote</span> <span class="kw">=</span> <span class="st">"shiny-cloudrun-sc"</span>,
+              <span class="kw">tag</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span>),
+              <span class="kw">max_instances</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="co"># required for shiny</span>
+              <span class="kw">concurrency</span> <span class="kw">=</span> <span class="fl">80</span>)</pre></body></html></div>
+</div>
+</div>
+</div>
 <div id="deploying-from-another-google-cloud-project" class="section level2">
 <h2 class="hasAnchor">
 <a href="#deploying-from-another-google-cloud-project" class="anchor"></a>Deploying from another Google Cloud project</h2>
 <p>By default the build will only allow deployments from the same Google Cloud Project - if you want to deploy container images from other projects you need to give the Cloud Run Service Agent for the Cloud Run project access to the source project. See this <a href="https://cloud.google.com/run/docs/deploying#other-projects">Google help file</a>.</p>
 <p>This is available via the <code><a href="../reference/cr_setup_service.html">cr_setup_service()</a></code> function, using the role lookup <code><a href="../reference/cr_setup_service.html">cr_setup_role_lookup("run_agent")</a></code>:</p>
-<div class="sourceCode" id="cb8"><html><body><pre class="r">cr_setup_service("service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com"
+<div class="sourceCode" id="cb16"><html><body><pre class="r">cr_setup_service("service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com"
                  roles = cr_setup_role_lookup("run_agent"))</pre></body></html></div>
 </div>
   </div>

@@ -186,6 +186,9 @@
   <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
   <span class='kw'>concurrency</span> <span class='kw'>=</span> <span class='fl'>80</span>,
   <span class='kw'>port</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>max_instances</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
+  <span class='kw'>memory</span> <span class='kw'>=</span> <span class='st'>"256Mi"</span>,
+  <span class='kw'>cpu</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -210,11 +213,23 @@
     </tr>
     <tr>
       <th>concurrency</th>
-      <td><p>How many connections each image can serve. Can be up to 80.</p></td>
+      <td><p>How many connections each container instance can serve. Can be up to 80.</p></td>
     </tr>
     <tr>
       <th>port</th>
       <td><p>Container port to receive requests at. Also sets the $PORT environment variable. Must be a number between 1 and 65535, inclusive. To unset this field, pass the special value "default".</p></td>
+    </tr>
+    <tr>
+      <th>max_instances</th>
+      <td><p>the desired maximum nuimber of container instances. "default" is 1000, you can get more if you requested a quota instance.  For Shiny instances on Cloud Run, this needs to be 1.</p></td>
+    </tr>
+    <tr>
+      <th>memory</th>
+      <td><p>The format for size is a fixed or floating point number followed by a unit: G, M, or K corresponding to gigabyte, megabyte, or kilobyte, respectively, or use the power-of-two equivalents: Gi, Mi, Ki corresponding to gibibyte, mebibyte or kibibyte respectively. The default is 256Mi</p></td>
+    </tr>
+    <tr>
+      <th>cpu</th>
+      <td><p>1 or 2 CPUs for your instance</p></td>
     </tr>
     <tr>
       <th>...</th>

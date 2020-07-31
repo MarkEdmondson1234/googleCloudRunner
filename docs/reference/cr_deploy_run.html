@@ -189,7 +189,8 @@
   <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(),
   <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
   <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>
+  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
+  <span class='no'>...</span>
 )
 
 <span class='fu'>cr_deploy_html</span>(
@@ -259,6 +260,20 @@
     <tr>
       <th>timeout</th>
       <td><p>Amount of time that this build should be allowed to run, to second</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed on to <code><a href='cr_buildstep_run.html'>cr_buildstep_run</a></code></p><dl'>
+    <dt><code>name</code></dt><dd><p>Name for deployment on Cloud Run</p></dd>
+    <dt><code>image</code></dt><dd><p>The name of the image to create or use in deployment - <code>gcr.io</code></p></dd>
+    <dt><code>allowUnauthenticated</code></dt><dd><p>TRUE if can be reached from public HTTP address.</p></dd>
+    <dt><code>concurrency</code></dt><dd><p>How many connections each container instance can serve. Can be up to 80.</p></dd>
+    <dt><code>port</code></dt><dd><p>Container port to receive requests at. Also sets the $PORT environment variable. Must be a number between 1 and 65535, inclusive. To unset this field, pass the special value "default".</p></dd>
+    <dt><code>max_instances</code></dt><dd><p>the desired maximum nuimber of container instances. "default" is 1000, you can get more if you requested a quota instance.  For Shiny instances on Cloud Run, this needs to be 1.</p></dd>
+    <dt><code>memory</code></dt><dd><p>The format for size is a fixed or floating point number followed by a unit: G, M, or K corresponding to gigabyte, megabyte, or kilobyte, respectively, or use the power-of-two equivalents: Gi, Mi, Ki corresponding to gibibyte, mebibyte or kibibyte respectively. The default is 256Mi</p></dd>
+    <dt><code>cpu</code></dt><dd><p>1 or 2 CPUs for your instance</p></dd>
+  
+</dl></td>
     </tr>
     <tr>
       <th>html_folder</th>

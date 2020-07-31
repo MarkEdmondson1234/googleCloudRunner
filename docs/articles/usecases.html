@@ -122,12 +122,12 @@
 
       
 
-      </header><div class="row">
+      </header><script src="usecases_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example Use Cases for googleCloudRunner</h1>
             
-            <h4 class="date">2020-06-30</h4>
+            <h4 class="date">2020-07-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecases.Rmd"><code>vignettes/usecases.Rmd</code></a></small>
       <div class="hidden name"><code>usecases.Rmd</code></div>
@@ -304,13 +304,52 @@ auth_file &lt;- gcs_get_object("config.json", bucket = "my-bucket")
 <span class="no">schedule_me</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(<span class="no">built</span>)
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"r-code-example"</span>, <span class="st">"15 8 * * *"</span>, <span class="kw">httpTarget</span> <span class="kw">=</span> <span class="no">schedule_me</span>)</pre></body></html></div>
 </div>
+<div id="deploying-shiny-to-cloud-run" class="section level2">
+<h2 class="hasAnchor">
+<a href="#deploying-shiny-to-cloud-run" class="anchor"></a>Deploying Shiny to Cloud Run</h2>
+<p>Due to Shiny’s stateful nature, Cloud Run is not a perfect fit for Shiny but it can be configured to run Shiny apps that scale to 0 (e.g. no cost) up to 80 connections at once to one instance. The one instance is necessary to avoid requests being sent to another Shiny container instance and losing the user session. Shiny also needs to have certain websocket features disabled.</p>
+<p>This means you can’t scale to a billion like other Cloud Run apps, and need to keep an eye on the load of the Shiny app (which will depend on your code) to see if 80 connections are too much for the CPU and Memory you assign to the Cloud Run instance. However this should still be a good fit for a lot of data science applications.</p>
+<p><img src="max_cpu_mem.png"></p>
+<p>A minimal working example has been created by <span class="citation">@randy3k</span> here: <a href="https://github.com/randy3k/shiny-cloudrun-demo" class="uri">https://github.com/randy3k/shiny-cloudrun-demo</a> which can be deployed to Cloud Run via a fork here:</p>
+<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleCloudRunner</span>)
+
+<span class="co"># a repo with the Dockerfile template</span>
+<span class="no">repo</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span>(<span class="st">"MarkEdmondson1234/shiny-cloudrun-demo"</span>)
+
+<span class="co"># deploy a cloud build trigger so each commit build the image</span>
+<span class="fu"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span>(
+  <span class="no">repo</span>,
+  <span class="kw">image</span> <span class="kw">=</span> <span class="st">"shiny-cloudrun"</span>
+)
+
+<span class="co"># deploy to Cloud Run</span>
+<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span>()),
+       <span class="kw">name</span> <span class="kw">=</span> <span class="st">"shiny-cloudrun"</span>,
+       <span class="kw">concurrency</span> <span class="kw">=</span> <span class="fl">80</span>,
+       <span class="kw">max_instances</span> <span class="kw">=</span> <span class="fl">1</span>)</pre></body></html></div>
+<p>If you need to change the memory for the one instance, you can use <code>cpu</code> and <code>memory</code> arguments in the <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code> and subsequent functions such as <code><a href="../reference/cr_run.html">cr_run()</a></code>. The maximum allowed is 2 CPUs and 2 gibibytes (<code>2Gi</code>):</p>
+<div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="co"># deploy to Cloud Run with 2GBs of RAM per instance and 2 CPUs</span>
+<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span>()),
+       <span class="kw">name</span> <span class="kw">=</span> <span class="st">"shiny-cloudrun"</span>,
+       <span class="kw">concurrency</span> <span class="kw">=</span> <span class="fl">80</span>,
+       <span class="kw">max_instances</span> <span class="kw">=</span> <span class="fl">1</span>,
+       <span class="kw">cpu</span> <span class="kw">=</span> <span class="fl">2</span>,
+       <span class="kw">memory</span> <span class="kw">=</span> <span class="st">"2Gi"</span>)</pre></body></html></div>
+<p>Or if you have a local Shiny app in <code>shiny_cloudrun/</code> with the appropriate Dockerfile and Shiny configuration, the full Docker build and deployment pipeline can be carried out with:</p>
+<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="co"># deploy the app version from this folder</span>
+<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span>(<span class="st">"shiny_cloudrun/"</span>,
+              <span class="kw">remote</span> <span class="kw">=</span> <span class="st">"shiny-cloudrun2"</span>,
+              <span class="kw">tag</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span>),
+              <span class="kw">max_instances</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="co"># required for shiny</span>
+              <span class="kw">concurrency</span> <span class="kw">=</span> <span class="fl">80</span>)</pre></body></html></div>
+</div>
 <div id="trigger-an-r-function-from-pubsub" class="section level2">
 <h2 class="hasAnchor">
 <a href="#trigger-an-r-function-from-pubsub" class="anchor"></a>Trigger an R function from pub/sub</h2>
 <p>This uses <code>cr_deploy_plumber</code> to deploy an R API that can then be triggered from pub/sub events, such as Cloud logging events or when files get updated in a Cloud Storage bucket. This in turn can trigger other Cloud Builds.</p>
 <p>A plumber API that accepts pub/sub messages is facilitated by <code><a href="../reference/cr_plumber_pubsub.html">cr_plumber_pubsub()</a></code></p>
 <p><code>api.R</code>:</p>
-<div class="sourceCode" id="cb11"><html><body><pre class="r"><span class="co"># example function echos back pubsub message</span>
+<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="co"># example function echos back pubsub message</span>
 <span class="co"># change to do something more interesting with event data</span>
 <span class="no">pub</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">x</span>){
   <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"Echo:"</span>, <span class="no">x</span>)
@@ -331,16 +370,16 @@ COPY [".", "./"]
 ENTRYPOINT ["R", "-e", "pr &lt;- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))"]
 CMD ["api.R"]</code></pre>
 <p>Put both the Dockerfile and the <code>api.R</code> script in the same folder then deploy it to Cloud Run:</p>
-<div class="sourceCode" id="cb13"><html><body><pre class="r"><span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span>(<span class="st">"the_folder"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span>(<span class="st">"the_folder"</span>)</pre></body></html></div>
 <p>Or use the RStudio gadget:</p>
 <p><img src="gadget_plumber.png"></p>
 <p>Once built you will have a pub/sub live that will trigger the function you defined. You can test pubsub messages via <code><a href="../reference/cr_pubsub.html">cr_pubsub()</a></code></p>
-<div class="sourceCode" id="cb14"><html><body><pre class="r"><span class="no">test_url</span> <span class="kw">&lt;-</span> <span class="st">"http://your-cloudrun-api.com/pubsub"</span>
+<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">test_url</span> <span class="kw">&lt;-</span> <span class="st">"http://your-cloudrun-api.com/pubsub"</span>
 
 <span class="fu"><a href="../reference/cr_pubsub.html">cr_pubsub</a></span>(<span class="no">test_url</span>, <span class="st">"hello"</span>)
 <span class="co"># [1] "Echo: hello"</span></pre></body></html></div>
 <p>In this case the function only echos, but you can modify the function to call other libraries, functions, operate on data sent in pubsub such as bucket object names, BigQuery tableIds, etc.</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="co"># perhaps the function calls another Cloud Build</span>
+<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="co"># perhaps the function calls another Cloud Build</span>
 <span class="no">pub</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">x</span>){
   <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="no">x</span>, <span class="kw">source</span> <span class="kw">=</span> <span class="no">my_source</span>)
 }</pre></body></html></div>
@@ -383,44 +422,44 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 <h3 class="hasAnchor">
 <a href="#kubernetes-deployment-file" class="anchor"></a>Kubernetes deployment file</h3>
 <p>You can then also have a deployment file for Kubernetes that will govern its configuration after the new docker image is built. An example deployment file is below:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="fu">apiVersion:</span><span class="at"> extensions/v1beta1</span></a>
-<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="fu">kind:</span><span class="at"> Deployment</span></a>
-<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="fu">metadata:</span></a>
-<a class="sourceLine" id="cb17-4" data-line-number="4">  <span class="fu">name:</span><span class="at"> shiny-your-app</span></a>
-<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="fu">spec:</span></a>
-<a class="sourceLine" id="cb17-6" data-line-number="6">  <span class="fu">replicas:</span><span class="at"> 1</span></a>
-<a class="sourceLine" id="cb17-7" data-line-number="7">  <span class="fu">selector:</span></a>
-<a class="sourceLine" id="cb17-8" data-line-number="8">    <span class="fu">matchLabels:</span></a>
-<a class="sourceLine" id="cb17-9" data-line-number="9">      <span class="fu">run:</span><span class="at"> shiny-your-app</span></a>
-<a class="sourceLine" id="cb17-10" data-line-number="10">  <span class="fu">strategy:</span></a>
-<a class="sourceLine" id="cb17-11" data-line-number="11">    <span class="fu">rollingUpdate:</span></a>
-<a class="sourceLine" id="cb17-12" data-line-number="12">      <span class="fu">maxSurge:</span><span class="at"> 1</span></a>
-<a class="sourceLine" id="cb17-13" data-line-number="13">      <span class="fu">maxUnavailable:</span><span class="at"> 1</span></a>
-<a class="sourceLine" id="cb17-14" data-line-number="14">    <span class="fu">type:</span><span class="at"> RollingUpdate</span></a>
-<a class="sourceLine" id="cb17-15" data-line-number="15">  <span class="fu">template:</span></a>
-<a class="sourceLine" id="cb17-16" data-line-number="16">    <span class="fu">metadata:</span></a>
-<a class="sourceLine" id="cb17-17" data-line-number="17">      <span class="fu">labels:</span></a>
-<a class="sourceLine" id="cb17-18" data-line-number="18">        <span class="fu">run:</span><span class="at"> shiny-your-app</span></a>
-<a class="sourceLine" id="cb17-19" data-line-number="19">    <span class="fu">spec:</span></a>
-<a class="sourceLine" id="cb17-20" data-line-number="20">      <span class="fu">nodeSelector:</span></a>
-<a class="sourceLine" id="cb17-21" data-line-number="21">        <span class="fu">cloud.google.com/gke-nodepool:</span><span class="at"> generic-compute-pool</span></a>
-<a class="sourceLine" id="cb17-22" data-line-number="22">      <span class="fu">volumes:</span></a>
-<a class="sourceLine" id="cb17-23" data-line-number="23">      <span class="kw">-</span> <span class="fu">name:</span><span class="at"> varlog</span></a>
-<a class="sourceLine" id="cb17-24" data-line-number="24">        <span class="fu">emptyDir:</span></a>
-<a class="sourceLine" id="cb17-25" data-line-number="25">      <span class="fu">containers:</span></a>
-<a class="sourceLine" id="cb17-26" data-line-number="26">      <span class="kw">-</span> <span class="fu">name:</span><span class="at"> shiny-your-app</span></a>
-<a class="sourceLine" id="cb17-27" data-line-number="27">        <span class="fu">image:</span><span class="at"> gcr.io/your-project/shiny-your-app:latest</span></a>
-<a class="sourceLine" id="cb17-28" data-line-number="28">        <span class="fu">ports:</span></a>
-<a class="sourceLine" id="cb17-29" data-line-number="29">        <span class="kw">-</span> <span class="fu">containerPort:</span><span class="at"> 3838</span></a>
-<a class="sourceLine" id="cb17-30" data-line-number="30">        <span class="fu">volumeMounts:</span></a>
-<a class="sourceLine" id="cb17-31" data-line-number="31">        <span class="kw">-</span> <span class="fu">name:</span><span class="at"> varlog</span></a>
-<a class="sourceLine" id="cb17-32" data-line-number="32">          <span class="fu">mountPath:</span><span class="at"> /var/log/shiny-server/</span></a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">apiVersion</span><span class="kw">:</span><span class="at"> extensions/v1beta1</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="fu">kind</span><span class="kw">:</span><span class="at"> Deployment</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="fu">metadata</span><span class="kw">:</span></span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="at">  </span><span class="fu">name</span><span class="kw">:</span><span class="at"> shiny-your-app</span></span>
+<span id="cb20-5"><a href="#cb20-5"></a><span class="fu">spec</span><span class="kw">:</span></span>
+<span id="cb20-6"><a href="#cb20-6"></a><span class="at">  </span><span class="fu">replicas</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb20-7"><a href="#cb20-7"></a><span class="at">  </span><span class="fu">selector</span><span class="kw">:</span></span>
+<span id="cb20-8"><a href="#cb20-8"></a><span class="at">    </span><span class="fu">matchLabels</span><span class="kw">:</span></span>
+<span id="cb20-9"><a href="#cb20-9"></a><span class="at">      </span><span class="fu">run</span><span class="kw">:</span><span class="at"> shiny-your-app</span></span>
+<span id="cb20-10"><a href="#cb20-10"></a><span class="at">  </span><span class="fu">strategy</span><span class="kw">:</span></span>
+<span id="cb20-11"><a href="#cb20-11"></a><span class="at">    </span><span class="fu">rollingUpdate</span><span class="kw">:</span></span>
+<span id="cb20-12"><a href="#cb20-12"></a><span class="at">      </span><span class="fu">maxSurge</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb20-13"><a href="#cb20-13"></a><span class="at">      </span><span class="fu">maxUnavailable</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
+<span id="cb20-14"><a href="#cb20-14"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> RollingUpdate</span></span>
+<span id="cb20-15"><a href="#cb20-15"></a><span class="at">  </span><span class="fu">template</span><span class="kw">:</span></span>
+<span id="cb20-16"><a href="#cb20-16"></a><span class="at">    </span><span class="fu">metadata</span><span class="kw">:</span></span>
+<span id="cb20-17"><a href="#cb20-17"></a><span class="at">      </span><span class="fu">labels</span><span class="kw">:</span></span>
+<span id="cb20-18"><a href="#cb20-18"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> shiny-your-app</span></span>
+<span id="cb20-19"><a href="#cb20-19"></a><span class="at">    </span><span class="fu">spec</span><span class="kw">:</span></span>
+<span id="cb20-20"><a href="#cb20-20"></a><span class="at">      </span><span class="fu">nodeSelector</span><span class="kw">:</span></span>
+<span id="cb20-21"><a href="#cb20-21"></a><span class="at">        </span><span class="fu">cloud.google.com/gke-nodepool</span><span class="kw">:</span><span class="at"> generic-compute-pool</span></span>
+<span id="cb20-22"><a href="#cb20-22"></a><span class="at">      </span><span class="fu">volumes</span><span class="kw">:</span></span>
+<span id="cb20-23"><a href="#cb20-23"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> varlog</span></span>
+<span id="cb20-24"><a href="#cb20-24"></a><span class="at">        </span><span class="fu">emptyDir</span><span class="kw">:</span></span>
+<span id="cb20-25"><a href="#cb20-25"></a><span class="at">      </span><span class="fu">containers</span><span class="kw">:</span></span>
+<span id="cb20-26"><a href="#cb20-26"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> shiny-your-app</span></span>
+<span id="cb20-27"><a href="#cb20-27"></a><span class="at">        </span><span class="fu">image</span><span class="kw">:</span><span class="at"> gcr.io/your-project/shiny-your-app:latest</span></span>
+<span id="cb20-28"><a href="#cb20-28"></a><span class="at">        </span><span class="fu">ports</span><span class="kw">:</span></span>
+<span id="cb20-29"><a href="#cb20-29"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">containerPort</span><span class="kw">:</span><span class="at"> </span><span class="dv">3838</span></span>
+<span id="cb20-30"><a href="#cb20-30"></a><span class="at">        </span><span class="fu">volumeMounts</span><span class="kw">:</span></span>
+<span id="cb20-31"><a href="#cb20-31"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> varlog</span></span>
+<span id="cb20-32"><a href="#cb20-32"></a><span class="at">          </span><span class="fu">mountPath</span><span class="kw">:</span><span class="at"> /var/log/shiny-server/</span></span></code></pre></div>
 </div>
 <div id="cloud-build" class="section level3">
 <h3 class="hasAnchor">
 <a href="#cloud-build" class="anchor"></a>Cloud Build</h3>
 <p>Your cloudbuild steps will then build the Dockerfile, then use <code>gcr.io/cloud-builders/gke-deploy</code> to deploy it to the cluster - see this <a href="https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-gke">Google guide on deployment to GKE via Cloud Build</a> for details</p>
-<div class="sourceCode" id="cb18"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleCloudRunner</span>)
+<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleCloudRunner</span>)
 
 <span class="no">bs</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
   <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(<span class="st">"shiny-your-app"</span>,
@@ -437,7 +476,7 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 <span class="no">yaml</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(<span class="kw">steps</span> <span class="kw">=</span> <span class="no">bs</span>)
 <span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span>(<span class="no">yaml</span>, <span class="st">"build/cloudbuild.yml"</span>)</pre></body></html></div>
 <p>In this example we write the cloudbuild.yml to a build folder rather than making an inline build trigger deployment. This is setup in a Build Trigger upon GitHub commit with the code below:</p>
-<div class="sourceCode" id="cb19"><html><body><pre class="r"><span class="no">repo</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span>(<span class="st">"your-name/your-repo-with-shiny"</span>)
+<div class="sourceCode" id="cb22"><html><body><pre class="r"><span class="no">repo</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span>(<span class="st">"your-name/your-repo-with-shiny"</span>)
 
 <span class="co"># test build by pushing to git after this trigger made</span>
 <span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"build/cloudbuild.yml"</span>,
@@ -465,7 +504,7 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 <h3 class="hasAnchor">
 <a href="#the-plumber-api-with-pubsub" class="anchor"></a>The plumber API with pub/sub</h3>
 <p>The API endpoint in plumber needs an endpoint to recieve Pub/Sub messages, then an R function to process and do what you want with that message. In this case we shall email the file name to an end user. This could be expanded to do some R analysis, or what ever you need.</p>
-<div class="sourceCode" id="cb21"><html><body><pre class="r"><span class="co">#' Send an email via mailgun</span>
+<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="co">#' Send an email via mailgun</span>
 <span class="no">send_email</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">message</span>){
   <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"sending email with message: "</span>, <span class="no">message</span>)
 
@@ -507,12 +546,12 @@ CMD ["api.R"]</code></pre>
 <h3 class="hasAnchor">
 <a href="#deployment" class="anchor"></a>Deployment</h3>
 <p>This can be deployed via the RStudio Addin, or via the code below:</p>
-<div class="sourceCode" id="cb23"><html><body><pre class="r"><span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span>(<span class="st">"folder/with-api/"</span>,
+<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span>(<span class="st">"folder/with-api/"</span>,
                   <span class="kw">image_name</span> <span class="kw">=</span> <span class="st">"gcs-pubsub"</span>)</pre></body></html></div>
 <p>After the first deployment, go to the web UI and <code>Deploy New Revision</code> - keep everything the same but update the environment arguments. These will persist for future revisions:</p>
 <p><img src="cloudrun-environment-args.png"></p>
 <p>You can test the Pub/Sub API is working from R with the below code:</p>
-<div class="sourceCode" id="cb24"><html><body><pre class="r"><span class="fu"><a href="../reference/cr_pubsub.html">cr_pubsub</a></span>(<span class="st">"https://your-cloudendpoint.run.app/pubsub"</span>,
+<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="fu"><a href="../reference/cr_pubsub.html">cr_pubsub</a></span>(<span class="st">"https://your-cloudendpoint.run.app/pubsub"</span>,
           <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://jeroen.cran.dev/jsonlite/reference/fromJSON.html">toJSON</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">name</span> <span class="kw">=</span> <span class="st">"test_file_from_r"</span>)))</pre></body></html></div>
 </div>
 <div id="setup-pubsub" class="section level3">
@@ -522,7 +561,7 @@ CMD ["api.R"]</code></pre>
 <p>In the Web UI of Pub/Sub set up a Topic:</p>
 <p><img src="pubsub-topic.png"></p>
 <p>You can only setup cloud storage pub/sub messages to this topic using the API, which can be done using <code>googleCloudStorageR::gce_create_pubsub()</code>:</p>
-<div class="sourceCode" id="cb25"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleCloudStorageR</span>)
+<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleCloudStorageR</span>)
 <span class="fu"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_create_pubsub.html">gcs_create_pubsub</a></span>(<span class="st">"your-topic"</span>, <span class="st">"your-project"</span>, <span class="st">"your-bucket"</span>)</pre></body></html></div>
 <p>Each topic can have many subscriptions. One of these will push to the Cloud Run URL set up in the previous step:</p>
 <p><img src="pubsub-sub.png"></p>
@@ -539,7 +578,7 @@ CMD ["api.R"]</code></pre>
 <li>Arrive in your inbox</li>
 </ol>
 <p>You can test it by uploading files either in the web UI or via</p>
-<div class="sourceCode" id="cb26"><html><body><pre class="r"><span class="kw pkg">googleCloudStorageR</span><span class="kw ns">::</span><span class="fu"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_upload.html">gcs_upload</a></span>(<span class="no">mtcars</span>, <span class="kw">bucket</span> <span class="kw">=</span> <span class="st">"your-bucket"</span>,
+<div class="sourceCode" id="cb29"><html><body><pre class="r"><span class="kw pkg">googleCloudStorageR</span><span class="kw ns">::</span><span class="fu"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_upload.html">gcs_upload</a></span>(<span class="no">mtcars</span>, <span class="kw">bucket</span> <span class="kw">=</span> <span class="st">"your-bucket"</span>,
                                 <span class="kw">name</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>(), <span class="st">"test"</span>))</pre></body></html></div>
 <p>You will need to setup mailgun to stop it appearing in your spam folder, by verifying your domain etc.</p>
 </div>
@@ -552,7 +591,7 @@ CMD ["api.R"]</code></pre>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/BainmerWVb0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 <p>The Cloud Build below makes use of Cloud Build artifacts to send the built Rmd files to a public Cloud Storage bucket. The Rmd is built on a schedule to pull in new data from a Google Sheet:</p>
-<div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="no">rmd_build</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(
+<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="no">rmd_build</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(
   <span class="kw">steps</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
     <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(
       <span class="st">"gsutil"</span>,
@@ -572,7 +611,7 @@ CMD ["api.R"]</code></pre>
 <span class="co"># test the build</span>
 <span class="no">built</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="no">rmd_build</span>)</pre></body></html></div>
 <p>Once the build is tested, we now schedule the Rmd to build each morning, adapting to changes in the source data file.</p>
-<div class="sourceCode" id="cb28"><html><body><pre class="r"><span class="co"># schedule the build</span>
+<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="co"># schedule the build</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"rmd-demo"</span>, <span class="kw">schedule</span> <span class="kw">=</span> <span class="st">"15 5 * * *"</span>,
             <span class="kw">httpTarget</span> <span class="kw">=</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(<span class="no">built</span>))</pre></body></html></div>
 <p>The example Rmd file is built and available on a public Cloud Storage bucket - the above example is available at this <a href="https://storage.googleapis.com/mark-edmondson-public-read/scheduled_rmarkdown.html">link</a></p>
@@ -590,28 +629,28 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><p>Cloud Run scales from 0 to millions of hits, so can be an option for hosting a website. In particular you may want a private internal website, have R code executing via a plumber API in the same container, or have lots of traffic or data that goes over other free hosting options such as GitHub pages. A nginx server configuration is included to host any HTML you provide via <code><a href="../reference/cr_deploy_run.html">cr_deploy_html()</a></code>.</p>
 <p>You may prefer using Cloud Storage public URLs if you don’t need any of Cloud Run’s features, like the previous example.</p>
 <p>Coupled to that, a common use case is to render Rmd files and host them on a website like the tweet above. For the above tweet scenario, the Rmd has a setup block that reads from googlesheets via the code below:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode markdown"><code class="sourceCode markdown"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="bn">```{r setup, include=FALSE}</span></a>
-<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="bn">library(flexdashboard)</span></a>
-<a class="sourceLine" id="cb29-3" data-line-number="3"><span class="bn">library(googlesheets4)</span></a>
-<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="bn">library(ggplot2)</span></a>
-<a class="sourceLine" id="cb29-5" data-line-number="5"><span class="bn">library(plotly)</span></a>
-<a class="sourceLine" id="cb29-6" data-line-number="6"><span class="bn">library(dplyr)</span></a>
-<a class="sourceLine" id="cb29-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb29-8" data-line-number="8"><span class="bn"># for public Googlesheets.  </span></a>
-<a class="sourceLine" id="cb29-9" data-line-number="9"><span class="bn"># If private see https://gargle.r-lib.org/articles/non-interactive-auth.html</span></a>
-<a class="sourceLine" id="cb29-10" data-line-number="10"><span class="bn">sheets_deauth()</span></a>
-<a class="sourceLine" id="cb29-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb29-12" data-line-number="12"><span class="bn"># this is the data that may update each time the Rmd is rendered</span></a>
-<a class="sourceLine" id="cb29-13" data-line-number="13"><span class="bn">gm &lt;- sheets_example("gap") %&gt;% read_sheet()</span></a>
-<a class="sourceLine" id="cb29-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb29-15" data-line-number="15"><span class="bn">gm_agg &lt;- gm %&gt;%</span></a>
-<a class="sourceLine" id="cb29-16" data-line-number="16"><span class="bn">  mutate(gdp=gdpPercap*pop) %&gt;%</span></a>
-<a class="sourceLine" id="cb29-17" data-line-number="17"><span class="bn">  filter(continent=="Africa") %&gt;%</span></a>
-<a class="sourceLine" id="cb29-18" data-line-number="18"><span class="bn">  group_by(year) %&gt;%</span></a>
-<a class="sourceLine" id="cb29-19" data-line-number="19"><span class="bn">  summarize(mean(lifeExp), mean(gdp))</span></a>
-<a class="sourceLine" id="cb29-20" data-line-number="20"></a>
-<a class="sourceLine" id="cb29-21" data-line-number="21"><span class="bn">p &lt;- ggplot(gm, aes(gdpPercap, lifeExp)) + theme_minimal() + scale_x_log10()</span></a>
-<a class="sourceLine" id="cb29-22" data-line-number="22"><span class="bn">```</span></a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb32-1"><a href="#cb32-1"></a><span class="bn">```{r setup, include=FALSE}</span></span>
+<span id="cb32-2"><a href="#cb32-2"></a><span class="bn">library(flexdashboard)</span></span>
+<span id="cb32-3"><a href="#cb32-3"></a><span class="bn">library(googlesheets4)</span></span>
+<span id="cb32-4"><a href="#cb32-4"></a><span class="bn">library(ggplot2)</span></span>
+<span id="cb32-5"><a href="#cb32-5"></a><span class="bn">library(plotly)</span></span>
+<span id="cb32-6"><a href="#cb32-6"></a><span class="bn">library(dplyr)</span></span>
+<span id="cb32-7"><a href="#cb32-7"></a></span>
+<span id="cb32-8"><a href="#cb32-8"></a><span class="bn"># for public Googlesheets.  </span></span>
+<span id="cb32-9"><a href="#cb32-9"></a><span class="bn"># If private see https://gargle.r-lib.org/articles/non-interactive-auth.html</span></span>
+<span id="cb32-10"><a href="#cb32-10"></a><span class="bn">sheets_deauth()</span></span>
+<span id="cb32-11"><a href="#cb32-11"></a></span>
+<span id="cb32-12"><a href="#cb32-12"></a><span class="bn"># this is the data that may update each time the Rmd is rendered</span></span>
+<span id="cb32-13"><a href="#cb32-13"></a><span class="bn">gm &lt;- sheets_example("gap") %&gt;% read_sheet()</span></span>
+<span id="cb32-14"><a href="#cb32-14"></a></span>
+<span id="cb32-15"><a href="#cb32-15"></a><span class="bn">gm_agg &lt;- gm %&gt;%</span></span>
+<span id="cb32-16"><a href="#cb32-16"></a><span class="bn">  mutate(gdp=gdpPercap*pop) %&gt;%</span></span>
+<span id="cb32-17"><a href="#cb32-17"></a><span class="bn">  filter(continent=="Africa") %&gt;%</span></span>
+<span id="cb32-18"><a href="#cb32-18"></a><span class="bn">  group_by(year) %&gt;%</span></span>
+<span id="cb32-19"><a href="#cb32-19"></a><span class="bn">  summarize(mean(lifeExp), mean(gdp))</span></span>
+<span id="cb32-20"><a href="#cb32-20"></a></span>
+<span id="cb32-21"><a href="#cb32-21"></a><span class="bn">p &lt;- ggplot(gm, aes(gdpPercap, lifeExp)) + theme_minimal() + scale_x_log10()</span></span>
+<span id="cb32-22"><a href="#cb32-22"></a><span class="bn">```</span></span></code></pre></div>
 <p>The build Rmd docker in this case needs all the libraries listed (flexdashboard, googlesheets4 etc.) included in its build - this could be built before hand in another Cloud Build - in this case the libraries are all in <code>gcr.io/gcer-public/render_rmd</code></p>
 <p>For this example, the build is not reading from a git repo but the Rmd file is downloaded from a Cloud Storage bucket, that you may have uploaded to manually, via <code>googleCloudStorageR</code> or perhaps copied over from a repo in another Cloud Build on a Build Trigger.</p>
 <p>The scheduled build then can be enabled via:</p>
@@ -626,7 +665,7 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <li>build a Docker image of nginx with your HTML</li>
 <li>serve it on Cloud Run.</li>
 </ul>
-<div class="sourceCode" id="cb30"><html><body><pre class="r"><span class="no">r</span> <span class="kw">&lt;-</span> <span class="st">"rmarkdown::render('scheduled_rmarkdown.Rmd', output_file = 'scheduled_rmarkdown.html')"</span>
+<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="no">r</span> <span class="kw">&lt;-</span> <span class="st">"rmarkdown::render('scheduled_rmarkdown.Rmd', output_file = 'scheduled_rmarkdown.html')"</span>
 
 <span class="no">build_rmd</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(
       <span class="kw">steps</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
@@ -653,14 +692,14 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <ol start="5" style="list-style-type: decimal">
 <li>Run a test build to check it works.</li>
 </ol>
-<div class="sourceCode" id="cb31"><html><body><pre class="r"><span class="no">b</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="no">build_rmd</span>)
+<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="no">b</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="no">build_rmd</span>)
 <span class="no">built</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span>(<span class="no">b</span>)</pre></body></html></div>
 <p>You should see a Cloud Run URL in the logs, like this one: <code>https://my-html-on-cloudrun-ewjogewawq-ew.a.run.app/scheduled_rmarkdown.html</code></p>
 <p><img src="rmd-on-cloudrun.png"></p>
 <ol start="6" style="list-style-type: decimal">
 <li>Schedule the build using cron syntax</li>
 </ol>
-<div class="sourceCode" id="cb32"><html><body><pre class="r"><span class="no">schedule_me</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(<span class="no">built</span>)
+<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="no">schedule_me</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(<span class="no">built</span>)
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"rmd-on-cloudrun"</span>, <span class="st">"15 8 * * *"</span>, <span class="kw">httpTarget</span> <span class="kw">=</span> <span class="no">schedule_me</span>)
 <span class="co">#==CloudScheduleJob==</span>
 <span class="co">#name:  projects/project-name/locations/europe-west1/jobs/rmd-on-cloudrun </span>
@@ -696,7 +735,7 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 </li>
 </ul>
 <p>And will perform downloading unsampled data from Google Analytics, creating a statistical report of the data and then uploading the raw data to BigQuery for further analysis.</p>
-<div class="sourceCode" id="cb33"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleCloudRunner</span>)
+<div class="sourceCode" id="cb36"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleCloudRunner</span>)
 <span class="no">polygot</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(
   <span class="kw">steps</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
     <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(
@@ -782,11 +821,11 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <p>It also uploads the data to a BigQuery table:</p>
 <p><img src="polygot-bq-load.png"></p>
 <p>This constructed cloud build can also be used outside of R, by writing out the Cloud Build file via <code><a href="../reference/cr_build_write.html">cr_build_write()</a></code></p>
-<div class="sourceCode" id="cb34"><html><body><pre class="r"><span class="co"># write out to cloudbuild.yaml for other languages</span>
+<div class="sourceCode" id="cb37"><html><body><pre class="r"><span class="co"># write out to cloudbuild.yaml for other languages</span>
 <span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span>(<span class="no">polygot</span>)
 <span class="co"># 2019-12-28 19:15:50&gt; Writing to cloudbuild.yaml</span></pre></body></html></div>
 <p>This can then be scheduled as described in Cloud Scheduler section on <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html">scheduled cloud builds</a>.</p>
-<div class="sourceCode" id="cb35"><html><body><pre class="r"><span class="no">schedule_me</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(<span class="no">built</span>)
+<div class="sourceCode" id="cb38"><html><body><pre class="r"><span class="no">schedule_me</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(<span class="no">built</span>)
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"polygot-example"</span>, <span class="st">"15 8 * * *"</span>, <span class="kw">httpTarget</span> <span class="kw">=</span> <span class="no">schedule_me</span>)</pre></body></html></div>
 <p>An example of the cloudbuild.yaml is on GitHub <a href="https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml">here</a>.</p>
 </div>
