@@ -192,15 +192,15 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>test_script</th>
-      <td><p>The script that will run first making tests.  If <code>NULL</code> a default script it used</p></td>
+      <td><p>The script that will perform tests.  If <code>NULL</code> a default script is used in <code><a href='https://rdrr.io/r/base/system.file.html'>system.file("r_buildsteps", "devtools_tests.R")</a></code></p></td>
     </tr>
     <tr>
       <th>codecov_script</th>
-      <td><p>The script that will run first making tests.  If <code>NULL</code> a default script it used</p></td>
+      <td><p>The script that will perform coverage.  If <code>NULL</code> a default script is used in <code><a href='https://rdrr.io/r/base/system.file.html'>system.file("r_buildsteps", "codecov_tests.R")</a></code></p></td>
     </tr>
     <tr>
       <th>codecov_token</th>
-      <td><p>If using codecov, supply your codecov token here. Default assumes you add it to the Cloud Build substitution macros, which is more secure and recommended.</p></td>
+      <td><p>If using codecov, supply your codecov token here.</p></td>
     </tr>
     <tr>
       <th>build_image</th>
