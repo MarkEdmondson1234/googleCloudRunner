@@ -127,7 +127,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>R on Cloud Run</h1>
             
-            <h4 class="date">2020-07-31</h4>
+            <h4 class="date">2020-08-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudrun.Rmd"><code>vignettes/cloudrun.Rmd</code></a></small>
       <div class="hidden name"><code>cloudrun.Rmd</code></div>
@@ -361,14 +361,15 @@ cr_dockerfile_plumber &lt;- function(deploy_folder, ...){
 <pre><code>|
 |- app.R
 |- Dockerfile
-|- client.json</code></pre>
+|- client.json
+|- shiny-customized.config</code></pre>
 <div id="app-r" class="section level4">
 <h4 class="hasAnchor">
 <a href="#app-r" class="anchor"></a>app.R</h4>
 <div class="sourceCode" id="cb12"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">shiny</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">searchConsoleR</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleAuthR</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span>(<span class="kw">googleAuthR.verbose</span> <span class="kw">=</span> <span class="fl">2</span>)
+
 <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/gar_set_client.html">gar_set_client</a></span>(<span class="kw">web_json</span> <span class="kw">=</span> <span class="st">"client.json"</span>,
                <span class="kw">scopes</span> <span class="kw">=</span> <span class="st">"https://www.googleapis.com/auth/webmasters"</span>)
 
@@ -379,8 +380,6 @@ cr_dockerfile_plumber &lt;- function(deploy_folder, ...){
 
 <span class="no">server</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">input</span>, <span class="no">output</span>, <span class="no">session</span>) {
   <span class="no">auth</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/callModule.html">callModule</a></span>(<span class="no">googleAuth_js</span>, <span class="st">"auth"</span>)
-  <span class="co"># debug</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observe.html">observe</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/googleAuth_jsUI.html">googleAuth_jsUI</a></span>(<span class="st">'auth'</span>, <span class="kw">login_text</span> <span class="kw">=</span> <span class="st">'Login to Google'</span>)))
 
   <span class="no">sc_accounts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span>({
     <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html">req</a></span>(<span class="fu">auth</span>())
@@ -419,6 +418,7 @@ RUN install2.r --error \
     -r 'http://cran.rstudio.com' \
     googleAuthR searchConsoleR
 
+COPY shiny-customized.config /etc/shiny-server/shiny-server.conf
 COPY client.json /srv/shiny-server/client.json
 COPY app.R /srv/shiny-server/app.R
 
@@ -435,13 +435,35 @@ CMD ["/usr/bin/shiny-server"]</code></pre>
 <a href="#client-id-and-gcp-setup" class="anchor"></a>client.id and GCP setup</h4>
 <p>The client.json was a web client json from my project:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">{</span><span class="dt">"web"</span><span class="fu">:{</span><span class="dt">"client_id"</span><span class="fu">:</span><span class="st">"10XXX"</span><span class="fu">,</span><span class="dt">"project_id"</span><span class="fu">:</span><span class="st">"XXXX"</span><span class="fu">,</span><span class="dt">"auth_uri"</span><span class="fu">:</span><span class="st">"https://accounts.google.com/o/oauth2/auth"</span><span class="fu">,</span><span class="dt">"token_uri"</span><span class="fu">:</span><span class="st">"https://accounts.google.com/o/oauth2/token"</span><span class="fu">,</span><span class="dt">"auth_provider_x509_cert_url"</span><span class="fu">:</span><span class="st">"https://www.googleapis.com/oauth2/v1/certs"</span><span class="fu">,</span><span class="dt">"client_secret"</span><span class="fu">:</span><span class="st">"XXXXX"</span><span class="fu">,</span><span class="dt">"redirect_uris"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"http://localhost"</span><span class="ot">]</span><span class="fu">,</span><span class="dt">"javascript_origins"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"https://www.example.com"</span><span class="ot">,</span><span class="st">"http://localhost:1221"</span><span class="ot">]</span><span class="fu">}}</span></span></code></pre></div>
-<p>You need to add the domain of where the Cloud Run is running in the JavaScript origins within the GCP console, that you get after deploying the app. In the example case this is <code>https://shiny-cloudrun-sc-ewjogewawq-ew.a.run.app/</code></p>
+<p>You need to add the domain of where the Cloud Run is running in the JavaScript origins within the GCP console, that you get after deploying the app. (GCP console &gt; APIs &amp; Services &gt; Crdentials &gt; Click on the Web Client ID you are using &gt; Add URL to Authorised JavaScript origins).</p>
+<p><img src="javascript-origins.png"></p>
+<p>In the example case this is <code>https://shiny-cloudrun-sc-ewjogewawq-ew.a.run.app/</code></p>
+</div>
+<div id="shiny-customized-config" class="section level4">
+<h4 class="hasAnchor">
+<a href="#shiny-customized-config" class="anchor"></a>shiny-customized.config</h4>
+<p>This is the configuration file for Shiny that will overwrite the default one - its main purpose is turning off the websocket functionality that is not supported on Cloud Run</p>
+<pre><code>disable_protocols websocket xdr-streaming xhr-streaming iframe-eventsource iframe-htmlfile xdr-polling iframe-xhr-polling;
+
+run_as shiny;
+
+server {
+  listen 8080;
+
+  location / {
+    site_dir /srv/shiny-server;
+
+    log_dir /var/log/shiny-server;
+
+    directory_index off;
+  }
+}</code></pre>
 </div>
 <div id="deploying" class="section level4">
 <h4 class="hasAnchor">
 <a href="#deploying" class="anchor"></a>Deploying</h4>
 <p>You can then deploy similar to the example above, which will build the Dockerfile and then deploy it to Cloud Run.</p>
-<div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="co"># deploy the app version from this folder</span>
+<div class="sourceCode" id="cb16"><html><body><pre class="r"><span class="co"># deploy the app version from this folder</span>
 <span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span>(<span class="st">"shiny_cloudrun/app/"</span>,
               <span class="kw">remote</span> <span class="kw">=</span> <span class="st">"shiny-cloudrun-sc"</span>,
               <span class="kw">tag</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span>),
@@ -455,7 +477,7 @@ CMD ["/usr/bin/shiny-server"]</code></pre>
 <a href="#deploying-from-another-google-cloud-project" class="anchor"></a>Deploying from another Google Cloud project</h2>
 <p>By default the build will only allow deployments from the same Google Cloud Project - if you want to deploy container images from other projects you need to give the Cloud Run Service Agent for the Cloud Run project access to the source project. See this <a href="https://cloud.google.com/run/docs/deploying#other-projects">Google help file</a>.</p>
 <p>This is available via the <code><a href="../reference/cr_setup_service.html">cr_setup_service()</a></code> function, using the role lookup <code><a href="../reference/cr_setup_service.html">cr_setup_role_lookup("run_agent")</a></code>:</p>
-<div class="sourceCode" id="cb16"><html><body><pre class="r">cr_setup_service("service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com"
+<div class="sourceCode" id="cb17"><html><body><pre class="r">cr_setup_service("service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com"
                  roles = cr_setup_role_lookup("run_agent"))</pre></body></html></div>
 </div>
   </div>
