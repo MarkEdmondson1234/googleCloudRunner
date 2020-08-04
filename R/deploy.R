@@ -268,7 +268,7 @@ cr_deploy_packagetests <- function(
   env = c("NOT_CRAN=true"),
   test_script = NULL,
   codecov_script = NULL,
-  codecov_token = "$_CODECOV_TOKEN",
+  codecov_token = NULL,
   build_image = 'gcr.io/gcer-public/packagetools:latest',
   create_trigger = c("file","inline","no"),
   trigger_repo = NULL,
@@ -314,10 +314,6 @@ cr_deploy_packagetests <- function(
     the_build <- cloudbuild_file
   } else if(create_trigger == "inline"){
     the_build <- build_yaml
-  }
-
-  if(codecov_token == "$_CODECOV_TOKEN"){
-    stop("You must supply a Code Covr token for this repo to use it, or set to NULL")
   }
 
   if(is.null(codecov_token)){

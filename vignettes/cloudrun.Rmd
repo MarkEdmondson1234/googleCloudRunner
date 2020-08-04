@@ -269,6 +269,7 @@ Folder:
 |- app.R
 |- Dockerfile
 |- client.json
+|- shiny-customized.config
 ```
 
 #### app.R
@@ -277,7 +278,7 @@ Folder:
 library(shiny)
 library(searchConsoleR)
 library(googleAuthR)
-options(googleAuthR.verbose = 2)
+
 gar_set_client(web_json = "client.json",
                scopes = "https://www.googleapis.com/auth/webmasters")
 
@@ -288,8 +289,6 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   auth <- callModule(googleAuth_js, "auth")
-  # debug
-  observe(print(googleAuth_jsUI('auth', login_text = 'Login to Google')))
 
   sc_accounts <- reactive({
     req(auth())
@@ -329,6 +328,7 @@ RUN install2.r --error \
     -r 'http://cran.rstudio.com' \
     googleAuthR searchConsoleR
 
+COPY shiny-customized.config /etc/shiny-server/shiny-server.conf
 COPY client.json /srv/shiny-server/client.json
 COPY app.R /srv/shiny-server/app.R
 
@@ -349,7 +349,33 @@ The client.json was a web client json from my project:
 {"web":{"client_id":"10XXX","project_id":"XXXX","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://accounts.google.com/o/oauth2/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"XXXXX","redirect_uris":["http://localhost"],"javascript_origins":["https://www.example.com","http://localhost:1221"]}}
 ```
 
-You need to add the domain of where the Cloud Run is running in the JavaScript origins within the GCP console, that you get after deploying the app.  In the example case this is `https://shiny-cloudrun-sc-ewjogewawq-ew.a.run.app/`
+You need to add the domain of where the Cloud Run is running in the JavaScript origins within the GCP console, that you get after deploying the app.  (GCP console > APIs & Services > Crdentials > Click on the Web Client ID you are using > Add URL to Authorised JavaScript origins).
+
+![](javascript-origins.png)
+
+In the example case this is `https://shiny-cloudrun-sc-ewjogewawq-ew.a.run.app/`
+
+#### shiny-customized.config
+
+This is the configuration file for Shiny that will overwrite the default one - its main purpose is turning off the websocket functionality that is not supported on Cloud Run
+
+```
+disable_protocols websocket xdr-streaming xhr-streaming iframe-eventsource iframe-htmlfile xdr-polling iframe-xhr-polling;
+
+run_as shiny;
+
+server {
+  listen 8080;
+
+  location / {
+    site_dir /srv/shiny-server;
+
+    log_dir /var/log/shiny-server;
+
+    directory_index off;
+  }
+}
+```
 
 #### Deploying
 

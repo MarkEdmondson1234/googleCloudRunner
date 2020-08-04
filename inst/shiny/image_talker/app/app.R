@@ -8,17 +8,17 @@ ui <- fluidPage(
   helpText("Upload an image, have it spoken back to you"),
   radioButtons("input_choice", "Where is the image?",
               choices = c("Upload","URL"), inline = TRUE),
-  selectInput("voice", "What voice do you want?",
-              choices = c(`Alison (GB)` = "en-GB-Wavenet-F",
-                          `Sofia (DK)` = "da-DK-Wavenet-A",
-                          `Frederik (DK)` = "da-DK-Wavenet-C",
-                          `Lise (DK)` = "da-DK-Wavenet-D",
-                          `Bruce (AU)` = "en-AU-Wavenet-B",
-                          `Shelia (AU)`= "en-AU-Wavenet-A",
-                          `Sue (GB)` = "en-GB-Wavenet-A",
-                          `Simon (GB)` = "en-GB-Wavenet-B",
-                          `Tiffany (GB)` = "en-GB-Wavenet-C",
-                          `Nigel (GB)` = "en-GB-Wavenet-D")),
+  # selectInput("voice", "What voice do you want?",
+  #             choices = c(`Alison (GB)` = "en-GB-Wavenet-F",
+  #                         `Sofia (DK)` = "da-DK-Wavenet-A",
+  #                         `Frederik (DK)` = "da-DK-Wavenet-C",
+  #                         `Lise (DK)` = "da-DK-Wavenet-D",
+  #                         `Bruce (AU)` = "en-AU-Wavenet-B",
+  #                         `Shelia (AU)`= "en-AU-Wavenet-A",
+  #                         `Sue (GB)` = "en-GB-Wavenet-A",
+  #                         `Simon (GB)` = "en-GB-Wavenet-B",
+  #                         `Tiffany (GB)` = "en-GB-Wavenet-C",
+  #                         `Nigel (GB)` = "en-GB-Wavenet-D")),
   uiOutput("input_ui"),
   actionButton("do_image", "Get/Change Image"),
   uiOutput("show_image"),
@@ -47,6 +47,11 @@ server <- function(input, output, session){
   image_source <- eventReactive(input$do_image, {
     if(input$input_choice == "Upload"){
       message("An uploaded image")
+
+      # 2MB limit
+      if(file.info(input$image_input$datapath)$size > 2000000){
+        stop("Image is too large - limit to under 2MB", call. = FALSE)
+      }
 
       if(is.null(input$image_input$datapath)) return(NULL)
 
@@ -125,7 +130,7 @@ server <- function(input, output, session){
   })
 
   callModule(gl_talk_shiny, "image_talk",
-             transcript = talk_me, name = input$voice)
+             transcript = talk_me, name = "en-GB-Wavenet-A")
 
 }
 
