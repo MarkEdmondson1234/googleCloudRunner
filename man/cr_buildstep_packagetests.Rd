@@ -13,11 +13,11 @@ cr_buildstep_packagetests(
 )
 }
 \arguments{
-\item{test_script}{The script that will run first making tests.  If \code{NULL} a default script it used}
+\item{test_script}{The script that will perform tests.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "devtools_tests.R")}}
 
-\item{codecov_script}{The script that will run first making tests.  If \code{NULL} a default script it used}
+\item{codecov_script}{The script that will perform coverage.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "codecov_tests.R")}}
 
-\item{codecov_token}{If using codecov, supply your codecov token here. Default assumes you add it to the Cloud Build substitution macros, which is more secure and recommended.}
+\item{codecov_token}{If using codecov, supply your codecov token here.}
 
 \item{build_image}{The docker image that will be used to run the R code for the test scripts}
 

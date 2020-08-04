@@ -10,7 +10,7 @@ cr_deploy_packagetests(
   env = c("NOT_CRAN=true"),
   test_script = NULL,
   codecov_script = NULL,
-  codecov_token = NULL,
+  codecov_token = "$_CODECOV",
   build_image = "gcr.io/gcer-public/packagetools:latest",
   create_trigger = c("file", "inline", "no"),
   trigger_repo = NULL,
@@ -24,11 +24,11 @@ cr_deploy_packagetests(
 
 \item{env}{Environment arguments to be set during the test script runs}
 
-\item{test_script}{The script that will run first making tests.  If \code{NULL} a default script it used}
+\item{test_script}{The script that will perform tests.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "devtools_tests.R")}}
 
-\item{codecov_script}{The script that will run first making tests.  If \code{NULL} a default script it used}
+\item{codecov_script}{The script that will perform coverage.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "codecov_tests.R")}}
 
-\item{codecov_token}{If using codecov, supply your codecov token here. Default assumes you add it to the Cloud Build substitution macros, which is more secure and recommended.}
+\item{codecov_token}{If using codecov, supply your codecov token here.}
 
 \item{build_image}{The docker image that will be used to run the R code for the test scripts}
 

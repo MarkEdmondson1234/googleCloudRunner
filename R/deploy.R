@@ -268,7 +268,7 @@ cr_deploy_packagetests <- function(
   env = c("NOT_CRAN=true"),
   test_script = NULL,
   codecov_script = NULL,
-  codecov_token = NULL,
+  codecov_token = "$_CODECOV",
   build_image = 'gcr.io/gcer-public/packagetools:latest',
   create_trigger = c("file","inline","no"),
   trigger_repo = NULL,
@@ -313,10 +313,11 @@ cr_deploy_packagetests <- function(
     cr_build_write(build_yaml, file = cloudbuild_file)
     the_build <- cloudbuild_file
   } else if(create_trigger == "inline"){
-    the_build <- build_yaml
+    the_build <- cr_build_make(yaml = build_yaml)
   }
 
-  if(is.null(codecov_token)){
+  if(is.null(codecov_token) || codecov_token == "$_CODECOV_TOKEN"){
+    myMessage("If you want to use Code Covr, add the Code Covr token in a substitution varaible in the Build Trigger", level = 3)
     subs <- NULL
   } else {
     assert_that(is.string(codecov_token))

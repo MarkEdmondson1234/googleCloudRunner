@@ -2,9 +2,9 @@
 #'
 #' This lets you run R package tests and is intended to be used in a trigger when you push to a repository so you can monitor code quality.
 #'
-#' @param codecov_token If using codecov, supply your codecov token here. Default assumes you add it to the Cloud Build substitution macros, which is more secure and recommended.
-#' @param test_script The script that will run first making tests.  If \code{NULL} a default script it used
-#' @param codecov_script The script that will run first making tests.  If \code{NULL} a default script it used
+#' @param codecov_token If using codecov, supply your codecov token here.
+#' @param test_script The script that will perform tests.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "devtools_tests.R")}
+#' @param codecov_script The script that will perform coverage.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "codecov_tests.R")}
 #' @param build_image The docker image that will be used to run the R code for the test scripts
 #' @param env Environment arguments to be set during the test script runs
 #'
