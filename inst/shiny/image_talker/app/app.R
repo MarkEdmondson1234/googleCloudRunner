@@ -2,33 +2,32 @@ library(shiny)
 library(googleAuthR)
 library(googleLanguageR)
 library(googleCloudVisionR)
-library(imager)
+library(shinythemes)
+library(shinydashboard)
 
-ui <- fluidPage(
-  helpText("Upload an image, have it spoken back to you"),
-  radioButtons("input_choice", "Where is the image?",
-              choices = c("Upload","URL"), inline = TRUE),
-  # selectInput("voice", "What voice do you want?",
-  #             choices = c(`Alison (GB)` = "en-GB-Wavenet-F",
-  #                         `Sofia (DK)` = "da-DK-Wavenet-A",
-  #                         `Frederik (DK)` = "da-DK-Wavenet-C",
-  #                         `Lise (DK)` = "da-DK-Wavenet-D",
-  #                         `Bruce (AU)` = "en-AU-Wavenet-B",
-  #                         `Shelia (AU)`= "en-AU-Wavenet-A",
-  #                         `Sue (GB)` = "en-GB-Wavenet-A",
-  #                         `Simon (GB)` = "en-GB-Wavenet-B",
-  #                         `Tiffany (GB)` = "en-GB-Wavenet-C",
-  #                         `Nigel (GB)` = "en-GB-Wavenet-D")),
-  uiOutput("input_ui"),
-  actionButton("do_image", "Get/Change Image"),
-  uiOutput("show_image"),
-  uiOutput("image_labels"),
-  h2(textOutput("big_text")),
-  gl_talk_shinyUI("image_talk"),
-  br(),
-  tags$hr(),
-  h4("Debug"),
-  tableOutput("image_text")
+ui <- navbarPage(title = "Image Talker",
+                 windowTitle="Turn images into speech using machine learning",
+                 theme = shinytheme("sandstone"),
+                 footer = helpText("Demo via MarkEdmondson1234/googleCloudRunner"),
+                 tabPanel(title = "Talking Images",
+                          sidebarLayout(
+                            sidebarPanel(
+                              helpText("Upload an image, have it spoken back to you"),
+                              radioButtons("input_choice", "Where is the image?",
+                                           choices = c("URL","Upload"), inline = TRUE),
+
+                              uiOutput("input_ui"),
+                              actionButton("do_image", "Get/Change Image"),
+                              br()
+                            ),
+                            mainPanel(
+                              uiOutput("show_image"),
+                              br()
+
+                            ))
+                 ),
+                 tabPanel(title = "Examples",
+                 )
 )
 
 server <- function(input, output, session){
@@ -47,6 +46,7 @@ server <- function(input, output, session){
   image_source <- eventReactive(input$do_image, {
     if(input$input_choice == "Upload"){
       message("An uploaded image")
+      if(is.null(input$image_input$datapath)) return(NULL)
 
       # 2MB limit
       if(file.info(input$image_input$datapath)$size > 2000000){
@@ -73,7 +73,6 @@ server <- function(input, output, session){
   output$show_image <- renderUI({
     req(image_source())
 
-
     message("image_source(): ", image_source())
     if(input$input_choice == "Upload"){
       src <- gsub("www/","",image_source())
@@ -81,11 +80,37 @@ server <- function(input, output, session){
       src <- input$image_input
     }
 
-    tagList(
-      tags$img(src=src, width="500", height="500"),
-      textInput("override_label","Override image label" ,
-                placeholder = "Provide your own image label to talk"),
-      actionButton("do_apis", "Speak this image"),
+    if(!is.null(input$input_choice) &&
+       input$input_choice == "Upload" &&
+       !is.character(input$image_input) &&
+       is.null(input$image_input$datapath)){
+      return(
+        shinydashboard::box(
+          title = "Upload an image",
+          background = "olive",
+          width = 12,
+          br()
+        )
+      )
+    }
+
+    shinydashboard::box(
+      title = isolate(input$say_me),
+      background = "olive",
+      width = 12,
+      fluidRow(
+            column(width = 8,
+                   tags$img(src=src, width="100%", height="100%")
+            ),
+            column(width = 4,
+                   actionButton("do_apis", "Speak this image"),
+                   textInput("override_label","Override image label" ,
+                             placeholder = "Provide your own image label to talk"),
+                   uiOutput("image_labels")
+
+
+            )),
+        gl_talk_shinyUI("image_talk")
       )
 
   })
@@ -120,17 +145,17 @@ server <- function(input, output, session){
 
   talk_me <- eventReactive(input$do_apis, {
     req(input$say_me)
-    message("The voice:", input$voice)
     input$say_me
   })
 
   output$big_text <- renderText({
-    req(talk_me())
-    talk_me()
+    req(input$say_me)
+    input$say_me
   })
 
   callModule(gl_talk_shiny, "image_talk",
              transcript = talk_me, name = "en-GB-Wavenet-A")
+
 
 }
 
