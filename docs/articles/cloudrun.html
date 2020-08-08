@@ -127,7 +127,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>R on Cloud Run</h1>
             
-            <h4 class="date">2020-08-04</h4>
+            <h4 class="date">2020-08-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudrun.Rmd"><code>vignettes/cloudrun.Rmd</code></a></small>
       <div class="hidden name"><code>cloudrun.Rmd</code></div>
@@ -373,16 +373,16 @@ cr_dockerfile_plumber &lt;- function(deploy_folder, ...){
 <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/gar_set_client.html">gar_set_client</a></span>(<span class="kw">web_json</span> <span class="kw">=</span> <span class="st">"client.json"</span>,
                <span class="kw">scopes</span> <span class="kw">=</span> <span class="st">"https://www.googleapis.com/auth/webmasters"</span>)
 
-<span class="no">ui</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span>(
+<span class="no">ui</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html">fluidPage</a></span>(
   <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/googleAuth_jsUI.html">googleAuth_jsUI</a></span>(<span class="st">'auth'</span>, <span class="kw">login_text</span> <span class="kw">=</span> <span class="st">'Login to Google'</span>),
-  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tableOutput.html">tableOutput</a></span>(<span class="st">"sc_accounts"</span>)
+  <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/tableOutput.html">tableOutput</a></span>(<span class="st">"sc_accounts"</span>)
 )
 
 <span class="no">server</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">input</span>, <span class="no">output</span>, <span class="no">session</span>) {
-  <span class="no">auth</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/callModule.html">callModule</a></span>(<span class="no">googleAuth_js</span>, <span class="st">"auth"</span>)
+  <span class="no">auth</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/callModule.html">callModule</a></span>(<span class="no">googleAuth_js</span>, <span class="st">"auth"</span>)
 
-  <span class="no">sc_accounts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span>({
-    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html">req</a></span>(<span class="fu">auth</span>())
+  <span class="no">sc_accounts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/reactive.html">reactive</a></span>({
+    <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/req.html">req</a></span>(<span class="fu">auth</span>())
 
     <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/with_shiny.html">with_shiny</a></span>(
       <span class="no">list_websites</span>,
@@ -391,14 +391,14 @@ cr_dockerfile_plumber &lt;- function(deploy_folder, ...){
 
   })
 
-  <span class="no">output</span>$<span class="no">sc_accounts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderTable.html">renderTable</a></span>({
+  <span class="no">output</span>$<span class="no">sc_accounts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/renderTable.html">renderTable</a></span>({
     <span class="fu">sc_accounts</span>()
   })
 
 
 }
 
-<span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span>(<span class="kw">ui</span> <span class="kw">=</span> <span class="no">ui</span>, <span class="kw">server</span> <span class="kw">=</span> <span class="no">server</span>)</pre></body></html></div>
+<span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html">shinyApp</a></span>(<span class="kw">ui</span> <span class="kw">=</span> <span class="no">ui</span>, <span class="kw">server</span> <span class="kw">=</span> <span class="no">server</span>)</pre></body></html></div>
 </div>
 <div id="dockerfile" class="section level4">
 <h4 class="hasAnchor">
