@@ -1,3 +1,6 @@
+Sys.setenv(GL_AUTH="auth.json")
+Sys.setenv(GCV_AUTH_FILE="auth.json")
+
 library(shiny)
 library(googleAuthR)
 library(googleLanguageR)

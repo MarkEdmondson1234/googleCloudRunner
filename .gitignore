@@ -15,3 +15,4 @@ cloudbuild-pkgdown.yml
 googlecloudrunner-auth-key.json
 NEWS.txt
 inst/shiny/shiny_cloudrun/app/mark-edmondson-gde-web-client.json
+inst/shiny/image_talker/app/auth.json
