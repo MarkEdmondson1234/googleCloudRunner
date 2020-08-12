@@ -9,5 +9,6 @@ library(googleCloudRunner)
 cr_deploy_docker_trigger(
   cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner"),
   image = "github-codespace/googlecloudrunner",
-  location = "inst/docker/github"
+  location = "inst/docker/github",
+  includedFiles = c(".devcontainer/**","inst/docker/github/**")
 )

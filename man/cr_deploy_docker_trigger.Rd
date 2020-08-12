@@ -10,6 +10,9 @@ cr_deploy_docker_trigger(
   trigger_name = paste0("docker-", image),
   image_tag = c("latest", "$SHORT_SHA", "$BRANCH_NAME"),
   ...,
+  substitutions = NULL,
+  ignoredFiles = NULL,
+  includedFiles = NULL,
   projectId = cr_project_get()
 )
 }
@@ -30,6 +33,12 @@ cr_deploy_docker_trigger(
     \item{\code{dockerfile}}{Specify the name of the Dockerfile found at \code{location}}
     \item{\code{kaniko_cache}}{If TRUE will use kaniko cache for Docker builds.}
   }}
+
+\item{substitutions}{A named list of Build macro variables}
+
+\item{ignoredFiles}{ignored_files and included_files are file glob matches extended with support for "**".}
+
+\item{includedFiles}{If any of the files altered in the commit pass the ignored_files}
 
 \item{projectId}{The project to build under}
 }

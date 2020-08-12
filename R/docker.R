@@ -10,6 +10,7 @@
 #' @param trigger_name The trigger name
 #' @param ... Other arguments passed to `cr_buildstep_docker`
 #' @inheritDotParams cr_buildstep_docker
+#' @inheritParams cr_buildtrigger
 #' @param projectId The project to build under
 #' @family Deployment functions
 #' @details
@@ -28,6 +29,9 @@ cr_deploy_docker_trigger <- function(repo,
                                      trigger_name = paste0("docker-", image),
                                      image_tag = c("latest","$SHORT_SHA","$BRANCH_NAME"),
                                      ...,
+                                     substitutions = NULL,
+                                     ignoredFiles = NULL,
+                                     includedFiles = NULL,
                                      projectId = cr_project_get()){
 
   build_docker <- cr_build_make(
@@ -43,7 +47,10 @@ cr_deploy_docker_trigger <- function(repo,
                   name = safe_name,
                   trigger = repo,
                   description = paste0(safe_name,Sys.time()),
-                  trigger_tags = "docker-build")
+                  trigger_tags = "docker-build",
+                  substitutions = substitutions,
+                  ignoredFiles = ignoredFiles,
+                  includedFiles = includedFiles)
 }
 
 
