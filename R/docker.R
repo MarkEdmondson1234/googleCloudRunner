@@ -261,9 +261,13 @@ cr_buildstep_docker <- function(image,
 
   # kaniko cache
   build_context <- "dir:///workspace/"
-  dots <- list(...)
+
   if(!is.null(dots$dir)){
     build_context <- paste0(build_context, dots$dir)
+  }
+
+  if(location != "."){
+    build_context <- paste0(build_context, "/", location)
   }
 
   vapply(tag,
