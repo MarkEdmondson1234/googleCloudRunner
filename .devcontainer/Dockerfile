@@ -1,4 +1,4 @@
-FROM gcr.io/mark-edmondson-gde/github-codespace/googlecloudrunner
+FROM gcr.io/gcer-public/github-codespace/googlecloudrunner
 
 # Options for setup script
 ARG INSTALL_ZSH="true"
