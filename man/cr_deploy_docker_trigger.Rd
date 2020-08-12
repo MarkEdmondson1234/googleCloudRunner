@@ -13,6 +13,7 @@ cr_deploy_docker_trigger(
   substitutions = NULL,
   ignoredFiles = NULL,
   includedFiles = NULL,
+  timeout = NULL,
   projectId = cr_project_get()
 )
 }
@@ -39,6 +40,8 @@ cr_deploy_docker_trigger(
 \item{ignoredFiles}{ignored_files and included_files are file glob matches extended with support for "**".}
 
 \item{includedFiles}{If any of the files altered in the commit pass the ignored_files}
+
+\item{timeout}{Amount of time that this build should be allowed to run, to second}
 
 \item{projectId}{The project to build under}
 }

@@ -12,6 +12,7 @@
 #' @inheritDotParams cr_buildstep_docker
 #' @inheritParams cr_buildtrigger
 #' @param projectId The project to build under
+#' @inheritParams cr_build_make
 #' @family Deployment functions
 #' @details
 #'
@@ -32,6 +33,7 @@ cr_deploy_docker_trigger <- function(repo,
                                      substitutions = NULL,
                                      ignoredFiles = NULL,
                                      includedFiles = NULL,
+                                     timeout = NULL,
                                      projectId = cr_project_get()){
 
   build_docker <- cr_build_make(
@@ -40,7 +42,8 @@ cr_deploy_docker_trigger <- function(repo,
                                   tag = image_tag,
                                   ...,
                                   kaniko_cache = TRUE)
-    ))
+    ),
+    timeout = timeout)
 
   safe_name <- gsub("[^a-zA-Z1-9]","-", trigger_name)
   cr_buildtrigger(build_docker,
