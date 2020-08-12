@@ -185,6 +185,9 @@
   <span class='kw'>trigger_name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"docker-"</span>, <span class='no'>image</span>),
   <span class='kw'>image_tag</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"latest"</span>, <span class='st'>"$SHORT_SHA"</span>, <span class='st'>"$BRANCH_NAME"</span>),
   <span class='no'>...</span>,
+  <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ignoredFiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>includedFiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
 )</pre>
 
@@ -216,6 +219,18 @@
     <dt><code>kaniko_cache</code></dt><dd><p>If TRUE will use kaniko cache for Docker builds.</p></dd>
   
 </dl></td>
+    </tr>
+    <tr>
+      <th>substitutions</th>
+      <td><p>A named list of Build macro variables</p></td>
+    </tr>
+    <tr>
+      <th>ignoredFiles</th>
+      <td><p>ignored_files and included_files are file glob matches extended with support for "**".</p></td>
+    </tr>
+    <tr>
+      <th>includedFiles</th>
+      <td><p>If any of the files altered in the commit pass the ignored_files</p></td>
     </tr>
     <tr>
       <th>projectId</th>
