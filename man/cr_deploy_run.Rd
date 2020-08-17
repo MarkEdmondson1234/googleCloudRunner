@@ -77,6 +77,7 @@ cr_deploy_plumber(
     \item{\code{max_instances}}{the desired maximum nuimber of container instances. "default" is 1000, you can get more if you requested a quota instance.  For Shiny instances on Cloud Run, this needs to be 1.}
     \item{\code{memory}}{The format for size is a fixed or floating point number followed by a unit: G, M, or K corresponding to gigabyte, megabyte, or kilobyte, respectively, or use the power-of-two equivalents: Gi, Mi, Ki corresponding to gibibyte, mebibyte or kibibyte respectively. The default is 256Mi}
     \item{\code{cpu}}{1 or 2 CPUs for your instance}
+    \item{\code{env_vars}}{Environment arguments passed to the Cloud Run container at runtime.  Distinct from \code{env} that run at build time.}
   }}
 
 \item{html_folder}{the folder containing all the html}

@@ -248,6 +248,7 @@ cr_buildstep_run <- function(name,
                              max_instances = "default",
                              memory = "256Mi",
                              cpu = 1,
+                             env_vars = NULL,
                              ...){
 
   # don't allow dot names that would break things
@@ -280,6 +281,12 @@ cr_buildstep_run <- function(name,
     port <- "default"
   }
 
+  if(!is.null(env_vars)){
+    env_vars <- paste0("--set_env_vars=", paste(env_vars, collapse = ","))
+  } else {
+    env_vars <- "--clear-env-vars"
+  }
+
   c(
     cr_buildstep("gcloud",
                    c("beta","run","deploy", name,
@@ -291,6 +298,7 @@ cr_buildstep_run <- function(name,
                      "--max-instances", max_instances,
                      "--memory", memory,
                      "--cpu", cpu,
+                     env_vars,
                      auth_calls
                    ),
                    id = "deploy cloudrun",

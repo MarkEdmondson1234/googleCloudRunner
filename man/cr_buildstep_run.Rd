@@ -14,6 +14,7 @@ cr_buildstep_run(
   max_instances = "default",
   memory = "256Mi",
   cpu = 1,
+  env_vars = NULL,
   ...
 )
 }
@@ -35,6 +36,8 @@ cr_buildstep_run(
 \item{memory}{The format for size is a fixed or floating point number followed by a unit: G, M, or K corresponding to gigabyte, megabyte, or kilobyte, respectively, or use the power-of-two equivalents: Gi, Mi, Ki corresponding to gibibyte, mebibyte or kibibyte respectively. The default is 256Mi}
 
 \item{cpu}{1 or 2 CPUs for your instance}
+
+\item{env_vars}{Environment arguments passed to the Cloud Run container at runtime.  Distinct from \code{env} that run at build time.}
 
 \item{...}{passed on to \link{cr_buildstep}}
 }
