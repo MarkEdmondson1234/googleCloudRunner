@@ -272,6 +272,7 @@
     <dt><code>max_instances</code></dt><dd><p>the desired maximum nuimber of container instances. "default" is 1000, you can get more if you requested a quota instance.  For Shiny instances on Cloud Run, this needs to be 1.</p></dd>
     <dt><code>memory</code></dt><dd><p>The format for size is a fixed or floating point number followed by a unit: G, M, or K corresponding to gigabyte, megabyte, or kilobyte, respectively, or use the power-of-two equivalents: Gi, Mi, Ki corresponding to gibibyte, mebibyte or kibibyte respectively. The default is 256Mi</p></dd>
     <dt><code>cpu</code></dt><dd><p>1 or 2 CPUs for your instance</p></dd>
+    <dt><code>env_vars</code></dt><dd><p>Environment arguments passed to the Cloud Run container at runtime.  Distinct from <code>env</code> that run at build time.</p></dd>
   
 </dl></td>
     </tr>

@@ -189,6 +189,7 @@
   <span class='kw'>max_instances</span> <span class='kw'>=</span> <span class='st'>"default"</span>,
   <span class='kw'>memory</span> <span class='kw'>=</span> <span class='st'>"256Mi"</span>,
   <span class='kw'>cpu</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>env_vars</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -230,6 +231,10 @@
     <tr>
       <th>cpu</th>
       <td><p>1 or 2 CPUs for your instance</p></td>
+    </tr>
+    <tr>
+      <th>env_vars</th>
+      <td><p>Environment arguments passed to the Cloud Run container at runtime.  Distinct from <code>env</code> that run at build time.</p></td>
     </tr>
     <tr>
       <th>...</th>

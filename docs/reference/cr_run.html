@@ -192,6 +192,7 @@
   <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
   <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
   <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
+  <span class='kw'>env_vars</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -247,6 +248,10 @@
       <td><p>Whether to launch the logs URL in a browser once deployed</p></td>
     </tr>
     <tr>
+      <th>env_vars</th>
+      <td><p>Environment arguments passed to the Cloud Run container at runtime.  Distinct from <code>env</code> that run at build time.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Arguments passed on to <code><a href='cr_buildstep_run.html'>cr_buildstep_run</a></code></p><dl'>
     <dt><code></code></dt><dd><p></p></dd>
@@ -274,6 +279,8 @@
 <span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
 <span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span>(<span class='st'>"europe-west1"</span>)
 <span class='fu'>cr_run</span>(<span class='st'>"gcr.io/my-project/my-image"</span>)
+<span class='fu'>cr_run</span>(<span class='st'>"gcr.io/cloud-tagging-10302018/gtm-cloud-image:stable"</span>,
+       <span class='kw'>env_vars</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"CONTAINER_CONFIG=xxxxxxx"</span>))
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
