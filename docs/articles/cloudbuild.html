@@ -127,7 +127,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Serverless batched R scripts via Cloud Build</h1>
             
-            <h4 class="date">2020-08-17</h4>
+            <h4 class="date">2020-09-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudbuild.Rmd"><code>vignettes/cloudbuild.Rmd</code></a></small>
       <div class="hidden name"><code>cloudbuild.Rmd</code></div>
@@ -238,6 +238,8 @@
 <a href="#pre-made-build-step-templates" class="anchor"></a>Pre-made Build Step templates</h2>
 <p>Using the above build step editing functions, some helpful build steps you can use in your own cloudbuild steps have been included in the package.</p>
 <ul>
+<li>
+<code>cr_buildstep_gcloud()</code> - an optimised docker for <code>gcloud</code>, <code>bq</code>, <code>gsutil</code> or <code>kubectl</code> commands</li>
 <li>
 <code><a href="../reference/cr_buildstep_bash.html">cr_buildstep_bash()</a></code> - for including bash scripts</li>
 <li>
