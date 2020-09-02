@@ -404,12 +404,18 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
     )
   }
 
+  the_body <- toJSON(body, auto_unbox = TRUE)
+  myMessage("Body parsed: ", the_body, level = 3)
+
   if(!is.null(body)){
-    body <- base64_encode(toJSON(body, auto_unbox = TRUE),linebreaks = FALSE)
+    body <- base64_encode(the_body,linebreaks = FALSE)
   }
 
-  structure(rmNullObs(list(headers = headers, body = body, oauthToken = oauthToken,
-                 uri = uri, oidcToken = oidcToken, httpMethod = httpMethod)),
+  obj <- rmNullObs(list(headers = headers, body = body, oauthToken = oauthToken,
+                        uri = uri, oidcToken = oidcToken, httpMethod = httpMethod))
+
+  myMessage("HttpTarget Object: ", obj, level = 2)
+  structure(obj,
             class = c("gar_HttpTarget", "list"))
 }
 
