@@ -678,4 +678,47 @@ $(date +\"%Y%m%dT%H:%M:%S\")"),
 
 }
 
+#' A buildstep template for gcloud
+#'
+#' This enables an optimised version of gcloud docker for your buildstep such as \code{gcr.io/google.com/cloudsdktool/cloud-sdk:alpine}
+#'
+#' @seealso \url{https://github.com/GoogleCloudPlatform/cloud-builders/tree/master/gcloud}
+#' @param component What gcloud service you need, such as "gcloud", "bq" or "gsutil"
+#' @param ... Other arguments passed to \link{cr_buildstep}
+#' @inheritDotParams cr_buildstep
+#'
+#' @export
+#' @family Cloud Buildsteps
+#' @import assertthat
+cr_buildstep_gcloud <- function(component = c("gcloud","bq","gsutil","kubectl"),
+                                ...){
+
+  component <- match.arg(component)
+
+  # don't allow dot names that would break things
+  dots <- list(...)
+  assert_that(
+    is.null(dots$name),
+    is.null(dots$prefix),
+    is.null(dots$entrypoint)
+  )
+
+  the_name <- "cloud-sdk:alpine"
+  if(component == "kubectl"){
+    the_name <- "cloud-sdk:latest"
+  }
+
+  entrypoint <- NULL
+  if(component != "gcloud"){
+    entrypoint <- component
+  }
+
+  cr_buildstep(
+    name = the_name,
+    prefix = "gcr.io/google.com/cloudsdktool/",
+    entrypoint = entrypoint,
+    ...
+  )
+
+}
 

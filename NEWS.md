@@ -17,6 +17,7 @@
 * Fix `cr_schedule()` crash of `overwrite=TRUE` but no existing schedule
 * Add deploy Shiny to k8s and Cloud Run example use cases
 * Allow max_instances in `cr_run` so it can run Shiny apps (#35)
+* Add `cr_buildstep_gcloud()` for optimum gcloud builds (#83)
 
 # googleCloudRunner 0.2.0
 

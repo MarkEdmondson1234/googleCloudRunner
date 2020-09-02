@@ -153,6 +153,7 @@ This allows you to programmatically create cloudbuild yaml files for other langu
 
 Using the above build step editing functions, some helpful build steps you can use in your own cloudbuild steps have been included in the package.
 
+* `cr_buildstep_gcloud()` - an optimised docker for `gcloud`, `bq`, `gsutil` or `kubectl` commands
 * `cr_buildstep_bash()` - for including bash scripts
 * `cr_buildstep_docker()` - for building and pushing Docker images
 * `cr_buildstep_secret()` - storing secrets in the cloud and decrypting them
