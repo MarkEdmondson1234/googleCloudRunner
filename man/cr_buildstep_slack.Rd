@@ -60,6 +60,7 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_docker}()},
 \code{\link{cr_buildstep_edit}()},
 \code{\link{cr_buildstep_extract}()},
+\code{\link{cr_buildstep_gcloud}()},
 \code{\link{cr_buildstep_gitsetup}()},
 \code{\link{cr_buildstep_mailgun}()},
 \code{\link{cr_buildstep_nginx_setup}()},
