@@ -24,7 +24,7 @@ cr_run_list(
 List the Cloud Run services you have access to
 }
 \seealso{
-\href{https://cloud.run}{Google Documentation for Cloud Run}
+\href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
 
 Other Cloud Run functions: 
 \code{\link{cr_plumber_pubsub}()},

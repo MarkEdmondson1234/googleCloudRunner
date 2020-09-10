@@ -12,7 +12,7 @@
 #' @param volumes volumes to connect and write to
 #' @param waitFor Whether to wait for previous buildsteps to complete before running.  Default it will wait for previous step.
 #'
-#' @seealso \href{https://cloud.google.com/cloud-build/docs/create-custom-build-steps}{Creating custom build steps how-to guide}
+#' @seealso \href{https://cloud.google.com/cloud-build/docs/configuring-builds/use-community-and-custom-builders}{Creating custom build steps how-to guide}
 #'
 #' @details
 #'

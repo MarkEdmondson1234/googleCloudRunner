@@ -254,7 +254,7 @@ cr_build_status <- function(id = .Last.value,
 #' @import assertthat
 #' @importFrom googleCloudStorageR gcs_list_objects gcs_get_object
 #'
-#' @seealso \href{https://cloud.google.com/cloud-build/docs/configuring-builds/store-images-artifacts}{Storing images and artifacts}
+#' @seealso \href{https://cloud.google.com/cloud-build/docs/building/store-build-artifacts}{Storing images and artifacts}
 #'
 #' @examples
 #'

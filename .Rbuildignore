@@ -21,3 +21,6 @@
 ^vignettes$
 ^\.covrignore$
 ^cloud_build$
+^\.devcontainer$
+^cloudbuild-pkgdown\.yml$
+^tests$

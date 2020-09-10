@@ -12,7 +12,7 @@ Description: Tools to easily enable R scripts in the Google Cloud Platform.
   Cloud Build <https://cloud.google.com/cloud-build/> for Continuous Delivery 
   and Integration services and 
   Cloud Scheduler <https://cloud.google.com/scheduler/> for scheduled scripts.
-URL: https://code.markedmondson.me/googleCloudRunner
+URL: https://code.markedmondson.me/googleCloudRunner/
 BugReports: https://github.com/MarkEdmondson1234/googleCloudRunner/issues
 Depends:
     R (>= 3.3.0)

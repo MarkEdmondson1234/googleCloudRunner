@@ -126,7 +126,7 @@ make_endpoint <- function(endbit){
 #'
 #' List the Cloud Run services you have access to
 #'
-#' @seealso \href{https://cloud.run}{Google Documentation for Cloud Run}
+#' @seealso \href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
 #'
 #' @param projectId The GCP project from which the services should be listed
 #' @param labelSelector Allows to filter resources based on a label
