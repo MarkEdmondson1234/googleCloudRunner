@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>BuildTrigger Object — BuildTrigger • googleCloudRunner</title>
+<title>A buildstep template for gcloud — cr_buildstep_gcloud • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="BuildTrigger Object — BuildTrigger" />
-<meta property="og:description" content="Configuration for an automated build in response to source repositorychanges." />
+<meta property="og:title" content="A buildstep template for gcloud — cr_buildstep_gcloud" />
+<meta property="og:description" content="This enables an optimised version of gcloud docker for your buildstep such as gcr.io/google.com/cloudsdktool/cloud-sdk:alpine" />
 
 
 
@@ -170,93 +170,60 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>BuildTrigger Object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/buildtriggers.R'><code>R/buildtriggers.R</code></a></small>
-    <div class="hidden name"><code>BuildTrigger.Rd</code></div>
+    <h1>A buildstep template for gcloud</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/buildsteps_templates.R'><code>R/buildsteps_templates.R</code></a></small>
+    <div class="hidden name"><code>cr_buildstep_gcloud.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Configuration for an automated build in response to source repositorychanges.</p>
+    <p>This enables an optimised version of gcloud docker for your buildstep such as <code>gcr.io/google.com/cloudsdktool/cloud-sdk:alpine</code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>BuildTrigger</span>(
-  <span class='kw'>filename</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>build</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ignoredFiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>github</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>includedFiles</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>disabled</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>triggerTemplate</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>description</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>cr_buildstep_gcloud</span>(<span class='kw'>component</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"gcloud"</span>, <span class='st'>"bq"</span>, <span class='st'>"gsutil"</span>, <span class='st'>"kubectl"</span>), <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>filename</th>
-      <td><p>Path, from the source root, to a file whose contents is used for the</p></td>
+      <th>component</th>
+      <td><p>What gcloud service you need, such as "gcloud", "bq" or "gsutil"</p></td>
     </tr>
     <tr>
-      <th>name</th>
-      <td><p>User assigned name of the trigger</p></td>
-    </tr>
-    <tr>
-      <th>tags</th>
-      <td><p>Tags for annotation of a `BuildTrigger`</p></td>
-    </tr>
-    <tr>
-      <th>build</th>
-      <td><p>Contents of the build template</p></td>
-    </tr>
-    <tr>
-      <th>ignoredFiles</th>
-      <td><p>ignored_files and included_files are file glob matches extended with support for "**".</p></td>
-    </tr>
-    <tr>
-      <th>github</th>
-      <td><p>a <a href='GitHubEventsConfig.html'>GitHubEventsConfig</a> object - mutually exclusive with <code>triggerTemplate</code></p></td>
-    </tr>
-    <tr>
-      <th>substitutions</th>
-      <td><p>A named list of Build macro variables</p></td>
-    </tr>
-    <tr>
-      <th>includedFiles</th>
-      <td><p>If any of the files altered in the commit pass the ignored_files</p></td>
-    </tr>
-    <tr>
-      <th>disabled</th>
-      <td><p>If true, the trigger will never result in a build</p></td>
-    </tr>
-    <tr>
-      <th>triggerTemplate</th>
-      <td><p>a <a href='RepoSource.html'>RepoSource</a> object - mutually exclusive with <code>github</code></p></td>
-    </tr>
-    <tr>
-      <th>description</th>
-      <td><p>Human-readable description of this trigger</p></td>
+      <th>...</th>
+      <td><p>Arguments passed on to <code><a href='cr_buildstep.html'>cr_buildstep</a></code></p><dl'>
+    <dt><code>name</code></dt><dd><p>name of docker image to call appended to <code>prefix</code></p></dd>
+    <dt><code>args</code></dt><dd><p>character vector of arguments</p></dd>
+    <dt><code>prefix</code></dt><dd><p>prefixed to name - set to "" to suppress.  Will be suppressed if <code>name</code> starts with gcr.io</p></dd>
+    <dt><code>entrypoint</code></dt><dd><p>change the entrypoint for the docker container</p></dd>
+    <dt><code>dir</code></dt><dd><p>The directory to use, relative to /workspace e.g. /workspace/deploy/</p></dd>
+    <dt><code>id</code></dt><dd><p>Optional id for the step</p></dd>
+    <dt><code>env</code></dt><dd><p>Environment variables for this step.  A character vector for each assignment</p></dd>
+    <dt><code>volumes</code></dt><dd><p>volumes to connect and write to</p></dd>
+    <dt><code>waitFor</code></dt><dd><p>Whether to wait for previous buildsteps to complete before running.  Default it will wait for previous step.</p></dd>
+  
+</dl></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>BuildTrigger object</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.triggers'>https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.triggers</a></p>
-<p>Other BuildTrigger functions: 
-<code><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a>()</code>,
-<code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a>()</code>,
-<code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a>()</code>,
-<code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a>()</code>,
-<code><a href='cr_buildtrigger_list.html'>cr_buildtrigger_list</a>()</code>,
-<code><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a>()</code>,
-<code><a href='cr_buildtrigger_run.html'>cr_buildtrigger_run</a>()</code>,
-<code><a href='cr_buildtrigger.html'>cr_buildtrigger</a>()</code></p></div>
+    <div class='dont-index'><p><a href='https://github.com/GoogleCloudPlatform/cloud-builders/tree/master/gcloud'>https://github.com/GoogleCloudPlatform/cloud-builders/tree/master/gcloud</a></p>
+<p>Other Cloud Buildsteps: 
+<code><a href='cr_buildstep_bash.html'>cr_buildstep_bash</a>()</code>,
+<code><a href='cr_buildstep_decrypt.html'>cr_buildstep_decrypt</a>()</code>,
+<code><a href='cr_buildstep_df.html'>cr_buildstep_df</a>()</code>,
+<code><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a>()</code>,
+<code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a>()</code>,
+<code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a>()</code>,
+<code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a>()</code>,
+<code><a href='cr_buildstep_mailgun.html'>cr_buildstep_mailgun</a>()</code>,
+<code><a href='cr_buildstep_nginx_setup.html'>cr_buildstep_nginx_setup</a>()</code>,
+<code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a>()</code>,
+<code><a href='cr_buildstep_run.html'>cr_buildstep_run</a>()</code>,
+<code><a href='cr_buildstep_r.html'>cr_buildstep_r</a>()</code>,
+<code><a href='cr_buildstep_secret.html'>cr_buildstep_secret</a>()</code>,
+<code><a href='cr_buildstep_slack.html'>cr_buildstep_slack</a>()</code>,
+<code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

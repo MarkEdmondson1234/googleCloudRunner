@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleCloudRunner</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -266,7 +266,7 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># create a local cloudbuild.yml file for packagetests</span>
-<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_packagetests</span>(<span class='kw'>create_trigger</span> <span class='kw'>=</span> <span class='st'>"no"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-09-02 09:00:21 &gt; Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>ℹ Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'>● Go to https://console.cloud.google.com/cloud-build/triggers and</span>
+<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_packagetests</span>(<span class='kw'>create_trigger</span> <span class='kw'>=</span> <span class='st'>"no"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-09-10 09:58:47 &gt; Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>ℹ Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'>● Go to https://console.cloud.google.com/cloud-build/triggers and</span>
 #&gt; <span class='message'>  make a build trigger pointing at this file in your repo:</span>
 #&gt; <span class='message'>  cloudbuild-tests.yml </span></div><div class='output co'>#&gt; <span class='message'>ℹ Build Trigger substitution variable settings:</span>
 #&gt; <span class='message'>  _CODECOV_TOKEN = your-codecov-token</span>
@@ -301,7 +301,7 @@
   <span class='kw'>env</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"NOT_CRAN=true"</span>, <span class='st'>"MY_AUTH_FILE=auth.json"</span>),
   <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>1200</span>,
   <span class='kw'>create_trigger</span> <span class='kw'>=</span> <span class='st'>"no"</span>
-)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-09-02 09:00:21 &gt; Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>ℹ Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'>● Go to https://console.cloud.google.com/cloud-build/triggers and</span>
+)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-09-10 09:58:47 &gt; Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>ℹ Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'>● Go to https://console.cloud.google.com/cloud-build/triggers and</span>
 #&gt; <span class='message'>  make a build trigger pointing at this file in your repo:</span>
 #&gt; <span class='message'>  cloudbuild-tests.yml </span></div><div class='output co'>#&gt; <span class='message'>ℹ Build Trigger substitution variable settings:</span>
 #&gt; <span class='message'>  _CODECOV_TOKEN = your-codecov-token</span>

@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleCloudRunner</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -127,7 +127,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example Use Cases for googleCloudRunner</h1>
             
-            <h4 class="date">2020-09-02</h4>
+            <h4 class="date">2020-09-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecases.Rmd"><code>vignettes/usecases.Rmd</code></a></small>
       <div class="hidden name"><code>usecases.Rmd</code></div>
@@ -527,7 +527,7 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 <span class="kw">function</span>(<span class="no">message</span><span class="kw">=</span><span class="kw">NULL</span>){
 
   <span class="no">pub</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">x</span>){
-    <span class="no">o</span> <span class="kw">&lt;-</span> <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://jeroen.cran.dev/jsonlite/reference/fromJSON.html">fromJSON</a></span>(<span class="no">x</span>)
+    <span class="no">o</span> <span class="kw">&lt;-</span> <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html">fromJSON</a></span>(<span class="no">x</span>)
     <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"Echo:"</span>, <span class="no">o</span>)
     <span class="fu">send_email</span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"We got this file: "</span>, <span class="no">o</span>$<span class="no">name</span>))
   }
@@ -552,7 +552,7 @@ CMD ["api.R"]</code></pre>
 <p><img src="cloudrun-environment-args.png"></p>
 <p>You can test the Pub/Sub API is working from R with the below code:</p>
 <div class="sourceCode" id="cb27"><html><body><pre class="r"><span class="fu"><a href="../reference/cr_pubsub.html">cr_pubsub</a></span>(<span class="st">"https://your-cloudendpoint.run.app/pubsub"</span>,
-          <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://jeroen.cran.dev/jsonlite/reference/fromJSON.html">toJSON</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">name</span> <span class="kw">=</span> <span class="st">"test_file_from_r"</span>)))</pre></body></html></div>
+          <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html">toJSON</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">name</span> <span class="kw">=</span> <span class="st">"test_file_from_r"</span>)))</pre></body></html></div>
 </div>
 <div id="setup-pubsub" class="section level3">
 <h3 class="hasAnchor">
