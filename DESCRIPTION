@@ -8,7 +8,7 @@ Authors@R: c(person("Mark", "Edmondson", email = "r@sunholo.com",
                   comment = c(ORCID = "0000-0002-8434-3881")),
               person("Sunholo Ltd", role = "cph"))
 Description: Tools to easily enable R scripts in the Google Cloud Platform.
-  Utilise cloud services such as Cloud Run <https://cloud.run> for R over HTTP, 
+  Utilise cloud services such as Cloud Run <https://cloud.google.com/run/> for R over HTTP, 
   Cloud Build <https://cloud.google.com/cloud-build/> for Continuous Delivery 
   and Integration services and 
   Cloud Scheduler <https://cloud.google.com/scheduler/> for scheduled scripts.
