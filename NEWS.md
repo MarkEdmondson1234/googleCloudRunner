@@ -1,4 +1,4 @@
-# googleCloudRunner 0.2.0.9000
+# googleCloudRunner 0.3.0
 
 * Move the setup wizard functions from `googleCloudRunner` to `googleAuthR` so they are available for all packages.
 * Check for Cloud Scheduler Service Agent is present for scheduler to work (#73)
