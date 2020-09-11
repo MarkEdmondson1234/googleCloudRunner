@@ -28,7 +28,7 @@ It will walk you through the details below.  You can also use it to check your s
 
 You can configure authentication separately, as its usually the trickiest bit.  The `cr_setup_auth()` function attempts to help you walk through the authentication and after running it and restarting R a couple of times you should only need to download a client ID from your project to have it all configured for you.
 
-If you are customising things then `cr_setup_service()` may be useful, which lets you add common roles to the service account emails. The other setup functions call it to set things up for you, but you may want more control, or have special needs for your cloudbuild email for example, which needs roles assigned for certain services you want to build.
+If you are customising things then `cr_setup_service()` may be useful, which lets you add common roles to the service account emails. The other setup functions call it to set things up for you, but you may want more control, or have special needs for your cloud build email for example, which needs roles assigned for certain services you want to build.
 
 ### cr_setup_tests()
 

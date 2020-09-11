@@ -12,7 +12,7 @@
 #' @param r_image The image that will run the R code from \code{edit_r}
 #' @inheritParams cr_deploy_docker_trigger
 #' @inheritParams cr_buildstep_run
-#' @param repo A git repostitory defined in \link{cr_buildtrigger_repo}
+#' @param repo A git repository defined in \link{cr_buildtrigger_repo}
 #' @param timeout Timeout for the build
 #' @family Deployment functions
 #'

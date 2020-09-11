@@ -6,7 +6,7 @@
 #' @param roles the roles to grant access - default is all googleCloudRunner functions
 #'
 #' @export
-#' @import googleAuthR
+#' @importFrom googleAuthR gar_set_client gar_auth gar_service_grant_roles
 #' @family setup functions
 cr_setup_service <- function(account_email,
                              roles = cr_setup_role_lookup("local"),
@@ -14,6 +14,7 @@ cr_setup_service <- function(account_email,
                              email = Sys.getenv("GARGLE_EMAIL")
                              ){
 
+  account_email <- trimws(account_email)
   projectId <- gar_set_client(json,
                   scopes = "https://www.googleapis.com/auth/cloud-platform")
   if(email == ""){
@@ -21,7 +22,11 @@ cr_setup_service <- function(account_email,
   }
   gar_auth(email = email)
 
-  gar_service_grant_roles(trimws(account_email),
+  gar_service_create(account_email,
+                     projectId = projectId,
+                     serviceName = "CloudScheduler",
+                     serviceDescription = "Created via googleCloudRunner")
+  gar_service_grant_roles(account_email,
                           roles = roles,
                           projectId = projectId)
 

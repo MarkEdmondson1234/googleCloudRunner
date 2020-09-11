@@ -19,7 +19,7 @@ cr_deploy_run_website(
 )
 }
 \arguments{
-\item{repo}{A git repostitory defined in \link{cr_buildtrigger_repo}}
+\item{repo}{A git repository defined in \link{cr_buildtrigger_repo}}
 
 \item{image}{The name of the image you want to build}
 
