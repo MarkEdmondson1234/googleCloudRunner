@@ -1,3 +1,7 @@
+# googleCloudRunner 0.3.0.9000
+
+* Fix checking for existance of cloudscheduler.serviceAgent (#89 - thanks @BillPetti)
+
 # googleCloudRunner 0.3.0
 
 * Move the setup wizard functions from `googleCloudRunner` to `googleAuthR` so they are available for all packages.

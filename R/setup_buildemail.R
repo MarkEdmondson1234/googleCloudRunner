@@ -22,10 +22,12 @@ cr_setup_service <- function(account_email,
   }
   gar_auth(email = email)
 
+  # create email if needed
   gar_service_create(account_email,
                      projectId = projectId,
-                     serviceName = "CloudScheduler",
+                     serviceName = paste("googleCloudRunner_",as.numeric(Sys.time())),
                      serviceDescription = "Created via googleCloudRunner")
+
   gar_service_grant_roles(account_email,
                           roles = roles,
                           projectId = projectId)
