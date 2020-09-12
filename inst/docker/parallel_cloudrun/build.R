@@ -6,7 +6,7 @@ bs <- c(
   cr_buildstep_docker("cloudrun_parallel",
                       dir = "inst/docker/parallel_cloudrun/plumber",
                       kaniko_cache = TRUE),
-  cr_buildstep_run("parallel_cloudrun",
+  cr_buildstep_run("parallel-cloudrun",
                    image = "gcr.io/$PROJECT_ID/cloudrun_parallel:$BUILD_ID",
                    allowUnauthenticated = FALSE,
                    env_vars = "BQ_AUTH_FILE=auth.json")
