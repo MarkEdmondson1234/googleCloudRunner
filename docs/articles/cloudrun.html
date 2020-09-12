@@ -319,7 +319,7 @@ cr_dockerfile_plumber &lt;- function(deploy_folder, ...){
 <div id="deploying-shiny-to-cloud-run" class="section level2">
 <h2 class="hasAnchor">
 <a href="#deploying-shiny-to-cloud-run" class="anchor"></a>Deploying Shiny to Cloud Run</h2>
-<p>Due to Shiny’s stateful nature, Cloud Run is not a perfect fit for Shiny but it can be configured to run Shiny apps that scale to 0 (e.g. no cost) up to 80 connections at once to one instance. The one instance is necessary to avoid requests being sent to another Shiny container instance and losing the user session. Shiny also needs to have certain websocket features disabled.</p>
+<p>Due to Shiny’s stateful nature, Cloud Run is not a perfect fit for Shiny but it can be configured to run Shiny apps that scale to 0 (e.g. no cost) up to 80 connections at once to one instance. The one instance is necessary to avoid requests being sent to another Shiny container instance and losing the user session. Shiny also needs to have certain websocket features disabled, and there is a 15min session timeout.</p>
 <p>This means you can’t scale to a billion like other Cloud Run apps, and need to keep an eye on the load of the Shiny app (which will depend on your code) to see if 80 connections are too much for the CPU and Memory you assign to the Cloud Run instance. However this should still be a good fit for a lot of data science applications.</p>
 <p>A minimal working example has been created by <span class="citation">@randy3k</span> here: <a href="https://github.com/randy3k/shiny-cloudrun-demo" class="uri">https://github.com/randy3k/shiny-cloudrun-demo</a> which can be deployed to Cloud Run via a fork here:</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleCloudRunner</span>)
@@ -472,12 +472,32 @@ server {
 </div>
 </div>
 </div>
+<div id="accessing-authenticated-cloud-run-apps" class="section level2">
+<h2 class="hasAnchor">
+<a href="#accessing-authenticated-cloud-run-apps" class="anchor"></a>Accessing authenticated Cloud Run apps</h2>
+<p>When deploying via <code><a href="../reference/cr_run.html">cr_run()</a></code> or otherwise you have the option to only allowed authenticated requests to your app by setting the argument <code>allowUnauthenticated=FALSE</code>. This lets you deploy private docker containers and only allow requests from users or services that have the correct JSON Web Token (JWT) in their headers. Note this is distinct from OAuth2 access, which will not work.</p>
+<p>The accessing of those services are <a href="https://cloud.google.com/run/docs/authenticating/overview">documented here</a> and can be reached by any service that can make HTTP requests and has the appropriate authorisation via a service account key.</p>
+<p>To enable easier access from R the <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> functions let you use your own local service account key to generate appropriate JWTs, so as to be able to access the private Cloud Run URL.</p>
+<p>A demo is below, assuming you have already deployed the private Cloud Run service:</p>
+<div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="co"># The private authenticated access only Cloud Run service</span>
+<span class="no">the_url</span> <span class="kw">&lt;-</span> <span class="st">"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/"</span>
+
+<span class="co"># creating the JWT and token from your service account key used for googleCloudRunner</span>
+<span class="no">jwt</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_create</a></span>(<span class="no">the_url</span>, <span class="kw">service_json</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"GCE_AUTH_FILE"</span>))
+<span class="no">token</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_token</a></span>(<span class="no">jwt</span>, <span class="no">the_url</span>)
+
+<span class="co"># call Cloud Run app using token with any httr verb</span>
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">httr</span>)
+<span class="no">res</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_with</a></span>(<span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span>(<span class="st">"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"</span>),
+                   <span class="no">token</span>)
+<span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span>(<span class="no">res</span>)</pre></body></html></div>
+</div>
 <div id="deploying-from-another-google-cloud-project" class="section level2">
 <h2 class="hasAnchor">
 <a href="#deploying-from-another-google-cloud-project" class="anchor"></a>Deploying from another Google Cloud project</h2>
 <p>By default the build will only allow deployments from the same Google Cloud Project - if you want to deploy container images from other projects you need to give the Cloud Run Service Agent for the Cloud Run project access to the source project. See this <a href="https://cloud.google.com/run/docs/deploying#other-projects">Google help file</a>.</p>
 <p>This is available via the <code><a href="../reference/cr_setup_service.html">cr_setup_service()</a></code> function, using the role lookup <code><a href="../reference/cr_setup_service.html">cr_setup_role_lookup("run_agent")</a></code>:</p>
-<div class="sourceCode" id="cb17"><html><body><pre class="r">cr_setup_service("service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com"
+<div class="sourceCode" id="cb18"><html><body><pre class="r">cr_setup_service("service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com"
                  roles = cr_setup_role_lookup("run_agent"))</pre></body></html></div>
 </div>
   </div>
