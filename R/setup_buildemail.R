@@ -22,6 +22,12 @@ cr_setup_service <- function(account_email,
   }
   gar_auth(email = email)
 
+  gar_service_provision(account_email)
+
+  if(roles == "roles/cloudscheduler.serviceAgent"){
+    # needs special project
+    projectId <- "gcp-sa-cloudscheduler"
+  }
   # create email if needed
   gar_service_create(account_email,
                      projectId = projectId,
