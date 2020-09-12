@@ -26,17 +26,18 @@ cr_setup_service <- function(account_email,
     # needs special project
     projectId <- "gcp-sa-cloudscheduler"
   }
-  # create email if needed
+  # create email if needed -
+  #can't use gar_service_provision as different projectId form clientId
   gar_service_create(account_email,
                      projectId = projectId,
-                     serviceName = paste("googleCloudRunner_",as.numeric(Sys.time())),
+                     serviceName = paste("googleCloudRunner_",
+                                         as.numeric(Sys.time())),
                      serviceDescription = "Created via googleCloudRunner")
 
   gar_service_grant_roles(account_email,
                           roles = roles,
                           projectId = projectId)
 
-  the_roles <- NULL
   the_roles <- paste(roles, collapse = " ")
   cli_alert_success("Configured {account_email} with roles: {the_roles}")
 }

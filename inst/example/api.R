@@ -39,7 +39,7 @@ function(spec){
 }
 
 
-#' Recieve pub/sub message
+#' Receive pub/sub message
 #' @post /pubsub
 #' @param message a pub/sub message
 function(message=NULL){
