@@ -282,7 +282,7 @@ cr_buildstep_run <- function(name,
   }
 
   if(!is.null(env_vars)){
-    env_vars <- paste0("--set_env_vars=", paste(env_vars, collapse = ","))
+    env_vars <- paste0("--set-env-vars=", paste(env_vars, collapse = ","))
   } else {
     env_vars <- "--clear-env-vars"
   }

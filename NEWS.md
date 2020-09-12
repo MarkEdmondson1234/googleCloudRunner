@@ -1,6 +1,7 @@
 # googleCloudRunner 0.3.0.9000
 
 * Fix checking for existance of cloudscheduler.serviceAgent (#89 - thanks @BillPetti)
+* Setting env vars for Cloud Run runtime deployments fixed 
 
 # googleCloudRunner 0.3.0
 
