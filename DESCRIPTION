@@ -22,6 +22,7 @@ Imports:
     googleAuthR (>= 1.3.0),
     googleCloudStorageR (>= 0.5.1),
     httr (>= 1.4.1),
+    jose (>= 1.0),
     jsonlite (>= 1.5),
     openssl (>= 1.4.1),
     progress (>= 1.2.2),

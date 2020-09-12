@@ -78,6 +78,7 @@ Use \link{cr_deploy_docker} or similar to create image, \link{cr_deploy_run} to 
 \href{https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run}{Deploying Cloud Run using Cloud Build}
 
 Other Cloud Run functions: 
+\code{\link{cr_jwt_create}()},
 \code{\link{cr_plumber_pubsub}()},
 \code{\link{cr_run_get}()},
 \code{\link{cr_run_list}()}

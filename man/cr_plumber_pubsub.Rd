@@ -47,6 +47,7 @@ function(message=NULL){
 \href{https://cloud.google.com/run/docs/tutorials/pubsub}{Google Pub/Sub tutorial for Cloud Run}.  You can set up Pub/Sub messages from Google Cloud Storage buckets via \link[googleCloudStorageR]{gcs_create_pubsub}
 
 Other Cloud Run functions: 
+\code{\link{cr_jwt_create}()},
 \code{\link{cr_run_get}()},
 \code{\link{cr_run_list}()},
 \code{\link{cr_run}()}

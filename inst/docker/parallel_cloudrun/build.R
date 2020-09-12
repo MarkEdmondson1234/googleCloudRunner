@@ -9,11 +9,11 @@ bs <- c(
   cr_buildstep_run("parallel-cloudrun",
                    image = "gcr.io/$PROJECT_ID/cloudrun_parallel:$BUILD_ID",
                    allowUnauthenticated = FALSE,
-                   env_vars = "BQ_AUTH_FILE=auth.json")
+                   env_vars = "BQ_AUTH_FILE=auth.json,BQ_DEFAULT_PROJECT_ID=$PROJECT_ID")
 )
 
 by <- cr_build_yaml(bs)
-cr_build_write(by, file = "cloudbuild.yml")
+cr_build_write(by, file = "inst/docker/parallel_cloudrun/cloudbuild.yml")
 
 repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
 cr_buildtrigger("inst/docker/parallel_cloudrun/cloudbuild.yml",
@@ -78,13 +78,13 @@ add_jwt <- function(req, jwt){
 
 }
 
-the_url <- "https://parallel-cloudrun-ewjogewawq-ew.a.run.app/hello"
+the_url <- "https://parallel-cloudrun-ewjogewawq-ew.a.run.app/"
 jwt <- create_signed_jwt(the_url)
 
-token <- exchangeJwtForAccessToken(the_url)
+token <- exchangeJwtForAccessToken(jwt, the_url)
 
 # call Cloud Run with token!
-add_jwt(httr::GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app"), token)
+add_jwt(httr::GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/hello"), token)
 
 
 

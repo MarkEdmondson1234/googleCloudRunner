@@ -1,0 +1,91 @@
+#' Create a JSON Web Token (JWT) from your service client and call Google services
+#'
+#' This can be used to call authenticated services such as Cloud Run.
+#'
+#' @param the_url The URL of the service you want to call
+#' @param service_json The account service key JSON that will be used to generate the JWT
+#'
+#' @seealso \href{https://cloud.google.com/run/docs/authenticating/service-to-service}{Service-to-service authentication on GCP}
+#'
+#' @details For certain Google services a JWT is needed to authenticate access, which is distinct from OAuth2.  An example of this is authenticated Cloud Run such as deployed when using \link{cr_run} and parameter \code{allowUnauthenticated = FALSE}.  These functions help you call your services by generating the JWT from your service account key.
+#'
+#' @export
+#' @family Cloud Run functions
+#' @examples
+#'
+#' \dontrun{
+#'
+#' # The private authenticated access only Cloud Run service
+#' the_url <- "https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/"
+#'
+#' # creating the JWT and token
+#' jwt <- cr_jwt_create(the_url)
+#' token <- cr_jwt_token(jwt, the_url)
+#'
+#' # call Cloud Run app using token with any httr verb
+#' library(httr)
+#' res <- cr_jwt_with(GET("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"),
+#'                    token)
+#' content(res)
+#'
+#' }
+#'
+#' @importFrom jose jwt_claim jwt_encode_sig
+#' @importFrom jsonlite fromJSON
+cr_jwt_create <- function(the_url,
+                          service_json = Sys.getenv("GCE_AUTH_FILE")){
+
+  aj <- fromJSON(service_json)
+  headers <- list(
+    'kid' = aj$private_key_id,
+    "alg" = "RS256",
+    "typ" = "JWT"	# Google uses SHA256withRSA
+  )
+
+  claim <- jwt_claim(
+    target_audience = the_url,
+    aud = 'https://www.googleapis.com/oauth2/v4/token',
+    exp = unclass(Sys.time()+3600),
+    iss = aj$client_email,
+    sub = aj$client_email
+  )
+
+  jwt_encode_sig(claim,
+                 key = aj$private_key,
+                 header = headers)
+}
+
+#' @param signed_jwt A JWT created from \link{cr_jwt_create}
+#' @rdname cr_jwt_create
+#' @export
+#' @importFrom httr POST content
+cr_jwt_token <- function(signed_jwt, the_url){
+  auth_url = "https://www.googleapis.com/oauth2/v4/token"
+
+  params = list(
+    grant_type = "urn:ietf:params:oauth:grant-type:jwt-bearer",
+    assertion = signed_jwt
+  )
+
+  res <- POST(auth_url, body = params)
+
+  content(res)$id_token
+}
+
+#' @param req A \code{httr} request to the service running on \code{the_url}, using httr verbs such as \link[httr]{GET}
+#' @param token The token created via \link{cr_jwt_token}
+#' @rdname cr_jwt_create
+#' @export
+#' @importFrom httr with_config add_headers
+cr_jwt_with <- function(req, token){
+  with_config(
+    config = add_headers(
+      Authorization = sprintf("Bearer %s", token)
+    ),
+    req
+  )
+}
+
+
+
+

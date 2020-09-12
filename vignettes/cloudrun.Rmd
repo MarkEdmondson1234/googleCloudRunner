@@ -211,7 +211,7 @@ cr_dockerfile_plumber <- function(deploy_folder, ...){
 
 ## Deploying Shiny to Cloud Run
 
-Due to Shiny's stateful nature, Cloud Run is not a perfect fit for Shiny but it can be configured to run Shiny apps that scale to 0 (e.g. no cost) up to 80 connections at once to one instance.  The one instance is necessary to avoid requests being sent to another Shiny container instance and losing the user session.  Shiny also needs to have certain websocket features disabled.
+Due to Shiny's stateful nature, Cloud Run is not a perfect fit for Shiny but it can be configured to run Shiny apps that scale to 0 (e.g. no cost) up to 80 connections at once to one instance.  The one instance is necessary to avoid requests being sent to another Shiny container instance and losing the user session.  Shiny also needs to have certain websocket features disabled, and there is a 15min session timeout.
 
 This means you can't scale to a billion like other Cloud Run apps, and need to keep an eye on the load of the Shiny app (which will depend on your code) to see if 80 connections are too much for the CPU and Memory you assign to the Cloud Run instance.  However this should still be a good fit for a lot of data science applications.
 
@@ -388,6 +388,31 @@ cr_deploy_run("shiny_cloudrun/app/",
               tag = c("latest","$BUILD_ID"),
               max_instances = 1, # required for shiny
               concurrency = 80)
+```
+
+## Accessing authenticated Cloud Run apps
+
+When deploying via `cr_run()` or otherwise you have the option to only allowed authenticated requests to your app by setting the argument `allowUnauthenticated=FALSE`.  This lets you deploy private docker containers and only allow requests from users or services that have the correct JSON Web Token (JWT) in their headers.  Note this is distinct from OAuth2 access, which will not work. 
+
+The accessing of those services are [documented here](https://cloud.google.com/run/docs/authenticating/overview) and can be reached by any service that can make HTTP requests and has the appropriate authorisation via a service account key.
+
+To enable easier access from R the `cr_jwt_create()` functions let you use your own local service account key to generate appropriate JWTs, so as to be able to access the private Cloud Run URL. 
+
+A demo is below, assuming you have already deployed the private Cloud Run service:
+
+```r
+# The private authenticated access only Cloud Run service
+the_url <- "https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/"
+
+# creating the JWT and token from your service account key used for googleCloudRunner
+jwt <- cr_jwt_create(the_url, service_json = Sys.getenv("GCE_AUTH_FILE"))
+token <- cr_jwt_token(jwt, the_url)
+
+# call Cloud Run app using token with any httr verb
+library(httr)
+res <- cr_jwt_with(GET("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"),
+                   token)
+content(res)
 ```
 
 ## Deploying from another Google Cloud project

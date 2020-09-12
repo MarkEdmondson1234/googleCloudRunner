@@ -21,6 +21,7 @@ This returns details on a particular deployed Cloud Run service.
 \href{https://cloud.google.com/run/docs/reference/rest/v1/namespaces.services/get}{Google Documentation on namespaces.services.get}
 
 Other Cloud Run functions: 
+\code{\link{cr_jwt_create}()},
 \code{\link{cr_plumber_pubsub}()},
 \code{\link{cr_run_list}()},
 \code{\link{cr_run}()}

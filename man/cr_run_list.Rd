@@ -27,6 +27,7 @@ List the Cloud Run services you have access to
 \href{https://cloud.google.com/run/}{Google Documentation for Cloud Run}
 
 Other Cloud Run functions: 
+\code{\link{cr_jwt_create}()},
 \code{\link{cr_plumber_pubsub}()},
 \code{\link{cr_run_get}()},
 \code{\link{cr_run}()}
