@@ -20,3 +20,28 @@ cr_buildtrigger("inst/docker/parallel_cloudrun/cloudbuild.yml",
                 "parallel-cloudrun",
                 trigger = repo,
                 includedFiles = "inst/docker/parallel_cloudrun/**")
+
+cr <- cr_run_get("parallel-cloudrun")
+options(googleAuthR.verbose = 1)
+# its an authenticated call only API, so we need an auth token.
+# curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://parallel-cloudrun-ewjogewawq-ew.a.run.app/hello
+
+library(jose)
+
+aj <- jsonlite::fromJSON(Sys.getenv("GCE_AUTH_FILE"))
+
+claim <- jwt_claim(
+  target_audience = "https://parallel-cloudrun-ewjogewawq-ew.a.run.app",
+  azp = aj$client_id,
+  email = aj$client_email,
+  email_verified = TRUE,
+  exp = unclass(Sys.time()+3600),
+  iss = "https://accounts.google.com",
+  sub = aj$client_id
+)
+
+encode <- jwt_encode_sig(claim, aj$private_key)
+
+httr::POST(aj$token_uri, body = encode)
+
+
