@@ -28,20 +28,63 @@ options(googleAuthR.verbose = 1)
 
 library(jose)
 
-aj <- jsonlite::fromJSON(Sys.getenv("GCE_AUTH_FILE"))
+create_signed_jwt <- function(the_url,
+                              service_json = Sys.getenv("GCE_AUTH_FILE"),
+                              scope=NULL){
 
-claim <- jwt_claim(
-  target_audience = "https://parallel-cloudrun-ewjogewawq-ew.a.run.app",
-  azp = aj$client_id,
-  email = aj$client_email,
-  email_verified = TRUE,
-  exp = unclass(Sys.time()+3600),
-  iss = "https://accounts.google.com",
-  sub = aj$client_id
-)
+  aj <- jsonlite::fromJSON(service_json)
+  headers <- list(
+    'kid' = aj$private_key_id,
+    "alg" = "RS256",
+    "typ" = "JWT"	# Google uses SHA256withRSA
+  )
 
-encode <- jwt_encode_sig(claim, aj$private_key)
+  claim <- jose::jwt_claim(
+    target_audience = the_url,
+    aud = 'https://www.googleapis.com/oauth2/v4/token',
+    exp = unclass(Sys.time()+3600),
+    iss = aj$client_email,
+    sub = aj$client_email,
+    scope = scope
+  )
 
-httr::POST(aj$token_uri, body = encode)
+  jose::jwt_encode_sig(claim,
+                 key = aj$private_key,
+                 header = headers)
+}
+
+exchangeJwtForAccessToken <- function(signed_jwt, the_url){
+  auth_url = "https://www.googleapis.com/oauth2/v4/token"
+
+  params = list(
+    grant_type = "urn:ietf:params:oauth:grant-type:jwt-bearer",
+    assertion = signed_jwt
+  )
+
+  res <- httr::POST(auth_url, body = params)
+
+  httr::content(res)$id_token
+}
+
+add_jwt <- function(req, jwt){
+  res <- with_config(
+    config = httr::add_headers(
+      Authorization = sprintf("Bearer %s", jwt)
+    ),
+    req
+  )
+
+  httr::content(res)
+
+}
+
+the_url <- "https://parallel-cloudrun-ewjogewawq-ew.a.run.app/hello"
+jwt <- create_signed_jwt(the_url)
+
+token <- exchangeJwtForAccessToken(the_url)
+
+# call Cloud Run with token!
+add_jwt(httr::GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app"), token)
+
 
 
