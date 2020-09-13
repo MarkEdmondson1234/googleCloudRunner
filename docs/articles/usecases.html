@@ -443,7 +443,7 @@ auth_file &lt;- gcs_get_object("config.json", bucket = "my-bucket")
 <div class="sourceCode" id="cb15"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleCloudRunner</span>)
 
 <span class="no">bs</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
-  <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span>(<span class="st">"mark-edmondson-gde-auth"</span>,
+  <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span>(<span class="st">"my-auth"</span>,
       <span class="kw">decrypted</span> <span class="kw">=</span> <span class="st">"inst/docker/parallel_cloudrun/plumber/auth.json"</span>),
   <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(<span class="st">"cloudrun_parallel"</span>,
                       <span class="kw">dir</span> <span class="kw">=</span> <span class="st">"inst/docker/parallel_cloudrun/plumber"</span>,
@@ -471,9 +471,10 @@ auth_file &lt;- gcs_get_object("config.json", bucket = "my-bucket")
 <p>The files are then committed to GitHub and the build reviewed in the GCP Console.</p>
 <p>Once the builds are done, you should have a plumber API deployed with a URL similar to <code>https://parallel-cloudrun-ewjogewawq-ew.a.run.app/</code></p>
 </div>
-<div id="call-the-private-plumber-api-with-a-jwt" class="section level4">
-<h4 class="hasAnchor">
-<a href="#call-the-private-plumber-api-with-a-jwt" class="anchor"></a>Call the private plumber API with a JWT</h4>
+</div>
+<div id="calling-the-private-plumber-api-with-a-jwt" class="section level3">
+<h3 class="hasAnchor">
+<a href="#calling-the-private-plumber-api-with-a-jwt" class="anchor"></a>Calling the private plumber API with a JWT</h3>
 <p>Now the plumber API is up, but to call it with authentication will need a JSON Web Token, or JWT. These are supported via the <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> functions:</p>
 <div class="sourceCode" id="cb17"><html><body><pre class="r"><span class="no">cr</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/cr_run_get.html">cr_run_get</a></span>(<span class="st">"parallel-cloudrun"</span>)
 
@@ -490,7 +491,6 @@ auth_file &lt;- gcs_get_object("config.json", bucket = "my-bucket")
                    <span class="no">token</span>)
 <span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span>(<span class="no">res</span>)</pre></body></html></div>
 <p>The JWT token needs renewing each hour.</p>
-</div>
 <div id="use-your-private-micro-service" class="section level4">
 <h4 class="hasAnchor">
 <a href="#use-your-private-micro-service" class="anchor"></a>Use your private micro-service</h4>
