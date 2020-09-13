@@ -3,6 +3,7 @@
 * Fix checking for existance of cloudscheduler.serviceAgent (#89 - thanks @BillPetti)
 * Setting env vars for Cloud Run runtime deployments fixed 
 * Added `cr_jwt_create()` and family to create JWTs to call authenticated services such as Cloud Run (#91)
+* Add authenticated Cloud Run use case
 
 # googleCloudRunner 0.3.0
 

@@ -389,7 +389,7 @@ The steps below:
 library(googleCloudRunner)
 
 bs <- c(
-  cr_buildstep_secret("mark-edmondson-gde-auth",
+  cr_buildstep_secret("my-auth",
       decrypted = "inst/docker/parallel_cloudrun/plumber/auth.json"),
   cr_buildstep_docker("cloudrun_parallel",
                       dir = "inst/docker/parallel_cloudrun/plumber",
@@ -423,7 +423,7 @@ The files are then committed to GitHub and the build reviewed in the GCP Console
 Once the builds are done, you should have a plumber API deployed with a URL similar to 
 `https://parallel-cloudrun-ewjogewawq-ew.a.run.app/`
 
-#### Call the private plumber API with a JWT
+### Calling the private plumber API with a JWT
 
 Now the plumber API is up, but to call it with authentication will need a JSON Web Token, or JWT.  These are supported via the `cr_jwt_create()` functions:
 
