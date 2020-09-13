@@ -42,19 +42,13 @@ function(region=NULL, industry=NULL, bqds = NULL, bqtbl = NULL){
     maxResults = 10000
   )
 
-  str(traffic)
-
   # filter to industry in R this time
   test_data <- traffic[traffic$industry == industry,
                        c("date","percent_of_baseline")]
 
-  tts <- tryCatch(xts(test_data$percent_of_baseline,
+  tts <- xts(test_data$percent_of_baseline,
              order.by = test_data$date,
-             frequency = 7),
-             error = function(err){
-               return(paste("Couldn't make ts: industry ", industry,
-                            " region:", region))
-             })
+             frequency = 7)
 
   # replace with long running sophisticated analysis
   model <- forecast(auto.arima(tts))
@@ -79,7 +73,7 @@ function(region=NULL, industry=NULL, bqds = NULL, bqtbl = NULL){
   bqr_upload_data(
     datasetId = bqds,
     tableId = bqtbl,
-    upload_data = o,
+    upload_data = list(o),
     sourceFormat = "NEWLINE_DELIMITED_JSON",
     wait = FALSE,
     autodetect = TRUE

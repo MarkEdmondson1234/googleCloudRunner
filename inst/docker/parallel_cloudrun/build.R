@@ -43,13 +43,19 @@ call_api <- function(region, industry, token, bqds=NULL, bqtbl=NULL){
   api <- sprintf("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=%s&industry=%s",
                  URLencode(region), URLencode(industry))
 
-  if(!is.null(bqds) || !is.null(bqtbl)){
-    sprintf(paste0(api,"&bqds=%s&bqtbl=%s"), bqds, bqtbl)
+  asynch <- !is.null(bqds) || !is.null(bqtbl)
+
+  if(asynch){
+    api <- paste0(api,"&bqds=",bqds,"&bqtbl=",bqtbl)
   }
 
   message("Request: ", api)
   res <- cr_jwt_with(httr::GET(api),token)
-  httr::content(res, as = "text")
+
+  if(!asynch){
+    httr::content(res, as = "text", encoding = "UTF-8")
+  }
+
 
 }
 
@@ -103,7 +109,7 @@ all_results <- lapply(regions, function(x){
 # do it asynchronously in cloud run which returns results to BigQuery
 all_async <- lapply(regions, function(x){
 
-  lapply(industry, function(y){
+  future_lapply(industry, function(y){
     call_api(region = x, industry = y,
              token = token,
              bqds = "test",
