@@ -285,6 +285,243 @@ cr_deploy_run("shiny_cloudrun/",
               concurrency = 80)
 ```
 
+## Run private R micro-services on Cloud Run
+
+One strategy for running lots of parallel computation is to use an API endpoint, which can be triggered many times simultaneously.
+
+Hosting the computation behind a plumber API and hosted on Cloud Run, you can control what data is worked on via URL parameters, and loop calling the API.
+
+The R computation behind plumber could call other services or compute directly, although keep in mind the 15min timeout for Cloud Run API responses.
+
+A demonstration is shown below:
+
+### Creating the Cloud Run deployment
+
+The demo API queries a BigQuery database and computes a forecast for the time-series it gets back.  The data is from the Covid public datasets hosted on BigQuery.
+
+The plumber script below has two endpoints:
+
+* `/` to test its running
+* `/covid_traffic` which is fetched with parameters region and industry to specify what times-series to fetch a forecast for. 
+
+We will want these to be private (e.g. only authenticated calls) since they contain potentially expensive BigQuery queries. 
+ 
+#### plumber API script
+
+```r
+if(Sys.getenv("PORT") == "") Sys.setenv(PORT = 8000)
+
+#auth via BQ_AUTH_FILE environment argument
+library(bigQueryR)
+library(xts)
+library(forecast)
+
+#' @get /
+#' @html
+function(){
+  "<html><h1>It works!</h1></html>"
+}
+
+
+#' @get /covid_traffic
+#' @param industry the industry to filter results down to e.g "Software"
+#' @param region the region to filter results down to e.g "Europe"
+function(region=NULL, industry=NULL){
+
+  if(any(is.null(region), is.null(industry))){
+    stop("Must supply region and industry parameters")
+  }
+
+  # to handle spaces
+  region <- URLdecode(region)
+  industry <- URLdecode(industry)
+
+  sql <- sprintf("SELECT date, industry, percent_of_baseline FROM `bigquery-public-data.covid19_geotab_mobility_impact.commercial_traffic_by_industry`  WHERE region = '%s' order by date LIMIT 1000", region)
+
+  message("Query: ", sql)
+
+  traffic <- bqr_query(
+    query = sql,
+    datasetId = "covid19_geotab_mobility_impact",
+    useLegacySql = FALSE,
+    maxResults = 10000
+  )
+
+  # filter to industry in R this time
+  test_data <- traffic[traffic$industry == industry,
+                       c("date","percent_of_baseline")]
+
+  tts <- xts(test_data$percent_of_baseline,
+             order.by = test_data$date,
+             frequency = 7)
+
+  # replace with long running sophisticated analysis
+  model <- forecast(auto.arima(tts))
+
+  # output a list that can be turned into JSON via jsonlite::toJSON
+  o <- list(
+    params = c(region, industry),
+    x = model$x,
+    mean = model$mean,
+    lower = model$lower,
+    upper = model$upper
+  )
+
+  message("Return: ", jsonlite::toJSON(o))
+  
+  o
+
+}
+```
+
+#### Deploy plumber API as a private micro-service
+
+The first step is to host the plumber API above.
+
+The steps below:
+
+* Download an authentication file for the script
+* Build the Docker container for the plumber API
+* Deploys the plumber API to a private Cloud Run instance
+* Creates the cloudbuild.yml and writes it to a file in the repo
+
+```r
+library(googleCloudRunner)
+
+bs <- c(
+  cr_buildstep_secret("mark-edmondson-gde-auth",
+      decrypted = "inst/docker/parallel_cloudrun/plumber/auth.json"),
+  cr_buildstep_docker("cloudrun_parallel",
+                      dir = "inst/docker/parallel_cloudrun/plumber",
+                      kaniko_cache = TRUE),
+  cr_buildstep_run("parallel-cloudrun",
+                   image = "gcr.io/$PROJECT_ID/cloudrun_parallel:$BUILD_ID",
+                   allowUnauthenticated = FALSE,
+                   env_vars = "BQ_AUTH_FILE=auth.json,BQ_DEFAULT_PROJECT_ID=$PROJECT_ID")
+)
+
+# make a buildtrigger pointing at above steps
+cloudbuild_file <- "inst/docker/parallel_cloudrun/cloudbuild.yml"
+by <- cr_build_yaml(bs)
+cr_build_write(by, file = cloudbuild_file)
+```
+
+#### Create a build trigger so it builds upon each git commit
+
+Now the cloudbuild.yml is available, a build trigger is created so that it will deploy upon each commit to this GitHub:
+
+```r
+repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+cr_buildtrigger(cloudbuild_file,
+                "parallel-cloudrun",
+                trigger = repo,
+                includedFiles = "inst/docker/parallel_cloudrun/**")
+```
+
+The files are then committed to GitHub and the build reviewed in the GCP Console. 
+
+Once the builds are done, you should have a plumber API deployed with a URL similar to 
+`https://parallel-cloudrun-ewjogewawq-ew.a.run.app/`
+
+#### Call the private plumber API with a JWT
+
+Now the plumber API is up, but to call it with authentication will need a JSON Web Token, or JWT.  These are supported via the `cr_jwt_create()` functions:
+
+```r
+cr <- cr_run_get("parallel-cloudrun")
+
+# Interact with the authenticated Cloud Run service
+the_url <- cr$status$url
+jwt <- cr_jwt_create(the_url)
+
+# needs to be recreated every 60mins
+token <- cr_jwt_token(jwt, the_url)
+
+# call Cloud Run with token!
+library(httr)
+res <- cr_jwt_with(GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/"),
+                   token)
+content(res)
+```
+
+The JWT token needs renewing each hour.
+
+#### Use your private micro-service
+
+The above shows you can call the API's test endpoint, but now we wish to call the API many times with the parameters to filter to the data we want.
+
+This is facilitated by a wrapper function to call our API:
+
+```r
+# interact with the API we made
+call_api <- function(region, industry, token){
+  api <- sprintf("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=%s&industry=%s",
+                 URLencode(region), URLencode(industry))
+
+  message("Request: ", api)
+  res <- cr_jwt_with(httr::GET(api),token)
+
+  httr::content(res, as = "text", encoding = "UTF-8")
+
+}
+
+# test call
+result <- call_api(region = "Europe", industry = "Software", token = token)
+```
+
+Once the test call is complete, you can loop over your data - the parameters for this particular dataset are shown below:
+
+```r
+# the variables to loop over
+regions <- c("North America", "Europe","South America","Australia")
+industry <- c("Transportation (non-freight)",
+              "Software",
+              "Telecommunications",
+              "Manufacturing",
+              "Real Estate",
+              "Government",
+              "Construction",
+              "Holding Companies & Conglomerates",
+              "Freight & Logistics Services",
+              "Agriculture",
+              "Retail",
+              "Consumer Services",
+              "Hospitality",
+              "Business Services",
+              "Waste Treatment, Environmental Services & Recycling",
+              "Energy & Utilities",
+              "Education",
+              "Insurance",
+              "Media & Internet",
+              "Minerals & Mining",
+              "Healthcare Services & Hospitals",
+              "Organizations",
+              "Finance")
+```
+
+#### Parallel calling of the API
+
+For parallel processing, the [`future.apply`]( https://CRAN.R-project.org/package=future.apply) package has a drop in replacement for `lapply()` - this is used to call the API with many threads simultaneously: 
+
+```r
+# loop over all variables for parallel processing
+library(future.apply)
+
+# not multisession to avoid https://github.com/HenrikBengtsson/future.apply/issues/4
+plan(multicore)
+
+results <- future_lapply(regions, call_api, industry = "Software", token = token)
+
+# loop over all industries and regions
+all_results <- lapply(regions, function(x){
+
+  future_lapply(industry, function(y){
+    call_api(region = x, industry = y, token = token)
+  })
+
+})
+```
+
 
 ## Trigger an R function from pub/sub
 

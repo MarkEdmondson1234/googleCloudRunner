@@ -39,23 +39,14 @@ res <- cr_jwt_with(GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/hello"
 content(res)
 
 # interact with the API we made
-call_api <- function(region, industry, token, bqds=NULL, bqtbl=NULL){
+call_api <- function(region, industry, token){
   api <- sprintf("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=%s&industry=%s",
                  URLencode(region), URLencode(industry))
-
-  asynch <- !is.null(bqds) || !is.null(bqtbl)
-
-  if(asynch){
-    api <- paste0(api,"&bqds=",bqds,"&bqtbl=",bqtbl)
-  }
 
   message("Request: ", api)
   res <- cr_jwt_with(httr::GET(api),token)
 
-  if(!asynch){
-    httr::content(res, as = "text", encoding = "UTF-8")
-  }
-
+  httr::content(res, as = "text", encoding = "UTF-8")
 
 }
 
@@ -91,7 +82,6 @@ industry <- c("Transportation (non-freight)",
 # loop over all variables for parallel processing
 library(future.apply)
 
-# local
 # not multisession to avoid https://github.com/HenrikBengtsson/future.apply/issues/4
 plan(multicore)
 
@@ -102,19 +92,6 @@ all_results <- lapply(regions, function(x){
 
   future_lapply(industry, function(y){
     call_api(region = x, industry = y, token = token)
-  })
-
-})
-
-# do it asynchronously in cloud run which returns results to BigQuery
-all_async <- lapply(regions, function(x){
-
-  future_lapply(industry, function(y){
-    call_api(region = x, industry = y,
-             token = token,
-             bqds = "test",
-             bqtbl = "parallel_cloudrun"
-             )
   })
 
 })
