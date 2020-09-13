@@ -12,79 +12,105 @@ bs <- c(
                    env_vars = "BQ_AUTH_FILE=auth.json,BQ_DEFAULT_PROJECT_ID=$PROJECT_ID")
 )
 
+# make a buildtrigger pointing at above steps
+cloudbuild_file <- "inst/docker/parallel_cloudrun/cloudbuild.yml"
 by <- cr_build_yaml(bs)
-cr_build_write(by, file = "inst/docker/parallel_cloudrun/cloudbuild.yml")
+cr_build_write(by, file = cloudbuild_file)
 
 repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
-cr_buildtrigger("inst/docker/parallel_cloudrun/cloudbuild.yml",
+cr_buildtrigger(cloudbuild_file,
                 "parallel-cloudrun",
                 trigger = repo,
                 includedFiles = "inst/docker/parallel_cloudrun/**")
 
 cr <- cr_run_get("parallel-cloudrun")
-options(googleAuthR.verbose = 1)
-# its an authenticated call only API, so we need an auth token.
-# curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://parallel-cloudrun-ewjogewawq-ew.a.run.app/hello
 
-library(jose)
+# Interact with the authenticated Cloud Run service
+the_url <- cr$status$url
+jwt <- cr_jwt_create(the_url)
 
-create_signed_jwt <- function(the_url,
-                              service_json = Sys.getenv("GCE_AUTH_FILE"),
-                              scope=NULL){
-
-  aj <- jsonlite::fromJSON(service_json)
-  headers <- list(
-    'kid' = aj$private_key_id,
-    "alg" = "RS256",
-    "typ" = "JWT"	# Google uses SHA256withRSA
-  )
-
-  claim <- jose::jwt_claim(
-    target_audience = the_url,
-    aud = 'https://www.googleapis.com/oauth2/v4/token',
-    exp = unclass(Sys.time()+3600),
-    iss = aj$client_email,
-    sub = aj$client_email,
-    scope = scope
-  )
-
-  jose::jwt_encode_sig(claim,
-                 key = aj$private_key,
-                 header = headers)
-}
-
-exchangeJwtForAccessToken <- function(signed_jwt, the_url){
-  auth_url = "https://www.googleapis.com/oauth2/v4/token"
-
-  params = list(
-    grant_type = "urn:ietf:params:oauth:grant-type:jwt-bearer",
-    assertion = signed_jwt
-  )
-
-  res <- httr::POST(auth_url, body = params)
-
-  httr::content(res)$id_token
-}
-
-add_jwt <- function(req, jwt){
-  res <- with_config(
-    config = httr::add_headers(
-      Authorization = sprintf("Bearer %s", jwt)
-    ),
-    req
-  )
-
-  httr::content(res)
-
-}
-
-the_url <- "https://parallel-cloudrun-ewjogewawq-ew.a.run.app/"
-jwt <- create_signed_jwt(the_url)
-
-token <- exchangeJwtForAccessToken(jwt, the_url)
+# needs to be recreated every 60mins
+token <- cr_jwt_token(jwt, the_url)
 
 # call Cloud Run with token!
-add_jwt(httr::GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/hello"), token)
+library(httr)
+res <- cr_jwt_with(GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/hello"),
+                   token)
+content(res)
 
+# interact with the API we made
+call_api <- function(region, industry, token, bqds=NULL, bqtbl=NULL){
+  api <- sprintf("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=%s&industry=%s",
+                 URLencode(region), URLencode(industry))
+
+  if(!is.null(bqds) || !is.null(bqtbl)){
+    sprintf(paste0(api,"&bqds=%s&bqtbl=%s"), bqds, bqtbl)
+  }
+
+  message("Request: ", api)
+  res <- cr_jwt_with(httr::GET(api),token)
+  httr::content(res, as = "text")
+
+}
+
+# test call
+result <- call_api(region = "Europe", industry = "Software", token = token)
+
+# the variables to loop over
+regions <- c("North America", "Europe","South America","Australia")
+industry <- c("Transportation (non-freight)",
+              "Software",
+              "Telecommunications",
+              "Manufacturing",
+              "Real Estate",
+              "Government",
+              "Construction",
+              "Holding Companies & Conglomerates",
+              "Freight & Logistics Services",
+              "Agriculture",
+              "Retail",
+              "Consumer Services",
+              "Hospitality",
+              "Business Services",
+              "Waste Treatment, Environmental Services & Recycling",
+              "Energy & Utilities",
+              "Education",
+              "Insurance",
+              "Media & Internet",
+              "Minerals & Mining",
+              "Healthcare Services & Hospitals",
+              "Organizations",
+              "Finance")
+
+# loop over all variables for parallel processing
+library(future.apply)
+
+# local
+# not multisession to avoid https://github.com/HenrikBengtsson/future.apply/issues/4
+plan(multicore)
+
+results <- future_lapply(regions, call_api, industry = "Software", token = token)
+
+# loop over all industries and regions
+all_results <- lapply(regions, function(x){
+
+  future_lapply(industry, function(y){
+    call_api(region = x, industry = y, token = token)
+  })
+
+})
+
+# do it asynchronously in cloud run which returns results to BigQuery
+all_async <- lapply(regions, function(x){
+
+  lapply(industry, function(y){
+    call_api(region = x, industry = y,
+             token = token,
+             bqds = "test",
+             bqtbl = "parallel_cloudrun"
+             )
+  })
+
+})
 
 

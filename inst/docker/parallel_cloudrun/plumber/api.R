@@ -21,13 +21,19 @@ function(){
 #' @get /covid_traffic
 #' @param industry the industry to filter results down to e.g "Software"
 #' @param region the region to filter results down to e.g "Europe"
-function(region=NULL, industry=NULL){
+function(region=NULL, industry=NULL, bqds = NULL, bqtbl = NULL){
 
   if(any(is.null(region), is.null(industry))){
     stop("Must supply region and industry parameters")
   }
 
+  # to handle spaces
+  region <- URLdecode(region)
+  industry <- URLdecode(industry)
+
   sql <- sprintf("SELECT date, industry, percent_of_baseline FROM `bigquery-public-data.covid19_geotab_mobility_impact.commercial_traffic_by_industry`  WHERE region = '%s' order by date LIMIT 1000", region)
+
+  message("Query: ", sql)
 
   traffic <- bqr_query(
     query = sql,
@@ -48,11 +54,30 @@ function(region=NULL, industry=NULL){
   model <- forecast(auto.arima(tts))
 
   # output a list that can be turned into JSON via jsonlite::toJSON
-  list(
+  o <- list(
     x = model$x,
     mean = model$mean,
     lower = model$lower,
     upper = model$upper
   )
+
+  message("Return: ", jsonlite::toJSON(o))
+
+  if(is.null(bqds) || is.null(bqtbl)){
+    # return data directly
+    return(o)
+  }
+
+  # we upload result to bigQuery
+  bqr_upload_data(
+    datasetId = bqds,
+    tableId = bqtbl,
+    upload_data = o,
+    sourceFormat = "NEWLINE_DELIMITED_JSON",
+    wait = FALSE,
+    autodetect = TRUE
+  )
+
+
 
 }

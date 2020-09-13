@@ -9,6 +9,8 @@
 #'
 #' @details For certain Google services a JWT is needed to authenticate access, which is distinct from OAuth2.  An example of this is authenticated Cloud Run such as deployed when using \link{cr_run} and parameter \code{allowUnauthenticated = FALSE}.  These functions help you call your services by generating the JWT from your service account key.
 #'
+#' The token is set to expire in 1 hour, so it will need refreshing before then by calling this function again.
+#'
 #' @export
 #' @family Cloud Run functions
 #' @examples
