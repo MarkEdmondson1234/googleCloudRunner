@@ -42,19 +42,26 @@ function(region=NULL, industry=NULL, bqds = NULL, bqtbl = NULL){
     maxResults = 10000
   )
 
+  str(traffic)
+
   # filter to industry in R this time
   test_data <- traffic[traffic$industry == industry,
                        c("date","percent_of_baseline")]
 
-  tts <- xts(test_data$percent_of_baseline,
+  tts <- tryCatch(xts(test_data$percent_of_baseline,
              order.by = test_data$date,
-             frequency = 7)
+             frequency = 7),
+             error = function(err){
+               return(paste("Couldn't make ts: industry ", industry,
+                            " region:", region))
+             })
 
   # replace with long running sophisticated analysis
   model <- forecast(auto.arima(tts))
 
   # output a list that can be turned into JSON via jsonlite::toJSON
   o <- list(
+    params = c(region, industry),
     x = model$x,
     mean = model$mean,
     lower = model$lower,
