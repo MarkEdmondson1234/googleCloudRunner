@@ -213,6 +213,7 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>For certain Google services a JWT is needed to authenticate access, which is distinct from OAuth2.  An example of this is authenticated Cloud Run such as deployed when using <a href='cr_run.html'>cr_run</a> and parameter <code>allowUnauthenticated = FALSE</code>.  These functions help you call your services by generating the JWT from your service account key.</p>
+<p>The token is set to expire in 1 hour, so it will need refreshing before then by calling this function again.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='https://cloud.google.com/run/docs/authenticating/service-to-service'>Service-to-service authentication on GCP</a></p>
