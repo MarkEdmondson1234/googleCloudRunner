@@ -180,11 +180,11 @@
     </div>
 
     <pre class="usage"><span class='fu'>cr_build_upload_gcs</span>(
-  <span class='no'>local</span>,
-  <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='no'>local</span>, <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>(), <span class='st'>"%Y%m%d%H%M%S"</span>), <span class='st'>".tar.gz"</span>),
-  <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(),
-  <span class='kw'>predefinedAcl</span> <span class='kw'>=</span> <span class='st'>"bucketOwnerFullControl"</span>,
-  <span class='kw'>deploy_folder</span> <span class='kw'>=</span> <span class='st'>"deploy"</span>
+  <span class='kw'>local</span>,
+  remote = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='kw'>local</span>, <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>(), <span class='st'>"%Y%m%d%H%M%S"</span>), <span class='st'>".tar.gz"</span>),
+  bucket = <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(),
+  predefinedAcl = <span class='st'>"bucketOwnerFullControl"</span>,
+  deploy_folder = <span class='st'>"deploy"</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -237,13 +237,14 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
 <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
-<span class='no'>my_gcs_source</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_build_upload_gcs</span>(<span class='st'>"my_folder"</span>)
-<span class='no'>build1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='st'>"cloudbuild.yaml"</span>, <span class='kw'>source</span> <span class='kw'>=</span> <span class='no'>my_gcs_source</span>)
+<span class='kw'>my_gcs_source</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_upload_gcs</span>(<span class='st'>"my_folder"</span>)
+<span class='kw'>build1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='st'>"cloudbuild.yaml"</span>, source = <span class='kw'>my_gcs_source</span>)
 
-}</div></pre>
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -259,7 +260,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

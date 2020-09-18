@@ -180,13 +180,13 @@
     </div>
 
     <pre class="usage"><span class='fu'>cr_buildstep_pkgdown</span>(
-  <span class='no'>github_repo</span>,
-  <span class='no'>git_email</span>,
-  <span class='no'>secret</span>,
-  <span class='kw'>env</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>,
-  <span class='kw'>post_setup</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>post_clone</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+  <span class='kw'>github_repo</span>,
+  <span class='kw'>git_email</span>,
+  <span class='kw'>secret</span>,
+  env = <span class='kw'>NULL</span>,
+  build_image = <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>,
+  post_setup = <span class='kw'>NULL</span>,
+  post_clone = <span class='kw'>NULL</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -225,7 +225,7 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Its convenient to set some of the above via <a href='Build.html'>Build</a> macros, such as <code>github_repo=$_GITHUB_REPO</code> and <code>git_email=$_BUILD_EMAIL</code> in the Build Trigger web UI</p>
-<p>To commit the website to git, <a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a> is used for which
+<p>To commit the website to git, <a href='cr_buildstep_gitsetup.html'>cr_buildstep_gitsetup</a> is used for which
   you will need to add your git ssh private key to Google Secret Manager</p>
 <p>The R package is installed via <a href='https://devtools.r-lib.org//reference/install.html'>install</a> before
   running <a href='https://pkgdown.r-lib.org/reference/build_site.html'>build_site</a></p>
@@ -239,7 +239,7 @@
 <code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a>()</code>,
 <code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a>()</code>,
 <code><a href='cr_buildstep_gcloud.html'>cr_buildstep_gcloud</a>()</code>,
-<code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a>()</code>,
+<code><a href='cr_buildstep_gitsetup.html'>cr_buildstep_gitsetup</a>()</code>,
 <code><a href='cr_buildstep_mailgun.html'>cr_buildstep_mailgun</a>()</code>,
 <code><a href='cr_buildstep_nginx_setup.html'>cr_buildstep_nginx_setup</a>()</code>,
 <code><a href='cr_buildstep_run.html'>cr_buildstep_run</a>()</code>,
@@ -249,11 +249,14 @@
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-09-13 19:37:27 &gt; ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-09-13 19:37:27 &gt; Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-18 14:21:55 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-18 14:21:55 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
 <span class='co'># set github repo directly to write it out via cr_build_write()</span>
 <span class='fu'>cr_buildstep_pkgdown</span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
-                     <span class='kw'>git_email</span> <span class='kw'>=</span> <span class='st'>"cloudbuild@google.com"</span>,
-                     <span class='kw'>secret</span> <span class='kw'>=</span> <span class='st'>"github-ssh"</span>)</div><div class='output co'>#&gt; [[1]]
+                     git_email = <span class='st'>"cloudbuild@google.com"</span>,
+                     secret = <span class='st'>"github-ssh"</span>)
+</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/gcloud
 #&gt; entrypoint: bash
@@ -358,8 +361,9 @@
 #&gt; </div><div class='input'>
 <span class='co'># github repo set via build trigger macro _GITHUB_REPO</span>
 <span class='fu'>cr_buildstep_pkgdown</span>(<span class='st'>"$_GITHUB_REPO"</span>,
-                     <span class='kw'>git_email</span> <span class='kw'>=</span> <span class='st'>"cloudbuild@google.com"</span>,
-                     <span class='kw'>secret</span> <span class='kw'>=</span> <span class='st'>"github-ssh"</span>)</div><div class='output co'>#&gt; [[1]]
+                     git_email = <span class='st'>"cloudbuild@google.com"</span>,
+                     secret = <span class='st'>"github-ssh"</span>)
+</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/gcloud
 #&gt; entrypoint: bash
@@ -464,9 +468,10 @@
 #&gt; </div><div class='input'>
 <span class='co'># example including environment arguments for pkgdown build step</span>
 <span class='fu'>cr_buildstep_pkgdown</span>(<span class='st'>"$_GITHUB_REPO"</span>,
-                     <span class='kw'>git_email</span> <span class='kw'>=</span> <span class='st'>"cloudbuild@google.com"</span>,
-                     <span class='kw'>secret</span> <span class='kw'>=</span> <span class='st'>"github-ssh"</span>,
-                     <span class='kw'>env</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"MYVAR=$_MY_VAR"</span>, <span class='st'>"PROJECT=$PROJECT_ID"</span>))</div><div class='output co'>#&gt; [[1]]
+                     git_email = <span class='st'>"cloudbuild@google.com"</span>,
+                     secret = <span class='st'>"github-ssh"</span>,
+                     env = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"MYVAR=$_MY_VAR"</span>, <span class='st'>"PROJECT=$PROJECT_ID"</span>))
+</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/gcloud
 #&gt; entrypoint: bash
@@ -572,7 +577,7 @@
 #&gt; - name: ssh
 #&gt;   path: /root/.ssh
 #&gt; </div><div class='input'>
-</div></pre>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -588,7 +593,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

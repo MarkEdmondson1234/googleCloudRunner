@@ -180,15 +180,15 @@
     </div>
 
     <pre class="usage"><span class='fu'>cr_build_yaml</span>(
-  <span class='no'>steps</span>,
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>logsBucket</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>options</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>secrets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>images</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>artifacts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+  <span class='kw'>steps</span>,
+  timeout = <span class='kw'>NULL</span>,
+  logsBucket = <span class='kw'>NULL</span>,
+  options = <span class='kw'>NULL</span>,
+  substitutions = <span class='kw'>NULL</span>,
+  tags = <span class='kw'>NULL</span>,
+  secrets = <span class='kw'>NULL</span>,
+  images = <span class='kw'>NULL</span>,
+  artifacts = <span class='kw'>NULL</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -250,12 +250,14 @@
 <code><a href='cr_build.html'>cr_build</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-09-13 19:37:25 &gt; ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='no'>image</span> <span class='kw'>&lt;-</span> <span class='st'>"gcr.io/my-project/my-image"</span>
-<span class='fu'>cr_build_yaml</span>(<span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
-    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span>(<span class='st'>"docker"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"build"</span>,<span class='st'>"-t"</span>,<span class='no'>image</span>,<span class='st'>"."</span>)),
-    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span>(<span class='st'>"docker"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"push"</span>,<span class='no'>image</span>)),
-    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span>(<span class='st'>"gcloud"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"beta"</span>,<span class='st'>"run"</span>,<span class='st'>"deploy"</span>, <span class='st'>"test1"</span>, <span class='st'>"--image"</span>, <span class='no'>image</span>))),
-  <span class='kw'>images</span> <span class='kw'>=</span> <span class='no'>image</span>)</div><div class='output co'>#&gt; ==cloudRunnerYaml==
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-18 14:21:53 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='kw'>image</span> <span class='op'>&lt;-</span> <span class='st'>"gcr.io/my-project/my-image"</span>
+<span class='fu'>cr_build_yaml</span>(steps = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
+    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span>(<span class='st'>"docker"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"build"</span>,<span class='st'>"-t"</span>,<span class='kw'>image</span>,<span class='st'>"."</span>)),
+    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span>(<span class='st'>"docker"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"push"</span>,<span class='kw'>image</span>)),
+    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span>(<span class='st'>"gcloud"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"beta"</span>,<span class='st'>"run"</span>,<span class='st'>"deploy"</span>, <span class='st'>"test1"</span>, <span class='st'>"--image"</span>, <span class='kw'>image</span>))),
+  images = <span class='kw'>image</span>)
+</div><div class='output co'>#&gt; ==cloudRunnerYaml==
 #&gt; steps:
 #&gt; - name: gcr.io/cloud-builders/docker
 #&gt;   args:
@@ -276,7 +278,7 @@
 #&gt;   - --image
 #&gt;   - gcr.io/my-project/my-image
 #&gt; images:
-#&gt; - gcr.io/my-project/my-image</div></pre>
+#&gt; - gcr.io/my-project/my-image</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -292,7 +294,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

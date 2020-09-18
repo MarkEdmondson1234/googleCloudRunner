@@ -180,13 +180,13 @@
     </div>
 
     <pre class="usage"><span class='fu'>cr_build_make</span>(
-  <span class='no'>yaml</span>,
-  <span class='kw'>source</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>images</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>artifacts</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>options</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+  <span class='kw'>yaml</span>,
+  source = <span class='kw'>NULL</span>,
+  timeout = <span class='kw'>NULL</span>,
+  images = <span class='kw'>NULL</span>,
+  artifacts = <span class='kw'>NULL</span>,
+  options = <span class='kw'>NULL</span>,
+  substitutions = <span class='kw'>NULL</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -240,9 +240,10 @@
 <code><a href='cr_build.html'>cr_build</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>cloudbuild</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"cloudbuild/cloudbuild.yaml"</span>,
-                           <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>)
-<span class='fu'>cr_build_make</span>(<span class='no'>cloudbuild</span>)</div><div class='output co'>#&gt; ==CloudBuildObject==
+    <pre class="examples"><div class='input'><span class='kw'>cloudbuild</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"cloudbuild/cloudbuild.yaml"</span>,
+                           package = <span class='st'>"googleCloudRunner"</span>)
+<span class='fu'>cr_build_make</span>(<span class='kw'>cloudbuild</span>)
+</div><div class='output co'>#&gt; ==CloudBuildObject==
 #&gt; steps:
 #&gt; - name: gcr.io/cloud-builders/docker
 #&gt;   id: Docker Version
@@ -273,7 +274,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

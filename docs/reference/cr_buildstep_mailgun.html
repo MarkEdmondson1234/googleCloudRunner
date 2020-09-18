@@ -180,13 +180,13 @@
     </div>
 
     <pre class="usage"><span class='fu'>cr_buildstep_mailgun</span>(
-  <span class='no'>message</span>,
-  <span class='no'>to</span>,
-  <span class='no'>subject</span>,
-  <span class='no'>from</span>,
-  <span class='kw'>mailgun_url</span> <span class='kw'>=</span> <span class='st'>"$_MAILGUN_URL"</span>,
-  <span class='kw'>mailgun_key</span> <span class='kw'>=</span> <span class='st'>"$_MAILGUN_KEY"</span>,
-  <span class='no'>...</span>
+  <span class='kw'>message</span>,
+  <span class='kw'>to</span>,
+  <span class='kw'>subject</span>,
+  <span class='kw'>from</span>,
+  mailgun_url = <span class='st'>"$_MAILGUN_URL"</span>,
+  mailgun_key = <span class='st'>"$_MAILGUN_KEY"</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -236,7 +236,7 @@ Pre-verification you can only send to a whitelist of emails you configure - see 
 <code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a>()</code>,
 <code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a>()</code>,
 <code><a href='cr_buildstep_gcloud.html'>cr_buildstep_gcloud</a>()</code>,
-<code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a>()</code>,
+<code><a href='cr_buildstep_gitsetup.html'>cr_buildstep_gitsetup</a>()</code>,
 <code><a href='cr_buildstep_nginx_setup.html'>cr_buildstep_nginx_setup</a>()</code>,
 <code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a>()</code>,
 <code><a href='cr_buildstep_run.html'>cr_buildstep_run</a>()</code>,
@@ -246,22 +246,25 @@ Pre-verification you can only send to a whitelist of emails you configure - see 
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-09-13 19:37:26 &gt; ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-09-13 19:37:26 &gt; Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='no'>mailgun_url</span> <span class='kw'>&lt;-</span> <span class='st'>"https://api.mailgun.net/v3/sandboxXXX.mailgun.org"</span>
-<span class='no'>mailgun_key</span> <span class='kw'>&lt;-</span> <span class='st'>"key-XXXX"</span>
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-18 14:21:55 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-18 14:21:55 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='kw'>mailgun_url</span> <span class='op'>&lt;-</span> <span class='st'>"https://api.mailgun.net/v3/sandboxXXX.mailgun.org"</span>
+<span class='kw'>mailgun_key</span> <span class='op'>&lt;-</span> <span class='st'>"key-XXXX"</span>
 
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'># assumes you have verified the email</span>
 <span class='fu'><a href='cr_build.html'>cr_build</a></span>(
-  <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span>(<span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'>cr_buildstep_mailgun</span>(
+  <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span>(steps = <span class='fu'>cr_buildstep_mailgun</span>(
                            <span class='st'>"Hello from Cloud Build"</span>,
-                           <span class='kw'>to</span> <span class='kw'>=</span> <span class='st'>"me@verfied_email.com"</span>,
-                           <span class='kw'>subject</span> <span class='kw'>=</span> <span class='st'>"Hello"</span>,
-                           <span class='kw'>from</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner@example.com"</span>),
-                <span class='kw'>substitutions</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
-                  <span class='kw'>`_MAILGUN_URL`</span> <span class='kw'>=</span> <span class='no'>mailgun_url</span>,
-                  <span class='kw'>`_MAILGUN_KEY`</span> <span class='kw'>=</span> <span class='no'>mailgun_key</span>)
+                           to = <span class='st'>"me@verfied_email.com"</span>,
+                           subject = <span class='st'>"Hello"</span>,
+                           from = <span class='st'>"googleCloudRunner@example.com"</span>),
+                substitutions = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
+                  `_MAILGUN_URL` = <span class='kw'>mailgun_url</span>,
+                  `_MAILGUN_KEY` = <span class='kw'>mailgun_key</span>)
           ))
-}</div></pre>
+}
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -277,7 +280,7 @@ Pre-verification you can only send to a whitelist of emails you configure - see 
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

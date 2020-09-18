@@ -179,11 +179,15 @@
     <p>This can be used to call authenticated services such as Cloud Run.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_jwt_create</span>(<span class='no'>the_url</span>, <span class='kw'>service_json</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"GCE_AUTH_FILE"</span>))
+    <pre class="usage"><span class='fu'>cr_jwt_create</span>(<span class='kw'>the_url</span>, service_json = <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"GCE_AUTH_FILE"</span>))
 
-<span class='fu'>cr_jwt_token</span>(<span class='no'>signed_jwt</span>, <span class='no'>the_url</span>)
+<span class='fu'>cr_jwt_token</span>(<span class='kw'>signed_jwt</span>, <span class='kw'>the_url</span>)
 
-<span class='fu'>cr_jwt_with</span>(<span class='no'>req</span>, <span class='no'>token</span>)</pre>
+<span class='fu'>cr_jwt_with_httr</span>(<span class='kw'>req</span>, <span class='kw'>token</span>)
+
+<span class='fu'>cr_jwt_with_curl</span>(h = <span class='kw'>curl</span>::<span class='fu'><a href='https://jeroen.cran.dev/curl/reference/handle.html'>new_handle</a></span>(), <span class='kw'>token</span>)
+
+<span class='fu'>cr_jwt_async</span>(<span class='kw'>urls</span>, <span class='kw'>token</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -208,6 +212,14 @@
       <th>token</th>
       <td><p>The token created via cr_jwt_token</p></td>
     </tr>
+    <tr>
+      <th>h</th>
+      <td><p>A curl handle such as set with <a href='https://jeroen.cran.dev/curl/reference/handle.html'>new_handle</a></p></td>
+    </tr>
+    <tr>
+      <th>urls</th>
+      <td><p>URLs to request asynchronously</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -225,22 +237,24 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 
 <span class='co'># The private authenticated access only Cloud Run service</span>
-<span class='no'>the_url</span> <span class='kw'>&lt;-</span> <span class='st'>"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/"</span>
+<span class='kw'>the_url</span> <span class='op'>&lt;-</span> <span class='st'>"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/"</span>
 
 <span class='co'># creating the JWT and token</span>
-<span class='no'>jwt</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_jwt_create</span>(<span class='no'>the_url</span>)
-<span class='no'>token</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_jwt_token</span>(<span class='no'>jwt</span>, <span class='no'>the_url</span>)
+<span class='kw'>jwt</span> <span class='op'>&lt;-</span> <span class='fu'>cr_jwt_create</span>(<span class='kw'>the_url</span>)
+<span class='kw'>token</span> <span class='op'>&lt;-</span> <span class='fu'>cr_jwt_token</span>(<span class='kw'>jwt</span>, <span class='kw'>the_url</span>)
 
 <span class='co'># call Cloud Run app using token with any httr verb</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>httr</span>)
-<span class='no'>res</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_jwt_with</span>(<span class='fu'><a href='https://httr.r-lib.org/reference/GET.html'>GET</a></span>(<span class='st'>"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"</span>),
-                   <span class='no'>token</span>)
-<span class='fu'><a href='https://httr.r-lib.org/reference/content.html'>content</a></span>(<span class='no'>res</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://httr.r-lib.org'>httr</a></span>)
+<span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'>cr_jwt_with</span>(<span class='fu'><a href='https://httr.r-lib.org/reference/GET.html'>GET</a></span>(<span class='st'>"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"</span>),
+                   <span class='kw'>token</span>)
+<span class='fu'><a href='https://httr.r-lib.org/reference/content.html'>content</a></span>(<span class='kw'>res</span>)
 
-}</div></pre>
+}
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -256,7 +270,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -180,16 +180,16 @@
     </div>
 
     <pre class="usage"><span class='fu'>cr_deploy_pkgdown</span>(
-  <span class='no'>github_repo</span>,
-  <span class='no'>secret</span>,
-  <span class='kw'>steps</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>create_trigger</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"file"</span>, <span class='st'>"inline"</span>, <span class='st'>"no"</span>),
-  <span class='kw'>cloudbuild_file</span> <span class='kw'>=</span> <span class='st'>"cloudbuild-pkgdown.yml"</span>,
-  <span class='kw'>git_email</span> <span class='kw'>=</span> <span class='st'>"googlecloudrunner@r.com"</span>,
-  <span class='kw'>env</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>,
-  <span class='kw'>post_setup</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>post_clone</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+  <span class='kw'>github_repo</span>,
+  <span class='kw'>secret</span>,
+  steps = <span class='kw'>NULL</span>,
+  create_trigger = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"file"</span>, <span class='st'>"inline"</span>, <span class='st'>"no"</span>),
+  cloudbuild_file = <span class='st'>"cloudbuild-pkgdown.yml"</span>,
+  git_email = <span class='st'>"googlecloudrunner@r.com"</span>,
+  env = <span class='kw'>NULL</span>,
+  build_image = <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>,
+  post_setup = <span class='kw'>NULL</span>,
+  post_clone = <span class='kw'>NULL</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -241,7 +241,7 @@
 
     <p>The trigger repository needs to hold an R package configured to build a pkgdown website.</p>
 <p>For GitHub, the repository will also need to be linked to the project you are building within, via <a href='https://console.cloud.google.com/cloud-build/triggers/connect'>https://console.cloud.google.com/cloud-build/triggers/connect</a></p>
-<p>The git ssh keys need to be deployed to Google Secret Manager for the deployment of the website - see <a href='cr_buildstep_git.html'>cr_buildstep_git</a> - this only needs to be done once per Git account.</p>
+<p>The git ssh keys need to be deployed to Google Secret Manager for the deployment of the website - see <a href='cr_buildstep_gitsetup.html'>cr_buildstep_git</a> - this only needs to be done once per Git account.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Create your own custom deployment using <a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a> which this function uses with some defaults.</p>
@@ -255,11 +255,13 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>pd</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_deploy_pkgdown</span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
-                        <span class='kw'>secret</span> <span class='kw'>=</span> <span class='st'>"my_git_secret"</span>,
-                        <span class='kw'>create_trigger</span> <span class='kw'>=</span> <span class='st'>"no"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-09-13 19:37:29 &gt; Writing to cloudbuild-pkgdown.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>ℹ Complete deployment of pkgdown Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'>● Go to https://console.cloud.google.com/cloud-build/triggers and</span>
+<span class='kw'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>cr_deploy_pkgdown</span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
+                        secret = <span class='st'>"my_git_secret"</span>,
+                        create_trigger = <span class='st'>"no"</span>)
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-18 14:21:58 &gt;</span><span> Writing to cloudbuild-pkgdown.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>ℹ</span><span> Complete deployment of pkgdown Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BB0000;'>●</span><span> Go to https://console.cloud.google.com/cloud-build/triggers and</span>
 #&gt; <span class='message'>  make a build trigger pointing at this file in your repo:</span>
-#&gt; <span class='message'>  cloudbuild-pkgdown.yml </span></div><div class='output co'>#&gt; <span class='message'>ℹ Ignored files filter (glob): docs/**, inst/**, tests/**</span></div><div class='input'><span class='no'>pd</span></div><div class='output co'>#&gt; ==CloudBuildObject==
+#&gt; <span class='message'>  cloudbuild-pkgdown.yml </span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>ℹ</span><span> Ignored files filter (glob): docs/**, inst/**, tests/**</span></div><div class='input'><span class='kw'>pd</span>
+</div><div class='output co'>#&gt; ==CloudBuildObject==
 #&gt; steps:
 #&gt; - name: gcr.io/cloud-builders/gcloud
 #&gt;   entrypoint: bash
@@ -339,14 +341,17 @@
 #&gt;   dir: repo
 #&gt;   volumes:
 #&gt;   - name: ssh
-#&gt;     path: /root/.ssh</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='st'>"cloudbuild-pkgdown.yml"</span>)</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span>(<span class='st'>"cloudbuild-pkgdown.yml"</span>)
+#&gt;     path: /root/.ssh</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span>(<span class='st'>"cloudbuild-pkgdown.yml"</span>)
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span>(<span class='st'>"cloudbuild-pkgdown.yml"</span>)
 
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='fu'>cr_deploy_pkgdown</span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
-                  <span class='kw'>secret</span> <span class='kw'>=</span> <span class='st'>"my_git_secret"</span>,
-                  <span class='kw'>create_trigger</span> <span class='kw'>=</span> <span class='st'>"inline"</span>)
+                  secret = <span class='st'>"my_git_secret"</span>,
+                  create_trigger = <span class='st'>"inline"</span>)
 
-}</div></pre>
+}
+
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -362,7 +367,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

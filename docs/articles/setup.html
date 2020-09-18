@@ -127,7 +127,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Setup</h1>
             
-            <h4 class="date">2020-09-13</h4>
+            <h4 class="date">2020-09-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/setup.Rmd"><code>vignettes/setup.Rmd</code></a></small>
       <div class="hidden name"><code>setup.Rmd</code></div>
@@ -140,7 +140,8 @@
 <h2 class="hasAnchor">
 <a href="#setup-wizard-cr_setup" class="anchor"></a>Setup wizard cr_setup()</h2>
 <p>There is a setup function to help you configure the package. Get started via the commands below:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">googleCloudRunner</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://code.markedmondson.me/googleCloudRunner">googleCloudRunner</a></span>)
 <span class="fu"><a href="../reference/cr_setup.html">cr_setup</a></span>()
 <span class="co">#ℹ ==Welcome to googleCloudRunner setup==</span>
 <span class="co">#This wizard will scan your system for setup options and help you setup any that are missing.</span>
@@ -151,7 +152,8 @@
 <span class="co">#3: Configure Authentication JSON file</span>
 <span class="co">#4: Configure Cloud Storage bucket</span>
 <span class="co">#5: Configure Cloud Run region</span>
-<span class="co">#6: Configure Cloud Scheduler build email</span></pre></body></html></div>
+<span class="co">#6: Configure Cloud Scheduler build email</span>
+</pre></div>
 <p>It will walk you through the details below. You can also use it to check your settings.</p>
 <div id="cr_setup_auth-and-cr_setup_service" class="section level3">
 <h3 class="hasAnchor">
@@ -197,10 +199,12 @@ CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com</code></pr
 <li><code><a href="../reference/cr_region_set.html">cr_region_set()</a></code></li>
 <li><code><a href="../reference/cr_project_set.html">cr_project_set()</a></code></li>
 <li><code><a href="../reference/cr_bucket_set.html">cr_bucket_set()</a></code></li>
-<li><code><a href="../reference/cr_email_set.html">cr_email_set()</a></code></li>
+<li><code><a href="../reference/cr_email_get.html">cr_email_set()</a></code></li>
 </ul>
 <p>Or authenticate via</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="kw pkg">googleAuthR</span><span class="kw ns">::</span><span class="fu">gar_service_auth</span>(<span class="st">"my_auth_json.com"</span>)</pre></body></html></div>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="kw">googleAuthR</span>::<span class="fu">gar_service_auth</span>(<span class="st">"my_auth_json.com"</span>)
+</pre></div>
 </div>
 </div>
   </div>
@@ -220,7 +224,7 @@ CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com</code></pr
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

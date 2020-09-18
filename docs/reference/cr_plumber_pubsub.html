@@ -179,7 +179,7 @@
     <p>A function to use in plumber scripts to accept Pub/Sub messages</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_plumber_pubsub</span>(<span class='kw'>message</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pass_f</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='no'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_plumber_pubsub</span>(message = <span class='kw'>NULL</span>, pass_f = <span class='fu'>function</span>(<span class='kw'>x</span>) <span class='kw'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -211,23 +211,24 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 
 <span class='co'># within a plumber api.R script:</span>
 
 <span class='co'># example function echos back pubsub message</span>
-<span class='no'>pub</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>x</span>){
-  <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Echo:"</span>, <span class='no'>x</span>)
+<span class='kw'>pub</span> <span class='op'>&lt;-</span> <span class='fu'>function</span>(<span class='kw'>x</span>){
+  <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"Echo:"</span>, <span class='kw'>x</span>)
 }
 
 <span class='co'>#' Recieve pub/sub message</span>
 <span class='co'>#' @post /pubsub</span>
 <span class='co'>#' @param message a pub/sub message</span>
-<span class='kw'>function</span>(<span class='no'>message</span><span class='kw'>=</span><span class='kw'>NULL</span>){
-  <span class='kw pkg'>googleCloudRunner</span><span class='kw ns'>::</span><span class='fu'>cr_plumber_pubsub</span>(<span class='no'>message</span>, <span class='no'>pub</span>)
+<span class='fu'>function</span>(<span class='kw'>message</span>=<span class='kw'>NULL</span>){
+  <span class='kw'>googleCloudRunner</span>::<span class='fu'>cr_plumber_pubsub</span>(<span class='kw'>message</span>, <span class='kw'>pub</span>)
   }
 
-}</div></pre>
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -243,7 +244,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

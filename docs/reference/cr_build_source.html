@@ -179,13 +179,13 @@
     <p>Build a source object</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_build_source</span>(<span class='no'>x</span>)
+    <pre class="usage"><span class='fu'>cr_build_source</span>(<span class='kw'>x</span>)
 
 <span class='co'># S3 method for gar_RepoSource</span>
-<span class='fu'>cr_build_source</span>(<span class='no'>x</span>)
+<span class='fu'>cr_build_source</span>(<span class='kw'>x</span>)
 
 <span class='co'># S3 method for gar_StorageSource</span>
-<span class='fu'>cr_build_source</span>(<span class='no'>x</span>)</pre>
+<span class='fu'>cr_build_source</span>(<span class='kw'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -199,25 +199,29 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='no'>repo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='RepoSource.html'>RepoSource</a></span>(<span class='st'>"my_repo"</span>, <span class='kw'>branchName</span> <span class='kw'>=</span> <span class='st'>"master"</span>)
-<span class='no'>gcs</span>  <span class='kw'>&lt;-</span> <span class='fu'><a href='StorageSource.html'>StorageSource</a></span>(<span class='st'>"my_code.tar.gz"</span>,<span class='st'>"gs://my-bucket"</span>)
+<span class='kw'>repo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='RepoSource.html'>RepoSource</a></span>(<span class='st'>"my_repo"</span>, branchName = <span class='st'>"master"</span>)
+<span class='kw'>gcs</span>  <span class='op'>&lt;-</span> <span class='fu'><a href='StorageSource.html'>StorageSource</a></span>(<span class='st'>"my_code.tar.gz"</span>,<span class='st'>"gs://my-bucket"</span>)
 
-<span class='fu'>cr_build_source</span>(<span class='no'>repo</span>)</div><div class='output co'>#&gt; ==CloudBuildSource==
+<span class='fu'>cr_build_source</span>(<span class='kw'>repo</span>)
+</div><div class='output co'>#&gt; ==CloudBuildSource==
 #&gt; ==CloudBuildRepoSource==
 #&gt; repoName:  my_repo 
-#&gt; branchName:  master </div><div class='input'><span class='fu'>cr_build_source</span>(<span class='no'>gcs</span>)</div><div class='output co'>#&gt; ==CloudBuildSource==
+#&gt; branchName:  master </div><div class='input'><span class='fu'>cr_build_source</span>(<span class='kw'>gcs</span>)
+</div><div class='output co'>#&gt; ==CloudBuildSource==
 #&gt; ==CloudBuildStorageSource==
 #&gt; bucket:  gs://my-bucket 
 #&gt; object:  my_code.tar.gz </div><div class='input'>
-<span class='no'>my_gcs_source</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_build_source</span>(<span class='no'>gcs</span>)
-<span class='no'>my_repo_source</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_build_source</span>(<span class='no'>repo</span>)
+<span class='kw'>my_gcs_source</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_source</span>(<span class='kw'>gcs</span>)
+<span class='kw'>my_repo_source</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_source</span>(<span class='kw'>repo</span>)
 
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 
-<span class='no'>build1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='st'>"cloudbuild.yaml"</span>, <span class='kw'>source</span> <span class='kw'>=</span> <span class='no'>my_gcs_source</span>)
-<span class='no'>build2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='st'>"cloudbuild.yaml"</span>, <span class='kw'>source</span> <span class='kw'>=</span> <span class='no'>my_repo_source</span>)
+<span class='kw'>build1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='st'>"cloudbuild.yaml"</span>, source = <span class='kw'>my_gcs_source</span>)
+<span class='kw'>build2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='st'>"cloudbuild.yaml"</span>, source = <span class='kw'>my_repo_source</span>)
 
-}</div></pre>
+}
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -233,7 +237,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

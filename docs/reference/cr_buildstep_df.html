@@ -179,7 +179,7 @@
     <p>Helper to turn a data.frame of buildsteps info into format accepted by <a href='cr_build.html'>cr_build</a></p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildstep_df</span>(<span class='no'>x</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_buildstep_df</span>(<span class='kw'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -203,7 +203,7 @@
 <code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a>()</code>,
 <code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a>()</code>,
 <code><a href='cr_buildstep_gcloud.html'>cr_buildstep_gcloud</a>()</code>,
-<code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a>()</code>,
+<code><a href='cr_buildstep_gitsetup.html'>cr_buildstep_gitsetup</a>()</code>,
 <code><a href='cr_buildstep_mailgun.html'>cr_buildstep_mailgun</a>()</code>,
 <code><a href='cr_buildstep_nginx_setup.html'>cr_buildstep_nginx_setup</a>()</code>,
 <code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a>()</code>,
@@ -214,12 +214,13 @@
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"docker"</span>, <span class='st'>"alpine"</span>),
-                <span class='kw'>args</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/AsIs.html'>I</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"version"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"echo"</span>, <span class='st'>"Hello Cloud Build"</span>))),
-                <span class='kw'>id</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Docker Version"</span>, <span class='st'>"Hello Cloud Build"</span>),
-                <span class='kw'>prefix</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>NA</span>, <span class='st'>""</span>),
-                <span class='kw'>stringsAsFactors</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'>cr_buildstep_df</span>(<span class='no'>y</span>)</div><div class='output co'>#&gt; [[1]]
+    <pre class="examples"><div class='input'><span class='kw'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(name = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"docker"</span>, <span class='st'>"alpine"</span>),
+                args = <span class='fu'><a href='https://rdrr.io/r/base/AsIs.html'>I</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"version"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"echo"</span>, <span class='st'>"Hello Cloud Build"</span>))),
+                id = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Docker Version"</span>, <span class='st'>"Hello Cloud Build"</span>),
+                prefix = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>NA</span>, <span class='st'>""</span>),
+                stringsAsFactors = <span class='fl'>FALSE</span>)
+<span class='fu'>cr_buildstep_df</span>(<span class='kw'>y</span>)
+</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
@@ -249,7 +250,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

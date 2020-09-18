@@ -179,7 +179,7 @@
     <p>Seems not to work at the moment (issue #16)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildtrigger_edit</span>(<span class='no'>BuildTrigger</span>, <span class='no'>triggerId</span>, <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>())</pre>
+    <pre class="usage"><span class='fu'>cr_buildtrigger_edit</span>(<span class='kw'>BuildTrigger</span>, <span class='kw'>triggerId</span>, projectId = <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>())</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -212,24 +212,26 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 
-<span class='no'>github</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
-                            <span class='kw'>branch</span> <span class='kw'>=</span> <span class='st'>"master"</span>)
-<span class='no'>bt2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger.html'>cr_buildtrigger</a></span>(<span class='st'>"trig2"</span>,
-                       <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='no'>github</span>,
-                       <span class='kw'>build</span> <span class='kw'>=</span> <span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>)
-<span class='no'>bt3</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='BuildTrigger.html'>BuildTrigger</a></span>(
-  <span class='kw'>filename</span> <span class='kw'>=</span> <span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>,
-  <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"edited1"</span>,
-  <span class='kw'>tags</span> <span class='kw'>=</span> <span class='st'>"edit"</span>,
-  <span class='kw'>github</span> <span class='kw'>=</span> <span class='no'>github</span>,
-  <span class='kw'>disabled</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>description</span> <span class='kw'>=</span> <span class='st'>"edited trigger"</span>)
+<span class='kw'>github</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
+                            branch = <span class='st'>"master"</span>)
+<span class='kw'>bt2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger.html'>cr_buildtrigger</a></span>(<span class='st'>"trig2"</span>,
+                       trigger = <span class='kw'>github</span>,
+                       build = <span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>)
+<span class='kw'>bt3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='BuildTrigger.html'>BuildTrigger</a></span>(
+  filename = <span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>,
+  name = <span class='st'>"edited1"</span>,
+  tags = <span class='st'>"edit"</span>,
+  github = <span class='kw'>github</span>,
+  disabled = <span class='fl'>TRUE</span>,
+  description = <span class='st'>"edited trigger"</span>)
 
-<span class='no'>edited</span> <span class='kw'>&lt;-</span> <span class='fu'>cr_buildtrigger_edit</span>(<span class='no'>bt3</span>, <span class='kw'>triggerId</span> <span class='kw'>=</span> <span class='no'>bt2</span>)
+<span class='kw'>edited</span> <span class='op'>&lt;-</span> <span class='fu'>cr_buildtrigger_edit</span>(<span class='kw'>bt3</span>, triggerId = <span class='kw'>bt2</span>)
 
-}</div></pre>
+}
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -245,7 +247,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

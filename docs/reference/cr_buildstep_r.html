@@ -180,11 +180,11 @@
     </div>
 
     <pre class="usage"><span class='fu'>cr_buildstep_r</span>(
-  <span class='no'>r</span>,
-  <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"r-base"</span>,
-  <span class='kw'>r_source</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"local"</span>, <span class='st'>"runtime"</span>),
-  <span class='kw'>prefix</span> <span class='kw'>=</span> <span class='st'>"rocker/"</span>,
-  <span class='no'>...</span>
+  <span class='kw'>r</span>,
+  name = <span class='st'>"r-base"</span>,
+  r_source = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"local"</span>, <span class='st'>"runtime"</span>),
+  prefix = <span class='st'>"rocker/"</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -227,7 +227,7 @@
 <code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a>()</code>,
 <code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a>()</code>,
 <code><a href='cr_buildstep_gcloud.html'>cr_buildstep_gcloud</a>()</code>,
-<code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a>()</code>,
+<code><a href='cr_buildstep_gitsetup.html'>cr_buildstep_gitsetup</a>()</code>,
 <code><a href='cr_buildstep_mailgun.html'>cr_buildstep_mailgun</a>()</code>,
 <code><a href='cr_buildstep_nginx_setup.html'>cr_buildstep_nginx_setup</a>()</code>,
 <code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a>()</code>,
@@ -237,9 +237,12 @@
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-09-13 19:37:27 &gt; ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'>ℹ 2020-09-13 19:37:27 &gt; Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-18 14:21:56 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-18 14:21:56 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
 <span class='co'># create an R buildstep inline</span>
-<span class='fu'>cr_buildstep_r</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"paste('1+1=', 1+1)"</span>, <span class='st'>"sessionInfo()"</span>))</div><div class='output co'>#&gt; [[1]]
+<span class='fu'>cr_buildstep_r</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"paste('1+1=', 1+1)"</span>, <span class='st'>"sessionInfo()"</span>))
+</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: rocker/r-base
 #&gt; args:
@@ -249,13 +252,13 @@
 #&gt;   paste('1+1=', 1+1)
 #&gt;   sessionInfo()
 #&gt; </div><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 
 <span class='co'># create an R buildstep from a local file</span>
 <span class='fu'>cr_buildstep_r</span>(<span class='st'>"my-r-file.R"</span>)
 
 <span class='co'># create an R buildstep from a file within the source of the Build</span>
-<span class='fu'>cr_buildstep_r</span>(<span class='st'>"inst/schedule/schedule.R"</span>, <span class='kw'>r_source</span> <span class='kw'>=</span> <span class='st'>"runtime"</span>)
+<span class='fu'>cr_buildstep_r</span>(<span class='st'>"inst/schedule/schedule.R"</span>, r_source = <span class='st'>"runtime"</span>)
 
 }
 
@@ -263,7 +266,8 @@
 <span class='fu'>cr_buildstep_r</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"library(dplyr)"</span>,
                  <span class='st'>"mtcars %&gt;% select(mpg)"</span>,
                  <span class='st'>"sessionInfo()"</span>),
-               <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"verse"</span>)</div><div class='output co'>#&gt; [[1]]
+               name = <span class='st'>"verse"</span>)
+</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: rocker/verse
 #&gt; args:
@@ -275,8 +279,12 @@
 #&gt;   sessionInfo()
 #&gt; </div><div class='input'>
 <span class='co'># use your own R image with custom R</span>
-<span class='no'>my_r</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"devtools::install()"</span>, <span class='st'>"pkgdown::build_site()"</span>)
-<span class='no'>br</span> <span class='kw'>&lt;-</span>  <span class='fu'>cr_buildstep_r</span>(<span class='no'>my_r</span>, <span class='kw'>name</span><span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>)</div></pre>
+<span class='kw'>my_r</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"devtools::install()"</span>, <span class='st'>"pkgdown::build_site()"</span>)
+<span class='kw'>br</span> <span class='op'>&lt;-</span>  <span class='fu'>cr_buildstep_r</span>(<span class='kw'>my_r</span>, name= <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>)
+
+
+
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -292,7 +300,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
