@@ -3,14 +3,20 @@
 \name{cr_jwt_create}
 \alias{cr_jwt_create}
 \alias{cr_jwt_token}
-\alias{cr_jwt_with}
+\alias{cr_jwt_with_httr}
+\alias{cr_jwt_with_curl}
+\alias{cr_jwt_async}
 \title{Create a JSON Web Token (JWT) from your service client and call Google services}
 \usage{
 cr_jwt_create(the_url, service_json = Sys.getenv("GCE_AUTH_FILE"))
 
 cr_jwt_token(signed_jwt, the_url)
 
-cr_jwt_with(req, token)
+cr_jwt_with_httr(req, token)
+
+cr_jwt_with_curl(h = curl::new_handle(), token)
+
+cr_jwt_async(urls, token)
 }
 \arguments{
 \item{the_url}{The URL of the service you want to call}
@@ -22,6 +28,10 @@ cr_jwt_with(req, token)
 \item{req}{A \code{httr} request to the service running on \code{the_url}, using httr verbs such as \link[httr]{GET}}
 
 \item{token}{The token created via \link{cr_jwt_token}}
+
+\item{h}{A curl handle such as set with \link[curl]{new_handle}}
+
+\item{urls}{URLs to request asynchronously}
 }
 \description{
 This can be used to call authenticated services such as Cloud Run.

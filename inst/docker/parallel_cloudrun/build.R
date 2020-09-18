@@ -96,4 +96,17 @@ all_results <- lapply(regions, function(x){
 
 })
 
+## curl multi asynch
+# interact with the API we made
+make_urls <- function(regions, industry){
 
+  combos <- expand.grid(regions, industry, stringsAsFactors = FALSE)
+
+  unlist(mapply(function(x,y){sprintf("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=%s&industry=%s",URLencode(x), URLencode(y))},
+                SIMPLIFY = FALSE, USE.NAMES = FALSE,
+         combos$Var1 ,combos$Var2))
+}
+
+all_urls <- make_urls(regions = regions, industry = industry)
+
+cr_jwt_async(all_urls[1:5], token = token)

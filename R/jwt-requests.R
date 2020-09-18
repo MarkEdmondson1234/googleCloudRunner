@@ -79,7 +79,7 @@ cr_jwt_token <- function(signed_jwt, the_url){
 #' @rdname cr_jwt_create
 #' @export
 #' @importFrom httr with_config add_headers
-cr_jwt_with <- function(req, token){
+cr_jwt_with_httr <- function(req, token){
   with_config(
     config = add_headers(
       Authorization = sprintf("Bearer %s", token)
@@ -88,6 +88,52 @@ cr_jwt_with <- function(req, token){
   )
 }
 
+#' @param h A curl handle such as set with \link[curl]{new_handle}
+#' @param token The token created via \link{cr_jwt_token}
+#' @rdname cr_jwt_create
+#' @export
+#' @importFrom curl new_handle handle_setheaders
+cr_jwt_with_curl <- function(h = curl::new_handle(), token){
+  handle_setheaders(h,
+                    Authorization = sprintf("Bearer %s", token)
+                    )
 
+  h
+}
 
+#' @param urls URLs to request asynchronously
+#' @param token The token created via \link{cr_jwt_token}
+#' @export
+#' @rdname cr_jwt_create
+cr_jwt_async <- function(urls, token){
+
+  failure <- function(str){
+    cat(paste("Failed request:", str), file = stderr())
+  }
+
+  results <- list()
+  success <- function(x){
+    if(x$status_code == 200){
+      results <<- append(results, list(rawToChar(x$content)))
+    } else {
+      myMessage(x$status_code, "failure for request", x$url, level = 3)
+    }
+
+  }
+  pool <- curl::new_pool()
+
+  lapply(urls, function(x){
+    myMessage("Calling asynch: ", x, level = 3)
+    h <- curl::new_handle(url = x)
+    h <- cr_jwt_with_curl(h = h, token = token)
+    curl::curl_fetch_multi(x,
+                           done = success, fail = failure,
+                           handle = h, pool = pool)
+  })
+
+  curl::multi_run(pool = pool)
+
+  results
+
+}
 
