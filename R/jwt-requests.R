@@ -140,7 +140,7 @@ cr_jwt_async <- function(urls, token, ...){
 
   lapply(urls, function(x){
     myMessage("Calling asynch: ", x, level = 3)
-    h <- new_handle(url = x)
+    h <- new_handle(url = x, ...)
     h <- cr_jwt_with_curl(h = h, token = token)
     curl_fetch_multi(x,
                      done = success, fail = failure,
