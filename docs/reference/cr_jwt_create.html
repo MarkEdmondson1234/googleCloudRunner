@@ -187,7 +187,7 @@
 
 <span class='fu'>cr_jwt_with_curl</span>(h = <span class='kw'>curl</span>::<span class='fu'><a href='https://jeroen.cran.dev/curl/reference/handle.html'>new_handle</a></span>(), <span class='kw'>token</span>)
 
-<span class='fu'>cr_jwt_async</span>(<span class='kw'>urls</span>, <span class='kw'>token</span>)</pre>
+<span class='fu'>cr_jwt_async</span>(<span class='kw'>urls</span>, <span class='kw'>token</span>, <span class='kw'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -220,6 +220,10 @@
       <th>urls</th>
       <td><p>URLs to request asynchronously</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments passed to <a href='https://jeroen.cran.dev/curl/reference/handle.html'>new_handle</a></p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -248,10 +252,24 @@
 
 <span class='co'># call Cloud Run app using token with any httr verb</span>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://httr.r-lib.org'>httr</a></span>)
-<span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'>cr_jwt_with</span>(<span class='fu'><a href='https://httr.r-lib.org/reference/GET.html'>GET</a></span>(<span class='st'>"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"</span>),
-                   <span class='kw'>token</span>)
+<span class='kw'>res</span> <span class='op'>&lt;-</span> <span class='fu'>cr_jwt_with_httr</span>(
+  <span class='fu'><a href='https://httr.r-lib.org/reference/GET.html'>GET</a></span>(<span class='st'>"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"</span>),
+  <span class='kw'>token</span>)
 <span class='fu'><a href='https://httr.r-lib.org/reference/content.html'>content</a></span>(<span class='kw'>res</span>)
 
+<span class='co'># call Cloud Run app with curl - you can pass in a curl handle</span>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://jeroen.cran.dev/curl'>curl</a></span>)
+<span class='kw'>h</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://jeroen.cran.dev/curl/reference/handle.html'>new_handle</a></span>()
+<span class='fu'><a href='https://jeroen.cran.dev/curl/reference/handle.html'>handle_setopt</a></span>(<span class='kw'>h</span>, customrequest = <span class='st'>"PUT"</span>)
+<span class='fu'><a href='https://jeroen.cran.dev/curl/reference/handle.html'>handle_setform</a></span>(<span class='kw'>h</span>, a = <span class='st'>"1"</span>, b = <span class='st'>"2"</span>)
+<span class='kw'>h</span> <span class='op'>&lt;-</span> <span class='fu'>cr_jwt_with_curl</span>(<span class='kw'>h</span>, token = <span class='kw'>token</span>)
+<span class='kw'>r</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://jeroen.cran.dev/curl/reference/curl_fetch.html'>curl_fetch_memory</a></span>(<span class='st'>"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"</span>, <span class='kw'>h</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/cat.html'>cat</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/rawConversion.html'>rawToChar</a></span>(<span class='kw'>r</span><span class='op'>$</span><span class='kw'>content</span>))
+
+<span class='co'># use curls multi-asynch functions</span>
+<span class='kw'>many_urls</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"</span>,
+                    <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"?param="</span>),<span class='fl'>1</span><span class='op'>:</span><span class='fl'>6</span>)
+<span class='fu'>cr_jwt_async</span>(<span class='kw'>many_urls</span>, token = <span class='kw'>token</span>)
 }
 
 </div></pre>
