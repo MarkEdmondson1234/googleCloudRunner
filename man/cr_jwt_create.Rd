@@ -16,7 +16,7 @@ cr_jwt_with_httr(req, token)
 
 cr_jwt_with_curl(h = curl::new_handle(), token)
 
-cr_jwt_async(urls, token)
+cr_jwt_async(urls, token, ...)
 }
 \arguments{
 \item{the_url}{The URL of the service you want to call}
@@ -32,6 +32,8 @@ cr_jwt_async(urls, token)
 \item{h}{A curl handle such as set with \link[curl]{new_handle}}
 
 \item{urls}{URLs to request asynchronously}
+
+\item{...}{Other arguments passed to \link[curl]{new_handle}}
 }
 \description{
 This can be used to call authenticated services such as Cloud Run.
@@ -54,10 +56,24 @@ token <- cr_jwt_token(jwt, the_url)
 
 # call Cloud Run app using token with any httr verb
 library(httr)
-res <- cr_jwt_with(GET("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"),
-                   token)
+res <- cr_jwt_with_httr(
+  GET("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"),
+  token)
 content(res)
 
+# call Cloud Run app with curl - you can pass in a curl handle
+library(curl)
+h <- new_handle()
+handle_setopt(h, customrequest = "PUT")
+handle_setform(h, a = "1", b = "2")
+h <- cr_jwt_with_curl(h, token = token)
+r <- curl_fetch_memory("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello", h)
+cat(rawToChar(r$content))
+
+# use curls multi-asynch functions
+many_urls <- paste0("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello",
+                    paste0("?param="),1:6)
+cr_jwt_async(many_urls, token = token)
 }
 
 }

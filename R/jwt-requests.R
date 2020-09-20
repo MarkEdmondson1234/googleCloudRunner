@@ -26,10 +26,24 @@
 #'
 #' # call Cloud Run app using token with any httr verb
 #' library(httr)
-#' res <- cr_jwt_with(GET("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"),
-#'                    token)
+#' res <- cr_jwt_with_httr(
+#'   GET("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"),
+#'   token)
 #' content(res)
 #'
+#' # call Cloud Run app with curl - you can pass in a curl handle
+#' library(curl)
+#' h <- new_handle()
+#' handle_setopt(h, customrequest = "PUT")
+#' handle_setform(h, a = "1", b = "2")
+#' h <- cr_jwt_with_curl(h, token = token)
+#' r <- curl_fetch_memory("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello", h)
+#' cat(rawToChar(r$content))
+#'
+#' # use curls multi-asynch functions
+#' many_urls <- paste0("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello",
+#'                     paste0("?param="),1:6)
+#' cr_jwt_async(many_urls, token = token)
 #' }
 #'
 #' @importFrom jose jwt_claim jwt_encode_sig
@@ -103,9 +117,11 @@ cr_jwt_with_curl <- function(h = curl::new_handle(), token){
 
 #' @param urls URLs to request asynchronously
 #' @param token The token created via \link{cr_jwt_token}
+#' @param ... Other arguments passed to \link[curl]{new_handle}
 #' @export
 #' @rdname cr_jwt_create
-cr_jwt_async <- function(urls, token){
+#' @importFrom curl new_handle curl_fetch_multi multi_run new_pool
+cr_jwt_async <- function(urls, token, ...){
 
   failure <- function(str){
     cat(paste("Failed request:", str), file = stderr())
@@ -120,18 +136,18 @@ cr_jwt_async <- function(urls, token){
     }
 
   }
-  pool <- curl::new_pool()
+  pool <- new_pool()
 
   lapply(urls, function(x){
     myMessage("Calling asynch: ", x, level = 3)
-    h <- curl::new_handle(url = x)
+    h <- new_handle(url = x)
     h <- cr_jwt_with_curl(h = h, token = token)
-    curl::curl_fetch_multi(x,
-                           done = success, fail = failure,
-                           handle = h, pool = pool)
+    curl_fetch_multi(x,
+                     done = success, fail = failure,
+                     handle = h, pool = pool)
   })
 
-  curl::multi_run(pool = pool)
+  multi_run(pool = pool)
 
   results
 
