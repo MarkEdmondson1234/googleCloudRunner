@@ -34,7 +34,7 @@ token <- cr_jwt_token(jwt, the_url)
 
 # call Cloud Run with token!
 library(httr)
-res <- cr_jwt_with(GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/hello"),
+res <- cr_jwt_with_httr(GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/hello"),
                    token)
 content(res)
 
@@ -44,7 +44,7 @@ call_api <- function(region, industry, token){
                  URLencode(region), URLencode(industry))
 
   message("Request: ", api)
-  res <- cr_jwt_with(httr::GET(api),token)
+  res <- cr_jwt_with_httr(httr::GET(api),token)
 
   httr::content(res, as = "text", encoding = "UTF-8")
 

@@ -147,10 +147,6 @@ test_that("[Online] Test Build Triggers",{
 
   bb <- cr_build_make(cloudbuild)
 
-  github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner",
-                               branch = "master")
-
-
   gh_trigger <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
   cs_trigger <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
                                      type = "cloud_source")
@@ -204,7 +200,7 @@ test_that("[Online] Test Build Triggers",{
 
 })
 
-test_that("Test Source Repo functions", {
+test_that("[Online] Test Source Repo functions", {
   skip_on_travis()
   skip_on_cran()
 
@@ -213,7 +209,7 @@ test_that("Test Source Repo functions", {
   expect_s3_class(sr, "data.frame")
 })
 
-test_that("Test build artifacts", {
+test_that("[Online] Test build artifacts", {
   skip_on_travis()
   skip_on_cran()
   r <- "write.csv(mtcars,file = 'artifact.csv')"
@@ -235,7 +231,56 @@ test_that("Test build artifacts", {
 
 })
 
+test_that("[Online] JWT fetches", {
+
+  cr <- cr_run_get("parallel-cloudrun")
+
+  # Interact with the authenticated Cloud Run service
+  the_url <- cr$status$url
+  jwt <- cr_jwt_create(the_url)
+
+  # needs to be recreated every 60mins
+  token <- cr_jwt_token(jwt, the_url)
+
+  # call Cloud Run with token
+  res <- cr_jwt_with_httr(
+    httr::GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=North%20America&industry=Transportation%20(non-freight)"),
+                     token)
+  o <- httr::content(res)
+
+  expect_s3_class(o, "list")
+  expect_equal(o$mean[[1]], 81)
+  expect_equal(o$x[[1]], 100)
+
+  all_urls <- c("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=North%20America&industry=Transportation%20(non-freight)"
+  ,"https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=Europe&industry=Transportation%20(non-freight)"
+  ,"https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=South%20America&industry=Transportation%20(non-freight)"
+  ,"https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=Australia&industry=Transportation%20(non-freight)"
+  ,"https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=North%20America&industry=Software")
+
+  res2 <- cr_jwt_async(all_urls, token = token)
+  expect_s3_class(res2, "list")
+  # response is json starting with {"params" ...}
+  expect_true(grepl('^\\{\\"params\\"',res2[[1]]))
+
+})
+
+
+
 context("Offline tests")
+
+test_that("JWT creation", {
+
+  test_url <- "https://fake.a.run.app"
+  jwt <- cr_jwt_create(test_url)
+  expect_equal(jwt, "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6ImJkOTEwNWFiMjVkOTY1NDI2NzYzYzNlYWYwZGY1NDczMTZiMjdjYTQiLCJhbGcuMSI6IlJTMjU2IiwidHlwLjEiOiJKV1QifQ.eyJpc3MiOiJnb29nbGVjbG91ZHJ1bm5lckBtYXJrLWVkbW9uZHNvbi1nZGUuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJzdWIiOiJnb29nbGVjbG91ZHJ1bm5lckBtYXJrLWVkbW9uZHNvbi1nZGUuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJhdWQiOiJodHRwczovL3d3dy5nb29nbGVhcGlzLmNvbS9vYXV0aDIvdjQvdG9rZW4iLCJleHAiOjE2MDA2NzgxMzgsImlhdCI6MTYwMDY3NDUzOCwidGFyZ2V0X2F1ZGllbmNlIjoiaHR0cHM6Ly9mYWtlLmEucnVuLmFwcCJ9.i2naLHKTxyKo8lglcdr9NakkC4HFvZldjpUJX8DjCjObyi7_QriATlKOlfZcDbTyIIZlKVZI52UisnXtxzgUOdJyrsL5weE9F1yuMM2_LZoj7EyCksgaTNPtoJv4_xosr7Xq_wtzdQJI8Gm0LODxhM8Zx_o8Sy47mJ3x36PlcXIiWzDvoSnigabJIob-qJ4leT871h8ipVJ8hyCXcTuUIzmvoyjjHwNsJuedL8GVT79SE9Mo5v0H9-7tdXDu6f2KCoeCkrtZm_HSWQ1YEgkpYaxOe77vtF3PKaDWXl3gTfEZaWN-E0WPYQTqcazln3Z25yX9ILt206CLoYIybXoClQ")
+
+  token <- cr_jwt_token(jwt, test_url)
+  expect_equal(token,
+               "eyJhbGciOiJSUzI1NiIsImtpZCI6IjRiODNmMTgwMjNhODU1NTg3Zjk0MmU3NTEwMjI1MTEyMDg4N2Y3MjUiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJodHRwczovL2Zha2UuYS5ydW4uYXBwIiwiYXpwIjoiZ29vZ2xlY2xvdWRydW5uZXJAbWFyay1lZG1vbmRzb24tZ2RlLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwiZW1haWwiOiJnb29nbGVjbG91ZHJ1bm5lckBtYXJrLWVkbW9uZHNvbi1nZGUuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiZXhwIjoxNjAwNjc4MTk2LCJpYXQiOjE2MDA2NzQ1OTYsImlzcyI6Imh0dHBzOi8vYWNjb3VudHMuZ29vZ2xlLmNvbSIsInN1YiI6IjExNzQzNjQ4OTM0NTk5NjE0Nzk3MyJ9.Qwvjez5ejOHWBEnwc4rCkTogDxwhi_wpuJPUYkYM8Dw2kgfCJeh_xkFiesWsPSRd0_RO161bSNg6xskc9GspwCQOGJK6pj1RA6GCImuRSDuUJsfUl2nfbhYmKBXpvfJVtoKZbBn-Y0WguYQ0NtzTepCpMxHT9YGCpED2xKLWAq3LAQEHwEvZpumdvktzXIQUnuhrQBq6sR9vAvsnbtAgGEB3xSTpExKSmbtoEtXBAdyC2Oqw4XuOC3CH0OMc7tyT9b96BM1Xhk7GmPAqg9YrMvnRH7z7_USFgii9R62F3fC0Vnhk88q-9ARCKoPG_kzB9rKZX3LTKwCweW9S9gjszA")
+
+
+})
 
 test_that("Building Build Objects", {
 
@@ -513,6 +558,41 @@ test_that("Render BuildStep objects", {
   expect_equal(cs_trigger$type, "cloud_source")
   expect_equal(cs_trigger$repo$repoName,
                "github_markedmondson1234_googlecloudrunner")
+
+  #gcloud
+  gc <- cr_buildstep_gcloud("gcloud","ls")
+  expect_s3_class(gc[[1]], "cr_buildstep")
+  expect_equal(gc[[1]]$name, "gcr.io/google.com/cloudsdktool/cloud-sdk:alpine")
+  expect_equal(gc[[1]]$args[[1]], "ls")
+
+  bq <- cr_buildstep_gcloud("bq","ls")
+  expect_s3_class(bq[[1]], "cr_buildstep")
+  expect_equal(bq[[1]]$name, "gcr.io/google.com/cloudsdktool/cloud-sdk:alpine")
+  expect_equal(bq[[1]]$entrypoint, "bq")
+  expect_equal(bq[[1]]$args[[1]], "ls")
+
+  kk <- cr_buildstep_gcloud("kubectl","ls")
+  expect_s3_class(kk[[1]], "cr_buildstep")
+  expect_equal(kk[[1]]$name, "gcr.io/google.com/cloudsdktool/cloud-sdk:latest")
+
+  # r script from bucket
+  rr <- cr_buildstep_r("gs://my-bucket/script.R")
+
+  expect_s3_class(rr[[1]], "cr_buildstep")
+  expect_s3_class(rr[[2]], "cr_buildstep")
+  expect_equal(rr[[1]]$name, "gcr.io/google.com/cloudsdktool/cloud-sdk:alpine")
+  expect_equal(rr[[1]]$args, c("cp","gs://my-bucket/script.R","/workspace/script.R"))
+  expect_equal(rr[[2]]$name, "rocker/r-base")
+  expect_equal("rocker/r-base", c("Rscript", "/workspace/script.R"))
+
+  # setup nginx
+  ff <- cr_buildstep_nginx_setup("folder")
+
+  expect_s3_class(ff[[1]], "cr_buildstep")
+  expect_equal(ff[[1]]$name, "ubuntu")
+  expect_equal(ff[[1]]$args[[1]], "bash")
+  expect_equal(ff[[1]]$dir, "folder")
+
 })
 
 

@@ -439,7 +439,7 @@ cr_buildstep_r <- function(r,
     myMessage(paste0("Buildstep will download R script from ", r),
               level = 3)
     gs <- c(
-      cr_buildstep(
+      cr_buildstep_gcloud(
         "gsutil",
         id = paste("download r script"),
         args = c("cp", r, r_here)
