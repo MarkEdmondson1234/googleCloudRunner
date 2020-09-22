@@ -101,6 +101,7 @@ check_timeout <- function(timeout){
   }
 
   assert_that(is.numeric(timeout))
+  assert_that(timeout <= 86400)
   paste0(as.integer(timeout),"s")
 
 }
