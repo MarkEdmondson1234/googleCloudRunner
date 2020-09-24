@@ -102,13 +102,13 @@ cr_deploy_packagetests(
 
 Use the resulting cloudbuild.yml file in the same manner as unauthenticated tests. 
 
-## Run R code in a background task
+## Run R code on a schedule
 
-Sometimes you just want to have some R code running whilst you get on with something else.  In this case you can use `cr_buildstep_r()` to run your R code even after you have turned your computer off, since its running in the cloud.
+Sometimes you just want to have some R code running whilst you get on with something else.  In this case you can use `cr_buildstep_r()` to run your R code even after you have turned your computer off, since its running in the cloud.  You can also set it up on a schedule to run periodically.
 
 When running R code, it needs to run in an environment that has the packages and resources it needs.  If those are covered by images such as `rocker/verse` (the tidyverse) then you can commit it straight away.  Otherwise you can first make a custom Docker file with the R packages you need in it, and then run your code against that. 
 
-Once you have your R code and chosen the Docker image, then you can use `cr_deploy_r()` to point at your R file and Docker image, set the timeout to what you need (the maximum is 24 hours).  
+Once you have your R code and chosen the Docker image, then you can use `cr_deploy_r()` to point at your R file and Docker image, set the timeout to what you need (the maximum is 24 hours) and select a schedule if you need it. 
 
 An RStudio gadget is also available to help you deploy:
 
