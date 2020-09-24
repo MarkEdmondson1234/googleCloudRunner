@@ -127,7 +127,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example Use Cases for googleCloudRunner</h1>
             
-            <h4 class="date">2020-09-22</h4>
+            <h4 class="date">2020-09-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecases.Rmd"><code>vignettes/usecases.Rmd</code></a></small>
       <div class="hidden name"><code>usecases.Rmd</code></div>
@@ -219,12 +219,12 @@
 <p>Use the resulting cloudbuild.yml file in the same manner as unauthenticated tests.</p>
 </div>
 </div>
-<div id="run-r-code-in-a-background-task" class="section level2">
+<div id="run-r-code-on-a-schedule" class="section level2">
 <h2 class="hasAnchor">
-<a href="#run-r-code-in-a-background-task" class="anchor"></a>Run R code in a background task</h2>
-<p>Sometimes you just want to have some R code running whilst you get on with something else. In this case you can use <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code> to run your R code even after you have turned your computer off, since its running in the cloud.</p>
+<a href="#run-r-code-on-a-schedule" class="anchor"></a>Run R code on a schedule</h2>
+<p>Sometimes you just want to have some R code running whilst you get on with something else. In this case you can use <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code> to run your R code even after you have turned your computer off, since its running in the cloud. You can also set it up on a schedule to run periodically.</p>
 <p>When running R code, it needs to run in an environment that has the packages and resources it needs. If those are covered by images such as <code>rocker/verse</code> (the tidyverse) then you can commit it straight away. Otherwise you can first make a custom Docker file with the R packages you need in it, and then run your code against that.</p>
-<p>Once you have your R code and chosen the Docker image, then you can use <code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code> to point at your R file and Docker image, set the timeout to what you need (the maximum is 24 hours).</p>
+<p>Once you have your R code and chosen the Docker image, then you can use <code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code> to point at your R file and Docker image, set the timeout to what you need (the maximum is 24 hours) and select a schedule if you need it.</p>
 <p>An RStudio gadget is also available to help you deploy:</p>
 <p><img src="gadget_r.png"></p>
 <p>If you want help creating the Docker image, try <a href="https://o2r.info/containerit/"><code>containerit</code></a> to generate your Dockerfile, then use <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> to build it.</p>
