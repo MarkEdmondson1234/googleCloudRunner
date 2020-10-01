@@ -179,18 +179,18 @@
     <p>This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_docker_trigger</span>(
-  <span class='kw'>repo</span>,
-  <span class='kw'>image</span>,
-  trigger_name = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"docker-"</span>, <span class='kw'>image</span>),
-  image_tag = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"latest"</span>, <span class='st'>"$SHORT_SHA"</span>, <span class='st'>"$BRANCH_NAME"</span>),
-  <span class='kw'>...</span>,
-  substitutions = <span class='kw'>NULL</span>,
-  ignoredFiles = <span class='kw'>NULL</span>,
-  includedFiles = <span class='kw'>NULL</span>,
-  timeout = <span class='kw'>NULL</span>,
-  projectId = <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
-)</pre>
+    <pre class="usage"><span class='fu'>cr_deploy_docker_trigger</span><span class='op'>(</span>
+  <span class='va'>repo</span>,
+  <span class='va'>image</span>,
+  trigger_name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"docker-"</span>, <span class='va'>image</span><span class='op'>)</span>,
+  image_tag <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"latest"</span>, <span class='st'>"$SHORT_SHA"</span>, <span class='st'>"$BRANCH_NAME"</span><span class='op'>)</span>,
+  <span class='va'>...</span>,
+  substitutions <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ignoredFiles <span class='op'>=</span> <span class='cn'>NULL</span>,
+  includedFiles <span class='op'>=</span> <span class='cn'>NULL</span>,
+  timeout <span class='op'>=</span> <span class='cn'>NULL</span>,
+  projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -259,10 +259,10 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='kw'>repo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a></span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>)
-<span class='fu'>cr_deploy_docker_trigger</span>(<span class='kw'>repo</span>, <span class='st'>"test"</span>, dir = <span class='st'>"cloud_build"</span>)
-}
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>repo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a></span><span class='op'>(</span><span class='st'>"MarkEdmondson1234/googleCloudRunner"</span><span class='op'>)</span>
+<span class='fu'>cr_deploy_docker_trigger</span><span class='op'>(</span><span class='va'>repo</span>, <span class='st'>"test"</span>, dir <span class='op'>=</span> <span class='st'>"cloud_build"</span><span class='op'>)</span>
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

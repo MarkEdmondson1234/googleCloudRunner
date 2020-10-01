@@ -179,21 +179,21 @@
     <p>Will create a build to run an R script in Cloud Build with an optional schedule from Cloud Scheduler</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_r</span>(
-  <span class='kw'>r</span>,
-  schedule = <span class='kw'>NULL</span>,
-  source = <span class='kw'>NULL</span>,
-  run_name = <span class='kw'>NULL</span>,
-  r_image = <span class='st'>"rocker/verse"</span>,
-  pre_steps = <span class='kw'>NULL</span>,
-  post_steps = <span class='kw'>NULL</span>,
-  timeout = <span class='fl'>600L</span>,
-  <span class='kw'>...</span>,
-  email = <span class='fu'><a href='cr_email_get.html'>cr_email_get</a></span>(),
-  region = <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  projectId = <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
-  launch_browser = <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()
-)</pre>
+    <pre class="usage"><span class='fu'>cr_deploy_r</span><span class='op'>(</span>
+  <span class='va'>r</span>,
+  schedule <span class='op'>=</span> <span class='cn'>NULL</span>,
+  source <span class='op'>=</span> <span class='cn'>NULL</span>,
+  run_name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  r_image <span class='op'>=</span> <span class='st'>"rocker/verse"</span>,
+  pre_steps <span class='op'>=</span> <span class='cn'>NULL</span>,
+  post_steps <span class='op'>=</span> <span class='cn'>NULL</span>,
+  timeout <span class='op'>=</span> <span class='fl'>600L</span>,
+  <span class='va'>...</span>,
+  email <span class='op'>=</span> <span class='fu'><a href='cr_email_get.html'>cr_email_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  region <span class='op'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  launch_browser <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -279,24 +279,24 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>r_lines</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"list.files()"</span>,
+<span class='va'>r_lines</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"list.files()"</span>,
              <span class='st'>"library(dplyr)"</span>,
              <span class='st'>"mtcars %&gt;% select(mpg)"</span>,
-             <span class='st'>"sessionInfo()"</span>)
-<span class='kw'>source</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_source.html'>cr_build_source</a></span>(<span class='fu'><a href='RepoSource.html'>RepoSource</a></span>(<span class='st'>"googleCloudStorageR"</span>,
-                                     branchName = <span class='st'>"master"</span>))
+             <span class='st'>"sessionInfo()"</span><span class='op'>)</span>
+<span class='va'>source</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_source.html'>cr_build_source</a></span><span class='op'>(</span><span class='fu'><a href='RepoSource.html'>RepoSource</a></span><span class='op'>(</span><span class='st'>"googleCloudStorageR"</span>,
+                                     branchName <span class='op'>=</span> <span class='st'>"master"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
-<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span>(<span class='st'>"europe-west1"</span>)
-<span class='fu'><a href='cr_email_get.html'>cr_email_set</a></span>(<span class='st'>"123456@projectid.iam.gserviceaccount.com"</span>)
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
+<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span><span class='op'>(</span><span class='st'>"europe-west1"</span><span class='op'>)</span>
+<span class='fu'><a href='cr_email_get.html'>cr_email_set</a></span><span class='op'>(</span><span class='st'>"123456@projectid.iam.gserviceaccount.com"</span><span class='op'>)</span>
 
 <span class='co'># check the script runs ok</span>
-<span class='fu'>cr_deploy_r</span>(<span class='kw'>r_lines</span>, source = <span class='kw'>source</span>)
+<span class='fu'>cr_deploy_r</span><span class='op'>(</span><span class='va'>r_lines</span>, source <span class='op'>=</span> <span class='va'>source</span><span class='op'>)</span>
 
 <span class='co'># schedule the script</span>
-<span class='fu'>cr_deploy_r</span>(<span class='kw'>r_lines</span>, schedule = <span class='st'>"15 21 * * *"</span>, source = <span class='kw'>source</span>)
-}
+<span class='fu'>cr_deploy_r</span><span class='op'>(</span><span class='va'>r_lines</span>, schedule <span class='op'>=</span> <span class='st'>"15 21 * * *"</span>, source <span class='op'>=</span> <span class='va'>source</span><span class='op'>)</span>
+<span class='op'>}</span>
 
 </div></pre>
   </div>

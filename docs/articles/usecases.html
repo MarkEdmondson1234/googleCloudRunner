@@ -127,7 +127,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example Use Cases for googleCloudRunner</h1>
             
-            <h4 class="date">2020-09-24</h4>
+            <h4 class="date">2020-10-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecases.Rmd"><code>vignettes/usecases.Rmd</code></a></small>
       <div class="hidden name"><code>usecases.Rmd</code></div>
@@ -166,10 +166,9 @@
 <li>Use <code><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown()</a></code> to create a cloudbuild.yml file in your R package’s directory, giving it your secret name from step 2. <code>create_trigger</code> can be <code>file</code> if you want the cloudbuild.yaml to be within your directory, or <code>inline</code> if the build will only be defined in the trigger.</li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown</a></span>(<span class="st">"MarkEdmondson1234/googleCloudRunner"</span>,
-                  secret = <span class="st">"github-key"</span>,
-                  create_trigger = <span class="st">"inline"</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span>,
+                  secret <span class="op">=</span> <span class="st">"github-key"</span>,
+                  create_trigger <span class="op">=</span> <span class="st">"inline"</span><span class="op">)</span></pre></div>
 <ol start="5" style="list-style-type: decimal">
 <li>Commit to your git repository</li>
 </ol>
@@ -211,11 +210,10 @@
 <p>In that case, the decryption step needs to occur before the tests run, which you can do by supplying <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> to <code><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests()</a></code>.</p>
 <p>You will also want to use that auth file somehow, in the below example it is placed in an environment argument that your tests use to find the authentication file:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="fu"><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests</a></span>(
-  steps = <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span>(<span class="st">"my_secret"</span>, <span class="st">"auth.json"</span>),
-  env = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"NOT_CRAN=true"</span>, <span class="st">"MY_AUTH_FILE=auth.json"</span>)
-)
-</pre></div>
+<span class="fu"><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests</a></span><span class="op">(</span>
+  steps <span class="op">=</span> <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"my_secret"</span>, <span class="st">"auth.json"</span><span class="op">)</span>,
+  env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"NOT_CRAN=true"</span>, <span class="st">"MY_AUTH_FILE=auth.json"</span><span class="op">)</span>
+<span class="op">)</span></pre></div>
 <p>Use the resulting cloudbuild.yml file in the same manner as unauthenticated tests.</p>
 </div>
 </div>
@@ -234,16 +232,15 @@
 <p>In some cases you may hit character limits of the cloudbuild file in which case you will need to execute the R code from a file. The easiest way to do this is to upload your R code to a Cloud Storage bucket and then supply the <code>gs://</code> URI to <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>:</p>
 <p>The below example uses a public bucket and R image, for your use case you would change to your own private one that your Cloud Build service email has access to:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://code.markedmondson.me/googleCloudRunner">googleCloudRunner</a></span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
-<span class="kw">large_r_job</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(
-  steps = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
-    <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(<span class="st">"gs://mark-edmondson-public-read/schedule.R"</span>, 
-                   name = <span class="st">"gcr.io/gcer-public/googleauthr-verse:latest"</span>)
-  )
-)
-<span class="fu"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="kw">large_r_job</span>)
-</pre></div>
+<span class="va">large_r_job</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
+  steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+    <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="st">"gs://mark-edmondson-public-read/schedule.R"</span>, 
+                   name <span class="op">=</span> <span class="st">"gcr.io/gcer-public/googleauthr-verse:latest"</span><span class="op">)</span>
+  <span class="op">)</span>
+<span class="op">)</span>
+<span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">large_r_job</span><span class="op">)</span></pre></div>
 </div>
 <div id="authentication-within-the-r-script-on-cloud-build" class="section level3">
 <h3 class="hasAnchor">
@@ -267,8 +264,7 @@
 <span id="cb4-12"><a href="#cb4-12"></a>...do something with the config file...</span></code></pre></div>
 <p>This would then be saved to an R script and deployed via the gadget or:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="../reference/cr_deploy_r.html">cr_deploy_r</a></span>(<span class="st">"the_script.R"</span>, r_image = <span class="st">"gcr.io/gcer-public/googleauthr-verse"</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_deploy_r.html">cr_deploy_r</a></span><span class="op">(</span><span class="st">"the_script.R"</span>, r_image <span class="op">=</span> <span class="st">"gcr.io/gcer-public/googleauthr-verse"</span><span class="op">)</span></pre></div>
 <p>…where the docker R image is one with googleCloudStorageR installed.</p>
 </div>
 </div>
@@ -280,9 +276,8 @@
 <p>If you want the Docker image to rebuild each git commit, then you also need a build trigger. This can be enabled using <code><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger()</a></code></p>
 <p>The below example builds this package’s Dockerfile upon each commit, for a Dockerfile located in the <code>cloud_build/</code> folder.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="kw">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span>(<span class="st">"MarkEdmondson1234/googleCloudRunner"</span>)
-<span class="fu"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span>(<span class="kw">repo</span>, <span class="st">"test3"</span>, dir = <span class="st">"cloud_build"</span>)
-</pre></div>
+<span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span><span class="op">(</span><span class="va">repo</span>, <span class="st">"test3"</span>, dir <span class="op">=</span> <span class="st">"cloud_build"</span><span class="op">)</span></pre></div>
 <div id="kaniko-cache" class="section level3">
 <h3 class="hasAnchor">
 <a href="#kaniko-cache" class="anchor"></a>Kaniko cache</h3>
@@ -290,8 +285,7 @@
 <p>If it is a long build, consider using the <a href="https://cloud.google.com/cloud-build/docs/kaniko-cache">kaniko cache</a> option in your Docker builds. This caches each step of the Dockerfile so only those that are new are built, and can considerably speed up Docker build times.</p>
 <p>To use, select the <code>kamiko_cache=TRUE</code> option in your builds:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="fu"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span>(<span class="st">"my_folder"</span>, kaniko_cache=<span class="fl">TRUE</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span><span class="op">(</span><span class="st">"my_folder"</span>, kaniko_cache<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></pre></div>
 </div>
 </div>
 <div id="migrate-an-existing-scheduled-docker-container" class="section level2">
@@ -302,25 +296,22 @@
 <p>If you give the cloud build service email the right permissions, then this can all be done on Cloud Build + Cloud Scheduler.</p>
 <p>For example, say your existing container is called <code>gcr.io/my-project/my-r-script</code>. A Cloud Build could look simply like this:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="kw">r_code</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(
-  <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(<span class="st">"gcr.io/my-project/my-r-script"</span>)
-)
-<span class="fu"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="kw">r_code</span>)
-</pre></div>
+<span class="va">r_code</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
+  <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span><span class="st">"gcr.io/my-project/my-r-script"</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">r_code</span><span class="op">)</span></pre></div>
 <p>You could add other steps if you wanted, such as sending an email when done via <code><a href="../reference/cr_buildstep_mailgun.html">cr_buildstep_mailgun()</a></code> or <code><a href="../reference/cr_buildstep_slack.html">cr_buildstep_slack()</a></code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="kw">r_code</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(
-  <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(<span class="st">"gcr.io/my-project/my-r-script"</span>),
-  <span class="fu"><a href="../reference/cr_buildstep_slack.html">cr_buildstep_slack</a></span>(<span class="st">"The script run ok"</span>)
-)
-<span class="fu"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="kw">r_code</span>, `_SLACK_WEBHOOK` = <span class="st">"https://your_slack_webhook"</span>)
-</pre></div>
+<span class="va">r_code</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
+  <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span><span class="st">"gcr.io/my-project/my-r-script"</span><span class="op">)</span>,
+  <span class="fu"><a href="../reference/cr_buildstep_slack.html">cr_buildstep_slack</a></span><span class="op">(</span><span class="st">"The script run ok"</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">r_code</span>, `_SLACK_WEBHOOK` <span class="op">=</span> <span class="st">"https://your_slack_webhook"</span><span class="op">)</span></pre></div>
 <p>To set this up in a schedule, add it to the scheduler like so:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="kw">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="kw">r_code</span>, `_SLACK_WEBHOOK` = <span class="st">"https://your_slack_webhook"</span>)
-<span class="kw">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(<span class="kw">built</span>)
-<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"r-code-example"</span>, <span class="st">"15 8 * * *"</span>, httpTarget = <span class="kw">schedule_me</span>)
-</pre></div>
+<span class="va">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">r_code</span>, `_SLACK_WEBHOOK` <span class="op">=</span> <span class="st">"https://your_slack_webhook"</span><span class="op">)</span>
+<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span>
+<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"r-code-example"</span>, <span class="st">"15 8 * * *"</span>, httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span></pre></div>
 </div>
 <div id="deploying-shiny-to-cloud-run" class="section level2">
 <h2 class="hasAnchor">
@@ -330,42 +321,39 @@
 <p><img src="max_cpu_mem.png"></p>
 <p>A minimal working example has been created by <span class="citation">@randy3k</span> here: <a href="https://github.com/randy3k/shiny-cloudrun-demo" class="uri">https://github.com/randy3k/shiny-cloudrun-demo</a> which can be deployed to Cloud Run via a fork here:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://code.markedmondson.me/googleCloudRunner">googleCloudRunner</a></span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
 <span class="co"># a repo with the Dockerfile template</span>
-<span class="kw">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span>(<span class="st">"MarkEdmondson1234/shiny-cloudrun-demo"</span>)
+<span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/shiny-cloudrun-demo"</span><span class="op">)</span>
 
 <span class="co"># deploy a cloud build trigger so each commit build the image</span>
-<span class="fu"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span>(
-  <span class="kw">repo</span>,
-  image = <span class="st">"shiny-cloudrun"</span>
-)
+<span class="fu"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span><span class="op">(</span>
+  <span class="va">repo</span>,
+  image <span class="op">=</span> <span class="st">"shiny-cloudrun"</span>
+<span class="op">)</span>
 
 <span class="co"># deploy to Cloud Run</span>
-<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span>()),
-       name = <span class="st">"shiny-cloudrun"</span>,
-       concurrency = <span class="fl">80</span>,
-       max_instances = <span class="fl">1</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
+       name <span class="op">=</span> <span class="st">"shiny-cloudrun"</span>,
+       concurrency <span class="op">=</span> <span class="fl">80</span>,
+       max_instances <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></pre></div>
 <p>If you need to change the memory for the one instance, you can use <code>cpu</code> and <code>memory</code> arguments in the <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code> and subsequent functions such as <code><a href="../reference/cr_run.html">cr_run()</a></code>. The maximum allowed is 2 CPUs and 2 gibibytes (<code>2Gi</code>):</p>
 <div class="sourceCode" id="cb12"><pre class="downlit">
 <span class="co"># deploy to Cloud Run with 2GBs of RAM per instance and 2 CPUs</span>
-<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span>()),
-       name = <span class="st">"shiny-cloudrun"</span>,
-       concurrency = <span class="fl">80</span>,
-       max_instances = <span class="fl">1</span>,
-       cpu = <span class="fl">2</span>,
-       memory = <span class="st">"2Gi"</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
+       name <span class="op">=</span> <span class="st">"shiny-cloudrun"</span>,
+       concurrency <span class="op">=</span> <span class="fl">80</span>,
+       max_instances <span class="op">=</span> <span class="fl">1</span>,
+       cpu <span class="op">=</span> <span class="fl">2</span>,
+       memory <span class="op">=</span> <span class="st">"2Gi"</span><span class="op">)</span></pre></div>
 <p>Or if you have a local Shiny app in <code>shiny_cloudrun/</code> with the appropriate Dockerfile and Shiny configuration, the full Docker build and deployment pipeline can be carried out with:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit">
 <span class="co"># deploy the app version from this folder</span>
-<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span>(<span class="st">"shiny_cloudrun/"</span>,
-              remote = <span class="st">"shiny-cloudrun2"</span>,
-              tag = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span>),
-              max_instances = <span class="fl">1</span>, <span class="co"># required for shiny</span>
-              concurrency = <span class="fl">80</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span><span class="op">(</span><span class="st">"shiny_cloudrun/"</span>,
+              remote <span class="op">=</span> <span class="st">"shiny-cloudrun2"</span>,
+              tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span><span class="op">)</span>,
+              max_instances <span class="op">=</span> <span class="fl">1</span>, <span class="co"># required for shiny</span>
+              concurrency <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></pre></div>
 </div>
 <div id="run-private-r-micro-services-on-cloud-run" class="section level2">
 <h2 class="hasAnchor">
@@ -390,70 +378,69 @@
 <h4 class="hasAnchor">
 <a href="#plumber-api-script" class="anchor"></a>plumber API script</h4>
 <div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="co">if</span>(<span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"PORT"</span>) <span class="op">==</span> <span class="st">""</span>) <span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span>(PORT = <span class="fl">8000</span>)
+<span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">"PORT"</span><span class="op">)</span> <span class="op">==</span> <span class="st">""</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span><span class="op">(</span>PORT <span class="op">=</span> <span class="fl">8000</span><span class="op">)</span>
 
 <span class="co">#auth via BQ_AUTH_FILE environment argument</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">bigQueryR</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">xts</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">forecast</span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">bigQueryR</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">xts</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">forecast</span><span class="op">)</span>
 
 <span class="co">#' @get /</span>
 <span class="co">#' @html</span>
-<span class="fu">function</span>(){
+<span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span>
   <span class="st">"&lt;html&gt;&lt;h1&gt;It works!&lt;/h1&gt;&lt;/html&gt;"</span>
-}
+<span class="op">}</span>
 
 
 <span class="co">#' @get /covid_traffic</span>
 <span class="co">#' @param industry the industry to filter results down to e.g "Software"</span>
 <span class="co">#' @param region the region to filter results down to e.g "Europe"</span>
-<span class="fu">function</span>(<span class="kw">region</span>=<span class="kw">NULL</span>, <span class="kw">industry</span>=<span class="kw">NULL</span>){
+<span class="kw">function</span><span class="op">(</span><span class="va">region</span><span class="op">=</span><span class="cn">NULL</span>, <span class="va">industry</span><span class="op">=</span><span class="cn">NULL</span><span class="op">)</span><span class="op">{</span>
 
-  <span class="co">if</span>(<span class="fu"><a href="https://rdrr.io/r/base/any.html">any</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span>(<span class="kw">region</span>), <span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span>(<span class="kw">industry</span>))){
-    <span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="st">"Must supply region and industry parameters"</span>)
-  }
+  <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">region</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">industry</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/stop.html">stop</a></span><span class="op">(</span><span class="st">"Must supply region and industry parameters"</span><span class="op">)</span>
+  <span class="op">}</span>
 
   <span class="co"># to handle spaces</span>
-  <span class="kw">region</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLdecode</a></span>(<span class="kw">region</span>)
-  <span class="kw">industry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLdecode</a></span>(<span class="kw">industry</span>)
+  <span class="va">region</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLdecode</a></span><span class="op">(</span><span class="va">region</span><span class="op">)</span>
+  <span class="va">industry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLdecode</a></span><span class="op">(</span><span class="va">industry</span><span class="op">)</span>
 
-  <span class="kw">sql</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"SELECT date, industry, percent_of_baseline FROM `bigquery-public-data.covid19_geotab_mobility_impact.commercial_traffic_by_industry`  WHERE region = '%s' order by date LIMIT 1000"</span>, <span class="kw">region</span>)
+  <span class="va">sql</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"SELECT date, industry, percent_of_baseline FROM `bigquery-public-data.covid19_geotab_mobility_impact.commercial_traffic_by_industry`  WHERE region = '%s' order by date LIMIT 1000"</span>, <span class="va">region</span><span class="op">)</span>
 
-  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"Query: "</span>, <span class="kw">sql</span>)
+  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"Query: "</span>, <span class="va">sql</span><span class="op">)</span>
 
-  <span class="kw">traffic</span> <span class="op">&lt;-</span> <span class="fu">bqr_query</span>(
-    query = <span class="kw">sql</span>,
-    datasetId = <span class="st">"covid19_geotab_mobility_impact"</span>,
-    useLegacySql = <span class="fl">FALSE</span>,
-    maxResults = <span class="fl">10000</span>
-  )
+  <span class="va">traffic</span> <span class="op">&lt;-</span> <span class="fu">bqr_query</span><span class="op">(</span>
+    query <span class="op">=</span> <span class="va">sql</span>,
+    datasetId <span class="op">=</span> <span class="st">"covid19_geotab_mobility_impact"</span>,
+    useLegacySql <span class="op">=</span> <span class="cn">FALSE</span>,
+    maxResults <span class="op">=</span> <span class="fl">10000</span>
+  <span class="op">)</span>
 
   <span class="co"># filter to industry in R this time</span>
-  <span class="kw">test_data</span> <span class="op">&lt;-</span> <span class="kw">traffic</span>[<span class="kw">traffic</span><span class="op">$</span><span class="kw">industry</span> <span class="op">==</span> <span class="kw">industry</span>,
-                       <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"date"</span>,<span class="st">"percent_of_baseline"</span>)]
+  <span class="va">test_data</span> <span class="op">&lt;-</span> <span class="va">traffic</span><span class="op">[</span><span class="va">traffic</span><span class="op">$</span><span class="va">industry</span> <span class="op">==</span> <span class="va">industry</span>,
+                       <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"date"</span>,<span class="st">"percent_of_baseline"</span><span class="op">)</span><span class="op">]</span>
 
-  <span class="kw">tts</span> <span class="op">&lt;-</span> <span class="fu">xts</span>(<span class="kw">test_data</span><span class="op">$</span><span class="kw">percent_of_baseline</span>,
-             order.by = <span class="kw">test_data</span><span class="op">$</span><span class="kw">date</span>,
-             frequency = <span class="fl">7</span>)
+  <span class="va">tts</span> <span class="op">&lt;-</span> <span class="fu">xts</span><span class="op">(</span><span class="va">test_data</span><span class="op">$</span><span class="va">percent_of_baseline</span>,
+             order.by <span class="op">=</span> <span class="va">test_data</span><span class="op">$</span><span class="va">date</span>,
+             frequency <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>
 
   <span class="co"># replace with long running sophisticated analysis</span>
-  <span class="kw">model</span> <span class="op">&lt;-</span> <span class="fu">forecast</span>(<span class="fu">auto.arima</span>(<span class="kw">tts</span>))
+  <span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">forecast</span><span class="op">(</span><span class="fu">auto.arima</span><span class="op">(</span><span class="va">tts</span><span class="op">)</span><span class="op">)</span>
 
   <span class="co"># output a list that can be turned into JSON via jsonlite::toJSON</span>
-  <span class="kw">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-    params = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw">region</span>, <span class="kw">industry</span>),
-    x = <span class="kw">model</span><span class="op">$</span><span class="kw">x</span>,
-    mean = <span class="kw">model</span><span class="op">$</span><span class="kw">mean</span>,
-    lower = <span class="kw">model</span><span class="op">$</span><span class="kw">lower</span>,
-    upper = <span class="kw">model</span><span class="op">$</span><span class="kw">upper</span>
-  )
+  <span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">industry</span><span class="op">)</span>,
+    x <span class="op">=</span> <span class="va">model</span><span class="op">$</span><span class="va">x</span>,
+    mean <span class="op">=</span> <span class="va">model</span><span class="op">$</span><span class="va">mean</span>,
+    lower <span class="op">=</span> <span class="va">model</span><span class="op">$</span><span class="va">lower</span>,
+    upper <span class="op">=</span> <span class="va">model</span><span class="op">$</span><span class="va">upper</span>
+  <span class="op">)</span>
 
-  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"Return: "</span>, <span class="kw">jsonlite</span>::<span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html">toJSON</a></span>(<span class="kw">o</span>))
+  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"Return: "</span>, <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html">toJSON</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span><span class="op">)</span>
   
-  <span class="kw">o</span>
+  <span class="va">o</span>
 
-}
-</pre></div>
+<span class="op">}</span></pre></div>
 </div>
 <div id="deploy-plumber-api-as-a-private-micro-service" class="section level4">
 <h4 class="hasAnchor">
@@ -467,37 +454,35 @@
 <li>Creates the cloudbuild.yml and writes it to a file in the repo</li>
 </ul>
 <div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://code.markedmondson.me/googleCloudRunner">googleCloudRunner</a></span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
-<span class="kw">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
-  <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span>(<span class="st">"my-auth"</span>,
-      decrypted = <span class="st">"inst/docker/parallel_cloudrun/plumber/auth.json"</span>),
-  <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(<span class="st">"cloudrun_parallel"</span>,
-                      dir = <span class="st">"inst/docker/parallel_cloudrun/plumber"</span>,
-                      kaniko_cache = <span class="fl">TRUE</span>),
-  <span class="fu"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span>(<span class="st">"parallel-cloudrun"</span>,
-                   image = <span class="st">"gcr.io/$PROJECT_ID/cloudrun_parallel:$BUILD_ID"</span>,
-                   allowUnauthenticated = <span class="fl">FALSE</span>,
-                   env_vars = <span class="st">"BQ_AUTH_FILE=auth.json,BQ_DEFAULT_PROJECT_ID=$PROJECT_ID"</span>)
-)
+<span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+  <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"my-auth"</span>,
+      decrypted <span class="op">=</span> <span class="st">"inst/docker/parallel_cloudrun/plumber/auth.json"</span><span class="op">)</span>,
+  <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span><span class="op">(</span><span class="st">"cloudrun_parallel"</span>,
+                      dir <span class="op">=</span> <span class="st">"inst/docker/parallel_cloudrun/plumber"</span>,
+                      kaniko_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
+  <span class="fu"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span><span class="op">(</span><span class="st">"parallel-cloudrun"</span>,
+                   image <span class="op">=</span> <span class="st">"gcr.io/$PROJECT_ID/cloudrun_parallel:$BUILD_ID"</span>,
+                   allowUnauthenticated <span class="op">=</span> <span class="cn">FALSE</span>,
+                   env_vars <span class="op">=</span> <span class="st">"BQ_AUTH_FILE=auth.json,BQ_DEFAULT_PROJECT_ID=$PROJECT_ID"</span><span class="op">)</span>
+<span class="op">)</span>
 
 <span class="co"># make a buildtrigger pointing at above steps</span>
-<span class="kw">cloudbuild_file</span> <span class="op">&lt;-</span> <span class="st">"inst/docker/parallel_cloudrun/cloudbuild.yml"</span>
-<span class="kw">by</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(<span class="kw">bs</span>)
-<span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span>(<span class="kw">by</span>, file = <span class="kw">cloudbuild_file</span>)
-</pre></div>
+<span class="va">cloudbuild_file</span> <span class="op">&lt;-</span> <span class="st">"inst/docker/parallel_cloudrun/cloudbuild.yml"</span>
+<span class="va">by</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span><span class="va">bs</span><span class="op">)</span>
+<span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">by</span>, file <span class="op">=</span> <span class="va">cloudbuild_file</span><span class="op">)</span></pre></div>
 </div>
 <div id="create-a-build-trigger-so-it-builds-upon-each-git-commit" class="section level4">
 <h4 class="hasAnchor">
 <a href="#create-a-build-trigger-so-it-builds-upon-each-git-commit" class="anchor"></a>Create a build trigger so it builds upon each git commit</h4>
 <p>Now the cloudbuild.yml is available, a build trigger is created so that it will deploy upon each commit to this GitHub:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="kw">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span>(<span class="st">"MarkEdmondson1234/googleCloudRunner"</span>)
-<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="kw">cloudbuild_file</span>,
+<span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="va">cloudbuild_file</span>,
                 <span class="st">"parallel-cloudrun"</span>,
-                trigger = <span class="kw">repo</span>,
-                includedFiles = <span class="st">"inst/docker/parallel_cloudrun/**"</span>)
-</pre></div>
+                trigger <span class="op">=</span> <span class="va">repo</span>,
+                includedFiles <span class="op">=</span> <span class="st">"inst/docker/parallel_cloudrun/**"</span><span class="op">)</span></pre></div>
 <p>The files are then committed to GitHub and the build reviewed in the GCP Console.</p>
 <p>Once the builds are done, you should have a plumber API deployed with a URL similar to <code>https://parallel-cloudrun-ewjogewawq-ew.a.run.app/</code></p>
 </div>
@@ -507,22 +492,21 @@
 <a href="#calling-the-private-plumber-api-with-a-jwt" class="anchor"></a>Calling the private plumber API with a JWT</h3>
 <p>Now the plumber API is up, but to call it with authentication will need a JSON Web Token, or JWT. These are supported via the <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> functions:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit">
-<span class="kw">cr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_run_get.html">cr_run_get</a></span>(<span class="st">"parallel-cloudrun"</span>)
+<span class="va">cr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_run_get.html">cr_run_get</a></span><span class="op">(</span><span class="st">"parallel-cloudrun"</span><span class="op">)</span>
 
 <span class="co"># Interact with the authenticated Cloud Run service</span>
-<span class="kw">the_url</span> <span class="op">&lt;-</span> <span class="kw">cr</span><span class="op">$</span><span class="kw">status</span><span class="op">$</span><span class="kw">url</span>
-<span class="kw">jwt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_create</a></span>(<span class="kw">the_url</span>)
+<span class="va">the_url</span> <span class="op">&lt;-</span> <span class="va">cr</span><span class="op">$</span><span class="va">status</span><span class="op">$</span><span class="va">url</span>
+<span class="va">jwt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_create</a></span><span class="op">(</span><span class="va">the_url</span><span class="op">)</span>
 
 <span class="co"># needs to be recreated every 60mins</span>
-<span class="kw">token</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_token</a></span>(<span class="kw">jwt</span>, <span class="kw">the_url</span>)
+<span class="va">token</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_token</a></span><span class="op">(</span><span class="va">jwt</span>, <span class="va">the_url</span><span class="op">)</span>
 
 <span class="co"># call Cloud Run with token using httr call</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://httr.r-lib.org">httr</a></span>)
-<span class="kw">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_with_httr</a></span>(
-  <span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span>(<span class="st">"https://parallel-cloudrun-ewjogewawq-ew.a.run.app/"</span>),
-  <span class="kw">token</span>)
-<span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span>(<span class="kw">res</span>)
-</pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_with_httr</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span><span class="st">"https://parallel-cloudrun-ewjogewawq-ew.a.run.app/"</span><span class="op">)</span>,
+  <span class="va">token</span><span class="op">)</span>
+<span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></pre></div>
 <p>The JWT token needs renewing each hour.</p>
 <div id="use-your-private-micro-service" class="section level4">
 <h4 class="hasAnchor">
@@ -531,26 +515,25 @@
 <p>This is facilitated by a wrapper function to call our API:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit">
 <span class="co"># interact with the API we made</span>
-<span class="kw">call_api</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">region</span>, <span class="kw">industry</span>, <span class="kw">token</span>){
-  <span class="kw">api</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(
+<span class="va">call_api</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">region</span>, <span class="va">industry</span>, <span class="va">token</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">api</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span>
     <span class="st">"https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=%s&amp;industry=%s"</span>,
-    <span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLencode</a></span>(<span class="kw">region</span>), <span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLencode</a></span>(<span class="kw">industry</span>))
+    <span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLencode</a></span><span class="op">(</span><span class="va">region</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLencode</a></span><span class="op">(</span><span class="va">industry</span><span class="op">)</span><span class="op">)</span>
 
-  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"Request: "</span>, <span class="kw">api</span>)
-  <span class="kw">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_with_httr</a></span>(<span class="kw">httr</span>::<span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span>(<span class="kw">api</span>),<span class="kw">token</span>)
+  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"Request: "</span>, <span class="va">api</span><span class="op">)</span>
+  <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_with_httr</a></span><span class="op">(</span><span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span><span class="va">api</span><span class="op">)</span>,<span class="va">token</span><span class="op">)</span>
 
-  <span class="kw">httr</span>::<span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span>(<span class="kw">res</span>, as = <span class="st">"text"</span>, encoding = <span class="st">"UTF-8"</span>)
+  <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span><span class="op">(</span><span class="va">res</span>, as <span class="op">=</span> <span class="st">"text"</span>, encoding <span class="op">=</span> <span class="st">"UTF-8"</span><span class="op">)</span>
 
-}
+<span class="op">}</span>
 
 <span class="co"># test call</span>
-<span class="kw">result</span> <span class="op">&lt;-</span> <span class="fu">call_api</span>(region = <span class="st">"Europe"</span>, industry = <span class="st">"Software"</span>, token = <span class="kw">token</span>)
-</pre></div>
+<span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">call_api</span><span class="op">(</span>region <span class="op">=</span> <span class="st">"Europe"</span>, industry <span class="op">=</span> <span class="st">"Software"</span>, token <span class="op">=</span> <span class="va">token</span><span class="op">)</span></pre></div>
 <p>Once the test call is complete, you can loop over your data - the parameters for this particular dataset are shown below:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit">
 <span class="co"># the variables to loop over</span>
-<span class="kw">regions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"North America"</span>, <span class="st">"Europe"</span>,<span class="st">"South America"</span>,<span class="st">"Australia"</span>)
-<span class="kw">industry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Transportation (non-freight)"</span>,
+<span class="va">regions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"North America"</span>, <span class="st">"Europe"</span>,<span class="st">"South America"</span>,<span class="st">"Australia"</span><span class="op">)</span>
+<span class="va">industry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Transportation (non-freight)"</span>,
               <span class="st">"Software"</span>,
               <span class="st">"Telecommunications"</span>,
               <span class="st">"Manufacturing"</span>,
@@ -572,8 +555,7 @@
               <span class="st">"Minerals &amp; Mining"</span>,
               <span class="st">"Healthcare Services &amp; Hospitals"</span>,
               <span class="st">"Organizations"</span>,
-              <span class="st">"Finance"</span>)
-</pre></div>
+              <span class="st">"Finance"</span><span class="op">)</span></pre></div>
 </div>
 <div id="parallel-calling-of-the-api" class="section level4">
 <h4 class="hasAnchor">
@@ -585,21 +567,20 @@
 <span class="co">## curl multi asynch</span>
 
 <span class="co"># function to make the URLs</span>
-<span class="kw">make_urls</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">regions</span>, <span class="kw">industry</span>){
+<span class="va">make_urls</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">regions</span>, <span class="va">industry</span><span class="op">)</span><span class="op">{</span>
 
-  <span class="kw">combos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span>(<span class="kw">regions</span>, <span class="kw">industry</span>, stringsAsFactors = <span class="fl">FALSE</span>)
+  <span class="va">combos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">regions</span>, <span class="va">industry</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
-  <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/mapply.html">mapply</a></span>(<span class="fu">function</span>(<span class="kw">x</span>,<span class="kw">y</span>){<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=%s&amp;industry=%s"</span>,<span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLencode</a></span>(<span class="kw">x</span>), <span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLencode</a></span>(<span class="kw">y</span>))},
-                SIMPLIFY = <span class="fl">FALSE</span>, USE.NAMES = <span class="fl">FALSE</span>,
-         <span class="kw">combos</span><span class="op">$</span><span class="kw">Var1</span> ,<span class="kw">combos</span><span class="op">$</span><span class="kw">Var2</span>))
-}
+  <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mapply.html">mapply</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=%s&amp;industry=%s"</span>,<span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLencode</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLencode</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>,
+                SIMPLIFY <span class="op">=</span> <span class="cn">FALSE</span>, USE.NAMES <span class="op">=</span> <span class="cn">FALSE</span>,
+         <span class="va">combos</span><span class="op">$</span><span class="va">Var1</span> ,<span class="va">combos</span><span class="op">$</span><span class="va">Var2</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
 
 <span class="co"># make all the URLs</span>
-<span class="kw">all_urls</span> <span class="op">&lt;-</span> <span class="fu">make_urls</span>(regions = <span class="kw">regions</span>, industry = <span class="kw">industry</span>)
+<span class="va">all_urls</span> <span class="op">&lt;-</span> <span class="fu">make_urls</span><span class="op">(</span>regions <span class="op">=</span> <span class="va">regions</span>, industry <span class="op">=</span> <span class="va">industry</span><span class="op">)</span>
 
 <span class="co"># calling them</span>
-<span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_async</a></span>(<span class="kw">all_urls</span>, token = <span class="kw">token</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_async</a></span><span class="op">(</span><span class="va">all_urls</span>, token <span class="op">=</span> <span class="va">token</span><span class="op">)</span></pre></div>
 <p>Some example output is shown below - not that some combinations didn’t have data so the API returned a 500 error, but later valid combinations completed and returned the JSON response for the forecast:</p>
 <pre><code>&gt; # calling them
 &gt; cr_jwt_async(all_urls, token = token)
@@ -630,17 +611,16 @@
 <div class="sourceCode" id="cb22"><pre class="downlit">
 <span class="co"># example function echos back pubsub message</span>
 <span class="co"># change to do something more interesting with event data</span>
-<span class="kw">pub</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">x</span>){
-  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"Echo:"</span>, <span class="kw">x</span>)
-}
+<span class="va">pub</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Echo:"</span>, <span class="va">x</span><span class="op">)</span>
+<span class="op">}</span>
 
 <span class="co">#' Receive pub/sub message</span>
 <span class="co">#' @post /pubsub</span>
 <span class="co">#' @param message a pub/sub message</span>
-<span class="fu">function</span>(<span class="kw">message</span>=<span class="kw">NULL</span>){
-  <span class="kw">googleCloudRunner</span>::<span class="fu"><a href="../reference/cr_plumber_pubsub.html">cr_plumber_pubsub</a></span>(<span class="kw">message</span>, <span class="kw">pub</span>)
-}
-</pre></div>
+<span class="kw">function</span><span class="op">(</span><span class="va">message</span><span class="op">=</span><span class="cn">NULL</span><span class="op">)</span><span class="op">{</span>
+  <span class="fu">googleCloudRunner</span><span class="fu">::</span><span class="fu"><a href="../reference/cr_plumber_pubsub.html">cr_plumber_pubsub</a></span><span class="op">(</span><span class="va">message</span>, <span class="va">pub</span><span class="op">)</span>
+<span class="op">}</span></pre></div>
 <p>Deploy the R API using an image that has plumber and googleCloudRunner installed. There is one available at <code>gcr.io/gcer-public/googlecloudrunner</code></p>
 <p><code>Dockerfile</code>:</p>
 <pre><code>FROM gcr.io/gcer-public/googlecloudrunner:master
@@ -651,24 +631,21 @@ ENTRYPOINT ["R", "-e", "pr &lt;- plumber::plumb(commandArgs()[4]); pr$run(host='
 CMD ["api.R"]</code></pre>
 <p>Put both the Dockerfile and the <code>api.R</code> script in the same folder then deploy it to Cloud Run:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit">
-<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span>(<span class="st">"the_folder"</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span><span class="op">(</span><span class="st">"the_folder"</span><span class="op">)</span></pre></div>
 <p>Or use the RStudio gadget:</p>
 <p><img src="gadget_plumber.png"></p>
 <p>Once built you will have a pub/sub live that will trigger the function you defined. You can test pubsub messages via <code><a href="../reference/cr_pubsub.html">cr_pubsub()</a></code></p>
 <div class="sourceCode" id="cb25"><pre class="downlit">
-<span class="kw">test_url</span> <span class="op">&lt;-</span> <span class="st">"http://your-cloudrun-api.com/pubsub"</span>
+<span class="va">test_url</span> <span class="op">&lt;-</span> <span class="st">"http://your-cloudrun-api.com/pubsub"</span>
 
-<span class="fu"><a href="../reference/cr_pubsub.html">cr_pubsub</a></span>(<span class="kw">test_url</span>, <span class="st">"hello"</span>)
-<span class="co"># [1] "Echo: hello"</span>
-</pre></div>
+<span class="fu"><a href="../reference/cr_pubsub.html">cr_pubsub</a></span><span class="op">(</span><span class="va">test_url</span>, <span class="st">"hello"</span><span class="op">)</span>
+<span class="co"># [1] "Echo: hello"</span></pre></div>
 <p>In this case the function only echos, but you can modify the function to call other libraries, functions, operate on data sent in pubsub such as bucket object names, BigQuery tableIds, etc.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit">
 <span class="co"># perhaps the function calls another Cloud Build</span>
-<span class="kw">pub</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">x</span>){
-  <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="kw">x</span>, source = <span class="kw">my_source</span>)
-}
-</pre></div>
+<span class="va">pub</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
+  <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">x</span>, source <span class="op">=</span> <span class="va">my_source</span><span class="op">)</span>
+<span class="op">}</span></pre></div>
 <p>If you would like to trigger a pub/sub message when a file arrives on Google Cloud Storage, use <code><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_create_pubsub.html">googleCloudStorageR::gcs_create_pubsub()</a></code></p>
 </div>
 <div id="deploy-a-shiny-app-to-google-kubernetes-engine" class="section level2">
@@ -746,32 +723,30 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 <a href="#cloud-build" class="anchor"></a>Cloud Build</h3>
 <p>Your cloudbuild steps will then build the Dockerfile, then use <code>gcr.io/cloud-builders/gke-deploy</code> to deploy it to the cluster - see this <a href="https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-gke">Google guide on deployment to GKE via Cloud Build</a> for details</p>
 <div class="sourceCode" id="cb29"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://code.markedmondson.me/googleCloudRunner">googleCloudRunner</a></span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
-<span class="kw">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
-  <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(<span class="st">"shiny-your-app"</span>,
-                      tag = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"latest"</span>,<span class="st">"$SHORT_SHA"</span>),
-                      kaniko_cache = <span class="fl">TRUE</span>),
-  <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(<span class="st">"gke-deploy"</span>,
-               args = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"run"</span>,
+<span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+  <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span><span class="op">(</span><span class="st">"shiny-your-app"</span>,
+                      tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"latest"</span>,<span class="st">"$SHORT_SHA"</span><span class="op">)</span>,
+                      kaniko_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
+  <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span><span class="st">"gke-deploy"</span>,
+               args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"run"</span>,
                         <span class="st">"--filename=deployment-k8s.yml"</span>,
                         <span class="st">"--image=gcr.io/$PROJECT_ID/shiny-your-app:$SHORT_SHA"</span>,
                         <span class="st">"--location=europe-west1-b"</span>,
-                        <span class="st">"--cluster=your-k8s-cluster"</span>))
-)
+                        <span class="st">"--cluster=your-k8s-cluster"</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span>
 
-<span class="kw">yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(steps = <span class="kw">bs</span>)
-<span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span>(<span class="kw">yaml</span>, <span class="st">"build/cloudbuild.yml"</span>)
-</pre></div>
+<span class="va">yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="va">bs</span><span class="op">)</span>
+<span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">yaml</span>, <span class="st">"build/cloudbuild.yml"</span><span class="op">)</span></pre></div>
 <p>In this example we write the cloudbuild.yml to a build folder rather than making an inline build trigger deployment. This is setup in a Build Trigger upon GitHub commit with the code below:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit">
-<span class="kw">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span>(<span class="st">"your-name/your-repo-with-shiny"</span>)
+<span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"your-name/your-repo-with-shiny"</span><span class="op">)</span>
 
 <span class="co"># test build by pushing to git after this trigger made</span>
-<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span>(<span class="st">"build/cloudbuild.yml"</span>,
-                name = <span class="st">"deploy-my-shiny-app"</span>,
-                trigger = <span class="kw">repo</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"build/cloudbuild.yml"</span>,
+                name <span class="op">=</span> <span class="st">"deploy-my-shiny-app"</span>,
+                trigger <span class="op">=</span> <span class="va">repo</span><span class="op">)</span></pre></div>
 <p>All together the git repo folder looks like:</p>
 <pre><code>|
 |- build/
@@ -796,37 +771,36 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 <p>The API endpoint in plumber needs an endpoint to recieve Pub/Sub messages, then an R function to process and do what you want with that message. In this case we shall email the file name to an end user. This could be expanded to do some R analysis, or what ever you need.</p>
 <div class="sourceCode" id="cb32"><pre class="downlit">
 <span class="co">#' Send an email via mailgun</span>
-<span class="kw">send_email</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">message</span>){
-  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"sending email with message: "</span>, <span class="kw">message</span>)
+<span class="va">send_email</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">message</span><span class="op">)</span><span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"sending email with message: "</span>, <span class="va">message</span><span class="op">)</span>
 
-  <span class="kw">httr</span>::<span class="fu"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"MAILGUN_URL"</span>),<span class="st">"/messages"</span>),
-             <span class="kw">httr</span>::<span class="fu"><a href="https://httr.r-lib.org/reference/authenticate.html">authenticate</a></span>(<span class="st">"api"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"MAILGUN_KEY"</span>)),
-             encode = <span class="st">"form"</span>,
-             body = <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
-               from=<span class="st">"googlecloudrunner@you.me"</span>,
-               to=<span class="st">"test@you.me"</span>,
-               subject=<span class="st">"Message from Pub/Sub"</span>,
-               text=<span class="kw">message</span>
-             ))
+  <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">"MAILGUN_URL"</span><span class="op">)</span>,<span class="st">"/messages"</span><span class="op">)</span>,
+             <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/authenticate.html">authenticate</a></span><span class="op">(</span><span class="st">"api"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">"MAILGUN_KEY"</span><span class="op">)</span><span class="op">)</span>,
+             encode <span class="op">=</span> <span class="st">"form"</span>,
+             body <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+               from<span class="op">=</span><span class="st">"googlecloudrunner@you.me"</span>,
+               to<span class="op">=</span><span class="st">"test@you.me"</span>,
+               subject<span class="op">=</span><span class="st">"Message from Pub/Sub"</span>,
+               text<span class="op">=</span><span class="va">message</span>
+             <span class="op">)</span><span class="op">)</span>
 
-  <span class="fl">TRUE</span>
-}
+  <span class="cn">TRUE</span>
+<span class="op">}</span>
 
 <span class="co">#' Recieve pub/sub message</span>
 <span class="co">#' @post /pubsub</span>
 <span class="co">#' @param message a pub/sub message</span>
-<span class="fu">function</span>(<span class="kw">message</span>=<span class="kw">NULL</span>){
+<span class="kw">function</span><span class="op">(</span><span class="va">message</span><span class="op">=</span><span class="cn">NULL</span><span class="op">)</span><span class="op">{</span>
 
-  <span class="kw">pub</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">x</span>){
-    <span class="kw">o</span> <span class="op">&lt;-</span> <span class="kw">jsonlite</span>::<span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html">fromJSON</a></span>(<span class="kw">x</span>)
-    <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"Echo:"</span>, <span class="kw">o</span>)
-    <span class="fu">send_email</span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"We got this file: "</span>, <span class="kw">o</span><span class="op">$</span><span class="kw">name</span>))
-  }
+  <span class="va">pub</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
+    <span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html">fromJSON</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"Echo:"</span>, <span class="va">o</span><span class="op">)</span>
+    <span class="fu">send_email</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"We got this file: "</span>, <span class="va">o</span><span class="op">$</span><span class="va">name</span><span class="op">)</span><span class="op">)</span>
+  <span class="op">}</span>
 
-  <span class="kw">googleCloudRunner</span>::<span class="fu"><a href="../reference/cr_plumber_pubsub.html">cr_plumber_pubsub</a></span>(<span class="kw">message</span>, <span class="kw">pub</span>)
+  <span class="fu">googleCloudRunner</span><span class="fu">::</span><span class="fu"><a href="../reference/cr_plumber_pubsub.html">cr_plumber_pubsub</a></span><span class="op">(</span><span class="va">message</span>, <span class="va">pub</span><span class="op">)</span>
 
-}
-</pre></div>
+<span class="op">}</span></pre></div>
 <p>The above script relies on two environment arguments with the Mailgun keys, which can be set in the Cloud Run interface once a deployment is live. The environment arguments persist inbetween versions so you only need to set this up once.</p>
 <p>For this example, the Dockerfile is a standard one with plumber and googleCloudRunner installed - you may need to add your own dependencies:</p>
 <pre><code>FROM gcr.io/gcer-public/googlecloudrunner:master
@@ -839,16 +813,14 @@ CMD ["api.R"]</code></pre>
 <a href="#deployment" class="anchor"></a>Deployment</h3>
 <p>This can be deployed via the RStudio Addin, or via the code below:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit">
-<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span>(<span class="st">"folder/with-api/"</span>, 
-                  image_name = <span class="st">"gcs-pubsub"</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span><span class="op">(</span><span class="st">"folder/with-api/"</span>, 
+                  image_name <span class="op">=</span> <span class="st">"gcs-pubsub"</span><span class="op">)</span></pre></div>
 <p>After the first deployment, go to the web UI and <code>Deploy New Revision</code> - keep everything the same but update the environment arguments. These will persist for future revisions:</p>
 <p><img src="cloudrun-environment-args.png"></p>
 <p>You can test the Pub/Sub API is working from R with the below code:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit">
-<span class="fu"><a href="../reference/cr_pubsub.html">cr_pubsub</a></span>(<span class="st">"https://your-cloudendpoint.run.app/pubsub"</span>,
-          <span class="kw">jsonlite</span>::<span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html">toJSON</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(name = <span class="st">"test_file_from_r"</span>)))
-</pre></div>
+<span class="fu"><a href="../reference/cr_pubsub.html">cr_pubsub</a></span><span class="op">(</span><span class="st">"https://your-cloudendpoint.run.app/pubsub"</span>,
+          <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html">toJSON</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"test_file_from_r"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></pre></div>
 </div>
 <div id="setup-pubsub" class="section level3">
 <h3 class="hasAnchor">
@@ -858,9 +830,8 @@ CMD ["api.R"]</code></pre>
 <p><img src="pubsub-topic.png"></p>
 <p>You can only setup cloud storage pub/sub messages to this topic using the API, which can be done using <code>googleCloudStorageR::gce_create_pubsub()</code>:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://code.markedmondson.me/googleCloudStorageR">googleCloudStorageR</a></span>)
-<span class="fu"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_create_pubsub.html">gcs_create_pubsub</a></span>(<span class="st">"your-topic"</span>, <span class="st">"your-project"</span>, <span class="st">"your-bucket"</span>)
-</pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://code.markedmondson.me/googleCloudStorageR/">googleCloudStorageR</a></span><span class="op">)</span>
+<span class="fu"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_create_pubsub.html">gcs_create_pubsub</a></span><span class="op">(</span><span class="st">"your-topic"</span>, <span class="st">"your-project"</span>, <span class="st">"your-bucket"</span><span class="op">)</span></pre></div>
 <p>Each topic can have many subscriptions. One of these will push to the Cloud Run URL set up in the previous step:</p>
 <p><img src="pubsub-sub.png"></p>
 </div>
@@ -877,9 +848,8 @@ CMD ["api.R"]</code></pre>
 </ol>
 <p>You can test it by uploading files either in the web UI or via</p>
 <div class="sourceCode" id="cb37"><pre class="downlit">
-<span class="kw">googleCloudStorageR</span>::<span class="fu"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_upload.html">gcs_upload</a></span>(<span class="kw">mtcars</span>, bucket = <span class="st">"your-bucket"</span>, 
-                                name = <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span>(), <span class="st">"test"</span>))
-</pre></div>
+<span class="fu">googleCloudStorageR</span><span class="fu">::</span><span class="fu"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_upload.html">gcs_upload</a></span><span class="op">(</span><span class="va">mtcars</span>, bucket <span class="op">=</span> <span class="st">"your-bucket"</span>, 
+                                name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"test"</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p>You will need to setup mailgun to stop it appearing in your spam folder, by verifying your domain etc.</p>
 </div>
 </div>
@@ -892,32 +862,30 @@ CMD ["api.R"]</code></pre>
 </iframe>
 <p>The Cloud Build below makes use of Cloud Build artifacts to send the built Rmd files to a public Cloud Storage bucket. The Rmd is built on a schedule to pull in new data from a Google Sheet:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit">
-<span class="kw">rmd_build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(
-  steps = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
-    <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(
+<span class="va">rmd_build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
+  steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+    <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span>
       <span class="st">"gsutil"</span>,
-      args = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cp"</span>,
+      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
                <span class="st">"gs://mark-edmondson-public-read/scheduled_rmarkdown.Rmd"</span>,
-               <span class="st">"scheduled_rmarkdown.Rmd"</span>)),
-    <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(
+               <span class="st">"scheduled_rmarkdown.Rmd"</span><span class="op">)</span><span class="op">)</span>,
+    <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span>
       <span class="st">"gcr.io/gcer-public/render_rmd:master"</span>,
-      r = <span class="st">"rmarkdown::render('scheduled_rmarkdown.Rmd',
+      r <span class="op">=</span> <span class="st">"rmarkdown::render('scheduled_rmarkdown.Rmd',
                output_file = 'scheduled_rmarkdown_2020.html')"</span>,
-  )),
-  artifacts = <span class="fu"><a href="../reference/cr_build_yaml_artifact.html">cr_build_yaml_artifact</a></span>(
+  <span class="op">)</span><span class="op">)</span>,
+  artifacts <span class="op">=</span> <span class="fu"><a href="../reference/cr_build_yaml_artifact.html">cr_build_yaml_artifact</a></span><span class="op">(</span>
     <span class="st">"scheduled_rmarkdown_2020.html"</span>,
-    bucket = <span class="st">"mark-edmondson-public-read"</span>)
-)
+    bucket <span class="op">=</span> <span class="st">"mark-edmondson-public-read"</span><span class="op">)</span>
+<span class="op">)</span>
 
 <span class="co"># test the build</span>
-<span class="kw">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="kw">rmd_build</span>)
-</pre></div>
+<span class="va">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">rmd_build</span><span class="op">)</span></pre></div>
 <p>Once the build is tested, we now schedule the Rmd to build each morning, adapting to changes in the source data file.</p>
 <div class="sourceCode" id="cb39"><pre class="downlit">
 <span class="co"># schedule the build</span>
-<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"rmd-demo"</span>, schedule = <span class="st">"15 5 * * *"</span>,
-            httpTarget = <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(<span class="kw">built</span>))
-</pre></div>
+<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"rmd-demo"</span>, schedule <span class="op">=</span> <span class="st">"15 5 * * *"</span>,
+            httpTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span><span class="op">)</span></pre></div>
 <p>The example Rmd file is built and available on a public Cloud Storage bucket - the above example is available at this <a href="https://storage.googleapis.com/mark-edmondson-public-read/scheduled_rmarkdown.html">link</a></p>
 <p><img src="schedule_markdown_hosted_gcs.png"></p>
 </div>
@@ -970,46 +938,44 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <li>serve it on Cloud Run.</li>
 </ul>
 <div class="sourceCode" id="cb41"><pre class="downlit">
-<span class="kw">r</span> <span class="op">&lt;-</span> <span class="st">"rmarkdown::render('scheduled_rmarkdown.Rmd', output_file = 'scheduled_rmarkdown.html')"</span>
+<span class="va">r</span> <span class="op">&lt;-</span> <span class="st">"rmarkdown::render('scheduled_rmarkdown.Rmd', output_file = 'scheduled_rmarkdown.html')"</span>
 
-<span class="kw">build_rmd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(
-      steps = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
-        <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(
-          id = <span class="st">"download Rmd template"</span>,
-          name = <span class="st">"gsutil"</span>,
-          args = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cp"</span>,
+<span class="va">build_rmd</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
+      steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+        <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span>
+          id <span class="op">=</span> <span class="st">"download Rmd template"</span>,
+          name <span class="op">=</span> <span class="st">"gsutil"</span>,
+          args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
                    <span class="st">"gs://mark-edmondson-public-read/scheduled_rmarkdown.Rmd"</span>,
-                   <span class="st">"scheduled_rmarkdown.Rmd"</span>),
-        ),
-        <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(
-          id=<span class="st">"render rmd"</span>,
-          r = <span class="kw">r</span>,
-          name = <span class="st">"gcr.io/gcer-public/render_rmd:master"</span>
-        ),
-        <span class="fu"><a href="../reference/cr_buildstep_nginx_setup.html">cr_buildstep_nginx_setup</a></span>(<span class="st">"/workspace/"</span>),
-        <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(<span class="st">"html-on-cloudrun"</span>, tag = <span class="st">"$BUILD_ID"</span>),
-        <span class="fu"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span>(name = <span class="st">"my-html-on-cloudrun"</span>,
-                         image = <span class="st">"gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID"</span>,
-                         concurrency = <span class="fl">80</span>)
-        ), 
-    images = <span class="st">"gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID"</span>,
-    )
-</pre></div>
+                   <span class="st">"scheduled_rmarkdown.Rmd"</span><span class="op">)</span>,
+        <span class="op">)</span>,
+        <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span>
+          id<span class="op">=</span><span class="st">"render rmd"</span>,
+          r <span class="op">=</span> <span class="va">r</span>,
+          name <span class="op">=</span> <span class="st">"gcr.io/gcer-public/render_rmd:master"</span>
+        <span class="op">)</span>,
+        <span class="fu"><a href="../reference/cr_buildstep_nginx_setup.html">cr_buildstep_nginx_setup</a></span><span class="op">(</span><span class="st">"/workspace/"</span><span class="op">)</span>,
+        <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span><span class="op">(</span><span class="st">"html-on-cloudrun"</span>, tag <span class="op">=</span> <span class="st">"$BUILD_ID"</span><span class="op">)</span>,
+        <span class="fu"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"my-html-on-cloudrun"</span>,
+                         image <span class="op">=</span> <span class="st">"gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID"</span>,
+                         concurrency <span class="op">=</span> <span class="fl">80</span><span class="op">)</span>
+        <span class="op">)</span>, 
+    images <span class="op">=</span> <span class="st">"gcr.io/mark-edmondson-gde/html-on-cloudrun:$BUILD_ID"</span>,
+    <span class="op">)</span></pre></div>
 <ol start="5" style="list-style-type: decimal">
 <li>Run a test build to check it works.</li>
 </ol>
 <div class="sourceCode" id="cb42"><pre class="downlit">
-<span class="kw">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="kw">build_rmd</span>)
-<span class="kw">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span>(<span class="kw">b</span>)
-</pre></div>
+<span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">build_rmd</span><span class="op">)</span>
+<span class="va">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span></pre></div>
 <p>You should see a Cloud Run URL in the logs, like this one: <code>https://my-html-on-cloudrun-ewjogewawq-ew.a.run.app/scheduled_rmarkdown.html</code></p>
 <p><img src="rmd-on-cloudrun.png"></p>
 <ol start="6" style="list-style-type: decimal">
 <li>Schedule the build using cron syntax</li>
 </ol>
 <div class="sourceCode" id="cb43"><pre class="downlit">
-<span class="kw">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(<span class="kw">built</span>)
-<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"rmd-on-cloudrun"</span>, <span class="st">"15 8 * * *"</span>, httpTarget = <span class="kw">schedule_me</span>)
+<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span>
+<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"rmd-on-cloudrun"</span>, <span class="st">"15 8 * * *"</span>, httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span>
 <span class="co">#==CloudScheduleJob==</span>
 <span class="co">#name:  projects/project-name/locations/europe-west1/jobs/rmd-on-cloudrun </span>
 <span class="co">#state:  ENABLED </span>
@@ -1017,8 +983,7 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <span class="co">#httpTarget.httpMethod:  POST </span>
 <span class="co">#userUpdateTime:  2020-01-04T08:34:42Z </span>
 <span class="co">#schedule:  15 8 * * * </span>
-<span class="co">#timezone:  UTC </span>
-</pre></div>
+<span class="co">#timezone:  UTC </span></pre></div>
 <div id="do-it-all-in-r-using-cr_deploy_r" class="section level3">
 <h3 class="hasAnchor">
 <a href="#do-it-all-in-r-using-cr_deploy_r" class="anchor"></a>Do it all in R using cr_deploy_r()</h3>
@@ -1046,28 +1011,28 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 </ul>
 <p>And will perform downloading unsampled data from Google Analytics, creating a statistical report of the data and then uploading the raw data to BigQuery for further analysis.</p>
 <div class="sourceCode" id="cb44"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://code.markedmondson.me/googleCloudRunner">googleCloudRunner</a></span>)
-<span class="kw">polygot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(
-  steps = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(
-    <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(
-      id = <span class="st">"download encrypted auth file"</span>,
-      name = <span class="st">"gsutil"</span>,
-      args = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cp"</span>,
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
+<span class="va">polygot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
+  steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+    <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span>
+      id <span class="op">=</span> <span class="st">"download encrypted auth file"</span>,
+      name <span class="op">=</span> <span class="st">"gsutil"</span>,
+      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
                <span class="st">"gs://marks-bucket-of-stuff/auth.json.enc"</span>,
-               <span class="st">"/workspace/auth.json.enc"</span>),
-    ),
-    <span class="fu"><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt</a></span>(
-      id = <span class="st">"decrypt file"</span>,
-      cipher = <span class="st">"/workspace/auth.json.enc"</span>,
-      plain = <span class="st">"/workspace/auth.json"</span>,
-      keyring = <span class="st">"my-keyring"</span>,
-      key = <span class="st">"ga_auth"</span>
-    ),
-    <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(
-      id = <span class="st">"download google analytics"</span>,
-      name = <span class="st">"gcr.io/gcer-public/gago:master"</span>,
-      env = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"GAGO_AUTH=/workspace/auth.json"</span>),
-      args = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"reports"</span>,
+               <span class="st">"/workspace/auth.json.enc"</span><span class="op">)</span>,
+    <span class="op">)</span>,
+    <span class="fu"><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt</a></span><span class="op">(</span>
+      id <span class="op">=</span> <span class="st">"decrypt file"</span>,
+      cipher <span class="op">=</span> <span class="st">"/workspace/auth.json.enc"</span>,
+      plain <span class="op">=</span> <span class="st">"/workspace/auth.json"</span>,
+      keyring <span class="op">=</span> <span class="st">"my-keyring"</span>,
+      key <span class="op">=</span> <span class="st">"ga_auth"</span>
+    <span class="op">)</span>,
+    <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span>
+      id <span class="op">=</span> <span class="st">"download google analytics"</span>,
+      name <span class="op">=</span> <span class="st">"gcr.io/gcer-public/gago:master"</span>,
+      env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"GAGO_AUTH=/workspace/auth.json"</span><span class="op">)</span>,
+      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"reports"</span>,
                <span class="st">"--view=81416156"</span>,
                <span class="st">"--dims=ga:date,ga:medium"</span>,
                <span class="st">"--mets=ga:sessions"</span>,
@@ -1075,59 +1040,58 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
                <span class="st">"--end=2019-11-30"</span>,
                <span class="st">"--antisample"</span>,
                <span class="st">"--max=-1"</span>,
-               <span class="st">"-o=google_analytics.csv"</span>),
-      dir = <span class="st">"build"</span>
-    ),
-    <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(
-      id = <span class="st">"download Rmd template"</span>,
-      name = <span class="st">"gsutil"</span>,
-      args = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"cp"</span>,
+               <span class="st">"-o=google_analytics.csv"</span><span class="op">)</span>,
+      dir <span class="op">=</span> <span class="st">"build"</span>
+    <span class="op">)</span>,
+    <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span>
+      id <span class="op">=</span> <span class="st">"download Rmd template"</span>,
+      name <span class="op">=</span> <span class="st">"gsutil"</span>,
+      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
                <span class="st">"gs://mark-edmondson-public-read/polygot.Rmd"</span>,
-               <span class="st">"/workspace/build/polygot.Rmd"</span>)
-    ),
-    <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(
-      id=<span class="st">"render rmd"</span>,
-      r = <span class="st">"lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
+               <span class="st">"/workspace/build/polygot.Rmd"</span><span class="op">)</span>
+    <span class="op">)</span>,
+    <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span>
+      id<span class="op">=</span><span class="st">"render rmd"</span>,
+      r <span class="op">=</span> <span class="st">"lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
              rmarkdown::render, output_format = 'html_document')"</span>,
-      name = <span class="st">"gcr.io/gcer-public/packagetools:latest"</span>,
-      dir = <span class="st">"build"</span>
-      ),
-    <span class="fu"><a href="../reference/cr_buildstep_bash.html">cr_buildstep_bash</a></span>(
-      id = <span class="st">"setup nginx"</span>,
-      bash_script = <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"docker"</span>, <span class="st">"nginx"</span>, <span class="st">"setup.bash"</span>,
-                                package = <span class="st">"googleCloudRunner"</span>),
-      dir = <span class="st">"build"</span>
-      ),
-    <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span>(
+      name <span class="op">=</span> <span class="st">"gcr.io/gcer-public/packagetools:latest"</span>,
+      dir <span class="op">=</span> <span class="st">"build"</span>
+      <span class="op">)</span>,
+    <span class="fu"><a href="../reference/cr_buildstep_bash.html">cr_buildstep_bash</a></span><span class="op">(</span>
+      id <span class="op">=</span> <span class="st">"setup nginx"</span>,
+      bash_script <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"docker"</span>, <span class="st">"nginx"</span>, <span class="st">"setup.bash"</span>,
+                                package <span class="op">=</span> <span class="st">"googleCloudRunner"</span><span class="op">)</span>,
+      dir <span class="op">=</span> <span class="st">"build"</span>
+      <span class="op">)</span>,
+    <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span><span class="op">(</span>
       <span class="co"># change to your own container registry</span>
-      image = <span class="st">"gcr.io/gcer-public/polygot_demo"</span>,
-      tag = <span class="st">"latest"</span>,
-      dir = <span class="st">"build"</span>
-      ),
-    <span class="fu"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span>(
-      name = <span class="st">"polygot-demo"</span>,
-      image = <span class="st">"gcr.io/gcer-public/polygot_demo"</span>,
-      concurrency = <span class="fl">80</span>),
-    <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span>(
-      id = <span class="st">"load BigQuery"</span>,
-      name = <span class="st">"gcr.io/google.com/cloudsdktool/cloud-sdk:alpine"</span>,
-      entrypoint = <span class="st">"bq"</span>,
-      args = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"--location=EU"</span>,
+      image <span class="op">=</span> <span class="st">"gcr.io/gcer-public/polygot_demo"</span>,
+      tag <span class="op">=</span> <span class="st">"latest"</span>,
+      dir <span class="op">=</span> <span class="st">"build"</span>
+      <span class="op">)</span>,
+    <span class="fu"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span><span class="op">(</span>
+      name <span class="op">=</span> <span class="st">"polygot-demo"</span>,
+      image <span class="op">=</span> <span class="st">"gcr.io/gcer-public/polygot_demo"</span>,
+      concurrency <span class="op">=</span> <span class="fl">80</span><span class="op">)</span>,
+    <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span>
+      id <span class="op">=</span> <span class="st">"load BigQuery"</span>,
+      name <span class="op">=</span> <span class="st">"gcr.io/google.com/cloudsdktool/cloud-sdk:alpine"</span>,
+      entrypoint <span class="op">=</span> <span class="st">"bq"</span>,
+      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"--location=EU"</span>,
                <span class="st">"load"</span>,
                <span class="st">"--autodetect"</span>,
                <span class="st">"--source_format=CSV"</span>,
                <span class="st">"test_EU.polygot"</span>,
                <span class="st">"google_analytics.csv"</span>
-               ),
-      dir = <span class="st">"build"</span>
-    )
-  )
-)
+               <span class="op">)</span>,
+      dir <span class="op">=</span> <span class="st">"build"</span>
+    <span class="op">)</span>
+  <span class="op">)</span>
+<span class="op">)</span>
 
 <span class="co"># build the polygot cloud build steps</span>
-<span class="kw">build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span>(<span class="kw">polygot</span>)
-<span class="kw">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span>(<span class="kw">build</span>)
-</pre></div>
+<span class="va">build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">polygot</span><span class="op">)</span>
+<span class="va">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span><span class="op">(</span><span class="va">build</span><span class="op">)</span></pre></div>
 <p>An example of the demo output is on this Cloud Run instance URL: <code>https://polygot-demo-ewjogewawq-ew.a.run.app/polygot.html</code></p>
 <p><img src="polygot-html.png"></p>
 <p>It also uploads the data to a BigQuery table:</p>
@@ -1135,14 +1099,12 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <p>This constructed cloud build can also be used outside of R, by writing out the Cloud Build file via <code><a href="../reference/cr_build_write.html">cr_build_write()</a></code></p>
 <div class="sourceCode" id="cb45"><pre class="downlit">
 <span class="co"># write out to cloudbuild.yaml for other languages</span>
-<span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span>(<span class="kw">polygot</span>)
-<span class="co"># 2019-12-28 19:15:50&gt; Writing to cloudbuild.yaml</span>
-</pre></div>
+<span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">polygot</span><span class="op">)</span>
+<span class="co"># 2019-12-28 19:15:50&gt; Writing to cloudbuild.yaml</span></pre></div>
 <p>This can then be scheduled as described in Cloud Scheduler section on <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html">scheduled cloud builds</a>.</p>
 <div class="sourceCode" id="cb46"><pre class="downlit">
-<span class="kw">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(<span class="kw">built</span>)
-<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"polygot-example"</span>, <span class="st">"15 8 * * *"</span>, httpTarget = <span class="kw">schedule_me</span>)
-</pre></div>
+<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span>
+<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"polygot-example"</span>, <span class="st">"15 8 * * *"</span>, httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span></pre></div>
 <p>An example of the cloudbuild.yaml is on GitHub <a href="https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml">here</a>.</p>
 </div>
   </div>

@@ -179,26 +179,26 @@
     <p>Configuration for an automated build in response to source repositorychanges.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>BuildTrigger</span>(
-  filename = <span class='kw'>NULL</span>,
-  name = <span class='kw'>NULL</span>,
-  tags = <span class='kw'>NULL</span>,
-  build = <span class='kw'>NULL</span>,
-  ignoredFiles = <span class='kw'>NULL</span>,
-  github = <span class='kw'>NULL</span>,
-  substitutions = <span class='kw'>NULL</span>,
-  includedFiles = <span class='kw'>NULL</span>,
-  disabled = <span class='kw'>NULL</span>,
-  triggerTemplate = <span class='kw'>NULL</span>,
-  description = <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>BuildTrigger</span><span class='op'>(</span>
+  filename <span class='op'>=</span> <span class='cn'>NULL</span>,
+  name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  tags <span class='op'>=</span> <span class='cn'>NULL</span>,
+  build <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ignoredFiles <span class='op'>=</span> <span class='cn'>NULL</span>,
+  github <span class='op'>=</span> <span class='cn'>NULL</span>,
+  substitutions <span class='op'>=</span> <span class='cn'>NULL</span>,
+  includedFiles <span class='op'>=</span> <span class='cn'>NULL</span>,
+  disabled <span class='op'>=</span> <span class='cn'>NULL</span>,
+  triggerTemplate <span class='op'>=</span> <span class='cn'>NULL</span>,
+  description <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>filename</th>
-      <td><p>Path, from the source root, to a file whose contents is used for the</p></td>
+      <td><p>Path, from the source root, to a file whose contents is used for the build</p></td>
     </tr>
     <tr>
       <th>name</th>
@@ -250,6 +250,7 @@
     <div class='dont-index'><p><a href='https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.triggers'>https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.triggers</a></p>
 <p>Other BuildTrigger functions: 
 <code><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a>()</code>,
+<code><a href='cr_buildtrigger_copy.html'>cr_buildtrigger_copy</a>()</code>,
 <code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a>()</code>,
 <code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a>()</code>,
 <code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a>()</code>,

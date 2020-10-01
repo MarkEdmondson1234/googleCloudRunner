@@ -179,17 +179,17 @@
     <p>Give a service account the right permissions for googleCloudRunner operations</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_setup_service</span>(
-  <span class='kw'>account_email</span>,
-  roles = <span class='fu'>cr_setup_role_lookup</span>(<span class='st'>"local"</span>),
-  json = <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"GAR_CLIENT_JSON"</span>),
-  email = <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span>(<span class='st'>"GARGLE_EMAIL"</span>)
-)
+    <pre class="usage"><span class='fu'>cr_setup_service</span><span class='op'>(</span>
+  <span class='va'>account_email</span>,
+  roles <span class='op'>=</span> <span class='fu'>cr_setup_role_lookup</span><span class='op'>(</span><span class='st'>"local"</span><span class='op'>)</span>,
+  json <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"GAR_CLIENT_JSON"</span><span class='op'>)</span>,
+  email <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"GARGLE_EMAIL"</span><span class='op'>)</span>
+<span class='op'>)</span>
 
-<span class='fu'>cr_setup_role_lookup</span>(
-  type = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"local"</span>, <span class='st'>"cloudrun"</span>, <span class='st'>"bigquery"</span>, <span class='st'>"secrets"</span>, <span class='st'>"cloudbuild"</span>, <span class='st'>"cloudstorage"</span>,
-    <span class='st'>"schedule_agent"</span>, <span class='st'>"run_agent"</span>)
-)</pre>
+<span class='fu'>cr_setup_role_lookup</span><span class='op'>(</span>
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"local"</span>, <span class='st'>"cloudrun"</span>, <span class='st'>"bigquery"</span>, <span class='st'>"secrets"</span>, <span class='st'>"cloudbuild"</span>, <span class='st'>"cloudstorage"</span>,
+    <span class='st'>"schedule_agent"</span>, <span class='st'>"run_agent"</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

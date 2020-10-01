@@ -179,18 +179,18 @@
     <p>Creates a new `BuildTrigger`.This API is experimental.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildtrigger</span>(
-  <span class='kw'>build</span>,
-  <span class='kw'>name</span>,
-  <span class='kw'>trigger</span>,
-  description = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='st'>"cr_buildtrigger: "</span>, <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span>()),
-  disabled = <span class='fl'>FALSE</span>,
-  substitutions = <span class='kw'>NULL</span>,
-  ignoredFiles = <span class='kw'>NULL</span>,
-  includedFiles = <span class='kw'>NULL</span>,
-  trigger_tags = <span class='kw'>NULL</span>,
-  projectId = <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
-)</pre>
+    <pre class="usage"><span class='fu'>cr_buildtrigger</span><span class='op'>(</span>
+  <span class='va'>build</span>,
+  <span class='va'>name</span>,
+  <span class='va'>trigger</span>,
+  description <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"cr_buildtrigger: "</span>, <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
+  disabled <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  substitutions <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ignoredFiles <span class='op'>=</span> <span class='cn'>NULL</span>,
+  includedFiles <span class='op'>=</span> <span class='cn'>NULL</span>,
+  trigger_tags <span class='op'>=</span> <span class='cn'>NULL</span>,
+  projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -245,6 +245,7 @@
     <div class='dont-index'><p>Other BuildTrigger functions: 
 <code><a href='BuildTrigger.html'>BuildTrigger</a>()</code>,
 <code><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a>()</code>,
+<code><a href='cr_buildtrigger_copy.html'>cr_buildtrigger_copy</a>()</code>,
 <code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a>()</code>,
 <code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a>()</code>,
 <code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a>()</code>,
@@ -253,34 +254,34 @@
 <code><a href='cr_buildtrigger_run.html'>cr_buildtrigger_run</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-24 13:03:15 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-24 13:03:15 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='kw'>cloudbuild</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"cloudbuild/cloudbuild.yaml"</span>,
-                           package = <span class='st'>"googleCloudRunner"</span>)
-<span class='kw'>bb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_make.html'>cr_build_make</a></span>(<span class='kw'>cloudbuild</span>)
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-10-01 09:13:40 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-10-01 09:13:40 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='va'>cloudbuild</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"cloudbuild/cloudbuild.yaml"</span>,
+                           package <span class='op'>=</span> <span class='st'>"googleCloudRunner"</span><span class='op'>)</span>
+<span class='va'>bb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_make.html'>cr_build_make</a></span><span class='op'>(</span><span class='va'>cloudbuild</span><span class='op'>)</span>
 
 <span class='co'># repo hosted on GitHub</span>
-<span class='kw'>gh_trigger</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a></span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>)
+<span class='va'>gh_trigger</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a></span><span class='op'>(</span><span class='st'>"MarkEdmondson1234/googleCloudRunner"</span><span class='op'>)</span>
 
 <span class='co'># repo mirrored to Cloud Source Repositories</span>
-<span class='kw'>cs_trigger</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a></span>(<span class='st'>"github_markedmondson1234_googlecloudrunner"</span>,
-                                   type = <span class='st'>"cloud_source"</span>)
+<span class='va'>cs_trigger</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a></span><span class='op'>(</span><span class='st'>"github_markedmondson1234_googlecloudrunner"</span>,
+                                   type <span class='op'>=</span> <span class='st'>"cloud_source"</span><span class='op'>)</span>
 
-<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># build with in-line build code</span>
-<span class='fu'>cr_buildtrigger</span>(<span class='kw'>bb</span>, name = <span class='st'>"bt-github-inline"</span>, trigger = <span class='kw'>gh_trigger</span>)
+<span class='fu'>cr_buildtrigger</span><span class='op'>(</span><span class='va'>bb</span>, name <span class='op'>=</span> <span class='st'>"bt-github-inline"</span>, trigger <span class='op'>=</span> <span class='va'>gh_trigger</span><span class='op'>)</span>
 
 <span class='co'># build with in-line build code using Cloud Source Repository</span>
-<span class='fu'>cr_buildtrigger</span>(<span class='kw'>bb</span>, name = <span class='st'>"bt-github-inline"</span>, trigger = <span class='kw'>cs_trigger</span>)
+<span class='fu'>cr_buildtrigger</span><span class='op'>(</span><span class='va'>bb</span>, name <span class='op'>=</span> <span class='st'>"bt-github-inline"</span>, trigger <span class='op'>=</span> <span class='va'>cs_trigger</span><span class='op'>)</span>
 
 <span class='co'># build pointing to cloudbuild.yaml within the GitHub repo</span>
-<span class='fu'>cr_buildtrigger</span>(<span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>,
-                 name = <span class='st'>"bt-github-file"</span>, trigger = <span class='kw'>gh_trigger</span>)
+<span class='fu'>cr_buildtrigger</span><span class='op'>(</span><span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>,
+                 name <span class='op'>=</span> <span class='st'>"bt-github-file"</span>, trigger <span class='op'>=</span> <span class='va'>gh_trigger</span><span class='op'>)</span>
 
 <span class='co'># build with repo mirror from file</span>
-<span class='fu'>cr_buildtrigger</span>(<span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>,
-                 name = <span class='st'>"bt-cs-file"</span>, trigger = <span class='kw'>cs_trigger</span>)
-}
+<span class='fu'>cr_buildtrigger</span><span class='op'>(</span><span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>,
+                 name <span class='op'>=</span> <span class='st'>"bt-cs-file"</span>, trigger <span class='op'>=</span> <span class='va'>cs_trigger</span><span class='op'>)</span>
+<span class='op'>}</span>
 </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Build a source object — cr_build_source • googleCloudRunner</title>
+<title>Copy a buildtrigger — cr_buildtrigger_copy • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Build a source object — cr_build_source" />
-<meta property="og:description" content="Build a source object" />
+<meta property="og:title" content="Copy a buildtrigger — cr_buildtrigger_copy" />
+<meta property="og:description" content="This lets you use the response from cr_buildtrigger_get for an existing buildtrigger to copy over settings to a new buildtrigger." />
 
 
 
@@ -170,57 +170,112 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Build a source object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/build_sources.R'><code>R/build_sources.R</code></a></small>
-    <div class="hidden name"><code>cr_build_source.Rd</code></div>
+    <h1>Copy a buildtrigger</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/buildtriggers.R'><code>R/buildtriggers.R</code></a></small>
+    <div class="hidden name"><code>cr_buildtrigger_copy.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Build a source object</p>
+    <p>This lets you use the response from <a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a> for an existing buildtrigger to copy over settings to a new buildtrigger.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_build_source</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
-
-<span class='co'># S3 method for gar_RepoSource</span>
-<span class='fu'>cr_build_source</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
-
-<span class='co'># S3 method for gar_StorageSource</span>
-<span class='fu'>cr_build_source</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cr_buildtrigger_copy</span><span class='op'>(</span>
+  <span class='va'>buildTrigger</span>,
+  filename <span class='op'>=</span> <span class='cn'>NULL</span>,
+  name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  tags <span class='op'>=</span> <span class='cn'>NULL</span>,
+  build <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ignoredFiles <span class='op'>=</span> <span class='cn'>NULL</span>,
+  github <span class='op'>=</span> <span class='cn'>NULL</span>,
+  substitutions <span class='op'>=</span> <span class='cn'>NULL</span>,
+  includedFiles <span class='op'>=</span> <span class='cn'>NULL</span>,
+  disabled <span class='op'>=</span> <span class='cn'>NULL</span>,
+  triggerTemplate <span class='op'>=</span> <span class='cn'>NULL</span>,
+  projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>A <a href='RepoSource.html'>RepoSource</a> or a <a href='StorageSource.html'>StorageSource</a> object</p></td>
+      <th>filename</th>
+      <td><p>Path, from the source root, to a file whose contents is used for the build</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>User assigned name of the trigger</p></td>
+    </tr>
+    <tr>
+      <th>tags</th>
+      <td><p>Tags for annotation of a `BuildTrigger`</p></td>
+    </tr>
+    <tr>
+      <th>build</th>
+      <td><p>Contents of the build template</p></td>
+    </tr>
+    <tr>
+      <th>ignoredFiles</th>
+      <td><p>ignored_files and included_files are file glob matches extended with support for "**".</p></td>
+    </tr>
+    <tr>
+      <th>github</th>
+      <td><p>a <a href='GitHubEventsConfig.html'>GitHubEventsConfig</a> object - mutually exclusive with <code>triggerTemplate</code></p></td>
+    </tr>
+    <tr>
+      <th>substitutions</th>
+      <td><p>A named list of Build macro variables</p></td>
+    </tr>
+    <tr>
+      <th>includedFiles</th>
+      <td><p>If any of the files altered in the commit pass the ignored_files</p></td>
+    </tr>
+    <tr>
+      <th>disabled</th>
+      <td><p>If true, the trigger will never result in a build</p></td>
+    </tr>
+    <tr>
+      <th>triggerTemplate</th>
+      <td><p>a <a href='RepoSource.html'>RepoSource</a> object - mutually exclusive with <code>github</code></p></td>
+    </tr>
+    <tr>
+      <th>buildtrigger</th>
+      <td><p>A <code>CloudBuildTriggerResponse</code> object from <a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a></p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Overwrite settings for the build trigger you are coping by supplying it as one of the other arguments from <a href='BuildTrigger.html'>BuildTrigger</a>.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other BuildTrigger functions: 
+<code><a href='BuildTrigger.html'>BuildTrigger</a>()</code>,
+<code><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a>()</code>,
+<code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a>()</code>,
+<code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a>()</code>,
+<code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a>()</code>,
+<code><a href='cr_buildtrigger_list.html'>cr_buildtrigger_list</a>()</code>,
+<code><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a>()</code>,
+<code><a href='cr_buildtrigger_run.html'>cr_buildtrigger_run</a>()</code>,
+<code><a href='cr_buildtrigger.html'>cr_buildtrigger</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='va'>repo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='RepoSource.html'>RepoSource</a></span><span class='op'>(</span><span class='st'>"my_repo"</span>, branchName <span class='op'>=</span> <span class='st'>"master"</span><span class='op'>)</span>
-<span class='va'>gcs</span>  <span class='op'>&lt;-</span> <span class='fu'><a href='StorageSource.html'>StorageSource</a></span><span class='op'>(</span><span class='st'>"my_code.tar.gz"</span>,<span class='st'>"gs://my-bucket"</span><span class='op'>)</span>
-
-<span class='fu'>cr_build_source</span><span class='op'>(</span><span class='va'>repo</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; ==CloudBuildSource==
-#&gt; ==CloudBuildRepoSource==
-#&gt; repoName:  my_repo 
-#&gt; branchName:  master </div><div class='input'><span class='fu'>cr_build_source</span><span class='op'>(</span><span class='va'>gcs</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; ==CloudBuildSource==
-#&gt; ==CloudBuildStorageSource==
-#&gt; bucket:  gs://my-bucket 
-#&gt; object:  my_code.tar.gz </div><div class='input'>
-<span class='va'>my_gcs_source</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_source</span><span class='op'>(</span><span class='va'>gcs</span><span class='op'>)</span>
-<span class='va'>my_repo_source</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_source</span><span class='op'>(</span><span class='va'>repo</span><span class='op'>)</span>
-
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'>#copying a GitHub buildtrigger across projects and git repos</span>
+<span class='va'>bt</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a></span><span class='op'>(</span><span class='st'>"my-trigger"</span>, projectId <span class='op'>=</span> <span class='st'>"my-project-1"</span><span class='op'>)</span>
 
-<span class='va'>build1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span><span class='op'>(</span><span class='st'>"cloudbuild.yaml"</span>, source <span class='op'>=</span> <span class='va'>my_gcs_source</span><span class='op'>)</span>
-<span class='va'>build2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span><span class='op'>(</span><span class='st'>"cloudbuild.yaml"</span>, source <span class='op'>=</span> <span class='va'>my_repo_source</span><span class='op'>)</span>
+<span class='co'># a new GitHub project</span>
+<span class='va'>gh</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></span><span class='op'>(</span><span class='st'>"username/new-repo"</span>,
+                         event <span class='op'>=</span> <span class='st'>"push"</span>,
+                         branch <span class='op'>=</span> <span class='st'>"^master$"</span><span class='op'>)</span>
+
+<span class='co'># give 'Cloud Build Editor' role to your service auth key in new project</span>
+<span class='co'># then copy configuration across</span>
+<span class='fu'>cr_buildtrigger_copy</span><span class='op'>(</span><span class='va'>bt</span>, github <span class='op'>=</span> <span class='va'>gh</span>, projectId <span class='op'>=</span> <span class='st'>"my-new-project"</span><span class='op'>)</span>
+
 
 <span class='op'>}</span>
-
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

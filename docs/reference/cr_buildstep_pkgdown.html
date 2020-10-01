@@ -179,15 +179,15 @@
     <p>Create buildsteps for deploying an R pkgdown website to GitHub</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildstep_pkgdown</span>(
-  <span class='kw'>github_repo</span>,
-  <span class='kw'>git_email</span>,
-  <span class='kw'>secret</span>,
-  env = <span class='kw'>NULL</span>,
-  build_image = <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>,
-  post_setup = <span class='kw'>NULL</span>,
-  post_clone = <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>cr_buildstep_pkgdown</span><span class='op'>(</span>
+  <span class='va'>github_repo</span>,
+  <span class='va'>git_email</span>,
+  <span class='va'>secret</span>,
+  env <span class='op'>=</span> <span class='cn'>NULL</span>,
+  build_image <span class='op'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>,
+  post_setup <span class='op'>=</span> <span class='cn'>NULL</span>,
+  post_clone <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -249,13 +249,13 @@
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-24 13:03:13 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-24 13:03:13 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-10-01 09:13:39 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-10-01 09:13:39 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
 <span class='co'># set github repo directly to write it out via cr_build_write()</span>
-<span class='fu'>cr_buildstep_pkgdown</span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
-                     git_email = <span class='st'>"cloudbuild@google.com"</span>,
-                     secret = <span class='st'>"github-ssh"</span>)
+<span class='fu'>cr_buildstep_pkgdown</span><span class='op'>(</span><span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
+                     git_email <span class='op'>=</span> <span class='st'>"cloudbuild@google.com"</span>,
+                     secret <span class='op'>=</span> <span class='st'>"github-ssh"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/gcloud
@@ -360,9 +360,9 @@
 #&gt;   path: /root/.ssh
 #&gt; </div><div class='input'>
 <span class='co'># github repo set via build trigger macro _GITHUB_REPO</span>
-<span class='fu'>cr_buildstep_pkgdown</span>(<span class='st'>"$_GITHUB_REPO"</span>,
-                     git_email = <span class='st'>"cloudbuild@google.com"</span>,
-                     secret = <span class='st'>"github-ssh"</span>)
+<span class='fu'>cr_buildstep_pkgdown</span><span class='op'>(</span><span class='st'>"$_GITHUB_REPO"</span>,
+                     git_email <span class='op'>=</span> <span class='st'>"cloudbuild@google.com"</span>,
+                     secret <span class='op'>=</span> <span class='st'>"github-ssh"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/gcloud
@@ -467,10 +467,10 @@
 #&gt;   path: /root/.ssh
 #&gt; </div><div class='input'>
 <span class='co'># example including environment arguments for pkgdown build step</span>
-<span class='fu'>cr_buildstep_pkgdown</span>(<span class='st'>"$_GITHUB_REPO"</span>,
-                     git_email = <span class='st'>"cloudbuild@google.com"</span>,
-                     secret = <span class='st'>"github-ssh"</span>,
-                     env = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"MYVAR=$_MY_VAR"</span>, <span class='st'>"PROJECT=$PROJECT_ID"</span>))
+<span class='fu'>cr_buildstep_pkgdown</span><span class='op'>(</span><span class='st'>"$_GITHUB_REPO"</span>,
+                     git_email <span class='op'>=</span> <span class='st'>"cloudbuild@google.com"</span>,
+                     secret <span class='op'>=</span> <span class='st'>"github-ssh"</span>,
+                     env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MYVAR=$_MY_VAR"</span>, <span class='st'>"PROJECT=$PROJECT_ID"</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/gcloud

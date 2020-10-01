@@ -179,7 +179,7 @@
     <p>Setup nginx for Cloud Run in a buildstep</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildstep_nginx_setup</span>(<span class='kw'>html_folder</span>, <span class='kw'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_buildstep_nginx_setup</span><span class='op'>(</span><span class='va'>html_folder</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -215,21 +215,21 @@
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-24 13:03:13 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-24 13:03:13 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span>(<span class='st'>"europe-west1"</span>)
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-24 13:03:13 &gt;</span><span> Region set to  europe-west1</span></div><div class='output co'>#&gt; [1] "europe-west1"</div><div class='input'>
-<span class='kw'>html_folder</span> <span class='op'>&lt;-</span> <span class='st'>"my_html"</span>
-<span class='kw'>run_image</span> <span class='op'>&lt;-</span> <span class='st'>"gcr.io/my-project/my-image-for-cloudrun"</span>
-<span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span>(
- steps = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
-  <span class='fu'>cr_buildstep_nginx_setup</span>(<span class='kw'>html_folder</span>),
-  <span class='fu'><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a></span>(<span class='kw'>run_image</span>, dir = <span class='kw'>html_folder</span>),
-  <span class='fu'><a href='cr_buildstep_run.html'>cr_buildstep_run</a></span>(name = <span class='st'>"running-nginx"</span>,
-                   image = <span class='kw'>run_image</span>,
-                   concurrency = <span class='fl'>80</span>)
-                   )
-           )
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-10-01 09:13:38 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-10-01 09:13:38 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span><span class='op'>(</span><span class='st'>"europe-west1"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-10-01 09:13:38 &gt;</span><span> Region set to  europe-west1</span></div><div class='output co'>#&gt; [1] "europe-west1"</div><div class='input'>
+<span class='va'>html_folder</span> <span class='op'>&lt;-</span> <span class='st'>"my_html"</span>
+<span class='va'>run_image</span> <span class='op'>&lt;-</span> <span class='st'>"gcr.io/my-project/my-image-for-cloudrun"</span>
+<span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span><span class='op'>(</span>
+ steps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
+  <span class='fu'>cr_buildstep_nginx_setup</span><span class='op'>(</span><span class='va'>html_folder</span><span class='op'>)</span>,
+  <span class='fu'><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a></span><span class='op'>(</span><span class='va'>run_image</span>, dir <span class='op'>=</span> <span class='va'>html_folder</span><span class='op'>)</span>,
+  <span class='fu'><a href='cr_buildstep_run.html'>cr_buildstep_run</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>"running-nginx"</span>,
+                   image <span class='op'>=</span> <span class='va'>run_image</span>,
+                   concurrency <span class='op'>=</span> <span class='fl'>80</span><span class='op'>)</span>
+                   <span class='op'>)</span>
+           <span class='op'>)</span>
 </div><div class='output co'>#&gt; ==cloudRunnerYaml==
 #&gt; steps:
 #&gt; - name: ubuntu

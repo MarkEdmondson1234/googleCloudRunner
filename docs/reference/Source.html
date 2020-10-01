@@ -179,7 +179,7 @@
     <p>It is suggested to use <a href='cr_build_source.html'>cr_build_source</a> instead to build sources</p>
     </div>
 
-    <pre class="usage"><span class='fu'>Source</span>(storageSource = <span class='kw'>NULL</span>, repoSource = <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>Source</span><span class='op'>(</span>storageSource <span class='op'>=</span> <span class='cn'>NULL</span>, repoSource <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -220,19 +220,19 @@ this location in a Cloud Source</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-24 13:03:09 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-09-24 13:03:09 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='kw'>my_gcs_source</span> <span class='op'>&lt;-</span> <span class='fu'>Source</span>(storageSource=<span class='fu'><a href='StorageSource.html'>StorageSource</a></span>(<span class='st'>"my_code.tar.gz"</span>,
-                                                    <span class='st'>"gs://my-bucket"</span>))
-<span class='kw'>my_repo_source</span> <span class='op'>&lt;-</span> <span class='fu'>Source</span>(repoSource=<span class='fu'><a href='RepoSource.html'>RepoSource</a></span>(<span class='st'>"https://my-repo.com"</span>,
-                                               branchName=<span class='st'>"master"</span>))
+<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-10-01 09:13:34 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #555555;'>2020-10-01 09:13:34 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='va'>my_gcs_source</span> <span class='op'>&lt;-</span> <span class='fu'>Source</span><span class='op'>(</span>storageSource<span class='op'>=</span><span class='fu'><a href='StorageSource.html'>StorageSource</a></span><span class='op'>(</span><span class='st'>"my_code.tar.gz"</span>,
+                                                    <span class='st'>"gs://my-bucket"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>my_repo_source</span> <span class='op'>&lt;-</span> <span class='fu'>Source</span><span class='op'>(</span>repoSource<span class='op'>=</span><span class='fu'><a href='RepoSource.html'>RepoSource</a></span><span class='op'>(</span><span class='st'>"https://my-repo.com"</span>,
+                                               branchName<span class='op'>=</span><span class='st'>"master"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
-<span class='kw'>build1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='st'>"cloudbuild.yaml"</span>, source = <span class='kw'>my_gcs_source</span>)
-<span class='kw'>build2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='st'>"cloudbuild.yaml"</span>, source = <span class='kw'>my_repo_source</span>)
+<span class='va'>build1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span><span class='op'>(</span><span class='st'>"cloudbuild.yaml"</span>, source <span class='op'>=</span> <span class='va'>my_gcs_source</span><span class='op'>)</span>
+<span class='va'>build2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span><span class='op'>(</span><span class='st'>"cloudbuild.yaml"</span>, source <span class='op'>=</span> <span class='va'>my_repo_source</span><span class='op'>)</span>
 
-}
+<span class='op'>}</span>
 </div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

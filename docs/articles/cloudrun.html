@@ -127,7 +127,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>R on Cloud Run</h1>
             
-            <h4 class="date">2020-09-24</h4>
+            <h4 class="date">2020-10-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudrun.Rmd"><code>vignettes/cloudrun.Rmd</code></a></small>
       <div class="hidden name"><code>cloudrun.Rmd</code></div>
@@ -148,42 +148,41 @@
 <div class="sourceCode" id="cb1"><pre class="downlit">
 <span class="co">#' @get /</span>
 <span class="co">#' @html</span>
-<span class="fu">function</span>(){
+<span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span>
   <span class="st">"&lt;html&gt;&lt;h1&gt;It works!&lt;/h1&gt;&lt;/html&gt;"</span>
-}
+<span class="op">}</span>
 
 
 <span class="co">#' @get /hello</span>
 <span class="co">#' @html</span>
-<span class="fu">function</span>(){
+<span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span>
   <span class="st">"&lt;html&gt;&lt;h1&gt;hello world&lt;/h1&gt;&lt;/html&gt;"</span>
-}
+<span class="op">}</span>
 
 <span class="co">#' Echo the parameter that was sent in</span>
 <span class="co">#' @param msg The message to echo back.</span>
 <span class="co">#' @get /echo</span>
-<span class="fu">function</span>(<span class="kw">msg</span>=<span class="st">""</span>){
-  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(msg = <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"The message is: '"</span>, <span class="kw">msg</span>, <span class="st">"'"</span>))
-}
+<span class="kw">function</span><span class="op">(</span><span class="va">msg</span><span class="op">=</span><span class="st">""</span><span class="op">)</span><span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>msg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"The message is: '"</span>, <span class="va">msg</span>, <span class="st">"'"</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
 
 <span class="co">#' Plot out data from the iris dataset</span>
 <span class="co">#' @param spec If provided, filter the data to only this species (e.g. 'setosa')</span>
 <span class="co">#' @get /plot</span>
 <span class="co">#' @png</span>
-<span class="fu">function</span>(<span class="kw">spec</span>){
-  <span class="kw">myData</span> <span class="op">&lt;-</span> <span class="kw">iris</span>
-  <span class="kw">title</span> <span class="op">&lt;-</span> <span class="st">"All Species"</span>
+<span class="kw">function</span><span class="op">(</span><span class="va">spec</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">myData</span> <span class="op">&lt;-</span> <span class="va">iris</span>
+  <span class="va">title</span> <span class="op">&lt;-</span> <span class="st">"All Species"</span>
 
   <span class="co"># Filter if the species was specified</span>
-  <span class="co">if</span> (<span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/missing.html">missing</a></span>(<span class="kw">spec</span>)){
-    <span class="kw">title</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Only the '"</span>, <span class="kw">spec</span>, <span class="st">"' Species"</span>)
-    <span class="kw">myData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(<span class="kw">iris</span>, <span class="kw">Species</span> <span class="op">==</span> <span class="kw">spec</span>)
-  }
+  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/missing.html">missing</a></span><span class="op">(</span><span class="va">spec</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
+    <span class="va">title</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Only the '"</span>, <span class="va">spec</span>, <span class="st">"' Species"</span><span class="op">)</span>
+    <span class="va">myData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">iris</span>, <span class="va">Species</span> <span class="op">==</span> <span class="va">spec</span><span class="op">)</span>
+  <span class="op">}</span>
 
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span>(<span class="kw">myData</span><span class="op">$</span><span class="kw">Sepal.Length</span>, <span class="kw">myData</span><span class="op">$</span><span class="kw">Petal.Length</span>,
-       main=<span class="kw">title</span>, xlab=<span class="st">"Sepal Length"</span>, ylab=<span class="st">"Petal Length"</span>)
-}
-</pre></div>
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">myData</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="va">myData</span><span class="op">$</span><span class="va">Petal.Length</span>,
+       main<span class="op">=</span><span class="va">title</span>, xlab<span class="op">=</span><span class="st">"Sepal Length"</span>, ylab<span class="op">=</span><span class="st">"Petal Length"</span><span class="op">)</span>
+<span class="op">}</span></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Create a Dockerfile for the API - see bottom of page for how to do this automatically with <a href="https://o2r.info/containerit/" class="uri">https://o2r.info/containerit/</a>
 </li>
@@ -197,10 +196,10 @@ CMD ["api.R"]</code></pre>
 <li>Deploy via the <code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code> function:</li>
 </ol>
 <div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://code.markedmondson.me/googleCloudRunner">googleCloudRunner</a></span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
-<span class="kw">my_plumber_folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"example"</span>, package=<span class="st">"googleCloudRunner"</span>)
-<span class="kw">cr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span>(<span class="kw">my_plumber_folder</span>)
+<span class="va">my_plumber_folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"example"</span>, package<span class="op">=</span><span class="st">"googleCloudRunner"</span><span class="op">)</span>
+<span class="va">cr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span><span class="op">(</span><span class="va">my_plumber_folder</span><span class="op">)</span>
 <span class="co">#2019-11-12 10:34:29 -- File size detected as 903 bytes</span>
 <span class="co">#2019-11-12 10:34:31&gt; Cloud Build started - logs: </span>
 <span class="co">#https://console.cloud.google.com/gcr/builds/40343fd4-6981-41c3-98c8-f5973c3de386?project=1080525199262</span>
@@ -217,8 +216,7 @@ CMD ["api.R"]</code></pre>
 <span class="co">#containers:  gcr.io/mark-edmondson-gde/cloudrunnertest2 </span>
 <span class="co">#creationTimestamp:  2019-11-12T10:35:19.993128Z </span>
 <span class="co">#observedGeneration:  1 </span>
-<span class="co">#url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app </span>
-</pre></div>
+<span class="co">#url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app </span></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Enjoy your API</li>
 </ol>
@@ -250,15 +248,13 @@ CMD ["api.R"]</code></pre>
 <p>You can build the deployment yourself by using <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code> within your own <code><a href="../reference/cr_build.html">cr_build()</a></code>. This may cover things like downloading encrypted resources necessary for a build, running other code etc.</p>
 <p>If you have an existing image you want to deploy on Cloud Run (usually one that serves up HTTP content, such as a website or via <code><a href="https://www.rplumber.io">library(plumber)</a></code>) then you only need to supply that image to deploy:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="st">"gcr.io/my-project/my-image"</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span><span class="op">(</span><span class="st">"gcr.io/my-project/my-image"</span><span class="op">)</span></pre></div>
 <p>Cloud Run needs <a href="https://cloud.google.com/run/docs/deploying">specific ports available in your container</a>, so you may want to consult the documentation if you do - in particular look at the <a href="https://cloud.google.com/run/docs/reference/container-contract">container contract</a> which specifies what the Docker container requirements are.</p>
 <p>If you want to do the common use case of building the container first before deployment to Cloud Run, you can do so by using the helper <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="fu"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span>(<span class="st">"my-image"</span>)
+<span class="fu"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span><span class="op">(</span><span class="st">"my-image"</span><span class="op">)</span>
 
-<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="st">"gcr.io/my-project/my-image"</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span><span class="op">(</span><span class="st">"gcr.io/my-project/my-image"</span><span class="op">)</span></pre></div>
 <p>If you want this in the same Cloud Build, then this is available via the buildsteps <code><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker()</a></code> and <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code>.</p>
 </div>
 <div id="cloud-run-deployment-functions" class="section level2">
@@ -276,15 +272,14 @@ CMD ["api.R"]</code></pre>
 <p>Pub/Sub is a messaging service used throughout GCP to transfer messages to services. For instance, Cloud Storage objects being created, logging filter conditions, BigQuery table updates. It is useful to be able to react to these messages with R code which Cloud Run + Plumber enables by providing a HTTP endpoint for push Pub/Sub subscriptions.</p>
 <p>A helper function is included with <code>googleCloudRunner</code> that decodes the standard pub/sub message into an R object. To use place the below function into your plumber script and deploy:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="kw">pub</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">x</span>){<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"Echo:"</span>, <span class="kw">x</span>)}
+<span class="va">pub</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Echo:"</span>, <span class="va">x</span><span class="op">)</span><span class="op">}</span>
 
 <span class="co">#' Recieve pub/sub message</span>
 <span class="co">#' @post /pubsub</span>
 <span class="co">#' @param message a pub/sub message</span>
-<span class="fu">function</span>(<span class="kw">message</span>=<span class="kw">NULL</span>){
-  <span class="kw">googleCloudRunner</span>::<span class="fu"><a href="../reference/cr_plumber_pubsub.html">cr_plumber_pubsub</a></span>(<span class="kw">message</span>, <span class="kw">pub</span>)
-}
-</pre></div>
+<span class="kw">function</span><span class="op">(</span><span class="va">message</span><span class="op">=</span><span class="cn">NULL</span><span class="op">)</span><span class="op">{</span>
+  <span class="fu">googleCloudRunner</span><span class="fu">::</span><span class="fu"><a href="../reference/cr_plumber_pubsub.html">cr_plumber_pubsub</a></span><span class="op">(</span><span class="va">message</span>, <span class="va">pub</span><span class="op">)</span>
+<span class="op">}</span></pre></div>
 <p>The <code>pub()</code> function can be any R code you like, so you can change it to trigger an analysis or other R tasks. The data within a pubsub message can also be used as a parameter to your code, such as an object name or timestamp of when the event fired. An example if also in the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecases.html#trigger-an-r-function-from-pubsub">use case section of the website</a></p>
 </div>
 <div id="creating-a-dockerfile-with-containerit" class="section level2">
@@ -333,42 +328,39 @@ CMD ["api.R"]</code></pre>
 <p>This means you can’t scale to a billion like other Cloud Run apps, and need to keep an eye on the load of the Shiny app (which will depend on your code) to see if 80 connections are too much for the CPU and Memory you assign to the Cloud Run instance. However this should still be a good fit for a lot of data science applications.</p>
 <p>A minimal working example has been created by <span class="citation">@randy3k</span> here: <a href="https://github.com/randy3k/shiny-cloudrun-demo" class="uri">https://github.com/randy3k/shiny-cloudrun-demo</a> which can be deployed to Cloud Run via a fork here:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://code.markedmondson.me/googleCloudRunner">googleCloudRunner</a></span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
 <span class="co"># a repo with the Dockerfile template</span>
-<span class="kw">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span>(<span class="st">"MarkEdmondson1234/shiny-cloudrun-demo"</span>)
+<span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/shiny-cloudrun-demo"</span><span class="op">)</span>
 
 <span class="co"># deploy a cloud build trigger so each commit build the image</span>
-<span class="fu"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span>(
-  <span class="kw">repo</span>,
-  image = <span class="st">"shiny-cloudrun"</span>
-)
+<span class="fu"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span><span class="op">(</span>
+  <span class="va">repo</span>,
+  image <span class="op">=</span> <span class="st">"shiny-cloudrun"</span>
+<span class="op">)</span>
 
 <span class="co"># deploy to Cloud Run</span>
-<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span>()),
-       name = <span class="st">"shiny-cloudrun"</span>,
-       concurrency = <span class="fl">80</span>,
-       max_instances = <span class="fl">1</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
+       name <span class="op">=</span> <span class="st">"shiny-cloudrun"</span>,
+       concurrency <span class="op">=</span> <span class="fl">80</span>,
+       max_instances <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></pre></div>
 <p>If you need to change the memory for the one instance, you can use <code>cpu</code> and <code>memory</code> arguments in the <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code> and subsequent functions such as <code><a href="../reference/cr_run.html">cr_run()</a></code>. The maximum allowed is 2 CPUs and 2 gibibytes (<code>2Gi</code>):</p>
 <div class="sourceCode" id="cb9"><pre class="downlit">
 <span class="co"># deploy to Cloud Run with 2GBs of RAM per instance and 2 CPUs</span>
-<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span>()),
-       name = <span class="st">"shiny-cloudrun"</span>,
-       concurrency = <span class="fl">80</span>,
-       max_instances = <span class="fl">1</span>,
-       cpu = <span class="fl">2</span>,
-       memory = <span class="st">"2Gi"</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
+       name <span class="op">=</span> <span class="st">"shiny-cloudrun"</span>,
+       concurrency <span class="op">=</span> <span class="fl">80</span>,
+       max_instances <span class="op">=</span> <span class="fl">1</span>,
+       cpu <span class="op">=</span> <span class="fl">2</span>,
+       memory <span class="op">=</span> <span class="st">"2Gi"</span><span class="op">)</span></pre></div>
 <p>Or if you have a local Shiny app in <code>shiny_cloudrun/</code> with the appropriate Dockerfile and Shiny configuration, the full Docker build and deployment pipeline can be carried out with:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit">
 <span class="co"># deploy the app version from this folder</span>
-<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span>(<span class="st">"shiny_cloudrun/"</span>,
-              remote = <span class="st">"shiny-cloudrun2"</span>,
-              tag = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span>),
-              max_instances = <span class="fl">1</span>, <span class="co"># required for shiny</span>
-              concurrency = <span class="fl">80</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span><span class="op">(</span><span class="st">"shiny_cloudrun/"</span>,
+              remote <span class="op">=</span> <span class="st">"shiny-cloudrun2"</span>,
+              tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span><span class="op">)</span>,
+              max_instances <span class="op">=</span> <span class="fl">1</span>, <span class="co"># required for shiny</span>
+              concurrency <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></pre></div>
 <div id="shiny-app-on-cloud-run-with-googleauthr-authentication" class="section level3">
 <h3 class="hasAnchor">
 <a href="#shiny-app-on-cloud-run-with-googleauthr-authentication" class="anchor"></a>Shiny app on Cloud Run with googleAuthR authentication</h3>
@@ -383,40 +375,39 @@ CMD ["api.R"]</code></pre>
 <h4 class="hasAnchor">
 <a href="#app-r" class="anchor"></a>app.R</h4>
 <div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://shiny.rstudio.com">shiny</a></span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">searchConsoleR</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://code.markedmondson.me/googleAuthR">googleAuthR</a></span>)
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://shiny.rstudio.com">shiny</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">searchConsoleR</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://code.markedmondson.me/googleAuthR/">googleAuthR</a></span><span class="op">)</span>
 
-<span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/gar_set_client.html">gar_set_client</a></span>(web_json = <span class="st">"client.json"</span>,
-               scopes = <span class="st">"https://www.googleapis.com/auth/webmasters"</span>)
+<span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/gar_set_client.html">gar_set_client</a></span><span class="op">(</span>web_json <span class="op">=</span> <span class="st">"client.json"</span>,
+               scopes <span class="op">=</span> <span class="st">"https://www.googleapis.com/auth/webmasters"</span><span class="op">)</span>
 
-<span class="kw">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html">fluidPage</a></span>(
-  <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/googleAuth_jsUI.html">googleAuth_jsUI</a></span>(<span class="st">'auth'</span>, login_text = <span class="st">'Login to Google'</span>),
-  <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/tableOutput.html">tableOutput</a></span>(<span class="st">"sc_accounts"</span>)
-)
+<span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html">fluidPage</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/googleAuth_jsUI.html">googleAuth_jsUI</a></span><span class="op">(</span><span class="st">'auth'</span>, login_text <span class="op">=</span> <span class="st">'Login to Google'</span><span class="op">)</span>,
+  <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/tableOutput.html">tableOutput</a></span><span class="op">(</span><span class="st">"sc_accounts"</span><span class="op">)</span>
+<span class="op">)</span>
 
-<span class="kw">server</span> <span class="op">&lt;-</span> <span class="fu">function</span>(<span class="kw">input</span>, <span class="kw">output</span>, <span class="kw">session</span>) {
-  <span class="kw">auth</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/callModule.html">callModule</a></span>(<span class="kw">googleAuth_js</span>, <span class="st">"auth"</span>)
+<span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">auth</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/callModule.html">callModule</a></span><span class="op">(</span><span class="va">googleAuth_js</span>, <span class="st">"auth"</span><span class="op">)</span>
 
-  <span class="kw">sc_accounts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/reactive.html">reactive</a></span>({
-    <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/req.html">req</a></span>(<span class="fu">auth</span>())
+  <span class="va">sc_accounts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/reactive.html">reactive</a></span><span class="op">(</span><span class="op">{</span>
+    <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/req.html">req</a></span><span class="op">(</span><span class="fu">auth</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
-    <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/with_shiny.html">with_shiny</a></span>(
-      <span class="kw">list_websites</span>,
-      shiny_access_token = <span class="fu">auth</span>()
-    )
+    <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/with_shiny.html">with_shiny</a></span><span class="op">(</span>
+      <span class="va">list_websites</span>,
+      shiny_access_token <span class="op">=</span> <span class="fu">auth</span><span class="op">(</span><span class="op">)</span>
+    <span class="op">)</span>
 
-  })
+  <span class="op">}</span><span class="op">)</span>
 
-  <span class="kw">output</span><span class="op">$</span><span class="kw">sc_accounts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/renderTable.html">renderTable</a></span>({
-    <span class="fu">sc_accounts</span>()
-  })
+  <span class="va">output</span><span class="op">$</span><span class="va">sc_accounts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/renderTable.html">renderTable</a></span><span class="op">(</span><span class="op">{</span>
+    <span class="fu">sc_accounts</span><span class="op">(</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">)</span>
 
 
-}
+<span class="op">}</span>
 
-<span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html">shinyApp</a></span>(ui = <span class="kw">ui</span>, server = <span class="kw">server</span>)
-</pre></div>
+<span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></pre></div>
 </div>
 <div id="dockerfile" class="section level4">
 <h4 class="hasAnchor">
@@ -483,12 +474,11 @@ server {
 <p>You can then deploy similar to the example above, which will build the Dockerfile and then deploy it to Cloud Run.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit">
 <span class="co"># deploy the app version from this folder</span>
-<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span>(<span class="st">"shiny_cloudrun/app/"</span>,
-              remote = <span class="st">"shiny-cloudrun-sc"</span>,
-              tag = <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span>),
-              max_instances = <span class="fl">1</span>, <span class="co"># required for shiny</span>
-              concurrency = <span class="fl">80</span>)
-</pre></div>
+<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span><span class="op">(</span><span class="st">"shiny_cloudrun/app/"</span>,
+              remote <span class="op">=</span> <span class="st">"shiny-cloudrun-sc"</span>,
+              tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span><span class="op">)</span>,
+              max_instances <span class="op">=</span> <span class="fl">1</span>, <span class="co"># required for shiny</span>
+              concurrency <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></pre></div>
 </div>
 </div>
 </div>
@@ -501,18 +491,17 @@ server {
 <p>A demo is below, assuming you have already deployed the private Cloud Run service:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit">
 <span class="co"># The private authenticated access only Cloud Run service</span>
-<span class="kw">the_url</span> <span class="op">&lt;-</span> <span class="st">"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/"</span>
+<span class="va">the_url</span> <span class="op">&lt;-</span> <span class="st">"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/"</span>
 
 <span class="co"># creating the JWT and token from your service account key used for googleCloudRunner</span>
-<span class="kw">jwt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_create</a></span>(<span class="kw">the_url</span>, service_json = <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"GCE_AUTH_FILE"</span>))
-<span class="kw">token</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_token</a></span>(<span class="kw">jwt</span>, <span class="kw">the_url</span>)
+<span class="va">jwt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_create</a></span><span class="op">(</span><span class="va">the_url</span>, service_json <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">"GCE_AUTH_FILE"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">token</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_token</a></span><span class="op">(</span><span class="va">jwt</span>, <span class="va">the_url</span><span class="op">)</span>
 
 <span class="co"># call Cloud Run app using token with any httr verb</span>
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://httr.r-lib.org">httr</a></span>)
-<span class="kw">res</span> <span class="op">&lt;-</span> <span class="fu">cr_jwt_with</span>(<span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span>(<span class="st">"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"</span>),
-                   <span class="kw">token</span>)
-<span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span>(<span class="kw">res</span>)
-</pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">cr_jwt_with</span><span class="op">(</span><span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span><span class="st">"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"</span><span class="op">)</span>,
+                   <span class="va">token</span><span class="op">)</span>
+<span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></pre></div>
 </div>
 <div id="deploying-from-another-google-cloud-project" class="section level2">
 <h2 class="hasAnchor">

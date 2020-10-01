@@ -179,14 +179,14 @@
     <p>Create a repository trigger object for use in build triggers</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildtrigger_repo</span>(
-  <span class='kw'>repo_name</span>,
-  branch = <span class='st'>".*"</span>,
-  tag = <span class='kw'>NULL</span>,
-  type = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"github"</span>, <span class='st'>"cloud_source"</span>),
-  github_secret = <span class='kw'>NULL</span>,
-  <span class='kw'>...</span>
-)</pre>
+    <pre class="usage"><span class='fu'>cr_buildtrigger_repo</span><span class='op'>(</span>
+  <span class='va'>repo_name</span>,
+  branch <span class='op'>=</span> <span class='st'>".*"</span>,
+  tag <span class='op'>=</span> <span class='cn'>NULL</span>,
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"github"</span>, <span class='st'>"cloud_source"</span><span class='op'>)</span>,
+  github_secret <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -222,6 +222,7 @@
     <div class='dont-index'><p>Other BuildTrigger functions: 
 <code><a href='BuildTrigger.html'>BuildTrigger</a>()</code>,
 <code><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a>()</code>,
+<code><a href='cr_buildtrigger_copy.html'>cr_buildtrigger_copy</a>()</code>,
 <code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a>()</code>,
 <code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a>()</code>,
 <code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a>()</code>,

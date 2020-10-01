@@ -179,16 +179,16 @@
     <p>Creates or updates a Cloud Scheduler job.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_schedule</span>(
-  <span class='kw'>name</span>,
-  schedule = <span class='kw'>NULL</span>,
-  httpTarget = <span class='kw'>NULL</span>,
-  description = <span class='kw'>NULL</span>,
-  overwrite = <span class='fl'>FALSE</span>,
-  timeZone = <span class='fu'><a href='https://rdrr.io/r/base/timezones.html'>Sys.timezone</a></span>(),
-  region = <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  projectId = <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
-)</pre>
+    <pre class="usage"><span class='fu'>cr_schedule</span><span class='op'>(</span>
+  <span class='va'>name</span>,
+  schedule <span class='op'>=</span> <span class='cn'>NULL</span>,
+  httpTarget <span class='op'>=</span> <span class='cn'>NULL</span>,
+  description <span class='op'>=</span> <span class='cn'>NULL</span>,
+  overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  timeZone <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/timezones.html'>Sys.timezone</a></span><span class='op'>(</span><span class='op'>)</span>,
+  region <span class='op'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

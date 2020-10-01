@@ -179,19 +179,19 @@
     <p>This lets you set up triggers that will update an R generated website each commit.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_run_website</span>(
-  <span class='kw'>repo</span>,
-  image = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='st'>"website-"</span>, <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span>(), <span class='st'>"%Y%m%d"</span>)),
-  rmd_folder = <span class='kw'>NULL</span>,
-  html_folder = <span class='kw'>NULL</span>,
-  image_tag = <span class='st'>"$SHORT_SHA"</span>,
-  timeout = <span class='fl'>600L</span>,
-  edit_r = <span class='kw'>NULL</span>,
-  r_image = <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>,
-  allowUnauthenticated = <span class='fl'>TRUE</span>,
-  region = <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  projectId = <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>()
-)</pre>
+    <pre class="usage"><span class='fu'>cr_deploy_run_website</span><span class='op'>(</span>
+  <span class='va'>repo</span>,
+  image <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"website-"</span>, <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"%Y%m%d"</span><span class='op'>)</span><span class='op'>)</span>,
+  rmd_folder <span class='op'>=</span> <span class='cn'>NULL</span>,
+  html_folder <span class='op'>=</span> <span class='cn'>NULL</span>,
+  image_tag <span class='op'>=</span> <span class='st'>"$SHORT_SHA"</span>,
+  timeout <span class='op'>=</span> <span class='fl'>600L</span>,
+  edit_r <span class='op'>=</span> <span class='cn'>NULL</span>,
+  r_image <span class='op'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>,
+  allowUnauthenticated <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  region <span class='op'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -261,21 +261,21 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
-<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span>(<span class='st'>"europe-west1"</span>)
-<span class='kw'>your_repo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a></span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>)
-<span class='fu'>cr_deploy_run_website</span>(<span class='kw'>your_repo</span>, rmd_folder = <span class='st'>"vignettes"</span>)
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
+<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span><span class='op'>(</span><span class='st'>"europe-west1"</span><span class='op'>)</span>
+<span class='va'>your_repo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a></span><span class='op'>(</span><span class='st'>"MarkEdmondson1234/googleCloudRunner"</span><span class='op'>)</span>
+<span class='fu'>cr_deploy_run_website</span><span class='op'>(</span><span class='va'>your_repo</span>, rmd_folder <span class='op'>=</span> <span class='st'>"vignettes"</span><span class='op'>)</span>
 
 <span class='co'># change the Rmd rendering to pkgdown</span>
-<span class='kw'>r</span> <span class='op'>&lt;-</span> <span class='st'>"devtools::install();pkgdown::build_site()"</span>
+<span class='va'>r</span> <span class='op'>&lt;-</span> <span class='st'>"devtools::install();pkgdown::build_site()"</span>
 
-<span class='fu'>cr_deploy_run_website</span>(<span class='kw'>your_repo</span>,
-                   image = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span>(<span class='kw'>your_repo</span>, <span class='st'>"-pkgdown"</span>),
-                   rmd_folder = <span class='st'>"."</span>,
-                   edit_r = <span class='kw'>r</span>)
+<span class='fu'>cr_deploy_run_website</span><span class='op'>(</span><span class='va'>your_repo</span>,
+                   image <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>your_repo</span>, <span class='st'>"-pkgdown"</span><span class='op'>)</span>,
+                   rmd_folder <span class='op'>=</span> <span class='st'>"."</span>,
+                   edit_r <span class='op'>=</span> <span class='va'>r</span><span class='op'>)</span>
 
-}
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

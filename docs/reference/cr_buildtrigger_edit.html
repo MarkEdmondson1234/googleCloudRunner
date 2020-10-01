@@ -179,7 +179,7 @@
     <p>Seems not to work at the moment (issue #16)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildtrigger_edit</span>(<span class='kw'>BuildTrigger</span>, <span class='kw'>triggerId</span>, projectId = <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>())</pre>
+    <pre class="usage"><span class='fu'>cr_buildtrigger_edit</span><span class='op'>(</span><span class='va'>BuildTrigger</span>, <span class='va'>triggerId</span>, projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -203,6 +203,7 @@
     <div class='dont-index'><p>Other BuildTrigger functions: 
 <code><a href='BuildTrigger.html'>BuildTrigger</a>()</code>,
 <code><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a>()</code>,
+<code><a href='cr_buildtrigger_copy.html'>cr_buildtrigger_copy</a>()</code>,
 <code><a href='cr_buildtrigger_delete.html'>cr_buildtrigger_delete</a>()</code>,
 <code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a>()</code>,
 <code><a href='cr_buildtrigger_list.html'>cr_buildtrigger_list</a>()</code>,
@@ -212,24 +213,24 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
-<span class='kw'>github</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
-                            branch = <span class='st'>"master"</span>)
-<span class='kw'>bt2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger.html'>cr_buildtrigger</a></span>(<span class='st'>"trig2"</span>,
-                       trigger = <span class='kw'>github</span>,
-                       build = <span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>)
-<span class='kw'>bt3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='BuildTrigger.html'>BuildTrigger</a></span>(
-  filename = <span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>,
-  name = <span class='st'>"edited1"</span>,
-  tags = <span class='st'>"edit"</span>,
-  github = <span class='kw'>github</span>,
-  disabled = <span class='fl'>TRUE</span>,
-  description = <span class='st'>"edited trigger"</span>)
+<span class='va'>github</span> <span class='op'>&lt;-</span> <span class='fu'><a href='GitHubEventsConfig.html'>GitHubEventsConfig</a></span><span class='op'>(</span><span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
+                            branch <span class='op'>=</span> <span class='st'>"master"</span><span class='op'>)</span>
+<span class='va'>bt2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger.html'>cr_buildtrigger</a></span><span class='op'>(</span><span class='st'>"trig2"</span>,
+                       trigger <span class='op'>=</span> <span class='va'>github</span>,
+                       build <span class='op'>=</span> <span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span><span class='op'>)</span>
+<span class='va'>bt3</span> <span class='op'>&lt;-</span> <span class='fu'><a href='BuildTrigger.html'>BuildTrigger</a></span><span class='op'>(</span>
+  filename <span class='op'>=</span> <span class='st'>"inst/cloudbuild/cloudbuild.yaml"</span>,
+  name <span class='op'>=</span> <span class='st'>"edited1"</span>,
+  tags <span class='op'>=</span> <span class='st'>"edit"</span>,
+  github <span class='op'>=</span> <span class='va'>github</span>,
+  disabled <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  description <span class='op'>=</span> <span class='st'>"edited trigger"</span><span class='op'>)</span>
 
-<span class='kw'>edited</span> <span class='op'>&lt;-</span> <span class='fu'>cr_buildtrigger_edit</span>(<span class='kw'>bt3</span>, triggerId = <span class='kw'>bt2</span>)
+<span class='va'>edited</span> <span class='op'>&lt;-</span> <span class='fu'>cr_buildtrigger_edit</span><span class='op'>(</span><span class='va'>bt3</span>, triggerId <span class='op'>=</span> <span class='va'>bt2</span><span class='op'>)</span>
 
-}
+<span class='op'>}</span>
 
 </div></pre>
   </div>
