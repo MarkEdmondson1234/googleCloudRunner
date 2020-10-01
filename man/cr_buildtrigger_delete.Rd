@@ -18,6 +18,7 @@ Deletes a `BuildTrigger` by its project ID and trigger ID.This API is experiment
 Other BuildTrigger functions: 
 \code{\link{BuildTrigger}()},
 \code{\link{GitHubEventsConfig}()},
+\code{\link{cr_buildtrigger_copy}()},
 \code{\link{cr_buildtrigger_edit}()},
 \code{\link{cr_buildtrigger_get}()},
 \code{\link{cr_buildtrigger_list}()},

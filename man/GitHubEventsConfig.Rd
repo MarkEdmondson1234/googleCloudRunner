@@ -35,6 +35,7 @@ The syntax of the regular expressions accepted is the syntax accepted by RE2 and
 \seealso{
 Other BuildTrigger functions: 
 \code{\link{BuildTrigger}()},
+\code{\link{cr_buildtrigger_copy}()},
 \code{\link{cr_buildtrigger_delete}()},
 \code{\link{cr_buildtrigger_edit}()},
 \code{\link{cr_buildtrigger_get}()},

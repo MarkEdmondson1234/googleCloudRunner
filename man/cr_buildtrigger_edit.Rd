@@ -42,6 +42,7 @@ edited <- cr_buildtrigger_edit(bt3, triggerId = bt2)
 Other BuildTrigger functions: 
 \code{\link{BuildTrigger}()},
 \code{\link{GitHubEventsConfig}()},
+\code{\link{cr_buildtrigger_copy}()},
 \code{\link{cr_buildtrigger_delete}()},
 \code{\link{cr_buildtrigger_get}()},
 \code{\link{cr_buildtrigger_list}()},

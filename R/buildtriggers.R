@@ -279,12 +279,92 @@ cr_buildtrigger_run <- function(triggerId,
 
 }
 
+#' Copy a buildtrigger
+#'
+#' This lets you use the response from \link{cr_buildtrigger_get} for an existing buildtrigger to copy over settings to a new buildtrigger.
+#'
+#' @param buildtrigger A \code{CloudBuildTriggerResponse} object from \link{cr_buildtrigger_get}
+#' @inheritParams BuildTrigger
+#'
+#' @details Overwrite settings for the build trigger you are coping by supplying it as one of the other arguments from \link{BuildTrigger}.
+#'
+#'
+#' @export
+#' @family BuildTrigger functions
+#' @import assertthat
+#' @examples
+#'
+#' \dontrun{
+#' #copying a GitHub buildtrigger across projects and git repos
+#' bt <- cr_buildtrigger_get("my-trigger", projectId = "my-project-1")
+#'
+#' # a new GitHub project
+#' gh <- GitHubEventsConfig("username/new-repo",
+#'                          event = "push",
+#'                          branch = "^master$")
+#'
+#' # give 'Cloud Build Editor' role to your service auth key in new project
+#' # then copy configuration across
+#' cr_buildtrigger_copy(bt, github = gh, projectId = "my-new-project")
+#'
+#'
+#' }
+cr_buildtrigger_copy <- function(buildTrigger,
+                                 filename = NULL,
+                                 name = NULL,
+                                 tags = NULL,
+                                 build = NULL,
+                                 ignoredFiles = NULL,
+                                 github = NULL,
+                                 substitutions = NULL,
+                                 includedFiles = NULL,
+                                 disabled = NULL,
+                                 triggerTemplate = NULL,
+                                 projectId = cr_project_get()){
+
+  assert_that(is.buildTriggerResponse(buildTrigger))
+
+  if(!is.null(name)) buildTrigger$name <- name
+  if(!is.null(filename)){
+    buildTrigger$filename <- filename
+    buildTrigger$build <- NULL
+  }
+  if(!is.null(build)){
+    buildTrigger$build <- build
+    buildTrigger$filename <- NULL
+  }
+  if(!is.null(tags)) buildTrigger$tags <- tags
+  if(!is.null(ignoredFiles)) buildTrigger$ignoredFiles <- ignoredFiles
+  if(!is.null(includedFiles)) buildTrigger$includedFiles <- includedFiles
+  if(!is.null(substitutions)) buildTrigger$substitutions <- substitutions
+  if(!is.null(github)){
+    buildTrigger$github <- github
+    buildTrigger$triggerTemplate <- NULL
+  }
+  if(!is.null(triggerTemplate)){
+    buildTrigger$github <- NULL
+    buildTrigger$triggerTemplate <- triggerTemplate
+  }
+  if(!is.null(disabled)) buildTrigger$disabled <- disabled
+
+  buildTrigger <- as.BuildTrigger(buildTrigger)
+  url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
+                 projectId)
+  # cloudbuild.projects.triggers.create
+  f <- gar_api_generator(url, "POST",
+                         data_parse_function = as.buildTriggerResponse)
+  stopifnot(inherits(buildTrigger, "BuildTrigger"))
+
+  f(the_body = buildTrigger)
+
+}
+
 #' BuildTrigger Object
 #'
 #' Configuration for an automated build in response to source repositorychanges.
 #'
 #' @param substitutions A named list of Build macro variables
-#' @param filename Path, from the source root, to a file whose contents is used for the
+#' @param filename Path, from the source root, to a file whose contents is used for the build
 #' @param name User assigned name of the trigger
 #' @param tags Tags for annotation of a `BuildTrigger`
 #' @param build Contents of the build template
@@ -342,4 +422,21 @@ BuildTrigger <- function(filename = NULL,
 
 is.gar_BuildTrigger <- function(x){
     inherits(x, "BuildTrigger")
+}
+
+as.BuildTrigger <- function(x){
+  assert_that(is.buildTriggerResponse(x))
+
+  BuildTrigger(filename = x$filename,
+               name = x$name,
+               tags = x$tags,
+               build = x$build,
+               ignoredFiles = x$ignoredFiles,
+               github = x$github,
+               substitutions = x$substitutions,
+               includedFiles = x$includedFiles,
+               disabled = x$disabled,
+               triggerTemplate = x$triggerTemplate,
+               description = x$description)
+
 }

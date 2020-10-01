@@ -20,6 +20,7 @@ Runs a `BuildTrigger` at a particular source revision.
 Other BuildTrigger functions: 
 \code{\link{BuildTrigger}()},
 \code{\link{GitHubEventsConfig}()},
+\code{\link{cr_buildtrigger_copy}()},
 \code{\link{cr_buildtrigger_delete}()},
 \code{\link{cr_buildtrigger_edit}()},
 \code{\link{cr_buildtrigger_get}()},

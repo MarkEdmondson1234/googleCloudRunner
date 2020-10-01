@@ -16,6 +16,7 @@ Lists existing `BuildTrigger`s.This API is experimental.
 Other BuildTrigger functions: 
 \code{\link{BuildTrigger}()},
 \code{\link{GitHubEventsConfig}()},
+\code{\link{cr_buildtrigger_copy}()},
 \code{\link{cr_buildtrigger_delete}()},
 \code{\link{cr_buildtrigger_edit}()},
 \code{\link{cr_buildtrigger_get}()},

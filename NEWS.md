@@ -5,6 +5,7 @@
 * Added `cr_jwt_create()` and family to create JWTs to call authenticated services such as Cloud Run (#91)
 * Add authenticated Cloud Run use case
 * Ensure timeout is under 86400 secs (24hrs) in `cr_build_make()`
+* Add `cr_buildtrigger_copy()`
 
 # googleCloudRunner 0.3.0
 
