@@ -286,7 +286,7 @@ cr_buildtrigger_run <- function(triggerId,
 #' @param buildtrigger A \code{CloudBuildTriggerResponse} object from \link{cr_buildtrigger_get}
 #' @inheritParams BuildTrigger
 #'
-#' @details Overwrite settings for the build trigger you are coping by supplying it as one of the other arguments from \link{BuildTrigger}.
+#' @details Overwrite settings for the build trigger you are copying by supplying it as one of the other arguments from \link{BuildTrigger}.
 #'
 #'
 #' @export

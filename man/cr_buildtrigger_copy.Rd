@@ -46,7 +46,7 @@ cr_buildtrigger_copy(
 This lets you use the response from \link{cr_buildtrigger_get} for an existing buildtrigger to copy over settings to a new buildtrigger.
 }
 \details{
-Overwrite settings for the build trigger you are coping by supplying it as one of the other arguments from \link{BuildTrigger}.
+Overwrite settings for the build trigger you are copying by supplying it as one of the other arguments from \link{BuildTrigger}.
 }
 \examples{
 
