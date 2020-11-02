@@ -65,7 +65,16 @@ get_email_setup <- function(){
         return(NULL)
       }
 
-      the_email <- jsonlite::fromJSON(Sys.getenv("GCE_AUTH_FILE"))$client_email
+      if(!assertthat::is.readable(Sys.getenv("GCE_AUTH_FILE"))){
+        stop("Found GCE_AUTH_FILE environment argument but could not read the file?
+             Found: ", Sys.getenv("GCE_AUTH_FILE"), call. = FALSE)
+      }
+
+      the_email <- tryCatch(jsonlite::fromJSON(Sys.getenv("GCE_AUTH_FILE"))$client_email,
+                            error = function(err){
+                              cli_alert_danger("Invalid JSON found in GCE_AUTH_FILE - incorrect JSON file?  Could not read client_email")
+                              stop(err$message)
+                            })
     } else {
       the_email <- readline("Enter the service email you wish to use")
     }

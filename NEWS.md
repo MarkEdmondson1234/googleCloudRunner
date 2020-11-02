@@ -6,6 +6,7 @@
 * Add authenticated Cloud Run use case
 * Ensure timeout is under 86400 secs (24hrs) in `cr_build_make()`
 * Add `cr_buildtrigger_copy()`
+* Extra checks for existance of valid auth file when creating build email (#89)
 
 # googleCloudRunner 0.3.0
 
