@@ -7,12 +7,16 @@
 #'
 #' @export
 #' @importFrom googleAuthR gar_set_client gar_auth gar_service_grant_roles
+#' @importFrom assertthat assert_that is.string
 #' @family setup functions
 cr_setup_service <- function(account_email,
                              roles = cr_setup_role_lookup("local"),
                              json = Sys.getenv("GAR_CLIENT_JSON"),
                              email = Sys.getenv("GARGLE_EMAIL")
                              ){
+
+  # to prevent #94
+  assert_that(is.string(account_email))
 
   account_email <- trimws(account_email)
   projectId <- gar_set_client(json,
@@ -22,7 +26,7 @@ cr_setup_service <- function(account_email,
   }
   gar_auth(email = email)
 
-  if(roles == "roles/cloudscheduler.serviceAgent"){
+  if("roles/cloudscheduler.serviceAgent" %in% roles){
     # needs special project
     projectId <- "gcp-sa-cloudscheduler"
   }
