@@ -9,6 +9,8 @@ do_build_service_setup <- function(){
   build_email <- paste0(extract_project_number(),
                         "@cloudbuild.gserviceaccount.com")
 
+  myMessage("build_email: ", paste(build_email, collapse = " "), level = 2)
+
   cli_alert_info("The Cloud Build service account ({build_email}) will need permissions during builds for certain operations calling other APIs.  This is distinct from the local authentication file you have setup.")
   do_it <- menu(title = "What services do you want to setup for the Cloud Build service account? (Esc or 0 to skip)",
                 choices = c("Skip or something not listed below",
