@@ -7,6 +7,7 @@
 * Ensure timeout is under 86400 secs (24hrs) in `cr_build_make()`
 * Add `cr_buildtrigger_copy()`
 * Extra checks for existance of valid auth file when creating build email (#89)
+* We can't check for existance of cloud build email #94 so `cr_setup()` will only set roles in assumed present Google service emails.
 
 # googleCloudRunner 0.3.0
 

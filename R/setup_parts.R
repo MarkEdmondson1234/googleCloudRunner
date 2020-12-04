@@ -59,7 +59,7 @@ do_build_service_setup <- function(){
 get_email_setup <- function(){
   email <- usethis::ui_yeah("Do you want to setup a Cloud Scheduler email?")
   if(email){
-    reuse_auth <- usethis::ui_yeah("Do you want to use the email from your JSON service account auth key?",
+    reuse_auth <- usethis::ui_yeah("Ensure that Cloud Scheduler is activated in your GCP console at https://console.cloud.google.com/cloudscheduler. Do you want to use the email from your JSON service account auth key?",
                                    yes = "Yes (Recommended)", no = "No")
     if(reuse_auth){
       if(Sys.getenv("GCE_AUTH_FILE") == ""){
