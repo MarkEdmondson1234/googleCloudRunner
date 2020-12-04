@@ -1,4 +1,4 @@
-extract_project_number <- function(json = Sys.getenv("GAR_CLIENT_JSON")){
+extract_project_number <- function(json){
   gsub("^([0-9]+?)\\-(.+)\\.apps.+","\\1",jsonlite::fromJSON(json)$installed$client_id)
 }
 
@@ -6,12 +6,12 @@ extract_project_number <- function(json = Sys.getenv("GAR_CLIENT_JSON")){
 #' @noRd
 do_build_service_setup <- function(){
 
-  build_email <- paste0(extract_project_number(),
+  json <- Sys.getenv("GAR_CLIENT_JSON")
+  build_email <- paste0(extract_project_number(json),
                         "@cloudbuild.gserviceaccount.com")
+  projectId <- jsonlite::fromJSON(json)$installed$project_id
 
-  myMessage("build_email: ", paste(build_email, collapse = " "), level = 2)
-
-  cli_alert_info("The Cloud Build service account ({build_email}) will need permissions during builds for certain operations calling other APIs.  This is distinct from the local authentication file you have setup.")
+  cli_alert_info("The Cloud Build service account ({build_email}) will need permissions during builds for certain operations calling other APIs.  This is distinct from the local authentication file you have setup.  Ensure Cloud Build is enabled at https://console.cloud.google.com/marketplace/product/google/cloudbuild.googleapis.com?project={projectId}")
   do_it <- menu(title = "What services do you want to setup for the Cloud Build service account? (Esc or 0 to skip)",
                 choices = c("Skip or something not listed below",
                             "All of the below (Recommended)",
