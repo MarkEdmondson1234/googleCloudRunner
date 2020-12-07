@@ -21,7 +21,7 @@ Imports:
     cli (>= 2.0.2),
     curl (>= 4.3),
     gargle (>= 0.5.0),
-    googleAuthR (>= 1.3.0),
+    googleAuthR (>= 1.3.1),
     googleCloudStorageR (>= 0.5.1),
     httr (>= 1.4.1),
     jose (>= 1.0),
