@@ -128,7 +128,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Serverless batched R scripts via Cloud Build</h1>
             
-            <h4 class="date">2020-11-02</h4>
+            <h4 class="date">2020-12-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudbuild.Rmd"><code>vignettes/cloudbuild.Rmd</code></a></small>
       <div class="hidden name"><code>cloudbuild.Rmd</code></div>
@@ -157,11 +157,11 @@
 <span id="cb1-9"><a href="#cb1-9"></a><span class="at">  </span><span class="fu">id</span><span class="kw">:</span><span class="at"> Hello R</span></span>
 <span id="cb1-10"><a href="#cb1-10"></a><span class="at">  </span><span class="fu">args</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"R"</span><span class="kw">,</span><span class="at"> </span><span class="st">"-e"</span><span class="kw">,</span><span class="at"> </span><span class="st">"paste0('1 + 1 = ', 1+1)"</span><span class="kw">]</span></span></code></pre></div>
 <p>This cloudbuild.yaml file can be built directly via the <code><a href="../reference/cr_build.html">cr_build()</a></code> function. The build will by default trigger a website URL to open with the build logs.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit">
-<span class="va">b1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">b1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span><span class="op">)</span></code></pre></div>
 <p>Or you can choose to wait in R for the build to finish, like below:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit">
-<span class="va">b2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, launch_browser <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">b2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, launch_browser <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">b3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span><span class="op">(</span><span class="va">b2</span><span class="op">)</span>
 <span class="co"># Waiting for build to finish:</span>
 <span class="co">#  |===||</span>
@@ -170,18 +170,18 @@
 <span class="co"># buildId:  c673143a-794d-4c69-8ad4-e777d068c066 </span>
 <span class="co"># status:  SUCCESS </span>
 <span class="co"># logUrl:  https://console.cloud.google.com/gcr/builds/c673143a-794d-4c69-8ad4-e777d068c066?project=1080525199262 </span>
-<span class="co"># ...</span></pre></div>
+<span class="co"># ...</span></code></pre></div>
 <p>You can export an existing build into a cloudbuild.yaml file, for instance to run in another project not using R.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit">
-<span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">b3</span>, file <span class="op">=</span> <span class="st">"cloudbuild.yml"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">b3</span>, file <span class="op">=</span> <span class="st">"cloudbuild.yml"</span><span class="op">)</span></code></pre></div>
 <p>You can also reuse Cloud Build objects to re-run a new build with the same settings. This is helpful when you test a build works locally, then pass the result of a successful run to <code><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http()</a></code> to schedule it.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit">
-<span class="co"># a cloud build you would like to schedule</span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># a cloud build you would like to schedule</span>
 <span class="va">itworks</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, launch_browser <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="co"># once working, pass in the build to the scheduler</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"15 5 * * *"</span>, name<span class="op">=</span><span class="st">"itworks-schedule"</span>,
-            httpTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">itworks</span><span class="op">)</span><span class="op">)</span></pre></div>
+            httpTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">itworks</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Any utility that has a Docker image can be used within Cloud Build steps.</p>
 <p>Official Google images for the <code>gcloud</code>, <code>bq</code> and <code>gsutil</code> are here: <a href="https://github.com/GoogleCloudPlatform/cloud-sdk-docker" class="uri">https://github.com/GoogleCloudPlatform/cloud-sdk-docker</a></p>
 <p>Some <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community">community contributed Cloud Build images are listed here</a>, including <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo">hugo</a>, <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make">make</a>, and <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar">tar</a>, or you can configure your own Dockerfile and build what image you need yourself, perhaps by using a previous Cloud Build and <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code></p>
@@ -192,8 +192,8 @@
 <p>Cloud Builds sometimes need code or data to work on to be useful.</p>
 <p>All cloudbuilds are launched in a serverless environment with a default directory <code>/workspace/</code>. The Source is copied into this workspace before the build steps execute, so steps can share state and files. Cloud Build sources are specified by the <code>source</code> argument.</p>
 <p>A source can be a <a href="https://cloud.google.com/source-repositories/">Cloud Source Repository</a> (perhaps mirrored from GitHub) or a <a href="https://cloud.google.com/storage/">Cloud Storage</a> bucket containing the code/data you want to operate on. An example of specifying both is below:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit">
-<span class="va">gcs_source</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_source.html">cr_build_source</a></span><span class="op">(</span>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gcs_source</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_source.html">cr_build_source</a></span><span class="op">(</span>
   <span class="fu"><a href="../reference/StorageSource.html">StorageSource</a></span><span class="op">(</span><span class="st">"gs://my-bucket"</span>, <span class="st">"my_code.tar.gz"</span><span class="op">)</span><span class="op">)</span>
   
 <span class="va">repo_source</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_source.html">cr_build_source</a></span><span class="op">(</span>
@@ -201,12 +201,12 @@
              branchName<span class="op">=</span><span class="st">"master"</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">build1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, source <span class="op">=</span> <span class="va">gcs_source</span><span class="op">)</span>
-<span class="va">build2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, source <span class="op">=</span> <span class="va">repo_source</span><span class="op">)</span></pre></div>
+<span class="va">build2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, source <span class="op">=</span> <span class="va">repo_source</span><span class="op">)</span></code></pre></div>
 <p><code><a href="../reference/cr_build_upload_gcs.html">cr_build_upload_gcs()</a></code> is a helper function for automating creation of a Google Cloud Storage source - this uses <a href="http://code.markedmondson.me/googleCloudStorageR/"><code>googleCloudStorageR</code></a> to tar and upload your source code locally to your bucket, making it available to your build.</p>
 <p>This returns a <code>Source</code> object that can be used in build functions:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit">
-<span class="va">storage</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_upload_gcs.html">cr_build_upload_gcs</a></span><span class="op">(</span><span class="st">"my_folder"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">my_yaml</span>, source <span class="op">=</span> <span class="va">storage</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">storage</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_upload_gcs.html">cr_build_upload_gcs</a></span><span class="op">(</span><span class="st">"my_folder"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">my_yaml</span>, source <span class="op">=</span> <span class="va">storage</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="cloud-build-macros" class="section level2">
 <h2 class="hasAnchor">
@@ -229,16 +229,16 @@
 <p>Instead of using separate <code>cloudbuild.yml</code> files, you can also choose to make your own cloudbuild.yaml files in R via <code><a href="../reference/cr_build_yaml.html">cr_build_yaml()</a></code> and <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code></p>
 <p>Lets say you don’t want to write a cloudbuild.yaml file - instead you can create all the features of the yaml files in R. Refer to the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yml config spec</a> on what it expected in the files or functions.</p>
 <p>An example below recreates a simple cloudbuild.yml file. If you print it to console it will output what the build would look like if it was in a yaml file:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit">
-<span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span> <span class="st">"gcloud"</span>,<span class="st">"version"</span><span class="op">)</span><span class="op">)</span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span> <span class="st">"gcloud"</span>,<span class="st">"version"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#==cloudRunnerYaml==</span>
 <span class="co">#steps:</span>
 <span class="co">#- name: gcr.io/cloud-builders/gcloud</span>
-<span class="co">#  args: version</span></pre></div>
+<span class="co">#  args: version</span></code></pre></div>
 <p>You can write back out into your own cloudbuild.yml</p>
-<div class="sourceCode" id="cb9"><pre class="downlit">
-<span class="va">my_yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span> <span class="st">"gcloud"</span>,<span class="st">"version"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">my_yaml</span>, file <span class="op">=</span> <span class="st">"cloudbuild.yaml"</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">my_yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span> <span class="st">"gcloud"</span>,<span class="st">"version"</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">my_yaml</span>, file <span class="op">=</span> <span class="st">"cloudbuild.yaml"</span><span class="op">)</span></code></pre></div>
 <p>And also edit or extract steps from existing cloudbuild.yml files via <code><a href="../reference/cr_buildstep_edit.html">cr_buildstep_edit()</a></code> and <code><a href="../reference/cr_buildstep_extract.html">cr_buildstep_extract()</a></code>.</p>
 <p>This allows you to programmatically create cloudbuild yaml files for other languages and triggers. See more at this article on <a href="https://cloud.google.com/cloud-build/docs/create-custom-build-steps">creating custom build steps with your own Docker images</a>.</p>
 </div>
@@ -272,21 +272,21 @@
 </ul>
 <p>If you have any requests for others, please <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/issues">raise an issue on GitHub</a>.</p>
 <p>Combine buildsteps with <code><a href="https://rdrr.io/r/base/c.html">c()</a></code> e.g.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit">
-<span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
       steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
         <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span><span class="st">"gcloud"</span>,<span class="st">"version"</span><span class="op">)</span>,
         <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span><span class="op">(</span><span class="st">"my-image"</span>, tag<span class="op">=</span><span class="st">"dev"</span><span class="op">)</span>,
         <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"my_secret"</span>,<span class="st">"auth.json"</span><span class="op">)</span>,
         <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="st">"sessionInfo()"</span><span class="op">)</span><span class="op">)</span>,
-      images <span class="op">=</span> <span class="st">"gcr.io/my-project/my-image"</span><span class="op">)</span></pre></div>
+      images <span class="op">=</span> <span class="st">"gcr.io/my-project/my-image"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="build-artifacts" class="section level2">
 <h2 class="hasAnchor">
 <a href="#build-artifacts" class="anchor"></a>Build Artifacts</h2>
 <p>You may have some useful files or data after your buildsteps that you want to use later. You can specify these files as <strong>artifacts</strong> that will be uploaded to a Google Cloud Storage bucket after the build finishes. A helper function <code><a href="../reference/cr_build_artifacts.html">cr_build_artifacts()</a></code> will take your build object and download the files to your local directory via <code>googleCloudStorageR</code></p>
-<div class="sourceCode" id="cb11"><pre class="downlit">
-<span class="va">r</span> <span class="op">&lt;-</span> <span class="st">"write.csv(mtcars,file = 'artifact.csv')"</span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">r</span> <span class="op">&lt;-</span> <span class="st">"write.csv(mtcars,file = 'artifact.csv')"</span>
 <span class="va">ba</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
      steps <span class="op">=</span> <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span>,
      artifacts <span class="op">=</span> <span class="fu"><a href="../reference/cr_build_yaml_artifact.html">cr_build_yaml_artifact</a></span><span class="op">(</span><span class="st">'artifact.csv'</span><span class="op">)</span>
@@ -304,7 +304,7 @@
 <span class="co">#2        Mazda RX4 Wag 21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span>
 <span class="co">#3           Datsun 710 22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
 <span class="co">#4       Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
-<span class="co"># ... etc ...</span></pre></div>
+<span class="co"># ... etc ...</span></code></pre></div>
 <div id="rstudio-gadget---build-docker" class="section level3">
 <h3 class="hasAnchor">
 <a href="#rstudio-gadget---build-docker" class="anchor"></a>RStudio Gadget - build Docker</h3>
@@ -330,8 +330,8 @@
 <code>gcr.io/gcer-public/googlecloudrunner</code> - installs: containerit, googleCloudStorageR, plumber, googleCloudRunner</li>
 </ul>
 <p>The R code can be created within the Build at build time, or you can refer to an existing R script within the Source.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit">
-<span class="co"># create an R buildstep inline</span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># create an R buildstep inline</span>
 <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"paste('1+1=', 1+1)"</span>, <span class="st">"sessionInfo()"</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># create an R buildstep from a local file</span>
@@ -349,7 +349,7 @@
 <span class="va">br</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="va">my_r</span>, name<span class="op">=</span> <span class="st">"gcr.io/gcer-public/packagetools:latest"</span><span class="op">)</span>
 
 <span class="co"># send it for building</span>
-<span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps<span class="op">=</span><span class="va">br</span><span class="op">)</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps<span class="op">=</span><span class="va">br</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="build-triggers" class="section level2">
 <h2 class="hasAnchor">
@@ -386,22 +386,22 @@
 <p>Build Triggers can be made via R code using the <code><a href="../reference/cr_buildtrigger.html">cr_buildtrigger()</a></code> function.</p>
 <p>Build Triggers include GitHub commits and pull requests.</p>
 <p>The example below shows how to set up some of the builds above:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit">
-<span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild.yaml"</span>,
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild.yaml"</span>,
                             package <span class="op">=</span> <span class="st">"googleCloudRunner"</span><span class="op">)</span>
 <span class="va">bb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">cloudbuild</span>, projectId <span class="op">=</span> <span class="st">"test-project"</span><span class="op">)</span>
 <span class="va">github</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span>, branch <span class="op">=</span> <span class="st">"master"</span><span class="op">)</span>
 
-<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="va">bb</span>, name <span class="op">=</span> <span class="st">"trig1"</span>, trigger <span class="op">=</span> <span class="va">github</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="va">bb</span>, name <span class="op">=</span> <span class="st">"trig1"</span>, trigger <span class="op">=</span> <span class="va">github</span><span class="op">)</span></code></pre></div>
 <p>The Build macros can also be configured by passing in a named list:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit">
-<span class="co"># creates a trigger with named substitutions</span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># creates a trigger with named substitutions</span>
 <span class="va">ss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>`$_MYVAR` <span class="op">=</span> <span class="st">"TEST1"</span>, `$_GITHUB` <span class="op">=</span> <span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"trig2"</span>, trigger <span class="op">=</span> <span class="va">github</span>, build <span class="op">=</span> <span class="va">bb</span>, substitutions <span class="op">=</span> <span class="va">ss</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"trig2"</span>, trigger <span class="op">=</span> <span class="va">github</span>, build <span class="op">=</span> <span class="va">bb</span>, substitutions <span class="op">=</span> <span class="va">ss</span><span class="op">)</span></code></pre></div>
 <p>The above examples will create the build step inline within the trigger, but you can also use existing cloudbuild.yaml files by specifying where in the repository the build file will be:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit">
-<span class="co"># create a trigger that will build from the file in the repo</span>
-<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, name <span class="op">=</span> <span class="st">"trig3"</span>, trigger <span class="op">=</span> <span class="va">github</span><span class="op">)</span></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># create a trigger that will build from the file in the repo</span>
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, name <span class="op">=</span> <span class="st">"trig3"</span>, trigger <span class="op">=</span> <span class="va">github</span><span class="op">)</span></code></pre></div>
 <p>This way you can commit changes to the cloudbuild.yaml file, and they will be reflected in the Build Trigger.</p>
 </div>
 <div id="connecting-to-github" class="section level3">
@@ -412,19 +412,19 @@
 <h4 class="hasAnchor">
 <a href="#mirroring-github" class="anchor"></a>Mirroring GitHub</h4>
 <p>Once your repo is mirrored it gives you a Cloud Repository name which is of the form <code>github_username_repo</code> - this you can add to a <code><a href="../reference/RepoSource.html">RepoSource()</a></code>:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit">
-<span class="co"># this repo mirrored on Google Source repos</span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># this repo mirrored on Google Source repos</span>
 <span class="va">my_repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_source.html">cr_build_source</a></span><span class="op">(</span>
   <span class="fu"><a href="../reference/RepoSource.html">RepoSource</a></span><span class="op">(</span><span class="st">"github_markedmondson1234_googlecloudrunner"</span>,
-             branchName<span class="op">=</span><span class="st">"master"</span><span class="op">)</span><span class="op">)</span></pre></div>
+             branchName<span class="op">=</span><span class="st">"master"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="cloud-build-github-app" class="section level4">
 <h4 class="hasAnchor">
 <a href="#cloud-build-github-app" class="anchor"></a>Cloud Build GitHub app</h4>
 <p>If you want build triggers to trigger on pushes and pulls then the GitHub app is necessary.</p>
 <p>You can create a GitHub build trigger using <code><a href="../reference/GitHubEventsConfig.html">GitHubEventsConfig()</a></code> - this will by default trigger builds when you push to any GitHub branch.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit">
-<span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild.yaml"</span>,
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild.yaml"</span>,
                            package <span class="op">=</span> <span class="st">"googleCloudRunner"</span><span class="op">)</span>
 <span class="va">bb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">cloudbuild</span>, projectId <span class="op">=</span> <span class="st">"test-project"</span><span class="op">)</span>
 
@@ -432,7 +432,7 @@
 <span class="va">github</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GitHubEventsConfig.html">GitHubEventsConfig</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span>, 
                              branch <span class="op">=</span> <span class="st">"master"</span><span class="op">)</span>
 
-<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"trig1"</span>, trigger <span class="op">=</span> <span class="va">github</span>, build <span class="op">=</span> <span class="va">bb</span><span class="op">)</span></pre></div>
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"trig1"</span>, trigger <span class="op">=</span> <span class="va">github</span>, build <span class="op">=</span> <span class="va">bb</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 </div>
