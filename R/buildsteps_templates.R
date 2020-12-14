@@ -662,7 +662,7 @@ cr_buildstep_pkgdown <- function(
     cr_buildstep_git(c("clone",repo, "repo"), id = "clone to repo dir"),
     post_clone,
     cr_buildstep_r(c("devtools::install_deps(dependencies=TRUE)",
-                     "devtools::install()",
+                     "devtools::install_local()",
                      "pkgdown::build_site()"),
                    name = build_image,
                    dir = "repo",
