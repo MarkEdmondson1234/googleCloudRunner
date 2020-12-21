@@ -26,6 +26,7 @@ Imports:
     jose (>= 1.0),
     jsonlite (>= 1.5),
     openssl (>= 1.4.1),
+    plumber (>= 1.0.0),
     progress (>= 1.2.2),
     usethis (>= 1.6.0),
     utils,
@@ -33,7 +34,6 @@ Imports:
 Suggests: 
     knitr,
     miniUI,
-    plumber, 
     rmarkdown,
     rstudioapi,
     shiny,
