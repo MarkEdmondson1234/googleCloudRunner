@@ -7,6 +7,7 @@
 #' @import cli
 cr_setup_test <- function(){
 
+  test_results <- list()
   cli_alert_info("Perform deployments to test your setup is working. Takes around 5mins.  ESC or 0 to skip.")
 
   gar_setup_auth_check("GCE_AUTH_FILE")
@@ -42,8 +43,12 @@ cr_setup_test <- function(){
     cd <- cr_deploy_docker(runme, launch_browser = TRUE)
     if(cd$status != "SUCCESS"){
       cli_alert_danger("Something is wrong with Cloud Build setup")
+      test_results <- c(test_results, "Something is wrong with Cloud Build setup")
+    } else {
+      cli_alert_success("Cloud Build Docker deployment successful")
+      test_results <- c(test_results, "Cloud Build Docker deployment successful")
     }
-    cli_alert_success("Cloud Build Docker deployment successful")
+
   }
 
   if(run_tests %in% c(1,3)){
@@ -52,16 +57,22 @@ cr_setup_test <- function(){
                             dockerfile = paste0(runme, "Dockerfile"))
     if(is.null(cr$kind) || cr$kind != "Service"){
       cli_alert_danger("Something is wrong with Cloud Run setup")
+      test_results <- c(test_results, "Something is wrong with Cloud Run setup")
+    } else {
+      cli_alert_success("Cloud Run plumber API deployment successful")
+      test_results <- c(test_results, "Cloud Run plumber API deployment successful")
+      print(cr_run_list())
+      test_url <- cr$status$url
+      cli_alert_info("Testing Pub/Sub API in example Cloud Run app: {test_url}")
+      test_call <- cr_pubsub(paste0(test_url,"/pubsub"), "hello")
+      if(test_call[[1]] != "Echo: hello"){
+        cli_alert_danger("Something is wrong with Pub/Sub setup")
+        test_results <- c(test_results, "Something is wrong with Pub/Sub setup")
+      } else {
+        cli_alert_success("Cloud Run plumber API Pub/Sub deployed successfully")
+        test_results <- c(test_results, "Cloud Run plumber API Pub/Sub deployed successfully")
+      }
     }
-    cli_alert_success("Cloud Run plumber API deployment successful")
-    print(cr_run_list())
-    test_url <- cr$status$url
-    cli_alert_info("Testing Pub/Sub API in example Cloud Run app: {test_url}")
-    test_call <- cr_pubsub(paste0(test_url,"/pubsub"), "hello")
-    if(test_call[[1]] != "Echo: hello"){
-      cli_alert_danger("Something is wrong with Pub/Sub setup")
-    }
-    cli_alert_success("Cloud Run plumber API Pub/Sub deployed successfully")
   }
 
   r_lines <- c("list.files()",
@@ -76,8 +87,12 @@ cr_setup_test <- function(){
     rb <- cr_deploy_r(r_lines)
     if(is.null(rb$status) || rb$status != "SUCCESS"){
       cli_alert_danger("Something is wrong with Cloud Build R scripts")
+      test_results <- c(test_results, "Something is wrong with Cloud Build R scripts")
+    } else {
+      cli_alert_success("Cloud Build R scripts deployed successfully")
+      test_results <- c(test_results, "Cloud Build R scripts deployed successfully")
     }
-    cli_alert_success("Cloud Build R scripts deployed successfully")
+
   }
 
   if(run_tests %in% c(1,5)){
@@ -88,12 +103,17 @@ cr_setup_test <- function(){
 
     if(is.null(rs$state) || rs$state != "ENABLED"){
       cli_alert_danger("Something is wrong with scheduled Cloud Build R scripts")
+      test_results <- c(test_results, "Something is wrong with scheduled Cloud Build R scripts")
+    } else {
+      cli_alert_success("Scheduled Cloud Build R scripts deployed successfully")
+      test_results <- c(test_results,
+                        "Scheduled Cloud Build R scripts deployed successfully")
+      print(cr_schedule_list())
     }
-    cli_alert_success("Scheduled Cloud Build R scripts deployed successfully")
-    print(cr_schedule_list())
-
     cr_schedule_delete(rs)
   }
 
   cli_alert_success("Deployment tests complete!")
+  lapply(test_results, cli::cli_alert_info)
 }
+
