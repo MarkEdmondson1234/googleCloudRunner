@@ -9,6 +9,7 @@
 * Extra checks for existance of valid auth file when creating build email (#89)
 * We can't check for existance of cloud build email #94 so `cr_setup()` will only set roles in assumed present Google service emails.
 * Include `plumber` in Depends as its needed for most applications - makes `FROM gcr.io/gcer-public/googlecloudrunner:master` more useful in Docker files.
+* Update example plumber deployment to use Rscript to start plumber server (#97)
 
 # googleCloudRunner 0.3.0
 

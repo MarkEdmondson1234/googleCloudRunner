@@ -8,5 +8,4 @@ RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
 	libsodium-dev
 RUN ["install2.r", "googleCloudStorageR", "openssl", "plumber", "remotes", "yaml"]
 RUN ["installGithub.r", "MarkEdmondson1234/googleCloudRunner"]
-WORKDIR /payload/
 CMD ["R"]
