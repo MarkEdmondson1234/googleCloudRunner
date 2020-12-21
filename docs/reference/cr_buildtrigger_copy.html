@@ -180,7 +180,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>cr_buildtrigger_copy</span><span class='op'>(</span>
-  <span class='va'>buildTrigger</span>,
+  <span class='va'>buildtrigger</span>,
   filename <span class='op'>=</span> <span class='cn'>NULL</span>,
   name <span class='op'>=</span> <span class='cn'>NULL</span>,
   tags <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -197,6 +197,10 @@
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>buildtrigger</th>
+      <td><p>A <code>CloudBuildTriggerResponse</code> object from <a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a></p></td>
+    </tr>
     <tr>
       <th>filename</th>
       <td><p>Path, from the source root, to a file whose contents is used for the build</p></td>
@@ -238,8 +242,8 @@
       <td><p>a <a href='RepoSource.html'>RepoSource</a> object - mutually exclusive with <code>github</code></p></td>
     </tr>
     <tr>
-      <th>buildtrigger</th>
-      <td><p>A <code>CloudBuildTriggerResponse</code> object from <a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a></p></td>
+      <th>projectId</th>
+      <td><p>The projectId you are copying to</p></td>
     </tr>
     </table>
 
