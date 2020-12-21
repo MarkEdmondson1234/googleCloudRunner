@@ -3,7 +3,8 @@ LABEL maintainer="mark"
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
   && apt-get install -y git-core \
 	zlib1g \
-	libxml2
+	libxml2 \
+	libsodium-dev
 RUN ["install2.r", "googleCloudStorageR", "openssl", "plumber", "remotes", "yaml"]
 RUN ["installGithub.r", "MarkEdmondson1234/googleCloudRunner"]
 WORKDIR /payload/
