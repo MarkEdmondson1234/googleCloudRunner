@@ -26,6 +26,15 @@ cr_setup_test <- function(){
 
   if(run_tests %in% c(1,2)){
     cli_alert_info("Attempting Docker deployment on Cloud Build via cr_deploy_docker()")
+
+    # check has access to the bucket
+    tryCatch(googleCloudStorageR::gcs_list_objects(cr_bucket_get()),
+             error = function(err){
+               stop("Could not see objects in ", cr_bucket_get(),
+                    " - authentication JSON email needs access?
+                    Rerun cr_setup() and select 'Configure Cloud Storage bucket'")
+             })
+
     runme <- system.file("example/",
                          package="googleCloudRunner",
                          mustWork=TRUE)
