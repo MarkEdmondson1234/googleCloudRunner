@@ -188,6 +188,7 @@
 </li>
 <li>Extra checks for existance of valid auth file when creating build email (<a href='https://github.com/MarkEdmondson1234/googleCloudRunner/issues/89'>#89</a>)</li>
 <li>We can’t check for existance of cloud build email <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/issues/94'>#94</a> so <code><a href="../reference/cr_setup.html">cr_setup()</a></code> will only set roles in assumed present Google service emails.</li>
+<li>Include <code>plumber</code> in Depends as its needed for most applications - makes <code>FROM gcr.io/gcer-public/googlecloudrunner:master</code> more useful in Docker files.</li>
 </ul>
 </div>
     <div id="googlecloudrunner-030" class="section level1">
