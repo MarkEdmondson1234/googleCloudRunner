@@ -69,3 +69,7 @@ cr_pubsub <- function(endpoint, payload = jsonlite::toJSON("hello")){
            data = base64_enc(payload))),
          encode="json"))
 }
+
+cran_check_plumber <- function(){
+  plumber::available_apis()
+}

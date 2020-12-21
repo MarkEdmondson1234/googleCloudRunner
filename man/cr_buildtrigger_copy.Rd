@@ -5,7 +5,7 @@
 \title{Copy a buildtrigger}
 \usage{
 cr_buildtrigger_copy(
-  buildTrigger,
+  buildtrigger,
   filename = NULL,
   name = NULL,
   tags = NULL,
@@ -20,6 +20,8 @@ cr_buildtrigger_copy(
 )
 }
 \arguments{
+\item{buildtrigger}{A \code{CloudBuildTriggerResponse} object from \link{cr_buildtrigger_get}}
+
 \item{filename}{Path, from the source root, to a file whose contents is used for the build}
 
 \item{name}{User assigned name of the trigger}
@@ -40,7 +42,7 @@ cr_buildtrigger_copy(
 
 \item{triggerTemplate}{a \link{RepoSource} object - mutually exclusive with \code{github}}
 
-\item{buildtrigger}{A \code{CloudBuildTriggerResponse} object from \link{cr_buildtrigger_get}}
+\item{projectId}{The projectId you are copying to}
 }
 \description{
 This lets you use the response from \link{cr_buildtrigger_get} for an existing buildtrigger to copy over settings to a new buildtrigger.

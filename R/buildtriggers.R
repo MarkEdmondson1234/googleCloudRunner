@@ -284,6 +284,7 @@ cr_buildtrigger_run <- function(triggerId,
 #' This lets you use the response from \link{cr_buildtrigger_get} for an existing buildtrigger to copy over settings to a new buildtrigger.
 #'
 #' @param buildtrigger A \code{CloudBuildTriggerResponse} object from \link{cr_buildtrigger_get}
+#' @param projectId The projectId you are copying to
 #' @inheritParams BuildTrigger
 #'
 #' @details Overwrite settings for the build trigger you are copying by supplying it as one of the other arguments from \link{BuildTrigger}.
@@ -309,7 +310,7 @@ cr_buildtrigger_run <- function(triggerId,
 #'
 #'
 #' }
-cr_buildtrigger_copy <- function(buildTrigger,
+cr_buildtrigger_copy <- function(buildtrigger,
                                  filename = NULL,
                                  name = NULL,
                                  tags = NULL,
