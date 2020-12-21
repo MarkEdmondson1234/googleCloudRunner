@@ -108,12 +108,13 @@ cr_setup_test <- function(){
       cli_alert_success("Scheduled Cloud Build R scripts deployed successfully")
       test_results <- c(test_results,
                         "Scheduled Cloud Build R scripts deployed successfully")
-      print(cr_schedule_list())
     }
     cr_schedule_delete(rs)
   }
 
-  cli_alert_success("Deployment tests complete!")
+  cli::cli_rule()
+  cli_h1("Test summary")
   lapply(test_results, cli::cli_alert_info)
+  cli_alert_success("Deployment tests complete!")
 }
 
