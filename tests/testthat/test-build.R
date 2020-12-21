@@ -248,9 +248,7 @@ test_that("[Online] JWT fetches", {
                      token)
   o <- httr::content(res)
 
-  expect_s3_class(o, "list")
-  expect_equal(o$mean[[1]], 81)
-  expect_equal(o$x[[1]], 100)
+  expect_true(inherits(o, "list"))
 
   all_urls <- c("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=North%20America&industry=Transportation%20(non-freight)"
   ,"https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=Europe&industry=Transportation%20(non-freight)"
@@ -259,7 +257,7 @@ test_that("[Online] JWT fetches", {
   ,"https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=North%20America&industry=Software")
 
   res2 <- cr_jwt_async(all_urls, token = token)
-  expect_s3_class(res2, "list")
+  expect_true(inherits(res2, "list"))
   # response is json starting with {"params" ...}
   expect_true(grepl('^\\{\\"params\\"',res2[[1]]))
 
