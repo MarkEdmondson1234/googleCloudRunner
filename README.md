@@ -1,7 +1,6 @@
 # googleCloudRunner
 
 ![CloudBuild](https://badger-ewjogewawq-ew.a.run.app/build/status?project=mark-edmondson-gde&id=0a3cade0-425f-4adc-b86b-14cde51af674)
-[![Build Status](https://travis-ci.org/MarkEdmondson1234/googleCloudRunner.svg?branch=master)](https://travis-ci.org/MarkEdmondson1234/googleCloudRunner)
 [![codecov](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner/branch/master/graph/badge.svg)](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner)
 ![CRAN](http://www.r-pkg.org/badges/version/googleCloudRunner)
 [![CodeFactor](https://www.codefactor.io/repository/github/markedmondson1234/googlecloudrunner/badge/master)](https://www.codefactor.io/repository/github/markedmondson1234/googlecloudrunner/overview/master)

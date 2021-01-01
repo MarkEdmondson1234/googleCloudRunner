@@ -3,6 +3,8 @@ title: "Setup"
 date: "`r Sys.Date()`"
 ---
 
+It is recommended to use a new Google Cloud Project, to ensure all modern services are activated.
+
 ## Setup wizard cr_setup()
 
 There is a setup function to help you configure the package.  Get started via the commands below:
