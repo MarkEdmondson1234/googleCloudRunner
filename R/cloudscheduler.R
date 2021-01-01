@@ -83,15 +83,13 @@ cr_schedule <- function(name,
                                    description = description))
 
       f <- gar_api_generator(the_url, "PATCH",
-                             data_parse_function = parse_schedule,
-                             pars_args = list(updateMask = paste(names(updateMask),
-                                                                 collapse = ",")))
+              data_parse_function = parse_schedule,
+              pars_args = list(updateMask = paste(names(updateMask),
+                                                  collapse = ",")))
     }
     # if not in the_name not in scheds, keep existing f()
     myMessage("No existing schedule to overwrite", level = 3)
   }
-
-  stopifnot(inherits(job, "gar_scheduleJob"))
 
   o <- f(the_body = job)
 
@@ -105,8 +103,7 @@ cr_schedule <- function(name,
 }
 
 parse_schedule <- function(x){
-  structure(x,
-            class = "gar_scheduleJob")
+  structure(x, class = "gar_scheduleJob")
 }
 
 retry_update_failed <- function(job, f) {
@@ -240,7 +237,7 @@ extract_schedule_name <- function(x){
 #' @seealso \href{https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/get}{Google Documentation}
 
 #' @family Cloud Scheduler functions
-#' @param name Required
+#' @param name Required - a string or a schedule Job object
 #' @param region The region to run within
 #' @param projectId The projectId
 #' @importFrom googleAuthR gar_api_generator
@@ -256,7 +253,7 @@ cr_schedule_get <- function(name,
                             region = cr_region_get(),
                             projectId = cr_project_get()) {
 
-  the_name <- contruct_name(name = name,
+  the_name <- contruct_name(name = extract_schedule_name(name),
                             region = region,
                             project = projectId)
 
@@ -393,7 +390,7 @@ cr_schedule_resume <- function(x,
 #' @family Cloud Scheduler functions
 #' @export
 #' @importFrom jsonlite toJSON
-#' @importFrom openssl base64_encode
+#' @importFrom openssl base64_encode base64_decode
 HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
                        uri = NULL, oidcToken = NULL, httpMethod = NULL) {
 
@@ -405,14 +402,21 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
   }
 
   the_body <- toJSON(body, auto_unbox = TRUE)
-  myMessage("Body parsed: ", the_body, level = 3)
+  myMessage("Body parsed: ", the_body, level = 2)
 
   if(!is.null(body)){
     body <- base64_encode(the_body,linebreaks = FALSE)
+    if(getOption("googleAuthR.verbose") < 3){
+      myMessage("Body unencoded: ", rawToChar(base64_decode(body)))
+    }
   }
 
-  obj <- rmNullObs(list(headers = headers, body = body, oauthToken = oauthToken,
-                        uri = uri, oidcToken = oidcToken, httpMethod = httpMethod))
+  obj <- rmNullObs(list(headers = headers,
+                        body = body,
+                        oauthToken = oauthToken,
+                        uri = uri,
+                        oidcToken = oidcToken,
+                        httpMethod = httpMethod))
 
   myMessage("HttpTarget Object: ", obj, level = 2)
   structure(obj,

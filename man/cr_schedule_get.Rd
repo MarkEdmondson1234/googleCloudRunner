@@ -7,7 +7,7 @@
 cr_schedule_get(name, region = cr_region_get(), projectId = cr_project_get())
 }
 \arguments{
-\item{name}{Required}
+\item{name}{Required - a string or a schedule Job object}
 
 \item{region}{The region to run within}
 

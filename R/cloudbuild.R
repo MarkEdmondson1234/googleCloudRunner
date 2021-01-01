@@ -94,8 +94,7 @@ cr_build <- function(x,
 
 
   parse_f <- function(x){
-    structure(x,
-              class = "BuildOperationMetadata")
+    structure(x,class = "BuildOperationMetadata")
   }
   # cloudbuild.projects.builds.create
   f <- gar_api_generator(url, "POST",
