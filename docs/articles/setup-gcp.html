@@ -127,7 +127,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Setup</h1>
             
-            <h4 class="date">2021-01-01</h4>
+            <h4 class="date">2021-01-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/setup-gcp.Rmd"><code>vignettes/setup-gcp.Rmd</code></a></small>
       <div class="hidden name"><code>setup-gcp.Rmd</code></div>
@@ -136,7 +136,23 @@
 
     
     
-<p>It is recommended to use a new Google Cloud Project, to ensure all modern services are activated.</p>
+<div id="setup-new-google-cloud-project-and-client-id" class="section level2">
+<h2 class="hasAnchor">
+<a href="#setup-new-google-cloud-project-and-client-id" class="anchor"></a>Setup new Google Cloud Project and client Id</h2>
+<p>It is recommended to use a new Google Cloud Project, to ensure all modern services are activated. Billing will need to be enabled with a credit card.</p>
+<p>You will need to be logged in as the Owner of the project for the below.</p>
+<p>Once your project is created, visit <code>APIs &amp; Services &gt; Credentials</code> or <code>https://console.cloud.google.com/apis/credentials</code> to set up an OAuth 2.0 Client ID</p>
+<p>If not created already, you will first need to make an OAuth consent screen at <code>APIs &amp; Services &gt; OAuth consent screen</code> or <code>https://console.cloud.google.com/apis/credentials/consent</code></p>
+<p>For most purposes, you will only need to authorize your own email through this OAuth consent screen, in which case the settings you want will be</p>
+<ul>
+<li>User type = “External” (or optionally “Internal” if you are a GSuite user)</li>
+<li>Scopes - you can skip this for now as it can be added later via <code><a href="../reference/cr_setup.html">cr_setup()</a></code> or the manual setup instructions below. As the app will not be public, the app should not require verification</li>
+<li>Test users = “<a href="mailto:your@email.com" class="email">your@email.com</a>” (plus anyone else who will authenticate with same client ID)</li>
+<li>Publishing status = “Testing”</li>
+</ul>
+<p>Once the consent screen is configured, you should be able to create credentials at <code>APIs &amp; Services &gt; Credentials &gt; Create Credentials &gt; OAuth client ID</code> or <code>https://console.cloud.google.com/apis/credentials/oauthclient</code> and select “Desktop app” - an OAuth client should be created. Download this client ID via the download button on the far right.</p>
+<p>Once you have the client Id JSON file, you should be able to use the below to setup the rest of the configuration such as service accounts, scopes and roles.</p>
+</div>
 <div id="setup-wizard-cr_setup" class="section level2">
 <h2 class="hasAnchor">
 <a href="#setup-wizard-cr_setup" class="anchor"></a>Setup wizard cr_setup()</h2>

@@ -127,7 +127,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Example Use Cases for googleCloudRunner</h1>
             
-            <h4 class="date">2021-01-01</h4>
+            <h4 class="date">2021-01-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecases.Rmd"><code>vignettes/usecases.Rmd</code></a></small>
       <div class="hidden name"><code>usecases.Rmd</code></div>
@@ -901,7 +901,7 @@ CMD ["api.R"]</code></pre>
 <p><img src="pubsub-topic.png"></p>
 <p>You can only setup cloud storage pub/sub messages to this topic using the API, which can be done using <code>googleCloudStorageR::gce_create_pubsub()</code>:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://code.markedmondson.me/googleCloudStorageR/">googleCloudStorageR</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudStorageR/">googleCloudStorageR</a></span><span class="op">)</span>
 <span class="fu"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_create_pubsub.html">gcs_create_pubsub</a></span><span class="op">(</span><span class="st">"your-topic"</span>, <span class="st">"your-project"</span>, <span class="st">"your-bucket"</span><span class="op">)</span></code></pre></div>
 <p>Each topic can have many subscriptions. One of these will push to the Cloud Run URL set up in the previous step:</p>
 <p><img src="pubsub-sub.png"></p>
