@@ -11,6 +11,8 @@
 * Include `plumber` in Depends as its needed for most applications - makes `FROM gcr.io/gcer-public/googlecloudrunner:master` more useful in Docker files.
 * Update example plumber deployment to use Rscript to start plumber server (#97)
 * Add R to git use case example
+* Improve `cr_setup()` for buckets
+* `cr_setup()` for scheduler emails was broken due to changes in Google's JSON file format (no $installed)
 
 # googleCloudRunner 0.3.0
 

@@ -3,7 +3,27 @@ title: "Setup"
 date: "`r Sys.Date()`"
 ---
 
-It is recommended to use a new Google Cloud Project, to ensure all modern services are activated.
+## Setup new Google Cloud Project and client Id
+
+It is recommended to use a new Google Cloud Project, to ensure all modern services are activated.  Billing will need to be enabled with a credit card.
+
+You will need to be logged in as the Owner of the project for the below.
+
+Once your project is created, visit `APIs & Services > Credentials` or `https://console.cloud.google.com/apis/credentials` to set up an OAuth 2.0 Client ID
+
+If not created already, you will first need to make an OAuth consent screen at `APIs & Services > OAuth consent screen` or
+`https://console.cloud.google.com/apis/credentials/consent`
+
+For most purposes, you will only need to authorize your own email through this OAuth consent screen, in which case the settings you want will be
+
+* User type = "External" (or optionally "Internal" if you are a GSuite user)
+* Scopes - you can skip this for now as it can be added later via `cr_setup()` or the manual setup instructions below.  As the app will not be public, the app should not require verification
+* Test users = "your@email.com" (plus anyone else who will authenticate with same client ID)
+* Publishing status = "Testing"
+
+Once the consent screen is configured, you should be able to create credentials at `APIs & Services > Credentials > Create Credentials > OAuth client ID` or `https://console.cloud.google.com/apis/credentials/oauthclient` and select "Desktop app" - an OAuth client should be created.  Download this client ID via the download button on the far right.
+
+Once you have the client Id JSON file, you should be able to use the below to setup the rest of the configuration such as service accounts, scopes and roles.
 
 ## Setup wizard cr_setup()
 

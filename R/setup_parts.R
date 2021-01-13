@@ -1,5 +1,15 @@
 extract_project_number <- function(json){
-  gsub("^([0-9]+?)\\-(.+)\\.apps.+","\\1",jsonlite::fromJSON(json)$installed$client_id)
+  o <- gsub("^([0-9]+?)\\-(.+)\\.apps.+","\\1",
+            jsonlite::fromJSON(json)$installed$client_id)
+  if(identical(o, character(0))){
+    # second try
+    o <- gsub("^([0-9]+?)\\-(.+)\\.apps.+","\\1",
+              jsonlite::fromJSON(json)$client_id)
+    if(identical(o, character(0))){
+      stop("Could not extract project number from ", json)
+    }
+  }
+  o
 }
 
 
@@ -80,12 +90,6 @@ get_email_setup <- function(){
     } else {
       the_email <- readline("Enter the service email you wish to use")
     }
-
-    #ensure cloud scheduler service agent role present
-    schedule_email <- paste0("service-",
-                             extract_project_number(),
-                             "@gcp-sa-cloudscheduler.iam.gserviceaccount.com")
-    cr_setup_service(schedule_email, roles = cr_setup_role_lookup("schedule_agent"))
 
     cli_alert_info("Using email: {the_email}")
     return(paste0("CR_BUILD_EMAIL=", the_email))
@@ -181,14 +185,14 @@ get_bucket_setup <- function(){
         }
         make_bucket_name <- readline(
           paste("What name will the bucket be? It will be created in your project: ",
-                Sys.getenv("GCE_DEFAULT_PROJECT_ID"))
+                Sys.getenv("GCE_DEFAULT_PROJECT_ID"),": ")
         )
         new_bucket <- googleCloudStorageR::gcs_create_bucket(
           make_bucket_name, projectId = cr_project_get()
         )
         if(!is.null(new_bucket$kind) && new_bucket$kind == "storage#bucket"){
           cli_alert_success("Successfully created bucket {make_bucket_name}")
-          return(paste0("GCS_DEFAULT_BUCKET=", new_bucket))
+          return(paste0("GCS_DEFAULT_BUCKET=", make_bucket_name))
         }
 
       } else {

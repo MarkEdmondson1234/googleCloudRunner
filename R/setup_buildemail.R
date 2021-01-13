@@ -18,12 +18,14 @@ cr_setup_service <- function(account_email,
   # to prevent #94
   assert_that(is.string(account_email))
 
+  the_roles <- paste(roles, collapse = " ")
   account_email <- trimws(account_email)
   projectId <- gar_set_client(json,
                   scopes = "https://www.googleapis.com/auth/cloud-platform")
   if(email == ""){
     email <- NULL
   }
+  cli::cli_alert_info("Adding {account_email} for project {projectId} with roles: {the_roles}")
   gar_auth(email = email)
 
   if("roles/cloudscheduler.serviceAgent" %in% roles){
@@ -35,8 +37,8 @@ cr_setup_service <- function(account_email,
                           roles = roles,
                           projectId = projectId)
 
-  the_roles <- paste(roles, collapse = " ")
-  cli_alert_success("Configured {account_email} with roles: {the_roles}")
+  cli::cli_alert_success("Configured {account_email} with roles: {the_roles}")
+  the_roles
 }
 
 
