@@ -9,21 +9,69 @@ It is recommended to use a new Google Cloud Project, to ensure all modern servic
 
 You will need to be logged in as the Owner of the project for the below.
 
+### Create Consent Screen for your GCP client
+
 Once your project is created, visit `APIs & Services > Credentials` or `https://console.cloud.google.com/apis/credentials` to set up an OAuth 2.0 Client ID
+
+![](oauth-create-credentials-start.png)
 
 If not created already, you will first need to make an OAuth consent screen at `APIs & Services > OAuth consent screen` or
 `https://console.cloud.google.com/apis/credentials/consent`
 
-For most purposes, you will only need to authorize your own email through this OAuth consent screen, in which case the settings you want will be
+![](oauth-consent-screen-name-step1.png)
+
+For most purposes, you will only need to authorize your own email through this OAuth consent screen, in which case the settings you want will be:
+
+* App name - whatever you want
+
+![](oauth-consent-screen-name-step1.png)
+
+* Scopes - set them to `../auth/cloud-platform` (**Note in screenshot a Google bug calls all scopes "BigQueryAPI" but should read "Cloud Platform"**)
+
+![](oauth-create-credentials-scopes-set-step2.png)
+* Test users = "your@email.com" (plus anyone else who will authenticate with same client ID)
+
+![](oauth-consent-screen-test-user-step3.png)
 
 * User type = "External" (or optionally "Internal" if you are a GSuite user)
-* Scopes - you can skip this for now as it can be added later via `cr_setup()` or the manual setup instructions below.  As the app will not be public, the app should not require verification
-* Test users = "your@email.com" (plus anyone else who will authenticate with same client ID)
-* Publishing status = "Testing"
 
-Once the consent screen is configured, you should be able to create credentials at `APIs & Services > Credentials > Create Credentials > OAuth client ID` or `https://console.cloud.google.com/apis/credentials/oauthclient` and select "Desktop app" - an OAuth client should be created.  Download this client ID via the download button on the far right.
+![](oauth-consent-screen-final-app.png)
 
-Once you have the client Id JSON file, you should be able to use the below to setup the rest of the configuration such as service accounts, scopes and roles.
+* Publishing status = "Testing" - you probably do NOT want to push to production otherwise you will need to get approval from Google.
+
+![](oauth-consent-screen-push-to-production.png)
+
+As the app will not be public or in production, the app should not require verification, only test users (e.g. your email) should be approved.  
+
+### Create Oauth2 client ID and download JSON file
+
+Once the consent screen is configured, you should be able to create credentials at `APIs & Services > Credentials > Create Credentials > OAuth client ID` or `https://console.cloud.google.com/apis/credentials/oauthclient`
+
+![](oauth-create-credentials-start.png)
+
+Select "Desktop app" - an OAuth client should be created.  Download this client ID via the download button on the far right.
+
+![](oauth-create-credentials-desktop-app.png)
+
+Upon creation you will have generated a Client ID and a Client Secret
+
+![](oauth-create-credentials-created.png)
+
+Now download the client ID JSON file via the download button far-right that will identify your GCP app.  This will be what is used to generated service keys that are another type of JSON file to authenticate users for this app.
+
+![](oauth-create-credentials-download-clientid.png)
+
+Once you have the client Id JSON file, you should be able to use `cr_setup()` or the manual steps below to setup the rest of the configuration.
+
+### Enable APIs
+
+To enable automatic provision of the service accounts are services you may also need to active the APIs necessary
+
+* IAM API `https://console.developers.google.com/apis/api/iam.googleapis.com/overview`
+* Cloud Resource Manager `https://console.developers.google.com/apis/api/cloudresourcemanager.googleapis.com/overview`
+* Cloud Run `https://console.developers.google.com/apis/api/run.googleapis.com/overview`
+
+If the APIs are not activated, the error messages should point you in the right direction. Enable the APIs if necessary and try the call again.
 
 ## Setup wizard cr_setup()
 
