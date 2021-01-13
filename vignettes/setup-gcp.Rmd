@@ -29,6 +29,7 @@ For most purposes, you will only need to authorize your own email through this O
 * Scopes - set them to `../auth/cloud-platform` (**Note in screenshot a Google bug calls all scopes "BigQueryAPI" but should read "Cloud Platform"**)
 
 ![](oauth-create-credentials-scopes-set-step2.png)
+
 * Test users = "your@email.com" (plus anyone else who will authenticate with same client ID)
 
 ![](oauth-consent-screen-test-user-step3.png)

@@ -1,6 +1,6 @@
-# googleCloudRunner 0.3.0.9000
+# googleCloudRunner 0.4.0
 
-* Fix checking for existance of cloudscheduler.serviceAgent (#89 - thanks @BillPetti)
+* Remove checking for existance of cloudscheduler.serviceAgent (#89 - thanks @BillPetti)
 * Setting env vars for Cloud Run runtime deployments fixed 
 * Added `cr_jwt_create()` and family to create JWTs to call authenticated services such as Cloud Run (#91)
 * Add authenticated Cloud Run use case
@@ -12,7 +12,6 @@
 * Update example plumber deployment to use Rscript to start plumber server (#97)
 * Add R to git use case example
 * Improve `cr_setup()` for buckets
-* `cr_setup()` for scheduler emails was broken due to changes in Google's JSON file format (no $installed)
 
 # googleCloudRunner 0.3.0
 
