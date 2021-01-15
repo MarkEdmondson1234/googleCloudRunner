@@ -25,6 +25,10 @@ cr_setup_test <- function(){
     cli_alert_info("Skipping deployment tests")
   }
 
+  runme <- system.file("example/",
+                       package="googleCloudRunner",
+                       mustWork=TRUE)
+
   if(run_tests %in% c(1,2)){
     cli_alert_info("Attempting Docker deployment on Cloud Build via cr_deploy_docker()")
 
@@ -35,10 +39,6 @@ cr_setup_test <- function(){
                     " - authentication JSON email needs access?
                     Rerun cr_setup() and select 'Configure Cloud Storage bucket'")
              })
-
-    runme <- system.file("example/",
-                         package="googleCloudRunner",
-                         mustWork=TRUE)
 
     cd <- cr_deploy_docker(runme, launch_browser = TRUE)
     if(cd$status != "SUCCESS"){
@@ -53,6 +53,7 @@ cr_setup_test <- function(){
 
   if(run_tests %in% c(1,3)){
     cli_alert_info("Attempting deployment of plumber API on Cloud Run via cr_deploy_plumber()")
+
     cr <- cr_deploy_plumber(runme,
                             dockerfile = paste0(runme, "Dockerfile"))
     if(is.null(cr$kind) || cr$kind != "Service"){

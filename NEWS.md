@@ -1,6 +1,6 @@
 # googleCloudRunner 0.4.0.9000
 
-* ...
+* Fix faulty test for `cr_setup_tests()` that was failing option 3 (#104)
 
 # googleCloudRunner 0.4.0
 
