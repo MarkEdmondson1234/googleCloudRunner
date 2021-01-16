@@ -494,6 +494,9 @@ read_buildstep_file <- function(x,
 
     rchars <- paste(rchars, collapse = "\n")
 
+    # issue 103 - replace $ with $$ to avoid running as substitution vars
+    rchars <- gsub("\\$","$$", rchars)
+
   } else if(code_source == "runtime"){
     #filepath in source, not much we can do to check it
     myMessage("Will read code in source from filepath ", rchars, level = 3)
