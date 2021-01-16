@@ -240,7 +240,7 @@
 #&gt;   remotes::install_local()
 #&gt;   cv &lt;- covr::package_coverage()
 #&gt;   print(cv)
-#&gt;   covr::codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
+#&gt;   covr::codecov(coverage=cv, commit = '$$COMMIT_SHA', branch = '$$BRANCH_NAME')
 #&gt; env:
 #&gt; - NOT_CRAN=true
 #&gt; - CODECOV_TOKEN=$_CODECOV_TOKEN
