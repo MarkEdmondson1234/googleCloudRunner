@@ -1,7 +1,7 @@
 # googleCloudRunner 0.4.0.9000
 
 * Fix faulty test for `cr_setup_tests()` that was failing option 3 (#104)
-* Fix R nad bash scripts failing builds and schedules if they included a `$` character in the script (#103 - thanks @yfarjoun)
+* Fix R and bash scripts failing builds and schedules if they included a `$` character in the script (#103 - thanks @yfarjoun)
 
 # googleCloudRunner 0.4.0
 

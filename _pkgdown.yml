@@ -100,6 +100,10 @@ reference:
       - cr_deploy_run
       - cr_plumber_pubsub
       - cr_pubsub
+  - title: "JWT authorisation"
+    desc: >
+      Functions for working with authenticated Google apps, such as Cloud Run
+    contents: matches("cr_jwt")
   - title: "Cloud Scheduler functions"
     desc: >
       Functions for working with Cloud Scheduler
