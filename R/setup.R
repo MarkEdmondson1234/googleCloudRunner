@@ -40,7 +40,11 @@ cr_setup <- function(){
       do_function = gar_setup_env_check,
       env_arg = "GCE_AUTH_FILE",
       set_to = gar_setup_get_authenv(session_user = session_user,
-                                     env_arg = "GCE_AUTH_FILE"),
+                                     env_arg = "GCE_AUTH_FILE",
+                                     file = "googlecloudrunner-auth-key.json",
+                                     client_json = "GAR_CLIENT_JSON",
+                                     roles = cr_setup_role_lookup("local"),
+                                     default_key = "googlecloudrunner"),
       edit_option = we_edit,
       stop = TRUE,
       session_user = session_user)
