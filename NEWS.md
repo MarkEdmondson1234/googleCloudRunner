@@ -1,6 +1,6 @@
 # googleCloudRunner 0.4.1.9000
 
-* ...
+* Add checks for Cloud Build email roles in `cr_setup()`
 
 # googleCloudRunner 0.4.1
 

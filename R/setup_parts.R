@@ -19,7 +19,46 @@ do_build_service_setup <- function(){
   json <- Sys.getenv("GAR_CLIENT_JSON")
   build_email <- paste0(extract_project_number(json),
                         "@cloudbuild.gserviceaccount.com")
-  projectId <- jsonlite::fromJSON(json)$installed$project_id
+
+  projectId <- gar_set_client(json = json,
+                              scopes = "https://www.googleapis.com/auth/cloud-platform")
+  gar_auth()
+
+  present_roles <- gar_service_get_roles(projectId, accountId = build_email)
+
+  if("roles/cloudbuild.builds.builder" %in% present_roles$roles){
+    cli_alert_success(
+      "The Cloud Build service account ({build_email}) has Cloud Build Access.")
+  }
+
+  if(all(cr_setup_role_lookup("secrets") %in% present_roles$roles)){
+    cli_alert_success(
+      "The Cloud Build service account ({build_email}) has Secret Manager Access.")
+  }
+
+  if(all(cr_setup_role_lookup("cloudrun") %in% present_roles$roles)){
+    cli_alert_success(
+      "The Cloud Build service account ({build_email}) has Cloud Run Access.")
+  }
+
+  if(all(cr_setup_role_lookup("cloudstorage") %in% present_roles$roles)){
+    cli_alert_success(
+      "The Cloud Build service account ({build_email}) has Cloud Storage Access.")
+  }
+
+  recommended_roles <- c("roles/bigquery.admin",
+                         "roles/cloudbuild.builds.builder",
+                         "roles/iam.serviceAccountUser",
+                         "roles/run.admin",
+                         "roles/secretmanager.secretAccessor",
+                         "roles/serverless.serviceAgent",
+                         "roles/storage.admin")
+
+  if(all(recommended_roles %in% present_roles$roles)){
+    cli_alert_success(
+      "The Cloud Build service account ({build_email}) has all recommended roles")
+    return(TRUE)
+  }
 
   cli_alert_info("The Cloud Build service account ({build_email}) will need permissions during builds for certain operations calling other APIs.  This is distinct from the local authentication file you have setup.  Ensure Cloud Build is enabled at https://console.cloud.google.com/marketplace/product/google/cloudbuild.googleapis.com?project={projectId}")
   do_it <- menu(title = "What services do you want to setup for the Cloud Build service account? (Esc or 0 to skip)",
