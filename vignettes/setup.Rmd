@@ -3,6 +3,10 @@ title: "Setup"
 date: "`r Sys.Date()`"
 ---
 
+A video walk-through is available below, on [how to set-up googleCloudRunner's Google Console and R environment](https://www.youtube.com/watch?v=RrYrMsoIXsw):
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/RrYrMsoIXsw?start=898" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Setup wizard cr_setup()
 
 There is a setup function to help you configure the package.  Get started via the commands below:
