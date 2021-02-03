@@ -11,6 +11,7 @@
 #' @param env Environment variables for this step.  A character vector for each assignment
 #' @param volumes volumes to connect and write to
 #' @param waitFor Whether to wait for previous buildsteps to complete before running.  Default it will wait for previous step.
+#' @param secretEnv A list of secrets stored in Secret Manager referred to in args via a \code{$$var}
 #'
 #' @seealso \href{https://cloud.google.com/cloud-build/docs/configuring-builds/use-community-and-custom-builders}{Creating custom build steps how-to guide}
 #'
@@ -36,6 +37,12 @@
 #' }
 #'
 #' Or you can add your own custom variables, set in the Build Trigger.  Custom variables always start with $_ e.g. $_MY_VAR
+#'
+#' @section secretEnv:
+#'
+#' You can pass secrets that are stored in Secret Manager directly instead of using a dedicated buildstep via \link{cr_buildstep_secret}
+#'
+#' Within the code passed to \code{args} those secrets are referred to via \code{$$SECRET_NAME}.  If used then \link{cr_build_yaml} must also include the \code{availableSecrets} argument.
 #'
 #' @export
 #' @family Cloud Buildsteps
@@ -83,7 +90,8 @@ cr_buildstep <- function(name,
                          dir = "",
                          env = NULL,
                          waitFor = NULL,
-                         volumes = NULL){
+                         volumes = NULL,
+                         secretEnv = NULL){
 
   if(is.null(prefix) || is.na(prefix)){
     prefix <- "gcr.io/cloud-builders/"
@@ -108,7 +116,8 @@ cr_buildstep <- function(name,
       dir = dir,
       env = string_to_list(env),
       volumes = volumes,
-      waitFor = string_to_list(waitFor)
+      waitFor = string_to_list(waitFor),
+      secretEnv = string_to_list(secretEnv)
     )), class = c("cr_buildstep","list")))
 }
 

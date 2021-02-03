@@ -23,26 +23,27 @@
 #'     cr_buildstep("docker", c("push",image)),
 #'     cr_buildstep("gcloud", c("beta","run","deploy", "test1", "--image", image))),
 #'   images = image)
-cr_build_yaml <- function(steps,
-                          timeout = NULL,
-                          logsBucket = NULL,
-                          options = NULL,
-                          substitutions = NULL,
-                          tags = NULL,
-                          secrets = NULL,
-                          images = NULL,
-                          artifacts = NULL){
-
-  timeout <- check_timeout(timeout)
+cr_build_yaml <- function(
+  steps,
+  timeout = NULL,
+  logsBucket = NULL,
+  options = NULL,
+  substitutions = NULL,
+  tags = NULL,
+  secrets = NULL,
+  availableSecrets = NULL,
+  images = NULL,
+  artifacts = NULL){
 
   Yaml(
     steps = steps,
-    timeout = timeout,
+    timeout = check_timeout(timeout),
     logsBucket = logsBucket,
     options = options,
     substitutions = substitutions,
     tags = string_to_list(tags),
     secrets = secrets,
+    availableSecrets = parse_yaml_secret_list(availableSecrets),
     images = string_to_list(images),
     artifacts = artifacts
   )
@@ -87,6 +88,78 @@ cr_build_yaml_artifact <- function(paths,
   )
 }
 
+#' Create an availableSecrets entry for build yaml
+#'
+#' This creates the availabelSecrets entry for Builds so they can use Secret Manager environment arguments in the builds.
+#'
+#' @param secretEnv The name of the secretEnv that will be referred to in the build steps e.g. \code{'GH_TOKEN'}
+#' @param projectId The project to get the Secret from
+#' @inheritParams cr_buildstep_secret
+#' @family Cloud Build functions
+#' @export
+#' @seealso To download from Secret Manager to a file in a dedicated buildstep see the legacy \link{cr_buildstep_secret}.
+#' @seealso \href{Using secrets from Secret Manager}{https://cloud.google.com/cloud-build/docs/securing-builds/use-secrets}
+#'
+#' @examples
+#'
+#' cr_build_yaml_secrets("GH_TOKEN", "github_token")
+#'
+#' s1 <- cr_build_yaml_secrets("USERNAME", "my_username")
+#' s2 <- cr_build_yaml_secrets("PASSWORD", "my_password")
+#'
+#' cr_build_yaml(
+#'   steps = cr_buildstep(
+#'             "docker",
+#'              entrypoint = "bash",
+#'              args = c(
+#'                "-c",
+#'                "docker login --username=$$USERNAME --password=$$PASSWORD"),
+#'              secretEnv = c("USERNAME","PASSWORD")
+#'          ),
+#'    availableSecrets = list(s1, s2)
+#' )
+cr_build_yaml_secrets <- function(secretEnv,
+                                  secret,
+                                  version = "latest",
+                                  projectId = cr_project_get()){
+
+  assert_that(
+    is.string(secretEnv),
+    is.string(secret),
+    is.string(version),
+    is.string(projectId)
+  )
+
+  structure(list(
+      versionName = sprintf(
+        "projects/%s/secrets/%s/versions/%s",
+        projectId, secret, version
+      ),
+      env = secretEnv
+  ), class = c("cr_yaml_secret","list"))
+}
+
+is.yaml_secret <- function(x){
+  inherits(x, "cr_yaml_secret")
+}
+
+parse_yaml_secret_list <- function(availableSecrets){
+  as <- NULL
+
+  if(is.null(availableSecrets)) return(NULL)
+
+  if(is.yaml_secret(availableSecrets)){
+    return(list(secretManager = list(availableSecrets)))
+  }
+
+  assert_that(all(
+    unlist(
+      lapply(availableSecrets, inherits, "cr_yaml_secret"))
+    ))
+
+  list(secretManager = availableSecrets)
+
+}
 
 
 #' @noRd

@@ -138,7 +138,8 @@ extract_logs <- function(o){
 #' @inheritParams cr_build
 #' @param yaml A \code{Yaml} object created from \link{cr_build_yaml} or a file location of a .yaml/.yml cloud build file
 #' @param artifacts Artifacts that may be built via \link{cr_build_yaml_artifact}
-#' @param options Options
+#' @param options Options to pass to a Cloud Build
+#' @param availableSecrets Secret Manager objects built by \link{cr_build_yaml_secrets}
 #'
 #' @export
 #' @import assertthat
@@ -153,7 +154,8 @@ cr_build_make <- function(yaml,
                           images=NULL,
                           artifacts = NULL,
                           options = NULL,
-                          substitutions = NULL){
+                          substitutions = NULL,
+                          availableSecrets = NULL){
 
   stepsy <- get_cr_yaml(yaml)
   if(is.null(stepsy$steps)){
@@ -161,38 +163,34 @@ cr_build_make <- function(yaml,
   }
 
   timeout <- check_timeout(timeout)
-  if(is.null(timeout)){
-    if(!is.null(stepsy$timeout)){
-      timeout <- stepsy$timeout
-    }
+  if(is.null(timeout) && !is.null(stepsy$timeout)){
+    timeout <- stepsy$timeout
   }
 
   if(!is.null(source)){
     assert_that(is.gar_Source(source))
   }
 
-  if(is.null(images)){
-    if(!is.null(stepsy$images)){
-      images <- stepsy$images
-    }
+  if(is.null(images) && !is.null(stepsy$images)){
+    images <- stepsy$images
   }
 
-  if(is.null(artifacts)){
-    if(!is.null(stepsy$artifacts)){
-      artifacts <- stepsy$artifacts
-    }
+  if(is.null(artifacts) && !is.null(stepsy$artifacts)){
+    artifacts <- stepsy$artifacts
   }
 
-  if(is.null(options)){
-    if(!is.null(stepsy$options)){
-      options <- stepsy$options
-    }
+  if(is.null(options) && !is.null(stepsy$options)){
+    options <- stepsy$options
   }
 
-  if(is.null(substitutions)){
-    if(!is.null(stepsy$substitutions)){
-      substitutions <- stepsy$substitutions
-    }
+  if(is.null(substitutions) && !is.null(stepsy$substitutions)){
+    substitutions <- stepsy$substitutions
+  }
+
+  if(is.null(availableSecrets) && !is.null(stepsy$availableSecrets)){
+    as <- stepsy$availableSecrets
+  } else {
+    as <- parse_yaml_secret_list(availableSecrets)
   }
 
   Build(steps = stepsy$steps,
@@ -201,7 +199,8 @@ cr_build_make <- function(yaml,
         source = source,
         options = options,
         substitutions = substitutions,
-        artifacts = artifacts)
+        artifacts = artifacts,
+        availableSecrets = as)
 }
 
 #' Returns information about a previously requested build.
@@ -490,7 +489,8 @@ is.gar_Build <- function(x){
 #' @param status Output only
 #' @param statusDetail Output only
 #' @param artifacts Artifacts produced by the build that should be uploaded upon
-#' @param secrets Secrets to decrypt using Cloud Key Management Service
+#' @param secrets Secrets to decrypt using Cloud Key Management Service [deprecated]
+#' @param availableSecrets preferred way to use Secrets, via Secret Manager
 #'
 #' @return Build object
 #'
@@ -519,7 +519,8 @@ Build <- function(Build.substitutions = NULL,
                   status = NULL,
                   statusDetail = NULL,
                   artifacts = NULL,
-                  secrets = NULL) {
+                  secrets = NULL,
+                  availableSecrets = NULL) {
 
   structure(rmNullObs(list(Build.substitutions = Build.substitutions,
                            Build.timing = Build.timing,
@@ -544,7 +545,8 @@ Build <- function(Build.substitutions = NULL,
                            status = status,
                            statusDetail = statusDetail,
                            artifacts = artifacts,
-                           secrets = secrets)),
+                           secrets = secrets,
+                           availableSecrets = availableSecrets)),
             class = c("gar_Build", "list"))
 }
 

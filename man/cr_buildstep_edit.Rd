@@ -21,6 +21,7 @@ cr_buildstep_edit(x, ...)
     \item{\code{env}}{Environment variables for this step.  A character vector for each assignment}
     \item{\code{volumes}}{volumes to connect and write to}
     \item{\code{waitFor}}{Whether to wait for previous buildsteps to complete before running.  Default it will wait for previous step.}
+    \item{\code{secretEnv}}{A list of secrets stored in Secret Manager referred to in args via a \code{$$var}}
   }}
 }
 \description{

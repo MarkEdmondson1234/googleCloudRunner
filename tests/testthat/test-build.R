@@ -90,3 +90,22 @@ test_that("[Online] JWT fetches", {
   expect_true(grepl('^\\{\\"params\\"',res2[[1]]))
 
 })
+
+test_that("availableSecrets works ok", {
+
+  s1 <- cr_build_yaml_secrets("SECRET","test_secret")
+  s2 <- cr_build_yaml_secrets("SECRET2","test_secret_two")
+
+  s_yaml <- cr_build_yaml(
+    steps = cr_buildstep_bash("echo $$SECRET $$SECRET2",
+                              secretEnv = c("SECRET","SECRET2")),
+    availableSecrets = list(s1, s2)
+  )
+  expect_snapshot(s_yaml)
+
+  build <- cr_build_make(s_yaml)
+  built <- cr_build(build)
+
+  # how to test it did the right secrets in the build?
+
+})

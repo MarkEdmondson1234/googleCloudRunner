@@ -56,6 +56,7 @@ Other Cloud Build functions:
 \code{\link{cr_build_wait}()},
 \code{\link{cr_build_write}()},
 \code{\link{cr_build_yaml_artifact}()},
+\code{\link{cr_build_yaml_secrets}()},
 \code{\link{cr_build_yaml}()},
 \code{\link{cr_build}()}
 }

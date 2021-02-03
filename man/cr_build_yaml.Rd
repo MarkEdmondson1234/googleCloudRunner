@@ -12,6 +12,7 @@ cr_build_yaml(
   substitutions = NULL,
   tags = NULL,
   secrets = NULL,
+  availableSecrets = NULL,
   images = NULL,
   artifacts = NULL
 )
@@ -62,6 +63,7 @@ Other Cloud Build functions:
 \code{\link{cr_build_wait}()},
 \code{\link{cr_build_write}()},
 \code{\link{cr_build_yaml_artifact}()},
+\code{\link{cr_build_yaml_secrets}()},
 \code{\link{cr_build}()}
 }
 \concept{Cloud Build functions}

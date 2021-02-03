@@ -28,7 +28,8 @@ Build(
   status = NULL,
   statusDetail = NULL,
   artifacts = NULL,
-  secrets = NULL
+  secrets = NULL,
+  availableSecrets = NULL
 )
 }
 \arguments{
@@ -78,7 +79,9 @@ Build(
 
 \item{artifacts}{Artifacts produced by the build that should be uploaded upon}
 
-\item{secrets}{Secrets to decrypt using Cloud Key Management Service}
+\item{secrets}{Secrets to decrypt using Cloud Key Management Service [deprecated]}
+
+\item{availableSecrets}{preferred way to use Secrets, via Secret Manager}
 }
 \value{
 Build object
@@ -118,6 +121,7 @@ Other Cloud Build functions:
 \code{\link{cr_build_wait}()},
 \code{\link{cr_build_write}()},
 \code{\link{cr_build_yaml_artifact}()},
+\code{\link{cr_build_yaml_secrets}()},
 \code{\link{cr_build_yaml}()},
 \code{\link{cr_build}()}
 }

@@ -11,7 +11,8 @@ cr_build_make(
   images = NULL,
   artifacts = NULL,
   options = NULL,
-  substitutions = NULL
+  substitutions = NULL,
+  availableSecrets = NULL
 )
 }
 \arguments{
@@ -25,9 +26,11 @@ cr_build_make(
 
 \item{artifacts}{Artifacts that may be built via \link{cr_build_yaml_artifact}}
 
-\item{options}{Options}
+\item{options}{Options to pass to a Cloud Build}
 
 \item{substitutions}{Substitutions data for `Build` resource}
+
+\item{availableSecrets}{Secret Manager objects built by \link{cr_build_yaml_secrets}}
 }
 \description{
 This creates a \link{Build} object via the standard cloudbuild.yaml format
@@ -51,6 +54,7 @@ Other Cloud Build functions:
 \code{\link{cr_build_wait}()},
 \code{\link{cr_build_write}()},
 \code{\link{cr_build_yaml_artifact}()},
+\code{\link{cr_build_yaml_secrets}()},
 \code{\link{cr_build_yaml}()},
 \code{\link{cr_build}()}
 }

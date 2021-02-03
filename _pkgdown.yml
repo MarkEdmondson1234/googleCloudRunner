@@ -1,5 +1,7 @@
 title: "googleCloudRunner"
 url: https://code.markedmondson.me/googleCloudRunner
+development:
+  mode: auto
 authors:
   name: Mark Edmondson
   href: https://code.markedmondson.me/

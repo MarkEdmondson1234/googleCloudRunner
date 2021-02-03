@@ -13,7 +13,8 @@ cr_buildstep(
   dir = "",
   env = NULL,
   waitFor = NULL,
-  volumes = NULL
+  volumes = NULL,
+  secretEnv = NULL
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ cr_buildstep(
 \item{waitFor}{Whether to wait for previous buildsteps to complete before running.  Default it will wait for previous step.}
 
 \item{volumes}{volumes to connect and write to}
+
+\item{secretEnv}{A list of secrets stored in Secret Manager referred to in args via a \code{$$var}}
 }
 \description{
 Helper for creating build steps for upload to Cloud Build
@@ -62,6 +65,14 @@ Fields can include the following variables, which will be expanded when the buil
 }
 
 Or you can add your own custom variables, set in the Build Trigger.  Custom variables always start with $_ e.g. $_MY_VAR
+}
+
+\section{secretEnv}{
+
+
+You can pass secrets that are stored in Secret Manager directly instead of using a dedicated buildstep via \link{cr_buildstep_secret}
+
+Within the code passed to \code{args} those secrets are referred to via \code{$$SECRET_NAME}.  If used then \link{cr_build_yaml} must also include the \code{availableSecrets} argument.
 }
 
 \examples{

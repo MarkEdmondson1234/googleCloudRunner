@@ -5,7 +5,7 @@
 \title{Copy a buildtrigger}
 \usage{
 cr_buildtrigger_copy(
-  buildtrigger,
+  buildTrigger,
   filename = NULL,
   name = NULL,
   tags = NULL,
@@ -20,7 +20,7 @@ cr_buildtrigger_copy(
 )
 }
 \arguments{
-\item{buildtrigger}{A \code{CloudBuildTriggerResponse} object from \link{cr_buildtrigger_get}}
+\item{buildTrigger}{A \code{CloudBuildTriggerResponse} object from \link{cr_buildtrigger_get}}
 
 \item{filename}{Path, from the source root, to a file whose contents is used for the build}
 
