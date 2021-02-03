@@ -1,6 +1,7 @@
 # googleCloudRunner 0.4.1.9000
 
 * Add checks for Cloud Build email roles in `cr_setup()`
+* Add direct use of Secret Manager environment args in builds via `availableSecrets` (#106)
 
 # googleCloudRunner 0.4.1
 
@@ -10,14 +11,14 @@
 
 # googleCloudRunner 0.4.0
 
-* Remove checking for existance of cloudscheduler.serviceAgent (#89 - thanks @BillPetti)
+* Remove checking for existence of cloudscheduler.serviceAgent (#89 - thanks @BillPetti)
 * Setting env vars for Cloud Run runtime deployments fixed 
 * Added `cr_jwt_create()` and family to create JWTs to call authenticated services such as Cloud Run (#91)
 * Add authenticated Cloud Run use case
 * Ensure timeout is under 86400 secs (24hrs) in `cr_build_make()`
 * Add `cr_buildtrigger_copy()`
-* Extra checks for existance of valid auth file when creating build email (#89)
-* We can't check for existance of cloud build email #94 so `cr_setup()` will only set roles in assumed present Google service emails.
+* Extra checks for existence of valid auth file when creating build email (#89)
+* We can't check for existence of cloud build email #94 so `cr_setup()` will only set roles in assumed present Google service emails.
 * Include `plumber` in Depends as its needed for most applications - makes `FROM gcr.io/gcer-public/googlecloudrunner:master` more useful in Docker files.
 * Update example plumber deployment to use Rscript to start plumber server (#97)
 * Add R to git use case example
