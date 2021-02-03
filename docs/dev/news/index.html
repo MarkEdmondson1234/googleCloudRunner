@@ -180,6 +180,7 @@
 <ul>
 <li>Add checks for Cloud Build email roles in <code><a href="../reference/cr_setup.html">cr_setup()</a></code>
 </li>
+<li>Add direct use of Secret Manager environment args in builds via <code>availableSecrets</code> (<a href='https://github.com/MarkEdmondson1234/googleCloudRunner/issues/106'>#106</a>)</li>
 </ul>
 </div>
     <div id="googlecloudrunner-041" class="section level1">
@@ -198,7 +199,7 @@
 <a href="#googlecloudrunner-040" class="anchor"></a>googleCloudRunner 0.4.0<small> 2021-01-13 </small>
 </h1>
 <ul>
-<li>Remove checking for existance of cloudscheduler.serviceAgent (<a href='https://github.com/MarkEdmondson1234/googleCloudRunner/issues/89'>#89</a> - thanks <a href='https://github.com/BillPetti'>@BillPetti</a>)</li>
+<li>Remove checking for existence of cloudscheduler.serviceAgent (<a href='https://github.com/MarkEdmondson1234/googleCloudRunner/issues/89'>#89</a> - thanks <a href='https://github.com/BillPetti'>@BillPetti</a>)</li>
 <li>Setting env vars for Cloud Run runtime deployments fixed</li>
 <li>Added <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> and family to create JWTs to call authenticated services such as Cloud Run (<a href='https://github.com/MarkEdmondson1234/googleCloudRunner/issues/91'>#91</a>)</li>
 <li>Add authenticated Cloud Run use case</li>
@@ -206,8 +207,8 @@
 </li>
 <li>Add <code><a href="../reference/cr_buildtrigger_copy.html">cr_buildtrigger_copy()</a></code>
 </li>
-<li>Extra checks for existance of valid auth file when creating build email (<a href='https://github.com/MarkEdmondson1234/googleCloudRunner/issues/89'>#89</a>)</li>
-<li>We can’t check for existance of cloud build email <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/issues/94'>#94</a> so <code><a href="../reference/cr_setup.html">cr_setup()</a></code> will only set roles in assumed present Google service emails.</li>
+<li>Extra checks for existence of valid auth file when creating build email (<a href='https://github.com/MarkEdmondson1234/googleCloudRunner/issues/89'>#89</a>)</li>
+<li>We can’t check for existence of cloud build email <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/issues/94'>#94</a> so <code><a href="../reference/cr_setup.html">cr_setup()</a></code> will only set roles in assumed present Google service emails.</li>
 <li>Include <code>plumber</code> in Depends as its needed for most applications - makes <code>FROM gcr.io/gcer-public/googlecloudrunner:master</code> more useful in Docker files.</li>
 <li>Update example plumber deployment to use Rscript to start plumber server (<a href='https://github.com/MarkEdmondson1234/googleCloudRunner/issues/97'>#97</a>)</li>
 <li>Add R to git use case example</li>
