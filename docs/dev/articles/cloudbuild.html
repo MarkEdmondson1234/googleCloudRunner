@@ -128,7 +128,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Serverless batched R scripts via Cloud Build</h1>
             
-            <h4 class="date">2021-02-03</h4>
+            <h4 class="date">2021-02-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudbuild.Rmd"><code>vignettes/cloudbuild.Rmd</code></a></small>
       <div class="hidden name"><code>cloudbuild.Rmd</code></div>
@@ -305,6 +305,30 @@
 <span class="co">#3           Datsun 710 22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
 <span class="co">#4       Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
 <span class="co"># ... etc ...</span></code></pre></div>
+</div>
+<div id="build-logs" class="section level2">
+<h2 class="hasAnchor">
+<a href="#build-logs" class="anchor"></a>Build Logs</h2>
+<p>You can view the logs of the build locally in R using <code><a href="../reference/cr_build_logs.html">cr_build_logs()</a></code></p>
+<p>Pass in the built logs via <code><a href="../reference/cr_build_wait.html">cr_build_wait()</a></code> or <code><a href="../reference/cr_build_status.html">cr_build_status()</a></code></p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">s_yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span> <span class="st">"gcloud"</span>,<span class="st">"version"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">s_yaml</span><span class="op">)</span>
+
+<span class="va">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">build</span><span class="op">)</span>
+
+<span class="va">the_build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span>
+
+<span class="fu"><a href="../reference/cr_build_logs.html">cr_build_logs</a></span><span class="op">(</span><span class="va">the_build</span><span class="op">)</span>
+<span class="co"># [1] "starting build \"6ce86e05-b0b1-4070-a849-05ec9020fd3b\""       </span>
+<span class="co"># [2] ""                                                              </span>
+<span class="co"># [3] "FETCHSOURCE"                                                   </span>
+<span class="co"># [4] "BUILD"                                                         </span>
+<span class="co"># [5] "Already have image (with digest): gcr.io/cloud-builders/gcloud"</span>
+<span class="co"># [6] "Google Cloud SDK 325.0.0"                                      </span>
+<span class="co"># [7] "alpha 2021.01.22"                                              </span>
+<span class="co"># [8] "app-engine-go 1.9.71"        </span>
+<span class="co"># ...</span></code></pre></div>
 <div id="rstudio-gadget---build-docker" class="section level3">
 <h3 class="hasAnchor">
 <a href="#rstudio-gadget---build-docker" class="anchor"></a>RStudio Gadget - build Docker</h3>
@@ -330,7 +354,7 @@
 <code>gcr.io/gcer-public/googlecloudrunner</code> - installs: containerit, googleCloudStorageR, plumber, googleCloudRunner</li>
 </ul>
 <p>The R code can be created within the Build at build time, or you can refer to an existing R script within the Source.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create an R buildstep inline</span>
 <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"paste('1+1=', 1+1)"</span>, <span class="st">"sessionInfo()"</span><span class="op">)</span><span class="op">)</span>
 
@@ -386,7 +410,7 @@
 <p>Build Triggers can be made via R code using the <code><a href="../reference/cr_buildtrigger.html">cr_buildtrigger()</a></code> function.</p>
 <p>Build Triggers include GitHub commits and pull requests.</p>
 <p>The example below shows how to set up some of the builds above:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild.yaml"</span>,
                             package <span class="op">=</span> <span class="st">"googleCloudRunner"</span><span class="op">)</span>
 <span class="va">bb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">cloudbuild</span>, projectId <span class="op">=</span> <span class="st">"test-project"</span><span class="op">)</span>
@@ -394,12 +418,12 @@
 
 <span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="va">bb</span>, name <span class="op">=</span> <span class="st">"trig1"</span>, trigger <span class="op">=</span> <span class="va">github</span><span class="op">)</span></code></pre></div>
 <p>The Build macros can also be configured by passing in a named list:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># creates a trigger with named substitutions</span>
 <span class="va">ss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>`$_MYVAR` <span class="op">=</span> <span class="st">"TEST1"</span>, `$_GITHUB` <span class="op">=</span> <span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"trig2"</span>, trigger <span class="op">=</span> <span class="va">github</span>, build <span class="op">=</span> <span class="va">bb</span>, substitutions <span class="op">=</span> <span class="va">ss</span><span class="op">)</span></code></pre></div>
 <p>The above examples will create the build step inline within the trigger, but you can also use existing cloudbuild.yaml files by specifying where in the repository the build file will be:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create a trigger that will build from the file in the repo</span>
 <span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, name <span class="op">=</span> <span class="st">"trig3"</span>, trigger <span class="op">=</span> <span class="va">github</span><span class="op">)</span></code></pre></div>
 <p>This way you can commit changes to the cloudbuild.yaml file, and they will be reflected in the Build Trigger.</p>
@@ -412,7 +436,7 @@
 <h4 class="hasAnchor">
 <a href="#mirroring-github" class="anchor"></a>Mirroring GitHub</h4>
 <p>Once your repo is mirrored it gives you a Cloud Repository name which is of the form <code>github_username_repo</code> - this you can add to a <code><a href="../reference/RepoSource.html">RepoSource()</a></code>:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># this repo mirrored on Google Source repos</span>
 <span class="va">my_repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_source.html">cr_build_source</a></span><span class="op">(</span>
   <span class="fu"><a href="../reference/RepoSource.html">RepoSource</a></span><span class="op">(</span><span class="st">"github_markedmondson1234_googlecloudrunner"</span>,
@@ -423,7 +447,7 @@
 <a href="#cloud-build-github-app" class="anchor"></a>Cloud Build GitHub app</h4>
 <p>If you want build triggers to trigger on pushes and pulls then the GitHub app is necessary.</p>
 <p>You can create a GitHub build trigger using <code><a href="../reference/GitHubEventsConfig.html">GitHubEventsConfig()</a></code> - this will by default trigger builds when you push to any GitHub branch.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild.yaml"</span>,
                            package <span class="op">=</span> <span class="st">"googleCloudRunner"</span><span class="op">)</span>
 <span class="va">bb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">cloudbuild</span>, projectId <span class="op">=</span> <span class="st">"test-project"</span><span class="op">)</span>

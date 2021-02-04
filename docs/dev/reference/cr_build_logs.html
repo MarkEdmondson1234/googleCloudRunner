@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a StorageSource — cr_build_upload_gcs • googleCloudRunner</title>
+<title>Download logs from a Cloud Build — cr_build_logs • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Create a StorageSource — cr_build_upload_gcs" />
-<meta property="og:description" content="This creates a StorageSource object after uploading to Google Cloud Storage" />
+<meta property="og:title" content="Download logs from a Cloud Build — cr_build_logs" />
+<meta property="og:description" content="This lets you download the logs to your local R session, rather than viewing them in the Cloud Console." />
 
 
 <meta name="robots" content="noindex">
@@ -170,66 +170,41 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a StorageSource</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/build_sources.R'><code>R/build_sources.R</code></a></small>
-    <div class="hidden name"><code>cr_build_upload_gcs.Rd</code></div>
+    <h1>Download logs from a Cloud Build</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/cloudbuild.R'><code>R/cloudbuild.R</code></a></small>
+    <div class="hidden name"><code>cr_build_logs.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This creates a <a href='StorageSource.html'>StorageSource</a> object after uploading to Google Cloud Storage</p>
+    <p>This lets you download the logs to your local R session, rather than viewing them in the Cloud Console.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_build_upload_gcs</span><span class='op'>(</span>
-  <span class='va'>local</span>,
-  remote <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>local</span>, <span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='st'>"%Y%m%d%H%M%S"</span><span class='op'>)</span>, <span class='st'>".tar.gz"</span><span class='op'>)</span>,
-  bucket <span class='op'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span><span class='op'>(</span><span class='op'>)</span>,
-  predefinedAcl <span class='op'>=</span> <span class='st'>"bucketOwnerFullControl"</span>,
-  deploy_folder <span class='op'>=</span> <span class='st'>"deploy"</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cr_build_logs</span><span class='op'>(</span><span class='va'>built</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>local</th>
-      <td><p>Local directory containing the Dockerfile etc. you wish to deploy</p></td>
-    </tr>
-    <tr>
-      <th>remote</th>
-      <td><p>The name of the folder in your bucket</p></td>
-    </tr>
-    <tr>
-      <th>bucket</th>
-      <td><p>The Google Cloud Storage bucket to upload to</p></td>
-    </tr>
-    <tr>
-      <th>predefinedAcl</th>
-      <td><p>The ACL rules for the object uploaded. Set to "bucketLevel" for buckets with bucket level access enabled</p></td>
-    </tr>
-    <tr>
-      <th>deploy_folder</th>
-      <td><p>Which folder to deploy from</p></td>
+      <th>built</th>
+      <td><p>The built object from <a href='cr_build_status.html'>cr_build_status</a> or <a href='cr_build_wait.html'>cr_build_wait</a></p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A Source object</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>It copies the files into a folder call "deploy" in your working directory,
-  then tars it for upload</p>
+    <p>By default, Cloud Build stores your build logs in a Google-created Cloud Storage bucket. You can view build logs store in the Google-created Cloud Storage bucket, but you cannot make any other changes to it. If you require full control over your logs bucket, store the logs in a user-created Cloud Storage bucket.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other Cloud Build functions: 
+    <div class='dont-index'><p><a href='https://cloud.google.com/cloud-build/docs/securing-builds/store-manage-build-logs'>https://cloud.google.com/cloud-build/docs/securing-builds/store-manage-build-logs</a></p>
+<p>Other Cloud Build functions: 
 <code><a href='Build.html'>Build</a>()</code>,
 <code><a href='RepoSource.html'>RepoSource</a>()</code>,
 <code><a href='Source.html'>Source</a>()</code>,
 <code><a href='StorageSource.html'>StorageSource</a>()</code>,
 <code><a href='cr_build_artifacts.html'>cr_build_artifacts</a>()</code>,
-<code><a href='cr_build_logs.html'>cr_build_logs</a>()</code>,
 <code><a href='cr_build_make.html'>cr_build_make</a>()</code>,
 <code><a href='cr_build_status.html'>cr_build_status</a>()</code>,
+<code><a href='cr_build_upload_gcs.html'>cr_build_upload_gcs</a>()</code>,
 <code><a href='cr_build_wait.html'>cr_build_wait</a>()</code>,
 <code><a href='cr_build_write.html'>cr_build_write</a>()</code>,
 <code><a href='cr_build_yaml_artifact.html'>cr_build_yaml_artifact</a>()</code>,
@@ -240,12 +215,21 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
-<span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span>
-<span class='va'>my_gcs_source</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_upload_gcs</span><span class='op'>(</span><span class='st'>"my_folder"</span><span class='op'>)</span>
-<span class='va'>build1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span><span class='op'>(</span><span class='st'>"cloudbuild.yaml"</span>, source <span class='op'>=</span> <span class='va'>my_gcs_source</span><span class='op'>)</span>
-
-<span class='op'>}</span>
+<span class='va'>s_yaml</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span><span class='op'>(</span>steps <span class='op'>=</span> <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span><span class='op'>(</span> <span class='st'>"gcloud"</span>,<span class='st'>"version"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>build</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_make.html'>cr_build_make</a></span><span class='op'>(</span><span class='va'>s_yaml</span><span class='op'>)</span>
+<span class='va'>built</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span><span class='op'>(</span><span class='va'>build</span><span class='op'>)</span>
+<span class='va'>the_build</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_wait.html'>cr_build_wait</a></span><span class='op'>(</span><span class='va'>built</span><span class='op'>)</span>
+<span class='fu'>cr_build_logs</span><span class='op'>(</span><span class='va'>the_build</span><span class='op'>)</span>
+<span class='co'># [1] "starting build \"6ce86e05-b0b1-4070-a849-05ec9020fd3b\""</span>
+<span class='co'># [2] ""</span>
+<span class='co'># [3] "FETCHSOURCE"</span>
+<span class='co'># [4] "BUILD"</span>
+<span class='co'># [5] "Already have image (with digest): gcr.io/cloud-builders/gcloud"</span>
+<span class='co'># [6] "Google Cloud SDK 325.0.0"</span>
+<span class='co'># [7] "alpha 2021.01.22"</span>
+<span class='co'># [8] "app-engine-go 1.9.71"</span>
+<span class='co'># ...</span>
+ <span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
