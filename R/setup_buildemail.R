@@ -64,7 +64,8 @@ cr_setup_role_lookup <- function(type = c(
                    "roles/cloudscheduler.admin",
                    "roles/iam.serviceAccountUser",
                    "roles/run.admin",
-                   "roles/storage.admin"),
+                   "roles/storage.admin",
+                   "roles/viewer"),
          cloudrun = c("roles/run.admin",
                       "roles/iam.serviceAccountUser",
                       "roles/serverless.serviceAgent"),
@@ -72,7 +73,7 @@ cr_setup_role_lookup <- function(type = c(
          secrets = "roles/secretmanager.secretAccessor",
          cloudbuild = c("roles/cloudbuild.builds.builder",
                         "roles/iam.serviceAccountUser"),
-         cloudstorage = "roles/storage.admin",
+         cloudstorage = c("roles/storage.admin","roles/viewer"),
          schedule_agent = "roles/cloudscheduler.serviceAgent",
          run_agent = "roles/serverless.serviceAgent"
          )

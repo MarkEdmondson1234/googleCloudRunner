@@ -44,6 +44,7 @@ Other Cloud Build functions:
 \code{\link{RepoSource}()},
 \code{\link{StorageSource}()},
 \code{\link{cr_build_artifacts}()},
+\code{\link{cr_build_logs}()},
 \code{\link{cr_build_make}()},
 \code{\link{cr_build_status}()},
 \code{\link{cr_build_upload_gcs}()},

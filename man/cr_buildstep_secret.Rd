@@ -16,9 +16,9 @@ cr_buildstep_secret(secret, decrypted, version = "latest", ...)
 \item{...}{Other arguments sent to \link{cr_buildstep_bash}}
 }
 \description{
-This is the preferred way to manage secrets, rather than
+This is the preferred way to manage secrets for files, rather than
   \link{cr_buildstep_decrypt}, as it stores the encrypted file in the cloud
-  rather than in your project workspace.
+  rather than in your project workspace.  For single environment values, \link{cr_build_yaml_secrets} may be more suitable.
 }
 \details{
 This is for downloading encrypted files from Google Secret Manager.  You will need to add the
@@ -32,6 +32,8 @@ cr_buildstep_secret("my_secret", decrypted = "/workspace/secret.json")
 }
 \seealso{
 How to set up secrets using \href{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials}{Secret Manager}
+
+\link{cr_build_yaml_secrets} let you directly support environment arguments in the buildsteps
 
 Other Cloud Buildsteps: 
 \code{\link{cr_buildstep_bash}()},

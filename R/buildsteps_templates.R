@@ -565,9 +565,9 @@ cr_buildstep_decrypt <- function(cipher,
 
 #' Create a buildstep for using Secret Manager
 #'
-#' This is the preferred way to manage secrets, rather than
+#' This is the preferred way to manage secrets for files, rather than
 #'   \link{cr_buildstep_decrypt}, as it stores the encrypted file in the cloud
-#'   rather than in your project workspace.
+#'   rather than in your project workspace.  For single environment values, \link{cr_build_yaml_secrets} may be more suitable.
 #'
 #' @seealso How to set up secrets using \href{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials}{Secret Manager}
 #'
@@ -582,6 +582,8 @@ cr_buildstep_decrypt <- function(cipher,
 #'   Secret Accessor Cloud IAM role to the Cloud Build service account to use it.
 #' Once you have uploaded your secret file and named it, it is available for Cloud
 #'   Build to use.
+#'
+#' @seealso \link{cr_build_yaml_secrets} let you directly support environment arguments in the buildsteps
 #' @family Cloud Buildsteps
 #' @export
 #' @examples

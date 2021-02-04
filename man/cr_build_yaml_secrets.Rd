@@ -30,20 +30,21 @@ cr_build_yaml_secrets("GH_TOKEN", "github_token")
 s1 <- cr_build_yaml_secrets("USERNAME", "my_username")
 s2 <- cr_build_yaml_secrets("PASSWORD", "my_password")
 
+# use one $ in scripts to use the secretEnv (will be replaced by $$)
 cr_build_yaml(
   steps = cr_buildstep(
             "docker",
              entrypoint = "bash",
              args = c(
                "-c",
-               "docker login --username=$$USERNAME --password=$$PASSWORD"),
+               "docker login --username=$USERNAME --password=$PASSWORD"),
              secretEnv = c("USERNAME","PASSWORD")
          ),
    availableSecrets = list(s1, s2)
 )
 }
 \seealso{
-To download from Secret Manager to a file in a dedicated buildstep see the legacy \link{cr_buildstep_secret}.
+To download from Secret Manager to a file in a dedicated buildstep see \link{cr_buildstep_secret}.
 
 \href{Using secrets from Secret Manager}{https://cloud.google.com/cloud-build/docs/securing-builds/use-secrets}
 
@@ -53,6 +54,7 @@ Other Cloud Build functions:
 \code{\link{Source}()},
 \code{\link{StorageSource}()},
 \code{\link{cr_build_artifacts}()},
+\code{\link{cr_build_logs}()},
 \code{\link{cr_build_make}()},
 \code{\link{cr_build_status}()},
 \code{\link{cr_build_upload_gcs}()},

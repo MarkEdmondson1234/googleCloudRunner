@@ -140,6 +140,7 @@ extract_logs <- function(o){
 #' @param artifacts Artifacts that may be built via \link{cr_build_yaml_artifact}
 #' @param options Options to pass to a Cloud Build
 #' @param availableSecrets Secret Manager objects built by \link{cr_build_yaml_secrets}
+#' @param logsBucket The gs:// location of a bucket to put logs in
 #'
 #' @export
 #' @import assertthat
@@ -155,7 +156,8 @@ cr_build_make <- function(yaml,
                           artifacts = NULL,
                           options = NULL,
                           substitutions = NULL,
-                          availableSecrets = NULL){
+                          availableSecrets = NULL,
+                          logsBucket = NULL){
 
   stepsy <- get_cr_yaml(yaml)
   if(is.null(stepsy$steps)){
@@ -187,6 +189,10 @@ cr_build_make <- function(yaml,
     substitutions <- stepsy$substitutions
   }
 
+  if(is.null(logsBucket) && !is.null(stepsy$logsBucket)){
+    logsBucket <- stepsy$logsBucket
+  }
+
   if(is.null(availableSecrets) && !is.null(stepsy$availableSecrets)){
     as <- stepsy$availableSecrets
   } else {
@@ -200,7 +206,52 @@ cr_build_make <- function(yaml,
         options = options,
         substitutions = substitutions,
         artifacts = artifacts,
-        availableSecrets = as)
+        availableSecrets = as,
+        logsBucket = logsBucket)
+}
+
+#' Download logs from a Cloud Build
+#'
+#' This lets you download the logs to your local R session, rather than viewing them in the Cloud Console.
+#'
+#' @param built The built object from \link{cr_build_status} or \link{cr_build_wait}
+#'
+#' @details
+#'
+#' By default, Cloud Build stores your build logs in a Google-created Cloud Storage bucket. You can view build logs store in the Google-created Cloud Storage bucket, but you cannot make any other changes to it. If you require full control over your logs bucket, store the logs in a user-created Cloud Storage bucket.
+#'
+#'
+#' @export
+#' @seealso \url{https://cloud.google.com/cloud-build/docs/securing-builds/store-manage-build-logs}
+#' @family Cloud Build functions
+#' @examples
+#'
+#' \dontrun{
+#' s_yaml <- cr_build_yaml(steps = cr_buildstep( "gcloud","version"))
+#' build <- cr_build_make(s_yaml)
+#' built <- cr_build(build)
+#' the_build <- cr_build_wait(built)
+#' cr_build_logs(the_build)
+#' # [1] "starting build \"6ce86e05-b0b1-4070-a849-05ec9020fd3b\""
+#' # [2] ""
+#' # [3] "FETCHSOURCE"
+#' # [4] "BUILD"
+#' # [5] "Already have image (with digest): gcr.io/cloud-builders/gcloud"
+#' # [6] "Google Cloud SDK 325.0.0"
+#' # [7] "alpha 2021.01.22"
+#' # [8] "app-engine-go 1.9.71"
+#' # ...
+#'  }
+cr_build_logs <- function(built){
+
+  assert_that(is.gar_Build(built))
+
+  log_url <- sprintf("%s/log-%s.txt",
+                     built$logsBucket, built$id)
+
+  logs <- googleCloudStorageR::gcs_get_object(log_url)
+
+  readLines(textConnection(logs))
 }
 
 #' Returns information about a previously requested build.

@@ -206,6 +206,32 @@ read.csv("artifact.csv")
 # ... etc ...
 ```
 
+## Build Logs
+
+You can view the logs of the build locally in R using `cr_build_logs()`
+
+Pass in the built logs via `cr_build_wait()` or `cr_build_status()`
+
+```r
+s_yaml <- cr_build_yaml(steps = cr_buildstep( "gcloud","version"))
+build <- cr_build_make(s_yaml)
+
+built <- cr_build(build)
+
+the_build <- cr_build_wait(built)
+
+cr_build_logs(the_build)
+# [1] "starting build \"6ce86e05-b0b1-4070-a849-05ec9020fd3b\""       
+# [2] ""                                                              
+# [3] "FETCHSOURCE"                                                   
+# [4] "BUILD"                                                         
+# [5] "Already have image (with digest): gcr.io/cloud-builders/gcloud"
+# [6] "Google Cloud SDK 325.0.0"                                      
+# [7] "alpha 2021.01.22"                                              
+# [8] "app-engine-go 1.9.71"        
+# ...
+```
+
 ### RStudio Gadget - build Docker
 
 If you are using RStudio, installing the library will enable an [RStudio Addin](https://rstudio.github.io/rstudioaddins/) that can be called after you have setup the library as per the setup page. 

@@ -12,7 +12,8 @@ cr_build_make(
   artifacts = NULL,
   options = NULL,
   substitutions = NULL,
-  availableSecrets = NULL
+  availableSecrets = NULL,
+  logsBucket = NULL
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ cr_build_make(
 \item{substitutions}{Substitutions data for `Build` resource}
 
 \item{availableSecrets}{Secret Manager objects built by \link{cr_build_yaml_secrets}}
+
+\item{logsBucket}{The gs:// location of a bucket to put logs in}
 }
 \description{
 This creates a \link{Build} object via the standard cloudbuild.yaml format
@@ -49,6 +52,7 @@ Other Cloud Build functions:
 \code{\link{Source}()},
 \code{\link{StorageSource}()},
 \code{\link{cr_build_artifacts}()},
+\code{\link{cr_build_logs}()},
 \code{\link{cr_build_status}()},
 \code{\link{cr_build_upload_gcs}()},
 \code{\link{cr_build_wait}()},

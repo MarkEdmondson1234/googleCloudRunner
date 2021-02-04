@@ -43,6 +43,7 @@ cr_deploy_packagetests(
     \item{\code{artifacts}}{Artifacts that may be built via \link{cr_build_yaml_artifact}}
     \item{\code{options}}{Options to pass to a Cloud Build}
     \item{\code{availableSecrets}}{Secret Manager objects built by \link{cr_build_yaml_secrets}}
+    \item{\code{logsBucket}}{The gs:// location of a bucket to put logs in}
     \item{\code{source}}{A \link{Source} object specifying the location of the source files to build, usually created by \link{cr_build_source}}
     \item{\code{timeout}}{Amount of time that this build should be allowed to run, to second}
     \item{\code{images}}{A list of images to be pushed upon the successful completion of all build}

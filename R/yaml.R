@@ -97,7 +97,7 @@ cr_build_yaml_artifact <- function(paths,
 #' @inheritParams cr_buildstep_secret
 #' @family Cloud Build functions
 #' @export
-#' @seealso To download from Secret Manager to a file in a dedicated buildstep see the legacy \link{cr_buildstep_secret}.
+#' @seealso To download from Secret Manager to a file in a dedicated buildstep see \link{cr_buildstep_secret}.
 #' @seealso \href{Using secrets from Secret Manager}{https://cloud.google.com/cloud-build/docs/securing-builds/use-secrets}
 #'
 #' @examples

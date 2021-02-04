@@ -99,13 +99,19 @@ test_that("availableSecrets works ok", {
   s_yaml <- cr_build_yaml(
     steps = cr_buildstep_bash("echo $SECRET $SECRET2",
                               secretEnv = c("SECRET","SECRET2")),
-    availableSecrets = list(s1, s2)
+    availableSecrets = list(s1, s2),
+    logsBucket = paste0("gs://", cr_bucket_get())
   )
   expect_snapshot(s_yaml)
 
-  # build <- cr_build_make(s_yaml)
-  # built <- cr_build(build)
+  build <- cr_build_make(s_yaml)
+  built <- cr_build(build)
 
-  # how to test it did the right secrets in the build?
+  the_build <- cr_build_wait(built)
+
+  parsed_logs <- cr_build_logs(the_build)
+
+  expect_snapshot(parsed_logs[[11]])
+
 
 })
