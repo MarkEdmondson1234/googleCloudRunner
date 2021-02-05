@@ -72,7 +72,7 @@ cr_build_list <- function(filter = NULL,
 
   bs <- lapply(o, as.gar_Build)
   ids <- unlist(lapply(bs, function(x) x$id))
-  objs <- setNames(bs, ids)
+  objs <- stats::setNames(bs, ids)
 
   # a list of build objects
   if(!data_frame_output) return(objs)
@@ -302,7 +302,7 @@ cr_build_wait <- function(op = .Last.value,
   logs <- cr_build_logs(status)
   cli::cli_rule()
   cli::cli_alert_info("Last 10 lines of build log.  Use cr_build_logs() to read more")
-  cat(cli::col_grey(paste(tail(logs, 10), collapse = "\n")))
+  cat(cli::col_grey(paste(utils::tail(logs, 10), collapse = "\n")))
   status
 }
 

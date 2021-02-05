@@ -65,12 +65,15 @@ cr_build_yaml <- function(
 #' @family Cloud Build functions
 #' @export
 #' @examples
+#'
+#' \dontrun{
 #' cr_project_set("my-project")
 #' r <- "write.csv(mtcars,file = 'artifact.csv')"
 #' cr_build_yaml(
 #'   steps = cr_buildstep_r(r),
 #'   artifacts = cr_build_yaml_artifact('artifact.csv', bucket = "my-bucket")
 #'   )
+#'   }
 cr_build_yaml_artifact <- function(paths,
                                    bucket_dir = NULL,
                                    bucket = cr_bucket_get()){

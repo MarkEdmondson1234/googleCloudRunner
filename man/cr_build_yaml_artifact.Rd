@@ -17,12 +17,15 @@ cr_build_yaml_artifact(paths, bucket_dir = NULL, bucket = cr_bucket_get())
 Add artifact objects to a build
 }
 \examples{
+
+\dontrun{
 cr_project_set("my-project")
 r <- "write.csv(mtcars,file = 'artifact.csv')"
 cr_build_yaml(
   steps = cr_buildstep_r(r),
   artifacts = cr_build_yaml_artifact('artifact.csv', bucket = "my-bucket")
   )
+  }
 }
 \seealso{
 Other Cloud Build functions: 
