@@ -1,258 +1,121 @@
-#' Starts a build with the specified configuration.
+#' Lists the build
 #'
-#' This method returns a long-running `Operation`, which includes the buildID. Pass the build ID to \link{cr_build_status} to determine the build status (such as `SUCCESS` or `FAILURE`).
+#' Get a list of builds within your project
 #'
-#'
-#' @seealso \href{https://cloud.google.com/cloud-build/docs/}{Google Documentation for Cloud Build}
-#'
-#' @inheritParams Build
 #' @param projectId ID of the project
-#' @param x A cloudbuild.yaml file location or an R object that will be turned into yaml via \link[yaml]{as.yaml} or a \link{Build} object created by \link{cr_build_make} or from a previous build you want to rerun.
-#' @param launch_browser Whether to launch the logs URL in a browser once deployed
-#' @importFrom googleAuthR gar_api_generator
-#' @importFrom yaml yaml.load_file
-#' @import assertthat
-#' @family Cloud Build functions
-#' @export
-#' @examples
-#' cr_project_set("my-project")
-#' my_gcs_source <- cr_build_source(StorageSource("my_code.tar.gz",
-#'                                              bucket = "gs://my-bucket"))
-#' my_gcs_source
+#' @param pageSize How many builds to fetch per page
+#' @param filter Text filter for the list
+#' @param data_frame_output If TRUE will output a data.frame of a subset of info from the builds, merged with the list of triggers from \link{cr_buildtrigger_list}.  Set to FALSE to return a list of Build objects similar to output from \link{cr_build_status}
 #'
-#' my_repo_source <- cr_build_source(RepoSource("github_username_my-repo.com",
-#'                                            branchName="master"))
-#' my_repo_source
+#' @details
+#'
+#' If filter is \code{NULL} then this will return all historic builds which can be a lot.  Its probably better to have a filter, but there is no documentation on the filter syntax at the moment.
+#'
+#' @seealso \url{https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/list}
+#'
+#' @importFrom googleAuthR gar_api_generator gar_api_page
+#' @import assertthat
+#' @export
+#' @family Cloud Build functions
+#' @examples
+#'
 #' \dontrun{
 #'
-#' # build from a cloudbuild.yaml file
-#' cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml",
-#'                                package="googleCloudRunner")
+#'  # merge with buildtrigger list
+#'  cr_build_list()
 #'
-#' # asynchronous, will launch log browser by default
-#' b1 <- cr_build(cloudbuild_file)
-#'
-#' # synchronous waiting for build to finish
-#' b2 <- cr_build_wait(b1)
-#'
-#' # the same results
-#' cr_build_status(b1)
-#' cr_build_status(b2)
-#'
-#' # build from a cloud storage source
-#' build1 <- cr_build(cloudbuild_file,
-#'                    source = my_gcs_source)
-#' # build from a git repository source
-#' build2 <- cr_build(cloudbuild_file,
-#'                    source = my_repo_source)
-#'
-#' # you can send in results for previous builds to trigger
-#' # the same build under a new Id
-#' # will trigger build2 again
-#' cr_build(build2)
-#'
-#' # a build with substitutions (Cloud Build macros)
-#' cr_build(build2, substitutions = list(`_SUB` = "yo"))
-#'
+#'  # output a list of build objects
+#'  cr_build_list(data_frame_output=FALSE)
 #' }
-cr_build <- function(x,
-                     source = NULL,
-                     timeout=NULL,
-                     images=NULL,
-                     substitutions=NULL,
-                     artifacts = NULL,
-                     options = NULL,
-                     projectId = cr_project_get(),
-                     launch_browser = interactive()) {
-
-  assert_that(
-    is.flag(launch_browser),
-    is.string(projectId)
-  )
-
-  timeout <- check_timeout(timeout)
+cr_build_list <- function(filter = NULL,
+                          projectId = cr_project_get(),
+                          pageSize = 1000,
+                          data_frame_output = TRUE){
 
   url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds",
                  projectId)
 
-  if(is.gar_Build(x)){
-    # turn existing build into a valid new build
-    build <- safe_set(x, "status", "QUEUED")
-
-  } else if(is.BuildOperationMetadata(x)){
-    x <- as.gar_Build(x)
-    build <- safe_set(x, "status", "QUEUED")
-  } else {
-    build <- cr_build_make(yaml = x,
-                           source = source,
-                           timeout = timeout,
-                           images = images,
-                           artifacts = artifacts,
-                           options = options,
-                           substitutions = substitutions)
+  pars <- list(
+    pageSize = pageSize
+  )
+  if(!is.null(filter)){
+    pars <- c(list(filter=filter), pars)
   }
 
+  # cloudbuild.projects.builds.list
+  f <- gar_api_generator(url, "GET",
+                         pars_args = pars,
+                         data_parse_function = function(x) x,
+                         simplifyVector = FALSE,
+                         checkTrailingSlash = FALSE)
 
-  parse_f <- function(x){
-    structure(x,class = "BuildOperationMetadata")
-  }
-  # cloudbuild.projects.builds.create
-  f <- gar_api_generator(url, "POST",
-         data_parse_function = parse_f)
-  stopifnot(is.gar_Build(build))
+  o <- f()
 
-  o <- f(the_body = build)
-
-  logs <- extract_logs(o)
-  myMessage("Cloud Build started - logs: \n", logs, level = 3)
-
-  if(launch_browser){
-    utils::browseURL(logs)
+  # no paging required, return
+  if(is.null(o$nextPageToken)){
+    return(o$builds)
   }
 
-  invisible(o)
+  pars <- c(list(pageToken = o$nextPageToken), pars)
+  # cloudbuild.projects.builds.list
+  f2 <- gar_api_generator(url, "GET",
+                          pars_args = pars,
+                          data_parse_function = function(x) x,
+                          simplifyVector = FALSE,
+                          checkTrailingSlash = FALSE)
+  results <- gar_api_page(f2,
+                          page_f = function(x) x$nextPageToken,
+                          page_method = "param",
+                          page_arg = "pageToken")
+
+  o <- unlist(lapply(results, function(x) x$builds), recursive = FALSE)
+
+  bs <- lapply(o, as.gar_Build)
+  ids <- unlist(lapply(bs, function(x) x$id))
+  objs <- setNames(bs, ids)
+
+  # a list of build objects
+  if(!data_frame_output) return(objs)
+
+  myMessage("Parsing build objects into data.frame", level = 3)
+  # make a data.frame output
+  b_df <- Reduce(
+    rbind,
+    lapply(ids,
+           function(y){
+             x <- objs[[y]]
+             data.frame(
+               buildId = if_null_na(x$id),
+               status = if_null_na(x$status),
+               projectId = if_null_na(x$projectId),
+               buildCreateTime = if_null_na(timestamp_to_r(x$createTime)),
+               buildStartTime = if_null_na(timestamp_to_r(x$startTime)),
+               buildFinishTime = if_null_na(timestamp_to_r(x$startTime)),
+               timeout = if_null_na(x$timeout),
+               logsBucket = if_null_na(x$logsBucket),
+               buildTriggerId = if_null_na(x$buildTriggerId),
+               logUrl = if_null_na(x$logUrl),
+               bucketLogUrl = make_bucket_log_url(x),
+               stringsAsFactors = FALSE)
+           }
+    )
+  )
+
+  bts_df <- cr_buildtrigger_list(projectId = projectId)
+
+  # merge on buildTriggerId
+  merged <- merge(b_df, bts_df, all.x = TRUE, sort = FALSE)
+
+  merged[order(merged$buildCreateTime, decreasing = TRUE), ]
+
 }
 
-is.BuildOperationMetadata <- function(x){
-  inherits(x, "BuildOperationMetadata")
+if_null_na <- function(thing){
+  if(is.null(thing)) return(NA)
+  thing
 }
 
 
-
-extract_logs <- function(o){
-  if(is.BuildOperationMetadata(o)){
-    return(o$metadata$build$logUrl)
-  } else if(is.gar_Build(o)){
-    return(o$logUrl)
-  } else {
-    warning("Could not extract logUrl from class: ", class(o))
-  }
-}
-
-#' Make a Cloud Build object out of a cloudbuild.yml file
-#'
-#' This creates a \link{Build} object via the standard cloudbuild.yaml format
-#'
-#' @seealso https://cloud.google.com/cloud-build/docs/build-config
-#'
-#' @inheritParams cr_build
-#' @param yaml A \code{Yaml} object created from \link{cr_build_yaml} or a file location of a .yaml/.yml cloud build file
-#' @param artifacts Artifacts that may be built via \link{cr_build_yaml_artifact}
-#' @param options Options to pass to a Cloud Build
-#' @param availableSecrets Secret Manager objects built by \link{cr_build_yaml_secrets}
-#' @param logsBucket The gs:// location of a bucket to put logs in
-#'
-#' @export
-#' @import assertthat
-#' @family Cloud Build functions
-#' @examples
-#' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
-#'                            package = "googleCloudRunner")
-#' cr_build_make(cloudbuild)
-cr_build_make <- function(yaml,
-                          source = NULL,
-                          timeout=NULL,
-                          images=NULL,
-                          artifacts = NULL,
-                          options = NULL,
-                          substitutions = NULL,
-                          availableSecrets = NULL,
-                          logsBucket = NULL){
-
-  stepsy <- get_cr_yaml(yaml)
-  if(is.null(stepsy$steps)){
-    stop("Invalid cloudbuild yaml - 'steps:' not found.", call. = FALSE)
-  }
-
-  timeout <- check_timeout(timeout)
-  if(is.null(timeout) && !is.null(stepsy$timeout)){
-    timeout <- stepsy$timeout
-  }
-
-  if(!is.null(source)){
-    assert_that(is.gar_Source(source))
-  }
-
-  if(is.null(images) && !is.null(stepsy$images)){
-    images <- stepsy$images
-  }
-
-  if(is.null(artifacts) && !is.null(stepsy$artifacts)){
-    artifacts <- stepsy$artifacts
-  }
-
-  if(is.null(options) && !is.null(stepsy$options)){
-    options <- stepsy$options
-  }
-
-  if(is.null(substitutions) && !is.null(stepsy$substitutions)){
-    substitutions <- stepsy$substitutions
-  }
-
-  if(is.null(logsBucket) && !is.null(stepsy$logsBucket)){
-    logsBucket <- stepsy$logsBucket
-  }
-
-  if(is.null(availableSecrets) && !is.null(stepsy$availableSecrets)){
-    as <- stepsy$availableSecrets
-  } else {
-    as <- parse_yaml_secret_list(availableSecrets)
-  }
-
-  Build(steps = stepsy$steps,
-        timeout = timeout,
-        images = images,
-        source = source,
-        options = options,
-        substitutions = substitutions,
-        artifacts = artifacts,
-        availableSecrets = as,
-        logsBucket = logsBucket)
-}
-
-#' Download logs from a Cloud Build
-#'
-#' This lets you download the logs to your local R session, rather than viewing them in the Cloud Console.
-#'
-#' @param built The built object from \link{cr_build_status} or \link{cr_build_wait}
-#'
-#' @details
-#'
-#' By default, Cloud Build stores your build logs in a Google-created Cloud Storage bucket. You can view build logs store in the Google-created Cloud Storage bucket, but you cannot make any other changes to it. If you require full control over your logs bucket, store the logs in a user-created Cloud Storage bucket.
-#'
-#'
-#' @export
-#' @seealso \url{https://cloud.google.com/cloud-build/docs/securing-builds/store-manage-build-logs}
-#' @family Cloud Build functions
-#' @examples
-#'
-#' \dontrun{
-#' s_yaml <- cr_build_yaml(steps = cr_buildstep( "gcloud","version"))
-#' build <- cr_build_make(s_yaml)
-#' built <- cr_build(build)
-#' the_build <- cr_build_wait(built)
-#' cr_build_logs(the_build)
-#' # [1] "starting build \"6ce86e05-b0b1-4070-a849-05ec9020fd3b\""
-#' # [2] ""
-#' # [3] "FETCHSOURCE"
-#' # [4] "BUILD"
-#' # [5] "Already have image (with digest): gcr.io/cloud-builders/gcloud"
-#' # [6] "Google Cloud SDK 325.0.0"
-#' # [7] "alpha 2021.01.22"
-#' # [8] "app-engine-go 1.9.71"
-#' # ...
-#'  }
-cr_build_logs <- function(built){
-
-  assert_that(is.gar_Build(built))
-
-  log_url <- sprintf("%s/log-%s.txt",
-                     built$logsBucket, built$id)
-
-  logs <- googleCloudStorageR::gcs_get_object(log_url)
-
-  readLines(textConnection(logs))
-}
 
 #' Returns information about a previously requested build.
 #'
@@ -284,6 +147,59 @@ cr_build_status <- function(id = .Last.value,
 
 }
 
+make_bucket_log_url <- function(x){
+  if(!is.null(x$logsBucket) && !is.null(x$id)){
+    return(sprintf("%s/log-%s.txt", x$logsBucket, x$id))
+  }
+  NA
+}
+
+#' Download logs from a Cloud Build
+#'
+#' This lets you download the logs to your local R session, rather than viewing them in the Cloud Console.
+#'
+#' @param built The built object from \link{cr_build_status} or \link{cr_build_wait}
+#' @param log_url You can optionally instead of \code{built} provide the direct gs:// URI to the log here.  It is in the format \code{gs://{{bucket}}/log-{{buildId}}.txt}
+#'
+#' @details
+#'
+#' By default, Cloud Build stores your build logs in a Google-created Cloud Storage bucket. You can view build logs store in the Google-created Cloud Storage bucket, but you cannot make any other changes to it. If you require full control over your logs bucket, store the logs in a user-created Cloud Storage bucket.
+#'
+#'
+#' @export
+#' @seealso \url{https://cloud.google.com/cloud-build/docs/securing-builds/store-manage-build-logs}
+#' @family Cloud Build functions
+#' @examples
+#'
+#' \dontrun{
+#' s_yaml <- cr_build_yaml(steps = cr_buildstep( "gcloud","version"))
+#' build <- cr_build_make(s_yaml)
+#' built <- cr_build(build)
+#' the_build <- cr_build_wait(built)
+#' cr_build_logs(the_build)
+#' # [1] "starting build \"6ce86e05-b0b1-4070-a849-05ec9020fd3b\""
+#' # [2] ""
+#' # [3] "FETCHSOURCE"
+#' # [4] "BUILD"
+#' # [5] "Already have image (with digest): gcr.io/cloud-builders/gcloud"
+#' # [6] "Google Cloud SDK 325.0.0"
+#' # [7] "alpha 2021.01.22"
+#' # [8] "app-engine-go 1.9.71"
+#' # ...
+#'  }
+cr_build_logs <- function(built, log_url = NULL){
+
+  if(is.null(log_url)){
+    assert_that(is.gar_Build(built))
+    log_url <- make_bucket_log_url(built)
+  }
+
+  if(is.na(log_url)) return(NULL)
+
+  logs <- googleCloudStorageR::gcs_get_object(log_url)
+
+  readLines(textConnection(logs))
+}
 
 
 #' Download artifacts from a build
@@ -330,7 +246,7 @@ cr_build_artifacts <- function(build,
     !is.null(build$artifacts$objects),
     !is.null(build$artifacts$objects$location),
     !is.null(build$artifacts$objects$paths)
-    )
+  )
 
   bucket <- build$artifacts$objects$location
   paths <- build$artifacts$objects$paths
@@ -407,7 +323,7 @@ wait_f <- function(init, projectId){
     status <- cr_build_status(op, projectId = projectId)
     pb$tick()
     if(!status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
-       wait <- FALSE
+      wait <- FALSE
     }
     op <- status
     Sys.sleep(5)
@@ -479,7 +395,7 @@ parse_build_meta_to_obj <- function(o){
 as.gar_Build <- function(x){
   if(is.BuildOperationMetadata(x)){
     bb <- cr_build_status(extract_build_id(x),
-                         projectId = x$metadata$build$projectId)
+                          projectId = x$metadata$build$projectId)
     o <- parse_build_meta_to_obj(bb)
   } else if (is.gar_Build(x)) {
     o <- x # maybe more here later...

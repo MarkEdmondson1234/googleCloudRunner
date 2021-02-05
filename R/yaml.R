@@ -10,7 +10,8 @@
 #' @param tags Tags for the build
 #' @param secrets A secrets object
 #' @param images What images will be build from this cloudbuild
-#' @param artifacts What artifacts may be built from this cloudbuild
+#' @param artifacts What artifacts may be built from this cloudbuild - create via \link{cr_build_yaml_artifact}
+#' @param availableSecrets What environment arguments from Secret Manager are available to the build - create via \link{cr_build_yaml_secrets}
 #'
 #' @seealso \href{https://cloud.google.com/cloud-build/docs/build-config}{Build configuration overview for cloudbuild.yaml}
 #' @export
@@ -34,6 +35,10 @@ cr_build_yaml <- function(
   availableSecrets = NULL,
   images = NULL,
   artifacts = NULL){
+
+  if(!is.null(artifacts)){
+    assert_that(is.cr_build_artifact(artifacts))
+  }
 
   Yaml(
     steps = steps,
@@ -80,12 +85,16 @@ cr_build_yaml_artifact <- function(paths,
     location <- paste0(location, "/", bucket_dir)
   }
 
-  list(
+  structure(list(
     objects = list(
       location = location,
       paths = string_to_list(paths)
     )
-  )
+  ), class = c("cr_build_artifact", "list"))
+}
+
+is.cr_build_artifact <- function(x){
+  inherits(x, "gar_cr_build_artifact")
 }
 
 #' Create an availableSecrets entry for build yaml

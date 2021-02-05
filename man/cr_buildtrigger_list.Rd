@@ -12,7 +12,16 @@ cr_buildtrigger_list(projectId = cr_project_get())
 \description{
 Lists existing `BuildTrigger`s.This API is experimental.
 }
+\examples{
+
+\dontrun{
+
+  cr_buildtrigger_list()
+}
+}
 \seealso{
+\link{cr_build_list} which merges with this list
+
 Other BuildTrigger functions: 
 \code{\link{BuildTrigger}()},
 \code{\link{GitHubEventsConfig}()},

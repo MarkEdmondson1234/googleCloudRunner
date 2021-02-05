@@ -97,6 +97,13 @@ cr_buildtrigger_delete <- function(triggerId, projectId = cr_project_get()) {
 #' @param projectId ID of the project for which to list BuildTriggers
 #' @importFrom googleAuthR gar_api_generator
 #' @export
+#' @seealso \link{cr_build_list} which merges with this list
+#' @examples
+#'
+#' \dontrun{
+#'
+#'   cr_buildtrigger_list()
+#' }
 cr_buildtrigger_list <- function(projectId = cr_project_get()){
 
     url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
@@ -112,7 +119,21 @@ cr_buildtrigger_list <- function(projectId = cr_project_get()){
                       page_method = "param",
                       page_arg = "pageToken")
 
-    Reduce(rbind, o)
+    bts_df <- Reduce(rbind, o)
+
+    data.frame(
+      stringsAsFactors = FALSE,
+      buildTriggerName = bts_df$name,
+      buildTriggerId = bts_df$id,
+      buildTriggerCreateTime = bts_df$createTime,
+      filename = bts_df$filename,
+      description = bts_df$description,
+      github_name = paste0(bts_df$github$owner,"/", bts_df$github$name),
+      ignoredFiles = unlist(lapply(bts_df$ignoredFiles, paste, collapse = ", ")),
+      includedFiles = unlist(lapply(bts_df$includedFiles, paste, collapse = ", ")),
+      tags = unlist(lapply(bts_df$tags, paste, collapse = ", ")),
+      disabled = bts_df$disabled
+    )
 }
 
 parse_buildtrigger_list <- function(x){

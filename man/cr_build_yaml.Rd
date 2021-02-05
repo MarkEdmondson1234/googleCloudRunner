@@ -32,9 +32,11 @@ cr_build_yaml(
 
 \item{secrets}{A secrets object}
 
+\item{availableSecrets}{What environment arguments from Secret Manager are available to the build - create via \link{cr_build_yaml_secrets}}
+
 \item{images}{What images will be build from this cloudbuild}
 
-\item{artifacts}{What artifacts may be built from this cloudbuild}
+\item{artifacts}{What artifacts may be built from this cloudbuild - create via \link{cr_build_yaml_artifact}}
 }
 \description{
 This can be written to disk or used directly with functions such as \link{cr_build}
@@ -57,6 +59,7 @@ Other Cloud Build functions:
 \code{\link{Source}()},
 \code{\link{StorageSource}()},
 \code{\link{cr_build_artifacts}()},
+\code{\link{cr_build_list}()},
 \code{\link{cr_build_logs}()},
 \code{\link{cr_build_make}()},
 \code{\link{cr_build_status}()},

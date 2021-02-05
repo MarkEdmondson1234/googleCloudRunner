@@ -76,8 +76,12 @@ print.gar_Build <- function(x, ...){
   cat0("logUrl: ", x$logUrl)
   cat0("timeout: ", x$timeout)
   cat0("logsBucket: ", x$logsBucket)
-  cat0("tags: ", x$tags)
   cat0("secrets: ", x$secrets)
+
+  if(!is.null(x$tags)){
+    cat("tags:\n")
+    lapply(x$tags, print)
+  }
 
   if(!is.null(x$substitutions)){
     cat("substitutions:\n")
