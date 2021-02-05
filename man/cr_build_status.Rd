@@ -18,7 +18,7 @@ A gar_Build object \link{Build}
 The `Build` that is returned includes its status (such as `SUCCESS`,`FAILURE`, or `WORKING`), and timing information.
 }
 \seealso{
-https://cloud.google.com/cloud-build/docs/api/reference/rest/Shared.Types/Status
+\url{https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds#Build.Status}
 
 Other Cloud Build functions: 
 \code{\link{Build}()},

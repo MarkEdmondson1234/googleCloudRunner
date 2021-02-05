@@ -121,7 +121,7 @@ if_null_na <- function(thing){
 #'
 #' The `Build` that is returned includes its status (such as `SUCCESS`,`FAILURE`, or `WORKING`), and timing information.
 #'
-#' @seealso https://cloud.google.com/cloud-build/docs/api/reference/rest/Shared.Types/Status
+#' @seealso \url{https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds#Build.Status}
 #'
 #' @param projectId ID of the project
 #' @param id ID of the build or a \code{BuildOperationMetadata} object
@@ -196,7 +196,7 @@ cr_build_logs <- function(built, log_url = NULL){
 
   if(is.na(log_url)) return(NULL)
 
-  logs <- googleCloudStorageR::gcs_get_object(log_url)
+  logs <- suppressMessages(googleCloudStorageR::gcs_get_object(log_url))
 
   readLines(textConnection(logs))
 }
@@ -298,39 +298,50 @@ cr_build_wait <- function(op = .Last.value,
     return(init)
   }
 
-  wait_f(init, projectId)
-
+  status <- wait_f(init, projectId)
+  logs <- cr_build_logs(status)
+  cli::cli_rule()
+  cli::cli_alert_info("Last 10 lines of build log.  Use cr_build_logs() to read more")
+  cat(cli::col_grey(paste(tail(logs, 10), collapse = "\n")))
+  status
 }
 
+#' @noRd
+#' @import cli
 wait_f <- function(init, projectId){
   op <- init
   wait <- TRUE
 
-  myMessage("Waiting for Cloud Build...", level = 3)
+  cli_alert_info("Starting Cloud Build")
 
-  timeout <- extract_timeout(op)
-
-  pbf <- sprintf("(:spin) Build time: [:elapsedfull] (:percent of timeout: %ss)",
-                 timeout)
-  pb <- progress::progress_bar$new(
-    total = extract_timeout(op),
-    format = pbf,
-    clear = FALSE
-  )
-
-  pb$tick(0)
   while(wait){
     status <- cr_build_status(op, projectId = projectId)
-    pb$tick()
-    if(!status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
+    sb <- cli_status("{symbol$arrow_right} Running Build Id: {status$id}")
+
+    if(status$status %in%
+       c("FAILURE","INTERNAL_ERROR","TIMEOUT","CANCELLED","EXPIRED")){
+      cli_process_failed(
+        id = sb,
+        msg_failed = "Build failed with status: {status$status}")
       wait <- FALSE
     }
-    op <- status
-    Sys.sleep(5)
-  }
-  pb$terminate()
 
-  myMessage("Build finished with status:", status$status, level = 3)
+    if(status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
+      cli_status_update(id = sb,
+        msg = "{symbol$arrow_right} Running BuildId {status$id} Status: {status$status}")
+      Sys.sleep(5)
+    }
+
+    if(status$status == "SUCCESS"){
+      cli_process_done(
+        id = sb,
+        msg_done = "Build finished with status: {status$status}")
+      wait <- FALSE
+    }
+
+    op <- status
+
+  }
 
   status
 }
