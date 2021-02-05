@@ -171,7 +171,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Download logs from a Cloud Build</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/cloudbuild.R'><code>R/cloudbuild.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/build_admin.R'><code>R/build_admin.R</code></a></small>
     <div class="hidden name"><code>cr_build_logs.Rd</code></div>
     </div>
 
@@ -179,7 +179,7 @@
     <p>This lets you download the logs to your local R session, rather than viewing them in the Cloud Console.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_build_logs</span><span class='op'>(</span><span class='va'>built</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cr_build_logs</span><span class='op'>(</span><span class='va'>built</span>, log_url <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -187,6 +187,10 @@
     <tr>
       <th>built</th>
       <td><p>The built object from <a href='cr_build_status.html'>cr_build_status</a> or <a href='cr_build_wait.html'>cr_build_wait</a></p></td>
+    </tr>
+    <tr>
+      <th>log_url</th>
+      <td><p>You can optionally instead of <code>built</code> provide the direct gs:// URI to the log here.  It is in the format <code>gs://{{bucket}}/log-{{buildId}}.txt</code></p></td>
     </tr>
     </table>
 
@@ -202,6 +206,7 @@
 <code><a href='Source.html'>Source</a>()</code>,
 <code><a href='StorageSource.html'>StorageSource</a>()</code>,
 <code><a href='cr_build_artifacts.html'>cr_build_artifacts</a>()</code>,
+<code><a href='cr_build_list.html'>cr_build_list</a>()</code>,
 <code><a href='cr_build_make.html'>cr_build_make</a>()</code>,
 <code><a href='cr_build_status.html'>cr_build_status</a>()</code>,
 <code><a href='cr_build_upload_gcs.html'>cr_build_upload_gcs</a>()</code>,
