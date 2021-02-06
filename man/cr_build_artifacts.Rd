@@ -28,13 +28,14 @@ If your artifacts are using file glob (e.g. \code{myfolder/**}) to decide which 
 }
 \examples{
 
-r <- "write.csv(mtcars,file = 'artifact.csv')"
+\dontrun{
+#' r <- "write.csv(mtcars,file = 'artifact.csv')"
 ba <- cr_build_yaml(
     steps = cr_buildstep_r(r),
     artifacts = cr_build_yaml_artifact('artifact.csv', bucket = "my-bucket")
     )
 ba
-\dontrun{
+
 build <- cr_build(ba)
 built <- cr_build_wait(build)
 

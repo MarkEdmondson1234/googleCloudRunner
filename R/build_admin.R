@@ -9,7 +9,7 @@
 #'
 #' @details
 #'
-#' If filter is \code{NULL} then this will return all historic builds which can be a lot.  Its probably better to have a filter, but there is no documentation on the filter syntax at the moment.
+#' If filter is \code{NULL} then this will return all historic builds.  To use filters, ensure you use \code{""} and not \code{''} to quote the fields e.g. \code{'status!="SUCCESS"'} and \code{'status="SUCCESS"'}
 #'
 #' @seealso \url{https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/list}
 #'
@@ -26,6 +26,9 @@
 #'
 #'  # output a list of build objects
 #'  cr_build_list(data_frame_output=FALSE)
+#'
+#'  # output a list of builds that failed
+#'  cr_build_list('status!="SUCCESS"')
 #' }
 cr_build_list <- function(filter = NULL,
                           projectId = cr_project_get(),
@@ -223,13 +226,14 @@ cr_build_logs <- function(built, log_url = NULL){
 #'
 #' @examples
 #'
-#' r <- "write.csv(mtcars,file = 'artifact.csv')"
+#' \dontrun{
+#' #' r <- "write.csv(mtcars,file = 'artifact.csv')"
 #' ba <- cr_build_yaml(
 #'     steps = cr_buildstep_r(r),
 #'     artifacts = cr_build_yaml_artifact('artifact.csv', bucket = "my-bucket")
 #'     )
 #' ba
-#' \dontrun{
+#'
 #' build <- cr_build(ba)
 #' built <- cr_build_wait(build)
 #'

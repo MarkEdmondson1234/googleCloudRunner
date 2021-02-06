@@ -24,7 +24,7 @@ cr_build_list(
 Get a list of builds within your project
 }
 \details{
-If filter is \code{NULL} then this will return all historic builds which can be a lot.  Its probably better to have a filter, but there is no documentation on the filter syntax at the moment.
+If filter is \code{NULL} then this will return all historic builds.  To use filters, ensure you use \code{""} and not \code{''} to quote the fields e.g. \code{'status!="SUCCESS"'} and \code{'status="SUCCESS"'}
 }
 \examples{
 
@@ -35,6 +35,9 @@ If filter is \code{NULL} then this will return all historic builds which can be 
 
  # output a list of build objects
  cr_build_list(data_frame_output=FALSE)
+
+ # output a list of builds that failed
+ cr_build_list('status!="SUCCESS"')
 }
 }
 \seealso{

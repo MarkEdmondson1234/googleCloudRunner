@@ -25,7 +25,7 @@ cr_build_yaml(
   steps = cr_buildstep_r(r),
   artifacts = cr_build_yaml_artifact('artifact.csv', bucket = "my-bucket")
   )
-  }
+ }
 }
 \seealso{
 Other Cloud Build functions: 

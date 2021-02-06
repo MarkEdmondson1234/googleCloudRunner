@@ -73,7 +73,7 @@ cr_build_yaml <- function(
 #'   steps = cr_buildstep_r(r),
 #'   artifacts = cr_build_yaml_artifact('artifact.csv', bucket = "my-bucket")
 #'   )
-#'   }
+#'  }
 cr_build_yaml_artifact <- function(paths,
                                    bucket_dir = NULL,
                                    bucket = cr_bucket_get()){
