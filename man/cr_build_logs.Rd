@@ -4,7 +4,7 @@
 \alias{cr_build_logs}
 \title{Download logs from a Cloud Build}
 \usage{
-cr_build_logs(built, log_url = NULL)
+cr_build_logs(built = NULL, log_url = NULL)
 }
 \arguments{
 \item{built}{The built object from \link{cr_build_status} or \link{cr_build_wait}}

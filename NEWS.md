@@ -3,7 +3,7 @@
 * Add checks for Cloud Build email roles in `cr_setup()`
 * Add direct use of Secret Manager environment args in builds via `availableSecrets` (#106)
 * Add support for `logsBucket` in `cr_build_yaml` and `cr_build_make`
-* Add `cr_build_list()` and `cr_build_logs()`
+* Add `cr_build_list()` and `cr_build_logs()` and `cr_build_list_filter()`
 * Made Cloud Build status messages prettier
 
 # googleCloudRunner 0.4.1

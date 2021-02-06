@@ -2,6 +2,7 @@
 % Please edit documentation in R/build_admin.R
 \name{cr_build_list}
 \alias{cr_build_list}
+\alias{cr_build_list_filter}
 \title{Lists the build}
 \usage{
 cr_build_list(
@@ -10,21 +11,39 @@ cr_build_list(
   pageSize = 1000,
   data_frame_output = TRUE
 )
+
+cr_build_list_filter(
+  field,
+  operator = c("=", "!=", ">", ">=", "<", "<="),
+  value
+)
 }
 \arguments{
-\item{filter}{Text filter for the list}
+\item{filter}{Text filter for the list - use \code{cr_build_list_filter()} or a raw string}
 
 \item{projectId}{ID of the project}
 
 \item{pageSize}{How many builds to fetch per page}
 
 \item{data_frame_output}{If TRUE will output a data.frame of a subset of info from the builds, merged with the list of triggers from \link{cr_buildtrigger_list}.  Set to FALSE to return a list of Build objects similar to output from \link{cr_build_status}}
+
+\item{field}{The field you want to filter on.  Will validate.}
+
+\item{operator}{The type of comparision for the filter}
+
+\item{value}{The value for the filter's field. Auto-formats \code{POSIXct} and \code{Date} objects}
 }
 \description{
 Get a list of builds within your project
+
+cr_build_list_filter outputs valid filters for \code{cr_build_list}'s filter argument
 }
 \details{
-If filter is \code{NULL} then this will return all historic builds.  To use filters, ensure you use \code{""} and not \code{''} to quote the fields e.g. \code{'status!="SUCCESS"'} and \code{'status="SUCCESS"'}
+When \code{data_frame_output=TRUE} results are sorted with the latest buildStartTime in the first row
+
+If filter is \code{NULL} then this will return all historic builds.  To use filters, ensure you use \code{""} and not \code{''} to quote the fields e.g. \code{'status!="SUCCESS"'} and \code{'status="SUCCESS"'} - see \href{Filtering build results docs}{https://cloud.google.com/cloud-build/docs/view-build-results#filtering_build_results_using_queries}.  \code{cr_build_list_filter} helps you construct valid filters.  More complex filters can be done using a combination of \link{paste} and \code{cr_build_list_filter()} - see examples
+
+Use \link{POSIXct} via functions like \link{Sys.time} to have them formatted into valid timestamps for time related fields, or \link{Date} objects via functions like \link{Sys.Date}
 }
 \examples{
 
@@ -36,8 +55,43 @@ If filter is \code{NULL} then this will return all historic builds.  To use filt
  # output a list of build objects
  cr_build_list(data_frame_output=FALSE)
 
- # output a list of builds that failed
+ # output a list of builds that failed using raw string
  cr_build_list('status!="SUCCESS"')
+
+ # output builds for a specific trigger using raw string
+ cr_build_list('trigger_id="af2c7ddc-e4eb-4170-b938-a4babb53bac6"')
+
+ # use cr_build_list_filter to help validate filters
+ failed_builds <- cr_build_list_filter("status","!=","SUCCESS")
+ cr_build_list(failed_builds)
+
+ f1 <- cr_build_list_filter(
+   "trigger_id","=","af2c7ddc-e4eb-4170-b938-a4babb53bac6")
+ cr_build_list(f1)
+
+ # do AND (and other) filters via paste() and cr_build_list_filter()
+ cr_build_list(paste(f1, "AND", failed_builds))
+
+ # builds in last 5 days
+ last_five <- cr_build_list_filter("create_time", ">", Sys.Date() - 5)
+ cr_build_list(last_five)
+
+ # builds in last 60 mins
+ last_hour <- cr_build_list_filter("create_time", ">", Sys.time() - 3600)
+ cr_build_list(last_hour)
+
+ # builds for this package's buildtrigger
+ gcr_trigger_id <- "0a3cade0-425f-4adc-b86b-14cde51af674"
+ gcr_bt <- cr_build_list_filter(
+             "trigger_id",
+             value = gcr_trigger_id)
+ gcr_builds <- cr_build_list(gcr_bt)
+
+ # get logs for last build
+ last_build <- gcr_builds[1,]
+ last_build_logs <- cr_build_logs(log_url = last_build$bucketLogUrl)
+ tail(last_logs, 10)
+
 }
 }
 \seealso{
