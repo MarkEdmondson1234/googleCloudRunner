@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Lists the build — cr_build_list" />
-<meta property="og:description" content="Get a list of builds within your project" />
+<meta property="og:description" content="Get a list of builds within your project
+cr_build_list_filter outputs valid filters for cr_build_list's filter argument" />
 
 
 <meta name="robots" content="noindex">
@@ -177,6 +178,7 @@
 
     <div class="ref-description">
     <p>Get a list of builds within your project</p>
+<p>cr_build_list_filter outputs valid filters for <code>cr_build_list</code>'s filter argument</p>
     </div>
 
     <pre class="usage"><span class='fu'>cr_build_list</span><span class='op'>(</span>
@@ -184,6 +186,12 @@
   projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>,
   pageSize <span class='op'>=</span> <span class='fl'>1000</span>,
   data_frame_output <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span>
+
+<span class='fu'>cr_build_list_filter</span><span class='op'>(</span>
+  <span class='va'>field</span>,
+  operator <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"="</span>, <span class='st'>"!="</span>, <span class='st'>"&gt;"</span>, <span class='st'>"&gt;="</span>, <span class='st'>"&lt;"</span>, <span class='st'>"&lt;="</span><span class='op'>)</span>,
+  <span class='va'>value</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -191,7 +199,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>filter</th>
-      <td><p>Text filter for the list</p></td>
+      <td><p>Text filter for the list - use <code>cr_build_list_filter()</code> or a raw string</p></td>
     </tr>
     <tr>
       <th>projectId</th>
@@ -205,11 +213,25 @@
       <th>data_frame_output</th>
       <td><p>If TRUE will output a data.frame of a subset of info from the builds, merged with the list of triggers from <a href='cr_buildtrigger_list.html'>cr_buildtrigger_list</a>.  Set to FALSE to return a list of Build objects similar to output from <a href='cr_build_status.html'>cr_build_status</a></p></td>
     </tr>
+    <tr>
+      <th>field</th>
+      <td><p>The field you want to filter on.  Will validate.</p></td>
+    </tr>
+    <tr>
+      <th>operator</th>
+      <td><p>The type of comparision for the filter</p></td>
+    </tr>
+    <tr>
+      <th>value</th>
+      <td><p>The value for the filter's field. Auto-formats <code>POSIXct</code> and <code>Date</code> objects</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If filter is <code>NULL</code> then this will return all historic builds.  To use filters, ensure you use <code>""</code> and not <code>''</code> to quote the fields e.g. <code>'status!="SUCCESS"'</code> and <code>'status="SUCCESS"'</code></p>
+    <p>When <code>data_frame_output=TRUE</code> results are sorted with the latest buildStartTime in the first row</p>
+<p>If filter is <code>NULL</code> then this will return all historic builds.  To use filters, ensure you use <code>""</code> and not <code>''</code> to quote the fields e.g. <code>'status!="SUCCESS"'</code> and <code>'status="SUCCESS"'</code> - see <a href='Filtering build results docs'>https://cloud.google.com/cloud-build/docs/view-build-results#filtering_build_results_using_queries</a>.  <code>cr_build_list_filter</code> helps you construct valid filters.  More complex filters can be done using a combination of <a href='https://rdrr.io/r/base/paste.html'>paste</a> and <code>cr_build_list_filter()</code> - see examples</p>
+<p>Use <a href='https://rdrr.io/r/base/DateTimeClasses.html'>POSIXct</a> via functions like <a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a> to have them formatted into valid timestamps for time related fields, or <a href='https://rdrr.io/r/base/Dates.html'>Date</a> objects via functions like <a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/list'>https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/list</a></p>
@@ -240,8 +262,43 @@
  <span class='co'># output a list of build objects</span>
  <span class='fu'>cr_build_list</span><span class='op'>(</span>data_frame_output<span class='op'>=</span><span class='cn'>FALSE</span><span class='op'>)</span>
 
- <span class='co'># output a list of builds that failed</span>
+ <span class='co'># output a list of builds that failed using raw string</span>
  <span class='fu'>cr_build_list</span><span class='op'>(</span><span class='st'>'status!="SUCCESS"'</span><span class='op'>)</span>
+
+ <span class='co'># output builds for a specific trigger using raw string</span>
+ <span class='fu'>cr_build_list</span><span class='op'>(</span><span class='st'>'trigger_id="af2c7ddc-e4eb-4170-b938-a4babb53bac6"'</span><span class='op'>)</span>
+
+ <span class='co'># use cr_build_list_filter to help validate filters</span>
+ <span class='va'>failed_builds</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_list_filter</span><span class='op'>(</span><span class='st'>"status"</span>,<span class='st'>"!="</span>,<span class='st'>"SUCCESS"</span><span class='op'>)</span>
+ <span class='fu'>cr_build_list</span><span class='op'>(</span><span class='va'>failed_builds</span><span class='op'>)</span>
+
+ <span class='va'>f1</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_list_filter</span><span class='op'>(</span>
+   <span class='st'>"trigger_id"</span>,<span class='st'>"="</span>,<span class='st'>"af2c7ddc-e4eb-4170-b938-a4babb53bac6"</span><span class='op'>)</span>
+ <span class='fu'>cr_build_list</span><span class='op'>(</span><span class='va'>f1</span><span class='op'>)</span>
+
+ <span class='co'># do AND (and other) filters via paste() and cr_build_list_filter()</span>
+ <span class='fu'>cr_build_list</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>f1</span>, <span class='st'>"AND"</span>, <span class='va'>failed_builds</span><span class='op'>)</span><span class='op'>)</span>
+
+ <span class='co'># builds in last 5 days</span>
+ <span class='va'>last_five</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_list_filter</span><span class='op'>(</span><span class='st'>"create_time"</span>, <span class='st'>"&gt;"</span>, <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>5</span><span class='op'>)</span>
+ <span class='fu'>cr_build_list</span><span class='op'>(</span><span class='va'>last_five</span><span class='op'>)</span>
+
+ <span class='co'># builds in last 60 mins</span>
+ <span class='va'>last_hour</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_list_filter</span><span class='op'>(</span><span class='st'>"create_time"</span>, <span class='st'>"&gt;"</span>, <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.time</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>3600</span><span class='op'>)</span>
+ <span class='fu'>cr_build_list</span><span class='op'>(</span><span class='va'>last_hour</span><span class='op'>)</span>
+
+ <span class='co'># builds for this package's buildtrigger</span>
+ <span class='va'>gcr_trigger_id</span> <span class='op'>&lt;-</span> <span class='st'>"0a3cade0-425f-4adc-b86b-14cde51af674"</span>
+ <span class='va'>gcr_bt</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_list_filter</span><span class='op'>(</span>
+             <span class='st'>"trigger_id"</span>,
+             value <span class='op'>=</span> <span class='va'>gcr_trigger_id</span><span class='op'>)</span>
+ <span class='va'>gcr_builds</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_list</span><span class='op'>(</span><span class='va'>gcr_bt</span><span class='op'>)</span>
+
+ <span class='co'># get logs for last build</span>
+ <span class='va'>last_build</span> <span class='op'>&lt;-</span> <span class='va'>gcr_builds</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>
+ <span class='va'>last_build_logs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_logs.html'>cr_build_logs</a></span><span class='op'>(</span>log_url <span class='op'>=</span> <span class='va'>last_build</span><span class='op'>$</span><span class='va'>bucketLogUrl</span><span class='op'>)</span>
+ <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>last_logs</span>, <span class='fl'>10</span><span class='op'>)</span>
+
 <span class='op'>}</span>
 </div></pre>
   </div>
