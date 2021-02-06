@@ -32,11 +32,11 @@ test_that("[Online] Test Build Triggers",{
                                       trigger = cs_trigger)
   Sys.sleep(5)
   the_list <- cr_buildtrigger_list()
-  expect_true("bt-github-inline" %in% the_list$name)
-  expect_true("bt-github-file" %in% the_list$name)
-  expect_true("bt-cs-file" %in% the_list$name)
-  expect_true("bt-github-source" %in% the_list$name)
-  expect_true("bt-cs-source" %in% the_list$name)
+  expect_true("bt-github-inline" %in% the_list$buildTriggerName)
+  expect_true("bt-github-file" %in% the_list$buildTriggerName)
+  expect_true("bt-cs-file" %in% the_list$buildTriggerName)
+  expect_true("bt-github-source" %in% the_list$buildTriggerName)
+  expect_true("bt-cs-source" %in% the_list$buildTriggerName)
 
   cr_buildtrigger_delete("bt-github-inline")
   cr_buildtrigger_delete("bt-github-file")
@@ -47,14 +47,13 @@ test_that("[Online] Test Build Triggers",{
   Sys.sleep(5)
   the_list2 <- cr_buildtrigger_list()
 
-  expect_false("bt-github-inline" %in% the_list2$name)
-  expect_false("bt-github-file" %in% the_list2$name)
-  expect_false("bt-cs-file" %in% the_list2$name)
-  expect_false("bt-github-source" %in% the_list2$name)
-  expect_false("bt-cs-source" %in% the_list2$name)
+  expect_false("bt-github-inline" %in% the_list2$buildTriggerName)
+  expect_false("bt-github-file" %in% the_list2$buildTriggerName)
+  expect_false("bt-cs-file" %in% the_list2$buildTriggerName)
+  expect_false("bt-github-source" %in% the_list2$buildTriggerName)
+  expect_false("bt-cs-source" %in% the_list2$buildTriggerName)
 
-  an_id <- the_list2[the_list2$name == "package-checks","id"]
-  info <- cr_buildtrigger_get(an_id)
+  info <- cr_buildtrigger_get("0a3cade0-425f-4adc-b86b-14cde51af674")
   expect_equal(info$name, "package-checks")
 
 })
