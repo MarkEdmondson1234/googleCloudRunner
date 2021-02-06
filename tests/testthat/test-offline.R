@@ -12,11 +12,6 @@ test_that("JWT creation", {
 
 test_that("Building Build Objects", {
 
-  cr_email_set("test@cloudbuilder.com")
-  cr_region_set("europe-west1")
-  cr_project_set("test-project")
-  cr_bucket_set("test-bucket")
-
   yaml <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
 
   expect_equal(basename(yaml), "cloudbuild.yaml" )
@@ -25,34 +20,26 @@ test_that("Building Build Objects", {
                                                       bucket = "gs://my-bucket"
   ))
   expect_true(googleCloudRunner:::is.gar_Source(my_gcs_source))
-  expect_equal(my_gcs_source$storageSource$bucket, "gs://my-bucket")
+  expect_snapshot(my_gcs_source)
 
   my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com",
                                                  branchName="master"))
   expect_true(googleCloudRunner:::is.gar_Source(my_repo_source))
-  expect_equal(my_repo_source$repoSource$branchName, "master")
+  expect_snapshot(my_repo_source)
 
   bq <- cr_build_make(yaml = yaml,
                       source = my_gcs_source,
                       timeout = 10,
                       images = "gcr.io/my-project/demo")
   expect_true(googleCloudRunner:::is.gar_Build(bq))
-  expect_equal(bq$images, "gcr.io/my-project/demo")
-  expect_equal(bq$timeout, "10s")
-  expect_equal(bq$steps[[1]]$name, "gcr.io/cloud-builders/docker")
-  expect_equal(bq$steps[[2]]$name, "alpine")
-  expect_equal(bq$source$storageSource$bucket, "gs://my-bucket")
+  expect_snapshot(bq)
 
   bq2 <- cr_build_make(yaml = yaml,
                        source = my_repo_source,
                        timeout = "11s",
                        images = "gcr.io/my-project/demo")
   expect_true(googleCloudRunner:::is.gar_Build(bq2))
-  expect_equal(bq2$images, "gcr.io/my-project/demo")
-  expect_equal(bq2$timeout, "11s")
-  expect_equal(bq2$steps[[1]]$name, "gcr.io/cloud-builders/docker")
-  expect_equal(bq2$steps[[2]]$name, "alpine")
-  expect_equal(bq2$source$repoSource$branchName, "master")
+  expect_snapshot(bq2)
 
   # write from creating a Yaml object
   image <- "gcr.io/my-project/my-image"
@@ -62,14 +49,7 @@ test_that("Building Build Objects", {
                                                      "--image", image), dir="deploy")),
                             images = image)
 
-  expect_equal(run_yaml$images[[1]], image)
-  expect_equal(run_yaml$steps[[1]]$dir, "deploy")
-  expect_equal(run_yaml$steps[[1]]$args[[5]],
-               "gcr.io/my-project/my-image:latest")
-  expect_equal(run_yaml$steps[[2]]$name, "gcr.io/cloud-builders/docker")
-  expect_equal(run_yaml$steps[[2]]$args[[2]],
-               "gcr.io/my-project/my-image")
-  expect_equal(run_yaml$steps[[3]]$args[[1]], "beta")
+  expect_snapshot(run_yaml)
 
   scheduler <- cr_build_schedule_http(cr_build_make(run_yaml))
 
@@ -79,21 +59,18 @@ test_that("Building Build Objects", {
   expect_true(file.exists("cloudbuild_test.yaml"))
 
   read_b <- cr_build_make("cloudbuild_test.yaml")
-  expect_equal(read_b$steps[[1]]$name, "gcr.io/cloud-builders/docker")
-  expect_equal(read_b$steps[[2]]$args[[1]], "push")
+  expect_snapshot(read_b)
 
   # write from a Build object
   build3 <- cr_build_make(system.file("cloudbuild/cloudbuild.yaml",
                                       package = "googleCloudRunner"))
-  expect_equal(build3$steps[[1]]$args, "version")
-  expect_equal(build3$steps[[2]]$name, "alpine")
+  expect_snapshot(build3)
 
   cr_build_write(build3, file = "cloudbuild_test2.yaml")
   expect_true(file.exists("cloudbuild_test2.yaml"))
 
   read_b2 <- cr_build_make("cloudbuild_test2.yaml")
-  expect_equal(read_b2$steps[[1]]$id, "Docker Version")
-  expect_equal(read_b2$steps[[2]]$args[[1]], "echo")
+  expect_snapshot(read_b2)
 
   unlink("cloudbuild_test.yaml")
   unlink("cloudbuild_test2.yaml")

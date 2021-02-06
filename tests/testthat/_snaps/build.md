@@ -13,10 +13,18 @@
         secretEnv:
         - SECRET
         - SECRET2
+      logsBucket: gs://mark-edmondson-public-files
       availableSecrets:
         secretManager:
         - versionName: projects/mark-edmondson-gde/secrets/test_secret/versions/latest
           env: SECRET
         - versionName: projects/mark-edmondson-gde/secrets/test_secret_two/versions/latest
           env: SECRET2
+
+---
+
+    Code
+      parsed_logs[[11]]
+    Output
+      [1] "A_SECRET_VALUE SECOND_SECRET"
 

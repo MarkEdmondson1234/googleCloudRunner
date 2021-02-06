@@ -97,7 +97,7 @@ cr_build_yaml_artifact <- function(paths,
 }
 
 is.cr_build_artifact <- function(x){
-  inherits(x, "gar_cr_build_artifact")
+  inherits(x, "cr_build_artifact")
 }
 
 #' Create an availableSecrets entry for build yaml
