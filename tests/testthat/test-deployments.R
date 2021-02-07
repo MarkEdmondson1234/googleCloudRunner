@@ -48,6 +48,8 @@ test_that("[Online] Test deployments", {
 
   # deploy a website using package's NEWS.md
   dir.create("test_website")
+  on.exit(unlink("test_website", recursive = TRUE))
+
   knitr::knit2html(system.file("NEWS.md",package="googleCloudRunner"),
                    output = "test_website/NEWS.html")
   ws <- cr_deploy_html("test_website")
@@ -57,9 +59,11 @@ test_that("[Online] Test deployments", {
   expect_equal(httr::GET(paste0(ws$status$url,"/blah"))$status_code, 404)
   expect_equal(httr::GET(paste0(ws$status$url,"/NEWS.html"))$status_code, 200)
 
+
+
   # test kaniko_cache
   ccd <- cr_deploy_docker(system.file("example/", package="googleCloudRunner"),
-                          kaniko_cache = 6L)
+                          kaniko_cache = TRUE)
   expect_equal(ccd$status,"SUCCESS")
 
 

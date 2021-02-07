@@ -76,9 +76,9 @@ cr_jwt_create <- function(the_url,
 #' @export
 #' @importFrom httr POST content
 cr_jwt_token <- function(signed_jwt, the_url){
-  auth_url = "https://www.googleapis.com/oauth2/v4/token"
+  auth_url <- "https://www.googleapis.com/oauth2/v4/token"
 
-  params = list(
+  params <- list(
     grant_type = "urn:ietf:params:oauth:grant-type:jwt-bearer",
     assertion = signed_jwt
   )

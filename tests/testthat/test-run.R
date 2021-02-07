@@ -47,7 +47,7 @@ test_that("[Online] Test deployments", {
   expect_true(deleteme)
 
   # deploy a website using package's NEWS.md
-  dir.create("test_website")
+  dir.create("test_website", showWarnings = FALSE)
   knitr::knit2html(system.file("NEWS.md",package="googleCloudRunner"),
                    output = "test_website/NEWS.html")
   ws <- cr_deploy_html("test_website")

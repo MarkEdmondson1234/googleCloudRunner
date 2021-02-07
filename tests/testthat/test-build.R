@@ -111,7 +111,7 @@ test_that("availableSecrets works ok", {
 
   parsed_logs <- cr_build_logs(the_build)
 
-  expect_snapshot(parsed_logs[[11]])
+  expect_true(any(grepl("A_SECRET_VALUE SECOND_SECRET", parsed_logs)))
 
 
 })
