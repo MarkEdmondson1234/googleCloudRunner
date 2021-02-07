@@ -1,14 +1,9 @@
 steps:
-- name: 'gcr.io/cloud-builders/gcloud'
-  id: decrypt gitkey
+- name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
   args:
-  - kms
-  - decrypt
-  - --ciphertext-file=cb_rsa.enc
-  - --plaintext-file=/root/.ssh/id_rsa
-  - --location=global
-  - --keyring=my-keyring
-  - --key=github-key
+  - -c
+  - gcloud secrets versions access latest --secret=github-ssh > /root/.ssh/id_rsa
   volumes:
   - name: 'ssh'
     path: /root/.ssh

@@ -8,15 +8,11 @@ options:
   - 'NOT_CRAN=true'
 timeout: "2400s"
 steps:
-- name: 'gcr.io/cloud-builders/gcloud'
+- name: gcr.io/cloud-builders/gcloud
+  entrypoint: bash
   args:
-  - kms
-  - decrypt
-  - --ciphertext-file=auth.json.enc
-  - --plaintext-file=auth.json
-  - --location=global
-  - --keyring=my-keyring
-  - --key=gce-auth-file
+  - -c
+  - gcloud secrets versions access latest --secret=googlecloudrunner-test-key > /workspace/auth.json
 - name: 'gcr.io/gcer-public/packagetools:latest'
   id: Devtools checks
   args:
