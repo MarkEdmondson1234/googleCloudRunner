@@ -123,7 +123,7 @@ cr_build_list <- function(filter = NULL,
   # a list of build objects
   if(!data_frame_output) return(objs)
 
-  myMessage("Parsing build objects into data.frame", level = 3)
+  myMessage("Parsing build objects into data.frame", level = 2)
   # make a data.frame output
   b_df <- Reduce(
     rbind,

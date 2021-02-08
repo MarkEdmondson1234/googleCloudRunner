@@ -67,6 +67,9 @@ cr_deploy_badger <- function(badger_image = "gcr.io/hightowerlabs/badger:0.0.1",
 #' @rdname cr_deploy_badger
 #' @export
 #'
+#' @param dir The directory containing the README.md file
+#' @param projectId The projectId running the badger badge for a buildtrigger
+#'
 #' @details
 #'
 #' \code{cr_build_logs_badger} is intended to be run from the root directory of

@@ -19,6 +19,10 @@ cr_build_logs_badger(dir = getwd(), projectId = cr_project_get())
 \item{json}{The clientId JSON file of the project to create within}
 
 \item{region}{The Cloud Run region}
+
+\item{dir}{The directory containing the README.md file}
+
+\item{projectId}{The projectId running the badger badge for a buildtrigger}
 }
 \description{
 This uses \url{https://github.com/kelseyhightower/badger} to create badges you can display in README.md etc. showing the current status of a Cloud Build
