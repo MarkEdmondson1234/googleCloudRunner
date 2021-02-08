@@ -2,6 +2,7 @@
 % Please edit documentation in R/badger.R
 \name{cr_deploy_badger}
 \alias{cr_deploy_badger}
+\alias{cr_build_logs_badger}
 \title{Deploy a Cloud Run app to display build badges}
 \usage{
 cr_deploy_badger(
@@ -9,6 +10,8 @@ cr_deploy_badger(
   json = Sys.getenv("GAR_CLIENT_JSON"),
   region = cr_region_get()
 )
+
+cr_build_logs_badger(dir = getwd(), projectId = cr_project_get())
 }
 \arguments{
 \item{badger_image}{The docker image from the badger project to use}
@@ -19,4 +22,10 @@ cr_deploy_badger(
 }
 \description{
 This uses \url{https://github.com/kelseyhightower/badger} to create badges you can display in README.md etc. showing the current status of a Cloud Build
+}
+\details{
+\code{cr_build_logs_badger} is intended to be run from the root directory of
+an R package that holds a README.md file containing a \code{![Cloudbuild]}
+badge as created by \code{cr_deploy_badger()}.  The function will scan the
+README.md file for the correct triggerId to pass to \link{cr_build_logs_last}
 }

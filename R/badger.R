@@ -63,3 +63,34 @@ cr_deploy_badger <- function(badger_image = "gcr.io/hightowerlabs/badger:0.0.1",
   myMessage(sprintf("![CloudBuild](%s/build/status?project=%s&id={your-trigger-id})",
                     run$status$url, projectId), level = 3)
 }
+
+#' @rdname cr_deploy_badger
+#' @export
+#'
+#' @details
+#'
+#' \code{cr_build_logs_badger} is intended to be run from the root directory of
+#' an R package that holds a README.md file containing a \code{![Cloudbuild]}
+#' badge as created by \code{cr_deploy_badger()}.  The function will scan the
+#' README.md file for the correct triggerId to pass to \link{cr_build_logs_last}
+cr_build_logs_badger <- function(dir = getwd(), projectId = cr_project_get()){
+
+  read_file <- file.path(dir, "README.md")
+  if(!file.exists(read_file)){
+    stop("Couldn't find README.md file at location ", read_file, call. = FALSE)
+  }
+
+  lines <- readLines(read_file)
+  badger_line <- lines[grepl("\\!\\[cloudbuild\\]", lines, ignore.case = TRUE)]
+  if(length(badger_line) == 0){
+    stop("Couldn't find '![CloudBuild]({badger-url})' within README.md",
+         call. = FALSE)
+  }
+
+  trigger_id <- strsplit(badger_line, "&id=")[[1]][[2]]
+  trigger_id <- strsplit(trigger_id, ")")[[1]]
+
+  bs <- cr_build_logs_last(trigger_id = trigger_id, projectId = projectId)
+
+  invisible(bs)
+}

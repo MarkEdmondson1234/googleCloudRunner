@@ -1,4 +1,6 @@
 test_that("Build Listings and Filters",{
+  skip_on_travis()
+  skip_on_cran()
 
   # builds for this package's buildtrigger
   gcr_trigger_id <- "0a3cade0-425f-4adc-b86b-14cde51af674"
@@ -21,5 +23,14 @@ test_that("Build Listings and Filters",{
                                       ">",
                                       as.Date("2020-01-06") - 5)
   expect_snapshot(date_filter)
+
+})
+
+test_that("Build logs work",{
+  skip_on_travis()
+  skip_on_cran()
+
+  last_logs <- cr_build_logs_last("package-checks")
+  expect_true(is.character(last_logs))
 
 })
