@@ -23,5 +23,4 @@
 ^cloud_build$
 ^\.devcontainer$
 ^cloudbuild-pkgdown\.yml$
-^tests$
 ^auth\.json$
