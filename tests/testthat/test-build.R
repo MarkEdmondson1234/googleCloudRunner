@@ -62,6 +62,8 @@ test_that("[Online] Test build artifacts", {
 
 
 test_that("availableSecrets works ok", {
+  skip_on_travis()
+  skip_on_cran()
 
   s1 <- cr_build_yaml_secrets("SECRET","test_secret")
   s2 <- cr_build_yaml_secrets("SECRET2","test_secret_two")
