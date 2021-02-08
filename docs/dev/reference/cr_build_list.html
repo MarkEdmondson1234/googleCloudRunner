@@ -172,7 +172,7 @@ cr_build_list_filter outputs valid filters for cr_build_list's filter argument" 
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Lists the build</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/build_admin.R'><code>R/build_admin.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/build_list.R'><code>R/build_list.R</code></a></small>
     <div class="hidden name"><code>cr_build_list.Rd</code></div>
     </div>
 
@@ -297,7 +297,7 @@ cr_build_list_filter outputs valid filters for cr_build_list's filter argument" 
  <span class='co'># get logs for last build</span>
  <span class='va'>last_build</span> <span class='op'>&lt;-</span> <span class='va'>gcr_builds</span><span class='op'>[</span><span class='fl'>1</span>,<span class='op'>]</span>
  <span class='va'>last_build_logs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_logs.html'>cr_build_logs</a></span><span class='op'>(</span>log_url <span class='op'>=</span> <span class='va'>last_build</span><span class='op'>$</span><span class='va'>bucketLogUrl</span><span class='op'>)</span>
- <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>last_logs</span>, <span class='fl'>10</span><span class='op'>)</span>
+ <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>last_build_logs</span>, <span class='fl'>10</span><span class='op'>)</span>
 
 <span class='op'>}</span>
 </div></pre>

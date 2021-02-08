@@ -171,7 +171,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Download logs from a Cloud Build</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/build_admin.R'><code>R/build_admin.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/build_logs.R'><code>R/build_logs.R</code></a></small>
     <div class="hidden name"><code>cr_build_logs.Rd</code></div>
     </div>
 
@@ -179,7 +179,13 @@
     <p>This lets you download the logs to your local R session, rather than viewing them in the Cloud Console.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_build_logs</span><span class='op'>(</span>built <span class='op'>=</span> <span class='cn'>NULL</span>, log_url <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cr_build_logs</span><span class='op'>(</span>built <span class='op'>=</span> <span class='cn'>NULL</span>, log_url <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+
+<span class='fu'>cr_build_logs_last</span><span class='op'>(</span>
+  trigger_name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  trigger_id <span class='op'>=</span> <span class='cn'>NULL</span>,
+  projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -192,6 +198,18 @@
       <th>log_url</th>
       <td><p>You can optionally instead of <code>built</code> provide the direct gs:// URI to the log here.  It is in the format <code>gs://{{bucket}}/log-{{buildId}}.txt</code></p></td>
     </tr>
+    <tr>
+      <th>trigger_name</th>
+      <td><p>The trigger name to check, will be used to look up trigger_id</p></td>
+    </tr>
+    <tr>
+      <th>trigger_id</th>
+      <td><p>If supplied, trigger_name will be ignored</p></td>
+    </tr>
+    <tr>
+      <th>projectId</th>
+      <td><p>The project containing the trigger_id</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -200,6 +218,7 @@
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='https://cloud.google.com/cloud-build/docs/securing-builds/store-manage-build-logs'>https://cloud.google.com/cloud-build/docs/securing-builds/store-manage-build-logs</a></p>
+<p><a href='cr_deploy_badger.html'>cr_build_logs_badger</a> to see logs for a badger created build</p>
 <p>Other Cloud Build functions: 
 <code><a href='Build.html'>Build</a>()</code>,
 <code><a href='RepoSource.html'>RepoSource</a>()</code>,
@@ -235,6 +254,20 @@
 <span class='co'># [8] "app-engine-go 1.9.71"</span>
 <span class='co'># ...</span>
  <span class='op'>}</span>
+
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+
+<span class='co'># get your trigger name</span>
+<span class='va'>ts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_list.html'>cr_buildtrigger_list</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>ts</span><span class='op'>$</span><span class='va'>buildTriggerName</span>
+
+<span class='va'>my_trigger</span> <span class='op'>&lt;-</span> <span class='st'>"package-checks"</span>
+<span class='va'>last_logs</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_logs_last</span><span class='op'>(</span><span class='va'>my_trigger</span><span class='op'>)</span>
+
+<span class='va'>my_trigger_id</span> <span class='op'>&lt;-</span> <span class='st'>"0a3cade0-425f-4adc-b86b-14cde51af674"</span>
+<span class='va'>last_logs</span> <span class='op'>&lt;-</span> <span class='fu'>cr_build_logs_last</span><span class='op'>(</span>trigger_id <span class='op'>=</span> <span class='va'>my_trigger_id</span><span class='op'>)</span>
+
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
