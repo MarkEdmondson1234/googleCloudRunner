@@ -13,7 +13,7 @@ test_that("Build Listings and Filters",{
   # get logs for last build
   last_build <- gcr_builds[1,]
   last_build_logs <- cr_build_logs(log_url = last_build$bucketLogUrl)
-  expect_s3_class(last_build_logs, "character")
+  expect_true(is.character(last_build_logs))
 
   expect_error(cr_build_list_filter("blah","=","boo"))
 
