@@ -64,7 +64,7 @@
 #'  # get logs for last build
 #'  last_build <- gcr_builds[1,]
 #'  last_build_logs <- cr_build_logs(log_url = last_build$bucketLogUrl)
-#'  tail(last_logs, 10)
+#'  tail(last_build_logs, 10)
 #'
 #' }
 cr_build_list <- function(filter = NULL,
