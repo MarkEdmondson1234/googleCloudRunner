@@ -12,6 +12,9 @@ test_that("[Online] Test schedule jobs", {
   # in case a failed test run left it up
   try(cr_schedule_delete(id))
 
+  ss <- cr_schedule_list()
+  expect_s3_class(ss, "data.frame")
+
   s1 <- cr_schedule(name=id, schedule = "11 11 * * *",
                     httpTarget = cr_build_schedule_http(build1))
   expect_equal(s1$name, fid)
