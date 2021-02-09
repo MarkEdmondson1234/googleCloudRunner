@@ -88,21 +88,32 @@ cr_build_logs_last <- function(trigger_name = NULL,
   if(is.null(trigger_name) && is.null(trigger_id)){
     stop("Must supply one of trigger_name or trigger_id", call. = FALSE)
   }
+  cli::cli_process_start("Downloading logs")
 
   if(is.null(trigger_id)){
+    cli::cli_process_update(msg = "{symbol$arrow_right} Downloading buildtriggers")
     ts <- cr_buildtrigger_list(projectId = projectId)
+
     trigger_id <- ts[ts$buildTriggerName == trigger_name,"buildTriggerId"]
   }
 
   gcr_bt <- cr_build_list_filter(
     "trigger_id",
     value = trigger_id)
+  cli::cli_status_update(msg = "{symbol$arrow_right} Downloading builds")
   gcr_builds <- cr_build_list(gcr_bt, projectId = projectId)
 
   # get logs for last build
   last_build <- gcr_builds[1,]
   last_build_logs <- cr_build_logs(log_url = last_build$bucketLogUrl)
-  cli::cli_alert_info("Last 10 lines of build log")
+
+  cli::cli_process_done()
+  cli::cli_h1("Build {last_build$status}")
+  cli::cli_ul()
+  cli::cli_li("BuildTrigger: {last_build$buildTriggerName} - {last_build$buildTriggerId}")
+  cli::cli_li("Started: {last_build$buildStartTime} - Finished: {last_build$buildFinishTime}")
+  cli::cli_end()
+  cli::cli_alert_info("Last 10 lines: {last_build$logUrl}")
 
   cat(cli::col_grey(paste(utils::tail(last_build_logs, 10), collapse = "\n")))
 
