@@ -16,6 +16,7 @@ extract_project_number <- function(json){
 #' @noRd
 do_build_service_setup <- function(){
 
+  cli_alert_info("Checking Cloud Build service email...")
   json <- Sys.getenv("GAR_CLIENT_JSON")
   build_email <- paste0(extract_project_number(json),
                         "@cloudbuild.gserviceaccount.com")
@@ -223,8 +224,7 @@ get_bucket_setup <- function(){
           return(NULL)
         }
         make_bucket_name <- readline(
-          paste("What name will the bucket be? It will be created in your project: ",
-                Sys.getenv("GCE_DEFAULT_PROJECT_ID"),": ")
+          "What name will the bucket be? :"
         )
         new_bucket <- googleCloudStorageR::gcs_create_bucket(
           make_bucket_name, projectId = cr_project_get()

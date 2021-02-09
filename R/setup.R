@@ -51,7 +51,8 @@ cr_setup <- function(){
 
   if(we_edit) return(invisible(""))
 
-  gar_setup_auth_check("GCE_AUTH_FILE")
+  gar_setup_auth_check("GCE_AUTH_FILE",
+                       scope = "https://www.googleapis.com/auth/cloud-platform")
 
   cli_rule()
   we_edit <- op == 4
