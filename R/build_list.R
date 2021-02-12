@@ -11,7 +11,7 @@
 #'
 #' When \code{data_frame_output=TRUE} results are sorted with the latest buildStartTime in the first row
 #'
-#' If filter is \code{NULL} then this will return all historic builds.  To use filters, ensure you use \code{""} and not \code{''} to quote the fields e.g. \code{'status!="SUCCESS"'} and \code{'status="SUCCESS"'} - see \href{Filtering build results docs}{https://cloud.google.com/cloud-build/docs/view-build-results#filtering_build_results_using_queries}.  \code{cr_build_list_filter} helps you construct valid filters.  More complex filters can be done using a combination of \link{paste} and \code{cr_build_list_filter()} - see examples
+#' If filter is \code{NULL} then this will return all historic builds.  To use filters, ensure you use \code{""} and not \code{''} to quote the fields e.g. \code{'status!="SUCCESS"'} and \code{'status="SUCCESS"'} - see \href{https://cloud.google.com/cloud-build/docs/view-build-results#filtering_build_results_using_queries}{Filtering build results docs}.  \code{cr_build_list_filter} helps you construct valid filters.  More complex filters can be done using a combination of \link{paste} and \code{cr_build_list_filter()} - see examples
 #'
 #' @seealso \url{https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/list}
 #'
@@ -175,8 +175,24 @@ cr_build_list_filter <- function(
   operator = c("=","!=",">",">=","<","<="),
   value){
 
+  if(is.null(field)) return(NULL)
+
   operator <- match.arg(operator)
-  assert_that(is.string(field))
+
+  if(is.buildtrigger_repo(field)){
+    # create multiple filters based on repo
+    return(
+        cr_build_list_filter(
+          "source.repo_source.repo_name",
+          "=",
+          paste0(field$repo$owner,"/", field$repo$name)
+        )
+    )
+
+  } else {
+    assert_that(is.string(field))
+  }
+
 
   the_fields <- c(
     "status",

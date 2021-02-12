@@ -41,7 +41,7 @@ cr_build_list_filter outputs valid filters for \code{cr_build_list}'s filter arg
 \details{
 When \code{data_frame_output=TRUE} results are sorted with the latest buildStartTime in the first row
 
-If filter is \code{NULL} then this will return all historic builds.  To use filters, ensure you use \code{""} and not \code{''} to quote the fields e.g. \code{'status!="SUCCESS"'} and \code{'status="SUCCESS"'} - see \href{Filtering build results docs}{https://cloud.google.com/cloud-build/docs/view-build-results#filtering_build_results_using_queries}.  \code{cr_build_list_filter} helps you construct valid filters.  More complex filters can be done using a combination of \link{paste} and \code{cr_build_list_filter()} - see examples
+If filter is \code{NULL} then this will return all historic builds.  To use filters, ensure you use \code{""} and not \code{''} to quote the fields e.g. \code{'status!="SUCCESS"'} and \code{'status="SUCCESS"'} - see \href{https://cloud.google.com/cloud-build/docs/view-build-results#filtering_build_results_using_queries}{Filtering build results docs}.  \code{cr_build_list_filter} helps you construct valid filters.  More complex filters can be done using a combination of \link{paste} and \code{cr_build_list_filter()} - see examples
 
 Use \link{POSIXct} via functions like \link{Sys.time} to have them formatted into valid timestamps for time related fields, or \link{Date} objects via functions like \link{Sys.Date}
 }
