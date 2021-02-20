@@ -21,7 +21,7 @@ cr_build_upload_gcs(
 
 \item{predefinedAcl}{The ACL rules for the object uploaded. Set to "bucketLevel" for buckets with bucket level access enabled}
 
-\item{deploy_folder}{Which folder to deploy from}
+\item{deploy_folder}{Which folder to deploy from - this will mean the files uploaded will be by default in \code{/workspace/deploy/}}
 }
 \value{
 A Source object

@@ -107,6 +107,8 @@ storage <- cr_build_upload_gcs("my_folder")
 cr_build(my_yaml, source = storage)
 ```
 
+By default this will place your local folder's contents in the `/workspace/deploy/` folder.  For buildsteps to access those files you may want to add `dir="deploy"` to them so they will have their working directory start from there. 
+
 ## Cloud Build macros
 
 Cloud Builds can use reserved macros and variables to help with deployments in a continuous development situation.  For instance, files can be named according to the Git branch they are committed from.  These are listed in `?Build` and reproduced below:

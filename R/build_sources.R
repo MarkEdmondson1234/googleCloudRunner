@@ -222,7 +222,7 @@ is.gar_StorageSource <- function(x){
 #' @param remote The name of the folder in your bucket
 #' @param bucket The Google Cloud Storage bucket to upload to
 #' @param predefinedAcl The ACL rules for the object uploaded. Set to "bucketLevel" for buckets with bucket level access enabled
-#' @param deploy_folder Which folder to deploy from
+#' @param deploy_folder Which folder to deploy from - this will mean the files uploaded will be by default in \code{/workspace/deploy/}
 #'
 #' @details
 #'
@@ -283,7 +283,11 @@ cr_build_upload_gcs <- function(local,
   gcs_upload(tar_file, bucket = bucket, name = remote,
              predefinedAcl = predefinedAcl)
 
-
+  myMessage("When used in builds files will be available in folder:",
+            paste0("/workspace/",deploy_folder), level = 3)
+  myMessage("Example: cr_buildstep_r('list.files()'",
+            paste0("dir='",deploy_folder,"')"),
+            level = 3)
 
   cr_build_source(StorageSource(bucket = bucket,
                                 object = remote))
