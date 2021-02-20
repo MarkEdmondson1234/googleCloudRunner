@@ -285,7 +285,7 @@ cr_build_upload_gcs <- function(local,
 
   myMessage("When used in builds files will be available in folder:",
             paste0("/workspace/",deploy_folder), level = 3)
-  myMessage("Example: cr_buildstep_r('list.files()'",
+  myMessage("Example: cr_buildstep_r('list.files()',",
             paste0("dir='",deploy_folder,"')"),
             level = 3)
 
