@@ -6,7 +6,7 @@
 * Add `cr_build_list()` and `cr_build_list_filter()` 
 * Add `cr_build_logs()` and `cr_build_logs_last()` and `cr_build_logs_badger()`
 * Made Cloud Build status messages prettier
-* Add messaging to `cr_build_upload_gcs()` saying where deploy folder is (#110)
+* Add messaging to `cr_build_upload_gcs()` saying where deploy folder is (#110) and clean up tar.gz folder correctly
 
 # googleCloudRunner 0.4.1
 

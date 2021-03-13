@@ -33,6 +33,8 @@ Or the development version via:
 remotes::install_github("MarkEdmondson1234/googleCloudRunner")
 ```
 
+The [dev version of the website is here](https://code.markedmondson.me/googleCloudRunner/dev/) which may include documentation of features not yet on CRAN.
+
 ## Usage
 
 Browse the [googleCloudRunner website](https://code.markedmondson.me/googleCloudRunner/) for topics on how to use:
@@ -61,3 +63,5 @@ If you blog anything interesting about the package let me know and I will list i
 * Arben documents his experience on how he got started [scheduling BigQuery uploads using Docker and R](https://arbenkqiku.github.io/create-docker-image-with-r-and-deploy-as-cron-job-on-google-cloud)
 * Michał Ludwicki was a huge help in mentoring Arben for the post above - he also has created a GitHub repo of some [useful example files for googleCloudRunner scripts](https://github.com/MLud/GCP_Rscheduler)
 * Sam Terfa has a guide on how to use googleCloudRunner to [create an R API you can use GoogleSheets](https://towardsdatascience.com/using-r-and-python-in-google-sheets-formulas-b397b302098) to create its front end 
+* Louis shows how to [create and deploy your own Python optimisation API using googleCloudRunner](https://louis-boguchwal.medium.com/create-and-deploy-your-own-optimization-api-7b4275f159c9)
+

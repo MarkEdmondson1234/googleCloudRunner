@@ -274,8 +274,8 @@ cr_build_upload_gcs <- function(local,
       files = deploy_folder,
       compression = "gzip")
 
-  on.exit(unlink(tar_file))
-  on.exit(unlink(deploy_folder, recursive = TRUE))
+  on.exit(unlink(tar_file), add=TRUE)
+  on.exit(unlink(deploy_folder, recursive = TRUE), add=TRUE)
 
   myMessage(paste("Uploading",
                   tar_file, "to", paste0(bucket,"/", remote)),
@@ -283,11 +283,8 @@ cr_build_upload_gcs <- function(local,
   gcs_upload(tar_file, bucket = bucket, name = remote,
              predefinedAcl = predefinedAcl)
 
-  myMessage("When used in builds files will be available in folder:",
-            paste0("/workspace/",deploy_folder), level = 3)
-  myMessage("Example: cr_buildstep_r('list.files()',",
-            paste0("dir='",deploy_folder,"')"),
-            level = 3)
+  myMessage("Google Cloud Storage Source enabled:",
+            paste0("/workspace/",deploy_folder,"/"), level = 3)
 
   cr_build_source(StorageSource(bucket = bucket,
                                 object = remote))
