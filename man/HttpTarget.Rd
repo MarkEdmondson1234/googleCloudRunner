@@ -38,6 +38,7 @@ https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.job
 Other Cloud Scheduler functions: 
 \code{\link{Job}()},
 \code{\link{cr_build_schedule_http}()},
+\code{\link{cr_run_schedule_http}()},
 \code{\link{cr_schedule_delete}()},
 \code{\link{cr_schedule_get}()},
 \code{\link{cr_schedule_list}()},

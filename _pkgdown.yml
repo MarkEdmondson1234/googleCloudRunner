@@ -112,6 +112,7 @@ reference:
     contents:
       - matches("cr_schedule")
       - cr_build_schedule_http
+      - cr_run_schedule_http
       - Job
       - HttpTarget
 

@@ -267,15 +267,15 @@ cr_buildstep_run <- function(name,
   if(allowUnauthenticated){
     auth_calls <- "--allow-unauthenticated"
     #sometimes unauth fails, so attempt to fix as per warning suggestion
-    auth_step <- cr_buildstep_gcloud("gcloud",
-                              c("run", "services", "add-iam-policy-binding",
-                                "--region", region,
-                                "--member=allUsers",
-                                "--role=roles/run.invoker",
-                                "--platform", "managed",
-                                name),
-                              id = "auth cloudrun",
-                              ...)
+    auth_step <- cr_buildstep_gcloud(
+      args = c("run", "services", "add-iam-policy-binding",
+               "--region", region,
+               "--member=allUsers",
+               "--role=roles/run.invoker",
+               "--platform", "managed",
+               name),
+      id = "auth cloudrun",
+      ...)
   }
 
   if(is.null(port)){
@@ -292,19 +292,20 @@ cr_buildstep_run <- function(name,
     assert_that(is.character(gcloud_args))
   }
 
-  deploy_step <- cr_buildstep_gcloud(c("beta","run","deploy", name,
-                                       "--image", image,
-                                       "--region", region,
-                                       "--platform", "managed",
-                                       "--concurrency", concurrency,
-                                       "--port", port,
-                                       "--max-instances", max_instances,
-                                       "--memory", memory,
-                                       "--cpu", cpu,
-                                       env_vars,
-                                       auth_calls,
-                                       gcloud_args),
-                                     id = "deploy cloudrun",...)
+  deploy_step <- cr_buildstep_gcloud(
+    args = c("beta","run","deploy", name,
+             "--image", image,
+             "--region", region,
+             "--platform", "managed",
+             "--concurrency", concurrency,
+             "--port", port,
+             "--max-instances", max_instances,
+             "--memory", memory,
+             "--cpu", cpu,
+             env_vars,
+             auth_calls,
+             gcloud_args),
+    id = "deploy cloudrun",...)
 
   c(deploy_step, auth_step)
 
@@ -555,7 +556,7 @@ cr_buildstep_decrypt <- function(cipher,
     is.null(dots$prefix),
     is.null(dots$entrypoint)
   )
-  cr_buildstep_gcloud(c("kms", "decrypt",
+  cr_buildstep_gcloud(args = c("kms", "decrypt",
                         "--ciphertext-file", cipher,
                         "--plaintext-file", plain,
                         "--location", location,

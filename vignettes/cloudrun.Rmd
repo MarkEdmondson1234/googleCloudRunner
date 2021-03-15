@@ -415,6 +415,20 @@ res <- cr_jwt_with(GET("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/h
 content(res)
 ```
 
+## Scheduling Cloud Run applications
+
+Via [Cloud Scheduler](https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html) you can set up a scheduled hit of your HTTP endpoints, via GET, POST or any other methods you have coded into your app.  `cr_run_schedule_http()` will help you create the HTTP endpoint for you to pass to `cr_schedule()`:
+
+```r
+run_me <- cr_run_schedule_http(
+       "https://example-ewjogewawq-ew.a.run.app/echo?msg=blah",
+      http_method = "GET"
+     )
+
+cr_schedule("cloud-run-scheduled", schedule = "4 16 * * *", httpTarget = run_me)
+
+```
+
 ## Deploying from another Google Cloud project
 
 By default the build will only allow deployments from the same Google Cloud Project - if you want to deploy container images from other projects you need to give the Cloud Run Service Agent for the Cloud Run project access to the source project.  See this [Google help file](https://cloud.google.com/run/docs/deploying#other-projects).

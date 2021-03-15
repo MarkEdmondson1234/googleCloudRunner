@@ -33,6 +33,20 @@ Update a schedule by specifying the same name and the `overwrite=TRUE` flag.  Yo
 cr_schedule("my-webhook", "12 6 * * *", overwrite=TRUE)
 ```
 
+## Schedule Cloud Run applications
+
+Via Cloud Scheduler you can set up a scheduled hit of your HTTP endpoints, via GET, POST or any other methods you have coded into your app.  `cr_run_schedule_http()` will help you create the HTTP endpoint for you to pass to `cr_schedule()`:
+
+```r
+run_me <- cr_run_schedule_http(
+       "https://example-ewjogewawq-ew.a.run.app/echo?msg=blah",
+      http_method = "GET"
+     )
+
+cr_schedule("cloud-run-scheduled", schedule = "4 16 * * *", httpTarget = run_me)
+
+```
+
 ## Schedule an R script
 
 A common use case is scheduling an R script.  This is provided by `cr_deploy_r()`
