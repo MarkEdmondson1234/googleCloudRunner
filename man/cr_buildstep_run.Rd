@@ -15,6 +15,7 @@ cr_buildstep_run(
   memory = "256Mi",
   cpu = 1,
   env_vars = NULL,
+  gcloud_args = NULL,
   ...
 )
 }
@@ -38,6 +39,8 @@ cr_buildstep_run(
 \item{cpu}{1 or 2 CPUs for your instance}
 
 \item{env_vars}{Environment arguments passed to the Cloud Run container at runtime.  Distinct from \code{env} that run at build time.}
+
+\item{gcloud_args}{a character string of arguments that can be sent to the gcloud command not covered by other parameters of this function}
 
 \item{...}{passed on to \link{cr_buildstep}}
 }

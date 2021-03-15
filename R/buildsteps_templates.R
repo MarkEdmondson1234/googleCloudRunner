@@ -249,6 +249,7 @@ cr_buildstep_run <- function(name,
                              memory = "256Mi",
                              cpu = 1,
                              env_vars = NULL,
+                             gcloud_args = NULL,
                              ...){
 
   # don't allow dot names that would break things
@@ -260,10 +261,13 @@ cr_buildstep_run <- function(name,
     is.null(dots$id)
   )
 
+  auth_calls <- "--no-allow-unauthenticated"
+  auth_step <- NULL
+
   if(allowUnauthenticated){
     auth_calls <- "--allow-unauthenticated"
     #sometimes unauth fails, so attempt to fix as per warning suggestion
-    auth_step <- cr_buildstep("gcloud",
+    auth_step <- cr_buildstep_gcloud("gcloud",
                               c("run", "services", "add-iam-policy-binding",
                                 "--region", region,
                                 "--member=allUsers",
@@ -272,9 +276,6 @@ cr_buildstep_run <- function(name,
                                 name),
                               id = "auth cloudrun",
                               ...)
-  } else {
-    auth_calls <- "--no-allow-unauthenticated"
-    auth_step <- NULL
   }
 
   if(is.null(port)){
@@ -287,24 +288,25 @@ cr_buildstep_run <- function(name,
     env_vars <- "--clear-env-vars"
   }
 
-  c(
-    cr_buildstep("gcloud",
-                   c("beta","run","deploy", name,
-                     "--image", image,
-                     "--region", region,
-                     "--platform", "managed",
-                     "--concurrency", concurrency,
-                     "--port", port,
-                     "--max-instances", max_instances,
-                     "--memory", memory,
-                     "--cpu", cpu,
-                     env_vars,
-                     auth_calls
-                   ),
-                   id = "deploy cloudrun",
-                 ...),
-      auth_step
-    )
+  if(!is.null(gcloud_args)){
+    assert_that(is.character(gcloud_args))
+  }
+
+  deploy_step <- cr_buildstep_gcloud(c("beta","run","deploy", name,
+                                       "--image", image,
+                                       "--region", region,
+                                       "--platform", "managed",
+                                       "--concurrency", concurrency,
+                                       "--port", port,
+                                       "--max-instances", max_instances,
+                                       "--memory", memory,
+                                       "--cpu", cpu,
+                                       env_vars,
+                                       auth_calls,
+                                       gcloud_args),
+                                     id = "deploy cloudrun",...)
+
+  c(deploy_step, auth_step)
 
 }
 
@@ -487,7 +489,7 @@ read_buildstep_file <- function(x,
     rchars <- x
     if(grepl(file_grep, x[[1]], ignore.case = TRUE)){
       # filepath
-      assert_that(is.readable(x), is.string(x))
+      assert_that(assertthat::is.readable(x), is.string(x))
       rchars <- readLines(x)
       myMessage("Copying into build step code from ", x, level = 2)
     }
@@ -553,8 +555,7 @@ cr_buildstep_decrypt <- function(cipher,
     is.null(dots$prefix),
     is.null(dots$entrypoint)
   )
-  cr_buildstep("gcloud",
-               args = c("kms", "decrypt",
+  cr_buildstep_gcloud(c("kms", "decrypt",
                         "--ciphertext-file", cipher,
                         "--plaintext-file", plain,
                         "--location", location,

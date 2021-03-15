@@ -16,6 +16,7 @@
 #' @param memory The format for size is a fixed or floating point number followed by a unit: G, M, or K corresponding to gigabyte, megabyte, or kilobyte, respectively, or use the power-of-two equivalents: Gi, Mi, Ki corresponding to gibibyte, mebibyte or kibibyte respectively. The default is 256Mi
 #' @param cpu 1 or 2 CPUs for your instance
 #' @param env_vars Environment arguments passed to the Cloud Run container at runtime.  Distinct from \code{env} that run at build time.
+#' @param gcloud_args a character string of arguments that can be sent to the gcloud command not covered by other parameters of this function
 #' @param ... Other arguments passed to \link{cr_buildstep_run}
 #' @inheritDotParams cr_buildstep_run
 #'
@@ -52,6 +53,7 @@ cr_run <- function(image,
                    projectId = cr_project_get(),
                    launch_browser=interactive(),
                    env_vars = NULL,
+                   gcloud_args = NULL,
                    ...) {
 
   myMessage(paste("#> Launching CloudRun image: ",image),
@@ -69,6 +71,7 @@ cr_run <- function(image,
                              memory = memory,
                              cpu = cpu,
                              env_vars = env_vars,
+                             gcloud_args = gcloud_args,
                              ...)
   )
 

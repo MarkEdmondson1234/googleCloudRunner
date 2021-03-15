@@ -18,6 +18,7 @@ cr_run(
   projectId = cr_project_get(),
   launch_browser = interactive(),
   env_vars = NULL,
+  gcloud_args = NULL,
   ...
 )
 }
@@ -47,6 +48,8 @@ cr_run(
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
 
 \item{env_vars}{Environment arguments passed to the Cloud Run container at runtime.  Distinct from \code{env} that run at build time.}
+
+\item{gcloud_args}{a character string of arguments that can be sent to the gcloud command not covered by other parameters of this function}
 
 \item{...}{
   Arguments passed on to \code{\link[=cr_buildstep_run]{cr_buildstep_run}}
