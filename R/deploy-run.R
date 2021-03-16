@@ -81,6 +81,7 @@ cr_deploy_run <- function(local,
 
 #' @param html_folder the folder containing all the html
 #' @inheritParams cr_deploy_run
+#' @param ... Other arguments passed to \link{cr_deploy_run} and eventually \link{cr_buildstep_run}
 #' @details
 #'
 #' @section cr_deploy_html:
@@ -113,7 +114,8 @@ cr_deploy_html <- function(html_folder,
                            bucket = cr_bucket_get(),
                            projectId = cr_project_get(),
                            launch_browser = interactive(),
-                           timeout=600L){
+                           timeout=600L,
+                           ...){
 
   file.copy(from = system.file("docker","nginx","default.template",
                                package = "googleCloudRunner"),
@@ -130,12 +132,14 @@ cr_deploy_html <- function(html_folder,
                 bucket = bucket,
                 projectId = projectId,
                 launch_browser = launch_browser,
-                timeout=timeout)
+                timeout=timeout,
+                ...)
 }
 
 #' Deploy a plumber API
 #' @rdname cr_deploy_run
 #' @param api A folder containing the R script using plumber called api.R and all its dependencies
+#' @param ... Other arguments passed to \link{cr_deploy_run} and eventually \link{cr_buildstep_run}
 #'
 #' @details
 #'
@@ -166,7 +170,8 @@ cr_deploy_plumber <- function(api,
                               bucket = cr_bucket_get(),
                               projectId = cr_project_get(),
                               launch_browser = interactive(),
-                              timeout=600L){
+                              timeout=600L,
+                              ...){
 
   local <- api
   local_files <- list.files(local)
@@ -195,7 +200,8 @@ cr_deploy_plumber <- function(api,
                 bucket = bucket,
                 projectId = projectId,
                 launch_browser = launch_browser,
-                timeout=timeout)
+                timeout=timeout,
+                ...)
 
 }
 

@@ -29,7 +29,8 @@ cr_deploy_html(
   bucket = cr_bucket_get(),
   projectId = cr_project_get(),
   launch_browser = interactive(),
-  timeout = 600L
+  timeout = 600L,
+  ...
 )
 
 cr_deploy_plumber(
@@ -42,7 +43,8 @@ cr_deploy_plumber(
   bucket = cr_bucket_get(),
   projectId = cr_project_get(),
   launch_browser = interactive(),
-  timeout = 600L
+  timeout = 600L,
+  ...
 )
 }
 \arguments{

@@ -44,7 +44,14 @@ cr_build_logs <- function(built = NULL, log_url = NULL){
 
   if(is.na(log_url)) return(NULL)
 
-  logs <- suppressMessages(googleCloudStorageR::gcs_get_object(log_url))
+  logs <- tryCatch(
+    suppressMessages(googleCloudStorageR::gcs_get_object(log_url)),
+    error = function(err){
+      cli::cli_alert_danger(
+        "Could not download logs - check you have Viewer role for auth key"
+      )
+      NULL
+    })
 
   readLines(textConnection(logs))
 }

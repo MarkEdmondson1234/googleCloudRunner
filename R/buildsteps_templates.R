@@ -14,11 +14,12 @@
 #'
 #' cr_buildstep_packagetests()
 #'
-cr_buildstep_packagetests <- function(test_script = NULL,
-                                      codecov_script = NULL,
-                                      codecov_token = "$_CODECOV_TOKEN",
-                                      build_image = "gcr.io/gcer-public/packagetools:latest",
-                                      env = c("NOT_CRAN=true")){
+cr_buildstep_packagetests <- function(
+  test_script = NULL,
+  codecov_script = NULL,
+  codecov_token = "$_CODECOV_TOKEN",
+  build_image = "gcr.io/gcer-public/packagetools:latest",
+  env = c("NOT_CRAN=true")){
 
   if(is.null(test_script)){
     test_script <- system.file("r_buildsteps", "devtools_tests.R",
@@ -268,7 +269,8 @@ cr_buildstep_run <- function(name,
     auth_calls <- "--allow-unauthenticated"
     #sometimes unauth fails, so attempt to fix as per warning suggestion
     auth_step <- cr_buildstep_gcloud(
-      args = c("run", "services", "add-iam-policy-binding",
+      args = c("gcloud",
+               "run", "services", "add-iam-policy-binding",
                "--region", region,
                "--member=allUsers",
                "--role=roles/run.invoker",
@@ -293,7 +295,8 @@ cr_buildstep_run <- function(name,
   }
 
   deploy_step <- cr_buildstep_gcloud(
-    args = c("beta","run","deploy", name,
+    args = c("gcloud",
+             "run","deploy", name,
              "--image", image,
              "--region", region,
              "--platform", "managed",
@@ -556,13 +559,15 @@ cr_buildstep_decrypt <- function(cipher,
     is.null(dots$prefix),
     is.null(dots$entrypoint)
   )
-  cr_buildstep_gcloud(args = c("kms", "decrypt",
-                        "--ciphertext-file", cipher,
-                        "--plaintext-file", plain,
-                        "--location", location,
-                        "--keyring", keyring,
-                        "--key", key),
-               ...)
+  cr_buildstep_gcloud(
+    args = c("gcloud",
+             "kms", "decrypt",
+             "--ciphertext-file", cipher,
+             "--plaintext-file", plain,
+             "--location", location,
+             "--keyring", keyring,
+             "--key", key),
+    ...)
 }
 
 #' Create a buildstep for using Secret Manager
