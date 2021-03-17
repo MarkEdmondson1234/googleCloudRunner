@@ -7,6 +7,17 @@ A video walk-through is available below, on [how to set-up googleCloudRunner's G
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/RrYrMsoIXsw?start=898" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
+## Manual setup
+
+You can setup the configurations directly using the below R functions:
+
+* `cr_region_set()`
+* `cr_project_set()`
+* `cr_bucket_set()`
+* `cr_email_set()`
+
+But it is recommended to use the environment arguments below.
+
 ## Setup wizard cr_setup()
 
 There is a setup function to help you configure the package.  Get started via the commands below:

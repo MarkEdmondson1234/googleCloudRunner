@@ -23,7 +23,9 @@ This returns details on a particular deployed Cloud Run service.
 Other Cloud Run functions: 
 \code{\link{cr_jwt_create}()},
 \code{\link{cr_plumber_pubsub}()},
+\code{\link{cr_run_email}()},
 \code{\link{cr_run_list}()},
+\code{\link{cr_run_schedule_http}()},
 \code{\link{cr_run}()}
 }
 \concept{Cloud Run functions}

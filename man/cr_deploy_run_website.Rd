@@ -35,7 +35,7 @@ cr_deploy_run_website(
 
 \item{r_image}{The image that will run the R code from \code{edit_r}}
 
-\item{allowUnauthenticated}{TRUE if can be reached from public HTTP address.}
+\item{allowUnauthenticated}{TRUE if can be reached from public HTTP address. If FALSE will configure a service-email called \code{(name)-cloudrun-invoker@(project-id).iam.gserviceaccount.com}}
 
 \item{region}{The region for cloud run}
 

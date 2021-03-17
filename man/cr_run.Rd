@@ -27,7 +27,7 @@ cr_run(
 
 \item{name}{Name for deployment on Cloud Run}
 
-\item{allowUnauthenticated}{TRUE if can be reached from public HTTP address.}
+\item{allowUnauthenticated}{TRUE if can be reached from public HTTP address. If FALSE will configure a service-email called \code{(name)-cloudrun-invoker@(project-id).iam.gserviceaccount.com}}
 
 \item{concurrency}{How many connections each container instance can serve. Can be up to 80.}
 
@@ -83,7 +83,9 @@ Use \link{cr_deploy_docker} or similar to create image, \link{cr_deploy_run} to 
 Other Cloud Run functions: 
 \code{\link{cr_jwt_create}()},
 \code{\link{cr_plumber_pubsub}()},
+\code{\link{cr_run_email}()},
 \code{\link{cr_run_get}()},
-\code{\link{cr_run_list}()}
+\code{\link{cr_run_list}()},
+\code{\link{cr_run_schedule_http}()}
 }
 \concept{Cloud Run functions}

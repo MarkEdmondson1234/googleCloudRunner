@@ -72,7 +72,7 @@ cr_setup_role_lookup <- function(type = c(
          bigquery = "roles/bigquery.admin",
          secrets = "roles/secretmanager.secretAccessor",
          cloudbuild = c("roles/cloudbuild.builds.builder",
-                        "roles/iam.serviceAccountUser"),
+                        "roles/iam.serviceAccountAdmin"),
          cloudstorage = c("roles/storage.admin","roles/viewer"),
          schedule_agent = "roles/cloudscheduler.serviceAgent",
          run_agent = "roles/serverless.serviceAgent"

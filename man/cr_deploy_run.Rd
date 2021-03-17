@@ -73,7 +73,7 @@ cr_deploy_plumber(
   \describe{
     \item{\code{name}}{Name for deployment on Cloud Run}
     \item{\code{image}}{The name of the image to create or use in deployment - \code{gcr.io}}
-    \item{\code{allowUnauthenticated}}{TRUE if can be reached from public HTTP address.}
+    \item{\code{allowUnauthenticated}}{TRUE if can be reached from public HTTP address. If FALSE will configure a service-email called \code{(name)-cloudrun-invoker@(project-id).iam.gserviceaccount.com}}
     \item{\code{concurrency}}{How many connections each container instance can serve. Can be up to 80.}
     \item{\code{port}}{Container port to receive requests at. Also sets the $PORT environment variable. Must be a number between 1 and 65535, inclusive. To unset this field, pass the special value "default".}
     \item{\code{max_instances}}{the desired maximum nuimber of container instances. "default" is 1000, you can get more if you requested a quota instance.  For Shiny instances on Cloud Run, this needs to be 1.}
@@ -91,7 +91,7 @@ cr_deploy_plumber(
 Deploy R api plumber scripts, HTML files or other images create the Docker image, add the build to Cloud Build and deploy to Cloud Run
 }
 \details{
-These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.
+
 
 
 
@@ -144,6 +144,10 @@ cr_deploy_plumber(system.file("example/", package = "googleCloudRunner"))
 }
 }
 \seealso{
+For scheduling Cloud Run apps \link{cr_run_schedule_http}
+
+These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.
+
 \link{cr_deploy_run_website} which has more features like rending Rmd files and deploying upon each git commit
 
 Other Deployment functions: 

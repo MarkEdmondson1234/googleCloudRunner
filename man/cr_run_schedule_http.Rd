@@ -2,52 +2,69 @@
 % Please edit documentation in R/cloudrun_schedule.R
 \name{cr_run_schedule_http}
 \alias{cr_run_schedule_http}
-\title{Create a Cloud Scheduler HTTP target for a Cloud Run URI}
+\title{Create a Cloud Scheduler HTTP target for a private Cloud Run URI}
 \usage{
-cr_run_schedule_http(
-  uri,
-  http_method = "GET",
-  body = NULL,
-  email = cr_email_get()
-)
+cr_run_schedule_http(uri, email, http_method = "GET", body = NULL)
 }
 \arguments{
 \item{uri}{The URI of your Cloud Run application}
 
+\item{email}{The service email that has invoke access to the Cloud Run application.  If using \link{cr_run} and derivatives to make the email this will include \code{(name)-cloudrun-invoker@(project-id).iam.gserviceaccount.com} - see \link{cr_run_email} to help make the email.}
+
 \item{http_method}{The HTTP verb you have set up your Cloud Run application to receive}
 
 \item{body}{(optional) An R list object that will be turned into JSON via \link[jsonlite]{toJSON} and turned into a base64-encoded string if you are doing a POST, PUT or PATCH request.}
-
-\item{email}{The email that will authenticate the job set via \link{cr_email_set}}
 }
 \value{
 A \link{HttpTarget} object for use in \link{cr_schedule}
 }
 \description{
-This enables Cloud Scheduler to trigger Cloud Run
+This enables Cloud Scheduler to trigger Cloud Run endpoints when they are not public.
 }
 \details{
 Ensure you have a service email with \link{cr_email_set} of format \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com} with Cloud Scheduler Service Agent role as per https://cloud.google.com/scheduler/docs/http-target-auth#add
 }
 \examples{
 
-run_me <- cr_run_schedule_http(
-  "https://example-ewjogewawq-ew.a.run.app/echo?msg=blah",
+\dontrun{
+# for unauthenticated apps create a HttpTarget
+run_me <- HttpTarget(
+  uri = "https://public-ewjogewawq-ew.a.run.app/echo?msg=blah",
   http_method = "GET"
 )
-
-\dontrun{
-
 cr_schedule("cloud-run-scheduled", schedule = "16 4 * * *",
             httpTarget = run_me)
 
+# for authenticated Cloud Run apps - create with allowUnauthenticated=FALSE
+cr_deploy_run("my-app", allowUnauthenticated = TRUE)
+}
+
+# deploying via R will help create a service email called my-app-cloudrun-invoker
+cr_run_email("my-app")
+
+\dontrun{
+# use that email to schedule the Cloud Run private micro-service
+
+# schedule the endpoint
+my_run_name <- "my-app"
+my_app <- cr_run_get(my_run_name)
+email <- cr_run_email(my_run_name)
+endpoint <- paste0(my_app$status$url, "/fetch_stuff")
+
+app_sched <- cr_run_schedule_http(endpoint,
+                                  http_method = "GET",
+                                  email = email)
+
+cr_schedule("cloud-run-scheduled-1",
+            schedule = "4 16 * * *",
+            httpTarget = app_sched)
 }
 
 }
 \seealso{
 https://cloud.google.com/run/docs/triggering/using-scheduler
 
-\link{cr_build_schedule_http}
+\link{cr_build_schedule_http} and \link{cr_run} and \link{cr_deploy_run}
 
 Other Cloud Scheduler functions: 
 \code{\link{HttpTarget}()},
@@ -59,5 +76,14 @@ Other Cloud Scheduler functions:
 \code{\link{cr_schedule_pause}()},
 \code{\link{cr_schedule_run}()},
 \code{\link{cr_schedule}()}
+
+Other Cloud Run functions: 
+\code{\link{cr_jwt_create}()},
+\code{\link{cr_plumber_pubsub}()},
+\code{\link{cr_run_email}()},
+\code{\link{cr_run_get}()},
+\code{\link{cr_run_list}()},
+\code{\link{cr_run}()}
 }
+\concept{Cloud Run functions}
 \concept{Cloud Scheduler functions}

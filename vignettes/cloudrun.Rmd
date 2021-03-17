@@ -417,16 +417,44 @@ content(res)
 
 ## Scheduling Cloud Run applications
 
-Via [Cloud Scheduler](https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html) you can set up a scheduled hit of your HTTP endpoints, via GET, POST or any other methods you have coded into your app.  `cr_run_schedule_http()` will help you create the HTTP endpoint for you to pass to `cr_schedule()`:
+Via [Cloud Scheduler](https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html) you can set up a scheduled hit of your HTTP endpoints, via GET, POST or any other methods you have coded into your app.  
 
 ```r
-run_me <- cr_run_schedule_http(
-       "https://example-ewjogewawq-ew.a.run.app/echo?msg=blah",
-      http_method = "GET"
-     )
+# get your previously deployed Cloud Run app
+my_app <- cr_run_get("your-cloud-run")
+
+# add any URL parameters your app needs etc.
+endpoint <- paste0(my_app$status$url, "?msg=blah")
+
+# make the HTTP target
+run_me <- HttpTarget(uri = endpoint, httpMethod = "GET")
 
 cr_schedule("cloud-run-scheduled", schedule = "4 16 * * *", httpTarget = run_me)
+```
 
+### Private Cloud Run service scheduling
+
+`cr_run_schedule_http()` will help you create the HTTP endpoint for you to pass to `cr_schedule()` that will work with Cloud Run apps with `allowUnauthenticated = FALSE` - it will by default create a service email for invoking your app called `{your-app}-cloudrun-invoker@{your-project}.iam.gserviceaccount.com`
+
+```r
+# deploy a non-public app
+cr_deploy_run("your-cloud-run", allowUnauthenticated = TRUE)
+
+# get your previously deployed Cloud Run app
+my_app <- cr_run_get("your-cloud-run")
+
+# add any URL parameters your app needs etc.
+endpoint <- paste0(my_app$status$url, "?msg=blah")
+
+# generate the service email invoker that was created upon deployment
+# "your-cloud-run-cloudrun-invoke@your-project.iam.gserviceaccount.com"
+email <- cr_run_email("your-cloud-run")
+
+# make the HTTP target for authenticated access only
+run_me <- cr_run_schedule_http(endpoint, email = email, http_method = "GET")
+
+# schedule the call to the endpoint of your Cloud run app
+cr_schedule("cloud-run-scheduled", schedule = "4 16 * * *", httpTarget = run_me)
 ```
 
 ## Deploying from another Google Cloud project

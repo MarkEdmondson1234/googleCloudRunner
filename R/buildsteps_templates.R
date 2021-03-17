@@ -262,27 +262,49 @@ cr_buildstep_run <- function(name,
     is.null(dots$id)
   )
 
-  auth_calls <- "--no-allow-unauthenticated"
-  auth_step <- NULL
+  create_service <- NULL
 
   if(allowUnauthenticated){
-    auth_calls <- "--allow-unauthenticated"
     #sometimes unauth fails, so attempt to fix as per warning suggestion
-    auth_step <- cr_buildstep_gcloud(
-      args = c("gcloud",
-               "run", "services", "add-iam-policy-binding",
-               "--region", region,
-               "--member=allUsers",
-               "--role=roles/run.invoker",
-               "--platform", "managed",
-               name),
-      id = "auth cloudrun",
-      ...)
+    auth_calls <- "--allow-unauthenticated"
+    member <- "allUsers"
+  } else {
+    # authenticated calls - add the default email
+    # https://cloud.google.com/run/docs/triggering/using-scheduler#command-line
+    service <- substr(paste0(name,"-invoker"),1,30)
+    desc <- paste("--display-name=Cloud Run Invoker for", name)
+    script <-
+      paste(
+        sprintf("gcloud iam service-accounts describe %s || ",
+                cr_run_email(service)),
+        sprintf("gcloud iam service-accounts create %s %s",
+                service, desc)
+      )
+    create_service <- cr_buildstep_bash(
+      name = "gcr.io/google.com/cloudsdktool/cloud-sdk:alpine",
+      bash_script = script,
+      id = "create invoker"
+    )
+
+    auth_calls <- "--no-allow-unauthenticated"
+    member <- sprintf("serviceAccount:%s", cr_run_email(service))
   }
+
+  auth_step <- cr_buildstep_gcloud(
+    args = c("gcloud",
+             "run", "services", "add-iam-policy-binding",
+             paste0("--region=", region),
+             paste0("--member=", member),
+             "--role=roles/run.invoker",
+             "--platform=managed",
+             name),
+    id = "auth cloudrun",
+    ...)
 
   if(is.null(port)){
     port <- "default"
   }
+
 
   if(!is.null(env_vars)){
     env_vars <- paste0("--set-env-vars=", paste(env_vars, collapse = ","))
@@ -310,7 +332,7 @@ cr_buildstep_run <- function(name,
              gcloud_args),
     id = "deploy cloudrun",...)
 
-  c(deploy_step, auth_step)
+  c(create_service, deploy_step, auth_step)
 
 }
 

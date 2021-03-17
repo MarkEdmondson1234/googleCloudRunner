@@ -11,7 +11,7 @@
 #' @param port Container port to receive requests at. Also sets the $PORT environment variable. Must be a number between 1 and 65535, inclusive. To unset this field, pass the special value "default".
 #' @param region The endpoint region for deployment
 #' @param projectId The GCP project from which the services should be listed
-#' @param allowUnauthenticated TRUE if can be reached from public HTTP address.
+#' @param allowUnauthenticated TRUE if can be reached from public HTTP address. If FALSE will configure a service-email called \code{(name)-cloudrun-invoker@(project-id).iam.gserviceaccount.com}
 #' @param max_instances the desired maximum nuimber of container instances. "default" is 1000, you can get more if you requested a quota instance.  For Shiny instances on Cloud Run, this needs to be 1.
 #' @param memory The format for size is a fixed or floating point number followed by a unit: G, M, or K corresponding to gigabyte, megabyte, or kilobyte, respectively, or use the power-of-two equivalents: Gi, Mi, Ki corresponding to gibibyte, mebibyte or kibibyte respectively. The default is 256Mi
 #' @param cpu 1 or 2 CPUs for your instance

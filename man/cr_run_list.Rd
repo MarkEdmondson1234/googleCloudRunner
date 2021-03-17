@@ -29,7 +29,9 @@ List the Cloud Run services you have access to
 Other Cloud Run functions: 
 \code{\link{cr_jwt_create}()},
 \code{\link{cr_plumber_pubsub}()},
+\code{\link{cr_run_email}()},
 \code{\link{cr_run_get}()},
+\code{\link{cr_run_schedule_http}()},
 \code{\link{cr_run}()}
 }
 \concept{Cloud Run functions}

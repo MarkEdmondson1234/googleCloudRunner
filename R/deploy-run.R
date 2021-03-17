@@ -16,6 +16,8 @@
 #' @family Deployment functions
 #' @details
 #'
+#' @seealso For scheduling Cloud Run apps \link{cr_run_schedule_http}
+#'
 #' These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.
 #'
 #' @export

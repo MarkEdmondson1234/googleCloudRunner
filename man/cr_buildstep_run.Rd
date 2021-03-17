@@ -24,7 +24,7 @@ cr_buildstep_run(
 
 \item{image}{The name of the image to create or use in deployment - \code{gcr.io}}
 
-\item{allowUnauthenticated}{TRUE if can be reached from public HTTP address.}
+\item{allowUnauthenticated}{TRUE if can be reached from public HTTP address. If FALSE will configure a service-email called \code{(name)-cloudrun-invoker@(project-id).iam.gserviceaccount.com}}
 
 \item{region}{The endpoint region for deployment}
 
