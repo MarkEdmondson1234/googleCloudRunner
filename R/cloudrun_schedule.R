@@ -79,7 +79,7 @@ cr_run_schedule_http <- function(uri,
 #' Create an invoker email for use within authenticated Cloud Run
 #'
 #' @param name Name of the Cloud Run service
-#' @param projectId The projectId where the Cloud Run service will run
+#' @param projectId The projectId where the Cloud Run service will run - set to NULL to only return the processed service name
 #'
 #' @export
 #' @family Cloud Run functions
@@ -88,5 +88,7 @@ cr_run_schedule_http <- function(uri,
 #' cr_run_email("my-run-app", "my-project")
 cr_run_email <- function(name, projectId = cr_project_get()){
   service_name <- substr(paste0(name,"-invoker"),1,30)
+  if(is.null(projectId)) return(service_name)
+
   sprintf("%s@%s.iam.gserviceaccount.com", service_name, projectId)
 }

@@ -271,7 +271,7 @@ cr_buildstep_run <- function(name,
   } else {
     # authenticated calls - add the default email
     # https://cloud.google.com/run/docs/triggering/using-scheduler#command-line
-    service <- substr(paste0(name,"-invoker"),1,30)
+    service <- cr_run_email(name,NULL)
     desc <- paste("--display-name=Cloud Run Invoker for", name)
     script <-
       paste(
