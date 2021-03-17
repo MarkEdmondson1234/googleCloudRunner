@@ -1,0 +1,45 @@
+---
+title: "GA imports into BigQuery via Polygot Cloud Builds - integrating R code with other languages"
+date: "`r Sys.Date()`"
+---
+
+Since Docker containers can hold any language within them, they offer a universal UI to combine languages.  This offers opportunities to extend other languages with R features, and give other languages access to R code without needing to know R.
+
+An example below uses:
+
+* `gcloud` - [Google's Cloud command line tool](https://cloud.google.com/sdk/gcloud/) to access Google's key management store and download an authentication file, and pushes to BigQuery
+* `gago` - [A Go package for fast downloads of Google Analytics data](https://github.com/MarkEdmondson1234/gago)
+* `R` - R code to create an Rmd file that will hold interactive forecasts of the Google Analytics data via `cr_buildstep_r()`
+* `nginx` - serve up the Rmd files rendered into HTML and hosted on Cloud Run via `cr_deploy_html()`
+
+And will perform downloading unsampled data from Google Analytics, creating a statistical report of the data and then uploading the raw data to BigQuery for further analysis.
+
+```{r, code=readLines("polygot.R"), eval=FALSE, echo = TRUE}
+```
+
+An example of the demo output is on this Cloud Run instance URL:
+`https://polygot-demo-ewjogewawq-ew.a.run.app/polygot.html`
+
+![](polygot-html.png)
+
+It also uploads the data to a BigQuery table:
+
+![](polygot-bq-load.png)
+
+This constructed cloud build can also be used outside of R, by writing out the Cloud Build file via `cr_build_write()`
+
+```r
+# write out to cloudbuild.yaml for other languages
+cr_build_write(polygot)
+# 2019-12-28 19:15:50> Writing to cloudbuild.yaml
+```
+
+This can then be scheduled as described in Cloud Scheduler section on [scheduled cloud builds](https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html).
+
+```r
+schedule_me <- cr_build_schedule_http(built)
+cr_schedule("polygot-example", "15 8 * * *", httpTarget = schedule_me)
+```
+
+An example of the cloudbuild.yaml is on GitHub [here](https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml).
+

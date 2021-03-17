@@ -135,12 +135,46 @@
     Cloud Scheduler
   </a>
 </li>
-<li>
-  <a href="../articles/usecases.html">
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fas fa-hands-helping"></span>
      
     Use Cases
+     
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/usecase-r-api-microservices.html">R API Microservices</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-shiny-cloudrun.html">Deploy Shiny on Cloud Run</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-shiny-kubernetes.html">Deploy Shiny on Kubernetes</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-package-docker-build.html">R Package Tools: Auto Docker images</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-testthat-coverage.html">R Package Tools: Testthat coverage</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-deploy-pkgdown-website.html">R Package Tools: Pkgdown websites</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-scheduled-r-builds.html">Scheduled R scripts in the Cloud</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-r-results-github.html">Save R output to GitHub</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-polygot-ga-imports-to-bigquery.html">Integrating R with other languages</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-r-event-driven-pubsub.html">Event-triggered R scripts with pub/sub</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../reference/index.html">
@@ -202,7 +236,8 @@
   bucket <span class='op'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span><span class='op'>(</span><span class='op'>)</span>,
   projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>,
   launch_browser <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span>,
-  timeout <span class='op'>=</span> <span class='fl'>600L</span>
+  timeout <span class='op'>=</span> <span class='fl'>600L</span>,
+  <span class='va'>...</span>
 <span class='op'>)</span>
 
 <span class='fu'>cr_deploy_plumber</span><span class='op'>(</span>
@@ -215,7 +250,8 @@
   bucket <span class='op'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span><span class='op'>(</span><span class='op'>)</span>,
   projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>,
   launch_browser <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span>,
-  timeout <span class='op'>=</span> <span class='fl'>600L</span>
+  timeout <span class='op'>=</span> <span class='fl'>600L</span>,
+  <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -266,13 +302,14 @@
       <td><p>Arguments passed on to <code><a href='cr_buildstep_run.html'>cr_buildstep_run</a></code></p><dl>
     <dt><code>name</code></dt><dd><p>Name for deployment on Cloud Run</p></dd>
     <dt><code>image</code></dt><dd><p>The name of the image to create or use in deployment - <code>gcr.io</code></p></dd>
-    <dt><code>allowUnauthenticated</code></dt><dd><p>TRUE if can be reached from public HTTP address.</p></dd>
+    <dt><code>allowUnauthenticated</code></dt><dd><p>TRUE if can be reached from public HTTP address. If FALSE will configure a service-email called <code>(name)-cloudrun-invoker@(project-id).iam.gserviceaccount.com</code></p></dd>
     <dt><code>concurrency</code></dt><dd><p>How many connections each container instance can serve. Can be up to 80.</p></dd>
     <dt><code>port</code></dt><dd><p>Container port to receive requests at. Also sets the $PORT environment variable. Must be a number between 1 and 65535, inclusive. To unset this field, pass the special value "default".</p></dd>
     <dt><code>max_instances</code></dt><dd><p>the desired maximum nuimber of container instances. "default" is 1000, you can get more if you requested a quota instance.  For Shiny instances on Cloud Run, this needs to be 1.</p></dd>
     <dt><code>memory</code></dt><dd><p>The format for size is a fixed or floating point number followed by a unit: G, M, or K corresponding to gigabyte, megabyte, or kilobyte, respectively, or use the power-of-two equivalents: Gi, Mi, Ki corresponding to gibibyte, mebibyte or kibibyte respectively. The default is 256Mi</p></dd>
     <dt><code>cpu</code></dt><dd><p>1 or 2 CPUs for your instance</p></dd>
     <dt><code>env_vars</code></dt><dd><p>Environment arguments passed to the Cloud Run container at runtime.  Distinct from <code>env</code> that run at build time.</p></dd>
+    <dt><code>gcloud_args</code></dt><dd><p>a character string of arguments that can be sent to the gcloud command not covered by other parameters of this function</p></dd>
   
 </dl></td>
     </tr>
@@ -288,7 +325,9 @@
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.</p>
+    
+
+
 
 
 
@@ -310,7 +349,9 @@ From that api.R you can source or call other resources in the same folder, using
 <p>The function will create a local folder called "deploy" and a tar.gz of that folder which is what is being uploaded to Google Cloud Storage</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><a href='cr_deploy_run_website.html'>cr_deploy_run_website</a> which has more features like rending Rmd files and deploying upon each git commit</p>
+    <div class='dont-index'><p>For scheduling Cloud Run apps <a href='cr_run_schedule_http.html'>cr_run_schedule_http</a></p>
+<p>These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.</p>
+<p><a href='cr_deploy_run_website.html'>cr_deploy_run_website</a> which has more features like rending Rmd files and deploying upon each git commit</p>
 <p>Other Deployment functions: 
 <code><a href='cr_deploy_docker_trigger.html'>cr_deploy_docker_trigger</a>()</code>,
 <code><a href='cr_deploy_docker.html'>cr_deploy_docker</a>()</code>,

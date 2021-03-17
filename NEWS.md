@@ -8,7 +8,7 @@
 * Made Cloud Build status messages prettier
 * Add messaging to `cr_build_upload_gcs()` saying where deploy folder is (#110) and clean up tar.gz folder correctly
 * Add `gcloud_args` to `cr_buildstep_run()` and `cr_run()` and `cr_deploy_run()` to allow more customisation (#113)
-* Add `cr_run_schedule_http()` to schedule Cloud Run HTTP calls
+* Add `cr_run_schedule_http()` to schedule Cloud Run HTTP calls (#113)
 
 # googleCloudRunner 0.4.1
 

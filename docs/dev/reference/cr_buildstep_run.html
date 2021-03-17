@@ -135,12 +135,46 @@
     Cloud Scheduler
   </a>
 </li>
-<li>
-  <a href="../articles/usecases.html">
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fas fa-hands-helping"></span>
      
     Use Cases
+     
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/usecase-r-api-microservices.html">R API Microservices</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-shiny-cloudrun.html">Deploy Shiny on Cloud Run</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-shiny-kubernetes.html">Deploy Shiny on Kubernetes</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-package-docker-build.html">R Package Tools: Auto Docker images</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-testthat-coverage.html">R Package Tools: Testthat coverage</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-deploy-pkgdown-website.html">R Package Tools: Pkgdown websites</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-scheduled-r-builds.html">Scheduled R scripts in the Cloud</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-r-results-github.html">Save R output to GitHub</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-polygot-ga-imports-to-bigquery.html">Integrating R with other languages</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-r-event-driven-pubsub.html">Event-triggered R scripts with pub/sub</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../reference/index.html">
@@ -190,6 +224,7 @@
   memory <span class='op'>=</span> <span class='st'>"256Mi"</span>,
   cpu <span class='op'>=</span> <span class='fl'>1</span>,
   env_vars <span class='op'>=</span> <span class='cn'>NULL</span>,
+  gcloud_args <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -206,7 +241,7 @@
     </tr>
     <tr>
       <th>allowUnauthenticated</th>
-      <td><p>TRUE if can be reached from public HTTP address.</p></td>
+      <td><p>TRUE if can be reached from public HTTP address. If FALSE will configure a service-email called <code>(name)-cloudrun-invoker@(project-id).iam.gserviceaccount.com</code></p></td>
     </tr>
     <tr>
       <th>region</th>
@@ -235,6 +270,10 @@
     <tr>
       <th>env_vars</th>
       <td><p>Environment arguments passed to the Cloud Run container at runtime.  Distinct from <code>env</code> that run at build time.</p></td>
+    </tr>
+    <tr>
+      <th>gcloud_args</th>
+      <td><p>a character string of arguments that can be sent to the gcloud command not covered by other parameters of this function</p></td>
     </tr>
     <tr>
       <th>...</th>

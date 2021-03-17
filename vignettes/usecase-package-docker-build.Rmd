@@ -1,0 +1,31 @@
+---
+title: "Create Docker image of a package each commit"
+date: "`r Sys.Date()`"
+---
+
+If you just want a one-off Docker image, use `cr_deploy_docker()` or make your own build via `cr_buildstep_docker()`
+
+![](gadget_docker.png)
+
+If you want the Docker image to rebuild each git commit, then you also need a build trigger.  This can be enabled using `cr_deploy_docker_trigger()`
+
+The below example builds this package's Dockerfile upon each commit, for a Dockerfile located in the `cloud_build/` folder.
+
+```r
+repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+cr_deploy_docker_trigger(repo, "test3", dir = "cloud_build")
+```
+
+### Kaniko cache
+
+A common workflow is to make lots of repeat builds of Docker images as you update the files and libraries within the Dockerfile.  If this is a heavy operation it can take 20mins+ to build the image.
+
+If it is a long build, consider using the [kaniko cache](https://cloud.google.com/cloud-build/docs/kaniko-cache) option in your Docker builds.  This caches each step of the Dockerfile so only those that are new are built, and can considerably speed up Docker build times. 
+
+To use, select the `kamiko_cache=TRUE` option in your builds:
+
+```r
+cr_deploy_docker("my_folder", kaniko_cache=TRUE)
+```
+
+

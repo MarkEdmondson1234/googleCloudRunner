@@ -90,12 +90,46 @@
     Cloud Scheduler
   </a>
 </li>
-<li>
-  <a href="../articles/usecases.html">
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fas fa-hands-helping"></span>
      
     Use Cases
+     
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="../articles/usecase-r-api-microservices.html">R API Microservices</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-shiny-cloudrun.html">Deploy Shiny on Cloud Run</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-shiny-kubernetes.html">Deploy Shiny on Kubernetes</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-package-docker-build.html">R Package Tools: Auto Docker images</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-testthat-coverage.html">R Package Tools: Testthat coverage</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-deploy-pkgdown-website.html">R Package Tools: Pkgdown websites</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-scheduled-r-builds.html">Scheduled R scripts in the Cloud</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-r-results-github.html">Save R output to GitHub</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-polygot-ga-imports-to-bigquery.html">Integrating R with other languages</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-r-event-driven-pubsub.html">Event-triggered R scripts with pub/sub</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../reference/index.html">
@@ -122,12 +156,12 @@
 
       
 
-      </header><script src="cloudrun_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="cloudrun_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>R on Cloud Run</h1>
             
-            <h4 class="date">2021-01-31</h4>
+            <h4 class="date">2021-03-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudrun.Rmd"><code>vignettes/cloudrun.Rmd</code></a></small>
       <div class="hidden name"><code>cloudrun.Rmd</code></div>
@@ -180,7 +214,7 @@
     <span class="va">myData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">iris</span>, <span class="va">Species</span> <span class="op">==</span> <span class="va">spec</span><span class="op">)</span>
   <span class="op">}</span>
 
-  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">myData</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="va">myData</span><span class="op">$</span><span class="va">Petal.Length</span>,
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="va">myData</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="va">myData</span><span class="op">$</span><span class="va">Petal.Length</span>,
        main<span class="op">=</span><span class="va">title</span>, xlab<span class="op">=</span><span class="st">"Sepal Length"</span>, ylab<span class="op">=</span><span class="st">"Petal Length"</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
@@ -289,37 +323,37 @@ CMD ["api.R"]</code></pre>
 <p>To install it use <code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github("o2r-project/containerit")</a></code></p>
 <p><a href="https://o2r.info/containerit/">See <code>containerit</code>s website for more details</a> on how to use it.</p>
 <p>An example of using it to help create plumber Dockerfiles is below:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">library</span>(containerit)</span>
-<span id="cb7-2"><a href="#cb7-2"></a>cr_dockerfile_plumber &lt;-<span class="st"> </span><span class="cf">function</span>(deploy_folder, ...){</span>
-<span id="cb7-3"><a href="#cb7-3"></a>  docker &lt;-<span class="st"> </span><span class="kw">dockerfile</span>(</span>
-<span id="cb7-4"><a href="#cb7-4"></a>      deploy_folder,</span>
-<span id="cb7-5"><a href="#cb7-5"></a>      <span class="dt">image =</span> <span class="st">"trestletech/plumber"</span>,</span>
-<span id="cb7-6"><a href="#cb7-6"></a>      <span class="dt">offline =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb7-7"><a href="#cb7-7"></a>      <span class="dt">cmd =</span> <span class="kw">Cmd</span>(<span class="st">"api.R"</span>),</span>
-<span id="cb7-8"><a href="#cb7-8"></a>      <span class="dt">maintainer =</span> <span class="ot">NULL</span>,</span>
-<span id="cb7-9"><a href="#cb7-9"></a>      <span class="dt">copy =</span> <span class="kw">list</span>(<span class="st">"./"</span>),</span>
-<span id="cb7-10"><a href="#cb7-10"></a>      <span class="dt">container_workdir =</span> <span class="ot">NULL</span>,</span>
-<span id="cb7-11"><a href="#cb7-11"></a>      <span class="dt">entrypoint =</span> <span class="kw">Entrypoint</span>(<span class="st">"R"</span>,</span>
-<span id="cb7-12"><a href="#cb7-12"></a>                       <span class="dt">params =</span> <span class="kw">list</span>(</span>
-<span id="cb7-13"><a href="#cb7-13"></a>        <span class="st">"-e"</span>,</span>
-<span id="cb7-14"><a href="#cb7-14"></a>       <span class="st">"pr &lt;- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))"</span>)</span>
-<span id="cb7-15"><a href="#cb7-15"></a>       ),</span>
-<span id="cb7-16"><a href="#cb7-16"></a>      <span class="dt">filter_baseimage_pkgs =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb7-17"><a href="#cb7-17"></a>      ...)<span class="er">)</span></span>
-<span id="cb7-18"><a href="#cb7-18"></a></span>
-<span id="cb7-19"><a href="#cb7-19"></a>  write_to &lt;-<span class="st"> </span><span class="kw">file.path</span>(deploy_folder, <span class="st">"Dockerfile"</span>)</span>
-<span id="cb7-20"><a href="#cb7-20"></a>  </span>
-<span id="cb7-21"><a href="#cb7-21"></a>  <span class="kw">write</span>(docker, <span class="dt">file =</span> write_to)</span>
-<span id="cb7-22"><a href="#cb7-22"></a></span>
-<span id="cb7-23"><a href="#cb7-23"></a>  <span class="kw">assert_that</span>(</span>
-<span id="cb7-24"><a href="#cb7-24"></a>    <span class="kw">is.readable</span>(write_to)</span>
-<span id="cb7-25"><a href="#cb7-25"></a>  )</span>
-<span id="cb7-26"><a href="#cb7-26"></a></span>
-<span id="cb7-27"><a href="#cb7-27"></a>  <span class="kw">message</span>(<span class="st">"Written Dockerfile to "</span>, write_to, <span class="dt">level =</span> <span class="dv">3</span>)</span>
-<span id="cb7-28"><a href="#cb7-28"></a>  <span class="kw">print</span>(docker)</span>
-<span id="cb7-29"><a href="#cb7-29"></a>  docker</span>
-<span id="cb7-30"><a href="#cb7-30"></a></span>
-<span id="cb7-31"><a href="#cb7-31"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(containerit)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>cr_dockerfile_plumber <span class="ot">&lt;-</span> <span class="cf">function</span>(deploy_folder, ...){</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  docker <span class="ot">&lt;-</span> <span class="fu">dockerfile</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>      deploy_folder,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">image =</span> <span class="st">"trestletech/plumber"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">offline =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">cmd =</span> <span class="fu">Cmd</span>(<span class="st">"api.R"</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">maintainer =</span> <span class="cn">NULL</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">copy =</span> <span class="fu">list</span>(<span class="st">"./"</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">container_workdir =</span> <span class="cn">NULL</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">entrypoint =</span> <span class="fu">Entrypoint</span>(<span class="st">"R"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">params =</span> <span class="fu">list</span>(</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"-e"</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>       <span class="st">"pr &lt;- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))"</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>       ),</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">filter_baseimage_pkgs =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>      ...)<span class="er">)</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  write_to <span class="ot">&lt;-</span> <span class="fu">file.path</span>(deploy_folder, <span class="st">"Dockerfile"</span>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write</span>(docker, <span class="at">file =</span> write_to)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assert_that</span>(</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">is.readable</span>(write_to)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"Written Dockerfile to "</span>, write_to, <span class="at">level =</span> <span class="dv">3</span>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(docker)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  docker</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="deploying-shiny-to-cloud-run" class="section level2">
 <h2 class="hasAnchor">
@@ -375,23 +409,23 @@ CMD ["api.R"]</code></pre>
 <h4 class="hasAnchor">
 <a href="#app-r" class="anchor"></a>app.R</h4>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://shiny.rstudio.com">shiny</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">searchConsoleR</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://code.markedmondson.me/searchConsoleR/">searchConsoleR</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAuthR/">googleAuthR</a></span><span class="op">)</span>
 
 <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/gar_set_client.html">gar_set_client</a></span><span class="op">(</span>web_json <span class="op">=</span> <span class="st">"client.json"</span>,
                scopes <span class="op">=</span> <span class="st">"https://www.googleapis.com/auth/webmasters"</span><span class="op">)</span>
 
-<span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html">fluidPage</a></span><span class="op">(</span>
+<span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
   <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/googleAuth_jsUI.html">googleAuth_jsUI</a></span><span class="op">(</span><span class="st">'auth'</span>, login_text <span class="op">=</span> <span class="st">'Login to Google'</span><span class="op">)</span>,
-  <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/tableOutput.html">tableOutput</a></span><span class="op">(</span><span class="st">"sc_accounts"</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tableOutput.html">tableOutput</a></span><span class="op">(</span><span class="st">"sc_accounts"</span><span class="op">)</span>
 <span class="op">)</span>
 
 <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">auth</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/callModule.html">callModule</a></span><span class="op">(</span><span class="va">googleAuth_js</span>, <span class="st">"auth"</span><span class="op">)</span>
+  <span class="va">auth</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/callModule.html">callModule</a></span><span class="op">(</span><span class="va">googleAuth_js</span>, <span class="st">"auth"</span><span class="op">)</span>
 
-  <span class="va">sc_accounts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/reactive.html">reactive</a></span><span class="op">(</span><span class="op">{</span>
-    <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/req.html">req</a></span><span class="op">(</span><span class="fu">auth</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">sc_accounts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html">req</a></span><span class="op">(</span><span class="fu">auth</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
     <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/with_shiny.html">with_shiny</a></span><span class="op">(</span>
       <span class="va">list_websites</span>,
@@ -400,14 +434,14 @@ CMD ["api.R"]</code></pre>
 
   <span class="op">}</span><span class="op">)</span>
 
-  <span class="va">output</span><span class="op">$</span><span class="va">sc_accounts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/renderTable.html">renderTable</a></span><span class="op">(</span><span class="op">{</span>
+  <span class="va">output</span><span class="op">$</span><span class="va">sc_accounts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderTable.html">renderTable</a></span><span class="op">(</span><span class="op">{</span>
     <span class="fu">sc_accounts</span><span class="op">(</span><span class="op">)</span>
   <span class="op">}</span><span class="op">)</span>
 
 
 <span class="op">}</span>
 
-<span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="dockerfile" class="section level4">
 <h4 class="hasAnchor">
@@ -443,7 +477,7 @@ CMD ["/usr/bin/shiny-server"]</code></pre>
 <h4 class="hasAnchor">
 <a href="#client-id-and-gcp-setup" class="anchor"></a>client.id and GCP setup</h4>
 <p>The client.json was a web client json from my project:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">{</span><span class="dt">"web"</span><span class="fu">:{</span><span class="dt">"client_id"</span><span class="fu">:</span><span class="st">"10XXX"</span><span class="fu">,</span><span class="dt">"project_id"</span><span class="fu">:</span><span class="st">"XXXX"</span><span class="fu">,</span><span class="dt">"auth_uri"</span><span class="fu">:</span><span class="st">"https://accounts.google.com/o/oauth2/auth"</span><span class="fu">,</span><span class="dt">"token_uri"</span><span class="fu">:</span><span class="st">"https://accounts.google.com/o/oauth2/token"</span><span class="fu">,</span><span class="dt">"auth_provider_x509_cert_url"</span><span class="fu">:</span><span class="st">"https://www.googleapis.com/oauth2/v1/certs"</span><span class="fu">,</span><span class="dt">"client_secret"</span><span class="fu">:</span><span class="st">"XXXXX"</span><span class="fu">,</span><span class="dt">"redirect_uris"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"http://localhost"</span><span class="ot">]</span><span class="fu">,</span><span class="dt">"javascript_origins"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"https://www.example.com"</span><span class="ot">,</span><span class="st">"http://localhost:1221"</span><span class="ot">]</span><span class="fu">}}</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">"web"</span><span class="fu">:{</span><span class="dt">"client_id"</span><span class="fu">:</span><span class="st">"10XXX"</span><span class="fu">,</span><span class="dt">"project_id"</span><span class="fu">:</span><span class="st">"XXXX"</span><span class="fu">,</span><span class="dt">"auth_uri"</span><span class="fu">:</span><span class="st">"https://accounts.google.com/o/oauth2/auth"</span><span class="fu">,</span><span class="dt">"token_uri"</span><span class="fu">:</span><span class="st">"https://accounts.google.com/o/oauth2/token"</span><span class="fu">,</span><span class="dt">"auth_provider_x509_cert_url"</span><span class="fu">:</span><span class="st">"https://www.googleapis.com/oauth2/v1/certs"</span><span class="fu">,</span><span class="dt">"client_secret"</span><span class="fu">:</span><span class="st">"XXXXX"</span><span class="fu">,</span><span class="dt">"redirect_uris"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"http://localhost"</span><span class="ot">]</span><span class="fu">,</span><span class="dt">"javascript_origins"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"https://www.example.com"</span><span class="ot">,</span><span class="st">"http://localhost:1221"</span><span class="ot">]</span><span class="fu">}}</span></span></code></pre></div>
 <p>You need to add the domain of where the Cloud Run is running in the JavaScript origins within the GCP console, that you get after deploying the app. (GCP console &gt; APIs &amp; Services &gt; Crdentials &gt; Click on the Web Client ID you are using &gt; Add URL to Authorised JavaScript origins).</p>
 <p><img src="javascript-origins.png"></p>
 <p>In the example case this is <code>https://shiny-cloudrun-sc-ewjogewawq-ew.a.run.app/</code></p>
@@ -503,13 +537,53 @@ server {
                    <span class="va">token</span><span class="op">)</span>
 <span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
 </div>
+<div id="scheduling-cloud-run-applications" class="section level2">
+<h2 class="hasAnchor">
+<a href="#scheduling-cloud-run-applications" class="anchor"></a>Scheduling Cloud Run applications</h2>
+<p>Via <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html">Cloud Scheduler</a> you can set up a scheduled hit of your HTTP endpoints, via GET, POST or any other methods you have coded into your app.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># get your previously deployed Cloud Run app</span>
+<span class="va">my_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_run_get.html">cr_run_get</a></span><span class="op">(</span><span class="st">"your-cloud-run"</span><span class="op">)</span>
+
+<span class="co"># add any URL parameters your app needs etc.</span>
+<span class="va">endpoint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">my_app</span><span class="op">$</span><span class="va">status</span><span class="op">$</span><span class="va">url</span>, <span class="st">"?msg=blah"</span><span class="op">)</span>
+
+<span class="co"># make the HTTP target</span>
+<span class="va">run_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HttpTarget.html">HttpTarget</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="va">endpoint</span>, httpMethod <span class="op">=</span> <span class="st">"GET"</span><span class="op">)</span>
+
+<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-run-scheduled"</span>, schedule <span class="op">=</span> <span class="st">"4 16 * * *"</span>, httpTarget <span class="op">=</span> <span class="va">run_me</span><span class="op">)</span></code></pre></div>
+<div id="private-cloud-run-service-scheduling" class="section level3">
+<h3 class="hasAnchor">
+<a href="#private-cloud-run-service-scheduling" class="anchor"></a>Private Cloud Run service scheduling</h3>
+<p><code><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http()</a></code> will help you create the HTTP endpoint for you to pass to <code><a href="../reference/cr_schedule.html">cr_schedule()</a></code> that will work with Cloud Run apps with <code>allowUnauthenticated = FALSE</code> - it will by default create a service email for invoking your app called <code>{your-app}-cloudrun-invoker@{your-project}.iam.gserviceaccount.com</code></p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># deploy a non-public app</span>
+<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span><span class="op">(</span><span class="st">"your-cloud-run"</span>, allowUnauthenticated <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+
+<span class="co"># get your previously deployed Cloud Run app</span>
+<span class="va">my_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_run_get.html">cr_run_get</a></span><span class="op">(</span><span class="st">"your-cloud-run"</span><span class="op">)</span>
+
+<span class="co"># add any URL parameters your app needs etc.</span>
+<span class="va">endpoint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">my_app</span><span class="op">$</span><span class="va">status</span><span class="op">$</span><span class="va">url</span>, <span class="st">"?msg=blah"</span><span class="op">)</span>
+
+<span class="co"># generate the service email invoker that was created upon deployment</span>
+<span class="co"># "your-cloud-run-cloudrun-invoke@your-project.iam.gserviceaccount.com"</span>
+<span class="va">email</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_run_email.html">cr_run_email</a></span><span class="op">(</span><span class="st">"your-cloud-run"</span><span class="op">)</span>
+
+<span class="co"># make the HTTP target for authenticated access only</span>
+<span class="va">run_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http</a></span><span class="op">(</span><span class="va">endpoint</span>, email <span class="op">=</span> <span class="va">email</span>, http_method <span class="op">=</span> <span class="st">"GET"</span><span class="op">)</span>
+
+<span class="co"># schedule the call to the endpoint of your Cloud run app</span>
+<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-run-scheduled"</span>, schedule <span class="op">=</span> <span class="st">"4 16 * * *"</span>, httpTarget <span class="op">=</span> <span class="va">run_me</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
 <div id="deploying-from-another-google-cloud-project" class="section level2">
 <h2 class="hasAnchor">
 <a href="#deploying-from-another-google-cloud-project" class="anchor"></a>Deploying from another Google Cloud project</h2>
 <p>By default the build will only allow deployments from the same Google Cloud Project - if you want to deploy container images from other projects you need to give the Cloud Run Service Agent for the Cloud Run project access to the source project. See this <a href="https://cloud.google.com/run/docs/deploying#other-projects">Google help file</a>.</p>
 <p>This is available via the <code><a href="../reference/cr_setup_service.html">cr_setup_service()</a></code> function, using the role lookup <code><a href="../reference/cr_setup_service.html">cr_setup_role_lookup("run_agent")</a></code>:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">cr_setup_service</span>(<span class="st">"service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com"</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>                 <span class="dt">roles =</span> <span class="kw">cr_setup_role_lookup</span>(<span class="st">"run_agent"</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cr_setup_service</span>(<span class="st">"service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com"</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">roles =</span> <span class="fu">cr_setup_role_lookup</span>(<span class="st">"run_agent"</span>))</span></code></pre></div>
 </div>
   </div>
 

@@ -135,12 +135,46 @@
     Cloud Scheduler
   </a>
 </li>
-<li>
-  <a href="../articles/usecases.html">
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fas fa-hands-helping"></span>
      
     Use Cases
+     
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/usecase-r-api-microservices.html">R API Microservices</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-shiny-cloudrun.html">Deploy Shiny on Cloud Run</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-shiny-kubernetes.html">Deploy Shiny on Kubernetes</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-package-docker-build.html">R Package Tools: Auto Docker images</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-testthat-coverage.html">R Package Tools: Testthat coverage</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-deploy-pkgdown-website.html">R Package Tools: Pkgdown websites</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-scheduled-r-builds.html">Scheduled R scripts in the Cloud</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-r-results-github.html">Save R output to GitHub</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-polygot-ga-imports-to-bigquery.html">Integrating R with other languages</a>
+    </li>
+    <li>
+      <a href="../articles/usecase-r-event-driven-pubsub.html">Event-triggered R scripts with pub/sub</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../reference/index.html">
@@ -193,6 +227,7 @@
   projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>,
   launch_browser <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span>,
   env_vars <span class='op'>=</span> <span class='cn'>NULL</span>,
+  gcloud_args <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -209,7 +244,7 @@
     </tr>
     <tr>
       <th>allowUnauthenticated</th>
-      <td><p>TRUE if can be reached from public HTTP address.</p></td>
+      <td><p>TRUE if can be reached from public HTTP address. If FALSE will configure a service-email called <code>(name)-cloudrun-invoker@(project-id).iam.gserviceaccount.com</code></p></td>
     </tr>
     <tr>
       <th>concurrency</th>
@@ -252,6 +287,10 @@
       <td><p>Environment arguments passed to the Cloud Run container at runtime.  Distinct from <code>env</code> that run at build time.</p></td>
     </tr>
     <tr>
+      <th>gcloud_args</th>
+      <td><p>a character string of arguments that can be sent to the gcloud command not covered by other parameters of this function</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Arguments passed on to <code><a href='cr_buildstep_run.html'>cr_buildstep_run</a></code></p><dl>
     <dt><code></code></dt><dd><p></p></dd>
@@ -271,8 +310,10 @@
 <p>Other Cloud Run functions: 
 <code><a href='cr_jwt_create.html'>cr_jwt_create</a>()</code>,
 <code><a href='cr_plumber_pubsub.html'>cr_plumber_pubsub</a>()</code>,
+<code><a href='cr_run_email.html'>cr_run_email</a>()</code>,
 <code><a href='cr_run_get.html'>cr_run_get</a>()</code>,
-<code><a href='cr_run_list.html'>cr_run_list</a>()</code></p></div>
+<code><a href='cr_run_list.html'>cr_run_list</a>()</code>,
+<code><a href='cr_run_schedule_http.html'>cr_run_schedule_http</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>

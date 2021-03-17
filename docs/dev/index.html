@@ -97,12 +97,46 @@
     Cloud Scheduler
   </a>
 </li>
-<li>
-  <a href="articles/usecases.html">
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     <span class="fas fa-hands-helping"></span>
      
     Use Cases
+     
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/usecase-r-api-microservices.html">R API Microservices</a>
+    </li>
+    <li>
+      <a href="articles/usecase-shiny-cloudrun.html">Deploy Shiny on Cloud Run</a>
+    </li>
+    <li>
+      <a href="articles/usecase-shiny-kubernetes.html">Deploy Shiny on Kubernetes</a>
+    </li>
+    <li>
+      <a href="articles/usecase-package-docker-build.html">R Package Tools: Auto Docker images</a>
+    </li>
+    <li>
+      <a href="articles/usecase-testthat-coverage.html">R Package Tools: Testthat coverage</a>
+    </li>
+    <li>
+      <a href="articles/usecase-deploy-pkgdown-website.html">R Package Tools: Pkgdown websites</a>
+    </li>
+    <li>
+      <a href="articles/usecase-scheduled-r-builds.html">Scheduled R scripts in the Cloud</a>
+    </li>
+    <li>
+      <a href="articles/usecase-r-results-github.html">Save R output to GitHub</a>
+    </li>
+    <li>
+      <a href="articles/usecase-polygot-ga-imports-to-bigquery.html">Integrating R with other languages</a>
+    </li>
+    <li>
+      <a href="articles/usecase-r-event-driven-pubsub.html">Event-triggered R scripts with pub/sub</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="reference/index.html">
@@ -153,6 +187,7 @@
 <p>Or the development version via:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span></code></pre></div>
+<p>The <a href="https://code.markedmondson.me/googleCloudRunner/dev/">dev version of the website is here</a> which may include documentation of features not yet on CRAN.</p>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
@@ -184,6 +219,8 @@
 <li>Michał Ludwicki was a huge help in mentoring Arben for the post above - he also has created a GitHub repo of some <a href="https://github.com/MLud/GCP_Rscheduler">useful example files for googleCloudRunner scripts</a>
 </li>
 <li>Sam Terfa has a guide on how to use googleCloudRunner to <a href="https://towardsdatascience.com/using-r-and-python-in-google-sheets-formulas-b397b302098">create an R API you can use GoogleSheets</a> to create its front end</li>
+<li>Louis shows how to <a href="https://louis-boguchwal.medium.com/create-and-deploy-your-own-optimization-api-7b4275f159c9">create and deploy your own Python optimisation API using googleCloudRunner</a>
+</li>
 </ul>
 </div>
 </div>

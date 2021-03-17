@@ -1,0 +1,36 @@
+---
+title: "Deploy a pkgdown website for your R package"
+date: "`r Sys.Date()`"
+---
+
+When creating an R package [pkgdown](https://pkgdown.r-lib.org/) is a fantastic resource for creating a package website from your R function's documentation and vignettes.  
+
+This workflow uses Google's Secret Manager to securely hold your Git ssh login details, then use those details to commit a built website on each Git commit.  This means you do not have to build the website locally.
+
+Each commit you make, a background task will build the website with your changes and commit it back to the repo - see example for this website:
+
+![](pkgdown-commit.png)
+
+A suggested setup workflow to do this is below:
+
+1. Go to [GCP console > Cloud Build > Triggers](https://console.cloud.google.com/cloud-build/triggers) and link your git repo to Cloud Build.
+2. Create a git ssh key to make commits to your repo.  [GitHub has a guide here](https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+3. Upload the ssh key secret to [Google Cloud Secret Manager](https://cloud.google.com/secret-manager) - you can use this secret for all future builds.
+4. Use `cr_deploy_pkgdown()` to create a cloudbuild.yml file in your R package's directory, giving it your secret name from step 2.  `create_trigger` can be `file` if you want the cloudbuild.yaml to be within your directory, or `inline` if the build will only be defined in the trigger.
+
+```r
+cr_deploy_pkgdown("MarkEdmondson1234/googleCloudRunner",
+                  secret = "github-key",
+                  create_trigger = "inline")
+```
+
+5. Commit to your git repository
+
+The function will then create a build customised for creating and rendering pkgdown websites, and committing the rendered version to your GitHub /docs folder.
+
+The below is an example for `googleCloudRunner`'s website:
+
+![](pkgdown-build-trigger.png)
+
+You can customise the deployment further by using `cr_buildstep_pkgdown()` in your own custom build files. For instance, you could download other auth keys using `cr_buildstep_secret()` again, so that your website has working authenticated examples. 
+

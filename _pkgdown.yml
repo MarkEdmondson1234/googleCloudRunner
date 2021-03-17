@@ -50,6 +50,27 @@ navbar:
     - text: "Use Cases"
       href: articles/usecases.html
       icon: fa-hands-helping
+      menu:
+        - text: "R API Microservices"
+          href: articles/usecase-r-api-microservices.html
+        - text: "Deploy Shiny on Cloud Run"
+          href: articles/usecase-shiny-cloudrun.html
+        - text: "Deploy Shiny on Kubernetes"
+          href: articles/usecase-shiny-kubernetes.html
+        - text: "R Package Tools: Auto Docker images"
+          href: articles/usecase-package-docker-build.html
+        - text: "R Package Tools: Testthat coverage"
+          href: articles/usecase-testthat-coverage.html
+        - text: "R Package Tools: Pkgdown websites"
+          href: articles/usecase-deploy-pkgdown-website.html
+        - text: "Scheduled R scripts in the Cloud"
+          href: articles/usecase-scheduled-r-builds.html
+        - text: "Save R output to GitHub"
+          href: articles/usecase-r-results-github.html
+        - text: "Integrating R with other languages"
+          href: articles/usecase-polygot-ga-imports-to-bigquery.html
+        - text: "Event-triggered R scripts with pub/sub"
+          href: articles/usecase-r-event-driven-pubsub.html
     - text: "Functions"
       href: reference/index.html
       icon: fa-question
