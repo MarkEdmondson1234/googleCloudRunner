@@ -58,16 +58,17 @@ You can export an existing build into a cloudbuild.yaml file, for instance to ru
 cr_build_write(b3, file = "cloudbuild.yml")
 ```
 
-You can also reuse Cloud Build objects to re-run a new build with the same settings.  This is helpful when you test a build works locally, then pass the result of a successful run to `cr_build_schedule_http()` to schedule it. 
+### Constructing Cloud Build objects
 
-```r
-# a cloud build you would like to schedule
-itworks <- cr_build("cloudbuild.yaml", launch_browser = FALSE)
+There are several layers to creating Cloud Build objects in R:
 
-# once working, pass in the build to the scheduler
-cr_schedule("15 5 * * *", name="itworks-schedule",
-            httpTarget = cr_build_schedule_http(itworks))
-```
+* `cr_build()` triggers the API with Cloud Build objects and cloudbuild.yaml files
+* `cr_build_yaml()` lets you create the Cloud Build objects in R and can write to .yaml files.
+* `cr_build_make()` creates Cloud Build R objects directly from .yaml files
+* `cr_buildstep()` lets you create specific steps within the Cloud Build objects. There are helper template files with common tasks such as `cr_buildstep_r()`
+
+
+### Docker images to use in Cloud Build
 
 Any utility that has a Docker image can be used within Cloud Build steps.  
 
@@ -128,7 +129,7 @@ Custom macros can also be configured, starting with _$ e.g. $_MY_CUSTOM_MACRO
 
 Instead of using separate `cloudbuild.yml` files, you can also choose to make your own cloudbuild.yaml files in R via `cr_build_yaml()` and `cr_buildstep()`
 
-Lets say you don't want to write a cloudbuild.yaml file - instead you can create all the features of the yaml files in R.  Refer to the [cloudbuild.yml config spec](https://cloud.google.com/cloud-build/docs/build-config) on what it expected in the files or functions. 
+Lets say you don't want to write a cloudbuild.yaml file manually - instead you can create all the features of the yaml files in R.  Refer to the [cloudbuild.yml config spec](https://cloud.google.com/cloud-build/docs/build-config) on what is expected in the files or functions. 
 
 An example below recreates a simple cloudbuild.yml file.  If you print it to console it will output what the build would look like if it was in a yaml file:
 
@@ -174,7 +175,8 @@ Combine buildsteps with `c()` e.g.
 ```r
 cr_build_yaml(
       steps = c(
-        cr_buildstep("gcloud","version"),
+        cr_buildstep("ubuntu", "echo hello"),
+        cr_buildstep_gcloud("gcloud","version"),
         cr_buildstep_docker("my-image", tag="dev"),
         cr_buildstep_secret("my_secret","auth.json"),
         cr_buildstep_r("sessionInfo()")),
@@ -251,7 +253,7 @@ Focusing on one buildstep in particular, since this is an R package - you can se
 
 It accepts both inline R code or a file location.  This R code is executed in the R environment as specified in argument `name` - they default to the R images provided by Rocker [rocker-project.org](https://www.rocker-project.org/).  
 
-Or if you want to build your own images (in perhaps another Cloud Build using `cr_deploy_docker()`) you can use your own R images with custom R packages and resources. 
+If you want to build your own images (in perhaps another Cloud Build using `cr_deploy_docker()`) you can use your own R images with custom R packages and resources. 
 
 Some useful R images have been made you could use or refer to their Dockerfiles for:
 
@@ -353,34 +355,4 @@ This way you can commit changes to the cloudbuild.yaml file, and they will be re
 
 ### Connecting to GitHub 
 
-You can connect via the [Source Repository mirroring service](https://cloud.google.com/source-repositories/docs/mirroring-a-github-repository) or via the [Google Cloud Build GitHub app](https://github.com/marketplace/google-cloud-build). 
-
-#### Mirroring GitHub 
-
-Once your repo is mirrored it gives you a Cloud Repository name which is of the form `github_username_repo` - this you can add to a `RepoSource()`:
-
-```r
-# this repo mirrored on Google Source repos
-my_repo <- cr_build_source(
-  RepoSource("github_markedmondson1234_googlecloudrunner",
-             branchName="master"))
-```
-
-#### Cloud Build GitHub app
-
-If you want build triggers to trigger on pushes and pulls then the GitHub app is necessary.
-
-You can create a GitHub build trigger using `GitHubEventsConfig()` - this will by default trigger builds when you push to any GitHub branch.  
-
-```r
-cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
-                           package = "googleCloudRunner")
-bb <- cr_build_make(cloudbuild, projectId = "test-project")
-
-# setting up the trigger event 
-github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner", 
-                             branch = "master")
-
-cr_buildtrigger("trig1", trigger = github, build = bb)
-```
-
+You can connect via the [Source Repository mirroring service](https://cloud.google.com/source-repositories/docs/mirroring-a-github-repository) or via the [Google Cloud Build GitHub app](https://github.com/marketplace/google-cloud-build) - see the [git setup page](https://code.markedmondson.me/googleCloudRunner/articles/git.html) for more details.

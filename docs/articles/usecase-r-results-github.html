@@ -6,13 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Run an R script, save results to GitHub • googleCloudRunner</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Run an R script, save results to GitHub">
-<meta property="og:description" content="googleCloudRunner">
+<meta property="og:description" content="">
+<meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -24,7 +24,7 @@
   gtag('config', 'UA-47480439-2');
 </script>
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -45,13 +45,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
      
@@ -71,28 +71,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fas fa-shapes"></span>
+    <span class="fa fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fas fa-running"></span>
+    <span class="fa fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fas fa-clock"></span>
+    <span class="fa fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-hands-helping"></span>
+    <span class="fa fa-hands-helping"></span>
      
     Use Cases
      
@@ -133,20 +133,13 @@
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-question"></span>
+    <span class="fa fa-question"></span>
      
     Functions
   </a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -156,14 +149,14 @@
 
       
 
-      </header><script src="usecase-r-results-github_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Run an R script, save results to GitHub</h1>
+      <h1>Run an R script, save results to GitHub</h1>
             
-            <h4 class="date">2021-03-17</h4>
+            <h4 class="date">2021-03-18</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-r-results-github.Rmd"><code>vignettes/usecase-r-results-github.Rmd</code></a></small>
+      
       <div class="hidden name"><code>usecase-r-results-github.Rmd</code></div>
 
     </div>
@@ -182,33 +175,32 @@
 <h3 class="hasAnchor">
 <a href="#create-the-cloudbuild-yaml" class="anchor"></a>Create the cloudbuild.yaml</h3>
 <p>For this we first need to create build steps that run the R code and commit the results back to a repo.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># can be R file location or in-line code</span>
-<span class="va">r_code</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"x &lt;- rnorm(1:10)"</span>,
-            <span class="st">"dir.create('data-raw')"</span>,
-            <span class="st">"save(x, file = paste0('data-raw/data_', make.names(Sys.time()), '.Rda'))"</span><span class="op">)</span>
-
-<span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
-  <span class="co"># assumes you have git credentials saved to Secret Manager</span>
-  <span class="fu"><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_gitsetup</a></span><span class="op">(</span><span class="st">"github-ssh"</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_git</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"clone"</span>,
-                     <span class="st">"git@github.com:$_GITHUB_REPO"</span>,
-                     <span class="st">"payload"</span><span class="op">)</span><span class="op">)</span>,
-  <span class="co"># run the R code above - could also be a file in the github repo</span>
-  <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="va">r_code</span>, id <span class="op">=</span> <span class="st">"run r code"</span>, dir <span class="op">=</span> <span class="st">"payload"</span><span class="op">)</span>,
-  <span class="co"># could put the git commands in one cr_buildstep_bash step for brevity</span>
-  <span class="fu"><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_git</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"add"</span>,<span class="st">"--all"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="st">"payload"</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_git</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"commit"</span>, <span class="st">"-a"</span>, <span class="st">"-m"</span>, 
-                     <span class="st">"Ran R script to add data $BUILD_ID"</span><span class="op">)</span>,
-                   dir <span class="op">=</span> <span class="st">"payload"</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_git</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"push"</span>, <span class="st">"git@github.com:$_GITHUB_REPO"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="st">"payload"</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="co"># using a substitution var for the GitHub repo to make it more portable</span>
-<span class="va">build_yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
-  steps <span class="op">=</span> <span class="va">bs</span>,
-  substitutions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>`_GITHUB_REPO`<span class="op">=</span><span class="st">"MarkEdmondson1234/r-code-commit-github"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># can be R file location or in-line code</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">r_code &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"x &lt;- rnorm(1:10)"</span>,</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">            <span class="st">"dir.create('data-raw')"</span>,</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">            <span class="st">"save(x, file = paste0('data-raw/data_', make.names(Sys.time()), '.Rda'))"</span>)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">bs &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">  <span class="co"># assumes you have git credentials saved to Secret Manager</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">  <span class="kw"><a href="../reference/cr_buildstep_git.html">cr_buildstep_gitsetup</a></span>(<span class="st">"github-ssh"</span>),</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">  <span class="kw"><a href="../reference/cr_buildstep_git.html">cr_buildstep_git</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"clone"</span>,</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">                     <span class="st">"git@github.com:$_GITHUB_REPO"</span>,</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">                     <span class="st">"payload"</span>)),</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">  <span class="co"># run the R code above - could also be a file in the github repo</span></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">  <span class="kw"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span>(r_code, <span class="dt">id =</span> <span class="st">"run r code"</span>, <span class="dt">dir =</span> <span class="st">"payload"</span>),</a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">  <span class="co"># could put the git commands in one cr_buildstep_bash step for brevity</span></a>
+<a class="sourceLine" id="cb1-15" data-line-number="15">  <span class="kw"><a href="../reference/cr_buildstep_git.html">cr_buildstep_git</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"add"</span>,<span class="st">"--all"</span>), <span class="dt">dir =</span> <span class="st">"payload"</span>),</a>
+<a class="sourceLine" id="cb1-16" data-line-number="16">  <span class="kw"><a href="../reference/cr_buildstep_git.html">cr_buildstep_git</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"commit"</span>, <span class="st">"-a"</span>, <span class="st">"-m"</span>, </a>
+<a class="sourceLine" id="cb1-17" data-line-number="17">                     <span class="st">"Ran R script to add data $BUILD_ID"</span>),</a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">                   <span class="dt">dir =</span> <span class="st">"payload"</span>),</a>
+<a class="sourceLine" id="cb1-19" data-line-number="19">  <span class="kw"><a href="../reference/cr_buildstep_git.html">cr_buildstep_git</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"push"</span>, <span class="st">"git@github.com:$_GITHUB_REPO"</span>), <span class="dt">dir =</span> <span class="st">"payload"</span>)</a>
+<a class="sourceLine" id="cb1-20" data-line-number="20">)</a>
+<a class="sourceLine" id="cb1-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb1-22" data-line-number="22"><span class="co"># using a substitution var for the GitHub repo to make it more portable</span></a>
+<a class="sourceLine" id="cb1-23" data-line-number="23">build_yaml &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span>(</a>
+<a class="sourceLine" id="cb1-24" data-line-number="24">  <span class="dt">steps =</span> bs,</a>
+<a class="sourceLine" id="cb1-25" data-line-number="25">  <span class="dt">substitutions =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">`</span><span class="dt">_GITHUB_REPO</span><span class="st">`</span>=<span class="st">"MarkEdmondson1234/r-code-commit-github"</span>)</a>
+<a class="sourceLine" id="cb1-26" data-line-number="26">)</a></code></pre></div>
 <p>Debug and test if the script works first by sending to <code><a href="../reference/cr_build.html">cr_build()</a></code> - this pops up the build log in your browser.</p>
 <p><img src="r-2-git-build.png"></p>
 <p>For example, when doing this I found I had to modify my code to create the data folder in R and clone to “payload” directory.</p>
@@ -219,27 +211,26 @@
 <h3 class="hasAnchor">
 <a href="#schedule-the-build" class="anchor"></a>Schedule the build</h3>
 <p>Now the build needs a schedule. Taking a working YAML configuration, we use that to create the API call for Cloud Scheduler that will run the build periodically:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># your running successful build</span>
-<span class="va">build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">build_yaml</span><span class="op">)</span>
-
-<span class="co"># create build API call</span>
-<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">build</span><span class="op">)</span>
-
-<span class="co"># schedule the build</span>
-<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"r-2-git-demo"</span>, <span class="st">"5 15 * * 0"</span>, httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span>
-<span class="co">#==CloudScheduleJob==</span>
-<span class="co">#name:  projects/xxxx/locations/europe-west1/jobs/r-2-git-demo </span>
-<span class="co">#state:  ENABLED </span>
-<span class="co">#httpTarget.uri:  https://cloudbuild.googleapis.com/v1/projects/xxxx/builds </span>
-<span class="co">#httpTarget.httpMethod:  POST </span>
-<span class="co">#userUpdateTime:  2021-01-01T07:21:44Z </span>
-<span class="co">#schedule:  5 15 * * 0 </span>
-<span class="co">#timezone:  Europe/Copenhagen </span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># your running successful build</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">build &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_make.html">cr_build_make</a></span>(build_yaml)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># create build API call</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">schedule_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span>(build)</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co"># schedule the build</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"r-2-git-demo"</span>, <span class="st">"5 15 * * 0"</span>, <span class="dt">httpTarget =</span> schedule_me)</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#==CloudScheduleJob==</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#name:  projects/xxxx/locations/europe-west1/jobs/r-2-git-demo </span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#state:  ENABLED </span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#httpTarget.uri:  https://cloudbuild.googleapis.com/v1/projects/xxxx/builds </span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#httpTarget.httpMethod:  POST </span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#userUpdateTime:  2021-01-01T07:21:44Z </span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#schedule:  5 15 * * 0 </span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#timezone:  Europe/Copenhagen </span></a></code></pre></div>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
 
       </div>
 
@@ -252,7 +243,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>

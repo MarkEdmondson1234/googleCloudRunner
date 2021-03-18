@@ -54,7 +54,7 @@ cr_schedule("cloud-build-test", "15 5 * * *",
 
 # schedule a cloud build with code source from GCS bucket
 my_gcs_source <- cr_build_upload_gcs("my_folder", bucket = cr_get_bucket())
-build <- cr_build_make("cloudbuild.yaml", source = my_gcs_source))
+build <- cr_build_make("cloudbuild.yaml", source = my_gcs_source)
 cr_schedule("cloud-build-test2", "15 5 * * *",
             httpTarget = cr_build_schedule_http(build))
 
@@ -64,6 +64,25 @@ cr_schedule("cloud-build-test2", "12 6 * * *", overwrite=TRUE)
 # By default will use the timezone as specified by Sys.timezone() - change
 # this by supplying it directly
 cr_schedule("timzone-utc", "12 2 * * *", timeZone = "UTC")
+
+# schedule private Cloud Run app
+# for authenticated Cloud Run apps - create with allowUnauthenticated=FALSE
+cr_deploy_run("my-app", allowUnauthenticated = TRUE)
+
+# deploying via R will help create a service email called my-app-invoker
+cr_run_email("my-app")
+#> "my-app-invoker@your-project.iam.gserviceaccount.com"
+
+# schedule the endpoint
+my_app <- cr_run_get("my-app")
+
+endpoint <- paste0(my_app$status$url, "/fetch_stuff")
+
+app_sched <- cr_run_schedule_http(endpoint, http_method = "GET",
+                                  email = cr_run_email("my-app"))
+
+cr_schedule("my-app-scheduled-1", schedule = "16 4 * * *",
+            httpTarget = app_sched)
 }
 }
 \seealso{

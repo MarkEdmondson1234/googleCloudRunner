@@ -264,7 +264,7 @@ Instead of using Cloud Build, you may want to use Cloud Run as the engine runnin
 
 See the [R API Microservices Use Case](https://code.markedmondson.me/googleCloudRunner/articles/usecase-r-api-microservices.html) for more details on creating and deploying an R API using plumber.
 
-R code typically is triggered via using an API package such as plumber to create HTTP endpoints.  The scheduler can then use that HTTP endpoint as the mechanism to trigger schedules.
+R code is triggered using an API package such as plumber to create HTTP endpoints.  The scheduler can then use that HTTP endpoint as the mechanism to trigger schedules.
 
 See `?cr_run_schedule_http` for examples.
 
@@ -278,8 +278,7 @@ run_me <- HttpTarget(
   uri = "https://public-ewjogewawq-ew.a.run.app/echo?msg=blah",
   http_method = "GET"
 )
-cr_schedule("cloud-run-scheduled", schedule = "16 4 * * *",
-            httpTarget = run_me)
+cr_schedule("cloudrun-scheduled", schedule = "16 4 * * *", httpTarget = run_me)
 ```
 
 ### Private APIs
@@ -303,10 +302,10 @@ endpoint <- paste0(my_app$status$url, "/fetch_stuff")
 
 app_sched <- cr_run_schedule_http(endpoint,
                                   http_method = "GET",
-                                  email = cr_run_email(my_run_name))
+                                  email = cr_run_email("my-app"))
 
-cr_schedule("cloud-run-scheduled-1",
-            schedule = "4 16 * * *",
+cr_schedule("my-app-scheduled-1",
+            schedule = "16 4 * * *",
             httpTarget = app_sched)
 ```
 
