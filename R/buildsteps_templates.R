@@ -271,12 +271,12 @@ cr_buildstep_run <- function(name,
   } else {
     # authenticated calls - add the default email
     # https://cloud.google.com/run/docs/triggering/using-scheduler#command-line
-    desc <- paste("--display-name=Cloud Run Invoker for", name)
+    desc <- paste("Cloud Run Invoker for", name)
     script <-
       paste(
         sprintf("gcloud iam service-accounts describe %s || ",
                 cr_run_email(name)),
-        sprintf("gcloud iam service-accounts create %s %s",
+        sprintf("gcloud iam service-accounts create %s --display-name='%s'",
                 cr_run_email(name, NULL), desc)
       )
     create_service <- cr_buildstep_bash(
