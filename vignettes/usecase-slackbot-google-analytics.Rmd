@@ -48,8 +48,7 @@ previousDays <- two_years %>% filter(date < Sys.Date() - 30)
 new_refs <- setdiff(unique(last30Days$fullReferrer),
                     unique(previousDays$fullReferrer))
 
-last_30_new_refs <- last30Days %>% 
-  filter(fullReferrer %in% new_refs)
+last_30_new_refs <- last30Days %>% filter(fullReferrer %in% new_refs)
 ```
 
 ## Create a plumber script for wrapping the GA fetch
@@ -268,7 +267,7 @@ POST(slack_url, body = the_body, encode = "json")
 
 ## Modifying the R script to get the right format for Slack
 
-To call the Slack bot, the API needs to collect the data then make a HTTP GET request above itself to the Slack URL.  I don't want to include the Slack URL in the code, so I'll also alter the Build Trigger to accept a substitution variable in the build, that will hold the Slack URL.  
+To call the Slack bot, the API needs to collect the data then make a HTTP request itself to pass on the data to the Slack URL.  I don't want to include the Slack URL in the code, so I'll also alter the Build Trigger to accept a substitution variable in the build, that will hold the Slack URL - this way I can swap out to other Slack webhooks more easily.  
 
 ```r
 library(googleCloudRunner)
@@ -289,7 +288,7 @@ bs <- c(
   cr_buildstep_run(
     "slackbot",
     image = "gcr.io/$PROJECT_ID/slackbot:$BUILD_ID",
-    memory = "1Gi",
+    memory = "1Gi", # make the cloud run app a bit bigger
     env_vars = c("GAR_CLIENT_JSON=client.json",
                  "GA_AUTH_FILE=auth.json",
                  "SLACK_URL=$_SLACK_URL") # will get from substitution variable
@@ -312,56 +311,20 @@ cr_buildtrigger(
   includedFiles = "inst/slackbot/**",
   substitutions = 
      list(
-       `_SLACK_URL`=slack_url
+       `_SLACK_URL`=slack_url # used in the builds, can modify in build Web UI
       ),
   overwrite=TRUE
 )
 ```
 
-The R API is now also modified to include this new endpoint:
+The R API is now also modified to include the new endpoint `/trigger-slack`:
 
 ```r
 library(googleAnalyticsR)
 library(dplyr)
 library(httr)
 
-# the function will be called from the endpoints
-do_ga <- function(ga_id){
-  # get last years referrer data
-  two_years <- google_analytics(
-    ga_id, 
-    date_range = c(Sys.Date()-(365), Sys.Date()), 
-    dimensions = c("date","fullReferrer","landingPagePath"), 
-    metrics = "sessions", 
-    rows_per_call = 50000,
-    max = -1)
-
-  last30Days <- two_years %>% filter(date >= Sys.Date() - 30)
-  previousDays <- two_years %>% filter(date < Sys.Date() - 30)
-
-  # the referrers seen in last30days but not previously
-  new_refs <- setdiff(unique(last30Days$fullReferrer),
-                      unique(previousDays$fullReferrer))
-
-  last_30_new_refs <- last30Days %>% 
-    filter(fullReferrer %in% new_refs)
-    
-  last_30_new_refs
-}
-
-#' @get /
-#' @serializer html
-function(){
-  "<html><h1>It works!</h1></html>"
-}
-
-
-#' @get /last-30-days
-#' @serializer csv
-function(ga_id){
-  # get last years referrer data
-  do_ga(ga_id)
-}
+#...as above...
 
 #' @get /trigger-slack
 #' @serializer json
@@ -396,7 +359,7 @@ COPY ["./", "./"]
 ENTRYPOINT ["Rscript", "server.R"]
 ```
 
-After making the changes to the Dockerfile and api.R, we commit the changes to redeploy via the Build Trigger
+After making the changes to the Dockerfile and api.R, we commit the changes to redeploy via the Build Trigger (~5mins)
 
 ## Testing the App and Scheduling
 
@@ -433,7 +396,7 @@ content(res)
 
 ### Scheduling
 
-Now we can schedule the URL via Cloud Scheduler.
+Now we can schedule the URL via Cloud Scheduler.  I'd like it every Friday with my coffee but before my tea.
 
 ```r
 ga_id <- 1233456
@@ -456,7 +419,7 @@ cr_schedule("slackbot-schedule",
 
 ## Where to go from here
 
-Once the app is deployed you can spend most of your time developing the R code, which upon each commit will recreate the API.
+Once the app is deployed you can spend most of your time developing the R code rather than worrying about the deployment, which upon each commit will recreate itself.
 
 You could try adding other endpoints for different GA functions, or making the API/webhook compatible with other services other than Slack.  
 
