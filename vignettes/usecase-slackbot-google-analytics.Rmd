@@ -425,7 +425,7 @@ res <- GET(paste0(my_app, "/trigger-slack?ga_id=",ga_id))
 content(res)
 ```
 
-![](csv_slack.png)
+![](list_slack.png)
 
 
 ### Scheduling
