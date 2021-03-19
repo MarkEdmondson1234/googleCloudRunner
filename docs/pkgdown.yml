@@ -1,5 +1,5 @@
-pandoc: 2.11.2
-pkgdown: 1.6.1
+pandoc: 2.3.1
+pkgdown: 1.4.1
 pkgdown_sha: ~
 articles:
   cloudbuild: cloudbuild.html
@@ -19,7 +19,6 @@ articles:
   usecase-shiny-kubernetes: usecase-shiny-kubernetes.html
   usecase-testthat-coverage: usecase-testthat-coverage.html
   usecases: usecases.html
-last_built: 2021-03-17T22:56Z
 urls:
   reference: https://code.markedmondson.me/googleCloudRunner/reference
   article: https://code.markedmondson.me/googleCloudRunner/articles

@@ -46,13 +46,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
      
@@ -72,28 +72,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fas fa-shapes"></span>
+    <span class="fa fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fas fa-running"></span>
+    <span class="fa fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fas fa-clock"></span>
+    <span class="fa fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-hands-helping"></span>
+    <span class="fa fa-hands-helping"></span>
      
     Use Cases
      
@@ -134,7 +134,7 @@
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-question"></span>
+    <span class="fa fa-question"></span>
      
     Functions
   </a>
@@ -143,7 +143,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
-    <span class="fab fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -157,12 +157,12 @@
 
       
 
-      </header><script src="usecase-shiny-kubernetes_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Deploy a Shiny app to Google Kubernetes Engine</h1>
             
-            <h4 class="date">2021-03-17</h4>
+            <h4 class="date">2021-03-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-shiny-kubernetes.Rmd"><code>vignettes/usecase-shiny-kubernetes.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-shiny-kubernetes.Rmd</code></div>
@@ -205,38 +205,38 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 <h3 class="hasAnchor">
 <a href="#kubernetes-deployment-file" class="anchor"></a>Kubernetes deployment file</h3>
 <p>You can then also have a deployment file for Kubernetes that will govern its configuration after the new docker image is built. An example deployment file is below:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apiVersion</span><span class="kw">:</span><span class="at"> extensions/v1beta1</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kind</span><span class="kw">:</span><span class="at"> Deployment</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">metadata</span><span class="kw">:</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">name</span><span class="kw">:</span><span class="at"> shiny-your-app</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">spec</span><span class="kw">:</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">replicas</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">selector</span><span class="kw">:</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">matchLabels</span><span class="kw">:</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">run</span><span class="kw">:</span><span class="at"> shiny-your-app</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">strategy</span><span class="kw">:</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">rollingUpdate</span><span class="kw">:</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">maxSurge</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">maxUnavailable</span><span class="kw">:</span><span class="at"> </span><span class="dv">1</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">type</span><span class="kw">:</span><span class="at"> RollingUpdate</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">template</span><span class="kw">:</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">metadata</span><span class="kw">:</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">labels</span><span class="kw">:</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">run</span><span class="kw">:</span><span class="at"> shiny-your-app</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">spec</span><span class="kw">:</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">nodeSelector</span><span class="kw">:</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">cloud.google.com/gke-nodepool</span><span class="kw">:</span><span class="at"> generic-compute-pool</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">volumes</span><span class="kw">:</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> varlog</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">emptyDir</span><span class="kw">:</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">containers</span><span class="kw">:</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> shiny-your-app</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">image</span><span class="kw">:</span><span class="at"> gcr.io/your-project/shiny-your-app:latest</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">ports</span><span class="kw">:</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">containerPort</span><span class="kw">:</span><span class="at"> </span><span class="dv">3838</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">volumeMounts</span><span class="kw">:</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> varlog</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">mountPath</span><span class="kw">:</span><span class="at"> /var/log/shiny-server/</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="fu">apiVersion:</span><span class="at"> extensions/v1beta1</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="fu">kind:</span><span class="at"> Deployment</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="fu">metadata:</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="fu">name:</span><span class="at"> shiny-your-app</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="fu">spec:</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">  <span class="fu">replicas:</span><span class="at"> 1</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">  <span class="fu">selector:</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">    <span class="fu">matchLabels:</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">      <span class="fu">run:</span><span class="at"> shiny-your-app</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">  <span class="fu">strategy:</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">    <span class="fu">rollingUpdate:</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">      <span class="fu">maxSurge:</span><span class="at"> 1</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">      <span class="fu">maxUnavailable:</span><span class="at"> 1</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">    <span class="fu">type:</span><span class="at"> RollingUpdate</span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">  <span class="fu">template:</span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">    <span class="fu">metadata:</span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17">      <span class="fu">labels:</span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">        <span class="fu">run:</span><span class="at"> shiny-your-app</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">    <span class="fu">spec:</span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20">      <span class="fu">nodeSelector:</span></a>
+<a class="sourceLine" id="cb2-21" data-line-number="21">        <span class="fu">cloud.google.com/gke-nodepool:</span><span class="at"> generic-compute-pool</span></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22">      <span class="fu">volumes:</span></a>
+<a class="sourceLine" id="cb2-23" data-line-number="23">      <span class="kw">-</span> <span class="fu">name:</span><span class="at"> varlog</span></a>
+<a class="sourceLine" id="cb2-24" data-line-number="24">        <span class="fu">emptyDir:</span></a>
+<a class="sourceLine" id="cb2-25" data-line-number="25">      <span class="fu">containers:</span></a>
+<a class="sourceLine" id="cb2-26" data-line-number="26">      <span class="kw">-</span> <span class="fu">name:</span><span class="at"> shiny-your-app</span></a>
+<a class="sourceLine" id="cb2-27" data-line-number="27">        <span class="fu">image:</span><span class="at"> gcr.io/your-project/shiny-your-app:latest</span></a>
+<a class="sourceLine" id="cb2-28" data-line-number="28">        <span class="fu">ports:</span></a>
+<a class="sourceLine" id="cb2-29" data-line-number="29">        <span class="kw">-</span> <span class="fu">containerPort:</span><span class="at"> 3838</span></a>
+<a class="sourceLine" id="cb2-30" data-line-number="30">        <span class="fu">volumeMounts:</span></a>
+<a class="sourceLine" id="cb2-31" data-line-number="31">        <span class="kw">-</span> <span class="fu">name:</span><span class="at"> varlog</span></a>
+<a class="sourceLine" id="cb2-32" data-line-number="32">          <span class="fu">mountPath:</span><span class="at"> /var/log/shiny-server/</span></a></code></pre></div>
 </div>
 <div id="cloud-build" class="section level3">
 <h3 class="hasAnchor">

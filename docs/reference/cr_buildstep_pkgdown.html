@@ -10,27 +10,23 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
-
-<!-- bootstrap-toc -->
-<link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -41,6 +37,7 @@
 
 <meta property="og:title" content="Create buildsteps for deploying an R pkgdown website to GitHub — cr_buildstep_pkgdown" />
 <meta property="og:description" content="Create buildsteps for deploying an R pkgdown website to GitHub" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -68,7 +65,7 @@
 
   </head>
 
-  <body data-spy="scroll" data-target="#toc">
+  <body>
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -90,13 +87,13 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
      
@@ -116,28 +113,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fas fa-shapes"></span>
+    <span class="fa fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fas fa-running"></span>
+    <span class="fa fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fas fa-clock"></span>
+    <span class="fa fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-hands-helping"></span>
+    <span class="fa fa-hands-helping"></span>
      
     Use Cases
      
@@ -178,19 +175,14 @@
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-question"></span>
+    <span class="fa fa-question"></span>
      
     Functions
   </a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -205,7 +197,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create buildsteps for deploying an R pkgdown website to GitHub</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/buildsteps_templates.R'><code>R/buildsteps_templates.R</code></a></small>
+    
     <div class="hidden name"><code>cr_buildstep_pkgdown.Rd</code></div>
     </div>
 
@@ -213,15 +205,15 @@
     <p>Create buildsteps for deploying an R pkgdown website to GitHub</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildstep_pkgdown</span><span class='op'>(</span>
-  <span class='va'>github_repo</span>,
-  <span class='va'>git_email</span>,
-  <span class='va'>secret</span>,
-  env <span class='op'>=</span> <span class='cn'>NULL</span>,
-  build_image <span class='op'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>,
-  post_setup <span class='op'>=</span> <span class='cn'>NULL</span>,
-  post_clone <span class='op'>=</span> <span class='cn'>NULL</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cr_buildstep_pkgdown</span>(
+  <span class='no'>github_repo</span>,
+  <span class='no'>git_email</span>,
+  <span class='no'>secret</span>,
+  <span class='kw'>env</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>build_image</span> <span class='kw'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>,
+  <span class='kw'>post_setup</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>post_clone</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -259,9 +251,9 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Its convenient to set some of the above via <a href='Build.html'>Build</a> macros, such as <code>github_repo=$_GITHUB_REPO</code> and <code>git_email=$_BUILD_EMAIL</code> in the Build Trigger web UI</p>
-<p>To commit the website to git, <a href='cr_buildstep_gitsetup.html'>cr_buildstep_gitsetup</a> is used for which
+<p>To commit the website to git, <a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a> is used for which
   you will need to add your git ssh private key to Google Secret Manager</p>
-<p>The R package is installed via <a href='https://devtools.r-lib.org//reference/install.html'>install</a> before
+<p>The R package is installed via <a href='https://rdrr.io/pkg/devtools/man/install.html'>install</a> before
   running <a href='https://pkgdown.r-lib.org/reference/build_site.html'>build_site</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -273,7 +265,7 @@
 <code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a>()</code>,
 <code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a>()</code>,
 <code><a href='cr_buildstep_gcloud.html'>cr_buildstep_gcloud</a>()</code>,
-<code><a href='cr_buildstep_gitsetup.html'>cr_buildstep_gitsetup</a>()</code>,
+<code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a>()</code>,
 <code><a href='cr_buildstep_mailgun.html'>cr_buildstep_mailgun</a>()</code>,
 <code><a href='cr_buildstep_nginx_setup.html'>cr_buildstep_nginx_setup</a>()</code>,
 <code><a href='cr_buildstep_run.html'>cr_buildstep_run</a>()</code>,
@@ -283,14 +275,11 @@
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-03-17 23:56:25 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-03-17 23:56:25 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-03-18 15:51:28 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-03-18 15:51:28 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
 <span class='co'># set github repo directly to write it out via cr_build_write()</span>
-<span class='fu'>cr_buildstep_pkgdown</span><span class='op'>(</span><span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
-                     git_email <span class='op'>=</span> <span class='st'>"cloudbuild@google.com"</span>,
-                     secret <span class='op'>=</span> <span class='st'>"github-ssh"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
+<span class='fu'>cr_buildstep_pkgdown</span>(<span class='st'>"MarkEdmondson1234/googleCloudRunner"</span>,
+                     <span class='kw'>git_email</span> <span class='kw'>=</span> <span class='st'>"cloudbuild@google.com"</span>,
+                     <span class='kw'>secret</span> <span class='kw'>=</span> <span class='st'>"github-ssh"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/gcloud
 #&gt; entrypoint: bash
@@ -395,10 +384,9 @@
 #&gt;   path: /root/.ssh
 #&gt; </div><div class='input'>
 <span class='co'># github repo set via build trigger macro _GITHUB_REPO</span>
-<span class='fu'>cr_buildstep_pkgdown</span><span class='op'>(</span><span class='st'>"$_GITHUB_REPO"</span>,
-                     git_email <span class='op'>=</span> <span class='st'>"cloudbuild@google.com"</span>,
-                     secret <span class='op'>=</span> <span class='st'>"github-ssh"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
+<span class='fu'>cr_buildstep_pkgdown</span>(<span class='st'>"$_GITHUB_REPO"</span>,
+                     <span class='kw'>git_email</span> <span class='kw'>=</span> <span class='st'>"cloudbuild@google.com"</span>,
+                     <span class='kw'>secret</span> <span class='kw'>=</span> <span class='st'>"github-ssh"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/gcloud
 #&gt; entrypoint: bash
@@ -503,11 +491,10 @@
 #&gt;   path: /root/.ssh
 #&gt; </div><div class='input'>
 <span class='co'># example including environment arguments for pkgdown build step</span>
-<span class='fu'>cr_buildstep_pkgdown</span><span class='op'>(</span><span class='st'>"$_GITHUB_REPO"</span>,
-                     git_email <span class='op'>=</span> <span class='st'>"cloudbuild@google.com"</span>,
-                     secret <span class='op'>=</span> <span class='st'>"github-ssh"</span>,
-                     env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"MYVAR=$_MY_VAR"</span>, <span class='st'>"PROJECT=$PROJECT_ID"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
+<span class='fu'>cr_buildstep_pkgdown</span>(<span class='st'>"$_GITHUB_REPO"</span>,
+                     <span class='kw'>git_email</span> <span class='kw'>=</span> <span class='st'>"cloudbuild@google.com"</span>,
+                     <span class='kw'>secret</span> <span class='kw'>=</span> <span class='st'>"github-ssh"</span>,
+                     <span class='kw'>env</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"MYVAR=$_MY_VAR"</span>, <span class='st'>"PROJECT=$PROJECT_ID"</span>))</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/gcloud
 #&gt; entrypoint: bash
@@ -616,10 +603,15 @@
 #&gt; </div><div class='input'>
 </div></span></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <nav id="toc" data-toggle="toc" class="sticky-top">
-      <h2 data-toc-skip>Contents</h2>
-    </nav>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#details">Details</a></li>
+      <li><a href="#see-also">See also</a></li>
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+
   </div>
 </div>
 
@@ -630,7 +622,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>

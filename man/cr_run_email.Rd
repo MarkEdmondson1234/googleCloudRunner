@@ -9,7 +9,7 @@ cr_run_email(name, projectId = cr_project_get())
 \arguments{
 \item{name}{Name of the Cloud Run service}
 
-\item{projectId}{The projectId where the Cloud Run service will run}
+\item{projectId}{The projectId where the Cloud Run service will run - set to NULL to only return the processed service name}
 }
 \description{
 Create an invoker email for use within authenticated Cloud Run

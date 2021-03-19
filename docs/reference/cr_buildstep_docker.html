@@ -10,27 +10,23 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
-
-<!-- bootstrap-toc -->
-<link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -41,6 +37,7 @@
 
 <meta property="og:title" content="Create a build step to build and push a docker image — cr_buildstep_docker" />
 <meta property="og:description" content="Create a build step to build and push a docker image" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -68,7 +65,7 @@
 
   </head>
 
-  <body data-spy="scroll" data-target="#toc">
+  <body>
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -90,13 +87,13 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
      
@@ -116,28 +113,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fas fa-shapes"></span>
+    <span class="fa fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fas fa-running"></span>
+    <span class="fa fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fas fa-clock"></span>
+    <span class="fa fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-hands-helping"></span>
+    <span class="fa fa-hands-helping"></span>
      
     Use Cases
      
@@ -178,19 +175,14 @@
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-question"></span>
+    <span class="fa fa-question"></span>
      
     Functions
   </a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+        
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -205,7 +197,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create a build step to build and push a docker image</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/docker.R'><code>R/docker.R</code></a></small>
+    
     <div class="hidden name"><code>cr_buildstep_docker.Rd</code></div>
     </div>
 
@@ -213,15 +205,15 @@
     <p>Create a build step to build and push a docker image</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildstep_docker</span><span class='op'>(</span>
-  <span class='va'>image</span>,
-  tag <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"latest"</span>, <span class='st'>"$BUILD_ID"</span><span class='op'>)</span>,
-  location <span class='op'>=</span> <span class='st'>"."</span>,
-  projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>,
-  dockerfile <span class='op'>=</span> <span class='st'>"Dockerfile"</span>,
-  kaniko_cache <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cr_buildstep_docker</span>(
+  <span class='no'>image</span>,
+  <span class='kw'>tag</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"latest"</span>, <span class='st'>"$BUILD_ID"</span>),
+  <span class='kw'>location</span> <span class='kw'>=</span> <span class='st'>"."</span>,
+  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
+  <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='st'>"Dockerfile"</span>,
+  <span class='kw'>kaniko_cache</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -269,7 +261,7 @@
 <code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a>()</code>,
 <code><a href='cr_buildstep_extract.html'>cr_buildstep_extract</a>()</code>,
 <code><a href='cr_buildstep_gcloud.html'>cr_buildstep_gcloud</a>()</code>,
-<code><a href='cr_buildstep_gitsetup.html'>cr_buildstep_gitsetup</a>()</code>,
+<code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a>()</code>,
 <code><a href='cr_buildstep_mailgun.html'>cr_buildstep_mailgun</a>()</code>,
 <code><a href='cr_buildstep_nginx_setup.html'>cr_buildstep_nginx_setup</a>()</code>,
 <code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a>()</code>,
@@ -280,11 +272,8 @@
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-03-17 23:56:24 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-03-17 23:56:24 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
-<span class='fu'>cr_buildstep_docker</span><span class='op'>(</span><span class='st'>"gcr.io/my-project/my-image"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
+    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-03-18 15:51:27 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-03-18 15:51:27 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
+<span class='fu'>cr_buildstep_docker</span>(<span class='st'>"gcr.io/my-project/my-image"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
@@ -303,8 +292,7 @@
 #&gt; args:
 #&gt; - push
 #&gt; - gcr.io/my-project/my-image
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span><span class='op'>(</span><span class='st'>"my-image"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
+#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
@@ -323,8 +311,7 @@
 #&gt; args:
 #&gt; - push
 #&gt; - gcr.io/my-project/my-image
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span><span class='op'>(</span><span class='st'>"my-image"</span>, tag <span class='op'>=</span> <span class='st'>"$BRANCH_NAME"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
+#&gt; </div><div class='input'><span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>, <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BRANCH_NAME"</span>)</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
@@ -343,36 +330,40 @@
 #&gt; - gcr.io/my-project/my-image
 #&gt; </div><div class='input'>
 <span class='co'># setting up a build to trigger off a Git source:</span>
-<span class='va'>my_image</span> <span class='op'>&lt;-</span> <span class='st'>"gcr.io/my-project/my-image"</span>
-<span class='va'>my_repo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='RepoSource.html'>RepoSource</a></span><span class='op'>(</span><span class='st'>"github_markedmondson1234_googlecloudrunner"</span>,
-                      branchName<span class='op'>=</span><span class='st'>"master"</span><span class='op'>)</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>docker_yaml</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span><span class='op'>(</span>steps <span class='op'>=</span> <span class='fu'>cr_buildstep_docker</span><span class='op'>(</span><span class='va'>my_image</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>built_docker</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span><span class='op'>(</span><span class='va'>docker_yaml</span>, source <span class='op'>=</span> <span class='va'>my_repo</span><span class='op'>)</span>
+<span class='no'>my_image</span> <span class='kw'>&lt;-</span> <span class='st'>"gcr.io/my-project/my-image"</span>
+<span class='no'>my_repo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='RepoSource.html'>RepoSource</a></span>(<span class='st'>"github_markedmondson1234_googlecloudrunner"</span>,
+                      <span class='kw'>branchName</span><span class='kw'>=</span><span class='st'>"master"</span>)
+<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='no'>docker_yaml</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span>(<span class='kw'>steps</span> <span class='kw'>=</span> <span class='fu'>cr_buildstep_docker</span>(<span class='no'>my_image</span>))
+<span class='no'>built_docker</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='no'>docker_yaml</span>, <span class='kw'>source</span> <span class='kw'>=</span> <span class='no'>my_repo</span>)
 
 <span class='co'># make a build trigger so it builds on each push to master</span>
-<span class='fu'><a href='cr_buildtrigger.html'>cr_buildtrigger</a></span><span class='op'>(</span><span class='st'>"build-docker"</span>, trigger <span class='op'>=</span> <span class='va'>my_repo</span>, build <span class='op'>=</span> <span class='va'>built_docker</span><span class='op'>)</span>
+<span class='fu'><a href='cr_buildtrigger.html'>cr_buildtrigger</a></span>(<span class='st'>"build-docker"</span>, <span class='kw'>trigger</span> <span class='kw'>=</span> <span class='no'>my_repo</span>, <span class='kw'>build</span> <span class='kw'>=</span> <span class='no'>built_docker</span>)
 
 
 <span class='co'># add a cache to your docker build to speed up repeat builds</span>
-<span class='fu'>cr_buildstep_docker</span><span class='op'>(</span><span class='st'>"my-image"</span>, kaniko_cache <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>cr_buildstep_docker</span>(<span class='st'>"my-image"</span>, <span class='kw'>kaniko_cache</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
 
 <span class='co'># building using manual buildsteps to clone from git</span>
-<span class='va'>bs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
-  <span class='fu'><a href='cr_buildstep_gitsetup.html'>cr_buildstep_gitsetup</a></span><span class='op'>(</span><span class='st'>"github-ssh"</span><span class='op'>)</span>,
-  <span class='fu'><a href='cr_buildstep_gitsetup.html'>cr_buildstep_git</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"clone"</span>,<span class='st'>"git@github.com:MarkEdmondson1234/googleCloudRunner"</span>,<span class='st'>"."</span><span class='op'>)</span><span class='op'>)</span>,
-  <span class='fu'>cr_buildstep_docker</span><span class='op'>(</span><span class='st'>"gcr.io/gcer-public/packagetools"</span>,
-                      dir <span class='op'>=</span> <span class='st'>"inst/docker/packages/"</span><span class='op'>)</span>
-  <span class='op'>)</span>
+<span class='no'>bs</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(
+  <span class='fu'><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a></span>(<span class='st'>"github-ssh"</span>),
+  <span class='fu'><a href='cr_buildstep_git.html'>cr_buildstep_git</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"clone"</span>,<span class='st'>"git@github.com:MarkEdmondson1234/googleCloudRunner"</span>,<span class='st'>"."</span>)),
+  <span class='fu'>cr_buildstep_docker</span>(<span class='st'>"gcr.io/gcer-public/packagetools"</span>,
+                      <span class='kw'>dir</span> <span class='kw'>=</span> <span class='st'>"inst/docker/packages/"</span>)
+  )
 
-<span class='va'>built</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span><span class='op'>(</span><span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span><span class='op'>(</span><span class='va'>bs</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></span></pre>
+<span class='no'>built</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span>(<span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span>(<span class='no'>bs</span>))
+}</div></span></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <nav id="toc" data-toggle="toc" class="sticky-top">
-      <h2 data-toc-skip>Contents</h2>
-    </nav>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#details">Details</a></li>
+      <li><a href="#see-also">See also</a></li>
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+
   </div>
 </div>
 
@@ -383,7 +374,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>

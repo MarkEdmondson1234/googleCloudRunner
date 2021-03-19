@@ -35,6 +35,8 @@ cr_schedule("my-webhook", "12 6 * * *", overwrite=TRUE)
 
 ## Schedule Cloud Run applications
 
+### Public HTTP endpoints
+
 Via Cloud Scheduler you can set up a scheduled hit of your HTTP endpoints, via GET, POST or any other methods you have coded into your app.  `cr_run_schedule_http()` will help you create the HTTP endpoint for you to pass to `cr_schedule()`:
 
 ```r
@@ -45,6 +47,32 @@ run_me <- cr_run_schedule_http(
 
 cr_schedule("cloud-run-scheduled", schedule = "4 16 * * *", httpTarget = run_me)
 
+```
+
+### Private HTTP endpoints
+
+When you create an app via `cr_deploy_run("my-app", allowUnauthenticated = TRUE)` a new service account will be created with the rights called "my-app-invoker".  Use that email to tell the scheduler how to call the app:
+
+```r
+# for authenticated Cloud Run apps - create with allowUnauthenticated=FALSE
+cr_deploy_run("my-app", allowUnauthenticated = TRUE)
+
+# deploying via R will help create a service email called my-app-invoker
+cr_run_email("my-app")
+#> "my-app-invoker@your-project.iam.gserviceaccount.com"
+
+# schedule the endpoint
+my_app <- cr_run_get("my-app")
+
+endpoint <- paste0(my_app$status$url, "/fetch_stuff")
+
+app_sched <- cr_run_schedule_http(endpoint,
+                                  http_method = "GET",
+                                  email = cr_run_email("my-app"))
+
+cr_schedule("my-app-scheduled-1",
+            schedule = "16 4 * * *",
+            httpTarget = app_sched)
 ```
 
 ## Schedule an R script
@@ -100,7 +128,7 @@ cr_deploy_r(r_lines, schedule = "15 21 * * *", source = source)
 
 ### Supplying your own Docker image
 
-The examples above are all using the default of `rocker/r-base` for the R environment.  If you have package depdencies for your script you would need to install them within the script.
+The examples above are all using the default of `rocker/r-base` for the R environment.  If you have package dependencies for your script you would need to install them within the script.
 
 An alternative is to customise the Docker image so it includes the R packages you need.  For instance, `rocker/tidyverse` would load the Tidyverse packages.
 
@@ -147,13 +175,13 @@ To schedule an R script the steps are:
 
 The R script can hold anything, but make sure its is self contained with auth files, data files etc.  All paths should be relative to the script and available in the source you choose to build with (e.g. GCS or git repo) or within the Docker image executing R. 
 
-Uploading auth files within Dockerfiles is not recommended security wise. The recommend way to download auth files is to use the GKE encryption service, which is available as a build step macro via `cr_buildstep_decrypt()`
+Uploading auth files within Dockerfiles is not recommended security wise. The recommend way to download auth files is to use Secret Manager, which is available as a build step macro via `cr_buildstep_secret()`
 
 ### 2. Bundle the R script with a Dockerfile
 
 You may only need vanilla r or tidyverse, in which case select the presets "rocker/r-ver" or "rocker/verse".
 
-You can also create your own Docker image - point it at the folder with your script and a Dockerfile (perhaps created with `cr_dockerfile()`)
+You can also create your own Docker image - point it at the folder with your script and a Dockerfile (perhaps created with `cr_buildstep_docker()`)
 
 ### 3. Build the Docker image on Cloud Build
 
@@ -173,7 +201,7 @@ You may want your R code to operate on data in Google Cloud Storage or a git rep
 
 #### Repo Source
 
-This is if you have your code files within a repo like GitHub and mirrored to Cloud Source repositories.
+This is if you have your code files within Cloud Source repositories - this can include mirrors from other git providers such as GitHub - see [setting up git](https://code.markedmondson.me/googleCloudRunner/articles/git.html).
 
 ```r
 schedule_me <- cr_build_yaml(
@@ -194,7 +222,7 @@ my_build <- cr_build_make(schedule_me, source = repo_source)
 
 This keeps your R code source in a Cloud Storage bucket.
 
-The first method uses a tar.gz that has zipped files in a folder that you upload:
+The first method uses `?cr_build_upload_gcs` to create a tar.gz that has zipped files in a folder that you upload:
 
 ```r
 schedule_me <- cr_build_yaml(
@@ -207,6 +235,8 @@ schedule_me <- cr_build_yaml(
 gcs_source <- cr_build_upload_gcs("local_folder_with_r_script")
 my_build <- cr_build_make(schedule_me, source = gcs_source)
 ```
+
+#### Download files in an initial buildstep
 
 When only a few files, it may be easiest to include downloading the R file from your bucket first into the /workspace/ via a buildstep using [gsutil](https://cloud.google.com/storage/docs/gsutil), not using source at all:
 
@@ -227,6 +257,21 @@ schedule_me <- cr_build_yaml(
     )
 
 my_build <- cr_build_make(schedule_me)
+```
+
+#### Download files via git
+
+Another alternative is to use git within the buildsteps to clone from a repo - these can be private git repos if you have uploaded your git SSH key to Secret Manager:
+
+```r
+cr_build_yaml(
+      steps = c(
+           cr_buildstep_gitsetup("github-ssh"),
+           cr_buildstep_git(c("clone",
+                              "git@github.com:github_name/repo_name")),
+           cr_buildstep_r("list.files()")
+      )
+  )
 ```
 
 ### Testing
@@ -254,5 +299,5 @@ cr_schedule("15 5 * * *", name="scheduled_r",
 
 Your R script should now be scheduled and running in its own environment.
 
-You can automate updates to the script and/or Docker container or schedule separately, by redoing the relevant step above, perhaps adding a [build trigger](https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html#build-triggers) to do so. 
+You can automate updates to the script and/or Docker container or schedule separately, by redoing the relevant step above, or using `cr_buildtrigger()` to automate deployments.
 
