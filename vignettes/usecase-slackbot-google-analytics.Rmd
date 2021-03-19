@@ -374,3 +374,49 @@ ENTRYPOINT ["Rscript", "server.R"]
 ```
 
 After making the changes to the Dockerfile and api.R, we commit the changes to redeploy via the Build Trigger
+
+## Testing the App and Scheduling
+
+After deployment it should now be able to respond to the GA endpoint:
+
+```r
+library(httr)
+ga_id <- 1234557
+res <- GET(paste0("https://slackbot-xxxx-ew.a.run.app/last-30-days?ga_id=",ga_id))
+content(res)
+```
+
+Check the logs for Cloud Build and Cloud Run to see if its all working.
+
+The first time I tried it the memory was too low for the app, which is why above it specifies "2G" for the Cloud Run size. 
+
+But if all goes well then you should be able to see the CSV file come back.
+
+The URL endpoint `/trigger-slack?ga_id=12345` should send the same data you see at `/last-30-days?ga_id=12345` but send that data to Slack.
+
+### Scheduling
+
+Now we can schedule the URL via Cloud Scheduler.
+
+```r
+ga_id <- 1233456
+my_app <- "https://slackbot-xxxxxxx-ew.a.run.app"
+my_endpoint <- paste0(my_app,"/trigger-slack?ga_id=",ga_id)
+
+http_target <- HttpTarget(
+  uri = my_endpoint,
+  httpMethod = "GET"
+) 
+
+# every Monday at 0830
+cr_schedule("slackbot-schedule", 
+            schedule = "30 8 * * 1",
+            httpTarget = http_target,
+            overwrite = TRUE)
+
+```
+
+
+## Where to go from here
+
+You could try adding other endpoints for different GA functions, or making the API/webhook compatible with other services other than Slack.  You may also want to make the Cloud Run API private, and should if its controlling private of expensive operations, so then look at `cr_jwt_create()` or `cr_run_schedule_http()` as your private API options.
