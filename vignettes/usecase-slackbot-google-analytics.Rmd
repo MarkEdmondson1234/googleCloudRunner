@@ -413,7 +413,7 @@ The first time I tried it the memory was too low for the app, which is why above
 
 But if all goes well then you should be able to see the CSV file come back. (yay!)
 
-![]
+![](slackbot_csv_download.png)
 
 The URL endpoint `/trigger-slack?ga_id=12345` should send the same data you see at `/last-30-days?ga_id=12345` but send that data to Slack:
 
@@ -424,6 +424,9 @@ my_app <- "https://slackbot-xxxx-ew.a.run.ap"
 res <- GET(paste0(my_app, "/trigger-slack?ga_id=",ga_id))
 content(res)
 ```
+
+![](csv_slack.png)
+
 
 ### Scheduling
 
