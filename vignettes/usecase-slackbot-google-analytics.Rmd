@@ -249,9 +249,56 @@ I played around with what exactly to send to Slack for a data.frame and ended up
 
 ## Modifying the R script to get the right format for Slack
 
-To call the Slack bot, the API needs to collect the data then make a HTTP GET request above itself to the Slack URL.  
+To call the Slack bot, the API needs to collect the data then make a HTTP GET request above itself to the Slack URL.  I don't want to include the Slack URL in the code, so I'll also alter the Build Trigger to accept a substitution variable in the build, that will hold the Slack URL.  
 
-The R API is now modified to include this new endpoint:
+```r
+library(googleCloudRunner)
+
+bs <- c(
+  # get secret files
+  cr_buildstep_secret("mark-edmondson-gde-clientid", "client.json",
+                      dir = "inst/slackbot/"),
+  cr_buildstep_secret("googleanalyticsr-tests","auth.json",
+                      dir = "inst/slackbot/"),
+  # build with the same name as deployed
+  cr_buildstep_docker(
+    image = "slackbot",
+    kaniko_cache = TRUE,
+    dir = "inst/slackbot/"
+  ),
+  #deploy the app
+  cr_buildstep_run(
+    "slackbot",
+    image = "gcr.io/$PROJECT_ID/slackbot:$BUILD_ID",
+    env_vars = c("GAR_CLIENT_JSON=client.json",
+                 "GA_AUTH_FILE=auth.json",
+                 "SLACK_URL=$_SLACK_URL") # will get from substitution variable
+  )
+)
+
+# increase timeout to 20 mins
+build_yml <- cr_build_yaml(bs, timeout = 2400)
+build_obj <- cr_build_make(build_yml)
+
+# setup trigger of build
+repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+
+# your own slack URL
+slack_url <- "https://hooks.slack.com/services/XXXX6/B0YYYYYY/3rNZZZZZ"
+
+cr_buildtrigger(
+  build_obj, name = "slackbot-trigger", trigger = repo,
+  description = "Deploying the Slackbot example",
+  includedFiles = "inst/slackbot/**",
+  substitutions = 
+     list(
+       `_SLACK_URL`=slack_url
+      ),
+  overwrite=TRUE
+)
+```
+
+The R API is now also modified to include this new endpoint:
 
 ```r
 library(googleAnalyticsR)
@@ -307,7 +354,8 @@ function(ga_id){
                  paste0(collapse = "\n",knitr::kable(last_30_new_refs)),
                 "```\n")
                 )
-
+  # get the Slack URL from an env var
+  slack_url <- Sys.getenv("SLACK_URL")
   POST(slack_url, body = the_body, encode = "json")
 }
 ```

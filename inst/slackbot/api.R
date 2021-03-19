@@ -51,6 +51,7 @@ function(ga_id){
                   paste0(collapse = "\n",knitr::kable(last_30_new_refs)),
                   "```\n")
   )
-
+  # get the Slack URL from an env var
+  slack_url <- Sys.getenv("SLACK_URL")
   POST(slack_url, body = the_body, encode = "json")
 }
