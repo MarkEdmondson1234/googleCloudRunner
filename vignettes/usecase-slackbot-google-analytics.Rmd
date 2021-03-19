@@ -199,6 +199,7 @@ bs <- c(
   cr_buildstep_run(
     "slackbot",
     image = "gcr.io/$PROJECT_ID/slackbot:$BUILD_ID",
+    memory = "1Gi",
     env_vars = c("GAR_CLIENT_JSON=client.json",
                  "GA_AUTH_FILE=auth.json")
   )
@@ -262,6 +263,8 @@ the_body <- list(
                 )
 POST(slack_url, body = the_body, encode = "json")
 ```
+
+![](list_slack.png)
 
 ## Modifying the R script to get the right format for Slack
 
