@@ -130,19 +130,25 @@ cr_build_list <- function(filter = NULL,
     lapply(ids,
            function(y){
              x <- objs[[y]]
-             data.frame(
-               buildId = if_null_na(x$id),
-               status = if_null_na(x$status),
-               projectId = if_null_na(x$projectId),
-               buildCreateTime = if_null_na(timestamp_to_r(x$createTime)),
-               buildStartTime = if_null_na(timestamp_to_r(x$startTime)),
-               buildFinishTime = if_null_na(timestamp_to_r(x$finishTime)),
-               timeout = if_null_na(x$timeout),
-               logsBucket = if_null_na(x$logsBucket),
-               buildTriggerId = if_null_na(x$buildTriggerId),
-               logUrl = if_null_na(x$logUrl),
-               bucketLogUrl = make_bucket_log_url(x),
-               stringsAsFactors = FALSE)
+             tryCatch(
+               data.frame(
+                 buildId = if_null_na(x$id),
+                 status = if_null_na(x$status),
+                 projectId = if_null_na(x$projectId),
+                 buildCreateTime = if_null_na(timestamp_to_r(x$createTime)),
+                 buildStartTime = if_null_na(timestamp_to_r(x$startTime)),
+                 buildFinishTime = if_null_na(timestamp_to_r(x$finishTime)),
+                 timeout = if_null_na(x$timeout),
+                 logsBucket = if_null_na(x$logsBucket),
+                 buildTriggerId = if_null_na(x$buildTriggerId),
+                 logUrl = if_null_na(x$logUrl),
+                 bucketLogUrl = make_bucket_log_url(x),
+                 stringsAsFactors = FALSE),
+             error = function(err){
+               str(x)
+               warning("Could not parse build list object: ", err$message)
+               return(NULL)
+             })
            }
     )
   )
