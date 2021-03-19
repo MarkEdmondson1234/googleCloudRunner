@@ -71,6 +71,8 @@ navbar:
           href: articles/usecase-polygot-ga-imports-to-bigquery.html
         - text: "Event-triggered R scripts with pub/sub"
           href: articles/usecase-r-event-driven-pubsub.html
+        - text: "Create a Slackbot downloading Google Analytics"
+          href: articles/usecase-slackbot-google-analytics.html
     - text: "Functions"
       href: reference/index.html
       icon: fa-question
