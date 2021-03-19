@@ -388,9 +388,54 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <div id="modifying-the-r-script-to-get-the-right-format-for-slack" class="section level2">
 <h2 class="hasAnchor">
 <a href="#modifying-the-r-script-to-get-the-right-format-for-slack" class="anchor"></a>Modifying the R script to get the right format for Slack</h2>
-<p>To call the Slack bot, the API needs to collect the data then make a HTTP GET request above itself to the Slack URL.</p>
-<p>The R API is now modified to include this new endpoint:</p>
+<p>To call the Slack bot, the API needs to collect the data then make a HTTP GET request above itself to the Slack URL. I don’t want to include the Slack URL in the code, so I’ll also alter the Build Trigger to accept a substitution variable in the build, that will hold the Slack URL.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
+
+<span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+  <span class="co"># get secret files</span>
+  <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"mark-edmondson-gde-clientid"</span>, <span class="st">"client.json"</span>,
+                      dir <span class="op">=</span> <span class="st">"inst/slackbot/"</span><span class="op">)</span>,
+  <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"googleanalyticsr-tests"</span>,<span class="st">"auth.json"</span>,
+                      dir <span class="op">=</span> <span class="st">"inst/slackbot/"</span><span class="op">)</span>,
+  <span class="co"># build with the same name as deployed</span>
+  <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span><span class="op">(</span>
+    image <span class="op">=</span> <span class="st">"slackbot"</span>,
+    kaniko_cache <span class="op">=</span> <span class="cn">TRUE</span>,
+    dir <span class="op">=</span> <span class="st">"inst/slackbot/"</span>
+  <span class="op">)</span>,
+  <span class="co">#deploy the app</span>
+  <span class="fu"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span><span class="op">(</span>
+    <span class="st">"slackbot"</span>,
+    image <span class="op">=</span> <span class="st">"gcr.io/$PROJECT_ID/slackbot:$BUILD_ID"</span>,
+    env_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"GAR_CLIENT_JSON=client.json"</span>,
+                 <span class="st">"GA_AUTH_FILE=auth.json"</span>,
+                 <span class="st">"SLACK_URL=$_SLACK_URL"</span><span class="op">)</span> <span class="co"># will get from substitution variable</span>
+  <span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># increase timeout to 20 mins</span>
+<span class="va">build_yml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span><span class="va">bs</span>, timeout <span class="op">=</span> <span class="fl">2400</span><span class="op">)</span>
+<span class="va">build_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">build_yml</span><span class="op">)</span>
+
+<span class="co"># setup trigger of build</span>
+<span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
+
+<span class="co"># your own slack URL</span>
+<span class="va">slack_url</span> <span class="op">&lt;-</span> <span class="st">"https://hooks.slack.com/services/XXXX6/B0YYYYYY/3rNZZZZZ"</span>
+
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span>
+  <span class="va">build_obj</span>, name <span class="op">=</span> <span class="st">"slackbot-trigger"</span>, trigger <span class="op">=</span> <span class="va">repo</span>,
+  description <span class="op">=</span> <span class="st">"Deploying the Slackbot example"</span>,
+  includedFiles <span class="op">=</span> <span class="st">"inst/slackbot/**"</span>,
+  substitutions <span class="op">=</span> 
+     <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+       `_SLACK_URL`<span class="op">=</span><span class="va">slack_url</span>
+      <span class="op">)</span>,
+  overwrite<span class="op">=</span><span class="cn">TRUE</span>
+<span class="op">)</span></code></pre></div>
+<p>The R API is now also modified to include this new endpoint:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">googleAnalyticsR</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
@@ -444,7 +489,8 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
                  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="st">"\n"</span>,<span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">last_30_new_refs</span><span class="op">)</span><span class="op">)</span>,
                 <span class="st">"```\n"</span><span class="op">)</span>
                 <span class="op">)</span>
-
+  <span class="co"># get the Slack URL from an env var</span>
+  <span class="va">slack_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">"SLACK_URL"</span><span class="op">)</span>
   <span class="fu"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, body <span class="op">=</span> <span class="va">the_body</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p>We also add knitr to help with rendering the output in the Dockerfile (httr is already a dependency for googleAnalyticsR):</p>
