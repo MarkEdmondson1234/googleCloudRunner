@@ -20,7 +20,7 @@ The workflow needed is:
 4. Setting up a build trigger to redeploy the R script on each git commit
 4. Creating a Slack App to respond to the Cloud Run webhook
 5. Modifying the R script to get the right format for Slack
-6. Scheduling
+6. Scheduling the webhook to fire
 
 ## Create the R script for downloading the GA data
 
@@ -270,6 +270,7 @@ bs <- c(
   cr_buildstep_run(
     "slackbot",
     image = "gcr.io/$PROJECT_ID/slackbot:$BUILD_ID",
+    memory = "2GiB",
     env_vars = c("GAR_CLIENT_JSON=client.json",
                  "GA_AUTH_FILE=auth.json",
                  "SLACK_URL=$_SLACK_URL") # will get from substitution variable
