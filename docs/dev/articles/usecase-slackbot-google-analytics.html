@@ -184,7 +184,7 @@
 <li>Setting up a build trigger to redeploy the R script on each git commit</li>
 <li>Creating a Slack App to respond to the Cloud Run webhook</li>
 <li>Modifying the R script to get the right format for Slack</li>
-<li>Scheduling</li>
+<li>Scheduling the webhook to fire</li>
 </ol>
 <div id="create-the-r-script-for-downloading-the-ga-data" class="section level2">
 <h2 class="hasAnchor">
@@ -408,6 +408,7 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
   <span class="fu"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span><span class="op">(</span>
     <span class="st">"slackbot"</span>,
     image <span class="op">=</span> <span class="st">"gcr.io/$PROJECT_ID/slackbot:$BUILD_ID"</span>,
+    memory <span class="op">=</span> <span class="st">"2GiB"</span>,
     env_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"GAR_CLIENT_JSON=client.json"</span>,
                  <span class="st">"GA_AUTH_FILE=auth.json"</span>,
                  <span class="st">"SLACK_URL=$_SLACK_URL"</span><span class="op">)</span> <span class="co"># will get from substitution variable</span>
