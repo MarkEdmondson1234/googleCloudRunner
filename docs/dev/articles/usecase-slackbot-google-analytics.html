@@ -348,7 +348,8 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
   <span class="op">)</span>
 <span class="op">)</span>
 
-<span class="va">build_yml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span><span class="va">bs</span><span class="op">)</span>
+<span class="co"># increase timeout to 20 mins</span>
+<span class="va">build_yml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span><span class="va">bs</span>, timeout <span class="op">=</span> <span class="fl">2400</span><span class="op">)</span>
 <span class="va">build_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">build_yml</span><span class="op">)</span>
 
 <span class="co"># setup trigger of build</span>
@@ -446,7 +447,7 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 
   <span class="fu"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, body <span class="op">=</span> <span class="va">the_body</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p>We also add knitr to help with rendering the output in the Dockerfile (httr is already a depdency for googleAnalyticsR):</p>
+<p>We also add knitr to help with rendering the output in the Dockerfile (httr is already a dependency for googleAnalyticsR):</p>
 <pre><code>FROM rstudio/plumber
 RUN install2.r --error \
     -r 'http://cran.rstudio.com' \
