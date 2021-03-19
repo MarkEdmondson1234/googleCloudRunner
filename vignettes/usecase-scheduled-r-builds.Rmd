@@ -243,18 +243,17 @@ You could add other steps if you wanted, such as sending an email when done via 
 
 ```r
 r_code <- cr_build_yaml(
-  cr_buildstep("gcr.io/my-project/my-r-script"),
-  cr_buildstep_slack("The script run ok")
+  steps = c(cr_buildstep("gcr.io/my-project/my-r-script"),
+            cr_buildstep_slack("The script run ok")),
+  substitutions = c(`_SLACK_WEBHOOK` = "https://your_slack_webhook")
 )
-cr_build(r_code, `_SLACK_WEBHOOK` = "https://your_slack_webhook")
-
+cr_build(r_code)
 ```
 
 To set this up in a schedule, add it to the scheduler like so:
 
 ```r
-built <- cr_build(r_code, `_SLACK_WEBHOOK` = "https://your_slack_webhook")
-schedule_me <- cr_build_schedule_http(built)
+schedule_me <- cr_build_schedule_http(r_code)
 cr_schedule("r-code-example", "15 8 * * *", httpTarget = schedule_me)
 ```
 
