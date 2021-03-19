@@ -384,12 +384,25 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <span class="fu"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, <span class="fu"><a href="https://httr.r-lib.org/reference/verbose.html">verbose</a></span><span class="op">(</span><span class="op">)</span>, body <span class="op">=</span> <span class="va">the_body</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span></code></pre></div>
 <p>I played around with what exactly to send to Slack for a data.frame and ended up with the above, which looked like this in Slack:</p>
 <p><img src="csv_slack.png"></p>
+<p>It won’t work with large tables, so limit the table down if using kable, or in the end I ended up with just a list of the referral URLs:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># get last years referrer data</span>
+<span class="va">last_30_new_refs</span> <span class="op">&lt;-</span> <span class="fu">do_ga</span><span class="op">(</span><span class="va">ga_id</span><span class="op">)</span>
+  
+<span class="va">the_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">last_30_new_refs</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span>
+  
+<span class="va">the_body</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"GoogleAnalyticsLast30DaysNewReferrals\n```\n"</span>, 
+                 <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="st">"\n"</span>,<span class="va">the_data</span><span class="op">)</span>,
+                <span class="st">"\n```\n"</span><span class="op">)</span>
+                <span class="op">)</span>
+<span class="fu"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, body <span class="op">=</span> <span class="va">the_body</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="modifying-the-r-script-to-get-the-right-format-for-slack" class="section level2">
 <h2 class="hasAnchor">
 <a href="#modifying-the-r-script-to-get-the-right-format-for-slack" class="anchor"></a>Modifying the R script to get the right format for Slack</h2>
 <p>To call the Slack bot, the API needs to collect the data then make a HTTP GET request above itself to the Slack URL. I don’t want to include the Slack URL in the code, so I’ll also alter the Build Trigger to accept a substitution variable in the build, that will hold the Slack URL.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
 <span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
@@ -408,7 +421,7 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
   <span class="fu"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span><span class="op">(</span>
     <span class="st">"slackbot"</span>,
     image <span class="op">=</span> <span class="st">"gcr.io/$PROJECT_ID/slackbot:$BUILD_ID"</span>,
-    memory <span class="op">=</span> <span class="st">"2GiB"</span>,
+    memory <span class="op">=</span> <span class="st">"1Gi"</span>,
     env_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"GAR_CLIENT_JSON=client.json"</span>,
                  <span class="st">"GA_AUTH_FILE=auth.json"</span>,
                  <span class="st">"SLACK_URL=$_SLACK_URL"</span><span class="op">)</span> <span class="co"># will get from substitution variable</span>
@@ -436,7 +449,7 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
   overwrite<span class="op">=</span><span class="cn">TRUE</span>
 <span class="op">)</span></code></pre></div>
 <p>The R API is now also modified to include this new endpoint:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">googleAnalyticsR</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
@@ -485,14 +498,18 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
   <span class="co"># get last years referrer data</span>
   <span class="va">last_30_new_refs</span> <span class="op">&lt;-</span> <span class="fu">do_ga</span><span class="op">(</span><span class="va">ga_id</span><span class="op">)</span>
   
+  <span class="va">the_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">last_30_new_refs</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span>
+  
   <span class="va">the_body</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-    text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"```\n"</span>, 
-                 <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="st">"\n"</span>,<span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">last_30_new_refs</span><span class="op">)</span><span class="op">)</span>,
-                <span class="st">"```\n"</span><span class="op">)</span>
+    text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"GoogleAnalyticsLast30DaysNewReferrals\n```\n"</span>, 
+                 <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="st">"\n"</span>,<span class="va">the_data</span><span class="op">)</span>,
+                <span class="st">"\n```\n"</span><span class="op">)</span>
                 <span class="op">)</span>
   <span class="co"># get the Slack URL from an env var</span>
   <span class="va">slack_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">"SLACK_URL"</span><span class="op">)</span>
-  <span class="fu"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, body <span class="op">=</span> <span class="va">the_body</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span>
+  <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, body <span class="op">=</span> <span class="va">the_body</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span>
+  
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>slack_http_response <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">status_code</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p>We also add knitr to help with rendering the output in the Dockerfile (httr is already a dependency for googleAnalyticsR):</p>
 <pre><code>FROM rstudio/plumber
@@ -508,20 +525,28 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <h2 class="hasAnchor">
 <a href="#testing-the-app-and-scheduling" class="anchor"></a>Testing the App and Scheduling</h2>
 <p>After deployment it should now be able to respond to the GA endpoint:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
 <span class="va">ga_id</span> <span class="op">&lt;-</span> <span class="fl">1234557</span>
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"https://slackbot-xxxx-ew.a.run.app/last-30-days?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span><span class="op">)</span>
+<span class="va">my_app</span> <span class="op">&lt;-</span> <span class="st">"https://slackbot-xxxx-ew.a.run.ap"</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">my_app</span>, <span class="st">"/last-30-days?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
 <p>Check the logs for Cloud Build and Cloud Run to see if its all working.</p>
-<p>The first time I tried it the memory was too low for the app, which is why above it specifies “2G” for the Cloud Run size.</p>
-<p>But if all goes well then you should be able to see the CSV file come back.</p>
-<p>The URL endpoint <code>/trigger-slack?ga_id=12345</code> should send the same data you see at <code>/last-30-days?ga_id=12345</code> but send that data to Slack.</p>
+<p>The first time I tried it the memory was too low for the app, which is why above it specifies “1Gi” for the Cloud Run size.</p>
+<p>But if all goes well then you should be able to see the CSV file come back. (yay!)</p>
+<p>[]</p>
+<p>The URL endpoint <code>/trigger-slack?ga_id=12345</code> should send the same data you see at <code>/last-30-days?ga_id=12345</code> but send that data to Slack:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
+<span class="va">ga_id</span> <span class="op">&lt;-</span> <span class="fl">1234557</span>
+<span class="va">my_app</span> <span class="op">&lt;-</span> <span class="st">"https://slackbot-xxxx-ew.a.run.ap"</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">my_app</span>, <span class="st">"/trigger-slack?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
 <div id="scheduling" class="section level3">
 <h3 class="hasAnchor">
 <a href="#scheduling" class="anchor"></a>Scheduling</h3>
 <p>Now we can schedule the URL via Cloud Scheduler.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ga_id</span> <span class="op">&lt;-</span> <span class="fl">1233456</span>
 <span class="va">my_app</span> <span class="op">&lt;-</span> <span class="st">"https://slackbot-xxxxxxx-ew.a.run.app"</span>
 <span class="va">my_endpoint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">my_app</span>,<span class="st">"/trigger-slack?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span>
@@ -531,9 +556,9 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
   httpMethod <span class="op">=</span> <span class="st">"GET"</span>
 <span class="op">)</span> 
 
-<span class="co"># every Monday at 0830</span>
+<span class="co"># every Friday at 0830</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"slackbot-schedule"</span>, 
-            schedule <span class="op">=</span> <span class="st">"30 8 * * 1"</span>,
+            schedule <span class="op">=</span> <span class="st">"30 8 * * 5"</span>,
             httpTarget <span class="op">=</span> <span class="va">http_target</span>,
             overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
@@ -541,7 +566,9 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <div id="where-to-go-from-here" class="section level2">
 <h2 class="hasAnchor">
 <a href="#where-to-go-from-here" class="anchor"></a>Where to go from here</h2>
-<p>You could try adding other endpoints for different GA functions, or making the API/webhook compatible with other services other than Slack. You may also want to make the Cloud Run API private, and should if its controlling private of expensive operations, so then look at <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> or <code><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http()</a></code> as your private API options.</p>
+<p>Once the app is deployed you can spend most of your time developing the R code, which upon each commit will recreate the API.</p>
+<p>You could try adding other endpoints for different GA functions, or making the API/webhook compatible with other services other than Slack.</p>
+<p>You may also want to make the Cloud Run API private, and should if its controlling private of expensive operations, so then look at <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> or <code><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http()</a></code> as your private API options.</p>
 </div>
   </div>
 
