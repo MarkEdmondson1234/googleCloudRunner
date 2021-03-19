@@ -103,5 +103,11 @@ cat0 <- function(prefix = "", x){
 #' @keywords internal
 #' @noRd
 timestamp_to_r <- function(t){
-  as.POSIXct(t, format = "%Y-%m-%dT%H:%M:%S", tz="UTC")
+  if(is.null(t)) return(t)
+  tryCatch(
+    as.POSIXct(t, format = "%Y-%m-%dT%H:%M:%S", tz="UTC"),
+    error = function(err){
+      warning(err$message, " t=", t)
+      return(t)
+    })
 }

@@ -204,7 +204,8 @@ bs <- c(
   )
 )
 
-build_yml <- cr_build_yaml(bs)
+# increase timeout to 20 mins
+build_yml <- cr_build_yaml(bs, timeout = 2400)
 build_obj <- cr_build_make(build_yml)
 
 # setup trigger of build
@@ -311,7 +312,7 @@ function(ga_id){
 }
 ```
 
-We also add knitr to help with rendering the output in the Dockerfile (httr is already a depdency for googleAnalyticsR):
+We also add knitr to help with rendering the output in the Dockerfile (httr is already a dependency for googleAnalyticsR):
 
 ```
 FROM rstudio/plumber

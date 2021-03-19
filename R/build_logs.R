@@ -101,6 +101,10 @@ cr_build_logs_last <- function(trigger_name = NULL,
     cli::cli_status_update(msg = "{symbol$arrow_right} Downloading buildtriggers")
     ts <- cr_buildtrigger_list(projectId = projectId)
 
+    if(!trigger_name %in% ts$buildTriggerName){
+      stop("Could not find trigger with name: ", trigger_name, call. = FALSE)
+    }
+
     trigger_id <- ts[ts$buildTriggerName == trigger_name,"buildTriggerId"]
   }
 
