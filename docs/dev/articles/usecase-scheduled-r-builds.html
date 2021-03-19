@@ -46,13 +46,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-wrench"></span>
+    <span class="fas fa-wrench"></span>
      
     Setup
      
@@ -72,28 +72,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fa fa-shapes"></span>
+    <span class="fas fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fa fa-running"></span>
+    <span class="fas fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fa fa-clock"></span>
+    <span class="fas fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-hands-helping"></span>
+    <span class="fas fa-hands-helping"></span>
      
     Use Cases
      
@@ -130,11 +130,14 @@
     <li>
       <a href="../articles/usecase-r-event-driven-pubsub.html">Event-triggered R scripts with pub/sub</a>
     </li>
+    <li>
+      <a href="../articles/usecase-slackbot-google-analytics.html">Create a Slackbot downloading Google Analytics</a>
+    </li>
   </ul>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fa fa-question"></span>
+    <span class="fas fa-question"></span>
      
     Functions
   </a>
@@ -143,7 +146,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -157,12 +160,12 @@
 
       
 
-      </header><div class="row">
+      </header><script src="usecase-scheduled-r-builds_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Run R code on a schedule</h1>
             
-            <h4 class="date">2021-03-18</h4>
+            <h4 class="date">2021-03-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-scheduled-r-builds.Rmd"><code>vignettes/usecase-scheduled-r-builds.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-scheduled-r-builds.Rmd</code></div>
@@ -201,18 +204,18 @@
 <p>The default metadata of the Cloud Build server is the same as <code>googleComputeEngineR</code>, so you can use <code><a href="https://code.markedmondson.me/googleAuthR//reference/gar_gce_auth.html">googleAuthR::gar_gce_auth("default", scopes = "https://www.googleapis.com/auth/cloud-platform")</a></code>.</p>
 <p>You can also use the Cloud Build email (the one that looks like <code>{project-number@cloudbuild.gserviceaccount.com}</code>) if its given the right access in Cloud IAM, authentication in your R script will look like <code><a href="https://code.markedmondson.me/googleAuthR//reference/gar_gce_auth.html">googleAuthR::gar_gce_auth("{project-number@cloudbuild.gserviceaccount.com}", scopes = "https://www.googleapis.com/auth/cloud-platform")</a></code></p>
 <p>This enables you in the R script to download files from Cloud Storage, for example. A minimal example is shown below:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(googleCloudStorageR)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">library</span>(googleAuthR)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">gar_gce_auth</span>(<span class="st">"default"</span>, <span class="dt">scopes =</span> <span class="st">"https://www.googleapis.com/auth/cloud-platform"</span>)</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">## or if using the build email..</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co"># gar_gce_auth("{project-number@cloudbuild.gserviceaccount.com}", </span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#                scopes = "https://www.googleapis.com/auth/cloud-platform")</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="kw">gcs_list_buckets</span>(<span class="st">"my_project"</span>)</a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">auth_file &lt;-<span class="st"> </span><span class="kw">gcs_get_object</span>(<span class="st">"config.json"</span>, <span class="dt">bucket =</span> <span class="st">"my-bucket"</span>)</a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12">...do something with the config file...</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googleCloudStorageR)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googleAuthR)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">gar_gce_auth</span>(<span class="st">"default"</span>, <span class="at">scopes =</span> <span class="st">"https://www.googleapis.com/auth/cloud-platform"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="do">## or if using the build email..</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># gar_gce_auth("{project-number@cloudbuild.gserviceaccount.com}", </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#                scopes = "https://www.googleapis.com/auth/cloud-platform")</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">gcs_list_buckets</span>(<span class="st">"my_project"</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>auth_file <span class="ot">&lt;-</span> <span class="fu">gcs_get_object</span>(<span class="st">"config.json"</span>, <span class="at">bucket =</span> <span class="st">"my-bucket"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>...do something with the config file...</span></code></pre></div>
 <p>This would then be saved to an R script and deployed via the gadget or:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_deploy_r.html">cr_deploy_r</a></span><span class="op">(</span><span class="st">"the_script.R"</span>, r_image <span class="op">=</span> <span class="st">"gcr.io/gcer-public/googleauthr-verse"</span><span class="op">)</span></code></pre></div>
@@ -266,28 +269,28 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><p>Cloud Run scales from 0 to millions of hits, so can be an option for hosting a website. In particular you may want a private internal website, have R code executing via a plumber API in the same container, or have lots of traffic or data that goes over other free hosting options such as GitHub pages. A nginx server configuration is included to host any HTML you provide via <code><a href="../reference/cr_deploy_run.html">cr_deploy_html()</a></code>.</p>
 <p>You may prefer using Cloud Storage public URLs if you don’t need any of Cloud Run’s features, like the previous example.</p>
 <p>Coupled to that, a common use case is to render Rmd files and host them on a website like the tweet above. For the above tweet scenario, the Rmd has a setup block that reads from googlesheets via the code below:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode markdown"><code class="sourceCode markdown"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="bn">```{r setup, include=FALSE}</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="bn">library(flexdashboard)</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="bn">library(googlesheets4)</span></a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="bn">library(ggplot2)</span></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="bn">library(plotly)</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="bn">library(dplyr)</span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="bn"># for public Googlesheets.  </span></a>
-<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="bn"># If private see https://gargle.r-lib.org/articles/non-interactive-auth.html</span></a>
-<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="bn">sheets_deauth()</span></a>
-<a class="sourceLine" id="cb6-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="bn"># this is the data that may update each time the Rmd is rendered</span></a>
-<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="bn">gm &lt;- sheets_example("gap") %&gt;% read_sheet()</span></a>
-<a class="sourceLine" id="cb6-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="bn">gm_agg &lt;- gm %&gt;%</span></a>
-<a class="sourceLine" id="cb6-16" data-line-number="16"><span class="bn">  mutate(gdp=gdpPercap*pop) %&gt;%</span></a>
-<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="bn">  filter(continent=="Africa") %&gt;%</span></a>
-<a class="sourceLine" id="cb6-18" data-line-number="18"><span class="bn">  group_by(year) %&gt;%</span></a>
-<a class="sourceLine" id="cb6-19" data-line-number="19"><span class="bn">  summarize(mean(lifeExp), mean(gdp))</span></a>
-<a class="sourceLine" id="cb6-20" data-line-number="20"></a>
-<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="bn">p &lt;- ggplot(gm, aes(gdpPercap, lifeExp)) + theme_minimal() + scale_x_log10()</span></a>
-<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="bn">```</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="in">library(flexdashboard)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="in">library(googlesheets4)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="in">library(ggplot2)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="in">library(plotly)</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="in">library(dplyr)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="in"># for public Googlesheets.  </span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="in"># If private see https://gargle.r-lib.org/articles/non-interactive-auth.html</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="in">sheets_deauth()</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="in"># this is the data that may update each time the Rmd is rendered</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="in">gm &lt;- sheets_example("gap") %&gt;% read_sheet()</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="in">gm_agg &lt;- gm %&gt;%</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="in">  mutate(gdp=gdpPercap*pop) %&gt;%</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="in">  filter(continent=="Africa") %&gt;%</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="in">  group_by(year) %&gt;%</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="in">  summarize(mean(lifeExp), mean(gdp))</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="in">p &lt;- ggplot(gm, aes(gdpPercap, lifeExp)) + theme_minimal() + scale_x_log10()</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 <p>The build Rmd docker in this case needs all the libraries listed (flexdashboard, googlesheets4 etc.) included in its build - this could be built before hand in another Cloud Build - in this case the libraries are all in <code>gcr.io/gcer-public/render_rmd</code></p>
 <p>For this example, the build is not reading from a git repo but the Rmd file is downloaded from a Cloud Storage bucket, that you may have uploaded to manually, via <code>googleCloudStorageR</code> or perhaps copied over from a repo in another Cloud Build on a Build Trigger.</p>
 <p>The scheduled build then can be enabled via:</p>
@@ -371,14 +374,14 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <p>You could add other steps if you wanted, such as sending an email when done via <code><a href="../reference/cr_buildstep_mailgun.html">cr_buildstep_mailgun()</a></code> or <code><a href="../reference/cr_buildstep_slack.html">cr_buildstep_slack()</a></code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r_code</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
-  <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span><span class="st">"gcr.io/my-project/my-r-script"</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_slack.html">cr_buildstep_slack</a></span><span class="op">(</span><span class="st">"The script run ok"</span><span class="op">)</span>
+  steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span><span class="st">"gcr.io/my-project/my-r-script"</span><span class="op">)</span>,
+            <span class="fu"><a href="../reference/cr_buildstep_slack.html">cr_buildstep_slack</a></span><span class="op">(</span><span class="st">"The script run ok"</span><span class="op">)</span><span class="op">)</span>,
+  substitutions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>`_SLACK_WEBHOOK` <span class="op">=</span> <span class="st">"https://your_slack_webhook"</span><span class="op">)</span>
 <span class="op">)</span>
-<span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">r_code</span>, `_SLACK_WEBHOOK` <span class="op">=</span> <span class="st">"https://your_slack_webhook"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">r_code</span><span class="op">)</span></code></pre></div>
 <p>To set this up in a schedule, add it to the scheduler like so:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">r_code</span>, `_SLACK_WEBHOOK` <span class="op">=</span> <span class="st">"https://your_slack_webhook"</span><span class="op">)</span>
-<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">r_code</span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"r-code-example"</span>, <span class="st">"15 8 * * *"</span>, httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="run-r-code-via-cloud-run" class="section level2">
