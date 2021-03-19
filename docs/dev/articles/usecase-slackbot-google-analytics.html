@@ -504,6 +504,45 @@ COPY ["./", "./"]
 ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <p>After making the changes to the Dockerfile and api.R, we commit the changes to redeploy via the Build Trigger</p>
 </div>
+<div id="testing-the-app-and-scheduling" class="section level2">
+<h2 class="hasAnchor">
+<a href="#testing-the-app-and-scheduling" class="anchor"></a>Testing the App and Scheduling</h2>
+<p>After deployment it should now be able to respond to the GA endpoint:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
+<span class="va">ga_id</span> <span class="op">&lt;-</span> <span class="fl">1234557</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"https://slackbot-xxxx-ew.a.run.app/last-30-days?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
+<p>Check the logs for Cloud Build and Cloud Run to see if its all working.</p>
+<p>The first time I tried it the memory was too low for the app, which is why above it specifies “2G” for the Cloud Run size.</p>
+<p>But if all goes well then you should be able to see the CSV file come back.</p>
+<p>The URL endpoint <code>/trigger-slack?ga_id=12345</code> should send the same data you see at <code>/last-30-days?ga_id=12345</code> but send that data to Slack.</p>
+<div id="scheduling" class="section level3">
+<h3 class="hasAnchor">
+<a href="#scheduling" class="anchor"></a>Scheduling</h3>
+<p>Now we can schedule the URL via Cloud Scheduler.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ga_id</span> <span class="op">&lt;-</span> <span class="fl">1233456</span>
+<span class="va">my_app</span> <span class="op">&lt;-</span> <span class="st">"https://slackbot-xxxxxxx-ew.a.run.app"</span>
+<span class="va">my_endpoint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">my_app</span>,<span class="st">"/trigger-slack?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span>
+
+<span class="va">http_target</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HttpTarget.html">HttpTarget</a></span><span class="op">(</span>
+  uri <span class="op">=</span> <span class="va">my_endpoint</span>,
+  httpMethod <span class="op">=</span> <span class="st">"GET"</span>
+<span class="op">)</span> 
+
+<span class="co"># every Monday at 0830</span>
+<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"slackbot-schedule"</span>, 
+            schedule <span class="op">=</span> <span class="st">"30 8 * * 1"</span>,
+            httpTarget <span class="op">=</span> <span class="va">http_target</span>,
+            overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
+<div id="where-to-go-from-here" class="section level2">
+<h2 class="hasAnchor">
+<a href="#where-to-go-from-here" class="anchor"></a>Where to go from here</h2>
+<p>You could try adding other endpoints for different GA functions, or making the API/webhook compatible with other services other than Slack. You may also want to make the Cloud Run API private, and should if its controlling private of expensive operations, so then look at <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> or <code><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http()</a></code> as your private API options.</p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
