@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,7 +41,6 @@
 
 <meta property="og:title" content="Extract a buildstep from a Build object — cr_buildstep_extract" />
 <meta property="og:description" content="Useful if you have a step from an existing cloudbuild.yaml you want in another" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -65,7 +68,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -87,13 +90,13 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-wrench"></span>
+    <span class="fas fa-wrench"></span>
      
     Setup
      
@@ -113,28 +116,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fa fa-shapes"></span>
+    <span class="fas fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fa fa-running"></span>
+    <span class="fas fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fa fa-clock"></span>
+    <span class="fas fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-hands-helping"></span>
+    <span class="fas fa-hands-helping"></span>
      
     Use Cases
      
@@ -171,18 +174,26 @@
     <li>
       <a href="../articles/usecase-r-event-driven-pubsub.html">Event-triggered R scripts with pub/sub</a>
     </li>
+    <li>
+      <a href="../articles/usecase-slackbot-google-analytics.html">Create a Slackbot downloading Google Analytics</a>
+    </li>
   </ul>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fa fa-question"></span>
+    <span class="fas fa-question"></span>
      
     Functions
   </a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -197,7 +208,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Extract a buildstep from a Build object</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/buildsteps.R'><code>R/buildsteps.R</code></a></small>
     <div class="hidden name"><code>cr_buildstep_extract.Rd</code></div>
     </div>
 
@@ -205,7 +216,7 @@
     <p>Useful if you have a step from an existing cloudbuild.yaml you want in another</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_buildstep_extract</span>(<span class='no'>x</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>cr_buildstep_extract</span><span class='op'>(</span><span class='va'>x</span>, step <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -229,7 +240,7 @@
 <code><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a>()</code>,
 <code><a href='cr_buildstep_edit.html'>cr_buildstep_edit</a>()</code>,
 <code><a href='cr_buildstep_gcloud.html'>cr_buildstep_gcloud</a>()</code>,
-<code><a href='cr_buildstep_git.html'>cr_buildstep_gitsetup</a>()</code>,
+<code><a href='cr_buildstep_gitsetup.html'>cr_buildstep_gitsetup</a>()</code>,
 <code><a href='cr_buildstep_mailgun.html'>cr_buildstep_mailgun</a>()</code>,
 <code><a href='cr_buildstep_nginx_setup.html'>cr_buildstep_nginx_setup</a>()</code>,
 <code><a href='cr_buildstep_pkgdown.html'>cr_buildstep_pkgdown</a>()</code>,
@@ -240,10 +251,11 @@
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>package_build</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"cloudbuild/cloudbuild.yaml"</span>,
-                             <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>)
-<span class='no'>build</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='cr_build_make.html'>cr_build_make</a></span>(<span class='no'>package_build</span>)
-<span class='no'>build</span></div><div class='output co'>#&gt; ==CloudBuildObject==
+    <pre class="examples"><div class='input'><span class='va'>package_build</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"cloudbuild/cloudbuild.yaml"</span>,
+                             package <span class='op'>=</span> <span class='st'>"googleCloudRunner"</span><span class='op'>)</span>
+<span class='va'>build</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_make.html'>cr_build_make</a></span><span class='op'>(</span><span class='va'>package_build</span><span class='op'>)</span>
+<span class='va'>build</span>
+</div><div class='output co'>#&gt; ==CloudBuildObject==
 #&gt; steps:
 #&gt; - name: gcr.io/cloud-builders/docker
 #&gt;   id: Docker Version
@@ -258,13 +270,15 @@
 #&gt;   args:
 #&gt;   - Rscript
 #&gt;   - -e
-#&gt;   - paste0('1 + 1 = ', 1+1)</div><div class='input'><span class='fu'>cr_buildstep_extract</span>(<span class='no'>build</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt;   - paste0('1 + 1 = ', 1+1)</div><div class='input'><span class='fu'>cr_buildstep_extract</span><span class='op'>(</span><span class='va'>build</span>, step <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: gcr.io/cloud-builders/docker
 #&gt; args:
 #&gt; - version
 #&gt; id: Docker Version
-#&gt; </div><div class='input'><span class='fu'>cr_buildstep_extract</span>(<span class='no'>build</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; [[1]]
+#&gt; </div><div class='input'><span class='fu'>cr_buildstep_extract</span><span class='op'>(</span><span class='va'>build</span>, step <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [[1]]
 #&gt; ==cloudRunnerBuildStep==
 #&gt; name: alpine
 #&gt; args:
@@ -273,14 +287,10 @@
 #&gt; id: Hello Cloud Build
 #&gt; </div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -291,7 +301,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

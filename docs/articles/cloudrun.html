@@ -6,13 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>R on Cloud Run • googleCloudRunner</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="R on Cloud Run">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="googleCloudRunner">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -24,7 +24,7 @@
   gtag('config', 'UA-47480439-2');
 </script>
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -45,13 +45,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-wrench"></span>
+    <span class="fas fa-wrench"></span>
      
     Setup
      
@@ -71,28 +71,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fa fa-shapes"></span>
+    <span class="fas fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fa fa-running"></span>
+    <span class="fas fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fa fa-clock"></span>
+    <span class="fas fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-hands-helping"></span>
+    <span class="fas fa-hands-helping"></span>
      
     Use Cases
      
@@ -129,17 +129,27 @@
     <li>
       <a href="../articles/usecase-r-event-driven-pubsub.html">Event-triggered R scripts with pub/sub</a>
     </li>
+    <li>
+      <a href="../articles/usecase-slackbot-google-analytics.html">Create a Slackbot downloading Google Analytics</a>
+    </li>
   </ul>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fa fa-question"></span>
+    <span class="fas fa-question"></span>
      
     Functions
   </a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -149,14 +159,14 @@
 
       
 
-      </header><div class="row">
+      </header><script src="cloudrun_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>R on Cloud Run</h1>
+      <h1 data-toc-skip>R on Cloud Run</h1>
             
-            <h4 class="date">2021-03-18</h4>
+            <h4 class="date">2021-03-19</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudrun.Rmd"><code>vignettes/cloudrun.Rmd</code></a></small>
       <div class="hidden name"><code>cloudrun.Rmd</code></div>
 
     </div>
@@ -172,43 +182,44 @@
 <ol style="list-style-type: decimal">
 <li>Make an R API via <a href="https://www.rplumber.io/">plumber</a> that contains entry file api.R. You can use the demo example in <code><a href="https://rdrr.io/r/base/system.file.html">system.file("example", package="googleCloudRunner")</a></code> if you like, which is reproduced below:</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">#' @get /</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">#' @html</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="cf">function</span>(){</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">  <span class="st">"&lt;html&gt;&lt;h1&gt;It works!&lt;/h1&gt;&lt;/html&gt;"</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">}</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="co">#' @get /hello</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="co">#' @html</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="cf">function</span>(){</a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">  <span class="st">"&lt;html&gt;&lt;h1&gt;hello world&lt;/h1&gt;&lt;/html&gt;"</span></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12">}</a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">#' Echo the parameter that was sent in</span></a>
-<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">#' @param msg The message to echo back.</span></a>
-<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">#' @get /echo</span></a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="cf">function</span>(<span class="dt">msg=</span><span class="st">""</span>){</a>
-<a class="sourceLine" id="cb1-18" data-line-number="18">  <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">msg =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"The message is: '"</span>, msg, <span class="st">"'"</span>))</a>
-<a class="sourceLine" id="cb1-19" data-line-number="19">}</a>
-<a class="sourceLine" id="cb1-20" data-line-number="20"></a>
-<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="co">#' Plot out data from the iris dataset</span></a>
-<a class="sourceLine" id="cb1-22" data-line-number="22"><span class="co">#' @param spec If provided, filter the data to only this species (e.g. 'setosa')</span></a>
-<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="co">#' @get /plot</span></a>
-<a class="sourceLine" id="cb1-24" data-line-number="24"><span class="co">#' @png</span></a>
-<a class="sourceLine" id="cb1-25" data-line-number="25"><span class="cf">function</span>(spec){</a>
-<a class="sourceLine" id="cb1-26" data-line-number="26">  myData &lt;-<span class="st"> </span>iris</a>
-<a class="sourceLine" id="cb1-27" data-line-number="27">  title &lt;-<span class="st"> "All Species"</span></a>
-<a class="sourceLine" id="cb1-28" data-line-number="28"></a>
-<a class="sourceLine" id="cb1-29" data-line-number="29">  <span class="co"># Filter if the species was specified</span></a>
-<a class="sourceLine" id="cb1-30" data-line-number="30">  <span class="cf">if</span> (<span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/missing.html">missing</a></span>(spec)){</a>
-<a class="sourceLine" id="cb1-31" data-line-number="31">    title &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"Only the '"</span>, spec, <span class="st">"' Species"</span>)</a>
-<a class="sourceLine" id="cb1-32" data-line-number="32">    myData &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/subset.html">subset</a></span>(iris, Species <span class="op">==</span><span class="st"> </span>spec)</a>
-<a class="sourceLine" id="cb1-33" data-line-number="33">  }</a>
-<a class="sourceLine" id="cb1-34" data-line-number="34"></a>
-<a class="sourceLine" id="cb1-35" data-line-number="35">  <span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(myData<span class="op">$</span>Sepal.Length, myData<span class="op">$</span>Petal.Length,</a>
-<a class="sourceLine" id="cb1-36" data-line-number="36">       <span class="dt">main=</span>title, <span class="dt">xlab=</span><span class="st">"Sepal Length"</span>, <span class="dt">ylab=</span><span class="st">"Petal Length"</span>)</a>
-<a class="sourceLine" id="cb1-37" data-line-number="37">}</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#' @get /</span>
+<span class="co">#' @html</span>
+<span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span>
+  <span class="st">"&lt;html&gt;&lt;h1&gt;It works!&lt;/h1&gt;&lt;/html&gt;"</span>
+<span class="op">}</span>
+
+
+<span class="co">#' @get /hello</span>
+<span class="co">#' @html</span>
+<span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span>
+  <span class="st">"&lt;html&gt;&lt;h1&gt;hello world&lt;/h1&gt;&lt;/html&gt;"</span>
+<span class="op">}</span>
+
+<span class="co">#' Echo the parameter that was sent in</span>
+<span class="co">#' @param msg The message to echo back.</span>
+<span class="co">#' @get /echo</span>
+<span class="kw">function</span><span class="op">(</span><span class="va">msg</span><span class="op">=</span><span class="st">""</span><span class="op">)</span><span class="op">{</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>msg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"The message is: '"</span>, <span class="va">msg</span>, <span class="st">"'"</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co">#' Plot out data from the iris dataset</span>
+<span class="co">#' @param spec If provided, filter the data to only this species (e.g. 'setosa')</span>
+<span class="co">#' @get /plot</span>
+<span class="co">#' @png</span>
+<span class="kw">function</span><span class="op">(</span><span class="va">spec</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">myData</span> <span class="op">&lt;-</span> <span class="va">iris</span>
+  <span class="va">title</span> <span class="op">&lt;-</span> <span class="st">"All Species"</span>
+
+  <span class="co"># Filter if the species was specified</span>
+  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/missing.html">missing</a></span><span class="op">(</span><span class="va">spec</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
+    <span class="va">title</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Only the '"</span>, <span class="va">spec</span>, <span class="st">"' Species"</span><span class="op">)</span>
+    <span class="va">myData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">iris</span>, <span class="va">Species</span> <span class="op">==</span> <span class="va">spec</span><span class="op">)</span>
+  <span class="op">}</span>
+
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">myData</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="va">myData</span><span class="op">$</span><span class="va">Petal.Length</span>,
+       main<span class="op">=</span><span class="va">title</span>, xlab<span class="op">=</span><span class="st">"Sepal Length"</span>, ylab<span class="op">=</span><span class="st">"Petal Length"</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
 <li>Create a Dockerfile for the API - see bottom of page for how to do this automatically with <a href="https://o2r.info/containerit/" class="uri">https://o2r.info/containerit/</a>
 </li>
@@ -221,27 +232,28 @@ CMD ["api.R"]</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>Deploy via the <code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code> function:</li>
 </ol>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleCloudRunner)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">my_plumber_folder &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"example"</span>, <span class="dt">package=</span><span class="st">"googleCloudRunner"</span>)</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">cr &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span>(my_plumber_folder)</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#2019-11-12 10:34:29 -- File size detected as 903 bytes</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#2019-11-12 10:34:31&gt; Cloud Build started - logs: </span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#https://console.cloud.google.com/gcr/builds/40343fd4-6981-41c3-98c8-f5973c3de386?project=1080525199262</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#Waiting for build to finish:</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co"># |===============||</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#Build finished</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#2019-11-12 10:35:43&gt; Deployed to Cloud Run at: </span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#https://cloudrunnertest2-ewjogewawq-ew.a.run.app</span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#==CloudRunService==</span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#name:  cloudrunnertest2 </span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#location:  europe-west1 </span></a>
-<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#lastModifier:  1080525199262@cloudbuild.gserviceaccount.com </span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#containers:  gcr.io/mark-edmondson-gde/cloudrunnertest2 </span></a>
-<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#creationTimestamp:  2019-11-12T10:35:19.993128Z </span></a>
-<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#observedGeneration:  1 </span></a>
-<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app </span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
+
+<span class="va">my_plumber_folder</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"example"</span>, package<span class="op">=</span><span class="st">"googleCloudRunner"</span><span class="op">)</span>
+<span class="va">cr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span><span class="op">(</span><span class="va">my_plumber_folder</span><span class="op">)</span>
+<span class="co">#2019-11-12 10:34:29 -- File size detected as 903 bytes</span>
+<span class="co">#2019-11-12 10:34:31&gt; Cloud Build started - logs: </span>
+<span class="co">#https://console.cloud.google.com/gcr/builds/40343fd4-6981-41c3-98c8-f5973c3de386?project=1080525199262</span>
+
+<span class="co">#Waiting for build to finish:</span>
+<span class="co"># |===============||</span>
+<span class="co">#Build finished</span>
+<span class="co">#2019-11-12 10:35:43&gt; Deployed to Cloud Run at: </span>
+<span class="co">#https://cloudrunnertest2-ewjogewawq-ew.a.run.app</span>
+<span class="co">#==CloudRunService==</span>
+<span class="co">#name:  cloudrunnertest2 </span>
+<span class="co">#location:  europe-west1 </span>
+<span class="co">#lastModifier:  1080525199262@cloudbuild.gserviceaccount.com </span>
+<span class="co">#containers:  gcr.io/mark-edmondson-gde/cloudrunnertest2 </span>
+<span class="co">#creationTimestamp:  2019-11-12T10:35:19.993128Z </span>
+<span class="co">#observedGeneration:  1 </span>
+<span class="co">#url:  https://cloudrunnertest2-ewjogewawq-ew.a.run.app </span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Enjoy your API</li>
 </ol>
@@ -271,13 +283,15 @@ CMD ["api.R"]</code></pre>
 <a href="#customising-cloud-run-deployments" class="anchor"></a>Customising Cloud Run deployments</h2>
 <p>The Cloud Run API is not called directly when deploying - instead a Cloud Build is created for deployment. <code>cr_run</code> creates a cloudbuild that make a cloud build including <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code>.</p>
 <p>You can build the deployment yourself by using <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code> within your own <code><a href="../reference/cr_build.html">cr_build()</a></code>. This may cover things like downloading encrypted resources necessary for a build, running other code etc.</p>
-<p>If you have an existing image you want to deploy on Cloud Run (usually one that serves up HTTP content, such as a website or via <code><a href="https://rdrr.io/r/base/library.html">library(plumber)</a></code>) then you only need to supply that image to deploy:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="st">"gcr.io/my-project/my-image"</span>)</a></code></pre></div>
+<p>If you have an existing image you want to deploy on Cloud Run (usually one that serves up HTTP content, such as a website or via <code><a href="https://www.rplumber.io">library(plumber)</a></code>) then you only need to supply that image to deploy:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/cr_run.html">cr_run</a></span><span class="op">(</span><span class="st">"gcr.io/my-project/my-image"</span><span class="op">)</span></code></pre></div>
 <p>Cloud Run needs <a href="https://cloud.google.com/run/docs/deploying">specific ports available in your container</a>, so you may want to consult the documentation if you do - in particular look at the <a href="https://cloud.google.com/run/docs/reference/container-contract">container contract</a> which specifies what the Docker container requirements are.</p>
 <p>If you want to do the common use case of building the container first before deployment to Cloud Run, you can do so by using the helper <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span>(<span class="st">"my-image"</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="st">"gcr.io/my-project/my-image"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span><span class="op">(</span><span class="st">"my-image"</span><span class="op">)</span>
+
+<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span><span class="op">(</span><span class="st">"gcr.io/my-project/my-image"</span><span class="op">)</span></code></pre></div>
 <p>If you want this in the same Cloud Build, then this is available via the buildsteps <code><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker()</a></code> and <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code>.</p>
 </div>
 <div id="cloud-run-deployment-functions" class="section level2">
@@ -294,14 +308,15 @@ CMD ["api.R"]</code></pre>
 <a href="#pubsub" class="anchor"></a>Pub/Sub</h2>
 <p>Pub/Sub is a messaging service used throughout GCP to transfer messages to services. For instance, Cloud Storage objects being created, logging filter conditions, BigQuery table updates. It is useful to be able to react to these messages with R code which Cloud Run + Plumber enables by providing a HTTP endpoint for push Pub/Sub subscriptions.</p>
 <p>A helper function is included with <code>googleCloudRunner</code> that decodes the standard pub/sub message into an R object. To use place the below function into your plumber script and deploy:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">pub &lt;-<span class="st"> </span><span class="cf">function</span>(x){<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"Echo:"</span>, x)}</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#' Recieve pub/sub message</span></a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">#' @post /pubsub</span></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">#' @param message a pub/sub message</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="cf">function</span>(<span class="dt">message=</span><span class="ot">NULL</span>){</a>
-<a class="sourceLine" id="cb6-7" data-line-number="7">  googleCloudRunner<span class="op">::</span><span class="kw"><a href="https://code.markedmondson.me/googleCloudRunner/reference/cr_plumber_pubsub.html">cr_plumber_pubsub</a></span>(message, pub)</a>
-<a class="sourceLine" id="cb6-8" data-line-number="8">}</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pub</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Echo:"</span>, <span class="va">x</span><span class="op">)</span><span class="op">}</span>
+
+<span class="co">#' Recieve pub/sub message</span>
+<span class="co">#' @post /pubsub</span>
+<span class="co">#' @param message a pub/sub message</span>
+<span class="kw">function</span><span class="op">(</span><span class="va">message</span><span class="op">=</span><span class="cn">NULL</span><span class="op">)</span><span class="op">{</span>
+  <span class="fu">googleCloudRunner</span><span class="fu">::</span><span class="fu"><a href="../reference/cr_plumber_pubsub.html">cr_plumber_pubsub</a></span><span class="op">(</span><span class="va">message</span>, <span class="va">pub</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
 <p>The <code>pub()</code> function can be any R code you like, so you can change it to trigger an analysis or other R tasks. The data within a pubsub message can also be used as a parameter to your code, such as an object name or timestamp of when the event fired. An example if also in the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecases.html#trigger-an-r-function-from-pubsub">use case section of the website</a></p>
 </div>
 <div id="creating-a-dockerfile-with-containerit" class="section level2">
@@ -311,37 +326,37 @@ CMD ["api.R"]</code></pre>
 <p>To install it use <code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github("o2r-project/containerit")</a></code></p>
 <p><a href="https://o2r.info/containerit/">See <code>containerit</code>s website for more details</a> on how to use it.</p>
 <p>An example of using it to help create plumber Dockerfiles is below:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(containerit)</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">cr_dockerfile_plumber &lt;-<span class="st"> </span><span class="cf">function</span>(deploy_folder, ...){</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">  docker &lt;-<span class="st"> </span><span class="kw">dockerfile</span>(</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">      deploy_folder,</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">      <span class="dt">image =</span> <span class="st">"trestletech/plumber"</span>,</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">      <span class="dt">offline =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb7-7" data-line-number="7">      <span class="dt">cmd =</span> <span class="kw">Cmd</span>(<span class="st">"api.R"</span>),</a>
-<a class="sourceLine" id="cb7-8" data-line-number="8">      <span class="dt">maintainer =</span> <span class="ot">NULL</span>,</a>
-<a class="sourceLine" id="cb7-9" data-line-number="9">      <span class="dt">copy =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">"./"</span>),</a>
-<a class="sourceLine" id="cb7-10" data-line-number="10">      <span class="dt">container_workdir =</span> <span class="ot">NULL</span>,</a>
-<a class="sourceLine" id="cb7-11" data-line-number="11">      <span class="dt">entrypoint =</span> <span class="kw">Entrypoint</span>(<span class="st">"R"</span>,</a>
-<a class="sourceLine" id="cb7-12" data-line-number="12">                       <span class="dt">params =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(</a>
-<a class="sourceLine" id="cb7-13" data-line-number="13">        <span class="st">"-e"</span>,</a>
-<a class="sourceLine" id="cb7-14" data-line-number="14">       <span class="st">"pr &lt;- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))"</span>)</a>
-<a class="sourceLine" id="cb7-15" data-line-number="15">       ),</a>
-<a class="sourceLine" id="cb7-16" data-line-number="16">      <span class="dt">filter_baseimage_pkgs =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb7-17" data-line-number="17">      ...)<span class="er">)</span></a>
-<a class="sourceLine" id="cb7-18" data-line-number="18"></a>
-<a class="sourceLine" id="cb7-19" data-line-number="19">  write_to &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(deploy_folder, <span class="st">"Dockerfile"</span>)</a>
-<a class="sourceLine" id="cb7-20" data-line-number="20">  </a>
-<a class="sourceLine" id="cb7-21" data-line-number="21">  <span class="kw"><a href="https://rdrr.io/r/base/write.html">write</a></span>(docker, <span class="dt">file =</span> write_to)</a>
-<a class="sourceLine" id="cb7-22" data-line-number="22"></a>
-<a class="sourceLine" id="cb7-23" data-line-number="23">  <span class="kw">assert_that</span>(</a>
-<a class="sourceLine" id="cb7-24" data-line-number="24">    <span class="kw">is.readable</span>(write_to)</a>
-<a class="sourceLine" id="cb7-25" data-line-number="25">  )</a>
-<a class="sourceLine" id="cb7-26" data-line-number="26"></a>
-<a class="sourceLine" id="cb7-27" data-line-number="27">  <span class="kw"><a href="https://rdrr.io/r/base/message.html">message</a></span>(<span class="st">"Written Dockerfile to "</span>, write_to, <span class="dt">level =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb7-28" data-line-number="28">  <span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(docker)</a>
-<a class="sourceLine" id="cb7-29" data-line-number="29">  docker</a>
-<a class="sourceLine" id="cb7-30" data-line-number="30"></a>
-<a class="sourceLine" id="cb7-31" data-line-number="31">}</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(containerit)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>cr_dockerfile_plumber <span class="ot">&lt;-</span> <span class="cf">function</span>(deploy_folder, ...){</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  docker <span class="ot">&lt;-</span> <span class="fu">dockerfile</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>      deploy_folder,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">image =</span> <span class="st">"trestletech/plumber"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">offline =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">cmd =</span> <span class="fu">Cmd</span>(<span class="st">"api.R"</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">maintainer =</span> <span class="cn">NULL</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">copy =</span> <span class="fu">list</span>(<span class="st">"./"</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">container_workdir =</span> <span class="cn">NULL</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">entrypoint =</span> <span class="fu">Entrypoint</span>(<span class="st">"R"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">params =</span> <span class="fu">list</span>(</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"-e"</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>       <span class="st">"pr &lt;- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))"</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>       ),</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">filter_baseimage_pkgs =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>      ...)<span class="er">)</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  write_to <span class="ot">&lt;-</span> <span class="fu">file.path</span>(deploy_folder, <span class="st">"Dockerfile"</span>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write</span>(docker, <span class="at">file =</span> write_to)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assert_that</span>(</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">is.readable</span>(write_to)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"Written Dockerfile to "</span>, write_to, <span class="at">level =</span> <span class="dv">3</span>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(docker)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  docker</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="deploying-shiny-to-cloud-run" class="section level2">
 <h2 class="hasAnchor">
@@ -349,37 +364,40 @@ CMD ["api.R"]</code></pre>
 <p>Due to Shiny’s stateful nature, Cloud Run is not a perfect fit for Shiny but it can be configured to run Shiny apps that scale to 0 (e.g. no cost) up to 80 connections at once to one instance. The one instance is necessary to avoid requests being sent to another Shiny container instance and losing the user session. Shiny also needs to have certain websocket features disabled, and there is a 15min session timeout.</p>
 <p>This means you can’t scale to a billion like other Cloud Run apps, and need to keep an eye on the load of the Shiny app (which will depend on your code) to see if 80 connections are too much for the CPU and Memory you assign to the Cloud Run instance. However this should still be a good fit for a lot of data science applications.</p>
 <p>A minimal working example has been created by <span class="citation">@randy3k</span> here: <a href="https://github.com/randy3k/shiny-cloudrun-demo" class="uri">https://github.com/randy3k/shiny-cloudrun-demo</a> which can be deployed to Cloud Run via a fork here:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleCloudRunner)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co"># a repo with the Dockerfile template</span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">repo &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span>(<span class="st">"MarkEdmondson1234/shiny-cloudrun-demo"</span>)</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co"># deploy a cloud build trigger so each commit build the image</span></a>
-<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="kw"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span>(</a>
-<a class="sourceLine" id="cb8-8" data-line-number="8">  repo,</a>
-<a class="sourceLine" id="cb8-9" data-line-number="9">  <span class="dt">image =</span> <span class="st">"shiny-cloudrun"</span></a>
-<a class="sourceLine" id="cb8-10" data-line-number="10">)</a>
-<a class="sourceLine" id="cb8-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co"># deploy to Cloud Run</span></a>
-<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="kw"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="kw"><a href="../reference/cr_project_set.html">cr_project_get</a></span>()),</a>
-<a class="sourceLine" id="cb8-14" data-line-number="14">       <span class="dt">name =</span> <span class="st">"shiny-cloudrun"</span>,</a>
-<a class="sourceLine" id="cb8-15" data-line-number="15">       <span class="dt">concurrency =</span> <span class="dv">80</span>,</a>
-<a class="sourceLine" id="cb8-16" data-line-number="16">       <span class="dt">max_instances =</span> <span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
+
+<span class="co"># a repo with the Dockerfile template</span>
+<span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/shiny-cloudrun-demo"</span><span class="op">)</span>
+
+<span class="co"># deploy a cloud build trigger so each commit build the image</span>
+<span class="fu"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span><span class="op">(</span>
+  <span class="va">repo</span>,
+  image <span class="op">=</span> <span class="st">"shiny-cloudrun"</span>
+<span class="op">)</span>
+
+<span class="co"># deploy to Cloud Run</span>
+<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
+       name <span class="op">=</span> <span class="st">"shiny-cloudrun"</span>,
+       concurrency <span class="op">=</span> <span class="fl">80</span>,
+       max_instances <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p>If you need to change the memory for the one instance, you can use <code>cpu</code> and <code>memory</code> arguments in the <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code> and subsequent functions such as <code><a href="../reference/cr_run.html">cr_run()</a></code>. The maximum allowed is 2 CPUs and 2 gibibytes (<code>2Gi</code>):</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># deploy to Cloud Run with 2GBs of RAM per instance and 2 CPUs</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw"><a href="../reference/cr_run.html">cr_run</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span>(<span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="kw"><a href="../reference/cr_project_set.html">cr_project_get</a></span>()),</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">       <span class="dt">name =</span> <span class="st">"shiny-cloudrun"</span>,</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">       <span class="dt">concurrency =</span> <span class="dv">80</span>,</a>
-<a class="sourceLine" id="cb9-5" data-line-number="5">       <span class="dt">max_instances =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb9-6" data-line-number="6">       <span class="dt">cpu =</span> <span class="dv">2</span>,</a>
-<a class="sourceLine" id="cb9-7" data-line-number="7">       <span class="dt">memory =</span> <span class="st">"2Gi"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># deploy to Cloud Run with 2GBs of RAM per instance and 2 CPUs</span>
+<span class="fu"><a href="../reference/cr_run.html">cr_run</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
+       name <span class="op">=</span> <span class="st">"shiny-cloudrun"</span>,
+       concurrency <span class="op">=</span> <span class="fl">80</span>,
+       max_instances <span class="op">=</span> <span class="fl">1</span>,
+       cpu <span class="op">=</span> <span class="fl">2</span>,
+       memory <span class="op">=</span> <span class="st">"2Gi"</span><span class="op">)</span></code></pre></div>
 <p>Or if you have a local Shiny app in <code>shiny_cloudrun/</code> with the appropriate Dockerfile and Shiny configuration, the full Docker build and deployment pipeline can be carried out with:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># deploy the app version from this folder</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span>(<span class="st">"shiny_cloudrun/"</span>,</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3">              <span class="dt">remote =</span> <span class="st">"shiny-cloudrun2"</span>,</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">              <span class="dt">tag =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span>),</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">              <span class="dt">max_instances =</span> <span class="dv">1</span>, <span class="co"># required for shiny</span></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">              <span class="dt">concurrency =</span> <span class="dv">80</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># deploy the app version from this folder</span>
+<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span><span class="op">(</span><span class="st">"shiny_cloudrun/"</span>,
+              remote <span class="op">=</span> <span class="st">"shiny-cloudrun2"</span>,
+              tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span><span class="op">)</span>,
+              max_instances <span class="op">=</span> <span class="fl">1</span>, <span class="co"># required for shiny</span>
+              concurrency <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></code></pre></div>
 <div id="shiny-app-on-cloud-run-with-googleauthr-authentication" class="section level3">
 <h3 class="hasAnchor">
 <a href="#shiny-app-on-cloud-run-with-googleauthr-authentication" class="anchor"></a>Shiny app on Cloud Run with googleAuthR authentication</h3>
@@ -393,39 +411,40 @@ CMD ["api.R"]</code></pre>
 <div id="app-r" class="section level4">
 <h4 class="hasAnchor">
 <a href="#app-r" class="anchor"></a>app.R</h4>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(shiny)</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(searchConsoleR)</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(googleAuthR)</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="kw"><a href="https://code.markedmondson.me/googleAuthR//reference/gar_set_client.html">gar_set_client</a></span>(<span class="dt">web_json =</span> <span class="st">"client.json"</span>,</a>
-<a class="sourceLine" id="cb12-6" data-line-number="6">               <span class="dt">scopes =</span> <span class="st">"https://www.googleapis.com/auth/webmasters"</span>)</a>
-<a class="sourceLine" id="cb12-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb12-8" data-line-number="8">ui &lt;-<span class="st"> </span><span class="kw"><a href="https://shiny.rstudio.com/reference/shiny/latest/fluidPage.html">fluidPage</a></span>(</a>
-<a class="sourceLine" id="cb12-9" data-line-number="9">  <span class="kw"><a href="https://code.markedmondson.me/googleAuthR//reference/googleAuth_jsUI.html">googleAuth_jsUI</a></span>(<span class="st">'auth'</span>, <span class="dt">login_text =</span> <span class="st">'Login to Google'</span>),</a>
-<a class="sourceLine" id="cb12-10" data-line-number="10">  <span class="kw"><a href="https://shiny.rstudio.com/reference/shiny/latest/tableOutput.html">tableOutput</a></span>(<span class="st">"sc_accounts"</span>)</a>
-<a class="sourceLine" id="cb12-11" data-line-number="11">)</a>
-<a class="sourceLine" id="cb12-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb12-13" data-line-number="13">server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {</a>
-<a class="sourceLine" id="cb12-14" data-line-number="14">  auth &lt;-<span class="st"> </span><span class="kw"><a href="https://shiny.rstudio.com/reference/shiny/latest/callModule.html">callModule</a></span>(googleAuth_js, <span class="st">"auth"</span>)</a>
-<a class="sourceLine" id="cb12-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb12-16" data-line-number="16">  sc_accounts &lt;-<span class="st"> </span><span class="kw"><a href="https://shiny.rstudio.com/reference/shiny/latest/reactive.html">reactive</a></span>({</a>
-<a class="sourceLine" id="cb12-17" data-line-number="17">    <span class="kw"><a href="https://shiny.rstudio.com/reference/shiny/latest/req.html">req</a></span>(<span class="kw">auth</span>())</a>
-<a class="sourceLine" id="cb12-18" data-line-number="18"></a>
-<a class="sourceLine" id="cb12-19" data-line-number="19">    <span class="kw"><a href="https://code.markedmondson.me/googleAuthR//reference/with_shiny.html">with_shiny</a></span>(</a>
-<a class="sourceLine" id="cb12-20" data-line-number="20">      list_websites,</a>
-<a class="sourceLine" id="cb12-21" data-line-number="21">      <span class="dt">shiny_access_token =</span> <span class="kw">auth</span>()</a>
-<a class="sourceLine" id="cb12-22" data-line-number="22">    )</a>
-<a class="sourceLine" id="cb12-23" data-line-number="23"></a>
-<a class="sourceLine" id="cb12-24" data-line-number="24">  })</a>
-<a class="sourceLine" id="cb12-25" data-line-number="25"></a>
-<a class="sourceLine" id="cb12-26" data-line-number="26">  output<span class="op">$</span>sc_accounts &lt;-<span class="st"> </span><span class="kw"><a href="https://shiny.rstudio.com/reference/shiny/latest/renderTable.html">renderTable</a></span>({</a>
-<a class="sourceLine" id="cb12-27" data-line-number="27">    <span class="kw">sc_accounts</span>()</a>
-<a class="sourceLine" id="cb12-28" data-line-number="28">  })</a>
-<a class="sourceLine" id="cb12-29" data-line-number="29"></a>
-<a class="sourceLine" id="cb12-30" data-line-number="30"></a>
-<a class="sourceLine" id="cb12-31" data-line-number="31">}</a>
-<a class="sourceLine" id="cb12-32" data-line-number="32"></a>
-<a class="sourceLine" id="cb12-33" data-line-number="33"><span class="kw"><a href="https://shiny.rstudio.com/reference/shiny/latest/shinyApp.html">shinyApp</a></span>(<span class="dt">ui =</span> ui, <span class="dt">server =</span> server)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">searchConsoleR</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAuthR/">googleAuthR</a></span><span class="op">)</span>
+
+<span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/gar_set_client.html">gar_set_client</a></span><span class="op">(</span>web_json <span class="op">=</span> <span class="st">"client.json"</span>,
+               scopes <span class="op">=</span> <span class="st">"https://www.googleapis.com/auth/webmasters"</span><span class="op">)</span>
+
+<span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/googleAuth_jsUI.html">googleAuth_jsUI</a></span><span class="op">(</span><span class="st">'auth'</span>, login_text <span class="op">=</span> <span class="st">'Login to Google'</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tableOutput.html">tableOutput</a></span><span class="op">(</span><span class="st">"sc_accounts"</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">auth</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/callModule.html">callModule</a></span><span class="op">(</span><span class="va">googleAuth_js</span>, <span class="st">"auth"</span><span class="op">)</span>
+
+  <span class="va">sc_accounts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html">req</a></span><span class="op">(</span><span class="fu">auth</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+    <span class="fu"><a href="https://code.markedmondson.me/googleAuthR//reference/with_shiny.html">with_shiny</a></span><span class="op">(</span>
+      <span class="va">list_websites</span>,
+      shiny_access_token <span class="op">=</span> <span class="fu">auth</span><span class="op">(</span><span class="op">)</span>
+    <span class="op">)</span>
+
+  <span class="op">}</span><span class="op">)</span>
+
+  <span class="va">output</span><span class="op">$</span><span class="va">sc_accounts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderTable.html">renderTable</a></span><span class="op">(</span><span class="op">{</span>
+    <span class="fu">sc_accounts</span><span class="op">(</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">)</span>
+
+
+<span class="op">}</span>
+
+<span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span>ui <span class="op">=</span> <span class="va">ui</span>, server <span class="op">=</span> <span class="va">server</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="dockerfile" class="section level4">
 <h4 class="hasAnchor">
@@ -461,7 +480,7 @@ CMD ["/usr/bin/shiny-server"]</code></pre>
 <h4 class="hasAnchor">
 <a href="#client-id-and-gcp-setup" class="anchor"></a>client.id and GCP setup</h4>
 <p>The client.json was a web client json from my project:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="fu">{</span><span class="dt">"web"</span><span class="fu">:{</span><span class="dt">"client_id"</span><span class="fu">:</span><span class="st">"10XXX"</span><span class="fu">,</span><span class="dt">"project_id"</span><span class="fu">:</span><span class="st">"XXXX"</span><span class="fu">,</span><span class="dt">"auth_uri"</span><span class="fu">:</span><span class="st">"https://accounts.google.com/o/oauth2/auth"</span><span class="fu">,</span><span class="dt">"token_uri"</span><span class="fu">:</span><span class="st">"https://accounts.google.com/o/oauth2/token"</span><span class="fu">,</span><span class="dt">"auth_provider_x509_cert_url"</span><span class="fu">:</span><span class="st">"https://www.googleapis.com/oauth2/v1/certs"</span><span class="fu">,</span><span class="dt">"client_secret"</span><span class="fu">:</span><span class="st">"XXXXX"</span><span class="fu">,</span><span class="dt">"redirect_uris"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"http://localhost"</span><span class="ot">]</span><span class="fu">,</span><span class="dt">"javascript_origins"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"https://www.example.com"</span><span class="ot">,</span><span class="st">"http://localhost:1221"</span><span class="ot">]</span><span class="fu">}}</span></a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span><span class="dt">"web"</span><span class="fu">:{</span><span class="dt">"client_id"</span><span class="fu">:</span><span class="st">"10XXX"</span><span class="fu">,</span><span class="dt">"project_id"</span><span class="fu">:</span><span class="st">"XXXX"</span><span class="fu">,</span><span class="dt">"auth_uri"</span><span class="fu">:</span><span class="st">"https://accounts.google.com/o/oauth2/auth"</span><span class="fu">,</span><span class="dt">"token_uri"</span><span class="fu">:</span><span class="st">"https://accounts.google.com/o/oauth2/token"</span><span class="fu">,</span><span class="dt">"auth_provider_x509_cert_url"</span><span class="fu">:</span><span class="st">"https://www.googleapis.com/oauth2/v1/certs"</span><span class="fu">,</span><span class="dt">"client_secret"</span><span class="fu">:</span><span class="st">"XXXXX"</span><span class="fu">,</span><span class="dt">"redirect_uris"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"http://localhost"</span><span class="ot">]</span><span class="fu">,</span><span class="dt">"javascript_origins"</span><span class="fu">:</span><span class="ot">[</span><span class="st">"https://www.example.com"</span><span class="ot">,</span><span class="st">"http://localhost:1221"</span><span class="ot">]</span><span class="fu">}}</span></span></code></pre></div>
 <p>You need to add the domain of where the Cloud Run is running in the JavaScript origins within the GCP console, that you get after deploying the app. (GCP console &gt; APIs &amp; Services &gt; Crdentials &gt; Click on the Web Client ID you are using &gt; Add URL to Authorised JavaScript origins).</p>
 <p><img src="javascript-origins.png"></p>
 <p>In the example case this is <code>https://shiny-cloudrun-sc-ewjogewawq-ew.a.run.app/</code></p>
@@ -490,12 +509,13 @@ server {
 <h4 class="hasAnchor">
 <a href="#deploying" class="anchor"></a>Deploying</h4>
 <p>You can then deploy similar to the example above, which will build the Dockerfile and then deploy it to Cloud Run.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co"># deploy the app version from this folder</span></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span>(<span class="st">"shiny_cloudrun/app/"</span>,</a>
-<a class="sourceLine" id="cb16-3" data-line-number="3">              <span class="dt">remote =</span> <span class="st">"shiny-cloudrun-sc"</span>,</a>
-<a class="sourceLine" id="cb16-4" data-line-number="4">              <span class="dt">tag =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span>),</a>
-<a class="sourceLine" id="cb16-5" data-line-number="5">              <span class="dt">max_instances =</span> <span class="dv">1</span>, <span class="co"># required for shiny</span></a>
-<a class="sourceLine" id="cb16-6" data-line-number="6">              <span class="dt">concurrency =</span> <span class="dv">80</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># deploy the app version from this folder</span>
+<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span><span class="op">(</span><span class="st">"shiny_cloudrun/app/"</span>,
+              remote <span class="op">=</span> <span class="st">"shiny-cloudrun-sc"</span>,
+              tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"latest"</span>,<span class="st">"$BUILD_ID"</span><span class="op">)</span>,
+              max_instances <span class="op">=</span> <span class="fl">1</span>, <span class="co"># required for shiny</span>
+              concurrency <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -506,55 +526,58 @@ server {
 <p>The accessing of those services are <a href="https://cloud.google.com/run/docs/authenticating/overview">documented here</a> and can be reached by any service that can make HTTP requests and has the appropriate authorisation via a service account key.</p>
 <p>To enable easier access from R the <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> functions let you use your own local service account key to generate appropriate JWTs, so as to be able to access the private Cloud Run URL.</p>
 <p>A demo is below, assuming you have already deployed the private Cloud Run service:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co"># The private authenticated access only Cloud Run service</span></a>
-<a class="sourceLine" id="cb17-2" data-line-number="2">the_url &lt;-<span class="st"> "https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/"</span></a>
-<a class="sourceLine" id="cb17-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb17-4" data-line-number="4"><span class="co"># creating the JWT and token from your service account key used for googleCloudRunner</span></a>
-<a class="sourceLine" id="cb17-5" data-line-number="5">jwt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_jwt_create.html">cr_jwt_create</a></span>(the_url, <span class="dt">service_json =</span> <span class="kw"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"GCE_AUTH_FILE"</span>))</a>
-<a class="sourceLine" id="cb17-6" data-line-number="6">token &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_jwt_create.html">cr_jwt_token</a></span>(jwt, the_url)</a>
-<a class="sourceLine" id="cb17-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb17-8" data-line-number="8"><span class="co"># call Cloud Run app using token with any httr verb</span></a>
-<a class="sourceLine" id="cb17-9" data-line-number="9"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(httr)</a>
-<a class="sourceLine" id="cb17-10" data-line-number="10">res &lt;-<span class="st"> </span><span class="kw">cr_jwt_with</span>(<span class="kw"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span>(<span class="st">"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"</span>),</a>
-<a class="sourceLine" id="cb17-11" data-line-number="11">                   token)</a>
-<a class="sourceLine" id="cb17-12" data-line-number="12"><span class="kw"><a href="https://httr.r-lib.org/reference/content.html">content</a></span>(res)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># The private authenticated access only Cloud Run service</span>
+<span class="va">the_url</span> <span class="op">&lt;-</span> <span class="st">"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/"</span>
+
+<span class="co"># creating the JWT and token from your service account key used for googleCloudRunner</span>
+<span class="va">jwt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_create</a></span><span class="op">(</span><span class="va">the_url</span>, service_json <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">"GCE_AUTH_FILE"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">token</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_token</a></span><span class="op">(</span><span class="va">jwt</span>, <span class="va">the_url</span><span class="op">)</span>
+
+<span class="co"># call Cloud Run app using token with any httr verb</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">cr_jwt_with</span><span class="op">(</span><span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span><span class="st">"https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"</span><span class="op">)</span>,
+                   <span class="va">token</span><span class="op">)</span>
+<span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="scheduling-cloud-run-applications" class="section level2">
 <h2 class="hasAnchor">
 <a href="#scheduling-cloud-run-applications" class="anchor"></a>Scheduling Cloud Run applications</h2>
 <p>Via <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html">Cloud Scheduler</a> you can set up a scheduled hit of your HTTP endpoints, via GET, POST or any other methods you have coded into your app.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="co"># get your previously deployed Cloud Run app</span></a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">my_app &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_run_get.html">cr_run_get</a></span>(<span class="st">"your-cloud-run"</span>)</a>
-<a class="sourceLine" id="cb18-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb18-4" data-line-number="4"><span class="co"># add any URL parameters your app needs etc.</span></a>
-<a class="sourceLine" id="cb18-5" data-line-number="5">endpoint &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(my_app<span class="op">$</span>status<span class="op">$</span>url, <span class="st">"?msg=blah"</span>)</a>
-<a class="sourceLine" id="cb18-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb18-7" data-line-number="7"><span class="co"># make the HTTP target</span></a>
-<a class="sourceLine" id="cb18-8" data-line-number="8">run_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/HttpTarget.html">HttpTarget</a></span>(<span class="dt">uri =</span> endpoint, <span class="dt">httpMethod =</span> <span class="st">"GET"</span>)</a>
-<a class="sourceLine" id="cb18-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb18-10" data-line-number="10"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"cloud-run-scheduled"</span>, <span class="dt">schedule =</span> <span class="st">"4 16 * * *"</span>, <span class="dt">httpTarget =</span> run_me)</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># get your previously deployed Cloud Run app</span>
+<span class="va">my_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_run_get.html">cr_run_get</a></span><span class="op">(</span><span class="st">"your-cloud-run"</span><span class="op">)</span>
+
+<span class="co"># add any URL parameters your app needs etc.</span>
+<span class="va">endpoint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">my_app</span><span class="op">$</span><span class="va">status</span><span class="op">$</span><span class="va">url</span>, <span class="st">"?msg=blah"</span><span class="op">)</span>
+
+<span class="co"># make the HTTP target</span>
+<span class="va">run_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HttpTarget.html">HttpTarget</a></span><span class="op">(</span>uri <span class="op">=</span> <span class="va">endpoint</span>, httpMethod <span class="op">=</span> <span class="st">"GET"</span><span class="op">)</span>
+
+<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-run-scheduled"</span>, schedule <span class="op">=</span> <span class="st">"4 16 * * *"</span>, httpTarget <span class="op">=</span> <span class="va">run_me</span><span class="op">)</span></code></pre></div>
 <div id="private-cloud-run-service-scheduling" class="section level3">
 <h3 class="hasAnchor">
 <a href="#private-cloud-run-service-scheduling" class="anchor"></a>Private Cloud Run service scheduling</h3>
 <p><code><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http()</a></code> will help you create the HTTP endpoint for you to pass to <code><a href="../reference/cr_schedule.html">cr_schedule()</a></code> that will work with Cloud Run apps with <code>allowUnauthenticated = FALSE</code> - it will by default create a service email for invoking your app called <code>{your-app}-cloudrun-invoker@{your-project}.iam.gserviceaccount.com</code></p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co"># deploy a non-public app</span></a>
-<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="kw"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span>(<span class="st">"your-cloud-run"</span>, <span class="dt">allowUnauthenticated =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb19-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb19-4" data-line-number="4"><span class="co"># get your previously deployed Cloud Run app</span></a>
-<a class="sourceLine" id="cb19-5" data-line-number="5">my_app &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_run_get.html">cr_run_get</a></span>(<span class="st">"your-cloud-run"</span>)</a>
-<a class="sourceLine" id="cb19-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb19-7" data-line-number="7"><span class="co"># add any URL parameters your app needs etc.</span></a>
-<a class="sourceLine" id="cb19-8" data-line-number="8">endpoint &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(my_app<span class="op">$</span>status<span class="op">$</span>url, <span class="st">"?msg=blah"</span>)</a>
-<a class="sourceLine" id="cb19-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb19-10" data-line-number="10"><span class="co"># generate the service email invoker that was created upon deployment</span></a>
-<a class="sourceLine" id="cb19-11" data-line-number="11"><span class="co"># "your-cloud-run-cloudrun-invoke@your-project.iam.gserviceaccount.com"</span></a>
-<a class="sourceLine" id="cb19-12" data-line-number="12">email &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_run_email.html">cr_run_email</a></span>(<span class="st">"your-cloud-run"</span>)</a>
-<a class="sourceLine" id="cb19-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb19-14" data-line-number="14"><span class="co"># make the HTTP target for authenticated access only</span></a>
-<a class="sourceLine" id="cb19-15" data-line-number="15">run_me &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http</a></span>(endpoint, <span class="dt">email =</span> email, <span class="dt">http_method =</span> <span class="st">"GET"</span>)</a>
-<a class="sourceLine" id="cb19-16" data-line-number="16"></a>
-<a class="sourceLine" id="cb19-17" data-line-number="17"><span class="co"># schedule the call to the endpoint of your Cloud run app</span></a>
-<a class="sourceLine" id="cb19-18" data-line-number="18"><span class="kw"><a href="../reference/cr_schedule.html">cr_schedule</a></span>(<span class="st">"cloud-run-scheduled"</span>, <span class="dt">schedule =</span> <span class="st">"4 16 * * *"</span>, <span class="dt">httpTarget =</span> run_me)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># deploy a non-public app</span>
+<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span><span class="op">(</span><span class="st">"your-cloud-run"</span>, allowUnauthenticated <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+
+<span class="co"># get your previously deployed Cloud Run app</span>
+<span class="va">my_app</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_run_get.html">cr_run_get</a></span><span class="op">(</span><span class="st">"your-cloud-run"</span><span class="op">)</span>
+
+<span class="co"># add any URL parameters your app needs etc.</span>
+<span class="va">endpoint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">my_app</span><span class="op">$</span><span class="va">status</span><span class="op">$</span><span class="va">url</span>, <span class="st">"?msg=blah"</span><span class="op">)</span>
+
+<span class="co"># generate the service email invoker that was created upon deployment</span>
+<span class="co"># "your-cloud-run-cloudrun-invoke@your-project.iam.gserviceaccount.com"</span>
+<span class="va">email</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_run_email.html">cr_run_email</a></span><span class="op">(</span><span class="st">"your-cloud-run"</span><span class="op">)</span>
+
+<span class="co"># make the HTTP target for authenticated access only</span>
+<span class="va">run_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http</a></span><span class="op">(</span><span class="va">endpoint</span>, email <span class="op">=</span> <span class="va">email</span>, http_method <span class="op">=</span> <span class="st">"GET"</span><span class="op">)</span>
+
+<span class="co"># schedule the call to the endpoint of your Cloud run app</span>
+<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-run-scheduled"</span>, schedule <span class="op">=</span> <span class="st">"4 16 * * *"</span>, httpTarget <span class="op">=</span> <span class="va">run_me</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div id="deploying-from-another-google-cloud-project" class="section level2">
@@ -562,29 +585,16 @@ server {
 <a href="#deploying-from-another-google-cloud-project" class="anchor"></a>Deploying from another Google Cloud project</h2>
 <p>By default the build will only allow deployments from the same Google Cloud Project - if you want to deploy container images from other projects you need to give the Cloud Run Service Agent for the Cloud Run project access to the source project. See this <a href="https://cloud.google.com/run/docs/deploying#other-projects">Google help file</a>.</p>
 <p>This is available via the <code><a href="../reference/cr_setup_service.html">cr_setup_service()</a></code> function, using the role lookup <code><a href="../reference/cr_setup_service.html">cr_setup_role_lookup("run_agent")</a></code>:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw"><a href="../reference/cr_setup_service.html">cr_setup_service</a></span>(<span class="st">"service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com"</span></a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">                 <span class="dt">roles =</span> <span class="kw"><a href="../reference/cr_setup_service.html">cr_setup_role_lookup</a></span>(<span class="st">"run_agent"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cr_setup_service</span>(<span class="st">"service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com"</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">roles =</span> <span class="fu">cr_setup_role_lookup</span>(<span class="st">"run_agent"</span>))</span></code></pre></div>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#quickstart---plumber-api">Quickstart - plumber API</a></li>
-      <li><a href="#customising-cloud-run-deployments">Customising Cloud Run deployments</a></li>
-      <li><a href="#cloud-run-deployment-functions">Cloud Run deployment functions</a></li>
-      <li><a href="#pubsub">Pub/Sub</a></li>
-      <li><a href="#creating-a-dockerfile-with-containerit">Creating a Dockerfile with containerit</a></li>
-      <li><a href="#deploying-shiny-to-cloud-run">Deploying Shiny to Cloud Run</a></li>
-      <li><a href="#accessing-authenticated-cloud-run-apps">Accessing authenticated Cloud Run apps</a></li>
-      <li><a href="#scheduling-cloud-run-applications">Scheduling Cloud Run applications</a></li>
-      <li><a href="#deploying-from-another-google-cloud-project">Deploying from another Google Cloud project</a></li>
-      </ul>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
 
@@ -595,7 +605,7 @@ server {
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

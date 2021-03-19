@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/readable/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,7 +41,6 @@
 
 <meta property="og:title" content="Deploy to Cloud Run — cr_deploy_run" />
 <meta property="og:description" content="Deploy R api plumber scripts, HTML files or other images create the Docker image, add the build to Cloud Build and deploy to Cloud Run" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -65,7 +68,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -87,13 +90,13 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-wrench"></span>
+    <span class="fas fa-wrench"></span>
      
     Setup
      
@@ -113,28 +116,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fa fa-shapes"></span>
+    <span class="fas fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fa fa-running"></span>
+    <span class="fas fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fa fa-clock"></span>
+    <span class="fas fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-hands-helping"></span>
+    <span class="fas fa-hands-helping"></span>
      
     Use Cases
      
@@ -171,18 +174,26 @@
     <li>
       <a href="../articles/usecase-r-event-driven-pubsub.html">Event-triggered R scripts with pub/sub</a>
     </li>
+    <li>
+      <a href="../articles/usecase-slackbot-google-analytics.html">Create a Slackbot downloading Google Analytics</a>
+    </li>
   </ul>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fa fa-question"></span>
+    <span class="fas fa-question"></span>
      
     Functions
   </a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -197,7 +208,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Deploy to Cloud Run</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/deploy-run.R'><code>R/deploy-run.R</code></a></small>
     <div class="hidden name"><code>cr_deploy_run.Rd</code></div>
     </div>
 
@@ -205,46 +216,46 @@
     <p>Deploy R api plumber scripts, HTML files or other images create the Docker image, add the build to Cloud Build and deploy to Cloud Run</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_deploy_run</span>(
-  <span class='no'>local</span>,
-  <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>local</span>),
-  <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>,
-  <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>,
-  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(),
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
-  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
-  <span class='no'>...</span>
-)
+    <pre class="usage"><span class='fu'>cr_deploy_run</span><span class='op'>(</span>
+  <span class='va'>local</span>,
+  remote <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span><span class='op'>(</span><span class='va'>local</span><span class='op'>)</span>,
+  dockerfile <span class='op'>=</span> <span class='cn'>NULL</span>,
+  image_name <span class='op'>=</span> <span class='va'>remote</span>,
+  tag <span class='op'>=</span> <span class='st'>"$BUILD_ID"</span>,
+  region <span class='op'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  bucket <span class='op'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  launch_browser <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span>,
+  timeout <span class='op'>=</span> <span class='fl'>600L</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
-<span class='fu'>cr_deploy_html</span>(
-  <span class='no'>html_folder</span>,
-  <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>html_folder</span>),
-  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>,
-  <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>,
-  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(),
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
-  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
-  <span class='no'>...</span>
-)
+<span class='fu'>cr_deploy_html</span><span class='op'>(</span>
+  <span class='va'>html_folder</span>,
+  remote <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span><span class='op'>(</span><span class='va'>html_folder</span><span class='op'>)</span>,
+  image_name <span class='op'>=</span> <span class='va'>remote</span>,
+  tag <span class='op'>=</span> <span class='st'>"$BUILD_ID"</span>,
+  region <span class='op'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  bucket <span class='op'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  launch_browser <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span>,
+  timeout <span class='op'>=</span> <span class='fl'>600L</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
-<span class='fu'>cr_deploy_plumber</span>(
-  <span class='no'>api</span>,
-  <span class='kw'>remote</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span>(<span class='no'>api</span>),
-  <span class='kw'>dockerfile</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>image_name</span> <span class='kw'>=</span> <span class='no'>remote</span>,
-  <span class='kw'>tag</span> <span class='kw'>=</span> <span class='st'>"$BUILD_ID"</span>,
-  <span class='kw'>region</span> <span class='kw'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span>(),
-  <span class='kw'>bucket</span> <span class='kw'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span>(),
-  <span class='kw'>projectId</span> <span class='kw'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span>(),
-  <span class='kw'>launch_browser</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>(),
-  <span class='kw'>timeout</span> <span class='kw'>=</span> <span class='fl'>600L</span>,
-  <span class='no'>...</span>
-)</pre>
+<span class='fu'>cr_deploy_plumber</span><span class='op'>(</span>
+  <span class='va'>api</span>,
+  remote <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/basename.html'>basename</a></span><span class='op'>(</span><span class='va'>api</span><span class='op'>)</span>,
+  dockerfile <span class='op'>=</span> <span class='cn'>NULL</span>,
+  image_name <span class='op'>=</span> <span class='va'>remote</span>,
+  tag <span class='op'>=</span> <span class='st'>"$BUILD_ID"</span>,
+  region <span class='op'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  bucket <span class='op'>=</span> <span class='fu'><a href='cr_bucket_set.html'>cr_bucket_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>,
+  launch_browser <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span>,
+  timeout <span class='op'>=</span> <span class='fl'>600L</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -291,7 +302,7 @@
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments passed on to <code><a href='cr_buildstep_run.html'>cr_buildstep_run</a></code></p><dl class='dl-horizontal'>
+      <td><p>Arguments passed on to <code><a href='cr_buildstep_run.html'>cr_buildstep_run</a></code></p><dl>
     <dt><code>name</code></dt><dd><p>Name for deployment on Cloud Run</p></dd>
     <dt><code>image</code></dt><dd><p>The name of the image to create or use in deployment - <code>gcr.io</code></p></dd>
     <dt><code>allowUnauthenticated</code></dt><dd><p>TRUE if can be reached from public HTTP address. If FALSE will configure a service-email called <code>(name)-cloudrun-invoker@(project-id).iam.gserviceaccount.com</code></p></dd>
@@ -354,43 +365,37 @@ From that api.R you can source or call other resources in the same folder, using
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
-<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span>(<span class='st'>"europe-west1"</span>)
-<span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
-<span class='fu'>cr_deploy_run</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"example/"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>))
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
+<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span><span class='op'>(</span><span class='st'>"europe-west1"</span><span class='op'>)</span>
+<span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span>
+<span class='fu'>cr_deploy_run</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"example/"</span>, package <span class='op'>=</span> <span class='st'>"googleCloudRunner"</span><span class='op'>)</span><span class='op'>)</span>
 
-}
+<span class='op'>}</span>
 
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
-<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span>(<span class='st'>"europe-west1"</span>)
-<span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
+<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span><span class='op'>(</span><span class='st'>"europe-west1"</span><span class='op'>)</span>
+<span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span>
 
-<span class='fu'>cr_deploy_html</span>(<span class='st'>"my_folder"</span>)
+<span class='fu'>cr_deploy_html</span><span class='op'>(</span><span class='st'>"my_folder"</span><span class='op'>)</span>
 
-}
+<span class='op'>}</span>
 
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span>(<span class='st'>"my-project"</span>)
-<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span>(<span class='st'>"europe-west1"</span>)
-<span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span>(<span class='st'>"my-bucket"</span>)
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
+<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span><span class='op'>(</span><span class='st'>"europe-west1"</span><span class='op'>)</span>
+<span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span>
 
-<span class='fu'>cr_deploy_plumber</span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"example/"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"googleCloudRunner"</span>))
+<span class='fu'>cr_deploy_plumber</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"example/"</span>, package <span class='op'>=</span> <span class='st'>"googleCloudRunner"</span><span class='op'>)</span><span class='op'>)</span>
 
-}</div></pre>
+<span class='op'>}</span>
+</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#cr-deploy-html">cr_deploy_html</a></li>
-      <li><a href="#cr-deploy-plumber">cr_deploy_plumber</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -401,7 +406,7 @@ From that api.R you can source or call other resources in the same folder, using
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
