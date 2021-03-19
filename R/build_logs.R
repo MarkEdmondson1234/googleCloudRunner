@@ -98,7 +98,7 @@ cr_build_logs_last <- function(trigger_name = NULL,
   cli::cli_process_start("Downloading logs")
 
   if(is.null(trigger_id)){
-    cli::cli_process_update(msg = "{symbol$arrow_right} Downloading buildtriggers")
+    cli::cli_status_update(msg = "{symbol$arrow_right} Downloading buildtriggers")
     ts <- cr_buildtrigger_list(projectId = projectId)
 
     trigger_id <- ts[ts$buildTriggerName == trigger_name,"buildTriggerId"]

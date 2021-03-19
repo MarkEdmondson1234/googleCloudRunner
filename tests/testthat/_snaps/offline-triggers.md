@@ -13,8 +13,9 @@
 
     [[1]]
     ==cloudRunnerBuildStep==
-    name: gcr.io/cloud-builders/gcloud
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
     args:
+    - gcloud
     - kms
     - decrypt
     - --ciphertext-file
