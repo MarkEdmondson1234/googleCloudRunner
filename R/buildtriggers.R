@@ -152,6 +152,7 @@ parse_buildtrigger_list <- function(x){
 #' @param build The build to trigger created via \link{cr_build_make}, or the file location of the cloudbuild.yaml within the trigger source
 #' @param projectId ID of the project for which to configure automatic builds
 #' @param trigger_tags Tags for the buildtrigger listing
+#' @param overwrite If TRUE will overwrite an existing trigger with the same name
 #' @importFrom googleAuthR gar_api_generator
 #' @family BuildTrigger functions
 #'
@@ -198,7 +199,8 @@ cr_buildtrigger <- function(build,
                             ignoredFiles = NULL,
                             includedFiles = NULL,
                             trigger_tags = NULL,
-                            projectId = cr_project_get()) {
+                            projectId = cr_project_get(),
+                            overwrite = FALSE) {
 
   assert_that(
     is.string(name),
@@ -241,6 +243,15 @@ cr_buildtrigger <- function(build,
       ignoredFiles = ignoredFiles,
       includedFiles = includedFiles
     )
+
+  if(overwrite){
+    tryCatch(
+      cr_buildtrigger_delete(name, projectId = projectId),
+      error = function(err){
+        myMessage("No buildtrigger to overwrite called ", name, level = 3)
+      }
+    )
+  }
 
   url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
                    projectId)

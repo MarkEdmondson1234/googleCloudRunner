@@ -14,7 +14,8 @@ cr_buildtrigger(
   ignoredFiles = NULL,
   includedFiles = NULL,
   trigger_tags = NULL,
-  projectId = cr_project_get()
+  projectId = cr_project_get(),
+  overwrite = FALSE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ cr_buildtrigger(
 \item{trigger_tags}{Tags for the buildtrigger listing}
 
 \item{projectId}{ID of the project for which to configure automatic builds}
+
+\item{overwrite}{If TRUE will overwrite an existing trigger with the same name}
 }
 \description{
 Creates a new `BuildTrigger`.This API is experimental.
