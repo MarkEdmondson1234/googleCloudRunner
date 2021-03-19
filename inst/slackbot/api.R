@@ -46,12 +46,17 @@ function(ga_id){
   # get last years referrer data
   last_30_new_refs <- do_ga(ga_id)
 
+  the_data <- unique(last_30_new_refs$fullReferrer)
+
   the_body <- list(
-    text = paste0("```\n",
-                  paste0(collapse = "\n",knitr::kable(last_30_new_refs)),
-                  "```\n")
+    text = paste0("GoogleAnalyticsLast30DaysNewReferrals\n```\n",
+                  paste0(collapse = "\n",the_data),
+                  "\n```\n")
   )
   # get the Slack URL from an env var
   slack_url <- Sys.getenv("SLACK_URL")
-  POST(slack_url, body = the_body, encode = "json")
+  res <- POST(slack_url, body = the_body, encode = "json")
+
+  list(slack_http_response = res$status_code)
 }
+

@@ -247,6 +247,22 @@ I played around with what exactly to send to Slack for a data.frame and ended up
 
 ![](csv_slack.png)
 
+It won't work with large tables, so limit the table down if using kable, or in the end I ended up with just a list of the referral URLs:
+
+```r
+# get last years referrer data
+last_30_new_refs <- do_ga(ga_id)
+  
+the_data <- unique(last_30_new_refs$fullReferrer)
+  
+the_body <- list(
+    text = paste0("GoogleAnalyticsLast30DaysNewReferrals\n```\n", 
+                 paste0(collapse = "\n",the_data),
+                "\n```\n")
+                )
+POST(slack_url, body = the_body, encode = "json")
+```
+
 ## Modifying the R script to get the right format for Slack
 
 To call the Slack bot, the API needs to collect the data then make a HTTP GET request above itself to the Slack URL.  I don't want to include the Slack URL in the code, so I'll also alter the Build Trigger to accept a substitution variable in the build, that will hold the Slack URL.  
@@ -270,7 +286,7 @@ bs <- c(
   cr_buildstep_run(
     "slackbot",
     image = "gcr.io/$PROJECT_ID/slackbot:$BUILD_ID",
-    memory = "2GiB",
+    memory = "1Gi",
     env_vars = c("GAR_CLIENT_JSON=client.json",
                  "GA_AUTH_FILE=auth.json",
                  "SLACK_URL=$_SLACK_URL") # will get from substitution variable
@@ -350,14 +366,18 @@ function(ga_id){
   # get last years referrer data
   last_30_new_refs <- do_ga(ga_id)
   
+  the_data <- unique(last_30_new_refs$fullReferrer)
+  
   the_body <- list(
-    text = paste0("```\n", 
-                 paste0(collapse = "\n",knitr::kable(last_30_new_refs)),
-                "```\n")
+    text = paste0("GoogleAnalyticsLast30DaysNewReferrals\n```\n", 
+                 paste0(collapse = "\n",the_data),
+                "\n```\n")
                 )
   # get the Slack URL from an env var
   slack_url <- Sys.getenv("SLACK_URL")
-  POST(slack_url, body = the_body, encode = "json")
+  res <- POST(slack_url, body = the_body, encode = "json")
+  
+  list(slack_http_response = res$status_code)
 }
 ```
 
@@ -382,17 +402,28 @@ After deployment it should now be able to respond to the GA endpoint:
 ```r
 library(httr)
 ga_id <- 1234557
-res <- GET(paste0("https://slackbot-xxxx-ew.a.run.app/last-30-days?ga_id=",ga_id))
+my_app <- "https://slackbot-xxxx-ew.a.run.ap"
+res <- GET(paste0(my_app, "/last-30-days?ga_id=",ga_id))
 content(res)
 ```
 
 Check the logs for Cloud Build and Cloud Run to see if its all working.
 
-The first time I tried it the memory was too low for the app, which is why above it specifies "2G" for the Cloud Run size. 
+The first time I tried it the memory was too low for the app, which is why above it specifies "1Gi" for the Cloud Run size. 
 
-But if all goes well then you should be able to see the CSV file come back.
+But if all goes well then you should be able to see the CSV file come back. (yay!)
 
-The URL endpoint `/trigger-slack?ga_id=12345` should send the same data you see at `/last-30-days?ga_id=12345` but send that data to Slack.
+![]
+
+The URL endpoint `/trigger-slack?ga_id=12345` should send the same data you see at `/last-30-days?ga_id=12345` but send that data to Slack:
+
+```r
+library(httr)
+ga_id <- 1234557
+my_app <- "https://slackbot-xxxx-ew.a.run.ap"
+res <- GET(paste0(my_app, "/trigger-slack?ga_id=",ga_id))
+content(res)
+```
 
 ### Scheduling
 
@@ -408,9 +439,9 @@ http_target <- HttpTarget(
   httpMethod = "GET"
 ) 
 
-# every Monday at 0830
+# every Friday at 0830
 cr_schedule("slackbot-schedule", 
-            schedule = "30 8 * * 1",
+            schedule = "30 8 * * 5",
             httpTarget = http_target,
             overwrite = TRUE)
 
@@ -419,4 +450,8 @@ cr_schedule("slackbot-schedule",
 
 ## Where to go from here
 
-You could try adding other endpoints for different GA functions, or making the API/webhook compatible with other services other than Slack.  You may also want to make the Cloud Run API private, and should if its controlling private of expensive operations, so then look at `cr_jwt_create()` or `cr_run_schedule_http()` as your private API options.
+Once the app is deployed you can spend most of your time developing the R code, which upon each commit will recreate the API.
+
+You could try adding other endpoints for different GA functions, or making the API/webhook compatible with other services other than Slack.  
+
+You may also want to make the Cloud Run API private, and should if its controlling private of expensive operations, so then look at `cr_jwt_create()` or `cr_run_schedule_http()` as your private API options.
