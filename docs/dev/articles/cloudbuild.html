@@ -46,13 +46,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-wrench"></span>
+    <span class="fas fa-wrench"></span>
      
     Setup
      
@@ -72,28 +72,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fa fa-shapes"></span>
+    <span class="fas fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fa fa-running"></span>
+    <span class="fas fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fa fa-clock"></span>
+    <span class="fas fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-hands-helping"></span>
+    <span class="fas fa-hands-helping"></span>
      
     Use Cases
      
@@ -130,11 +130,14 @@
     <li>
       <a href="../articles/usecase-r-event-driven-pubsub.html">Event-triggered R scripts with pub/sub</a>
     </li>
+    <li>
+      <a href="../articles/usecase-slackbot-google-analytics.html">Create a Slackbot downloading Google Analytics</a>
+    </li>
   </ul>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fa fa-question"></span>
+    <span class="fas fa-question"></span>
      
     Functions
   </a>
@@ -143,7 +146,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -157,12 +160,12 @@
 
       
 
-      </header><div class="row">
+      </header><script src="cloudbuild_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Serverless batched R scripts via Cloud Build</h1>
             
-            <h4 class="date">2021-03-18</h4>
+            <h4 class="date">2021-03-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudbuild.Rmd"><code>vignettes/cloudbuild.Rmd</code></a></small>
       <div class="hidden name"><code>cloudbuild.Rmd</code></div>
@@ -180,16 +183,16 @@
 <a href="#the-cloudbuild-yaml-format" class="anchor"></a>The cloudbuild.yaml format</h2>
 <p>Cloud Build is centered around the <a href="https://cloud.google.com/cloud-build/docs/build-config">cloudbuild.yaml format</a> - you can use existing cloudbuild.yaml files or create your own in R using the cloudbuild.yaml helper functions.</p>
 <p>An example cloudbuild.yaml is shown below - this outputs the versions of docker and echos “Hello Cloud Build” and calls an R function:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="fu">steps:</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">-</span> <span class="fu">name:</span><span class="at"> </span><span class="st">'gcr.io/cloud-builders/docker'</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">  <span class="fu">id:</span><span class="at"> Docker Version</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">  <span class="fu">args:</span><span class="at"> </span><span class="kw">[</span><span class="st">"version"</span><span class="kw">]</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">-</span> <span class="fu">name:</span><span class="at"> </span><span class="st">'alpine'</span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">  <span class="fu">id:</span><span class="at">  Hello Cloud Build</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">  <span class="fu">args:</span><span class="at"> </span><span class="kw">[</span><span class="st">"echo"</span><span class="kw">,</span> <span class="st">"Hello Cloud Build"</span><span class="kw">]</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="kw">-</span> <span class="fu">name:</span><span class="at"> </span><span class="st">'rocker/r-base'</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">  <span class="fu">id:</span><span class="at"> Hello R</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">  <span class="fu">args:</span><span class="at"> </span><span class="kw">[</span><span class="st">"R"</span><span class="kw">,</span> <span class="st">"-e"</span><span class="kw">,</span> <span class="st">"paste0('1 + 1 = ', 1+1)"</span><span class="kw">]</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">'gcr.io/cloud-builders/docker'</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">id</span><span class="kw">:</span><span class="at"> Docker Version</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">args</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"version"</span><span class="kw">]</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">'alpine'</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">id</span><span class="kw">:</span><span class="at">  Hello Cloud Build</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">args</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"echo"</span><span class="kw">,</span><span class="at"> </span><span class="st">"Hello Cloud Build"</span><span class="kw">]</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">'rocker/r-base'</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">id</span><span class="kw">:</span><span class="at"> Hello R</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">args</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"R"</span><span class="kw">,</span><span class="at"> </span><span class="st">"-e"</span><span class="kw">,</span><span class="at"> </span><span class="st">"paste0('1 + 1 = ', 1+1)"</span><span class="kw">]</span></span></code></pre></div>
 <p>This cloudbuild.yaml file can be built directly via the <code><a href="../reference/cr_build.html">cr_build()</a></code> function. The build will by default trigger a website URL to open with the build logs.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span><span class="op">)</span></code></pre></div>
@@ -268,7 +271,7 @@
 <li>$REVISION_ID or $COMMIT_SHA: the commit SHA specified by RepoSource or resolved from the specified branch or tag.</li>
 <li>$SHORT_SHA: first 7 characters of $REVISION_ID or $COMMIT_SHA.</li>
 </ul>
-<p>Custom macros can also be configured, starting with _$ e.g. $_MY_CUSTOM_MACRO</p>
+<p>Custom macros can also be configured, starting with _$ e.g. $_MY_CUSTOM_MACRO</p>
 </div>
 <div id="creating-cloudbuild-yml-build-steps" class="section level2">
 <h2 class="hasAnchor">

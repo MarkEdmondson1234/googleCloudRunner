@@ -46,13 +46,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-wrench"></span>
+    <span class="fas fa-wrench"></span>
      
     Setup
      
@@ -72,28 +72,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fa fa-shapes"></span>
+    <span class="fas fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fa fa-running"></span>
+    <span class="fas fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fa fa-clock"></span>
+    <span class="fas fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-hands-helping"></span>
+    <span class="fas fa-hands-helping"></span>
      
     Use Cases
      
@@ -130,11 +130,14 @@
     <li>
       <a href="../articles/usecase-r-event-driven-pubsub.html">Event-triggered R scripts with pub/sub</a>
     </li>
+    <li>
+      <a href="../articles/usecase-slackbot-google-analytics.html">Create a Slackbot downloading Google Analytics</a>
+    </li>
   </ul>
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fa fa-question"></span>
+    <span class="fas fa-question"></span>
      
     Functions
   </a>
@@ -143,7 +146,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -157,12 +160,12 @@
 
       
 
-      </header><div class="row">
+      </header><script src="usecase-r-api-microservices_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Run private R micro-services on Cloud Run</h1>
             
-            <h4 class="date">2021-03-18</h4>
+            <h4 class="date">2021-03-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-r-api-microservices.Rmd"><code>vignettes/usecase-r-api-microservices.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-r-api-microservices.Rmd</code></div>
@@ -194,9 +197,9 @@
 <code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">"PORT"</span><span class="op">)</span> <span class="op">==</span> <span class="st">""</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html">Sys.setenv</a></span><span class="op">(</span>PORT <span class="op">=</span> <span class="fl">8000</span><span class="op">)</span>
 
 <span class="co">#auth via BQ_AUTH_FILE environment argument</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://code.markedmondson.me/bigQueryR/">bigQueryR</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/xts">xts</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://pkg.robjhyndman.com/forecast">forecast</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">bigQueryR</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">xts</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">forecast</span><span class="op">)</span>
 
 <span class="co">#' @get /</span>
 <span class="co">#' @html</span>
@@ -222,7 +225,7 @@
 
   <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"Query: "</span>, <span class="va">sql</span><span class="op">)</span>
 
-  <span class="va">traffic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/bigQueryR/man/bqr_query.html">bqr_query</a></span><span class="op">(</span>
+  <span class="va">traffic</span> <span class="op">&lt;-</span> <span class="fu">bqr_query</span><span class="op">(</span>
     query <span class="op">=</span> <span class="va">sql</span>,
     datasetId <span class="op">=</span> <span class="st">"covid19_geotab_mobility_impact"</span>,
     useLegacySql <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -233,12 +236,12 @@
   <span class="va">test_data</span> <span class="op">&lt;-</span> <span class="va">traffic</span><span class="op">[</span><span class="va">traffic</span><span class="op">$</span><span class="va">industry</span> <span class="op">==</span> <span class="va">industry</span>,
                        <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"date"</span>,<span class="st">"percent_of_baseline"</span><span class="op">)</span><span class="op">]</span>
 
-  <span class="va">tts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xts/man/xts.html">xts</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">$</span><span class="va">percent_of_baseline</span>,
+  <span class="va">tts</span> <span class="op">&lt;-</span> <span class="fu">xts</span><span class="op">(</span><span class="va">test_data</span><span class="op">$</span><span class="va">percent_of_baseline</span>,
              order.by <span class="op">=</span> <span class="va">test_data</span><span class="op">$</span><span class="va">date</span>,
              frequency <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>
 
   <span class="co"># replace with long running sophisticated analysis</span>
-  <span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://pkg.robjhyndman.com/forecast/reference/forecast.html">forecast</a></span><span class="op">(</span><span class="fu"><a href="http://pkg.robjhyndman.com/forecast/reference/auto.arima.html">auto.arima</a></span><span class="op">(</span><span class="va">tts</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">forecast</span><span class="op">(</span><span class="fu">auto.arima</span><span class="op">(</span><span class="va">tts</span><span class="op">)</span><span class="op">)</span>
 
   <span class="co"># output a list that can be turned into JSON via jsonlite::toJSON</span>
   <span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
