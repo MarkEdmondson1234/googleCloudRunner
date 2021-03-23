@@ -9,7 +9,7 @@ When running R code, it needs to run in an environment that has the packages and
 
 Once you have your R code and chosen the Docker image, then you can use `cr_deploy_r()` to point at your R file and Docker image, set the timeout to what you need (the maximum is 24 hours) and select a schedule if you need it. 
 
-## Typcial workflow for running R on Cloud Build
+## Typical workflow for running R on Cloud Build
 
 A typical workflow is:
 
@@ -71,7 +71,7 @@ Variations include:
 * Include the R script within the Docker container, so you just need to run the Docker image to execute your script
 * Build the Docker image in the same Cloud Build as the R script running, for which you will need a source for the Dockerfile such as a trigger on GitHub via `cr_buildtrigger_repo()` or Cloud Storage
 
-## Or just use the gadget
+## The RStudio gadget
 
 An RStudio gadget is also available to help you deploy:
 
@@ -79,7 +79,7 @@ An RStudio gadget is also available to help you deploy:
 
 If you want help creating the Docker image, try [`containerit`](https://o2r.info/containerit/) to generate your Dockerfile, then use `cr_deploy_docker()` to build it.
 
-### Execute R scripts directly from Cloud Storage
+## Execute R scripts directly from Cloud Storage
 
 In some cases you may hit character limits of the cloudbuild file in which case you will need to execute the R code from a file.  The easiest way to do this is to upload your R code to a Cloud Storage bucket and then supply the `gs://` URI to `cr_buildstep_r()`:
 
@@ -98,7 +98,7 @@ cr_build(large_r_job)
 ```
 
 
-### Authentication within the R script on Cloud Build
+## Authentication within the R script on Cloud Build
 
 The recommended way to use secrets in build is to use `cr_buildstep_secret()`, and upload the sensitive authentication file to [Google Secret Manager](https://cloud.google.com/secret-manager) before hand.
 

@@ -84,7 +84,6 @@ cr_deploy_run <- function(local,
 #' @param html_folder the folder containing all the html
 #' @inheritParams cr_deploy_run
 #' @param ... Other arguments passed to \link{cr_deploy_run} and eventually \link{cr_buildstep_run}
-#' @details
 #'
 #' @section cr_deploy_html:
 #' Deploy html files to a nginx server on Cloud Run.

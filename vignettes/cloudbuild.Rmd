@@ -195,6 +195,13 @@ cr_build_yaml(
       images = "gcr.io/my-project/my-image")
 ```
 
+The `cr_buildstep_*` functions are all calling `cr_buildstep()` with helpful defaults, for example these are equivalent:
+
+```{r}
+cr_buildstep_bash("echo hello world")
+cr_buildstep("ubuntu", args = c("bash", "-c", "echo hello world"), prefix = "")
+```
+
 ## Build Artifacts
 
 You may have some useful files or data after your buildsteps that you want to use later.  You can specify these files as **artifacts** that will be uploaded to a Google Cloud Storage bucket after the build finishes.  A helper function `cr_build_artifacts()` will take your build object and download the files to your local directory via `googleCloudStorageR`

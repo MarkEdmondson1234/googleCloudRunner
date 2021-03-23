@@ -11,14 +11,19 @@ test_that("[Online] Test Build Triggers",{
                                      type = "cloud_source")
 
   # build with in-line build code
-  gh_inline <- cr_buildtrigger(bb, name = "bt-github-inline", trigger = gh_trigger)
+  gh_inline <- cr_buildtrigger(bb,
+                               name = "bt-github-inline",
+                               trigger = gh_trigger,
+                               overwrite = TRUE)
 
   # build pointing to cloudbuild.yaml within the GitHub repo
   gh_file <- cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
-                             name = "bt-github-file", trigger = gh_trigger)
+                             name = "bt-github-file", trigger = gh_trigger,
+                             overwrite = TRUE)
 
   cs_file <- cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
-                             name = "bt-cs-file", trigger = cs_trigger)
+                             name = "bt-cs-file", trigger = cs_trigger,
+                             overwrite = TRUE)
 
   # build inline with trigger source
   cloudbuild_rmd <- system.file("cloudbuild/cloudbuild_rmd.yml",
@@ -26,10 +31,12 @@ test_that("[Online] Test Build Triggers",{
   b_rmd <- cr_build_make(cloudbuild_rmd)
   gh_source_inline <- cr_buildtrigger(b_rmd,
                                       name = "bt-github-source",
-                                      trigger = gh_trigger)
+                                      trigger = gh_trigger,
+                                      overwrite = TRUE)
   cs_source_inline <- cr_buildtrigger(b_rmd,
                                       name = "bt-cs-source",
-                                      trigger = cs_trigger)
+                                      trigger = cs_trigger,
+                                      overwrite = TRUE)
   Sys.sleep(5)
   the_list <- cr_buildtrigger_list()
   expect_true("bt-github-inline" %in% the_list$buildTriggerName)
