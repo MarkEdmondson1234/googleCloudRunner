@@ -164,7 +164,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Serverless batched R scripts via Cloud Build</h1>
             
-            <h4 class="date">2021-03-19</h4>
+            <h4 class="date">2021-03-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudbuild.Rmd"><code>vignettes/cloudbuild.Rmd</code></a></small>
       <div class="hidden name"><code>cloudbuild.Rmd</code></div>
@@ -225,6 +225,25 @@
 <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code> lets you create specific steps within the Cloud Build objects. There are helper template files with common tasks such as <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>
 </li>
 </ul>
+<p>For common use cases the <code>cr_deploy_*</code> functions use the above functions with some sensible defaults to quickly run use cases for you:</p>
+<ul>
+<li>
+<code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> - builds from a Dockerfile then pushes the Docker image to Google Container Registry</li>
+<li>
+<code><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger()</a></code> - as above, plus creating a build trigger so the build will run upon each git commit - see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-package-docker-build.html">Docker image use case</a> for both.</li>
+<li>
+<code><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests()</a></code> - create a build that will run R package unit tests and a build trigger to run them upon each commit - see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-testthat-coverage.html">package tests and code coverage use case</a>
+</li>
+<li>
+<code><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown()</a></code> - create a build that will deploy an R package website and a build trigger to create it upon each commit - see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-deploy-pkgdown-website.html">pkgdown website use case</a>.</li>
+<li>
+<code><a href="../reference/cr_deploy_run_website.html">cr_deploy_run_website()</a></code> - take HTML you have in a folder (perhaps created from an RMarkdown file) and deploy it to a nginx website on Cloud Run</li>
+<li>
+<code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code> - take the R script you supply and run it within a Cloud Build. Optionally also schedule that R script - see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-scheduled-r-builds.html">R code on a schedule use case</a>.</li>
+<li>
+<code><a href="../reference/cr_deploy_run.html">cr_deploy_run()</a></code> - takes a local folder, builds the Docker image suitable for Cloud run and deploys to Cloud Run. Variants include <code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code> to R plumber APIs and <code><a href="../reference/cr_deploy_run.html">cr_deploy_html()</a></code> for nginx websites. See the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-r-api-microservices.html">R micro-services</a>, <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-r-event-driven-pubsub.html">trigger R functions from pub/sub</a> and <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-slackbot-google-analytics.html">creating a Slackbot</a> use cases</li>
+</ul>
+<p>Some of the above are also available in an RStudio gadget.</p>
 </div>
 <div id="docker-images-to-use-in-cloud-build" class="section level3">
 <h3 class="hasAnchor">
