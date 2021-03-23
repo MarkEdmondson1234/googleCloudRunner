@@ -7,23 +7,23 @@ do_ga <- function(ga_id){
   # get last years referrer data
   two_years <- google_analytics(
     ga_id,
-    date_range = c(Sys.Date()-(365), Sys.Date()),
+    date_range = c(Sys.Date()-365, Sys.Date()),
     dimensions = c("date","fullReferrer","landingPagePath"),
     metrics = "sessions",
     rows_per_call = 50000,
     max = -1)
 
-  last30Days <- two_years %>% filter(date >= Sys.Date() - 30)
-  previousDays <- two_years %>% filter(date < Sys.Date() - 30)
+  last7Days <- two_years %>% filter(date >= Sys.Date() - 7)
+  previousDays <- two_years %>% filter(date < Sys.Date() - 7)
 
   # the referrers seen in last30days but not previously
-  new_refs <- setdiff(unique(last30Days$fullReferrer),
+  new_refs <- setdiff(unique(last7Days$fullReferrer),
                       unique(previousDays$fullReferrer))
 
-  last_30_new_refs <- last30Days %>%
+  last_7_new_refs <- last7Days %>%
     filter(fullReferrer %in% new_refs)
 
-  last_30_new_refs
+  last_7_new_refs
 }
 
 #' @get /
@@ -49,7 +49,8 @@ function(ga_id){
   the_data <- unique(last_30_new_refs$fullReferrer)
 
   the_body <- list(
-    text = paste0("GoogleAnalyticsLast30DaysNewReferrals\n```\n",
+    text = paste0("Google Analytics Last 7Days New Referrals\n",
+                  "```\n",
                   paste0(collapse = "\n",the_data),
                   "\n```\n")
   )

@@ -212,7 +212,7 @@ cr_buildtrigger <- function(build,
     the_build <- NULL
     the_filename <- build
   } else {
-    assert_that(is.gar_Build(build))
+    assert_that(is.gar_Build(build) || is.Yaml(build))
     the_filename <- NULL
 
     # remove builds source
@@ -257,7 +257,8 @@ cr_buildtrigger <- function(build,
                    projectId)
   # cloudbuild.projects.triggers.create
   f <- gar_api_generator(url, "POST",
-                           data_parse_function = as.buildTriggerResponse)
+                         data_parse_function = as.buildTriggerResponse,
+                         simplifyVector = FALSE)
   stopifnot(inherits(buildTrigger, "BuildTrigger"))
 
   f(the_body = buildTrigger)
@@ -265,10 +266,15 @@ cr_buildtrigger <- function(build,
 }
 
 as.buildTriggerResponse <- function(x){
-    structure(
-        x,
-        class = c("BuildTriggerResponse", "list")
-    )
+  o <- x
+  if(!is.null(o$build)){
+    o$build <- as.gar_Build(x$build)
+  }
+
+  structure(
+    o,
+    class = c("BuildTriggerResponse", "list")
+  )
 }
 
 is.buildTriggerResponse <- function(x){

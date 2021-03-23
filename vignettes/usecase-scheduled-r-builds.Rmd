@@ -9,6 +9,70 @@ When running R code, it needs to run in an environment that has the packages and
 
 Once you have your R code and chosen the Docker image, then you can use `cr_deploy_r()` to point at your R file and Docker image, set the timeout to what you need (the maximum is 24 hours) and select a schedule if you need it. 
 
+## Typcial workflow for running R on Cloud Build
+
+A typical workflow is:
+
+1. Create your R script
+2. Pick or build a Docker image running R that has the libraries necessary for that script - for example `rocker/verse`.  If you need to build your own with a `Dockerfile` include that in a step before your R code runs.
+3. Use that Docker image to run your R script within with `cr_buildstep_r()`
+4. Deploy the Build via `cr_build()`
+5. Optionally setup scheduling or a build trigger for when your R script will fire in the future.
+
+An example of code doing the above would be:
+
+### Using a precreated docker image
+
+The below assumes your R script can run with `rocker/verse`
+
+```r
+my_r_script <- "here.R"
+
+bs <- cr_buildstep_r(
+    my_r_script,
+    name = "rocker/verse"
+  )
+
+# here you can add metadata for the build steps, such as timeout
+my_build <- cr_build_yaml(bs, timeout = 2400)
+
+# build it
+cr_build(my_build)
+```
+
+### Using an R Docker image you build yourself
+
+Here the Docker image is first built, then used in the R build afterwards (in the `name` argument).  It is also pushed to Google Container Registry.
+
+```r
+my_r_script <- "here.R"
+my_dockerfile_folder <- "my_build/"
+
+# build your image called my-r-docker
+cr_deploy_docker(my_dockerfile_folder, 
+                 image_name = "gcr.io/$PROJECT_ID/my-r-docker")
+
+# now the buildstep uses the built image
+bs <- cr_buildstep_r(
+    my_r_script,
+    name = "gcr.io/$PROJECT_ID/my-r-docker")
+
+# here you can add metadata for the build steps, such as timeout
+my_build <- cr_build_yaml(bs, timeout = 2400)
+
+# build it
+cr_build(my_build)
+```
+
+### Other Docker options
+
+Variations include:
+
+* Include the R script within the Docker container, so you just need to run the Docker image to execute your script
+* Build the Docker image in the same Cloud Build as the R script running, for which you will need a source for the Dockerfile such as a trigger on GitHub via `cr_buildtrigger_repo()` or Cloud Storage
+
+## Or just use the gadget
+
 An RStudio gadget is also available to help you deploy:
 
 ![](gadget_r.png)

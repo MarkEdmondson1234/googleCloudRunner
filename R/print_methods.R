@@ -37,9 +37,9 @@ print.BuildTriggerResponse <- function(x, ...){
   cat0("triggerTemplate.commitSha: ", x$triggerTemplate$commitSha)
   cat0("triggerTemplate.branchName: ", x$triggerTemplate$branchName)
   cat0("filename: ", x$filename)
-  if(!is.null(x$build$steps)){
-    cat("\n")
-    print(cr_buildstep_df(x$build$steps))
+
+  if(!is.null(x$build)){
+    print(x$build)
   }
 
 }
