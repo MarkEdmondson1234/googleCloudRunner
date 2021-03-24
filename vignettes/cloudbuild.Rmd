@@ -197,9 +197,23 @@ cr_build_yaml(
 
 The `cr_buildstep_*` functions are all calling `cr_buildstep()` with helpful defaults, for example these are equivalent:
 
-```{r}
+```r
 cr_buildstep_bash("echo hello world")
+#[[1]]
+#==cloudRunnerBuildStep==
+#name: ubuntu
+#args:
+#- bash
+#- -c
+#- echo hello world
 cr_buildstep("ubuntu", args = c("bash", "-c", "echo hello world"), prefix = "")
+#[[1]]
+#==cloudRunnerBuildStep==
+#name: ubuntu
+#args:
+#- bash
+#- -c
+#- echo hello world
 ```
 
 ## Build Artifacts

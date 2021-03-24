@@ -105,9 +105,11 @@ cr_schedule <- function(name,
               data_parse_function = parse_schedule,
               pars_args = list(updateMask = paste(names(updateMask),
                                                   collapse = ",")))
+    } else {
+      # if not in the_name not in scheds, keep existing f()
+      myMessage("No existing schedule to overwrite", level = 3)
     }
-    # if not in the_name not in scheds, keep existing f()
-    myMessage("No existing schedule to overwrite", level = 3)
+
   }
 
   o <- f(the_body = job)
