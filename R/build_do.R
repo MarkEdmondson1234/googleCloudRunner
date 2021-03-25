@@ -104,7 +104,8 @@ cr_build <- function(x,
   o <- f(the_body = build)
 
   logs <- extract_logs(o)
-  myMessage("Cloud Build started - logs: \n", logs, level = 3)
+  cli::cli_alert_info("Cloud Build started - logs:")
+  cli::cli_text("{.url {logs}}")
 
   if(launch_browser){
     utils::browseURL(logs)

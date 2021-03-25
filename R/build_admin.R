@@ -135,16 +135,19 @@ cr_build_wait <- function(op = .Last.value,
 
 #' @noRd
 #' @importFrom cli cli_alert_info cli_process_failed cli_process_done
-#' @importFrom cli cli_status cli_status_update
+#' @importFrom cli cli_status cli_status_update make_spinner
 wait_f <- function(init, projectId){
   op <- init
   wait <- TRUE
 
-  cli_alert_info("Starting Cloud Build")
+  sb <- cli_status("Launching Cloud Build...")
+  favs <- c("bouncingBall","triangle","runner","shark","arrow3","circleHalves")
+  sp1 <- make_spinner(which = favs[sample.int(6, size = 1)],
+                      template = "{spin} - building ")
+  cli_div(theme = list(span.status = list(color = "blue")))
 
   while(wait){
     status <- cr_build_status(op, projectId = projectId)
-    sb <- cli_status("{symbol$arrow_right} Running Build Id: {status$id}")
 
     if(status$status %in%
        c("FAILURE","INTERNAL_ERROR","TIMEOUT","CANCELLED","EXPIRED")){
@@ -156,7 +159,8 @@ wait_f <- function(init, projectId){
 
     if(status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
       cli_status_update(id = sb,
-        msg = "{symbol$arrow_right} Status: {status$status}")
+        msg = "{symbol$arrow_right} ------------------- Build Id: {status$id} Status: {.status {status$status}}")
+      sp1$spin()
       Sys.sleep(5)
     }
 
