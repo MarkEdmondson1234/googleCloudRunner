@@ -169,10 +169,8 @@ cr_deploy_pkgdown <- function(github_repo,
                                       post_clone = post_clone))
          )
 
-  build <- cr_build_make(build_yaml)
-
   if(create_trigger == "no"){
-    cr_build_write(build, file = cloudbuild_file)
+    cr_build_write(build_yaml, file = cloudbuild_file)
     usethis::ui_line()
     usethis::ui_info("Complete deployment of pkgdown Cloud Build yaml:")
     usethis::ui_todo(c(
@@ -188,21 +186,22 @@ cr_deploy_pkgdown <- function(github_repo,
   myMessage("#Creating pkgdown build trigger for", github_repo, level = 3)
 
   if(create_trigger == "file"){
-    cr_build_write(build, file = cloudbuild_file)
+    cr_build_write(build_yaml, file = cloudbuild_file)
     the_build <- cloudbuild_file
   } else if(create_trigger == "inline"){
-    the_build <- build
+    the_build <- cr_build_make(build_yaml)
   }
 
   trig <- cr_buildtrigger_repo(github_repo, branch = "^master$")
 
-  cr_buildtrigger(the_build,
-                  name = paste0("cr-deploy-pkgdown-",format(Sys.Date(),"%Y%m%d")),
-                  trigger = trig,
-                  description = "Build pkgdown website on master branch",
-                  ignoredFiles = c("docs/**",
-                                   "inst/**",
-                                   "tests/**"))
+  cr_buildtrigger(
+    the_build,
+    name = paste0("cr-deploy-pkgdown-",format(Sys.Date(),"%Y%m%d")),
+    trigger = trig,
+    description = "Build pkgdown website on master branch",
+    ignoredFiles = c("docs/**",
+                     "inst/**",
+                     "tests/**"))
 
 }
 

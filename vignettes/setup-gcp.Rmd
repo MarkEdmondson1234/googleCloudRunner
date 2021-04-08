@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 
 ## Setup new Google Cloud Project and client Id
 
-It is recommended to use a new Google Cloud Project, to ensure all modern services are activated.  Billing will need to be enabled with a credit card.
+It is recommended to use a new Google Cloud Project, to ensure all modern services are activated. Also cross-project authentication is more complicated so its easiest if you keep all services within one project. Billing will also need to be enabled with a credit card.
 
 You will need to be logged in as the Owner of the project for the below.
 
