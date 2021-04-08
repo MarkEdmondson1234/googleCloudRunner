@@ -13,15 +13,48 @@ If you do not need online authentication for your tests, then this is only a cas
 
 The below assumes you have created tests for your package.
 
-1. If you want to use Codecov, [generate a Codecov token](https://docs.codecov.io/reference) on its website and link it to your git repository
-2. Create the tests cloudbuild.yml file via `cr_deploy_packagetests()`
-3. Add and commit the cloudbuild.yml file to your git repository
-4. Go to [GCP console > Cloud Build > Triggers](https://console.cloud.google.com/cloud-build/triggers) and link your git repo to Cloud Build.
-5. Create a Build Trigger for your git repository: 
+1. Go to [GCP console > Cloud Build > Triggers](https://console.cloud.google.com/cloud-build/triggers) and link your git repo to Cloud Build.
 
-* point at the cloudbuild.yml file you committed (e.g. cloudbuild-tests.yml)
-* Exclude any folders such as the `docs/**` folder where changes should not trigger a recheck
-* Add a substitution variable `_CODECOV_TOKEN` if you are using it
+2. Create the tests cloudbuild.yml file via `cr_deploy_packagetests()` and generate a build trigger via its trigger_repo argument:
+
+```r
+repo <- "MarkEdmondson1234/googleCloudRunner"
+
+cr_deploy_packagetests(
+  cloudbuild_file = "testthat.yml",
+  trigger_repo = cr_buildtrigger_repo(repo,branch = "^master$")
+)
+```
+
+3. Add and commit the cloudbuild.yml file to your git repository
+
+### Code Coverage
+
+If you want to use codecov as well:
+
+1. [Generate a Codecov token](https://docs.codecov.io/reference) on its website and link it to your git repository
+2. Edit the Build Trigger for your git repository to add a substitution variable `_CODECOV_TOKEN` with your token
+3. Run a build and you should start to see Codecov reports after a successful test
+4. Add the Codecov badge to your README e.g.
+
+```
+[![codecov](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner/branch/master/graph/badge.svg)](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner)
+```
+
+### Readme Cloud Build Badge
+
+1. If you haven't already, deploy a Badger Cloud run app in your project (you can use this app for multiple buildtriggers) via `cr_deploy_badger()`
+2. Either in the GCP console or using `cr_buildtrigger_list()` find the build trigger ID for your test build e.g. `8d99c387-66f1-5ae4-a202-c2cace1fd71f`
+2. The Badger app will have a URL like `https://badger-fwjogfwaqq-ew.a.run.app/` - use the `/build/status?project={your-project}&id={the_build_trigger_id}` endpoint to make a URL for a particular build e.g.
+
+```
+![CloudBuild](https://badger-fwjogfwaqq-ew.a.run.app/build/status?project=your-project&id=8d99c387-66f1-5ae4-a202-c2cace1fd71f)
+```
+3. Add the badge to your README.md
+
+Once in your README.md you can use `cr_build_logs_badger()` in your local R session to download the last build logs.
+
+### Example trigger
 
 The below is an example for `googleCloudRunner`'s website:
 

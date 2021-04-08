@@ -8,6 +8,7 @@ cr_buildstep_bash(
   bash_script,
   name = "ubuntu",
   bash_source = c("local", "runtime"),
+  escape_dollar = TRUE,
   ...
 )
 }
@@ -17,6 +18,8 @@ cr_buildstep_bash(
 \item{name}{The image that will run the R code}
 
 \item{bash_source}{Whether the code will be from a runtime file within the source or at build time copying over from a local file in your session}
+
+\item{escape_dollar}{Default TRUE.  This will turn \code{$} into \code{$$} within the script to avoid them being recognised as Cloud Build variables.  Turn this off if you want that behaviour (e.g. \code{my_project="$PROJECT_ID"})}
 
 \item{...}{Other arguments passed to \link{cr_buildstep}}
 }

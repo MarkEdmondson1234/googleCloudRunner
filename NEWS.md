@@ -11,6 +11,7 @@
 * Add `cr_run_schedule_http()` to schedule Cloud Run HTTP calls (#113)
 * Allow usage of `cr_build_yaml()` objects directly in `cr_buildtrigger()` without needing `cr_build_make()`
 * Fix `cr_deploy_pkgdown()` error writing to file
+* allow `escape_dollar` in `cr_buildstep_r()` and `cr_buildstep_bash()` if you want to use Cloud Build substitutions in the script (#104)
 
 # googleCloudRunner 0.4.1
 

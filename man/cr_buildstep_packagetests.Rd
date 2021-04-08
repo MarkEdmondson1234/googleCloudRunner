@@ -13,9 +13,9 @@ cr_buildstep_packagetests(
 )
 }
 \arguments{
-\item{test_script}{The script that will perform tests.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "devtools_tests.R")}}
+\item{test_script}{The script that will call \link[rcmdcheck]{rcmdcheck} to perform tests.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "devtools_tests.R", package="googlecloudRunner")}}
 
-\item{codecov_script}{The script that will perform coverage.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "codecov_tests.R")}}
+\item{codecov_script}{The script that will call \link[covr]{codecov} to perform coverage.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "codecov_tests.R", package="googleCloudRunner")}}
 
 \item{codecov_token}{If using codecov, supply your codecov token here.}
 

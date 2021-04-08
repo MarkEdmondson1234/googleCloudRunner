@@ -180,7 +180,7 @@ cr_deploy_pkgdown <- function(github_repo,
 
     usethis::ui_info(c("Ignored files filter (glob): docs/**, inst/**, tests/**"))
 
-    return(invisible(build))
+    return(invisible(build_yaml))
   }
 
   myMessage("#Creating pkgdown build trigger for", github_repo, level = 3)

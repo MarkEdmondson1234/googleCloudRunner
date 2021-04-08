@@ -3,8 +3,8 @@
 #' This lets you run R package tests and is intended to be used in a trigger when you push to a repository so you can monitor code quality.
 #'
 #' @param codecov_token If using codecov, supply your codecov token here.
-#' @param test_script The script that will perform tests.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "devtools_tests.R")}
-#' @param codecov_script The script that will perform coverage.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "codecov_tests.R")}
+#' @param test_script The script that will call \link[rcmdcheck]{rcmdcheck} to perform tests.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "devtools_tests.R", package="googlecloudRunner")}
+#' @param codecov_script The script that will call \link[covr]{codecov} to perform coverage.  If \code{NULL} a default script is used in \code{system.file("r_buildsteps", "codecov_tests.R", package="googleCloudRunner")}
 #' @param build_image The docker image that will be used to run the R code for the test scripts
 #' @param env Environment arguments to be set during the test script runs
 #'
@@ -40,7 +40,8 @@ cr_buildstep_packagetests <- function(
       system.file("r_buildsteps", "codecov_tests.R",
                   package = "googleCloudRunner", mustWork = TRUE),
       name = build_image,
-      env = c(env, paste0("CODECOV_TOKEN=", codecov_token))
+      env = c(env, paste0("CODECOV_TOKEN=", codecov_token)),
+      escape_dollar = FALSE
     )
   }
 
@@ -342,6 +343,7 @@ cr_buildstep_run <- function(name,
 #' @param bash_script bash code to run or a filepath to a file containing bash code that ends with .bash or .sh
 #' @param name The image that will run the R code
 #' @param bash_source Whether the code will be from a runtime file within the source or at build time copying over from a local file in your session
+#' @param escape_dollar Default TRUE.  This will turn \code{$} into \code{$$} within the script to avoid them being recognised as Cloud Build variables.  Turn this off if you want that behaviour (e.g. \code{my_project="$PROJECT_ID"})
 #' @param ... Other arguments passed to \link{cr_buildstep}
 #' @family Cloud Buildsteps
 #' @export
@@ -362,6 +364,7 @@ cr_buildstep_run <- function(name,
 cr_buildstep_bash <- function(bash_script,
                               name = "ubuntu",
                               bash_source = c("local", "runtime"),
+                              escape_dollar = TRUE,
                               ...){
 
   bash_source <- match.arg(bash_source)
@@ -376,7 +379,8 @@ cr_buildstep_bash <- function(bash_script,
 
   bchars <- read_buildstep_file(bash_script,
                                 code_source = bash_source,
-                                file_grep = "\\.(bash|sh)$")
+                                file_grep = "\\.(bash|sh)$",
+                                escape_dollar = escape_dollar)
 
   # avoid having two bashes
   arg <- c("bash","-c", bchars)
@@ -397,6 +401,7 @@ cr_buildstep_bash <- function(bash_script,
 #' @param r R code to run or a file containing R code ending with .R, or the gs:// location on Cloud Storage of the R file you want to run
 #' @param name The docker image that will run the R code, usually from rocker-project.org
 #' @param r_source Whether the R code will be from a runtime file within the source or at build time copying over from a local R file in your session
+#' @param escape_dollar Default TRUE.  This will turn \code{$} into \code{$$} within the script to avoid them being recognised as Cloud Build variables.  Turn this off if you want that behaviour (e.g. \code{my_project="$PROJECT_ID"})
 #' @param ... Other arguments passed to \link{cr_buildstep}
 #' @inheritParams cr_buildstep
 #' @family Cloud Buildsteps
@@ -443,6 +448,7 @@ cr_buildstep_r <- function(r,
                            name = "r-base",
                            r_source = c("local", "runtime"),
                            prefix = "rocker/",
+                           escape_dollar = TRUE,
                            ...){
 
   r_source <- match.arg(r_source)
@@ -486,7 +492,8 @@ cr_buildstep_r <- function(r,
 
   rchars <- read_buildstep_file(r,
                                 code_source = r_source,
-                                file_grep = "\\.R$")
+                                file_grep = "\\.R$",
+                                escape_dollar = escape_dollar)
 
   if(r_source == "local"){
     r_args <- c("Rscript", "-e", rchars)
@@ -501,10 +508,11 @@ cr_buildstep_r <- function(r,
 
 }
 
-
+# use escape_dollar=FALSE to keep dollars in the script
 read_buildstep_file <- function(x,
                                 code_source = c("local","runtime"),
-                                file_grep = ".*") {
+                                file_grep = ".*",
+                                escape_dollar = TRUE) {
 
   code_source <- match.arg(code_source)
   rchars <- x
@@ -521,8 +529,10 @@ read_buildstep_file <- function(x,
 
     rchars <- paste(rchars, collapse = "\n")
 
-    # issue 103 - replace $ with $$ to avoid running as substitution vars
-    rchars <- gsub("\\$","$$", rchars)
+    if(escape_dollar){
+      # issue 103 - replace $ with $$ to avoid running as substitution vars
+      rchars <- gsub("\\$","$$", rchars)
+    }
 
   } else if(code_source == "runtime"){
     #filepath in source, not much we can do to check it
