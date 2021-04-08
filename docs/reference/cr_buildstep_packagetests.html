@@ -229,11 +229,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>test_script</th>
-      <td><p>The script that will perform tests.  If <code>NULL</code> a default script is used in <code><a href='https://rdrr.io/r/base/system.file.html'>system.file("r_buildsteps", "devtools_tests.R")</a></code></p></td>
+      <td><p>The script that will call <a href='https://rdrr.io/pkg/rcmdcheck/man/rcmdcheck.html'>rcmdcheck</a> to perform tests.  If <code>NULL</code> a default script is used in <code><a href='https://rdrr.io/r/base/system.file.html'>system.file("r_buildsteps", "devtools_tests.R", package="googlecloudRunner")</a></code></p></td>
     </tr>
     <tr>
       <th>codecov_script</th>
-      <td><p>The script that will perform coverage.  If <code>NULL</code> a default script is used in <code><a href='https://rdrr.io/r/base/system.file.html'>system.file("r_buildsteps", "codecov_tests.R")</a></code></p></td>
+      <td><p>The script that will call <a href='http://covr.r-lib.org/reference/codecov.html'>codecov</a> to perform coverage.  If <code>NULL</code> a default script is used in <code><a href='https://rdrr.io/r/base/system.file.html'>system.file("r_buildsteps", "codecov_tests.R", package="googleCloudRunner")</a></code></p></td>
     </tr>
     <tr>
       <th>codecov_token</th>
@@ -277,7 +277,7 @@
 #&gt;   remotes::install_local()
 #&gt;   cv &lt;- covr::package_coverage()
 #&gt;   print(cv)
-#&gt;   covr::codecov(coverage=cv, commit = '$$COMMIT_SHA', branch = '$$BRANCH_NAME')
+#&gt;   covr::codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
 #&gt; env:
 #&gt; - NOT_CRAN=true
 #&gt; - CODECOV_TOKEN=$_CODECOV_TOKEN
