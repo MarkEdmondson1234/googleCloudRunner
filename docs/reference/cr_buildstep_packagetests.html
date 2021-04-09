@@ -249,6 +249,22 @@
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>If using codecov, these environment arguments are added to aid with the codecoverage:</p>
+<p><code>
+* "CODECOV_TOKEN=$_CODECOV_TOKEN"
+* "GCB_PROJECT_ID=$PROJECT_ID"
+* "GCB_BUILD_ID=$BUILD_ID"
+* "GCB_COMMIT_SHA=$COMMIT_SHA"
+* "GCB_REPO_NAME=$REPO_NAME"
+* "GCB_BRANCH_NAME=$BRANCH_NAME"
+* "GCB_TAG_NAME=$TAG_NAME"
+* "GCB_HEAD_BRANCH=$_HEAD_BRANCH"
+* "GCB_BASE_BRANCH=$_BASE_BRANCH"
+* "GCB_HEAD_REPO_URL=$_HEAD_REPO_URL"
+* "GCB_PR_NUMBER=$_PR_NUMBER"
+</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -276,11 +292,22 @@
 #&gt;   remotes::install_deps(dependencies = TRUE)
 #&gt;   remotes::install_local()
 #&gt;   cv &lt;- covr::package_coverage()
-#&gt;   print(cv)
-#&gt;   covr::codecov(coverage=cv, commit = '$COMMIT_SHA', branch = '$BRANCH_NAME')
+#&gt;   covr::codecov(coverage=cv,
+#&gt;                 commit = '$COMMIT_SHA', branch = '$BRANCH_NAME',
+#&gt;                 quiet = FALSE)
 #&gt; env:
 #&gt; - NOT_CRAN=true
 #&gt; - CODECOV_TOKEN=$_CODECOV_TOKEN
+#&gt; - GCB_PROJECT_ID=$PROJECT_ID
+#&gt; - GCB_BUILD_ID=$BUILD_ID
+#&gt; - GCB_COMMIT_SHA=$COMMIT_SHA
+#&gt; - GCB_REPO_NAME=$REPO_NAME
+#&gt; - GCB_BRANCH_NAME=$BRANCH_NAME
+#&gt; - GCB_TAG_NAME=$TAG_NAME
+#&gt; - GCB_HEAD_BRANCH=$_HEAD_BRANCH
+#&gt; - GCB_BASE_BRANCH=$_BASE_BRANCH
+#&gt; - GCB_HEAD_REPO_URL=$_HEAD_REPO_URL
+#&gt; - GCB_PR_NUMBER=$_PR_NUMBER
 #&gt; </div><div class='input'>
 </div></pre>
   </div>
