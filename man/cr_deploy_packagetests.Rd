@@ -10,7 +10,7 @@ cr_deploy_packagetests(
   env = c("NOT_CRAN=true"),
   test_script = NULL,
   codecov_script = NULL,
-  codecov_token = "$_CODECOV",
+  codecov_token = "$_CODECOV_TOKEN",
   build_image = "gcr.io/gcer-public/packagetools:latest",
   create_trigger = c("file", "inline", "no"),
   trigger_repo = NULL,

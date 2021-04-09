@@ -61,6 +61,7 @@ cr_buildstep_packagetests <- function(
       name = build_image,
       env = c(env,
               paste0("CODECOV_TOKEN=", codecov_token),
+              paste0("CI=true"),
               paste0("GCB_PROJECT_ID=$PROJECT_ID"),
               paste0("GCB_BUILD_ID=$BUILD_ID"),
               paste0("GCB_COMMIT_SHA=$COMMIT_SHA"),

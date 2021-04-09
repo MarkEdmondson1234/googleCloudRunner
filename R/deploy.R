@@ -231,6 +231,7 @@ cr_deploy_pkgdown <- function(github_repo,
 #' @family Deployment functions
 #' @export
 #' @examples
+#' @seealso \link{cr_buildstep_packagetests}
 #'
 #' # create a local cloudbuild.yml file for packagetests
 #' pd <- cr_deploy_packagetests(create_trigger = "no")
@@ -267,7 +268,7 @@ cr_deploy_packagetests <- function(
   env = c("NOT_CRAN=true"),
   test_script = NULL,
   codecov_script = NULL,
-  codecov_token = "$_CODECOV",
+  codecov_token = "$_CODECOV_TOKEN",
   build_image = 'gcr.io/gcer-public/packagetools:latest',
   create_trigger = c("file","inline","no"),
   trigger_repo = NULL,
@@ -324,7 +325,8 @@ cr_deploy_packagetests <- function(
   }
 
   cr_buildtrigger(the_build,
-                  name = paste0("cr-deploy-tests-",format(Sys.Date(),"%Y%m%d")),
+                  name = paste0("cr-deploy-tests-",
+                                format(Sys.Date(),"%Y%m%d")),
                   trigger = trigger_repo,
                   description = "Tests for package",
                   substitutions = subs,
