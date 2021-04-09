@@ -26,6 +26,23 @@ cr_buildstep_packagetests(
 \description{
 This lets you run R package tests and is intended to be used in a trigger when you push to a repository so you can monitor code quality.
 }
+\details{
+If using codecov, these environment arguments are added to aid with the codecoverage:
+
+\code{
+* "CODECOV_TOKEN=$_CODECOV_TOKEN"
+* "GCB_PROJECT_ID=$PROJECT_ID"
+* "GCB_BUILD_ID=$BUILD_ID"
+* "GCB_COMMIT_SHA=$COMMIT_SHA"
+* "GCB_REPO_NAME=$REPO_NAME"
+* "GCB_BRANCH_NAME=$BRANCH_NAME"
+* "GCB_TAG_NAME=$TAG_NAME"
+* "GCB_HEAD_BRANCH=$_HEAD_BRANCH"
+* "GCB_BASE_BRANCH=$_BASE_BRANCH"
+* "GCB_HEAD_REPO_URL=$_HEAD_REPO_URL"
+* "GCB_PR_NUMBER=$_PR_NUMBER"
+}
+}
 \examples{
 
 cr_buildstep_packagetests()

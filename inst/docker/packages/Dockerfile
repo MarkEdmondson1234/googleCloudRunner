@@ -14,3 +14,5 @@ RUN install2.r --error \
     rhub \
     rmarkdown
 
+# fork with googleCloudRunner support
+RUN installGithub.r MarkEdmondson1234/covr

@@ -8,6 +8,23 @@
 #' @param build_image The docker image that will be used to run the R code for the test scripts
 #' @param env Environment arguments to be set during the test script runs
 #'
+#' @details
+#'
+#' If using codecov, these environment arguments are added to aid with the codecoverage:
+#'
+#' \code{
+#' * "CODECOV_TOKEN=$_CODECOV_TOKEN"
+#' * "GCB_PROJECT_ID=$PROJECT_ID"
+#' * "GCB_BUILD_ID=$BUILD_ID"
+#' * "GCB_COMMIT_SHA=$COMMIT_SHA"
+#' * "GCB_REPO_NAME=$REPO_NAME"
+#' * "GCB_BRANCH_NAME=$BRANCH_NAME"
+#' * "GCB_TAG_NAME=$TAG_NAME"
+#' * "GCB_HEAD_BRANCH=$_HEAD_BRANCH"
+#' * "GCB_BASE_BRANCH=$_BASE_BRANCH"
+#' * "GCB_HEAD_REPO_URL=$_HEAD_REPO_URL"
+#' * "GCB_PR_NUMBER=$_PR_NUMBER"
+#' }
 #' @export
 #'
 #' @examples
@@ -40,7 +57,19 @@ cr_buildstep_packagetests <- function(
       system.file("r_buildsteps", "codecov_tests.R",
                   package = "googleCloudRunner", mustWork = TRUE),
       name = build_image,
-      env = c(env, paste0("CODECOV_TOKEN=", codecov_token)),
+      env = c(env,
+              paste0("CODECOV_TOKEN=", codecov_token),
+              paste0("GCB_PROJECT_ID=$PROJECT_ID"),
+              paste0("GCB_BUILD_ID=$BUILD_ID"),
+              paste0("GCB_COMMIT_SHA=$COMMIT_SHA"),
+              paste0("GCB_REPO_NAME=$REPO_NAME"),
+              paste0("GCB_BRANCH_NAME=$BRANCH_NAME"),
+              paste0("GCB_TAG_NAME=$TAG_NAME"),
+              paste0("GCB_HEAD_BRANCH=$_HEAD_BRANCH"),
+              paste0("GCB_BASE_BRANCH=$_BASE_BRANCH"),
+              paste0("GCB_HEAD_REPO_URL=$_HEAD_REPO_URL"),
+              paste0("GCB_PR_NUMBER=$_PR_NUMBER")
+              ),
       escape_dollar = FALSE
     )
   }
