@@ -27,6 +27,8 @@
 #' }
 #' @export
 #'
+#' @seealso \url{https://docs.codecov.io/reference#upload}
+#'
 #' @examples
 #'
 #' cr_buildstep_packagetests()
