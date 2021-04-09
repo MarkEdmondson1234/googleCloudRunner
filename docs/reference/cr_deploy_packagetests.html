@@ -222,7 +222,7 @@
   env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"NOT_CRAN=true"</span><span class='op'>)</span>,
   test_script <span class='op'>=</span> <span class='cn'>NULL</span>,
   codecov_script <span class='op'>=</span> <span class='cn'>NULL</span>,
-  codecov_token <span class='op'>=</span> <span class='st'>"$_CODECOV"</span>,
+  codecov_token <span class='op'>=</span> <span class='st'>"$_CODECOV_TOKEN"</span>,
   build_image <span class='op'>=</span> <span class='st'>"gcr.io/gcer-public/packagetools:latest"</span>,
   create_trigger <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"file"</span>, <span class='st'>"inline"</span>, <span class='st'>"no"</span><span class='op'>)</span>,
   trigger_repo <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -306,7 +306,7 @@
     <pre class="examples"><div class='input'>
 <span class='co'># create a local cloudbuild.yml file for packagetests</span>
 <span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>cr_deploy_packagetests</span><span class='op'>(</span>create_trigger <span class='op'>=</span> <span class='st'>"no"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-04-09 08:17:36 &gt;</span><span> Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>ℹ</span><span> Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BB0000;'>●</span><span> Go to https://console.cloud.google.com/cloud-build/triggers and</span>
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-04-09 14:51:37 &gt;</span><span> Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>ℹ</span><span> Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BB0000;'>●</span><span> Go to https://console.cloud.google.com/cloud-build/triggers and</span>
 #&gt; <span class='message'>  make a build trigger pointing at this file in your repo:</span>
 #&gt; <span class='message'>  cloudbuild-tests.yml </span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>ℹ</span><span> Build Trigger substitution variable settings:</span>
 #&gt; <span class='message'>  _CODECOV_TOKEN = your-codecov-token</span>
@@ -336,7 +336,8 @@
 #&gt;                   quiet = FALSE)
 #&gt;   env:
 #&gt;   - NOT_CRAN=true
-#&gt;   - CODECOV_TOKEN=$_CODECOV
+#&gt;   - CODECOV_TOKEN=$_CODECOV_TOKEN
+#&gt;   - CI=true
 #&gt;   - GCB_PROJECT_ID=$PROJECT_ID
 #&gt;   - GCB_BUILD_ID=$BUILD_ID
 #&gt;   - GCB_COMMIT_SHA=$COMMIT_SHA
@@ -354,7 +355,7 @@
   timeout <span class='op'>=</span> <span class='fl'>1200</span>,
   create_trigger <span class='op'>=</span> <span class='st'>"no"</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-04-09 08:17:36 &gt;</span><span> Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>ℹ</span><span> Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BB0000;'>●</span><span> Go to https://console.cloud.google.com/cloud-build/triggers and</span>
+</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-04-09 14:51:37 &gt;</span><span> Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>ℹ</span><span> Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BB0000;'>●</span><span> Go to https://console.cloud.google.com/cloud-build/triggers and</span>
 #&gt; <span class='message'>  make a build trigger pointing at this file in your repo:</span>
 #&gt; <span class='message'>  cloudbuild-tests.yml </span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>ℹ</span><span> Build Trigger substitution variable settings:</span>
 #&gt; <span class='message'>  _CODECOV_TOKEN = your-codecov-token</span>
@@ -390,7 +391,8 @@
 #&gt;   env:
 #&gt;   - NOT_CRAN=true
 #&gt;   - MY_AUTH_FILE=auth.json
-#&gt;   - CODECOV_TOKEN=$_CODECOV
+#&gt;   - CODECOV_TOKEN=$_CODECOV_TOKEN
+#&gt;   - CI=true
 #&gt;   - GCB_PROJECT_ID=$PROJECT_ID
 #&gt;   - GCB_BUILD_ID=$BUILD_ID
 #&gt;   - GCB_COMMIT_SHA=$COMMIT_SHA

@@ -1,4 +1,4 @@
-pandoc: 2.11.2
+pandoc: 2.11.4
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
@@ -20,7 +20,7 @@ articles:
   usecase-slackbot-google-analytics: usecase-slackbot-google-analytics.html
   usecase-testthat-coverage: usecase-testthat-coverage.html
   usecases: usecases.html
-last_built: 2021-04-09T08:17Z
+last_built: 2021-04-09T14:51Z
 urls:
   reference: https://code.markedmondson.me/googleCloudRunner/reference
   article: https://code.markedmondson.me/googleCloudRunner/articles
