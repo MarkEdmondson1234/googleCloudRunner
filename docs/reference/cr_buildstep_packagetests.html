@@ -295,9 +295,11 @@
 #&gt;   remotes::install_deps(dependencies = TRUE)
 #&gt;   remotes::install_local()
 #&gt;   cv &lt;- covr::package_coverage()
-#&gt;   covr::codecov(coverage=cv,
+#&gt;   up &lt;- covr::codecov(coverage=cv,
 #&gt;                 commit = '$COMMIT_SHA', branch = '$BRANCH_NAME',
 #&gt;                 quiet = FALSE)
+#&gt;   up
+#&gt;   if(!up$uploaded) stop("Error uploading codecov reports")
 #&gt; env:
 #&gt; - NOT_CRAN=true
 #&gt; - CODECOV_TOKEN=$_CODECOV_TOKEN
