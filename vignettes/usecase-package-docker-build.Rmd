@@ -28,4 +28,60 @@ To use, select the `kamiko_cache=TRUE` option in your builds:
 cr_deploy_docker("my_folder", kaniko_cache=TRUE)
 ```
 
+## Combining buildsteps with other builds
 
+It may be you want the build to do other things after the Docker image is built such as use that Docker image somewhere.  You can extract the buildsteps from deployed buildtriggers to combine them and avoid having two builds.
+
+For example, say you have deployed a Dockerfile trigger:
+
+```r
+library(googleCloudRunner)
+
+repo <- cr_buildtrigger_repo("your-github/your-repo")
+
+# first time - by default will be called "docker-{image}"
+cr_deploy_docker_trigger(repo, image = "my-build")
+```
+
+If you want to extract the docker buildsteps you can find it in `dock_build$build$steps` below:
+
+```r
+# get the buildtrigger details
+dock_build <- cr_buildtrigger_get("docker-my-build")
+
+# contains the buildsteps from the deployment
+dock_build$build$steps
+```
+
+You can then combine those buildsteps in the usual way with other buildsteps.  The example below assumes you've made an R docker image with some of your custom dependencies that you then want to immediately run your R code within:
+
+```r
+# uses the docker image previously created
+my_r_step <- cr_buildstep_r(
+  r = "my_r_code.R",
+  name = "docker-my-build"
+)
+
+# combine the buildsteps
+new_buildsteps <- c(dock_build$build$steps, my_r_step)
+
+# remake the build yaml
+yml <- cr_build_yaml(new_buildsteps)
+```
+
+You can then reconfigure the build trigger with your new build yaml.  The below writes the yaml to a file to be read by the build trigger:
+
+```r
+# write it out to the git repo we are in
+cr_build_write(yml, "new_buildsteps.yml")
+
+repo <- cr_buildtrigger_repo("your-github/your-repo")
+
+# overwrite the deployed build trigger to read the yml
+cr_buildtrigger(
+  "new_buildsteps.yml",
+  name = "docker-my-build",
+  trigger = repo,
+  overwrite = TRUE
+)
+```
