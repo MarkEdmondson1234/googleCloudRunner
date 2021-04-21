@@ -164,7 +164,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Run R code on a schedule</h1>
             
-            <h4 class="date">2021-04-10</h4>
+            <h4 class="date">2021-04-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-scheduled-r-builds.Rmd"><code>vignettes/usecase-scheduled-r-builds.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-scheduled-r-builds.Rmd</code></div>
@@ -288,6 +288,20 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_deploy_r.html">cr_deploy_r</a></span><span class="op">(</span><span class="st">"the_script.R"</span>, r_image <span class="op">=</span> <span class="st">"gcr.io/gcer-public/googleauthr-verse"</span><span class="op">)</span></code></pre></div>
 <p>…where the docker R image is one with googleCloudStorageR installed.</p>
+</div>
+<div id="importing-data-for-your-r-script-to-operate-upon" class="section level2">
+<h2 class="hasAnchor">
+<a href="#importing-data-for-your-r-script-to-operate-upon" class="anchor"></a>Importing data for your R script to operate upon</h2>
+<p>There are lots of options for how your script will interact with data:</p>
+<ol style="list-style-type: decimal">
+<li>Download the data from within the R script itself, perhaps with <code>googleCloudStorageR</code> or similar</li>
+<li>Have a previous buildstep download the data into the Cloud Build workspace <code>/workspace/</code>, then have your R script import that file. e.g. use <code><a href="../reference/cr_buildstep_gcloud.html">cr_buildstep_gcloud()</a></code> to download from Cloud Storage before running <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>
+</li>
+<li>Use <code><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_git()</a></code> to clone or pull from another git repo</li>
+<li>If using a <code><a href="../reference/RepoSource.html">RepoSource()</a></code> or a <code><a href="../reference/StorageSource.html">StorageSource()</a></code> object in your Cloud Build, update those sources from some other process that will be included in the next build</li>
+<li>If using Build Triggers, the git repo the trigger is based upon will include the changes of the latest git commit</li>
+<li>Include the data within the Docker container environment the R script runs within</li>
+</ol>
 </div>
 <div id="build-an-rmd-on-a-schedule-and-host-its-html-on-cloud-storage" class="section level2">
 <h2 class="hasAnchor">
