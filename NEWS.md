@@ -15,6 +15,7 @@
 * Allow direct support for Codecov (#116)
 * Parse `gar_Build` objects to lists in buildtrigger responses so they can be more easily reused
 
+
 # googleCloudRunner 0.4.1
 
 * Fix faulty test for `cr_setup_tests()` that was failing option 3 (#104)
