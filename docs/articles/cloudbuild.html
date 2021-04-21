@@ -520,6 +520,49 @@
 <a href="#connecting-to-github" class="anchor"></a>Connecting to GitHub</h3>
 <p>You can connect via the <a href="https://cloud.google.com/source-repositories/docs/mirroring-a-github-repository">Source Repository mirroring service</a> or via the <a href="https://github.com/marketplace/google-cloud-build">Google Cloud Build GitHub app</a> - see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/git.html">git setup page</a> for more details.</p>
 </div>
+<div id="combining-buildsteps-from-triggers-with-other-builds" class="section level3">
+<h3 class="hasAnchor">
+<a href="#combining-buildsteps-from-triggers-with-other-builds" class="anchor"></a>Combining buildsteps from triggers with other builds</h3>
+<p>It may be you want to combine build steps from across buildtriggers. For example, you have a Docker build triggers and want to add some steps that use that Docker image after its been built.</p>
+<p>You can extract the buildsteps from deployed buildtriggers to combine them and avoid having two builds.</p>
+<p>For example, say you have deployed a Dockerfile trigger:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"your-github/your-repo"</span><span class="op">)</span>
+
+<span class="co"># first time - by default will be called "docker-{image}"</span>
+<span class="fu"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span><span class="op">(</span><span class="va">repo</span>, image <span class="op">=</span> <span class="st">"my-build"</span><span class="op">)</span></code></pre></div>
+<p>If you want to extract the docker buildsteps you can find it in <code>dock_build$build$steps</code> below:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># get the buildtrigger details</span>
+<span class="va">dock_build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_get.html">cr_buildtrigger_get</a></span><span class="op">(</span><span class="st">"docker-my-build"</span><span class="op">)</span>
+
+<span class="co"># contains the buildsteps from the deployment</span>
+<span class="va">dock_build</span><span class="op">$</span><span class="va">build</span><span class="op">$</span><span class="va">steps</span></code></pre></div>
+<p>You can then combine those buildsteps in the usual way with other buildsteps. The example below assumes you’ve made an R docker image with some of your custom dependencies that you then want to immediately run your R code within:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># uses the docker image previously created</span>
+<span class="va">my_r_step</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span>r <span class="op">=</span> <span class="st">"my_r_code.R"</span>, name <span class="op">=</span> <span class="st">"docker-my-build"</span><span class="op">)</span>
+
+<span class="co"># combine the buildsteps</span>
+<span class="va">new_buildsteps</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">dock_build</span><span class="op">$</span><span class="va">build</span><span class="op">$</span><span class="va">steps</span>, <span class="va">my_r_step</span><span class="op">)</span>
+
+<span class="co"># remake the build yaml</span>
+<span class="va">yml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span><span class="va">new_buildsteps</span><span class="op">)</span></code></pre></div>
+<p>You can then reconfigure the build trigger with your new build yaml. The below writes the yaml to a file to be read by the build trigger:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># write it out to the git repo we are in</span>
+<span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">yml</span>, <span class="st">"new_buildsteps.yml"</span><span class="op">)</span>
+
+<span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"your-github/your-repo"</span><span class="op">)</span>
+
+<span class="co"># overwrite the deployed build trigger to read the yml</span>
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span>
+  <span class="st">"new_buildsteps.yml"</span>,
+  name <span class="op">=</span> <span class="st">"docker-my-build"</span>,
+  trigger <span class="op">=</span> <span class="va">repo</span>,
+  overwrite <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span></code></pre></div>
+</div>
 </div>
   </div>
 
