@@ -266,6 +266,7 @@ cr_buildtrigger <- function(build,
 }
 
 as.buildTriggerResponse <- function(x){
+
   o <- x
   if(!is.null(o$build)){
     o$build <- as.gar_Build(x$build)

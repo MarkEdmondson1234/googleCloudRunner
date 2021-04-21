@@ -354,7 +354,7 @@
 
 ---
 
-    ==CloudBuildObject==
+    ==cloudRunnerYaml==
     steps:
     - name: gcr.io/cloud-builders/gcloud
       entrypoint: bash
@@ -459,11 +459,25 @@
         remotes::install_deps(dependencies = TRUE)
         remotes::install_local()
         cv <- covr::package_coverage()
-        print(cv)
-        covr::codecov(coverage=cv, commit = '$$COMMIT_SHA', branch = '$$BRANCH_NAME')
+        up <- covr::codecov(coverage=cv,
+                      commit = '$COMMIT_SHA', branch = '$BRANCH_NAME',
+                      quiet = FALSE)
+        up
+        if(!up$uploaded) stop("Error uploading codecov reports")
       env:
       - NOT_CRAN=true
-      - CODECOV_TOKEN=$_CODECOV
+      - CODECOV_TOKEN=$_CODECOV_TOKEN
+      - CI=true
+      - GCB_PROJECT_ID=$PROJECT_ID
+      - GCB_BUILD_ID=$BUILD_ID
+      - GCB_COMMIT_SHA=$COMMIT_SHA
+      - GCB_REPO_NAME=$REPO_NAME
+      - GCB_BRANCH_NAME=$BRANCH_NAME
+      - GCB_TAG_NAME=$TAG_NAME
+      - GCB_HEAD_BRANCH=$_HEAD_BRANCH
+      - GCB_BASE_BRANCH=$_BASE_BRANCH
+      - GCB_HEAD_REPO_URL=$_HEAD_REPO_URL
+      - GCB_PR_NUMBER=$_PR_NUMBER
 
 ---
 

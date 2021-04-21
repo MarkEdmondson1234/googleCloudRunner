@@ -248,6 +248,10 @@ as.gar_Build <- function(x){
   }
   assert_that(is.gar_Build(o))
 
+  if(is.data.frame(o$steps)){
+    o$steps <- cr_buildstep_df(o$steps)
+  }
+
   o
 }
 

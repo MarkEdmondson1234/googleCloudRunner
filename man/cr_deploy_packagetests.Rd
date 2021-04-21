@@ -62,7 +62,10 @@ If your tests need authentication details, add these via \link{cr_buildstep_secr
 
 If you want codecov to ignore some files then also deploy a .covrignore file to your repository - see covr website at \url{https://covr.r-lib.org/} for details.
 }
-\examples{
+\seealso{
+Create your own custom deployment using \link{cr_buildstep_packagetests} which this function uses with some defaults
+
+\link{cr_buildstep_packagetests}
 
 # create a local cloudbuild.yml file for packagetests
 pd <- cr_deploy_packagetests(create_trigger = "no")
@@ -92,10 +95,6 @@ cr_deploy_packagetests(create_trigger = "inline", trigger_repo = repo)
 }
 
 unlink("cloudbuild-tests.yml")
-
-}
-\seealso{
-Create your own custom deployment using \link{cr_buildstep_packagetests} which this function uses with some defaults
 
 Other Deployment functions: 
 \code{\link{cr_deploy_docker_trigger}()},

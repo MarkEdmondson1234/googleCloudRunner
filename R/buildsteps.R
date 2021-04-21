@@ -150,6 +150,8 @@ cr_buildstep_df <- function(x){
     all(c('name') %in% names(x))
   )
 
+  myMessage("Turning buildstep df into list", level = 2)
+
   if(is.null(x$prefix)){
     #probably from API
     x$prefix <- ""
@@ -169,7 +171,7 @@ cr_buildstep_df <- function(x){
                         "volumes",
                         "waitFor"), names(x))]
 
-  apply(xx, 1, function(row){
+  steps <- apply(xx, 1, function(row){
     cr_buildstep(name = row[["name"]],
                  args = row[["args"]],
                  id = row[["id"]],
@@ -180,6 +182,8 @@ cr_buildstep_df <- function(x){
                  waitFor = row[["waitFor"]],
                  dir = row[["dir"]])[[1]]
   })
+
+  unname(steps)
 
 }
 

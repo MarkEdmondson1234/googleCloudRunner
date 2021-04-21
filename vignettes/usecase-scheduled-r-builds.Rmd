@@ -133,6 +133,18 @@ cr_deploy_r("the_script.R", r_image = "gcr.io/gcer-public/googleauthr-verse")
 
 ...where the docker R image is one with googleCloudStorageR installed.
 
+## Importing data for your R script to operate upon
+
+There are lots of options for how your script will interact with data:
+
+1. Download the data from within the R script itself, perhaps with `googleCloudStorageR` or similar
+2. Have a previous buildstep download the data into the Cloud Build workspace `/workspace/`, then have your R script import that file.  e.g. use `cr_buildstep_gcloud()` to download from Cloud Storage before running `cr_buildstep_r()`
+3. Use `cr_buildstep_git()` to clone or pull from another git repo
+4. If using a `RepoSource()` or a `StorageSource()` object in your Cloud Build, update those sources from some other process that will be included in the next build
+5. If using Build Triggers, the git repo the trigger is based upon will include the changes of the latest git commit
+6. Include the data within the Docker container environment the R script runs within
+
+
 ## Build an Rmd on a schedule and host its HTML on Cloud Storage
 
 Cloud Storage can host public HTML files like a website, which can be accessed via public or private viewers.  This can be useful in setting up reporting infrastructure.
