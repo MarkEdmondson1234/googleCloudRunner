@@ -149,19 +149,7 @@ get_email_setup <- function(){
 get_region_setup <- function(){
   region <- usethis::ui_yeah("Do you want to setup a Cloud Run region?")
   if(region){
-    choices <- c("us-central1",
-                 "asia-northeast1",
-                 "europe-west1",
-                 "us-east1")
-    choices <- c(choices,
-                 "asia-east1", "asia-northeast1", "asia-northeast2", "europe-north1",
-      "europe-west1", "europe-west4", "us-central1", "us-east1", "us-east4",
-      "us-west1", "asia-east2", "asia-northeast3", "asia-southeast1",
-      "asia-southeast2 ", "asia-south1", "asia-south2", "australia-southeast1",
-      "australia-southeast2", "europe-central2", "europe-west2", "europe-west3",
-      "europe-west6", "northamerica-northeast1", "northamerica-northeast2",
-      "southamerica-east1", "us-west2", "us-west3", "us-west4")
-    choices <- unique(choices)
+    choices = googleCloudRunner::cr_regions
     region_select <- menu(
       choices = choices,
       title = "Which region shall Cloud Run perform in?"
