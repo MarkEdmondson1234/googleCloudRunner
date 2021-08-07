@@ -45,7 +45,7 @@ You can configure authentication separately, as its usually the trickiest bit.  
 
 If you are customising things then `cr_setup_service()` may be useful, which lets you add common roles to the service account emails. The other setup functions call it to set things up for you, but you may want more control, or have special needs for your cloudbuild email for example, which needs roles assigned for certain services you want to build.
 
-### cr_setup_tests()
+### cr_setup_test()
 
 Once you get all green ticks in `cr_setup()` then you should be able to run the subset of the package unit tests via `cr_setup_test()`.  Should those all complete then you should be able to run any of the functions in the package!
 

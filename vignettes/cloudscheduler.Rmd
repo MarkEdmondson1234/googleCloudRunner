@@ -100,7 +100,7 @@ cr_schedule_delete("test1")
 
 After it triggers you should see a "SUCCESS" in the [Cloud Scheduler console](https://console.cloud.google.com/cloudscheduler) and associated builds in the [Cloud Build web UI](https://console.cloud.google.com/cloud-build/builds).
 
-The above assumes you have followed the recommended authentication setup using `cr_setup()` and `cr_setup_tests()` all work.
+The above assumes you have followed the recommended authentication setup using `cr_setup()` and `cr_setup_test()` all work.
 
 In particular you can check the email that the API call will run under on Cloud Scheduler in `test_schedule$httpTarget$oauthToken$serviceAccountEmail`
 

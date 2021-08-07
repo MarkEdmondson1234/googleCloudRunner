@@ -230,8 +230,8 @@ cr_deploy_pkgdown <- function(github_repo,
 #' @seealso Create your own custom deployment using \link{cr_buildstep_packagetests} which this function uses with some defaults
 #' @family Deployment functions
 #' @export
-#' @examples
 #' @seealso \link{cr_buildstep_packagetests}
+#' @examples
 #'
 #' # create a local cloudbuild.yml file for packagetests
 #' pd <- cr_deploy_packagetests(create_trigger = "no")
