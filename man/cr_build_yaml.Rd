@@ -14,7 +14,8 @@ cr_build_yaml(
   secrets = NULL,
   availableSecrets = NULL,
   images = NULL,
-  artifacts = NULL
+  artifacts = NULL,
+  serviceAccount = NULL
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ cr_build_yaml(
 \item{images}{What images will be build from this cloudbuild}
 
 \item{artifacts}{What artifacts may be built from this cloudbuild - create via \link{cr_build_yaml_artifact}}
+
+\item{serviceAccount}{What service account should the build be run under?}
 }
 \description{
 This can be written to disk or used directly with functions such as \link{cr_build}

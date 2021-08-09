@@ -158,6 +158,7 @@ cr_build_make <- function(yaml,
                           options = NULL,
                           substitutions = NULL,
                           availableSecrets = NULL,
+                          serviceAccount = NULL,
                           logsBucket = NULL){
 
   stepsy <- get_cr_yaml(yaml)
@@ -200,6 +201,10 @@ cr_build_make <- function(yaml,
     as <- parse_yaml_secret_list(availableSecrets)
   }
 
+  if(is.null(serviceAccount) && !is.null(stepsy$serviceAccount)){
+    serviceAccount <- stepsy$serviceAccount
+  }
+
   Build(steps = stepsy$steps,
         timeout = timeout,
         images = images,
@@ -208,7 +213,8 @@ cr_build_make <- function(yaml,
         substitutions = substitutions,
         artifacts = artifacts,
         availableSecrets = as,
-        logsBucket = logsBucket)
+        logsBucket = logsBucket,
+        serviceAccount = serviceAccount)
 }
 
 

@@ -229,7 +229,8 @@ parse_build_meta_to_obj <- function(o){
     tags = o$tags,
     secrets = o$secrets,
     images = o$images,
-    artifacts = o$artifacts
+    artifacts = o$artifacts,
+    serviceAccount = o$serviceAccount
   )
 
   cr_build_make(yml)
@@ -305,6 +306,7 @@ is.gar_Build <- function(x){
 #' @param artifacts Artifacts produced by the build that should be uploaded upon
 #' @param secrets Secrets to decrypt using Cloud Key Management Service [deprecated]
 #' @param availableSecrets preferred way to use Secrets, via Secret Manager
+#' @param serviceAccount service account email to be used for the build
 #'
 #' @return Build object
 #'
@@ -334,7 +336,8 @@ Build <- function(Build.substitutions = NULL,
                   statusDetail = NULL,
                   artifacts = NULL,
                   secrets = NULL,
-                  availableSecrets = NULL) {
+                  availableSecrets = NULL,
+                  serviceAccount = NULL) {
 
   structure(rmNullObs(list(Build.substitutions = Build.substitutions,
                            Build.timing = Build.timing,
@@ -360,7 +363,8 @@ Build <- function(Build.substitutions = NULL,
                            statusDetail = statusDetail,
                            artifacts = artifacts,
                            secrets = secrets,
-                           availableSecrets = availableSecrets)),
+                           availableSecrets = availableSecrets,
+                           serviceAccount = serviceAccount)),
             class = c("gar_Build", "list"))
 }
 
