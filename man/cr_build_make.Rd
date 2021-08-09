@@ -34,6 +34,8 @@ cr_build_make(
 
 \item{availableSecrets}{Secret Manager objects built by \link{cr_build_yaml_secrets}}
 
+\item{serviceAccount}{service account email to be used for the build}
+
 \item{logsBucket}{The gs:// location of a bucket to put logs in}
 }
 \description{

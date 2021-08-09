@@ -60,6 +60,7 @@ cr_build <- function(x,
                      timeout=NULL,
                      images=NULL,
                      substitutions=NULL,
+                     serviceAccount = NULL,
                      artifacts = NULL,
                      options = NULL,
                      projectId = cr_project_get(),
@@ -89,7 +90,8 @@ cr_build <- function(x,
                            images = images,
                            artifacts = artifacts,
                            options = options,
-                           substitutions = substitutions)
+                           substitutions = substitutions,
+                           serviceAccount = serviceAccount)
   }
 
 

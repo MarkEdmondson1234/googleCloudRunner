@@ -61,6 +61,7 @@ cr_deploy_r <- function(r,
                         email = cr_email_get(),
                         region = cr_region_get(),
                         projectId = cr_project_get(),
+                        serviceAccount = NULL,
                         launch_browser=interactive()){
 
   if(is.null(run_name)){
@@ -81,7 +82,8 @@ cr_deploy_r <- function(r,
 
   br <- cr_build_make(build,
                       source = source,
-                      timeout = timeout)
+                      timeout = timeout,
+                      serviceAccount = serviceAccount)
 
   if(!is.null(schedule)){
     # a cloud build you would like to schedule

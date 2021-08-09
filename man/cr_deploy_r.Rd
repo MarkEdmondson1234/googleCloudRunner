@@ -17,6 +17,7 @@ cr_deploy_r(
   email = cr_email_get(),
   region = cr_region_get(),
   projectId = cr_project_get(),
+  serviceAccount = NULL,
   launch_browser = interactive()
 )
 }
@@ -51,6 +52,8 @@ cr_deploy_r(
 \item{region}{The region usually set with \link{cr_region_set}}
 
 \item{projectId}{ID of the project}
+
+\item{serviceAccount}{service account email to be used for the build}
 
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
 }
