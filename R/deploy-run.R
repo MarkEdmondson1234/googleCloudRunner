@@ -14,10 +14,11 @@
 #' @inheritParams cr_buildstep_docker
 #' @inheritParams cr_build
 #' @family Deployment functions
+#' @details
+#' These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.
 #'
 #' @seealso For scheduling Cloud Run apps \link{cr_run_schedule_http}
 #'
-#' These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.
 #'
 #' @export
 #' @examples
@@ -141,7 +142,6 @@ cr_deploy_html <- function(html_folder,
 #' @param api A folder containing the R script using plumber called api.R and all its dependencies
 #' @param ... Other arguments passed to \link{cr_deploy_run} and eventually \link{cr_buildstep_run}
 #'
-#' @details
 #'
 #' @section cr_deploy_plumber:
 #'

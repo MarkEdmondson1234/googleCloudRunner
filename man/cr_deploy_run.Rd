@@ -91,7 +91,7 @@ cr_deploy_plumber(
 Deploy R api plumber scripts, HTML files or other images create the Docker image, add the build to Cloud Build and deploy to Cloud Run
 }
 \details{
-
+These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.
 }
 \section{cr_deploy_html}{
 
@@ -141,8 +141,6 @@ cr_deploy_plumber(system.file("example/", package = "googleCloudRunner"))
 }
 \seealso{
 For scheduling Cloud Run apps \link{cr_run_schedule_http}
-
-These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.
 
 \link{cr_deploy_run_website} which has more features like rending Rmd files and deploying upon each git commit
 
