@@ -14,7 +14,6 @@
 #' @inheritParams cr_buildstep_docker
 #' @inheritParams cr_build
 #' @family Deployment functions
-#' @details
 #'
 #' @seealso For scheduling Cloud Run apps \link{cr_run_schedule_http}
 #'

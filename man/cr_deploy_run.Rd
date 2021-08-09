@@ -92,8 +92,6 @@ Deploy R api plumber scripts, HTML files or other images create the Docker image
 }
 \details{
 
-
-
 }
 \section{cr_deploy_html}{
 
