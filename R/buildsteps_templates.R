@@ -644,6 +644,7 @@ cr_buildstep_decrypt <- function(cipher,
 #' @param secret The secret data name in Secret Manager
 #' @param decrypted The name of the file the secret will be decrypted into
 #' @param version The version of the secret
+#' @param binary_mode Should the file be treated in binary/raw format?
 #' @param ... Other arguments sent to \link{cr_buildstep_bash}
 #'
 #' @details
@@ -662,10 +663,13 @@ cr_buildstep_decrypt <- function(cipher,
 cr_buildstep_secret <- function(secret,
                                 decrypted,
                                 version = "latest",
+                                binary_mode = FALSE,
                                 ...){
-
-  script <- sprintf("gcloud secrets versions access %s --secret=%s > %s",
-    version, secret, decrypted
+  # as per
+  # https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#a_note_on_resource_consistency
+  decode_it = "--format='get(payload.data)' | tr '_-' '/+' | base64 -d"
+  script <- sprintf("gcloud secrets versions access %s --secret=%s %s > %s",
+    version, secret, ifelse(binary_mode, decode_it, ""), decrypted
   )
 
   cr_buildstep(
