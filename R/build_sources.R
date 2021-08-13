@@ -250,7 +250,7 @@ cr_build_upload_gcs <- function(local,
                                                 ".tar.gz"),
                                 bucket = cr_bucket_get(),
                                 predefinedAcl="bucketOwnerFullControl",
-                                deploy_folder = "deploy"){
+                                deploy_folder = file.path(tempdir(), "deploy")){
 
   if(!grepl("tar\\.gz$", remote)){
     stop("remote argument name needs to end with .tar.gz", call. = FALSE)

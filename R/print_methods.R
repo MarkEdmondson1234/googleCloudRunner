@@ -14,7 +14,7 @@ print.cr_buildtrigger_repo <- function(x, ...){
     cat0("Project:           ", x$repo$projectId)
     cat0("Tag:               ", x$repo$tagName)
     cat0("commitSha:         ", x$repo$commitSha)
-    cat0("Brnach:            ", x$repo$branchName)
+    cat0("Branch:            ", x$repo$branchName)
     cat0("Directory:         ", x$repo$dir)
   }
 
@@ -77,6 +77,7 @@ print.gar_Build <- function(x, ...){
   cat0("timeout: ", x$timeout)
   cat0("logsBucket: ", x$logsBucket)
   cat0("secrets: ", x$secrets)
+  cat0("serviceAccount: ", x$serviceAccount)
 
   if(!is.null(x$tags)){
     cat("tags:\n")
