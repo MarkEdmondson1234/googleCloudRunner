@@ -31,7 +31,7 @@ Imports:
     utils,
     yaml (>= 2.2.0)
 Remotes:
-  MarkEdmondson1234/googleAuthR
+  MarkEdmondson1234/googleAuthR,
   r-lib/gargle
 Suggests: 
     knitr,
