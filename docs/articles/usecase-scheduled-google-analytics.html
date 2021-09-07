@@ -207,30 +207,15 @@
                         stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, 
                         colClasses <span class="op">=</span> <span class="st">"character"</span><span class="op">)</span>
 
-
-<span class="co"># check user has access to props</span>
-<span class="va">todo_props</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">todo</span><span class="op">$</span><span class="va">ua</span><span class="op">)</span>
-<span class="va">als</span> <span class="op">&lt;-</span> <span class="fu">ga_account_list</span><span class="op">(</span><span class="op">)</span>
-<span class="va">access_props</span> <span class="op">&lt;-</span> <span class="va">todo_props</span><span class="op">[</span><span class="va">todo_props</span> <span class="op">%in%</span> <span class="va">als</span><span class="op">$</span><span class="va">webPropertyId</span><span class="op">]</span>
-<span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">access_props</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">1</span><span class="op">)</span><span class="op">{</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/stop.html">stop</a></span><span class="op">(</span><span class="st">"User has no access to Web Properties requesting deletions"</span>,
-       call. <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="op">}</span>
-
-<span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">access_props</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">todo_props</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/warning.html">warning</a></span><span class="op">(</span><span class="st">"User does not have access to all Web Properties requesting deletions"</span>,
-          call. <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="op">}</span>
-
 <span class="co"># all rows without a delete flag</span>
-<span class="va">todo_filtered</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html">anti_join</a></span><span class="op">(</span><span class="va">todo</span>, 
-                                  <span class="va">old_deletes</span>, 
-                                  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>cid <span class="op">=</span> <span class="st">"userId"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">todo_filtered</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html">anti_join</a></span><span class="op">(</span><span class="va">todo</span>, <span class="va">old_deletes</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>cid <span class="op">=</span> <span class="st">"userId"</span><span class="op">)</span><span class="op">)</span>
+
 <span class="co"># we can only do 500 per day</span>
 <span class="va">todo_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">todo_filtered</span>, n <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>
 
 <span class="co"># we only do one UA code per run</span>
 <span class="va">splits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html">split</a></span><span class="op">(</span><span class="va">todo_filtered</span>, <span class="va">todo_filtered</span><span class="op">$</span><span class="va">ua</span><span class="op">)</span>
+
 <span class="va">do_these_cids</span> <span class="op">&lt;-</span> <span class="va">splits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">cid</span>
 <span class="va">do_this_ua</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">splits</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 
