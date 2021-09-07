@@ -37,30 +37,15 @@ old_deletes <- read.csv("deletes.csv",
                         stringsAsFactors = FALSE, 
                         colClasses = "character")
 
-
-# check user has access to props
-todo_props <- unique(todo$ua)
-als <- ga_account_list()
-access_props <- todo_props[todo_props %in% als$webPropertyId]
-if(length(access_props) < 1){
-  stop("User has no access to Web Properties requesting deletions",
-       call. = FALSE)
-}
-
-if(length(access_props) < length(todo_props)){
-  warning("User does not have access to all Web Properties requesting deletions",
-          call. = FALSE)
-}
-
 # all rows without a delete flag
-todo_filtered <- dplyr::anti_join(todo, 
-                                  old_deletes, 
-                                  by = c(cid = "userId"))
+todo_filtered <- dplyr::anti_join(todo, old_deletes, by = c(cid = "userId"))
+
 # we can only do 500 per day
 todo_filtered <- head(todo_filtered, n = 500)
 
 # we only do one UA code per run
 splits <- split(todo_filtered, todo_filtered$ua)
+
 do_these_cids <- splits[[1]]$cid
 do_this_ua <- names(splits)[[1]]
 
