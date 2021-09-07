@@ -116,7 +116,7 @@ Once the first run is made, this file will be appended to with the 500 entries i
 
 ## The Build
 
-We now create the build around the R script that will download the necessary files and upload the results:
+We now create the build around the R script that will download the necessary files and upload the results.  We save the above script locally to `delete.R` - then when we call `cr_buildstep_r("delete.R")` it will pull that script in and create a build step with the R code embedded within it:
 
 ```r
 library(googleCloudRunner)
@@ -133,7 +133,7 @@ bs <- c(
                                "gs://your-bucket/deletes.csv",
                                "deletes.csv")),
   cr_buildstep_r(
-    "scripts/delete.R",
+    "delete.R",
     name = "gcr.io/gcer-public/googleanalyticsr:master"
   ),
   cr_buildstep_gcloud("gsutil",
