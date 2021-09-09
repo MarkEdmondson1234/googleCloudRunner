@@ -434,6 +434,7 @@ cr_buildstep_bash <- function(bash_script,
 #' @param name The docker image that will run the R code, usually from rocker-project.org
 #' @param r_source Whether the R code will be from a runtime file within the source or at build time copying over from a local R file in your session
 #' @param escape_dollar Default TRUE.  This will turn \code{$} into \code{$$} within the script to avoid them being recognised as Cloud Build variables.  Turn this off if you want that behaviour (e.g. \code{my_project="$PROJECT_ID"})
+#' @param rscript_args Optional arguments for the R script run by \code{Rscript}.
 #' @param ... Other arguments passed to \link{cr_buildstep}
 #' @inheritParams cr_buildstep
 #' @family Cloud Buildsteps
@@ -461,7 +462,26 @@ cr_buildstep_bash <- function(bash_script,
 #' # create an R buildstep from a file within the source of the Build
 #' cr_buildstep_r("inst/schedule/schedule.R", r_source = "runtime")
 #'
+#' # create an R buildstep with Rscript arguments and use a large
+#' # machine with 32 cores
+#'
+#' ## create storage source
+#` storage_source <- cr_build_upload_gcs(
+#`  "my-r-script.R"
+#` )
+#` ## create the buildstep with the R script
+#' step1 <- cr_buildstep_r("deploy/my-r-script.R", r_source="runtime",
+#'                rscript_args=c("args_1=<args1>", "args_2=<args_2>"))
+#'
 #' }
+#' ## run the script on Cloud Build
+#' cr_build(
+#'   cr_build_yaml(
+#'     steps=c(step1)
+#'   ),
+#'   source = storage_source
+#'   options = list(machineType = "E2_HIGHCPU_32')
+#' )
 #'
 #' # use a different Rocker image e.g. rocker/verse
 #' cr_buildstep_r(c("library(dplyr)",
@@ -481,6 +501,7 @@ cr_buildstep_r <- function(r,
                            r_source = c("local", "runtime"),
                            prefix = "rocker/",
                            escape_dollar = TRUE,
+                           rscript_args = NULL,
                            ...){
 
   r_source <- match.arg(r_source)
@@ -514,6 +535,7 @@ cr_buildstep_r <- function(r,
         name = name,
         r_source = "runtime",
         prefix = prefix,
+        rscript_args = rscript_args,
         ...
       )
     )
@@ -530,7 +552,11 @@ cr_buildstep_r <- function(r,
   if(r_source == "local"){
     r_args <- c("Rscript", "-e", rchars)
   } else if(r_source == "runtime"){
-    r_args <- c("Rscript", rchars)
+    if (!is.null(rscript_args)) {
+      r_args <- c("Rscript", rchars, paste0("--", rscript_args))
+    } else {
+      r_args <- c("Rscript", rchars)
+    }
   }
 
   cr_buildstep(name = name,

@@ -132,6 +132,9 @@
     <li>
       <a href="../articles/usecase-slackbot-google-analytics.html">Create a Slackbot downloading Google Analytics</a>
     </li>
+    <li>
+      <a href="../articles/usecase-scheduled-google-analytics.html">Schedule Google Analytics User Deletion API</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -164,7 +167,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Scheduled R scripts via Cloud Scheduler</h1>
             
-            <h4 class="date">2021-04-21</h4>
+            <h4 class="date">2021-09-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudscheduler.Rmd"><code>vignettes/cloudscheduler.Rmd</code></a></small>
       <div class="hidden name"><code>cloudscheduler.Rmd</code></div>
@@ -255,7 +258,7 @@
 <span class="co"># once finished, delete the schedule</span>
 <span class="fu"><a href="../reference/cr_schedule_delete.html">cr_schedule_delete</a></span><span class="op">(</span><span class="st">"test1"</span><span class="op">)</span></code></pre></div>
 <p>After it triggers you should see a “SUCCESS” in the <a href="https://console.cloud.google.com/cloudscheduler">Cloud Scheduler console</a> and associated builds in the <a href="https://console.cloud.google.com/cloud-build/builds">Cloud Build web UI</a>.</p>
-<p>The above assumes you have followed the recommended authentication setup using <code><a href="../reference/cr_setup.html">cr_setup()</a></code> and <code>cr_setup_tests()</code> all work.</p>
+<p>The above assumes you have followed the recommended authentication setup using <code><a href="../reference/cr_setup.html">cr_setup()</a></code> and <code><a href="../reference/cr_setup_test.html">cr_setup_test()</a></code> all work.</p>
 <p>In particular you can check the email that the API call will run under on Cloud Scheduler in <code>test_schedule$httpTarget$oauthToken$serviceAccountEmail</code></p>
 <div id="a-more-complicated-r-script-example" class="section level3">
 <h3 class="hasAnchor">

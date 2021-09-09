@@ -132,6 +132,9 @@
     <li>
       <a href="../articles/usecase-slackbot-google-analytics.html">Create a Slackbot downloading Google Analytics</a>
     </li>
+    <li>
+      <a href="../articles/usecase-scheduled-google-analytics.html">Schedule Google Analytics User Deletion API</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -164,7 +167,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Setup</h1>
             
-            <h4 class="date">2021-04-21</h4>
+            <h4 class="date">2021-09-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/setup-gcp.Rmd"><code>vignettes/setup-gcp.Rmd</code></a></small>
       <div class="hidden name"><code>setup-gcp.Rmd</code></div>
@@ -229,17 +232,17 @@
 <a href="#enable-apis" class="anchor"></a>Enable APIs</h3>
 <p>To enable automatic provision of the service accounts are services you may also need to active the APIs necessary</p>
 <ul>
-<li>IAM API <code>https://console.developers.google.com/apis/api/iam.googleapis.com/overview</code>
+<li>IAM API <a href="https://console.developers.google.com/apis/api/iam.googleapis.com/overview" class="uri">https://console.developers.google.com/apis/api/iam.googleapis.com/overview</a>
 </li>
-<li>Cloud Resource Manager <code>https://console.developers.google.com/apis/api/cloudresourcemanager.googleapis.com/overview</code>
+<li>Cloud Resource Manager <a href="https://console.developers.google.com/apis/api/cloudresourcemanager.googleapis.com/overview" class="uri">https://console.developers.google.com/apis/api/cloudresourcemanager.googleapis.com/overview</a>
 </li>
-<li>Cloud Run <code>https://console.developers.google.com/apis/api/run.googleapis.com/overview</code>
+<li>Cloud Run <a href="https://console.developers.google.com/apis/api/run.googleapis.com/overview" class="uri">https://console.developers.google.com/apis/api/run.googleapis.com/overview</a>
 </li>
-<li>Cloud Build <code>https://console.cloud.google.com/apis/api/cloudbuild.googleapis.com/overview</code>
+<li>Cloud Build <a href="https://console.cloud.google.com/apis/api/cloudbuild.googleapis.com/overview" class="uri">https://console.cloud.google.com/apis/api/cloudbuild.googleapis.com/overview</a>
 </li>
 </ul>
 <p>If the APIs are not activated, the error messages should point you in the right direction. Enable the APIs if necessary and try the call again.</p>
-<p>You will also need to create a Cloud Schedule job manually first, which will on start up ask you to set up a region for your scheduled jobs. Set them up starting from here: <code>https://console.cloud.google.com/cloudscheduler</code></p>
+<p>You will also need to create a Cloud Schedule job manually first, which will on start up ask you to set up a region for your scheduled jobs. Set them up starting from here: <a href="https://console.cloud.google.com/cloudscheduler" class="uri">https://console.cloud.google.com/cloudscheduler</a></p>
 </div>
 </div>
 <div id="setup-wizard-cr_setup" class="section level2">
@@ -266,9 +269,9 @@
 <p>You can configure authentication separately, as its usually the trickiest bit. The <code><a href="../reference/cr_setup_auth.html">cr_setup_auth()</a></code> function attempts to help you walk through the authentication and after running it and restarting R a couple of times you should only need to download a client ID from your project to have it all configured for you.</p>
 <p>If you are customising things then <code><a href="../reference/cr_setup_service.html">cr_setup_service()</a></code> may be useful, which lets you add common roles to the service account emails. The other setup functions call it to set things up for you, but you may want more control, or have special needs for your cloud build email for example, which needs roles assigned for certain services you want to build.</p>
 </div>
-<div id="cr_setup_tests" class="section level3">
+<div id="cr_setup_test" class="section level3">
 <h3 class="hasAnchor">
-<a href="#cr_setup_tests" class="anchor"></a>cr_setup_tests()</h3>
+<a href="#cr_setup_test" class="anchor"></a>cr_setup_test()</h3>
 <p>Once you get all green ticks in <code><a href="../reference/cr_setup.html">cr_setup()</a></code> then you should be able to run the subset of the package unit tests via <code><a href="../reference/cr_setup_test.html">cr_setup_test()</a></code>. Should those all complete then you should be able to run any of the functions in the package!</p>
 </div>
 </div>

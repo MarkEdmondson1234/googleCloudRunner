@@ -1,0 +1,149 @@
+---
+title: "Scheduled Google Analytics API calls - GDPR User Deletions"
+date: "`r Sys.Date()`"
+---
+
+A very common use case in my line of work is to make Google Analytics API scheduled calls.  This example shows how to use [`googleAnalyticsR`](https://code.markedmondson.me/googleAnalyticsR/) within your build steps, then `gcloud` to interact with other Google Cloud Platform services, such as BigQuery or Cloud Storage.
+
+## User Deletions
+
+This example supposes you have a lot of GDPR requests to delete data in your Google Analytics set-up via the [User Deletion API](https://developers.google.com/analytics/devguides/config/userdeletion/v3).  This API only allows 500 requests per day, so if you have more than that you need to schedule the batches.
+
+To perform the deletions, we suppose we have a csv file on Google Cloud Storage that has two columns: cid and UA property.  The script will download this file, perform user deletions on 500 of them via `googleAnalyticsR::ga_clientid_deletion()` and then upload a record of the deleted rows to cross-reference the next day.
+
+A user could update the `delete-all.csv` on Google Cloud Storage with the requested deletions for GDPR compliance, and check the `deletes.csv` for which have been deleted already.
+
+### R script for Google Analytics user deletions
+
+An example script is shown below:
+
+```r
+library(googleAnalyticsR)
+# enable scopes for user deletions and listing GA accounts
+options(googleAuthR.scopes.selected = c(
+  "https://www.googleapis.com/auth/analytics.user.deletion",
+  "https://www.googleapis.com/auth/analytics.edit"))
+
+# auth with a service auth key - make sure its email is added as a GA user
+ga_auth(json_file = "auth.json")
+
+# what we want to delete
+todo <- read.csv("delete-all.csv", 
+                 stringsAsFactors = FALSE, 
+                 colClasses = "character")
+                 
+# what has been deleted already
+old_deletes <- read.csv("deletes.csv", 
+                        stringsAsFactors = FALSE, 
+                        colClasses = "character")
+
+# all rows without a delete flag
+todo_filtered <- dplyr::anti_join(todo, old_deletes, by = c(cid = "userId"))
+
+# we can only do 500 per day
+todo_filtered <- head(todo_filtered, n = 500)
+
+# we only do one UA code per run
+splits <- split(todo_filtered, todo_filtered$ua)
+
+do_these_cids <- splits[[1]]$cid
+do_this_ua <- names(splits)[[1]]
+
+message("Deleting IDs - should take around 6 mins to do 500")
+# to have more logs in the build
+options(googleAuthR.verbose = 2) 
+
+# 500 APIs calls
+deleted <- ga_clientid_deletion(do_these_cids, propertyId = do_this_ua)
+upload_deletes <- rbind(old_deletes, deleted)
+
+if(nrow(deleted) > 0){
+  # upload this file to Google Cloud STorage so they aren't deleted again
+  write.csv(deleted, file = "deletes.csv", row.names = FALSE)
+} else {
+  warning("No deletions were made", call. = FALSE)
+}
+```
+
+The script assumes three files existing in the folder: the authentication file `auth.json` which is a service account key whose email has been added to the GA accounts; and the two files tracking ID progress - you will need to create `delete-all.csv` and `deletes.csv`.
+
+#### delete-all.csv
+
+This should be a CSV file with cid and ua columns:
+
+| cid | ua  |
+|-----|-----|
+| 123.321 | UA-123456-3 |
+| 432.342 | UA-123456-3 |
+| 545.343 | UA-123456-2 |
+
+
+#### deletes.csv
+
+There won't be any deleted IDs the first time it runs, so you can generate an empty `deletes.csv` file via:
+
+```r
+deleted <- data.frame(userId = NA, 
+                      id_type = NA, 
+                      property = NA, 
+                      deletionRequestTime = NA,
+                      stringsAsFactors = FALSE)
+write.csv(deleted, "deletes.csv", row.names = FALSE)
+```
+
+Once the first run is made, this file will be appended to with the 500 entries it has deleted - it looks like this:
+
+| userId  | id_type   |   property  |    deletionRequestTime  |
+|-----|-----|-----|-----|
+| 123.321 | CLIENT_ID | UA-123456-3 | 2021-09-07T11:48:15.285Z |
+| 432.342 | CLIENT_ID | UA-123456-3 | 2021-09-07T11:48:17.390Z | 
+| 545.343 | CLIENT_ID | UA-123456-2 | 2021-09-07T11:48:19.420Z |
+
+## The Build
+
+We now create the build around the R script that will download the necessary files and upload the results.  We save the above script locally to `delete.R` - then when we call `cr_buildstep_r("delete.R")` it will pull that script in and create a build step with the R code embedded within it:
+
+```r
+library(googleCloudRunner)
+
+bs <- c(
+  cr_buildstep_secret("user-deletion-key",
+                      "auth.json"),
+  cr_buildstep_gcloud("gsutil",
+                      args = c("cp",
+                               "gs://your-bucket/delete-all.csv",
+                               "delete-all.csv")),
+  cr_buildstep_gcloud("gsutil",
+                      args = c("cp",
+                               "gs://your-bucket/deletes.csv",
+                               "deletes.csv")),
+  cr_buildstep_r(
+    "delete.R",
+    name = "gcr.io/gcer-public/googleanalyticsr:master"
+  ),
+  cr_buildstep_gcloud("gsutil",
+                      args = c("cp",
+                               "deletes.csv",
+                               "gs://your-bucket/deletes.csv"))
+)
+
+yaml <- cr_build_yaml(bs)
+build <- cr_build_make(yaml, timeout = 1200)
+
+# can test a build first via:
+#built <- cr_build(build)
+
+schedule_me <- cr_build_schedule_http(build)
+
+cr_schedule("delete-cids", 
+            schedule = "5 1 * * *", 
+            httpTarget = schedule_me)
+```
+
+The build assumes you have uploaded the authentication service key to Secret Manager for use within `cr_buildstep_secret()` and then `ga_auth()`, and the required files are uploaded to a Cloud Storage bucket for use within `cr_buildstep_gcloud()`.
+
+It turns out 500 API deletions is just over the default of 10mins build run time, so the time out is increased to 20mins via `cr_build_make(yaml, timeout = 1200)`
+
+The `googleAnalyticsR` API calls make use of the public Docker file that is built upon each commit to GitHub of the package, available at `gcr.io/gcer-public/googleAnalyticsR:master`
+
+
