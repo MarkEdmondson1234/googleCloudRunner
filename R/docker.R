@@ -70,6 +70,8 @@ cr_deploy_docker_trigger <- function(repo,
 #' @param bucket The GCS bucket that will be used to deploy code source
 #' @param image_name The name of the docker image to be built either full name starting with gcr.io or constructed from the image_name and projectId via \code{gcr.io/{projectId}/{image_name}}
 #' @param predefinedAcl Access setting for the bucket used in deployed.  Set to "bucketLevel" if using bucket level access
+#' @param pre_steps Other \link{cr_buildstep} to run before the docker build
+#' @param post_steps Other \link{cr_buildstep} to run after the docker build
 #' @param ... Other arguments passed to \link{cr_buildstep_docker}
 #' @inheritParams cr_buildstep_docker
 #' @inheritParams cr_build
@@ -105,6 +107,8 @@ cr_deploy_docker <- function(local,
                              launch_browser = interactive(),
                              kaniko_cache=TRUE,
                              predefinedAcl="bucketOwnerFullControl",
+                             pre_steps = NULL,
+                             post_steps = NULL,
                              ...){
   assert_that(
     dir.exists(local)
@@ -129,15 +133,26 @@ cr_deploy_docker <- function(local,
     push_image <- image
   }
 
+  waitFor = "-" # build concurrent tags
+  if (!is.null(pre_steps)) {
+    waitFor = NULL
+
+  }
+
+  steps = c(pre_steps,
+            cr_buildstep_docker(
+              image,
+              tag = tag,
+              location = ".",
+              dir=paste0("deploy/", basename(local)),
+              projectId = projectId,
+              kaniko_cache = kaniko_cache,
+              waitFor = waitFor,
+              ...),
+            post_steps
+  )
   build_yaml <- cr_build_yaml(
-    steps = cr_buildstep_docker(image,
-                                tag = tag,
-                                location = ".",
-                                dir=paste0("deploy/", basename(local)),
-                                projectId = projectId,
-                                kaniko_cache = kaniko_cache,
-                                waitFor = "-", # build concurrent tags
-                                ...),
+    steps = steps,
     images = push_image)
 
   image_tag <- paste0(image, ":", tag)

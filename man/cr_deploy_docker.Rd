@@ -16,6 +16,8 @@ cr_deploy_docker(
   launch_browser = interactive(),
   kaniko_cache = TRUE,
   predefinedAcl = "bucketOwnerFullControl",
+  pre_steps = NULL,
+  post_steps = NULL,
   ...
 )
 }
@@ -41,6 +43,10 @@ cr_deploy_docker(
 \item{kaniko_cache}{If TRUE will use kaniko cache for Docker builds.}
 
 \item{predefinedAcl}{Access setting for the bucket used in deployed.  Set to "bucketLevel" if using bucket level access}
+
+\item{pre_steps}{Other \link{cr_buildstep} to run before the docker build}
+
+\item{post_steps}{Other \link{cr_buildstep} to run after the docker build}
 
 \item{...}{
   Arguments passed on to \code{\link[=cr_buildstep_docker]{cr_buildstep_docker}}
