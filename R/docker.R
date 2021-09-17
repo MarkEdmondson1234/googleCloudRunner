@@ -118,10 +118,19 @@ cr_deploy_docker <- function(local,
             image_name, level = 2)
 
   myMessage(paste("Configuring Dockerfile"), level = 2)
-  find_dockerfile(local, dockerfile = dockerfile)
+  # remove local/Dockerfile if it didn't exist before
+  docker_file_path = file.path(local, "Dockerfile")
+  remove_docker_file_after = !file.exists(docker_file_path)
+  remove_docker_file_after = remove_docker_file_after &&
+    find_dockerfile(local, dockerfile = dockerfile)
+  if (remove_docker_file_after) {
+    on.exit({
+      file.remove(docker_file_path)
+    })
+  }
 
   assert_that(
-    is.readable(file.path(local, "Dockerfile"))
+    is.readable(docker_file_path)
   )
 
   image <- make_image_name(image_name, projectId = projectId)
@@ -342,7 +351,7 @@ find_dockerfile <- function(local, dockerfile){
   local_files <- list.files(local)
   if("Dockerfile" %in% local_files){
     myMessage("Dockerfile found in ",local, level = 3)
-    return(TRUE)
+    return(FALSE)
   }
 
   # if no dockerfile, attempt to create it
