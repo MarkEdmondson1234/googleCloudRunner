@@ -145,7 +145,6 @@ cr_deploy_docker <- function(local,
   waitFor = "-" # build concurrent tags
   if (!is.null(pre_steps)) {
     waitFor = NULL
-
   }
 
   steps = c(pre_steps,
