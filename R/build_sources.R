@@ -265,12 +265,13 @@ cr_build_upload_gcs <- function(local,
   tdir = tempfile()
   dir.create(tdir, showWarnings = FALSE, recursive = TRUE)
   full_deploy_folder = file.path(tdir, deploy_folder)
-  dir.create(full_deploy_folder, showWarnings = FALSE)
 
   myMessage(paste0("Copying files from ",
                    local, " to ", full_deploy_folder),
             level = 2)
-  file.copy(local, full_deploy_folder, recursive = TRUE)
+  # mirror the structure exactly
+  file.copy(local, tdir, recursive = TRUE)
+  file.rename(file.path(tdir, basename(local)), full_deploy_folder)
   myMessage(paste0("Compressing files from ",
                    full_deploy_folder, " to ", tar_file),
             level = 2)
