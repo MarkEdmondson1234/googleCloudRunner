@@ -250,7 +250,7 @@ cr_build_upload_gcs <- function(local,
                                                 ".tar.gz"),
                                 bucket = cr_bucket_get(),
                                 predefinedAcl="bucketOwnerFullControl",
-                                deploy_folder = file.path(tempdir(), "deploy")){
+                                deploy_folder = "deploy"){
 
   if(!grepl("tar\\.gz$", remote)){
     stop("remote argument name needs to end with .tar.gz", call. = FALSE)
@@ -260,21 +260,31 @@ cr_build_upload_gcs <- function(local,
                   paste0("gs://", bucket,"/",remote)),
             level = 3)
 
-  tar_file <- paste0(basename(local), ".tar.gz")
 
-  dir.create(deploy_folder, showWarnings = FALSE)
+  # make temporary folder (to avoid recursion issue)
+  tdir = tempfile()
+  dir.create(tdir, showWarnings = FALSE, recursive = TRUE)
+  full_deploy_folder = file.path(tdir, deploy_folder)
+  dir.create(full_deploy_folder, showWarnings = FALSE)
+
   myMessage(paste0("Copying files from ",
-                   local, " to /", deploy_folder),
+                   local, " to ", full_deploy_folder),
             level = 2)
-  file.copy(local, deploy_folder, recursive = TRUE)
-  myMessage(paste0("Compressing files from /",
-                   deploy_folder, " to ", tar_file),
+  file.copy(local, full_deploy_folder, recursive = TRUE)
+  myMessage(paste0("Compressing files from ",
+                   full_deploy_folder, " to ", tar_file),
             level = 2)
+
+  owd = getwd()
+  setwd(tdir)
+  on.exit(setwd(owd), add = TRUE)
+  tar_file <- paste0(basename(local), ".tar.gz")
   tar(tar_file,
-      files = basename(deploy_folder),
-      compression = "gzip",
-      extra_flags = paste0("-C ", shQuote(dirname(deploy_folder)))
+      files = deploy_folder,
+      compression = "gzip"
   )
+  tar_file <- normalizePath(tar_file, mustWork = FALSE)
+  setwd(owd)
 
   on.exit(unlink(tar_file), add=TRUE)
   on.exit(unlink(deploy_folder, recursive = TRUE), add=TRUE)

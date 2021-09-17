@@ -9,7 +9,7 @@ cr_build_upload_gcs(
   remote = paste0(local, format(Sys.time(), "\%Y\%m\%d\%H\%M\%S"), ".tar.gz"),
   bucket = cr_bucket_get(),
   predefinedAcl = "bucketOwnerFullControl",
-  deploy_folder = file.path(tempdir(), "deploy")
+  deploy_folder = "deploy"
 )
 }
 \arguments{
