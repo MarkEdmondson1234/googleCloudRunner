@@ -271,8 +271,10 @@ cr_build_upload_gcs <- function(local,
                    deploy_folder, " to ", tar_file),
             level = 2)
   tar(tar_file,
-      files = deploy_folder,
-      compression = "gzip")
+      files = "./",
+      compression = "gzip",
+      extra_flags = paste0("-C ", shQuote(deploy_folder))
+  )
 
   on.exit(unlink(tar_file), add=TRUE)
   on.exit(unlink(deploy_folder, recursive = TRUE), add=TRUE)

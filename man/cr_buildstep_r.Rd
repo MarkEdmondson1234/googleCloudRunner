@@ -10,6 +10,7 @@ cr_buildstep_r(
   r_source = c("local", "runtime"),
   prefix = "rocker/",
   escape_dollar = TRUE,
+  rscript_args = NULL,
   ...
 )
 }
@@ -23,6 +24,8 @@ cr_buildstep_r(
 \item{prefix}{prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io}
 
 \item{escape_dollar}{Default TRUE.  This will turn \code{$} into \code{$$} within the script to avoid them being recognised as Cloud Build variables.  Turn this off if you want that behaviour (e.g. \code{my_project="$PROJECT_ID"})}
+
+\item{rscript_args}{Optional arguments for the R script run by \code{Rscript}.}
 
 \item{...}{Other arguments passed to \link{cr_buildstep}}
 }
@@ -51,7 +54,26 @@ cr_buildstep_r("my-r-file.R")
 # create an R buildstep from a file within the source of the Build
 cr_buildstep_r("inst/schedule/schedule.R", r_source = "runtime")
 
+# create an R buildstep with Rscript arguments and use a large
+# machine with 32 cores
+
+## create storage source
+storage_source <- cr_build_upload_gcs(
+ "my-r-script.R"
+)
+## create the buildstep with the R script
+step1 <- cr_buildstep_r("deploy/my-r-script.R", r_source="runtime",
+               rscript_args=c("args_1=<args1>", "args_2=<args_2>"))
+
 }
+## run the script on Cloud Build
+cr_build(
+  cr_build_yaml(
+    steps=c(step1)
+  ),
+  source = storage_source
+  options = list(machineType = "E2_HIGHCPU_32")
+)
 
 # use a different Rocker image e.g. rocker/verse
 cr_buildstep_r(c("library(dplyr)",
