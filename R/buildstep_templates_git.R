@@ -31,7 +31,12 @@ cr_buildstep_gitsetup <- function(secret,
                                   post_setup = NULL){
 
   type = match.arg(type)
-  github_setup <- system.file("ssh", "github_setup.sh",
+  app = switch(type,
+               rsa = "",
+               ed25519 = "_ed25519")
+
+  github_setup <- system.file("ssh",
+                              paste0("github_setup", app, ".sh"),
                               package = "googleCloudRunner")
   c(
     cr_buildstep_secret(secret = secret,
