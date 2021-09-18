@@ -6,7 +6,7 @@
 \alias{git_volume}
 \title{Create a build step for authenticating with Git}
 \usage{
-cr_buildstep_gitsetup(secret, post_setup = NULL)
+cr_buildstep_gitsetup(secret, type = c("rsa", "ed25519"), post_setup = NULL)
 
 cr_buildstep_git(
   git_args = c("clone", "git@github.com:[GIT-USERNAME]/[REPOSITORY]", "."),
@@ -17,6 +17,8 @@ git_volume()
 }
 \arguments{
 \item{secret}{The name of the secret on Google Secret Manager for the git ssh private key}
+
+\item{type}{type of GitHub SSH key, either RSA or ED25519}
 
 \item{post_setup}{Steps that occur after git setup}
 
