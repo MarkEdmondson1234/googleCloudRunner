@@ -23,4 +23,5 @@ cr_regions <- c(cr_regions,
              "southamerica-east1", "us-west2", "us-west3", "us-west4")
 cr_regions <- unique(cr_regions)
 
-usethis::use_data(cr_regions, overwrite = TRUE)
+# Now replaced by data-raw/cloudrun-regions.R
+# usethis::use_data(cr_regions, overwrite = TRUE)

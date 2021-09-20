@@ -5,7 +5,7 @@
 \alias{cr_regions}
 \title{Cloud Run Regions}
 \format{
-A character vector of region names
+A character vector of valid Cloud Run region names
 }
 \usage{
 cr_regions

@@ -90,13 +90,13 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
      
@@ -116,28 +116,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fas fa-shapes"></span>
+    <span class="fa fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fas fa-running"></span>
+    <span class="fa fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fas fa-clock"></span>
+    <span class="fa fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-hands-helping"></span>
+    <span class="fa fa-hands-helping"></span>
      
     Use Cases
      
@@ -184,7 +184,7 @@
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-question"></span>
+    <span class="fa fa-question"></span>
      
     Functions
   </a>
@@ -283,6 +283,7 @@
     <dt><code>timeout</code></dt><dd><p>Amount of time that this build should be allowed to run, to second</p></dd>
     <dt><code>images</code></dt><dd><p>A list of images to be pushed upon the successful completion of all build</p></dd>
     <dt><code>substitutions</code></dt><dd><p>Substitutions data for `Build` resource</p></dd>
+    <dt><code>serviceAccount</code></dt><dd><p>service account email to be used for the build</p></dd>
   
 </dl></td>
     </tr>
@@ -310,9 +311,9 @@
     <pre class="examples"><div class='input'>
 <span class='co'># create a local cloudbuild.yml file for packagetests</span>
 <span class='va'>pd</span> <span class='op'>&lt;-</span> <span class='fu'>cr_deploy_packagetests</span><span class='op'>(</span>create_trigger <span class='op'>=</span> <span class='st'>"no"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-09-07 13:47:49 &gt;</span><span> Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>ℹ</span><span> Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BB0000;'>•</span><span> Go to https://console.cloud.google.com/cloud-build/triggers and</span>
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-09-20 14:31:57 &gt;</span> Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'><span style='color: #BBBB00;'>ℹ</span> Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #BB0000;'>•</span> Go to https://console.cloud.google.com/cloud-build/triggers and</span>
 #&gt; <span class='message'>  make a build trigger pointing at this file in your repo:</span>
-#&gt; <span class='message'>  cloudbuild-tests.yml </span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>ℹ</span><span> Build Trigger substitution variable settings:</span>
+#&gt; <span class='message'>  cloudbuild-tests.yml </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #BBBB00;'>ℹ</span> Build Trigger substitution variable settings:</span>
 #&gt; <span class='message'>  _CODECOV_TOKEN = your-codecov-token</span>
 #&gt; <span class='message'>  Ignored files filter (glob): docs/** and vignettes/**</span></div><div class='input'><span class='va'>pd</span>
 </div><div class='output co'>#&gt; ==cloudRunnerYaml==
@@ -361,9 +362,9 @@
   timeout <span class='op'>=</span> <span class='fl'>1200</span>,
   create_trigger <span class='op'>=</span> <span class='st'>"no"</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-09-07 13:47:49 &gt;</span><span> Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>ℹ</span><span> Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BB0000;'>•</span><span> Go to https://console.cloud.google.com/cloud-build/triggers and</span>
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-09-20 14:31:57 &gt;</span> Writing to cloudbuild-tests.yml</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'><span style='color: #BBBB00;'>ℹ</span> Complete deployment of tests Cloud Build yaml:</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #BB0000;'>•</span> Go to https://console.cloud.google.com/cloud-build/triggers and</span>
 #&gt; <span class='message'>  make a build trigger pointing at this file in your repo:</span>
-#&gt; <span class='message'>  cloudbuild-tests.yml </span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BBBB00;'>ℹ</span><span> Build Trigger substitution variable settings:</span>
+#&gt; <span class='message'>  cloudbuild-tests.yml </span></div><div class='output co'>#&gt; <span class='message'><span style='color: #BBBB00;'>ℹ</span> Build Trigger substitution variable settings:</span>
 #&gt; <span class='message'>  _CODECOV_TOKEN = your-codecov-token</span>
 #&gt; <span class='message'>  Ignored files filter (glob): docs/** and vignettes/**</span></div><div class='output co'>#&gt; ==cloudRunnerYaml==
 #&gt; steps:
@@ -371,7 +372,7 @@
 #&gt;   entrypoint: bash
 #&gt;   args:
 #&gt;   - -c
-#&gt;   - gcloud secrets versions access latest --secret=my_secret &gt; auth.json
+#&gt;   - gcloud secrets versions access latest --secret=my_secret  &gt; auth.json
 #&gt; - name: gcr.io/gcer-public/packagetools:latest
 #&gt;   args:
 #&gt;   - Rscript
@@ -429,7 +430,7 @@
 
 <span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='st'>"cloudbuild-tests.yml"</span><span class='op'>)</span>
 
-</div></span></pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
