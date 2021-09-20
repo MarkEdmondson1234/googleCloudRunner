@@ -24,3 +24,4 @@
 ^\.devcontainer$
 ^cloudbuild-pkgdown\.yml$
 ^auth\.json$
+^data-raw$
