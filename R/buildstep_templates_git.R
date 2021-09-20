@@ -31,9 +31,7 @@ cr_buildstep_gitsetup <- function(secret,
                                   post_setup = NULL){
 
   type = match.arg(type)
-  app = switch(type,
-               rsa = "",
-               ed25519 = "_ed25519")
+  app = paste0("_", type)
 
   github_setup <- system.file("ssh",
                               paste0("github_setup", app, ".sh"),
