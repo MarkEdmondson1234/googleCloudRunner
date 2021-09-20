@@ -44,6 +44,15 @@ steps:
     devtools::install()
     list.files()
     pkgdown::build_site()
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
+  args:
+  - bash
+  - -c
+  - gcloud run regions list > data-raw/regions.txt
+- name: rocker/tidyverse
+  args:
+  - Rscript
+  - data-raw/cloudrun-regions.R
 # Push build - remember to restrict other builds away from /docs
 # otherwise it will trigger again in never ending git commit loop
 - name: 'gcr.io/cloud-builders/git'
