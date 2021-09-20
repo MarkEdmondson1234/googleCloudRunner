@@ -3,8 +3,7 @@ library(googleCloudRunner)
 
 docker_steps <- cr_build_yaml(
   c(cr_buildstep_gcloud(
-    args = c("gcloud run regions list > regions.txt"),
-    dir = "data-raw"
+    args = c("gcloud run regions list > /workspace/data-raw/regions.txt"),
   ),
   cr_buildstep_r(
     "data-raw/cloudrun-regions.R",
