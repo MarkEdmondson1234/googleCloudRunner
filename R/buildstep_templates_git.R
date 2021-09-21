@@ -4,7 +4,6 @@
 #'
 #' @param secret The name of the secret on Google Secret Manager for the git ssh private key
 #' @param post_setup Steps that occur after git setup
-#' @param type type of GitHub SSH key, either RSA or ED25519
 #' @details
 #'
 #' The ssh private key should be uploaded to Google Secret Manager first
@@ -27,18 +26,15 @@
 #'  )
 #'
 cr_buildstep_gitsetup <- function(secret,
-                                  type = c("rsa", "ed25519"),
                                   post_setup = NULL){
 
-  type = match.arg(type)
-  app = paste0("_", type)
 
   github_setup <- system.file("ssh",
-                              paste0("github_setup", app, ".sh"),
+                              paste0("github_setup.sh"),
                               package = "googleCloudRunner")
   c(
     cr_buildstep_secret(secret = secret,
-                        decrypted = paste0("/root/.ssh/id_", type),
+                        decrypted = paste0("/root/.ssh/id_rsa"),
                         volumes = git_volume(),
                         binary_mode = TRUE,
                         id = "git secret"),
