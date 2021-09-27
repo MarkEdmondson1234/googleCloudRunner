@@ -266,7 +266,7 @@ cr_buildstep_docker <- function(image,
     is.null(dots$id)
   )
 
-  prefix <- grepl("^gcr.io", image)
+  prefix <- grepl("^gcr.io", image) || grepl("^.*-docker.pkg.dev", image)
   if(prefix){
     the_image <- image
   } else {
