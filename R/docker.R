@@ -268,6 +268,13 @@ cr_buildstep_docker <- function(image,
 
   the_image <- make_image_name(image, projectId = projectId)
 
+  # Adding this in for Artifacts Registry
+  need_location = grepl("^.*-docker.pkg.dev", the_image)
+  if (need_location) {
+    location = sub("^(.*-docker.pkg.dev).*", "\\1", the_image)
+    location = sub("^https://", "", location)
+  }
+
   myMessage("Image to be built: ", the_image, level = 2)
 
   the_image_tagged <- c(vapply(tag,
@@ -277,7 +284,7 @@ cr_buildstep_docker <- function(image,
   )
 
   if(!kaniko_cache){
-    return(c(
+    steps = c(
       cr_buildstep("docker",
                    c("build",
                      "-f", dockerfile,
@@ -285,7 +292,17 @@ cr_buildstep_docker <- function(image,
                      location),
                    ...),
       cr_buildstep("docker", c("push", the_image), ...)
-    ))
+    )
+    if (need_location) {
+      steps = c(
+        cr_buildstep_gcloud(
+          "gcloud",
+          c("gcloud", "auth", "configure-docker",
+            location)
+        ),
+        steps)
+    }
+    return(steps)
   }
 
   # kaniko cache
