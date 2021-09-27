@@ -266,7 +266,7 @@ cr_buildstep_docker <- function(image,
     is.null(dots$id)
   )
 
-  the_image <- make_image_name(image_name, projectId = projectId)
+  the_image <- make_image_name(image, projectId = projectId)
 
   myMessage("Image to be built: ", the_image, level = 2)
 
