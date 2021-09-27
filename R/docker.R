@@ -266,12 +266,7 @@ cr_buildstep_docker <- function(image,
     is.null(dots$id)
   )
 
-  prefix <- grepl("^gcr.io", image) || grepl("^.*-docker.pkg.dev", image)
-  if(prefix){
-    the_image <- image
-  } else {
-    the_image <- paste0("gcr.io/", projectId, "/", image)
-  }
+  the_image <- make_image_name(image_name, projectId = projectId)
 
   myMessage("Image to be built: ", the_image, level = 2)
 
