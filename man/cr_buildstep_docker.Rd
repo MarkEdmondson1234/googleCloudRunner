@@ -11,6 +11,7 @@ cr_buildstep_docker(
   projectId = cr_project_get(),
   dockerfile = "Dockerfile",
   kaniko_cache = FALSE,
+  build_args = NULL,
   ...
 )
 }
@@ -26,6 +27,9 @@ cr_buildstep_docker(
 \item{dockerfile}{Specify the name of the Dockerfile found at \code{location}}
 
 \item{kaniko_cache}{If TRUE will use kaniko cache for Docker builds.}
+
+\item{build_args}{additional arguments to pass to \code{docker build},
+should be a character vector.}
 
 \item{...}{Further arguments passed in to \link{cr_buildstep}}
 }

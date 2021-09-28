@@ -53,6 +53,8 @@ cr_deploy_docker(
   \describe{
     \item{\code{image}}{The image tag that will be pushed, starting with gcr.io or created by combining with \code{projectId} if not starting with gcr.io}
     \item{\code{location}}{Where the Dockerfile to build is in relation to \code{dir}}
+    \item{\code{build_args}}{additional arguments to pass to \code{docker build},
+should be a character vector.}
   }}
 }
 \description{

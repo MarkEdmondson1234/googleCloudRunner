@@ -220,6 +220,8 @@ cr_deploy_docker <- function(local,
 #' @param projectId The projectId
 #' @param dockerfile Specify the name of the Dockerfile found at \code{location}
 #' @param kaniko_cache If TRUE will use kaniko cache for Docker builds.
+#' @param build_args additional arguments to pass to \code{docker build},
+#' should be a character vector.
 #'
 #' @details
 #'
@@ -269,6 +271,7 @@ cr_buildstep_docker <- function(image,
                                 projectId = cr_project_get(),
                                 dockerfile = "Dockerfile",
                                 kaniko_cache = FALSE,
+                                build_args = NULL,
                                 ...){
   # don't allow dot names that would break things
   dots <- list(...)
@@ -296,7 +299,8 @@ cr_buildstep_docker <- function(image,
                    c("build",
                      "-f", dockerfile,
                      the_image_tagged,
-                     location),
+                     location,
+                     build_args),
                    ...),
       cr_buildstep("docker", c("push", the_image), ...)
     )
