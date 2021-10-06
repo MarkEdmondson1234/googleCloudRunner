@@ -49,6 +49,11 @@ steps:
   - bash
   - -c
   - gcloud run regions list > data-raw/regions.txt
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
+  args:
+  - bash
+  - -c
+  - gcloud compute zones list --format='value(name)' > data-raw/zones.txt
 - name: rocker/tidyverse
   args:
   - Rscript
