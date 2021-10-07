@@ -7,6 +7,8 @@ test_that("[Online] Test Deploy Website", {
 
   knitr::knit2html(system.file("NEWS.md",package="googleCloudRunner"),
                    output = "test_website/NEWS.html")
+  # from https://testthat.r-lib.org/articles/test-fixtures.html
+  # could use withr::defer, but don't need it here
   unlink("NEWS.txt")
 
   ws <- cr_deploy_html("test_website")
