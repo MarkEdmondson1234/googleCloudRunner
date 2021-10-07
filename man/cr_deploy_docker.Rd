@@ -55,6 +55,9 @@ cr_deploy_docker(
     \item{\code{location}}{Where the Dockerfile to build is in relation to \code{dir}}
     \item{\code{build_args}}{additional arguments to pass to \code{docker build},
 should be a character vector.}
+    \item{\code{push_image}}{if \code{kaniko_cache = FALSE} and
+\code{push_image = FALSE}, then the docker image is simply built and not
+pushed}
   }}
 }
 \description{

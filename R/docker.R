@@ -222,6 +222,9 @@ cr_deploy_docker <- function(local,
 #' @param kaniko_cache If TRUE will use kaniko cache for Docker builds.
 #' @param build_args additional arguments to pass to \code{docker build},
 #' should be a character vector.
+#' @param push_image if \code{kaniko_cache = FALSE} and
+#' \code{push_image = FALSE}, then the docker image is simply built and not
+#' pushed
 #'
 #' @details
 #'
@@ -272,6 +275,7 @@ cr_buildstep_docker <- function(image,
                                 dockerfile = "Dockerfile",
                                 kaniko_cache = FALSE,
                                 build_args = NULL,
+                                push_image = TRUE,
                                 ...){
   # don't allow dot names that would break things
   dots <- list(...)
@@ -293,6 +297,9 @@ cr_buildstep_docker <- function(image,
                                USE.NAMES = FALSE)
   )
 
+  if (!push_image && kaniko_cache) {
+    warning("push_image = FALSE, but using kaniko, so image is auto-pushed")
+  }
   if(!kaniko_cache){
     steps = c(
       cr_buildstep("docker",
@@ -301,9 +308,14 @@ cr_buildstep_docker <- function(image,
                      the_image_tagged,
                      location,
                      build_args),
-                   ...),
-      cr_buildstep("docker", c("push", the_image), ...)
+                   ...)
     )
+    if (push_image) {
+      steps = c(steps,
+                cr_buildstep("docker", c("push", the_image),
+                             ...)
+      )
+    }
     return(steps)
   }
 

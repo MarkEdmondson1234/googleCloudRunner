@@ -30,11 +30,11 @@ cr_buildstep_gitsetup <- function(secret,
 
 
   github_setup <- system.file("ssh",
-                              paste0("github_setup.sh"),
+                              "github_setup.sh",
                               package = "googleCloudRunner")
   c(
     cr_buildstep_secret(secret = secret,
-                        decrypted = paste0("/root/.ssh/id_rsa"),
+                        decrypted = "/root/.ssh/id_rsa",
                         volumes = git_volume(),
                         binary_mode = TRUE,
                         id = "git secret"),

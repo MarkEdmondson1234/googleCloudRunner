@@ -17,6 +17,8 @@ cr_deploy_run(
   projectId = cr_project_get(),
   launch_browser = interactive(),
   timeout = 600L,
+  kaniko_cache = TRUE,
+  push_image = TRUE,
   ...
 )
 
@@ -67,6 +69,12 @@ cr_deploy_plumber(
 \item{launch_browser}{Whether to launch the logs URL in a browser once deployed}
 
 \item{timeout}{Amount of time that this build should be allowed to run, to second}
+
+\item{kaniko_cache}{If TRUE will use kaniko cache for Docker builds.}
+
+\item{push_image}{if \code{kaniko_cache = FALSE} and
+\code{push_image = FALSE}, then the docker image is simply built and not
+pushed}
 
 \item{...}{
   Arguments passed on to \code{\link[=cr_buildstep_run]{cr_buildstep_run}}

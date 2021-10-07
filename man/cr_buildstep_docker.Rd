@@ -12,6 +12,7 @@ cr_buildstep_docker(
   dockerfile = "Dockerfile",
   kaniko_cache = FALSE,
   build_args = NULL,
+  push_image = TRUE,
   ...
 )
 }
@@ -30,6 +31,10 @@ cr_buildstep_docker(
 
 \item{build_args}{additional arguments to pass to \code{docker build},
 should be a character vector.}
+
+\item{push_image}{if \code{kaniko_cache = FALSE} and
+\code{push_image = FALSE}, then the docker image is simply built and not
+pushed}
 
 \item{...}{Further arguments passed in to \link{cr_buildstep}}
 }
