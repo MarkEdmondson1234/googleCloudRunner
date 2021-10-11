@@ -137,9 +137,9 @@ cr_deploy_docker <- function(local,
 
   #kaniko_cache will push image for you
   if(kaniko_cache){
-    push_image <- NULL
+    pushed_image <- NULL
   } else {
-    push_image <- image
+    pushed_image <- image
   }
 
   # Adding this in for Artifacts Registry
@@ -176,7 +176,7 @@ cr_deploy_docker <- function(local,
   )
   build_yaml <- cr_build_yaml(
     steps = steps,
-    images = push_image)
+    images = pushed_image)
 
   image_tag <- paste0(image, ":", tag)
   myMessage("#Deploy docker build for image: ", image, level = 3)
