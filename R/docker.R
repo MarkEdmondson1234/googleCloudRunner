@@ -155,20 +155,21 @@ cr_deploy_docker <- function(local,
 
 #' @export
 #' @rdname cr_deploy_docker
-construct_cr_deploy_docker <- function(local,
-                             image_name = remote,
-                             dockerfile = NULL,
-                             remote = basename(local),
-                             tag = c("latest","$BUILD_ID"),
-                             timeout = 600L,
-                             bucket = cr_bucket_get(),
-                             projectId = cr_project_get(),
-                             launch_browser = interactive(),
-                             kaniko_cache=TRUE,
-                             predefinedAcl="bucketOwnerFullControl",
-                             pre_steps = NULL,
-                             post_steps = NULL,
-                             ...){
+construct_cr_deploy_docker <- function(
+  local,
+  image_name = remote,
+  dockerfile = NULL,
+  remote = basename(local),
+  tag = c("latest","$BUILD_ID"),
+  timeout = 600L,
+  bucket = cr_bucket_get(),
+  projectId = cr_project_get(),
+  launch_browser = interactive(),
+  kaniko_cache=TRUE,
+  predefinedAcl="bucketOwnerFullControl",
+  pre_steps = NULL,
+  post_steps = NULL,
+  ...){
   assert_that(
     dir.exists(local)
   )
@@ -220,17 +221,18 @@ construct_cr_deploy_docker <- function(local,
     waitFor = NULL
   }
 
+  docker_step = cr_buildstep_docker(
+    image,
+    tag = tag,
+    location = ".",
+    # dir=paste0("deploy/", basename(local)),
+    dir = "deploy",
+    projectId = projectId,
+    kaniko_cache = kaniko_cache,
+    waitFor = waitFor,
+    ...)
   steps = c(pre_steps,
-            cr_buildstep_docker(
-              image,
-              tag = tag,
-              location = ".",
-              # dir=paste0("deploy/", basename(local)),
-              dir = "deploy",
-              projectId = projectId,
-              kaniko_cache = kaniko_cache,
-              waitFor = waitFor,
-              ...),
+            docker_step,
             post_steps
   )
   build_yaml <- cr_build_yaml(
@@ -257,7 +259,10 @@ construct_cr_deploy_docker <- function(local,
     projectId = projectId,
     launch_browser = launch_browser,
     timeout = timeout,
-    image_tag = image_tag
+    image_tag = image_tag,
+    pre_steps = pre_steps,
+    docker_step = docker_step,
+    post_steps = post_steps
   )
   return(L)
 
