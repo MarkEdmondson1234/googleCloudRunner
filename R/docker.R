@@ -132,6 +132,8 @@ cr_deploy_docker <- function(local,
   gcs_source = result$gcs_source
   image_tag = result$image_tag
   projectId = result$projectId
+  launch_browser = result$launch_browser
+  timeout = result$timeout
 
   docker_build <- cr_build(build_yaml,
                            source = gcs_source,
@@ -158,8 +160,10 @@ construct_cr_deploy_docker <- function(local,
                              dockerfile = NULL,
                              remote = basename(local),
                              tag = c("latest","$BUILD_ID"),
+                             timeout = 600L,
                              bucket = cr_bucket_get(),
                              projectId = cr_project_get(),
+                             launch_browser = interactive(),
                              kaniko_cache=TRUE,
                              predefinedAcl="bucketOwnerFullControl",
                              pre_steps = NULL,

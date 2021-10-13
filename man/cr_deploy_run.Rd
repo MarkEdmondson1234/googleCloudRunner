@@ -73,6 +73,10 @@ cr_deploy_plumber(
 
 \item{kaniko_cache}{If TRUE will use kaniko cache for Docker builds.}
 
+\item{pre_steps}{Other \link{cr_buildstep} to run before the docker build}
+
+\item{post_steps}{Other \link{cr_buildstep} to run after the docker build}
+
 \item{...}{
   Arguments passed on to \code{\link[=cr_buildstep_run]{cr_buildstep_run}}
   \describe{

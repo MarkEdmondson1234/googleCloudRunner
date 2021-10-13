@@ -9,6 +9,8 @@
 #' @param projectId The projectId where it all gets deployed to
 #' @param region The Cloud Run endpoint set by CR_REGION env arg
 #' @param bucket The Cloud Storage bucket that will hold the code
+#' @param pre_steps Other \link{cr_buildstep} to run before the docker build
+#' @param post_steps Other \link{cr_buildstep} to run after the docker build
 #' @param ... Other arguments passed to \link{cr_buildstep_run}
 #' @inheritDotParams cr_buildstep_run
 #' @inheritParams cr_buildstep_docker
