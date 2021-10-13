@@ -2,6 +2,7 @@
 % Please edit documentation in R/docker.R
 \name{cr_deploy_docker}
 \alias{cr_deploy_docker}
+\alias{construct_cr_deploy_docker}
 \title{Deploy a local Dockerfile to be built on ContainerRegistry}
 \usage{
 cr_deploy_docker(
@@ -14,6 +15,21 @@ cr_deploy_docker(
   bucket = cr_bucket_get(),
   projectId = cr_project_get(),
   launch_browser = interactive(),
+  kaniko_cache = TRUE,
+  predefinedAcl = "bucketOwnerFullControl",
+  pre_steps = NULL,
+  post_steps = NULL,
+  ...
+)
+
+construct_cr_deploy_docker(
+  local,
+  image_name = remote,
+  dockerfile = NULL,
+  remote = basename(local),
+  tag = c("latest", "$BUILD_ID"),
+  bucket = cr_bucket_get(),
+  projectId = cr_project_get(),
   kaniko_cache = TRUE,
   predefinedAcl = "bucketOwnerFullControl",
   pre_steps = NULL,
@@ -67,6 +83,11 @@ Build a local Dockerfile in the cloud. See googleCloudRunner website for help ho
 This lets you deploy local folders with Dockerfiles, automating saving the source on Google Cloud Storage.
 
 To deploy builds on git triggers and sources such as GitHub, see the examples of \link{cr_buildstep_docker} or the use cases on the website
+}
+\note{
+`construct_cr_deploy_docker` is a helper function to construct the arguments
+needed to deploy the docker, which may be combined with
+\code{\link{cr_deploy_r}} to combine Docker and R
 }
 \examples{
 

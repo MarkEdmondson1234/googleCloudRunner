@@ -85,6 +85,9 @@ cr_deploy_docker_trigger <- function(repo,
 #'
 #' To deploy builds on git triggers and sources such as GitHub, see the examples of \link{cr_buildstep_docker} or the use cases on the website
 #'
+#' @note `construct_cr_deploy_docker` is a helper function to construct the arguments
+#' needed to deploy the docker, which may be combined with
+#' \code{\link{cr_deploy_r}} to combine Docker and R
 #' @examples
 #'
 #' \dontrun{
@@ -105,6 +108,58 @@ cr_deploy_docker <- function(local,
                              bucket = cr_bucket_get(),
                              projectId = cr_project_get(),
                              launch_browser = interactive(),
+                             kaniko_cache=TRUE,
+                             predefinedAcl="bucketOwnerFullControl",
+                             pre_steps = NULL,
+                             post_steps = NULL,
+                             ...){
+
+  result = construct_cr_deploy_docker(
+    local = local,
+    image_name = image_name,
+    dockerfile = dockerfile,
+    remote = remote,
+    tag = tag,
+    bucket = bucket,
+    projectId = projectId,
+    kaniko_cache = kaniko_cache,
+    predefinedAcl = predefinedAcl,
+    pre_steps = pre_steps,
+    post_steps = post_steps,
+    ...
+  )
+  build_yaml = result$build_yaml
+  gcs_source = result$gcs_source
+  image_tag = result$image_tag
+  projectId = result$projectId
+
+  docker_build <- cr_build(build_yaml,
+                           source = gcs_source,
+                           launch_browser = launch_browser,
+                           timeout = timeout)
+
+  b <- cr_build_wait(docker_build, projectId = projectId)
+
+  myMessage(image_tag, level = 3)
+
+  # to make it the same as non-kaniko docker builds
+  if(kaniko_cache){
+    b$results$images$name <- b$steps$args[[1]][[4]]
+  }
+
+  b
+
+}
+
+#' @export
+#' @rdname cr_deploy_docker
+construct_cr_deploy_docker <- function(local,
+                             image_name = remote,
+                             dockerfile = NULL,
+                             remote = basename(local),
+                             tag = c("latest","$BUILD_ID"),
+                             bucket = cr_bucket_get(),
+                             projectId = cr_project_get(),
                              kaniko_cache=TRUE,
                              predefinedAcl="bucketOwnerFullControl",
                              pre_steps = NULL,
@@ -190,21 +245,18 @@ cr_deploy_docker <- function(local,
                                     bucket = bucket,
                                     predefinedAcl=predefinedAcl)
 
-  docker_build <- cr_build(build_yaml,
-                           source = gcs_source,
-                           launch_browser = launch_browser,
-                           timeout=timeout)
+  L = list(
+    steps = steps,
+    gcs_source = gcs_source,
+    images = pushed_image,
+    build_yaml = build_yaml,
+    projectId = projectId,
+    launch_browser = launch_browser,
+    timeout = timeout,
+    image_tag = image_tag
+  )
+  return(L)
 
-  b <- cr_build_wait(docker_build, projectId = projectId)
-
-  myMessage(image_tag, level = 3)
-
-  # to make it the same as non-kaniko docker builds
-  if(kaniko_cache){
-    b$results$images$name <- b$steps$args[[1]][[4]]
-  }
-
-  b
 }
 
 

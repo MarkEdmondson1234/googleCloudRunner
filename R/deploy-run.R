@@ -41,7 +41,8 @@ cr_deploy_run <- function(local,
                           launch_browser = interactive(),
                           timeout=600L,
                           kaniko_cache = TRUE,
-                          push_image = TRUE,
+                          pre_steps = NULL,
+                          post_steps = NULL,
                           ...){
 
   assert_that(
@@ -64,7 +65,9 @@ cr_deploy_run <- function(local,
                             launch_browser = launch_browser,
                             timeout=timeout,
                             kaniko_cache=kaniko_cache,
-                            push_image = push_image)
+                            pre_steps = pre_steps,
+                            post_steps = post_steps
+                            )
 
   if(built$status != "SUCCESS"){
     myMessage("Error building Dockerfile", level = 3)
