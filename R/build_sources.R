@@ -262,9 +262,9 @@ cr_build_upload_gcs <- function(local,
 
 
   # make temporary folder (to avoid recursion issue)
-  tdir = tempfile()
+  tdir <- tempfile()
   dir.create(tdir, showWarnings = FALSE, recursive = TRUE)
-  full_deploy_folder = file.path(tdir, deploy_folder)
+  full_deploy_folder <- file.path(tdir, deploy_folder)
 
   myMessage(paste0("Copying files from ",
                    local, " to ", full_deploy_folder),
@@ -276,7 +276,7 @@ cr_build_upload_gcs <- function(local,
                    full_deploy_folder, " to ", tar_file),
             level = 2)
 
-  owd = getwd()
+  owd <- getwd()
   setwd(tdir)
   on.exit(setwd(owd), add = TRUE)
   tar_file <- paste0(basename(local), ".tar.gz")

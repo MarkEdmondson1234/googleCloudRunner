@@ -54,7 +54,7 @@ cr_build_schedule_http <- function(build,
 #' @export
 #' @param schedule A cron schedule e.g. \code{"15 5 * * *"}
 #' @param ... additional arguments to pass to \code{\link{cr_schedule}}
-cr_schedule_build = function(build,
+cr_schedule_build <- function(build,
                              schedule = NULL,
                              email = cr_email_get(),
                              projectId = cr_project_get(),
@@ -64,9 +64,8 @@ cr_schedule_build = function(build,
                                   email = email,
                                   projectId = projectId)
 
-  brs <- cr_schedule(
+  cr_schedule(
     schedule = schedule,
     httpTarget = https,
     ...)
-  return(brs)
 }

@@ -21,7 +21,7 @@ cr_setup_test <- function(){
                 "Cloud Scheduler - R script"
     ))
 
-  if(run_tests == 0){
+  if (run_tests == 0 ){
     cli_alert_info("Skipping deployment tests")
   }
 
@@ -29,7 +29,7 @@ cr_setup_test <- function(){
                        package="googleCloudRunner",
                        mustWork=TRUE)
 
-  if(run_tests %in% c(1,2)){
+  if (run_tests %in% c(1,2)) {
     cli_alert_info("Attempting Docker deployment on Cloud Build via cr_deploy_docker()")
 
     # check has access to the bucket
@@ -51,7 +51,7 @@ cr_setup_test <- function(){
 
   }
 
-  if(run_tests %in% c(1,3)){
+  if (run_tests %in% c(1,3)) {
     cli_alert_info("Attempting deployment of plumber API on Cloud Run via cr_deploy_plumber()")
 
     cr <- cr_deploy_plumber(runme,
@@ -81,7 +81,7 @@ cr_setup_test <- function(){
                "mtcars %>% select(mpg)",
                "sessionInfo()")
 
-  if(run_tests %in% c(1,4)){
+  if (run_tests %in% c(1,4)) {
     cli_alert_info("Testing Cloud Build R scripts deployments via cr_deploy_r()")
 
     # check the script runs ok
@@ -96,7 +96,7 @@ cr_setup_test <- function(){
 
   }
 
-  if(run_tests %in% c(1,5)){
+  if (run_tests %in% c(1,5)) {
     cli_alert_info("Testing scheduling R script deployments via cr_deploy_r(schedule = '* * * * *')")
 
     # schedule the script

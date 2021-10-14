@@ -693,7 +693,7 @@ cr_buildstep_secret <- function(secret,
                                 ...){
   # as per
   # https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#a_note_on_resource_consistency
-  decode_it = "--format='get(payload.data)' | tr '_-' '/+' | base64 -d"
+  decode_it <- "--format='get(payload.data)' | tr '_-' '/+' | base64 -d"
   script <- sprintf("gcloud secrets versions access %s --secret=%s %s > %s",
     version, secret, ifelse(binary_mode, decode_it, ""), decrypted
   )

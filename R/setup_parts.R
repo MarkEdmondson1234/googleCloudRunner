@@ -149,7 +149,7 @@ get_email_setup <- function(){
 get_region_setup <- function(){
   region <- usethis::ui_yeah("Do you want to setup a Cloud Run region?")
   if(region){
-    choices = googleCloudRunner::cr_regions
+    choices <- googleCloudRunner::cr_regions
     region_select <- menu(
       choices = choices,
       title = "Which region shall Cloud Run perform in?"

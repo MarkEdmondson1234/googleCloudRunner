@@ -2,7 +2,7 @@
 % Please edit documentation in R/docker.R
 \name{cr_deploy_docker}
 \alias{cr_deploy_docker}
-\alias{construct_cr_deploy_docker}
+\alias{cr_deploy_docker_construct}
 \title{Deploy a local Dockerfile to be built on ContainerRegistry}
 \usage{
 cr_deploy_docker(
@@ -22,7 +22,7 @@ cr_deploy_docker(
   ...
 )
 
-construct_cr_deploy_docker(
+cr_deploy_docker_construct(
   local,
   image_name = remote,
   dockerfile = NULL,
@@ -87,7 +87,7 @@ This lets you deploy local folders with Dockerfiles, automating saving the sourc
 To deploy builds on git triggers and sources such as GitHub, see the examples of \link{cr_buildstep_docker} or the use cases on the website
 }
 \note{
-`construct_cr_deploy_docker` is a helper function to construct the arguments
+`cr_deploy_docker_construct` is a helper function to construct the arguments
 needed to deploy the docker, which may be combined with
 \code{\link{cr_deploy_r}} to combine Docker and R
 }

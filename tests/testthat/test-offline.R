@@ -14,7 +14,7 @@ test_that("Building Build Objects", {
 
   yaml <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
 
-  expect_equal(basename(yaml), "cloudbuild.yaml" )
+  expect_equal(basename(yaml), "cloudbuild.yaml")
 
   my_gcs_source <- Source(storageSource=StorageSource(object = "my_code.tar.gz",
                                                       bucket = "gs://my-bucket"

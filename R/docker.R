@@ -85,7 +85,7 @@ cr_deploy_docker_trigger <- function(repo,
 #'
 #' To deploy builds on git triggers and sources such as GitHub, see the examples of \link{cr_buildstep_docker} or the use cases on the website
 #'
-#' @note `construct_cr_deploy_docker` is a helper function to construct the arguments
+#' @note `cr_deploy_docker_construct` is a helper function to construct the arguments
 #' needed to deploy the docker, which may be combined with
 #' \code{\link{cr_deploy_r}} to combine Docker and R
 #' @examples
@@ -114,7 +114,7 @@ cr_deploy_docker <- function(local,
                              post_steps = NULL,
                              ...){
 
-  result = construct_cr_deploy_docker(
+  result <- cr_deploy_docker_construct(
     local = local,
     image_name = image_name,
     dockerfile = dockerfile,
@@ -128,12 +128,12 @@ cr_deploy_docker <- function(local,
     post_steps = post_steps,
     ...
   )
-  build_yaml = result$build_yaml
-  gcs_source = result$gcs_source
-  image_tag = result$image_tag
-  projectId = result$projectId
-  launch_browser = result$launch_browser
-  timeout = result$timeout
+  build_yaml <- result$build_yaml
+  gcs_source <- result$gcs_source
+  image_tag <- result$image_tag
+  projectId <- result$projectId
+  launch_browser <- result$launch_browser
+  timeout <- result$timeout
 
   docker_build <- cr_build(build_yaml,
                            source = gcs_source,
@@ -155,7 +155,7 @@ cr_deploy_docker <- function(local,
 
 #' @export
 #' @rdname cr_deploy_docker
-construct_cr_deploy_docker <- function(
+cr_deploy_docker_construct <- function(
   local,
   image_name = remote,
   dockerfile = NULL,
@@ -179,9 +179,9 @@ construct_cr_deploy_docker <- function(
 
   myMessage(paste("Configuring Dockerfile"), level = 2)
   # remove local/Dockerfile if it didn't exist before
-  docker_file_path = file.path(local, "Dockerfile")
-  remove_docker_file_after = !file.exists(docker_file_path)
-  remove_docker_file_after = remove_docker_file_after &&
+  docker_file_path <- file.path(local, "Dockerfile")
+  remove_docker_file_after <- !file.exists(docker_file_path)
+  remove_docker_file_after <- remove_docker_file_after &&
     find_dockerfile(local, dockerfile = dockerfile)
   if (remove_docker_file_after) {
     on.exit({
@@ -203,11 +203,11 @@ construct_cr_deploy_docker <- function(
   }
 
   # Adding this in for Artifacts Registry
-  need_location = grepl("^.*-docker.pkg.dev", tolower(image))
+  need_location <- grepl("^.*-docker.pkg.dev", tolower(image))
   if (need_location) {
-    dev_location = sub("^(.*-docker.pkg.dev).*", "\\1", tolower(image))
-    dev_location = sub("^https://", "", dev_location)
-    pre_steps = c(pre_steps,
+    dev_location <- sub("^(.*-docker.pkg.dev).*", "\\1", tolower(image))
+    dev_location <- sub("^https://", "", dev_location)
+    pre_steps <- c(pre_steps,
                   cr_buildstep_gcloud(
                     "gcloud",
                     c("gcloud", "auth", "configure-docker",
@@ -216,12 +216,12 @@ construct_cr_deploy_docker <- function(
     )
   }
 
-  waitFor = "-" # build concurrent tags
+  waitFor <- "-" # build concurrent tags
   if (!is.null(pre_steps)) {
-    waitFor = NULL
+    waitFor <- NULL
   }
 
-  docker_step = cr_buildstep_docker(
+  docker_step <- cr_buildstep_docker(
     image,
     tag = tag,
     location = ".",
@@ -231,7 +231,7 @@ construct_cr_deploy_docker <- function(
     kaniko_cache = kaniko_cache,
     waitFor = waitFor,
     ...)
-  steps = c(pre_steps,
+  steps <- c(pre_steps,
             docker_step,
             post_steps
   )
@@ -251,7 +251,7 @@ construct_cr_deploy_docker <- function(
                                     bucket = bucket,
                                     predefinedAcl=predefinedAcl)
 
-  L = list(
+  list(
     steps = steps,
     gcs_source = gcs_source,
     images = pushed_image,
@@ -264,8 +264,6 @@ construct_cr_deploy_docker <- function(
     docker_step = docker_step,
     post_steps = post_steps
   )
-  return(L)
-
 }
 
 
@@ -362,7 +360,7 @@ cr_buildstep_docker <- function(image,
     warning("push_image = FALSE, but using kaniko, so image is auto-pushed")
   }
   if(!kaniko_cache){
-    steps = c(
+    steps <- c(
       cr_buildstep("docker",
                    c("build",
                      "-f", dockerfile,
@@ -372,7 +370,7 @@ cr_buildstep_docker <- function(image,
                    ...)
     )
     if (push_image) {
-      steps = c(steps,
+      steps <- c(steps,
                 cr_buildstep("docker", c("push", the_image),
                              ...)
       )
