@@ -21,7 +21,7 @@ cr_buildstep_r(
 
 \item{r_source}{Whether the R code will be from a runtime file within the source or at build time copying over from a local R file in your session}
 
-\item{prefix}{prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io}
+\item{prefix}{prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io or \code{*-docker.pkg.dev}}
 
 \item{escape_dollar}{Default TRUE.  This will turn \code{$} into \code{$$} within the script to avoid them being recognised as Cloud Build variables.  Turn this off if you want that behaviour (e.g. \code{my_project="$PROJECT_ID"})}
 
