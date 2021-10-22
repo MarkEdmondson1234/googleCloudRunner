@@ -21,7 +21,7 @@ cr_setup_test <- function(){
                 "Cloud Scheduler - R script"
     ))
 
-  if (run_tests == 0 ){
+  if (run_tests == 0) {
     cli_alert_info("Skipping deployment tests")
   }
 
