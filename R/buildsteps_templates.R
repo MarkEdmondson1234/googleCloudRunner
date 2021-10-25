@@ -691,6 +691,7 @@ cr_buildstep_secret <- function(secret,
                                 version = "latest",
                                 binary_mode = FALSE,
                                 ...){
+  assetthat::is_flag(binary_mode)
   # as per
   # https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#a_note_on_resource_consistency
   decode_it <- "--format='get(payload.data)' | tr '_-' '/+' | base64 -d"
