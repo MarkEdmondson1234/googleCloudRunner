@@ -121,6 +121,10 @@ cr_buildtrigger_list <- function(projectId = cr_project_get()){
 
     bts_df <- Reduce(rbind, o)
 
+    bts_df$filename = if_null_na(bts_df$filename)
+    bts_df$ignoredFiles = if_null_na(bts_df$ignoredFiles)
+    bts_df$includedFiles = if_null_na(bts_df$includedFiles)
+    bts_df$disabled = if_null_na(bts_df$disabled)
     data.frame(
       stringsAsFactors = FALSE,
       buildTriggerName = bts_df$name,
