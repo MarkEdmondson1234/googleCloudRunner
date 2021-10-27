@@ -79,6 +79,8 @@ An RStudio gadget is also available to help you deploy:
 
 If you want help creating the Docker image, try [`containerit`](https://o2r.info/containerit/) to generate your Dockerfile, then use `cr_deploy_docker()` to build it.
 
+NOTE: You must name the docker file "Dockerfile" when you use the `containerit::write()` function
+
 ## Execute R scripts directly from Cloud Storage
 
 In some cases you may hit character limits of the cloudbuild file in which case you will need to execute the R code from a file.  The easiest way to do this is to upload your R code to a Cloud Storage bucket and then supply the `gs://` URI to `cr_buildstep_r()`:
