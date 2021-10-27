@@ -1,0 +1,28 @@
+pandoc: 2.14.0.2
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  cloudbuild: cloudbuild.html
+  cloudrun: cloudrun.html
+  cloudscheduler: cloudscheduler.html
+  git: git.html
+  setup-gcp: setup-gcp.html
+  setup: setup.html
+  usecase-deploy-pkgdown-website: usecase-deploy-pkgdown-website.html
+  usecase-package-docker-build: usecase-package-docker-build.html
+  usecase-polygot-ga-imports-to-bigquery: usecase-polygot-ga-imports-to-bigquery.html
+  usecase-r-api-microservices: usecase-r-api-microservices.html
+  usecase-r-event-driven-pubsub: usecase-r-event-driven-pubsub.html
+  usecase-r-results-github: usecase-r-results-github.html
+  usecase-scheduled-google-analytics: usecase-scheduled-google-analytics.html
+  usecase-scheduled-r-builds: usecase-scheduled-r-builds.html
+  usecase-shiny-cloudrun: usecase-shiny-cloudrun.html
+  usecase-shiny-kubernetes: usecase-shiny-kubernetes.html
+  usecase-slackbot-google-analytics: usecase-slackbot-google-analytics.html
+  usecase-testthat-coverage: usecase-testthat-coverage.html
+  usecases: usecases.html
+last_built: 2021-10-27T14:27Z
+urls:
+  reference: https://code.markedmondson.me/googleCloudRunner/reference
+  article: https://code.markedmondson.me/googleCloudRunner/articles
+
