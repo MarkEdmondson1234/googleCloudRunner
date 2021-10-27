@@ -16,7 +16,8 @@ extract_repo <- function(x){
 }
 
 make_image_name <- function(name, projectId){
-  prefix <- grepl("^gcr.io", name) || grepl("^.*-docker.pkg.dev", name)
+  prefix <- grepl("^(eu|asia|us|)([.]|)gcr.io", name) ||
+    grepl("^.*-docker.pkg.dev", name)
   if(prefix){
     the_image <- name
   } else {

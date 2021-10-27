@@ -180,7 +180,17 @@ cr_deploy_docker_construct <- function(
             image_name, level = 2)
 
   myMessage(paste("Configuring Dockerfile"), level = 2)
+
+  # !!!
+  # Should likely move this to the step for cr_build_upload_gcs
+  # or simply make local into a tempdir and copy over
+  # as currently file.path(local, "Dockerfile") will
+  # be overwritten with dockerfile if !is.null(dockerfile)
+
   # remove local/Dockerfile if it didn't exist before
+  # to keep local directory as is
+  # If you move this to find_dockerfile, then the
+  # on.exit may not be scoped correctly (exits on find_dockerfile)
   docker_file_path <- file.path(local, "Dockerfile")
   remove_docker_file_after <- !file.exists(docker_file_path)
   remove_docker_file_after <- remove_docker_file_after &&
@@ -191,7 +201,7 @@ cr_deploy_docker_construct <- function(
     })
   }
 
-  assert_that(
+  assertthat::assert_that(
     is.readable(docker_file_path)
   )
 
@@ -205,21 +215,11 @@ cr_deploy_docker_construct <- function(
   }
 
   # Adding this in for Artifacts Registry
-  need_location <- grepl("^.*-docker.pkg.dev", tolower(image))
-  if (need_location) {
-    dev_location <- sub("^(.*-docker.pkg.dev).*", "\\1", tolower(image))
-    dev_location <- sub("^https://", "", dev_location)
-    pre_steps <- c(pre_steps,
-                  cr_buildstep_gcloud(
-                    "gcloud",
-                    c("gcloud", "auth", "configure-docker",
-                      dev_location)
-                  )
-    )
-  }
+  pre_steps = add_docker_auth_prestep(image, pre_steps)
 
   waitFor <- "-" # build concurrent tags
   if (!is.null(pre_steps)) {
+    # want pre steps to run before the docker build
     waitFor <- NULL
   }
 
@@ -234,8 +234,8 @@ cr_deploy_docker_construct <- function(
     waitFor = waitFor,
     ...)
   steps <- c(pre_steps,
-            docker_step,
-            post_steps
+             docker_step,
+             post_steps
   )
   build_yaml <- cr_build_yaml(
     steps = steps,
@@ -373,8 +373,8 @@ cr_buildstep_docker <- function(image,
     )
     if (push_image) {
       steps <- c(steps,
-                cr_buildstep("docker", c("push", the_image),
-                             ...)
+                 cr_buildstep("docker", c("push", the_image),
+                              ...)
       )
     }
     return(steps)
@@ -450,3 +450,19 @@ find_dockerfile <- function(local, dockerfile){
   TRUE
 }
 
+add_docker_auth_prestep = function(image, pre_steps) {
+  # Adding this in for Artifacts Registry
+  need_location <- grepl("^.*-docker.pkg.dev", tolower(image))
+  if (need_location) {
+    dev_location <- sub("^(.*-docker.pkg.dev).*", "\\1", tolower(image))
+    dev_location <- sub("^https://", "", dev_location)
+    pre_steps <- c(pre_steps,
+                   cr_buildstep_gcloud(
+                     "gcloud",
+                     c("gcloud", "auth", "configure-docker",
+                       dev_location)
+                   )
+    )
+  }
+  pre_steps
+}
