@@ -167,7 +167,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Run R code on a schedule</h1>
             
-            <h4 class="date">2021-09-20</h4>
+            <h4 class="date">2021-10-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-scheduled-r-builds.Rmd"><code>vignettes/usecase-scheduled-r-builds.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-scheduled-r-builds.Rmd</code></div>
@@ -250,6 +250,7 @@
 <p>An RStudio gadget is also available to help you deploy:</p>
 <p><img src="gadget_r.png"></p>
 <p>If you want help creating the Docker image, try <a href="https://o2r.info/containerit/"><code>containerit</code></a> to generate your Dockerfile, then use <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> to build it.</p>
+<p>NOTE: You must name the docker file “Dockerfile” when you use the <code>containerit::write()</code> function</p>
 </div>
 <div id="execute-r-scripts-directly-from-cloud-storage" class="section level2">
 <h2 class="hasAnchor">
