@@ -15,9 +15,12 @@ extract_repo <- function(x){
   }
 }
 
-make_image_name <- function(name, projectId){
-  prefix <- grepl("^(eu|asia|us|)([.]|)gcr.io", name) ||
+has_registry_prefix = function(name) {
+  grepl("^(eu|asia|us|)([.]|)gcr.io", name) ||
     grepl("^.*-docker.pkg.dev", name)
+}
+make_image_name <- function(name, projectId){
+  prefix <- has_registry_prefix(name)
   if(prefix){
     the_image <- name
   } else {

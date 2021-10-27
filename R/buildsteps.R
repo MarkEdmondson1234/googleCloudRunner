@@ -103,7 +103,7 @@ cr_buildstep <- function(name,
 
   if(dir %in% c("",NA)) dir <- NULL
 
-  if(grepl("^gcr.io", name) || grepl("^.*-docker.pkg.dev", name)){
+  if (has_registry_prefix(name)) {
     prefix <- ""
   }
 
