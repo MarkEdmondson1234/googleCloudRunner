@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Write out a Build object to cloudbuild.yaml — cr_build_write • googleCloudRunner</title>
+<title>Cloud Run Regions — cr_regions • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Write out a Build object to cloudbuild.yaml — cr_build_write" />
-<meta property="og:description" content="Write out a Build object to cloudbuild.yaml" />
+<meta property="og:title" content="Cloud Run Regions — cr_regions" />
+<meta property="og:description" content="Cloud Run Regions" />
 
 
 
@@ -210,71 +210,22 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Write out a Build object to cloudbuild.yaml</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/yaml.R'><code>R/yaml.R</code></a></small>
-    <div class="hidden name"><code>cr_build_write.Rd</code></div>
+    <h1>Cloud Run Regions</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/cr_regions.R'><code>R/cr_regions.R</code></a></small>
+    <div class="hidden name"><code>cr_regions.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Write out a Build object to cloudbuild.yaml</p>
+    <p>Cloud Run Regions</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cr_build_write</span><span class='op'>(</span><span class='va'>x</span>, file <span class='op'>=</span> <span class='st'>"cloudbuild.yaml"</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='va'>cr_regions</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>A <a href='Build.html'>Build</a> object perhaps created with <a href='cr_build_make.html'>cr_build_make</a> or <a href='cr_build_yaml.html'>cr_build_yaml</a></p></td>
-    </tr>
-    <tr>
-      <th>file</th>
-      <td><p>Where to write the yaml file</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <div class='dont-index'><p>Other Cloud Build functions: 
-<code><a href='Build.html'>Build</a>()</code>,
-<code><a href='RepoSource.html'>RepoSource</a>()</code>,
-<code><a href='Source.html'>Source</a>()</code>,
-<code><a href='StorageSource.html'>StorageSource</a>()</code>,
-<code><a href='cr_build_artifacts.html'>cr_build_artifacts</a>()</code>,
-<code><a href='cr_build_list.html'>cr_build_list</a>()</code>,
-<code><a href='cr_build_logs.html'>cr_build_logs</a>()</code>,
-<code><a href='cr_build_make.html'>cr_build_make</a>()</code>,
-<code><a href='cr_build_status.html'>cr_build_status</a>()</code>,
-<code><a href='cr_build_upload_gcs.html'>cr_build_upload_gcs</a>()</code>,
-<code><a href='cr_build_wait.html'>cr_build_wait</a>()</code>,
-<code><a href='cr_build_yaml_artifact.html'>cr_build_yaml_artifact</a>()</code>,
-<code><a href='cr_build_yaml_secrets.html'>cr_build_yaml_secrets</a>()</code>,
-<code><a href='cr_build_yaml.html'>cr_build_yaml</a>()</code>,
-<code><a href='cr_build.html'>cr_build</a>()</code></p></div>
+    <p>A character vector of valid Cloud Run region names</p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-11-06 08:58:53 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='co'># write from creating a Yaml object</span>
-<span class='va'>image</span> <span class='op'>=</span> <span class='st'>"gcr.io/my-project/my-image$BUILD_ID"</span>
-<span class='va'>run_yaml</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span><span class='op'>(</span>steps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
-    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span><span class='op'>(</span><span class='st'>"docker"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"build"</span>,<span class='st'>"-t"</span>,<span class='va'>image</span>,<span class='st'>"."</span><span class='op'>)</span><span class='op'>)</span>,
-    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span><span class='op'>(</span><span class='st'>"docker"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"push"</span>,<span class='va'>image</span><span class='op'>)</span><span class='op'>)</span>,
-    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span><span class='op'>(</span><span class='st'>"gcloud"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"beta"</span>,<span class='st'>"run"</span>,<span class='st'>"deploy"</span>, <span class='st'>"test1"</span>, <span class='st'>"--image"</span>, <span class='va'>image</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
-  images <span class='op'>=</span> <span class='va'>image</span><span class='op'>)</span>
-
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='fu'>cr_build_write</span><span class='op'>(</span><span class='va'>run_yaml</span><span class='op'>)</span>
-<span class='op'>}</span>
-
-<span class='co'># write from a Build object</span>
-<span class='va'>build</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_make.html'>cr_build_make</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"cloudbuild/cloudbuild.yaml"</span>,
-                                   package <span class='op'>=</span> <span class='st'>"googleCloudRunner"</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='fu'>cr_build_write</span><span class='op'>(</span><span class='va'>build</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
