@@ -10,6 +10,7 @@ cr_buildstep_r(
   r_source = c("local", "runtime"),
   prefix = "rocker/",
   escape_dollar = TRUE,
+  rscript_args = NULL,
   ...
 )
 }
@@ -24,6 +25,8 @@ cr_buildstep_r(
 
 \item{escape_dollar}{Default TRUE.  This will turn \code{$} into \code{$$} within the script to avoid them being recognised as Cloud Build variables.  Turn this off if you want that behaviour (e.g. \code{my_project="$PROJECT_ID"})}
 
+\item{rscript_args}{Optional arguments for the R script run by \code{Rscript}.}
+
 \item{...}{Other arguments passed to \link{cr_buildstep}}
 }
 \description{
@@ -35,36 +38,6 @@ If \code{r_source="runtime"} then \code{r} should be the location of that file w
 If \code{r_source="local"} then it will copy over from a character string or local file into the build step directly.
 
 If the R code location starts with \code{gs://} then an extra buildstep will be added that will download the R script from that location then run it as per \code{r_source="runtime"}.  This will consequently override your setting of \code{r_source}
-}
-\examples{
-cr_project_set("my-project")
-cr_bucket_set("my-bucket")
-
-# create an R buildstep inline
-cr_buildstep_r(c("paste('1+1=', 1+1)", "sessionInfo()"))
-
-\dontrun{
-
-# create an R buildstep from a local file
-cr_buildstep_r("my-r-file.R")
-
-# create an R buildstep from a file within the source of the Build
-cr_buildstep_r("inst/schedule/schedule.R", r_source = "runtime")
-
-}
-
-# use a different Rocker image e.g. rocker/verse
-cr_buildstep_r(c("library(dplyr)",
-                 "mtcars \%>\% select(mpg)",
-                 "sessionInfo()"),
-               name = "verse")
-
-# use your own R image with custom R
-my_r <- c("devtools::install()", "pkgdown::build_site()")
-br <-  cr_buildstep_r(my_r, name= "gcr.io/gcer-public/packagetools:latest")
-
-
-
 }
 \seealso{
 Other Cloud Buildsteps: 

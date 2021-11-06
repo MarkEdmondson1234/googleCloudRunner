@@ -43,6 +43,7 @@ cr_deploy_r(
     \item{\code{name}}{The docker image that will run the R code, usually from rocker-project.org}
     \item{\code{r_source}}{Whether the R code will be from a runtime file within the source or at build time copying over from a local R file in your session}
     \item{\code{escape_dollar}}{Default TRUE.  This will turn \code{$} into \code{$$} within the script to avoid them being recognised as Cloud Build variables.  Turn this off if you want that behaviour (e.g. \code{my_project="$PROJECT_ID"})}
+    \item{\code{rscript_args}}{Optional arguments for the R script run by \code{Rscript}.}
     \item{\code{prefix}}{prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io}
   }}
 

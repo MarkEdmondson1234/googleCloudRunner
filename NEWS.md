@@ -14,7 +14,8 @@
 * allow `escape_dollar` in `cr_buildstep_r()` and `cr_buildstep_bash()` if you want to use Cloud Build substitutions in the script (#104)
 * Allow direct support for Codecov (#116)
 * Parse `gar_Build` objects to lists in buildtrigger responses so they can be more easily reused
-
+* Fix bug with Cloud Run deployments not returning image names (#141 - thanks @engti)
+* Added rscript_args to `cr_buildstep_r()` - (#128 - thanks @simonsays1980)
 
 # googleCloudRunner 0.4.1
 
