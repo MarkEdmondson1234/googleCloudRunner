@@ -14,6 +14,20 @@ cr_setup_test(
 \description{
 This allows you to check if your setup works - run \link{cr_setup} first.
 }
+\examples{
+
+\dontrun{
+# start the menu for interactive use
+cr_setup_test()
+
+# skip menu and run all tests
+cr_setup_test("all")
+
+# run just the plumber deployment test
+cr_setup_test("plumber")
+
+}
+}
 \seealso{
 Other setup functions: 
 \code{\link{cr_setup_auth}()},
