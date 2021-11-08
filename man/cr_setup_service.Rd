@@ -14,7 +14,7 @@ cr_setup_service(
 
 cr_setup_role_lookup(
   type = c("local", "cloudrun", "bigquery", "secrets", "cloudbuild", "cloudstorage",
-    "schedule_agent", "run_agent")
+    "schedule_agent", "run_agent", "compute")
 )
 }
 \arguments{

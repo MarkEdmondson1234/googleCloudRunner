@@ -76,7 +76,11 @@ cr_deploy_run <- function(local,
     return(built)
   }
 
-  built_image <- built$results$images$name
+  built_image <- paste0(image_name, ":", built$id)
+
+  if(is.null(built_image)){
+    stop("Could not find image name in built response", call. = FALSE)
+  }
   myMessage("Built Docker image: ", built_image, level = 3)
 
   cr_run(built_image,

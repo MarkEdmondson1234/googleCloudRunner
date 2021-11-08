@@ -167,7 +167,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Setup</h1>
             
-            <h4 class="date">2021-10-27</h4>
+            <h4 class="date">2021-11-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/setup.Rmd"><code>vignettes/setup.Rmd</code></a></small>
       <div class="hidden name"><code>setup.Rmd</code></div>
@@ -184,10 +184,10 @@
 <a href="#manual-setup" class="anchor"></a>Manual setup</h2>
 <p>You can setup the configurations directly using the below R functions:</p>
 <ul>
-<li><code><a href="../reference/cr_region_set.html">cr_region_set()</a></code></li>
-<li><code><a href="../reference/cr_project_set.html">cr_project_set()</a></code></li>
-<li><code><a href="../reference/cr_bucket_set.html">cr_bucket_set()</a></code></li>
-<li><code><a href="../reference/cr_email_get.html">cr_email_set()</a></code></li>
+<li><code>cr_region_set()</code></li>
+<li><code>cr_project_set()</code></li>
+<li><code>cr_bucket_set()</code></li>
+<li><code>cr_email_set()</code></li>
 </ul>
 <p>But it is recommended to use the environment arguments below.</p>
 </div>
@@ -197,7 +197,7 @@
 <p>There is a setup function to help you configure the package. Get started via the commands below:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
-<span class="fu"><a href="../reference/cr_setup.html">cr_setup</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu">cr_setup</span><span class="op">(</span><span class="op">)</span>
 <span class="co">#ℹ ==Welcome to googleCloudRunner setup==</span>
 <span class="co">#This wizard will scan your system for setup options and help you setup any that are missing.</span>
 <span class="co">#Hit 0 or ESC to cancel.</span>
@@ -212,13 +212,13 @@
 <div id="cr_setup_auth-and-cr_setup_service" class="section level3">
 <h3 class="hasAnchor">
 <a href="#cr_setup_auth-and-cr_setup_service" class="anchor"></a>cr_setup_auth() and cr_setup_service()</h3>
-<p>You can configure authentication separately, as its usually the trickiest bit. The <code><a href="../reference/cr_setup_auth.html">cr_setup_auth()</a></code> function attempts to help you walk through the authentication and after running it and restarting R a couple of times you should only need to download a client ID from your project to have it all configured for you.</p>
-<p>If you are customising things then <code><a href="../reference/cr_setup_service.html">cr_setup_service()</a></code> may be useful, which lets you add common roles to the service account emails. The other setup functions call it to set things up for you, but you may want more control, or have special needs for your cloudbuild email for example, which needs roles assigned for certain services you want to build.</p>
+<p>You can configure authentication separately, as its usually the trickiest bit. The <code>cr_setup_auth()</code> function attempts to help you walk through the authentication and after running it and restarting R a couple of times you should only need to download a client ID from your project to have it all configured for you.</p>
+<p>If you are customising things then <code>cr_setup_service()</code> may be useful, which lets you add common roles to the service account emails. The other setup functions call it to set things up for you, but you may want more control, or have special needs for your cloudbuild email for example, which needs roles assigned for certain services you want to build.</p>
 </div>
 <div id="cr_setup_test" class="section level3">
 <h3 class="hasAnchor">
 <a href="#cr_setup_test" class="anchor"></a>cr_setup_test()</h3>
-<p>Once you get all green ticks in <code><a href="../reference/cr_setup.html">cr_setup()</a></code> then you should be able to run the subset of the package unit tests via <code><a href="../reference/cr_setup_test.html">cr_setup_test()</a></code>. Should those all complete then you should be able to run any of the functions in the package!</p>
+<p>Once you get all green ticks in <code>cr_setup()</code> then you should be able to run the subset of the package unit tests via <code>cr_setup_test()</code>. Should those all complete then you should be able to run any of the functions in the package!</p>
 </div>
 </div>
 <div id="r-settings" class="section level2">
@@ -250,10 +250,10 @@ CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com</code></pr
 <p>This <code>.Renviron</code> file can be placed in the root of your project or as per what is described in <code><a href="https://rdrr.io/r/base/Startup.html">?Startup</a></code>.</p>
 <p>You can also set the above in the R scripts via:</p>
 <ul>
-<li><code><a href="../reference/cr_region_set.html">cr_region_set()</a></code></li>
-<li><code><a href="../reference/cr_project_set.html">cr_project_set()</a></code></li>
-<li><code><a href="../reference/cr_bucket_set.html">cr_bucket_set()</a></code></li>
-<li><code><a href="../reference/cr_email_get.html">cr_email_set()</a></code></li>
+<li><code>cr_region_set()</code></li>
+<li><code>cr_project_set()</code></li>
+<li><code>cr_bucket_set()</code></li>
+<li><code>cr_email_set()</code></li>
 </ul>
 <p>Or authenticate via</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">

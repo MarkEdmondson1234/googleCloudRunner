@@ -167,7 +167,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Scheduled Google Analytics API calls - GDPR User Deletions</h1>
             
-            <h4 class="date">2021-10-27</h4>
+            <h4 class="date">2021-11-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-scheduled-google-analytics.Rmd"><code>vignettes/usecase-scheduled-google-analytics.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-scheduled-google-analytics.Rmd</code></div>
@@ -305,44 +305,44 @@
 <div id="the-build" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-build" class="anchor"></a>The Build</h2>
-<p>We now create the build around the R script that will download the necessary files and upload the results. We save the above script locally to <code>delete.R</code> - then when we call <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r("delete.R")</a></code> it will pull that script in and create a build step with the R code embedded within it:</p>
+<p>We now create the build around the R script that will download the necessary files and upload the results. We save the above script locally to <code>delete.R</code> - then when we call <code>cr_buildstep_r("delete.R")</code> it will pull that script in and create a build step with the R code embedded within it:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
 <span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
-  <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"user-deletion-key"</span>,
+  <span class="fu">cr_buildstep_secret</span><span class="op">(</span><span class="st">"user-deletion-key"</span>,
                       <span class="st">"auth.json"</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_gcloud.html">cr_buildstep_gcloud</a></span><span class="op">(</span><span class="st">"gsutil"</span>,
+  <span class="fu">cr_buildstep_gcloud</span><span class="op">(</span><span class="st">"gsutil"</span>,
                       args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
                                <span class="st">"gs://your-bucket/delete-all.csv"</span>,
                                <span class="st">"delete-all.csv"</span><span class="op">)</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_gcloud.html">cr_buildstep_gcloud</a></span><span class="op">(</span><span class="st">"gsutil"</span>,
+  <span class="fu">cr_buildstep_gcloud</span><span class="op">(</span><span class="st">"gsutil"</span>,
                       args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
                                <span class="st">"gs://your-bucket/deletes.csv"</span>,
                                <span class="st">"deletes.csv"</span><span class="op">)</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span>
+  <span class="fu">cr_buildstep_r</span><span class="op">(</span>
     <span class="st">"delete.R"</span>,
     name <span class="op">=</span> <span class="st">"gcr.io/gcer-public/googleanalyticsr:master"</span>
   <span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_gcloud.html">cr_buildstep_gcloud</a></span><span class="op">(</span><span class="st">"gsutil"</span>,
+  <span class="fu">cr_buildstep_gcloud</span><span class="op">(</span><span class="st">"gsutil"</span>,
                       args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
                                <span class="st">"deletes.csv"</span>,
                                <span class="st">"gs://your-bucket/deletes.csv"</span><span class="op">)</span><span class="op">)</span>
 <span class="op">)</span>
 
-<span class="va">yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span><span class="va">bs</span><span class="op">)</span>
-<span class="va">build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">yaml</span>, timeout <span class="op">=</span> <span class="fl">1200</span><span class="op">)</span>
+<span class="va">yaml</span> <span class="op">&lt;-</span> <span class="fu">cr_build_yaml</span><span class="op">(</span><span class="va">bs</span><span class="op">)</span>
+<span class="va">build</span> <span class="op">&lt;-</span> <span class="fu">cr_build_make</span><span class="op">(</span><span class="va">yaml</span>, timeout <span class="op">=</span> <span class="fl">1200</span><span class="op">)</span>
 
 <span class="co"># can test a build first via:</span>
 <span class="co">#built &lt;- cr_build(build)</span>
 
-<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">build</span><span class="op">)</span>
+<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu">cr_build_schedule_http</span><span class="op">(</span><span class="va">build</span><span class="op">)</span>
 
-<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"delete-cids"</span>, 
+<span class="fu">cr_schedule</span><span class="op">(</span><span class="st">"delete-cids"</span>, 
             schedule <span class="op">=</span> <span class="st">"5 1 * * *"</span>, 
             httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span></code></pre></div>
-<p>The build assumes you have uploaded the authentication service key to Secret Manager for use within <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> and then <code><a href="https://code.markedmondson.me/googleAnalyticsR//reference/ga_auth.html">ga_auth()</a></code>, and the required files are uploaded to a Cloud Storage bucket for use within <code><a href="../reference/cr_buildstep_gcloud.html">cr_buildstep_gcloud()</a></code>.</p>
-<p>It turns out 500 API deletions is just over the default of 10mins build run time, so the time out is increased to 20mins via <code><a href="../reference/cr_build_make.html">cr_build_make(yaml, timeout = 1200)</a></code></p>
+<p>The build assumes you have uploaded the authentication service key to Secret Manager for use within <code>cr_buildstep_secret()</code> and then <code><a href="https://code.markedmondson.me/googleAnalyticsR//reference/ga_auth.html">ga_auth()</a></code>, and the required files are uploaded to a Cloud Storage bucket for use within <code>cr_buildstep_gcloud()</code>.</p>
+<p>It turns out 500 API deletions is just over the default of 10mins build run time, so the time out is increased to 20mins via <code>cr_build_make(yaml, timeout = 1200)</code></p>
 <p>The <code>googleAnalyticsR</code> API calls make use of the public Docker file that is built upon each commit to GitHub of the package, available at <code>gcr.io/gcer-public/googleAnalyticsR:master</code></p>
 </div>
   </div>

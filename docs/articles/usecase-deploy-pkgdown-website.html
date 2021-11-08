@@ -167,7 +167,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Deploy a pkgdown website for your R package</h1>
             
-            <h4 class="date">2021-10-27</h4>
+            <h4 class="date">2021-11-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-deploy-pkgdown-website.Rmd"><code>vignettes/usecase-deploy-pkgdown-website.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-deploy-pkgdown-website.Rmd</code></div>
@@ -186,10 +186,10 @@
 <li>Create a git ssh key to make commits to your repo. <a href="https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent">GitHub has a guide here</a>
 </li>
 <li>Upload the ssh key secret to <a href="https://cloud.google.com/secret-manager">Google Cloud Secret Manager</a> - you can use this secret for all future builds.</li>
-<li>Use <code><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown()</a></code> to create a cloudbuild.yml file in your R package’s directory, giving it your secret name from step 2. <code>create_trigger</code> can be <code>file</code> if you want the cloudbuild.yaml to be within your directory, or <code>inline</code> if the build will only be defined in the trigger.</li>
+<li>Use <code>cr_deploy_pkgdown()</code> to create a cloudbuild.yml file in your R package’s directory, giving it your secret name from step 2. <code>create_trigger</code> can be <code>file</code> if you want the cloudbuild.yaml to be within your directory, or <code>inline</code> if the build will only be defined in the trigger.</li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span>,
+<code class="sourceCode R"><span class="fu">cr_deploy_pkgdown</span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span>,
                   secret <span class="op">=</span> <span class="st">"github-key"</span>,
                   create_trigger <span class="op">=</span> <span class="st">"inline"</span><span class="op">)</span></code></pre></div>
 <ol start="5" style="list-style-type: decimal">
@@ -198,7 +198,7 @@
 <p>The function will then create a build customised for creating and rendering pkgdown websites, and committing the rendered version to your GitHub /docs folder.</p>
 <p>The below is an example for <code>googleCloudRunner</code>’s website:</p>
 <p><img src="pkgdown-build-trigger.png"></p>
-<p>You can customise the deployment further by using <code><a href="../reference/cr_buildstep_pkgdown.html">cr_buildstep_pkgdown()</a></code> in your own custom build files. For instance, you could download other auth keys using <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> again, so that your website has working authenticated examples.</p>
+<p>You can customise the deployment further by using <code>cr_buildstep_pkgdown()</code> in your own custom build files. For instance, you could download other auth keys using <code>cr_buildstep_secret()</code> again, so that your website has working authenticated examples.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

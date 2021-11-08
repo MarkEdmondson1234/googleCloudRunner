@@ -68,7 +68,7 @@ step1 <- cr_buildstep_r("deploy/my-r-script.R", r_source="runtime",
 ## run the script on Cloud Build
 cr_build(
   cr_build_yaml(
-    steps=c(step1)
+    steps=step1
   ),
   source = storage_source,
   options = list(machineType = "E2_HIGHCPU_32")

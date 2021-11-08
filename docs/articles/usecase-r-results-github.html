@@ -167,7 +167,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Run an R script, save results to GitHub</h1>
             
-            <h4 class="date">2021-10-27</h4>
+            <h4 class="date">2021-11-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-r-results-github.Rmd"><code>vignettes/usecase-r-results-github.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-r-results-github.Rmd</code></div>
@@ -183,7 +183,7 @@
 <li>Commit that object to GitHub</li>
 <li>Run it on a schedule</li>
 </ul>
-<p>It assumes you have set-up googleCloudRunner via <code><a href="../reference/cr_setup.html">cr_setup()</a></code> for Cloud Builds and Cloud Scheduler, and have saved your git credentials previously to Secret Manager called “github-ssh”.</p>
+<p>It assumes you have set-up googleCloudRunner via <code>cr_setup()</code> for Cloud Builds and Cloud Scheduler, and have saved your git credentials previously to Secret Manager called “github-ssh”.</p>
 <div id="create-the-cloudbuild-yaml" class="section level3">
 <h3 class="hasAnchor">
 <a href="#create-the-cloudbuild-yaml" class="anchor"></a>Create the cloudbuild.yaml</h3>
@@ -196,26 +196,26 @@
 
 <span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
   <span class="co"># assumes you have git credentials saved to Secret Manager</span>
-  <span class="fu"><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_gitsetup</a></span><span class="op">(</span><span class="st">"github-ssh"</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_git</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"clone"</span>,
+  <span class="fu">cr_buildstep_gitsetup</span><span class="op">(</span><span class="st">"github-ssh"</span><span class="op">)</span>,
+  <span class="fu">cr_buildstep_git</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"clone"</span>,
                      <span class="st">"git@github.com:$_GITHUB_REPO"</span>,
                      <span class="st">"payload"</span><span class="op">)</span><span class="op">)</span>,
   <span class="co"># run the R code above - could also be a file in the github repo</span>
-  <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="va">r_code</span>, id <span class="op">=</span> <span class="st">"run r code"</span>, dir <span class="op">=</span> <span class="st">"payload"</span><span class="op">)</span>,
+  <span class="fu">cr_buildstep_r</span><span class="op">(</span><span class="va">r_code</span>, id <span class="op">=</span> <span class="st">"run r code"</span>, dir <span class="op">=</span> <span class="st">"payload"</span><span class="op">)</span>,
   <span class="co"># could put the git commands in one cr_buildstep_bash step for brevity</span>
-  <span class="fu"><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_git</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"add"</span>,<span class="st">"--all"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="st">"payload"</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_git</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"commit"</span>, <span class="st">"-a"</span>, <span class="st">"-m"</span>, 
+  <span class="fu">cr_buildstep_git</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"add"</span>,<span class="st">"--all"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="st">"payload"</span><span class="op">)</span>,
+  <span class="fu">cr_buildstep_git</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"commit"</span>, <span class="st">"-a"</span>, <span class="st">"-m"</span>, 
                      <span class="st">"Ran R script to add data $BUILD_ID"</span><span class="op">)</span>,
                    dir <span class="op">=</span> <span class="st">"payload"</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_git</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"push"</span>, <span class="st">"git@github.com:$_GITHUB_REPO"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="st">"payload"</span><span class="op">)</span>
+  <span class="fu">cr_buildstep_git</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"push"</span>, <span class="st">"git@github.com:$_GITHUB_REPO"</span><span class="op">)</span>, dir <span class="op">=</span> <span class="st">"payload"</span><span class="op">)</span>
 <span class="op">)</span>
 
 <span class="co"># using a substitution var for the GitHub repo to make it more portable</span>
-<span class="va">build_yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
+<span class="va">build_yaml</span> <span class="op">&lt;-</span> <span class="fu">cr_build_yaml</span><span class="op">(</span>
   steps <span class="op">=</span> <span class="va">bs</span>,
   substitutions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>`_GITHUB_REPO`<span class="op">=</span><span class="st">"MarkEdmondson1234/r-code-commit-github"</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
-<p>Debug and test if the script works first by sending to <code><a href="../reference/cr_build.html">cr_build()</a></code> - this pops up the build log in your browser.</p>
+<p>Debug and test if the script works first by sending to <code>cr_build()</code> - this pops up the build log in your browser.</p>
 <p><img src="r-2-git-build.png"></p>
 <p>For example, when doing this I found I had to modify my code to create the data folder in R and clone to “payload” directory.</p>
 <p>See some <a href="https://github.com/MarkEdmondson1234/r-code-commit-github/commits/main">commits to my test repo here</a>.</p>
@@ -227,13 +227,13 @@
 <p>Now the build needs a schedule. Taking a working YAML configuration, we use that to create the API call for Cloud Scheduler that will run the build periodically:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># your running successful build</span>
-<span class="va">build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">build_yaml</span><span class="op">)</span>
+<span class="va">build</span> <span class="op">&lt;-</span> <span class="fu">cr_build_make</span><span class="op">(</span><span class="va">build_yaml</span><span class="op">)</span>
 
 <span class="co"># create build API call</span>
-<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">build</span><span class="op">)</span>
+<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu">cr_build_schedule_http</span><span class="op">(</span><span class="va">build</span><span class="op">)</span>
 
 <span class="co"># schedule the build</span>
-<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"r-2-git-demo"</span>, <span class="st">"5 15 * * 0"</span>, httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span>
+<span class="fu">cr_schedule</span><span class="op">(</span><span class="st">"r-2-git-demo"</span>, <span class="st">"5 15 * * 0"</span>, httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span>
 <span class="co">#==CloudScheduleJob==</span>
 <span class="co">#name:  projects/xxxx/locations/europe-west1/jobs/r-2-git-demo </span>
 <span class="co">#state:  ENABLED </span>

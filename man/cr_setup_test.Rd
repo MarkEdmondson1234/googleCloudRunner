@@ -4,10 +4,29 @@
 \alias{cr_setup_test}
 \title{Run tests over your setup}
 \usage{
-cr_setup_test()
+cr_setup_test(
+  option = c("menu", "all", "docker", "plumber", "r_script", "r_schedule")
+)
+}
+\arguments{
+\item{option}{Default will use an interactive menu, select other option to run that test without a menu}
 }
 \description{
 This allows you to check if your setup works - run \link{cr_setup} first.
+}
+\examples{
+
+\dontrun{
+# start the menu for interactive use
+cr_setup_test()
+
+# skip menu and run all tests
+cr_setup_test("all")
+
+# run just the plumber deployment test
+cr_setup_test("plumber")
+
+}
 }
 \seealso{
 Other setup functions: 

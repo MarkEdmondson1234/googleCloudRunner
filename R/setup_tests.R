@@ -1,25 +1,55 @@
 #' Run tests over your setup
 #'
 #' This allows you to check if your setup works - run \link{cr_setup} first.
-#'
+#' @param option Default will use an interactive menu, select other option to run that test without a menu
 #' @export
 #' @family setup functions
 #' @import cli
-cr_setup_test <- function(){
+#' @examples
+#'
+#' \dontrun{
+#' # start the menu for interactive use
+#' cr_setup_test()
+#'
+#' # skip menu and run all tests
+#' cr_setup_test("all")
+#'
+#' # run just the plumber deployment test
+#' cr_setup_test("plumber")
+#'
+#' }
+cr_setup_test <- function(option = c("menu",
+                                     "all",
+                                     "docker",
+                                     "plumber",
+                                     "r_script",
+                                     "r_schedule")){
+
+  option <- match.arg(option)
 
   test_results <- list()
   cli_alert_info("Perform deployments to test your setup is working. Takes around 5mins.  ESC or 0 to skip.")
 
   gar_setup_auth_check("GCE_AUTH_FILE")
 
-  run_tests <- utils::menu(
-    title = "Select which deployments to test",
-    choices = c("All tests",
-                "Cloud Build - Docker",
-                "Cloud Run - plumber API with Pub/Sub",
-                "Cloud Build - R script",
-                "Cloud Scheduler - R script"
-    ))
+  if(option == "menu"){
+    run_tests <- utils::menu(
+      title = "Select which deployments to test",
+      choices = c("All tests",
+                  "Cloud Build - Docker",
+                  "Cloud Run - plumber API with Pub/Sub",
+                  "Cloud Build - R script",
+                  "Cloud Scheduler - R script"
+      ))
+  } else {
+    run_tests <- switch(option,
+        "all" = 1,
+        "docker" = 2,
+        "plumber" = 3,
+        "r_script" = 4,
+        "r_schedule" = 5)
+  }
+
 
   if (run_tests == 0) {
     cli_alert_info("Skipping deployment tests")

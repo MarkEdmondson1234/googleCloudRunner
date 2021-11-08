@@ -167,7 +167,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Deploy a Shiny app to Google Kubernetes Engine</h1>
             
-            <h4 class="date">2021-10-27</h4>
+            <h4 class="date">2021-11-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-shiny-kubernetes.Rmd"><code>vignettes/usecase-shiny-kubernetes.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-shiny-kubernetes.Rmd</code></div>
@@ -251,10 +251,10 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
 <span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
-  <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span><span class="op">(</span><span class="st">"shiny-your-app"</span>,
+  <span class="fu">cr_buildstep_docker</span><span class="op">(</span><span class="st">"shiny-your-app"</span>,
                       tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"latest"</span>,<span class="st">"$SHORT_SHA"</span><span class="op">)</span>,
                       kaniko_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span><span class="st">"gke-deploy"</span>,
+  <span class="fu">cr_buildstep</span><span class="op">(</span><span class="st">"gke-deploy"</span>,
                args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"run"</span>,
                         <span class="st">"--filename=deployment-k8s.yml"</span>,
                         <span class="st">"--image=gcr.io/$PROJECT_ID/shiny-your-app:$SHORT_SHA"</span>,
@@ -262,14 +262,14 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
                         <span class="st">"--cluster=your-k8s-cluster"</span><span class="op">)</span><span class="op">)</span>
 <span class="op">)</span>
 
-<span class="va">yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="va">bs</span><span class="op">)</span>
-<span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">yaml</span>, <span class="st">"build/cloudbuild.yml"</span><span class="op">)</span></code></pre></div>
+<span class="va">yaml</span> <span class="op">&lt;-</span> <span class="fu">cr_build_yaml</span><span class="op">(</span>steps <span class="op">=</span> <span class="va">bs</span><span class="op">)</span>
+<span class="fu">cr_build_write</span><span class="op">(</span><span class="va">yaml</span>, <span class="st">"build/cloudbuild.yml"</span><span class="op">)</span></code></pre></div>
 <p>In this example we write the cloudbuild.yml to a build folder rather than making an inline build trigger deployment. This is setup in a Build Trigger upon GitHub commit with the code below:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"your-name/your-repo-with-shiny"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu">cr_buildtrigger_repo</span><span class="op">(</span><span class="st">"your-name/your-repo-with-shiny"</span><span class="op">)</span>
 
 <span class="co"># test build by pushing to git after this trigger made</span>
-<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"build/cloudbuild.yml"</span>,
+<span class="fu">cr_buildtrigger</span><span class="op">(</span><span class="st">"build/cloudbuild.yml"</span>,
                 name <span class="op">=</span> <span class="st">"deploy-my-shiny-app"</span>,
                 trigger <span class="op">=</span> <span class="va">repo</span><span class="op">)</span></code></pre></div>
 <p>All together the git repo folder looks like:</p>

@@ -167,7 +167,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Run private R micro-services on Cloud Run</h1>
             
-            <h4 class="date">2021-10-27</h4>
+            <h4 class="date">2021-11-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-r-api-microservices.Rmd"><code>vignettes/usecase-r-api-microservices.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-r-api-microservices.Rmd</code></div>
@@ -275,12 +275,12 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
 <span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
-  <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"my-auth"</span>,
+  <span class="fu">cr_buildstep_secret</span><span class="op">(</span><span class="st">"my-auth"</span>,
       decrypted <span class="op">=</span> <span class="st">"inst/docker/parallel_cloudrun/plumber/auth.json"</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span><span class="op">(</span><span class="st">"cloudrun_parallel"</span>,
+  <span class="fu">cr_buildstep_docker</span><span class="op">(</span><span class="st">"cloudrun_parallel"</span>,
                       dir <span class="op">=</span> <span class="st">"inst/docker/parallel_cloudrun/plumber"</span>,
                       kaniko_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span><span class="op">(</span><span class="st">"parallel-cloudrun"</span>,
+  <span class="fu">cr_buildstep_run</span><span class="op">(</span><span class="st">"parallel-cloudrun"</span>,
                    image <span class="op">=</span> <span class="st">"gcr.io/$PROJECT_ID/cloudrun_parallel:$BUILD_ID"</span>,
                    allowUnauthenticated <span class="op">=</span> <span class="cn">FALSE</span>,
                    env_vars <span class="op">=</span> <span class="st">"BQ_AUTH_FILE=auth.json,BQ_DEFAULT_PROJECT_ID=$PROJECT_ID"</span><span class="op">)</span>
@@ -288,16 +288,16 @@
 
 <span class="co"># make a buildtrigger pointing at above steps</span>
 <span class="va">cloudbuild_file</span> <span class="op">&lt;-</span> <span class="st">"inst/docker/parallel_cloudrun/cloudbuild.yml"</span>
-<span class="va">by</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span><span class="va">bs</span><span class="op">)</span>
-<span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">by</span>, file <span class="op">=</span> <span class="va">cloudbuild_file</span><span class="op">)</span></code></pre></div>
+<span class="va">by</span> <span class="op">&lt;-</span> <span class="fu">cr_build_yaml</span><span class="op">(</span><span class="va">bs</span><span class="op">)</span>
+<span class="fu">cr_build_write</span><span class="op">(</span><span class="va">by</span>, file <span class="op">=</span> <span class="va">cloudbuild_file</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="create-a-build-trigger-so-it-builds-upon-each-git-commit" class="section level4">
 <h4 class="hasAnchor">
 <a href="#create-a-build-trigger-so-it-builds-upon-each-git-commit" class="anchor"></a>Create a build trigger so it builds upon each git commit</h4>
 <p>Now the cloudbuild.yml is available, a build trigger is created so that it will deploy upon each commit to this GitHub:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
-<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="va">cloudbuild_file</span>,
+<code class="sourceCode R"><span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu">cr_buildtrigger_repo</span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
+<span class="fu">cr_buildtrigger</span><span class="op">(</span><span class="va">cloudbuild_file</span>,
                 <span class="st">"parallel-cloudrun"</span>,
                 trigger <span class="op">=</span> <span class="va">repo</span>,
                 includedFiles <span class="op">=</span> <span class="st">"inst/docker/parallel_cloudrun/**"</span><span class="op">)</span></code></pre></div>
@@ -308,20 +308,20 @@
 <div id="calling-the-private-plumber-api-with-a-jwt" class="section level3">
 <h3 class="hasAnchor">
 <a href="#calling-the-private-plumber-api-with-a-jwt" class="anchor"></a>Calling the private plumber API with a JWT</h3>
-<p>Now the plumber API is up, but to call it with authentication will need a JSON Web Token, or JWT. These are supported via the <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> functions:</p>
+<p>Now the plumber API is up, but to call it with authentication will need a JSON Web Token, or JWT. These are supported via the <code>cr_jwt_create()</code> functions:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_run_get.html">cr_run_get</a></span><span class="op">(</span><span class="st">"parallel-cloudrun"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">cr</span> <span class="op">&lt;-</span> <span class="fu">cr_run_get</span><span class="op">(</span><span class="st">"parallel-cloudrun"</span><span class="op">)</span>
 
 <span class="co"># Interact with the authenticated Cloud Run service</span>
 <span class="va">the_url</span> <span class="op">&lt;-</span> <span class="va">cr</span><span class="op">$</span><span class="va">status</span><span class="op">$</span><span class="va">url</span>
-<span class="va">jwt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_create</a></span><span class="op">(</span><span class="va">the_url</span><span class="op">)</span>
+<span class="va">jwt</span> <span class="op">&lt;-</span> <span class="fu">cr_jwt_create</span><span class="op">(</span><span class="va">the_url</span><span class="op">)</span>
 
 <span class="co"># needs to be recreated every 60mins</span>
-<span class="va">token</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_token</a></span><span class="op">(</span><span class="va">jwt</span>, <span class="va">the_url</span><span class="op">)</span>
+<span class="va">token</span> <span class="op">&lt;-</span> <span class="fu">cr_jwt_token</span><span class="op">(</span><span class="va">jwt</span>, <span class="va">the_url</span><span class="op">)</span>
 
 <span class="co"># call Cloud Run with token using httr call</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_with_httr</a></span><span class="op">(</span>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">cr_jwt_with_httr</span><span class="op">(</span>
   <span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span><span class="st">"https://parallel-cloudrun-ewjogewawq-ew.a.run.app/"</span><span class="op">)</span>,
   <span class="va">token</span><span class="op">)</span>
 <span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
@@ -339,7 +339,7 @@
     <span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLencode</a></span><span class="op">(</span><span class="va">region</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/utils/URLencode.html">URLencode</a></span><span class="op">(</span><span class="va">industry</span><span class="op">)</span><span class="op">)</span>
 
   <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"Request: "</span>, <span class="va">api</span><span class="op">)</span>
-  <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_with_httr</a></span><span class="op">(</span><span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span><span class="va">api</span><span class="op">)</span>,<span class="va">token</span><span class="op">)</span>
+  <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">cr_jwt_with_httr</span><span class="op">(</span><span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span><span class="va">api</span><span class="op">)</span>,<span class="va">token</span><span class="op">)</span>
 
   <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span><span class="op">(</span><span class="va">res</span>, as <span class="op">=</span> <span class="st">"text"</span>, encoding <span class="op">=</span> <span class="st">"UTF-8"</span><span class="op">)</span>
 
@@ -369,7 +369,7 @@
 <h4 class="hasAnchor">
 <a href="#parallel-calling-of-the-api" class="anchor"></a>Parallel calling of the API</h4>
 <p>For parallel processing, ideally you don’t want R to block waiting for the HTTP response for each URL you are sending. This is easiest achieved through using <a href="https://jeroen.cran.dev/curl"><code>curl</code></a> and its <a href="https://cran.r-project.org/web/packages/curl/vignettes/intro.html#async_requests"><code>curl_fetch_multi()</code></a> function.</p>
-<p>A helper function that takes care of adding multiple URLs to the same curl pool is <code><a href="../reference/cr_jwt_create.html">cr_jwt_with_curl()</a></code> - if you pass it a vector of URL strings to call and the token, it will attempt to call all of them at the same time.</p>
+<p>A helper function that takes care of adding multiple URLs to the same curl pool is <code>cr_jwt_with_curl()</code> - if you pass it a vector of URL strings to call and the token, it will attempt to call all of them at the same time.</p>
 <p>An example calling each possible combination of the industries/regions above is shown below, which utilises <code><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid()</a></code> to create the URL variations.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## curl multi asynch</span>
@@ -388,7 +388,7 @@
 <span class="va">all_urls</span> <span class="op">&lt;-</span> <span class="fu">make_urls</span><span class="op">(</span>regions <span class="op">=</span> <span class="va">regions</span>, industry <span class="op">=</span> <span class="va">industry</span><span class="op">)</span>
 
 <span class="co"># calling them</span>
-<span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_async</a></span><span class="op">(</span><span class="va">all_urls</span>, token <span class="op">=</span> <span class="va">token</span><span class="op">)</span></code></pre></div>
+<span class="fu">cr_jwt_async</span><span class="op">(</span><span class="va">all_urls</span>, token <span class="op">=</span> <span class="va">token</span><span class="op">)</span></code></pre></div>
 <p>Some example output is shown below - note that some combinations didn’t have data so the API returned a 500 error, but later valid combinations completed and returned the JSON response for the forecast:</p>
 <pre><code>&gt; # calling them
 &gt; cr_jwt_async(all_urls, token = token)

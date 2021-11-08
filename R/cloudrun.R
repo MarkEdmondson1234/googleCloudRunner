@@ -59,6 +59,12 @@ cr_run <- function(image,
   myMessage(paste("#> Launching CloudRun image: ",image),
             level = 3)
 
+  assert_that(
+    is.string(image),
+    is.string(name),
+    is.flag(allowUnauthenticated)
+  )
+
   # use cloud build to deploy
   run_yaml <- cr_build_yaml(
     steps = cr_buildstep_run(name = name,

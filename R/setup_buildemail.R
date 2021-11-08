@@ -53,7 +53,8 @@ cr_setup_role_lookup <- function(type = c(
   "cloudbuild",
   "cloudstorage",
   "schedule_agent",
-  "run_agent"
+  "run_agent",
+  "compute"
 )){
 
   type <- match.arg(type)
@@ -75,7 +76,8 @@ cr_setup_role_lookup <- function(type = c(
                         "roles/iam.serviceAccountAdmin"),
          cloudstorage = c("roles/storage.admin","roles/viewer"),
          schedule_agent = "roles/cloudscheduler.serviceAgent",
-         run_agent = "roles/serverless.serviceAgent"
+         run_agent = "roles/serverless.serviceAgent",
+         compute = "roles/compute.admin"
          )
 
 

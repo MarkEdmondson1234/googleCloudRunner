@@ -167,7 +167,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Creating a Slackbot for Google Analytics reports</h1>
             
-            <h4 class="date">2021-10-27</h4>
+            <h4 class="date">2021-11-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-slackbot-google-analytics.Rmd"><code>vignettes/usecase-slackbot-google-analytics.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-slackbot-google-analytics.Rmd</code></div>
@@ -282,11 +282,11 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <div id="deploying-the-plumber-api-for-cloud-run" class="section level2">
 <h2 class="hasAnchor">
 <a href="#deploying-the-plumber-api-for-cloud-run" class="anchor"></a>Deploying the plumber API for Cloud Run</h2>
-<p>The app is now deployed to Cloud Run via <code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code></p>
+<p>The app is now deployed to Cloud Run via <code>cr_deploy_plumber()</code></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
-<span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span><span class="op">(</span><span class="st">"slackbot/"</span><span class="op">)</span>
+<span class="fu">cr_deploy_plumber</span><span class="op">(</span><span class="st">"slackbot/"</span><span class="op">)</span>
 <span class="co">#ℹ 2021-03-19 10:09:23 &gt; Using existing Dockerfile found in folder</span>
 <span class="co">#ℹ 2021-03-19 10:09:23 &gt; Uploading inst/slackbot/ folder for Cloud Run</span>
 <span class="co">#ℹ 2021-03-19 10:09:23 &gt; Dockerfile found in  inst/slackbot/</span>
@@ -323,25 +323,25 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <a href="#setting-up-a-build-trigger-to-redeploy-the-r-script-on-each-git-commit" class="anchor"></a>Setting up a build trigger to redeploy the R script on each git commit</h2>
 <p>To make working and updating the API easier, a build trigger will build the Dockerfile and deploy the API upon each git commit.</p>
 <p>The project files above are added to a git repository and published on say GitHub, and the GitHub repo is added to Cloud Build as <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html#build-triggers">described in the Build Triggers docs</a> - in my case its the googleCloudRunner’s own repo and I put everything in the <code>inst/slackbot</code> folder so that alters the directory in the buildsteps below.</p>
-<p>Once the files are on GitHub a build trigger is created which will mimic what <code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code> did earlier - it will build the Dockerfile and re-deploy the Cloud Run app. To have more control, we now use <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code> templates to make the build ourselves.</p>
-<p>If you tried to run the GA endpoint in the logs you can see that the default Client Id for Google Analytics won’t allow non-interactive use - we need to use our own clientId and auth file. These sensitive files are uploaded to <a href="https://console.cloud.google.com/security/secret-manager">Secret Manager</a> so they can be used more securely within builds via <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code></p>
+<p>Once the files are on GitHub a build trigger is created which will mimic what <code>cr_deploy_plumber()</code> did earlier - it will build the Dockerfile and re-deploy the Cloud Run app. To have more control, we now use <code>cr_buildstep()</code> templates to make the build ourselves.</p>
+<p>If you tried to run the GA endpoint in the logs you can see that the default Client Id for Google Analytics won’t allow non-interactive use - we need to use our own clientId and auth file. These sensitive files are uploaded to <a href="https://console.cloud.google.com/security/secret-manager">Secret Manager</a> so they can be used more securely within builds via <code>cr_buildstep_secret()</code></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
 <span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
   <span class="co"># get secret files</span>
-  <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"mark-edmondson-gde-clientid"</span>, <span class="st">"client.json"</span>,
+  <span class="fu">cr_buildstep_secret</span><span class="op">(</span><span class="st">"mark-edmondson-gde-clientid"</span>, <span class="st">"client.json"</span>,
                       dir <span class="op">=</span> <span class="st">"inst/slackbot/"</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"googleanalyticsr-tests"</span>,<span class="st">"auth.json"</span>,
+  <span class="fu">cr_buildstep_secret</span><span class="op">(</span><span class="st">"googleanalyticsr-tests"</span>,<span class="st">"auth.json"</span>,
                       dir <span class="op">=</span> <span class="st">"inst/slackbot/"</span><span class="op">)</span>,
   <span class="co"># build with the same name as deployed</span>
-  <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span><span class="op">(</span>
+  <span class="fu">cr_buildstep_docker</span><span class="op">(</span>
     image <span class="op">=</span> <span class="st">"slackbot"</span>,
     kaniko_cache <span class="op">=</span> <span class="cn">TRUE</span>,
     dir <span class="op">=</span> <span class="st">"inst/slackbot/"</span>
   <span class="op">)</span>,
   <span class="co">#deploy the app</span>
-  <span class="fu"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span><span class="op">(</span>
+  <span class="fu">cr_buildstep_run</span><span class="op">(</span>
     <span class="st">"slackbot"</span>,
     image <span class="op">=</span> <span class="st">"gcr.io/$PROJECT_ID/slackbot:$BUILD_ID"</span>,
     memory <span class="op">=</span> <span class="st">"1Gi"</span>,
@@ -351,13 +351,13 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <span class="op">)</span>
 
 <span class="co"># increase timeout to 20 mins</span>
-<span class="va">build_yml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span><span class="va">bs</span>, timeout <span class="op">=</span> <span class="fl">2400</span><span class="op">)</span>
-<span class="va">build_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">build_yml</span><span class="op">)</span>
+<span class="va">build_yml</span> <span class="op">&lt;-</span> <span class="fu">cr_build_yaml</span><span class="op">(</span><span class="va">bs</span>, timeout <span class="op">=</span> <span class="fl">2400</span><span class="op">)</span>
+<span class="va">build_obj</span> <span class="op">&lt;-</span> <span class="fu">cr_build_make</span><span class="op">(</span><span class="va">build_yml</span><span class="op">)</span>
 
 <span class="co"># setup trigger of build</span>
-<span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
+<span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu">cr_buildtrigger_repo</span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
 
-<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span>
+<span class="fu">cr_buildtrigger</span><span class="op">(</span>
   <span class="va">build_obj</span>, name <span class="op">=</span> <span class="st">"slackbot-trigger"</span>, trigger <span class="op">=</span> <span class="va">repo</span>,
   description <span class="op">=</span> <span class="st">"Deploying the Slackbot example"</span>,
   includedFiles <span class="op">=</span> <span class="st">"inst/slackbot/**"</span>
@@ -410,18 +410,18 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 
 <span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
   <span class="co"># get secret files</span>
-  <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"mark-edmondson-gde-clientid"</span>, <span class="st">"client.json"</span>,
+  <span class="fu">cr_buildstep_secret</span><span class="op">(</span><span class="st">"mark-edmondson-gde-clientid"</span>, <span class="st">"client.json"</span>,
                       dir <span class="op">=</span> <span class="st">"inst/slackbot/"</span><span class="op">)</span>,
-  <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"googleanalyticsr-tests"</span>,<span class="st">"auth.json"</span>,
+  <span class="fu">cr_buildstep_secret</span><span class="op">(</span><span class="st">"googleanalyticsr-tests"</span>,<span class="st">"auth.json"</span>,
                       dir <span class="op">=</span> <span class="st">"inst/slackbot/"</span><span class="op">)</span>,
   <span class="co"># build with the same name as deployed</span>
-  <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span><span class="op">(</span>
+  <span class="fu">cr_buildstep_docker</span><span class="op">(</span>
     image <span class="op">=</span> <span class="st">"slackbot"</span>,
     kaniko_cache <span class="op">=</span> <span class="cn">TRUE</span>,
     dir <span class="op">=</span> <span class="st">"inst/slackbot/"</span>
   <span class="op">)</span>,
   <span class="co">#deploy the app</span>
-  <span class="fu"><a href="../reference/cr_buildstep_run.html">cr_buildstep_run</a></span><span class="op">(</span>
+  <span class="fu">cr_buildstep_run</span><span class="op">(</span>
     <span class="st">"slackbot"</span>,
     image <span class="op">=</span> <span class="st">"gcr.io/$PROJECT_ID/slackbot:$BUILD_ID"</span>,
     memory <span class="op">=</span> <span class="st">"1Gi"</span>, <span class="co"># make the cloud run app a bit bigger</span>
@@ -432,16 +432,16 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <span class="op">)</span>
 
 <span class="co"># increase timeout to 20 mins</span>
-<span class="va">build_yml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span><span class="va">bs</span>, timeout <span class="op">=</span> <span class="fl">2400</span><span class="op">)</span>
-<span class="va">build_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">build_yml</span><span class="op">)</span>
+<span class="va">build_yml</span> <span class="op">&lt;-</span> <span class="fu">cr_build_yaml</span><span class="op">(</span><span class="va">bs</span>, timeout <span class="op">=</span> <span class="fl">2400</span><span class="op">)</span>
+<span class="va">build_obj</span> <span class="op">&lt;-</span> <span class="fu">cr_build_make</span><span class="op">(</span><span class="va">build_yml</span><span class="op">)</span>
 
 <span class="co"># setup trigger of build</span>
-<span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
+<span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu">cr_buildtrigger_repo</span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
 
 <span class="co"># your own slack URL</span>
 <span class="va">slack_url</span> <span class="op">&lt;-</span> <span class="st">"https://hooks.slack.com/services/XXXX6/B0YYYYYY/3rNZZZZZ"</span>
 
-<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span>
+<span class="fu">cr_buildtrigger</span><span class="op">(</span>
   <span class="va">build_obj</span>, name <span class="op">=</span> <span class="st">"slackbot-trigger"</span>, trigger <span class="op">=</span> <span class="va">repo</span>,
   description <span class="op">=</span> <span class="st">"Deploying the Slackbot example"</span>,
   includedFiles <span class="op">=</span> <span class="st">"inst/slackbot/**"</span>,
@@ -519,13 +519,13 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <span class="va">my_app</span> <span class="op">&lt;-</span> <span class="st">"https://slackbot-xxxxxxx-ew.a.run.app"</span>
 <span class="va">my_endpoint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">my_app</span>,<span class="st">"/trigger-slack?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span>
 
-<span class="va">http_target</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HttpTarget.html">HttpTarget</a></span><span class="op">(</span>
+<span class="va">http_target</span> <span class="op">&lt;-</span> <span class="fu">HttpTarget</span><span class="op">(</span>
   uri <span class="op">=</span> <span class="va">my_endpoint</span>,
   httpMethod <span class="op">=</span> <span class="st">"GET"</span>
 <span class="op">)</span> 
 
 <span class="co"># every Friday at 0830</span>
-<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"slackbot-schedule"</span>, 
+<span class="fu">cr_schedule</span><span class="op">(</span><span class="st">"slackbot-schedule"</span>, 
             schedule <span class="op">=</span> <span class="st">"30 8 * * 5"</span>,
             httpTarget <span class="op">=</span> <span class="va">http_target</span>,
             overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -536,7 +536,7 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <a href="#where-to-go-from-here" class="anchor"></a>Where to go from here</h2>
 <p>Once the app is deployed you can spend most of your time developing the R code rather than worrying about the deployment, which upon each commit will recreate itself.</p>
 <p>You could try adding other endpoints for different GA functions, or making the API/webhook compatible with other services other than Slack.</p>
-<p>You may also want to make the Cloud Run API private, and should if its controlling private of expensive operations, so then look at <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> or <code><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http()</a></code> as your private API options.</p>
+<p>You may also want to make the Cloud Run API private, and should if its controlling private of expensive operations, so then look at <code>cr_jwt_create()</code> or <code>cr_run_schedule_http()</code> as your private API options.</p>
 </div>
   </div>
 

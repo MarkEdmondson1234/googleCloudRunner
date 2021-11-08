@@ -167,7 +167,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Trigger an R function from pub/sub</h1>
             
-            <h4 class="date">2021-10-27</h4>
+            <h4 class="date">2021-11-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-r-event-driven-pubsub.Rmd"><code>vignettes/usecase-r-event-driven-pubsub.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-r-event-driven-pubsub.Rmd</code></div>
@@ -177,7 +177,7 @@
     
     
 <p>This uses <code>cr_deploy_plumber</code> to deploy an R API that can then be triggered from pub/sub events, such as Cloud logging events or when files get updated in a Cloud Storage bucket. This in turn can trigger other Cloud Builds.</p>
-<p>A plumber API that accepts pub/sub messages is facilitated by <code><a href="../reference/cr_plumber_pubsub.html">cr_plumber_pubsub()</a></code></p>
+<p>A plumber API that accepts pub/sub messages is facilitated by <code>cr_plumber_pubsub()</code></p>
 <p><code>api.R</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># example function echos back pubsub message</span>
@@ -190,7 +190,7 @@
 <span class="co">#' @post /pubsub</span>
 <span class="co">#' @param message a pub/sub message</span>
 <span class="kw">function</span><span class="op">(</span><span class="va">message</span><span class="op">=</span><span class="cn">NULL</span><span class="op">)</span><span class="op">{</span>
-  <span class="fu">googleCloudRunner</span><span class="fu">::</span><span class="fu"><a href="../reference/cr_plumber_pubsub.html">cr_plumber_pubsub</a></span><span class="op">(</span><span class="va">message</span>, <span class="va">pub</span><span class="op">)</span>
+  <span class="fu">googleCloudRunner</span><span class="fu">::</span><span class="fu">cr_plumber_pubsub</span><span class="op">(</span><span class="va">message</span>, <span class="va">pub</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p>Deploy the R API using an image that has plumber and googleCloudRunner installed. There is one available at <code>gcr.io/gcer-public/googlecloudrunner</code></p>
 <p><code>Dockerfile</code>:</p>
@@ -202,20 +202,20 @@ ENTRYPOINT ["R", "-e", "pr &lt;- plumber::plumb(commandArgs()[4]); pr$run(host='
 CMD ["api.R"]</code></pre>
 <p>Put both the Dockerfile and the <code>api.R</code> script in the same folder then deploy it to Cloud Run:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span><span class="op">(</span><span class="st">"the_folder"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">cr_deploy_plumber</span><span class="op">(</span><span class="st">"the_folder"</span><span class="op">)</span></code></pre></div>
 <p>Or use the RStudio gadget:</p>
 <p><img src="gadget_plumber.png"></p>
-<p>Once built you will have a pub/sub live that will trigger the function you defined. You can test pubsub messages via <code><a href="../reference/cr_pubsub.html">cr_pubsub()</a></code></p>
+<p>Once built you will have a pub/sub live that will trigger the function you defined. You can test pubsub messages via <code>cr_pubsub()</code></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">test_url</span> <span class="op">&lt;-</span> <span class="st">"http://your-cloudrun-api.com/pubsub"</span>
 
-<span class="fu"><a href="../reference/cr_pubsub.html">cr_pubsub</a></span><span class="op">(</span><span class="va">test_url</span>, <span class="st">"hello"</span><span class="op">)</span>
+<span class="fu">cr_pubsub</span><span class="op">(</span><span class="va">test_url</span>, <span class="st">"hello"</span><span class="op">)</span>
 <span class="co"># [1] "Echo: hello"</span></code></pre></div>
 <p>In this case the function only echos, but you can modify the function to call other libraries, functions, operate on data sent in pubsub such as bucket object names, BigQuery tableIds, etc.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># perhaps the function calls another Cloud Build</span>
 <span class="va">pub</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
-  <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">x</span>, source <span class="op">=</span> <span class="va">my_source</span><span class="op">)</span>
+  <span class="fu">cr_build</span><span class="op">(</span><span class="va">x</span>, source <span class="op">=</span> <span class="va">my_source</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p>If you would like to trigger a pub/sub message when a file arrives on Google Cloud Storage, use <code><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_create_pubsub.html">googleCloudStorageR::gcs_create_pubsub()</a></code></p>
 <div id="run-r-code-when-a-pubsub-message-is-created-from-a-new-file-in-google-cloud-storage" class="section level2">
@@ -258,7 +258,7 @@ CMD ["api.R"]</code></pre>
     <span class="fu">send_email</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"We got this file: "</span>, <span class="va">o</span><span class="op">$</span><span class="va">name</span><span class="op">)</span><span class="op">)</span>
   <span class="op">}</span>
 
-  <span class="fu">googleCloudRunner</span><span class="fu">::</span><span class="fu"><a href="../reference/cr_plumber_pubsub.html">cr_plumber_pubsub</a></span><span class="op">(</span><span class="va">message</span>, <span class="va">pub</span><span class="op">)</span>
+  <span class="fu">googleCloudRunner</span><span class="fu">::</span><span class="fu">cr_plumber_pubsub</span><span class="op">(</span><span class="va">message</span>, <span class="va">pub</span><span class="op">)</span>
 
 <span class="op">}</span></code></pre></div>
 <p>The above script relies on two environment arguments with the Mailgun keys, which can be set in the Cloud Run interface once a deployment is live. The environment arguments persist inbetween versions so you only need to set this up once.</p>
@@ -273,13 +273,13 @@ CMD ["api.R"]</code></pre>
 <a href="#deployment" class="anchor"></a>Deployment</h3>
 <p>This can be deployed via the RStudio Addin, or via the code below:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span><span class="op">(</span><span class="st">"folder/with-api/"</span>, 
+<code class="sourceCode R"><span class="fu">cr_deploy_plumber</span><span class="op">(</span><span class="st">"folder/with-api/"</span>, 
                   image_name <span class="op">=</span> <span class="st">"gcs-pubsub"</span><span class="op">)</span></code></pre></div>
 <p>After the first deployment, go to the web UI and <code>Deploy New Revision</code> - keep everything the same but update the environment arguments. These will persist for future revisions:</p>
 <p><img src="cloudrun-environment-args.png"></p>
 <p>You can test the Pub/Sub API is working from R with the below code:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/cr_pubsub.html">cr_pubsub</a></span><span class="op">(</span><span class="st">"https://your-cloudendpoint.run.app/pubsub"</span>,
+<code class="sourceCode R"><span class="fu">cr_pubsub</span><span class="op">(</span><span class="st">"https://your-cloudendpoint.run.app/pubsub"</span>,
           <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html">toJSON</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"test_file_from_r"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="setup-pubsub" class="section level3">
