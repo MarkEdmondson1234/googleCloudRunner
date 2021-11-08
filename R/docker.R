@@ -455,7 +455,7 @@ add_docker_auth_prestep = function(image, pre_steps) {
   need_location <- grepl("^.*-docker.pkg.dev", tolower(image))
   if (need_location) {
     dev_location <- sub("^(.*-docker.pkg.dev).*", "\\1", tolower(image))
-    dev_location <- sub("^https://", "", dev_location)
+    dev_location <- sub("^http(s|)://", "", dev_location)
     pre_steps <- c(pre_steps,
                    cr_buildstep_gcloud(
                      "gcloud",
