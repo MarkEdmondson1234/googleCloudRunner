@@ -466,18 +466,18 @@ cr_buildstep_bash <- function(bash_script,
 #' # machine with 32 cores
 #'
 #' ## create storage source
-#` storage_source <- cr_build_upload_gcs(
-#`  "my-r-script.R"
-#` )
+#` storage_source <- cr_build_upload_gcs("my-r-script.R")
+
 #` ## create the buildstep with the R script
-#' step1 <- cr_buildstep_r("deploy/my-r-script.R", r_source="runtime",
-#'                rscript_args=c("args_1=<args1>", "args_2=<args_2>"))
+#' step1 <- cr_buildstep_r("deploy/my-r-script.R",
+#'                         r_source="runtime",
+#'                         rscript_args=c("args_1=<args1>", "args_2=<args_2>"))
 #'
 #' }
 #' ## run the script on Cloud Build
 #' cr_build(
 #'   cr_build_yaml(
-#'     steps=c(step1)
+#'     steps=step1
 #'   ),
 #'   source = storage_source
 #'   options = list(machineType = "E2_HIGHCPU_32')
