@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Source Object — Source • googleCloudRunner</title>
+<title>Buildstep to deploy to Google Compute Engine — cr_buildstep_compute_container • googleCloudRunner</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Source Object — Source" />
-<meta property="og:description" content="It is suggested to use cr_build_source instead to build sources" />
+<meta property="og:title" content="Buildstep to deploy to Google Compute Engine — cr_buildstep_compute_container" />
+<meta property="og:description" content="This build step adds some helpers to cr_buildstep_gcloud for deploying to VMs to GCE that will auto create a container within them and atytach it to the disk" />
 
 
 
@@ -210,73 +210,127 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Source Object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/build_sources.R'><code>R/build_sources.R</code></a></small>
-    <div class="hidden name"><code>Source.Rd</code></div>
+    <h1>Buildstep to deploy to Google Compute Engine</h1>
+    <small class="dont-index">Source: <a href='https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/R/buildsteps_gce.R'><code>R/buildsteps_gce.R</code></a></small>
+    <div class="hidden name"><code>cr_buildstep_compute_container.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>It is suggested to use <a href='cr_build_source.html'>cr_build_source</a> instead to build sources</p>
+    <p>This build step adds some helpers to <a href='cr_buildstep_gcloud.html'>cr_buildstep_gcloud</a> for deploying to VMs to GCE that will auto create a container within them and atytach it to the disk</p>
     </div>
 
-    <pre class="usage"><span class='fu'>Source</span><span class='op'>(</span>storageSource <span class='op'>=</span> <span class='cn'>NULL</span>, repoSource <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>cr_buildstep_compute_container</span><span class='op'>(</span>
+  <span class='va'>vm_name</span>,
+  container_image <span class='op'>=</span> <span class='st'>"gcr.io/gcer-public/persistent-rstudio:latest"</span>,
+  disk_name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>vm_name</span>, <span class='st'>"-disk"</span><span class='op'>)</span>,
+  disk_mount_path <span class='op'>=</span> <span class='st'>"/home"</span>,
+  zone <span class='op'>=</span> <span class='st'>"europe-west1-b"</span>,
+  disk_size <span class='op'>=</span> <span class='st'>"10GB"</span>,
+  machine_type <span class='op'>=</span> <span class='st'>"n1-standard-1"</span>,
+  container_env <span class='op'>=</span> <span class='st'>""</span>,
+  scopes <span class='op'>=</span> <span class='st'>"cloud-platform"</span>,
+  network <span class='op'>=</span> <span class='st'>"default"</span>,
+  gcloud_args <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span>
+
+<span class='fu'>cr_buildstep_compute_rstudio</span><span class='op'>(</span>
+  <span class='va'>rstudio_user</span>,
+  <span class='va'>rstudio_pw</span>,
+  vm_name <span class='op'>=</span> <span class='st'>"rstudio"</span>,
+  disk_name <span class='op'>=</span> <span class='st'>"rstudio-disk"</span>,
+  zone <span class='op'>=</span> <span class='st'>"europe-west1-b"</span>,
+  disk_size <span class='op'>=</span> <span class='st'>"10GB"</span>,
+  machine_type <span class='op'>=</span> <span class='st'>"n1-standard-1"</span>,
+  container_image <span class='op'>=</span> <span class='st'>"gcr.io/gcer-public/persistent-rstudio:latest"</span>,
+  network <span class='op'>=</span> <span class='st'>"default"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>storageSource</th>
-      <td><p>If provided via <a href='StorageSource.html'>StorageSource</a>, get the source
-from this location in Google Cloud Storage</p></td>
+      <th>vm_name</th>
+      <td><p>Name of the VM you will create</p></td>
     </tr>
     <tr>
-      <th>repoSource</th>
-      <td><p>If provided via <a href='RepoSource.html'>RepoSource</a>, get the source from
-this location in a Cloud Source</p></td>
+      <th>container_image</th>
+      <td><p>The Docker image that will be launched in the VM</p></td>
+    </tr>
+    <tr>
+      <th>disk_name</th>
+      <td><p>Name of the disk that will be attached to the VM's container image</p></td>
+    </tr>
+    <tr>
+      <th>disk_mount_path</th>
+      <td><p>Where the disk will be attached to the container in the VM</p></td>
+    </tr>
+    <tr>
+      <th>zone</th>
+      <td><p>Which zone the VM will launch within</p></td>
+    </tr>
+    <tr>
+      <th>disk_size</th>
+      <td><p>The size of the disk</p></td>
+    </tr>
+    <tr>
+      <th>machine_type</th>
+      <td><p>The type of VM that will be launched</p></td>
+    </tr>
+    <tr>
+      <th>container_env</th>
+      <td><p>Environment variables set within the VM's container image</p></td>
+    </tr>
+    <tr>
+      <th>scopes</th>
+      <td><p>The GCE scopes that the VM will be launched with permission to use</p></td>
+    </tr>
+    <tr>
+      <th>network</th>
+      <td><p>The network the VM will use.  The container will bridge into the same network</p></td>
+    </tr>
+    <tr>
+      <th>gcloud_args</th>
+      <td><p>Other gcloud arguments you send in e.g. <code><a href='https://rdrr.io/r/base/c.html'>c("--boot-disk-device-name=boot-disk1","--boot-disk-size=10GB")</a></code></p></td>
+    </tr>
+    <tr>
+      <th>rstudio_user</th>
+      <td><p>The usename for the RStudio image the VM will launch</p></td>
+    </tr>
+    <tr>
+      <th>rstudio_pw</th>
+      <td><p>The password for the RStudio image the VM will launch</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>Source object</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Location of the source in a supported storage service.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other Cloud Build functions: 
-<code><a href='Build.html'>Build</a>()</code>,
-<code><a href='RepoSource.html'>RepoSource</a>()</code>,
-<code><a href='StorageSource.html'>StorageSource</a>()</code>,
-<code><a href='cr_build_artifacts.html'>cr_build_artifacts</a>()</code>,
-<code><a href='cr_build_list.html'>cr_build_list</a>()</code>,
-<code><a href='cr_build_logs.html'>cr_build_logs</a>()</code>,
-<code><a href='cr_build_make.html'>cr_build_make</a>()</code>,
-<code><a href='cr_build_status.html'>cr_build_status</a>()</code>,
-<code><a href='cr_build_upload_gcs.html'>cr_build_upload_gcs</a>()</code>,
-<code><a href='cr_build_wait.html'>cr_build_wait</a>()</code>,
-<code><a href='cr_build_write.html'>cr_build_write</a>()</code>,
-<code><a href='cr_build_yaml_artifact.html'>cr_build_yaml_artifact</a>()</code>,
-<code><a href='cr_build_yaml_secrets.html'>cr_build_yaml_secrets</a>()</code>,
-<code><a href='cr_build_yaml.html'>cr_build_yaml</a>()</code>,
-<code><a href='cr_build.html'>cr_build</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-11-08 08:04:32 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-11-08 08:04:32 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='va'>my_gcs_source</span> <span class='op'>&lt;-</span> <span class='fu'>Source</span><span class='op'>(</span>storageSource<span class='op'>=</span><span class='fu'><a href='StorageSource.html'>StorageSource</a></span><span class='op'>(</span><span class='st'>"my_code.tar.gz"</span>,
-                                                    <span class='st'>"gs://my-bucket"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>my_repo_source</span> <span class='op'>&lt;-</span> <span class='fu'>Source</span><span class='op'>(</span>repoSource<span class='op'>=</span><span class='fu'><a href='RepoSource.html'>RepoSource</a></span><span class='op'>(</span><span class='st'>"https://my-repo.com"</span>,
-                                               branchName<span class='op'>=</span><span class='st'>"master"</span><span class='op'>)</span><span class='op'>)</span>
-
+<span class='va'>bs</span> <span class='op'>&lt;-</span> <span class='fu'>cr_buildstep_compute_rstudio</span><span class='op'>(</span><span class='st'>"mark"</span>, <span class='st'>"securepassword1234"</span><span class='op'>)</span>
+<span class='va'>build</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span><span class='op'>(</span><span class='va'>bs</span><span class='op'>)</span>
+<span class='va'>build</span>
+</div><div class='output co'>#&gt; ==cloudRunnerYaml==
+#&gt; steps:
+#&gt; - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
+#&gt;   args:
+#&gt;   - gcloud
+#&gt;   - compute
+#&gt;   - instances
+#&gt;   - create-with-container
+#&gt;   - rstudio
+#&gt;   - --container-env=--container-env=[ROOT=TRUE,USER=mark,PASSWORD=securepassword1234]
+#&gt;   - --container-image=gcr.io/gcer-public/persistent-rstudio:latest
+#&gt;   - --container-mount-disk=name=rstudio-disk,mount-path=/home/mark
+#&gt;   - --create-disk=name=rstudio-disk,size=10GB
+#&gt;   - --machine-type=n1-standard-1
+#&gt;   - --scopes=cloud-platform
+#&gt;   - --zone=europe-west1-b
+#&gt;   - --network=default</div><div class='input'>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 
-<span class='va'>build1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span><span class='op'>(</span><span class='st'>"cloudbuild.yaml"</span>, source <span class='op'>=</span> <span class='va'>my_gcs_source</span><span class='op'>)</span>
-<span class='va'>build2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build.html'>cr_build</a></span><span class='op'>(</span><span class='st'>"cloudbuild.yaml"</span>, source <span class='op'>=</span> <span class='va'>my_repo_source</span><span class='op'>)</span>
+<span class='fu'><a href='cr_build.html'>cr_build</a></span><span class='op'>(</span><span class='va'>build</span><span class='op'>)</span>
 
 <span class='op'>}</span>
-</div></span></pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
