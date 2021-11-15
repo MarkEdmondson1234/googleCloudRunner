@@ -57,17 +57,14 @@ Once you get all green ticks in `cr_setup()` then you should be able to run the 
 * Reuses environment argument `GCE_AUTH_FILE` from [googleComputeEngineR](https://cloudyr.github.io/googleComputeEngineR) which holds location of your service auth JSON
 * Reuses environment argument `GCE_DEFAULT_PROJECT_ID` from googleComputeEngineR
 * Reuses environment argument `GCS_DEFAULT_BUCKET` from [googleCloudStorageR](http://code.markedmondson.me/googleCloudStorageR/)
-* New environment argument `CR_REGION` can be one of 
+* New environment argument `CR_BUILD_EMAIL` that is a Google service email (see [GCP setup](articles/setup-gcp.html))
+* New environment argument `CR_REGION` can be one of the regions listed in `cr_regions`:
 
+```{r}
+googleCloudRunner::cr_regions
 ```
-"us-central1",
-"asia-northeast1",
-"europe-west1",
-"us-east1"
-```
-* New environment argument `CR_BUILD_EMAIL` that is a Google service email (see GCP setup)
 
-e.g. your `.Renviron` should look like:
+e.g. at the end of all set-up your `.Renviron` should look like:
 
 ```
 GCE_AUTH_FILE="/Users/me/auth/auth.json"
@@ -75,6 +72,14 @@ GCE_DEFAULT_PROJECT_ID="my-project"
 GCS_DEFAULT_BUCKET="my-bucket"
 CR_REGION="europe-west1"
 CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com
+```
+
+And when you restart R and load the library you should see something like:
+
+```r
+library(googleCloudRunner)
+✓ Setting scopes to https://www.googleapis.com/auth/cloud-platform
+✓ Successfully auto-authenticated via /Users/me/auth/keys/googlecloudrunner-auth-key.json
 ```
 
 This `.Renviron` file can be placed in the root of your project or as per what is described in `?Startup`.

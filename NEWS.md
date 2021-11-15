@@ -17,6 +17,7 @@
 * Fix bug with Cloud Run deployments not returning image names (#141 - thanks @engti)
 * Added rscript_args to `cr_buildstep_r()` - (#128 - thanks @simonsays1980)
 * All `cr_setup_test()` to be run without the interactive menu (#129 - thanks @muschellij2)
+* Add `cr_regions` data that lists available Cloud Run regions (thanks @muschellij2)
 
 # googleCloudRunner 0.4.1
 

@@ -116,7 +116,7 @@ All the above stages can be customised for your own purposes, using the function
 
 ## Customising Cloud Run deployments
 
-The Cloud Run API is not called directly when deploying - instead a Cloud Build is created for deployment. `cr_run` creates a cloudbuild that make a cloud build including `cr_buildstep_run()`.  
+The Cloud Run API is not called directly when deploying - instead a Cloud Build is created for deployment. `cr_run` creates a cloudbuild that makes a cloud build including `cr_buildstep_run()`.  
 
 You can build the deployment yourself by using `cr_buildstep_run()` within your own `cr_build()`.  This may cover things like downloading encrypted resources necessary for a build, running other code etc.
 
@@ -140,11 +140,20 @@ If you want this in the same Cloud Build, then this is available via the buildst
 
 ## Cloud Run deployment functions
 
-* `cr_deploy_run()` wraps the steps described above to build the Dockerfile, and deploy it to Cloud Run, setting authentication as needed. 
+* `cr_deploy_run()` wraps the steps described above to build the Dockerfile, and deploys it to Cloud Run, setting authentication as needed. 
 
 * `cr_deploy_plumber()` adds checks for plumber API files.  You need to make sure you have an `api.R` file in the deployment folder you provide, that will hold plumber code.
 
 * `cr_deploy_html()` adds steps to deploy a nginx web server ready to serve the HTML files you supply.
+
+### Regions
+
+You can deploy to any GCP region that supports Cloud Run.  A list is maintained and updated from the latest package build that you can see in `googleCloudRunner::cr_regions`
+
+```{r}
+paste0("Supported Cloud Run regions as of date: ", Sys.Date())
+googleCloudRunner::cr_regions
+```
 
 ## Pub/Sub
 
