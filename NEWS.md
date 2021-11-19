@@ -18,6 +18,7 @@
 * Added rscript_args to `cr_buildstep_r()` - (#128 - thanks @simonsays1980)
 * All `cr_setup_test()` to be run without the interactive menu (#129 - thanks @muschellij2)
 * Add `cr_regions` data that lists available Cloud Run regions (thanks @muschellij2)
+* Allow specification of a target GCP project if it differs from the build project in `cr_deploy_docker_trigger()`
 
 # googleCloudRunner 0.4.1
 

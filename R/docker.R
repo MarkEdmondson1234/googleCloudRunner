@@ -11,7 +11,7 @@
 #' @param ... Other arguments passed to `cr_buildstep_docker`
 #' @inheritDotParams cr_buildstep_docker
 #' @inheritParams cr_buildtrigger
-#' @param projectId The project to build under
+#' @param projectId_target The project to publish the Docker image to.  The image will be built under the project configured via \link{cr_project_get}.  You will need to give the build project's service email access to the target GCP project via IAM for it to push successfully.
 #' @inheritParams cr_build_make
 #' @family Deployment functions
 #' @details
@@ -23,23 +23,29 @@
 #'
 #' \dontrun{
 #' repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+#' # create trigger that will publish Docker image to gcr.io/your-project/test upon each GitHub commit
 #' cr_deploy_docker_trigger(repo, "test", dir = "cloud_build")
+#'
+#' # build in one project, publish the docker image to another project (gcr.io/another-project/test)
+#' cr_deploy_docker_trigger(repo, "test", projectId_target = "another-project", dir = "cloud_build")
 #' }
-cr_deploy_docker_trigger <- function(repo,
-                                     image,
-                                     trigger_name = paste0("docker-", image),
-                                     image_tag = c("latest","$SHORT_SHA","$BRANCH_NAME"),
-                                     ...,
-                                     substitutions = NULL,
-                                     ignoredFiles = NULL,
-                                     includedFiles = NULL,
-                                     timeout = NULL,
-                                     projectId = cr_project_get()){
+cr_deploy_docker_trigger <- function(
+  repo,
+  image,
+  trigger_name = paste0("docker-", image),
+  image_tag = c("latest","$SHORT_SHA","$BRANCH_NAME"),
+  ...,
+  substitutions = NULL,
+  ignoredFiles = NULL,
+  includedFiles = NULL,
+  timeout = NULL,
+  projectId_target = cr_project_get()){
 
   build_docker <- cr_build_make(
     cr_build_yaml(
       steps = cr_buildstep_docker(image,
                                   tag = image_tag,
+                                  projectId = projectId_target,
                                   ...,
                                   kaniko_cache = TRUE)
     ),
