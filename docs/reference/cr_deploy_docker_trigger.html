@@ -229,7 +229,7 @@
   ignoredFiles <span class='op'>=</span> <span class='cn'>NULL</span>,
   includedFiles <span class='op'>=</span> <span class='cn'>NULL</span>,
   timeout <span class='op'>=</span> <span class='cn'>NULL</span>,
-  projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>
+  projectId_target <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -256,6 +256,7 @@
       <td><p>Arguments passed on to <code><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a></code></p><dl>
     <dt><code>tag</code></dt><dd><p>The tag or tags to be attached to the pushed image - can use <code>Build</code> macros</p></dd>
     <dt><code>location</code></dt><dd><p>Where the Dockerfile to build is in relation to <code>dir</code></p></dd>
+    <dt><code>projectId</code></dt><dd><p>The projectId</p></dd>
     <dt><code>dockerfile</code></dt><dd><p>Specify the name of the Dockerfile found at <code>location</code></p></dd>
     <dt><code>kaniko_cache</code></dt><dd><p>If TRUE will use kaniko cache for Docker builds.</p></dd>
   
@@ -278,8 +279,8 @@
       <td><p>Amount of time that this build should be allowed to run, to second</p></td>
     </tr>
     <tr>
-      <th>projectId</th>
-      <td><p>The project to build under</p></td>
+      <th>projectId_target</th>
+      <td><p>The project to publish the Docker image to.  The image will be built under the project configured via <a href='cr_project_set.html'>cr_project_get</a>.  You will need to give the build project's service email access to the target GCP project via IAM for it to push successfully.</p></td>
     </tr>
     </table>
 
@@ -301,7 +302,11 @@
     <pre class="examples"><div class='input'>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>repo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a></span><span class='op'>(</span><span class='st'>"MarkEdmondson1234/googleCloudRunner"</span><span class='op'>)</span>
+<span class='co'># create trigger that will publish Docker image to gcr.io/your-project/test upon each GitHub commit</span>
 <span class='fu'>cr_deploy_docker_trigger</span><span class='op'>(</span><span class='va'>repo</span>, <span class='st'>"test"</span>, dir <span class='op'>=</span> <span class='st'>"cloud_build"</span><span class='op'>)</span>
+
+<span class='co'># build in one project, publish the docker image to another project (gcr.io/another-project/test)</span>
+<span class='fu'>cr_deploy_docker_trigger</span><span class='op'>(</span><span class='va'>repo</span>, <span class='st'>"test"</span>, projectId_target <span class='op'>=</span> <span class='st'>"another-project"</span>, dir <span class='op'>=</span> <span class='st'>"cloud_build"</span><span class='op'>)</span>
 <span class='op'>}</span>
 </div></pre>
   </div>
