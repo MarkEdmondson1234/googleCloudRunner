@@ -9,6 +9,7 @@
 #' @param image_tag What to tag the build docker image
 #' @param trigger_name The trigger name
 #' @param ... Other arguments passed to `cr_buildstep_docker`
+#' @param timeout Timeout for build
 #' @inheritDotParams cr_buildstep_docker
 #' @inheritParams cr_buildtrigger
 #' @param projectId_target The project to publish the Docker image to.  The image will be built under the project configured via \link{cr_project_get}.  You will need to give the build project's service email access to the target GCP project via IAM for it to push successfully.
@@ -52,6 +53,7 @@ cr_deploy_docker_trigger <- function(
     timeout = timeout)
 
   safe_name <- gsub("[^a-zA-Z1-9]","-", trigger_name)
+
   cr_buildtrigger(build_docker,
                   name = safe_name,
                   trigger = repo,
@@ -254,6 +256,9 @@ cr_buildstep_docker <- function(image,
   } else {
     the_image <- paste0("gcr.io/", projectId, "/", image)
   }
+
+  # has to be lowercase for kaniko so may as well do it here too
+  the_image <- tolower(the_image)
 
   myMessage("Image to be built: ", the_image, level = 2)
 

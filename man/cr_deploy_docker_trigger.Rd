@@ -42,7 +42,7 @@ cr_deploy_docker_trigger(
 
 \item{includedFiles}{If any of the files altered in the commit pass the ignored_files}
 
-\item{timeout}{Amount of time that this build should be allowed to run, to second}
+\item{timeout}{Timeout for build}
 
 \item{projectId_target}{The project to publish the Docker image to.  The image will be built under the project configured via \link{cr_project_get}.  You will need to give the build project's service email access to the target GCP project via IAM for it to push successfully.}
 }
