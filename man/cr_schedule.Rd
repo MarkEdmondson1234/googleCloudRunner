@@ -8,6 +8,7 @@ cr_schedule(
   name,
   schedule = NULL,
   httpTarget = NULL,
+  pubsubTarget = NULL,
   description = NULL,
   overwrite = FALSE,
   timeZone = Sys.timezone(),
@@ -21,6 +22,8 @@ cr_schedule(
 \item{schedule}{A cron schedule e.g. \code{"15 5 * * *"}}
 
 \item{httpTarget}{A HTTP target object \link{HttpTarget}}
+
+\item{pubsubTarget}{Pub/Sub target}
 
 \item{description}{Optionally caller-specified in CreateJob or}
 
@@ -91,6 +94,7 @@ cr_schedule("my-app-scheduled-1", schedule = "16 4 * * *",
 Other Cloud Scheduler functions: 
 \code{\link{HttpTarget}()},
 \code{\link{Job}()},
+\code{\link{PubsubTarget}()},
 \code{\link{cr_build_schedule_http}()},
 \code{\link{cr_run_schedule_http}()},
 \code{\link{cr_schedule_delete}()},

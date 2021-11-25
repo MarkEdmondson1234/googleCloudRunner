@@ -5,50 +5,50 @@
 \title{Job Schedule Object}
 \usage{
 Job(
+  name = NULL,
+  description = NULL,
+  schedule = NULL,
+  timeZone = NULL,
+  userUpdateTime = NULL,
+  state = NULL,
+  status = NULL,
+  scheduleTime = NULL,
+  lastAttemptTime = NULL,
+  retryConfig = NULL,
   attemptDeadline = NULL,
   pubsubTarget = NULL,
-  httpTarget = NULL,
-  timeZone = NULL,
-  description = NULL,
   appEngineHttpTarget = NULL,
-  status = NULL,
-  retryConfig = NULL,
-  state = NULL,
-  name = NULL,
-  lastAttemptTime = NULL,
-  scheduleTime = NULL,
-  schedule = NULL,
-  userUpdateTime = NULL
+  httpTarget = NULL
 )
 }
 \arguments{
+\item{name}{Optionally caller-specified in CreateJob, after}
+
+\item{description}{Optionally caller-specified in CreateJob or}
+
+\item{schedule}{A cron schedule e.g. \code{"15 5 * * *"}}
+
+\item{timeZone}{Specifies the time zone to be used in interpreting schedule. If set to \code{NULL} will be "UTC". Note that some time zones include a provision for daylight savings time.}
+
+\item{userUpdateTime}{Output only}
+
+\item{state}{Output only}
+
+\item{status}{Output only}
+
+\item{scheduleTime}{Output only}
+
+\item{lastAttemptTime}{Output only}
+
+\item{retryConfig}{Settings that determine the retry behavior}
+
 \item{attemptDeadline}{The deadline for job attempts}
 
 \item{pubsubTarget}{Pub/Sub target}
 
-\item{httpTarget}{A HTTP target object \link{HttpTarget}}
-
-\item{timeZone}{Specifies the time zone to be used in interpreting schedule. If set to \code{NULL} will be "UTC". Note that some time zones include a provision for daylight savings time.}
-
-\item{description}{Optionally caller-specified in CreateJob or}
-
 \item{appEngineHttpTarget}{App Engine HTTP target}
 
-\item{status}{Output only}
-
-\item{retryConfig}{Settings that determine the retry behavior}
-
-\item{state}{Output only}
-
-\item{name}{Optionally caller-specified in CreateJob, after}
-
-\item{lastAttemptTime}{Output only}
-
-\item{scheduleTime}{Output only}
-
-\item{schedule}{A cron schedule e.g. \code{"15 5 * * *"}}
-
-\item{userUpdateTime}{Output only}
+\item{httpTarget}{A HTTP target object \link{HttpTarget}}
 }
 \value{
 Job object
@@ -62,6 +62,7 @@ Configuration for a job.The maximum allowed size for a job is 100KB.
 \seealso{
 Other Cloud Scheduler functions: 
 \code{\link{HttpTarget}()},
+\code{\link{PubsubTarget}()},
 \code{\link{cr_build_schedule_http}()},
 \code{\link{cr_run_schedule_http}()},
 \code{\link{cr_schedule_delete}()},

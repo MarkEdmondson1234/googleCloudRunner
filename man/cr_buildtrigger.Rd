@@ -23,7 +23,7 @@ cr_buildtrigger(
 
 \item{name}{User assigned name of the trigger}
 
-\item{trigger}{The trigger source created via \link{cr_buildtrigger_repo}}
+\item{trigger}{The trigger source created via \link{cr_buildtrigger_repo} or a pubsub trigger made with \link{cr_buildtrigger_pubsub} or a webhook trigger made with \link{cr_buildtrigger_webhook}}
 
 \item{description}{Human-readable description of this trigger}
 
@@ -86,7 +86,9 @@ Other BuildTrigger functions:
 \code{\link{cr_buildtrigger_edit}()},
 \code{\link{cr_buildtrigger_get}()},
 \code{\link{cr_buildtrigger_list}()},
+\code{\link{cr_buildtrigger_pubsub}()},
 \code{\link{cr_buildtrigger_repo}()},
-\code{\link{cr_buildtrigger_run}()}
+\code{\link{cr_buildtrigger_run}()},
+\code{\link{cr_buildtrigger_webhook}()}
 }
 \concept{BuildTrigger functions}

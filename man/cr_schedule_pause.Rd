@@ -39,6 +39,7 @@ cr_schedule_resume("cloud-build-test1")
 Other Cloud Scheduler functions: 
 \code{\link{HttpTarget}()},
 \code{\link{Job}()},
+\code{\link{PubsubTarget}()},
 \code{\link{cr_build_schedule_http}()},
 \code{\link{cr_run_schedule_http}()},
 \code{\link{cr_schedule_delete}()},

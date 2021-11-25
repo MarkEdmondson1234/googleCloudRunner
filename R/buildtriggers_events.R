@@ -1,3 +1,35 @@
+#' Create a buildtrigger pub/sub object
+#'
+#' Create a trigger from a Pub/Sub topic
+#'
+#' @inheritParams PubsubConfig
+#' @family BuildTrigger functions
+#' @export
+cr_buildtrigger_pubsub <- function(topic, serviceAccountEmail = NULL){
+
+  assert_that(
+    is.string(topic)
+  )
+
+  PubsubConfig(topic = topic,
+               serviceAccountEmail = serviceAccountEmail)
+
+}
+
+#' Create a buildtrigger webhook object
+#'
+#' Create a trigger from a webhook
+#'
+#' @inheritParams WebhookConfig
+#' @family BuildTrigger functions
+#' @export
+cr_buildtrigger_webhook <- function(secret){
+
+  WebhookConfig(secret)
+
+}
+
+
 #' Create a buildtrigger repo object
 #'
 #' Create a repository trigger object for use in build triggers

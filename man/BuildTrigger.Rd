@@ -15,7 +15,9 @@ BuildTrigger(
   includedFiles = NULL,
   disabled = NULL,
   triggerTemplate = NULL,
-  description = NULL
+  webhookConfig = NULL,
+  description = NULL,
+  pubsubConfig = NULL
 )
 }
 \arguments{
@@ -39,7 +41,11 @@ BuildTrigger(
 
 \item{triggerTemplate}{a \link{RepoSource} object - mutually exclusive with \code{github}}
 
+\item{webhookConfig}{WebhookConfig describes the configuration of a trigger that creates a build whenever a webhook is sent to a trigger's webhook URL.}
+
 \item{description}{Human-readable description of this trigger}
+
+\item{pubsubConfig}{PubsubConfig describes the configuration of a trigger that creates a build whenever a Pub/Sub message is published.}
 }
 \value{
 BuildTrigger object
@@ -57,8 +63,10 @@ Other BuildTrigger functions:
 \code{\link{cr_buildtrigger_edit}()},
 \code{\link{cr_buildtrigger_get}()},
 \code{\link{cr_buildtrigger_list}()},
+\code{\link{cr_buildtrigger_pubsub}()},
 \code{\link{cr_buildtrigger_repo}()},
 \code{\link{cr_buildtrigger_run}()},
+\code{\link{cr_buildtrigger_webhook}()},
 \code{\link{cr_buildtrigger}()}
 }
 \concept{BuildTrigger functions}

@@ -29,6 +29,7 @@ cr_schedule_list()
 Other Cloud Scheduler functions: 
 \code{\link{HttpTarget}()},
 \code{\link{Job}()},
+\code{\link{PubsubTarget}()},
 \code{\link{cr_build_schedule_http}()},
 \code{\link{cr_run_schedule_http}()},
 \code{\link{cr_schedule_delete}()},

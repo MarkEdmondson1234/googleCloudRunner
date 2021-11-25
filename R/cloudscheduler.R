@@ -60,6 +60,7 @@
 cr_schedule <- function(name,
                         schedule=NULL,
                         httpTarget=NULL,
+                        pubsubTarget=NULL,
                         description=NULL,
                         overwrite=FALSE,
                         timeZone=Sys.timezone(),
@@ -68,7 +69,8 @@ cr_schedule <- function(name,
                         ) {
 
   assert_that(
-    is.string(region)
+    is.string(region),
+    xor(is.null(httpTarget), is.null(pubsubTarget))
   )
 
   stem <- "https://cloudscheduler.googleapis.com/v1"
@@ -77,6 +79,7 @@ cr_schedule <- function(name,
   job <- Job(schedule=schedule,
              name = the_name,
              httpTarget = httpTarget,
+             pubsubTarget = pubsubTarget,
              description = description,
              timeZone = timeZone)
 
@@ -469,20 +472,20 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
 #'
 #' @family Cloud Scheduler functions
 #' @export
-Job <- function(attemptDeadline = NULL,
-                pubsubTarget = NULL,
-                httpTarget = NULL,
-                timeZone = NULL,
+Job <- function(name = NULL,
                 description = NULL,
-                appEngineHttpTarget = NULL,
-                status = NULL,
-                retryConfig = NULL,
-                state = NULL,
-                name = NULL,
-                lastAttemptTime = NULL,
-                scheduleTime = NULL,
                 schedule = NULL,
-                userUpdateTime = NULL) {
+                timeZone = NULL,
+                userUpdateTime = NULL,
+                state = NULL,
+                status = NULL,
+                scheduleTime = NULL,
+                lastAttemptTime = NULL,
+                retryConfig = NULL,
+                attemptDeadline = NULL,
+                pubsubTarget = NULL,
+                appEngineHttpTarget = NULL,
+                httpTarget = NULL) {
 
   structure(rmNullObs(list(attemptDeadline = attemptDeadline,
                            pubsubTarget = pubsubTarget,
@@ -505,3 +508,32 @@ is.gar_scheduleJob <- function(x){
   inherits(x, "gar_scheduleJob")
 }
 
+
+#' Pubsub Target Object (Cloud Scheduler)
+#'
+#' @details Pub/Sub target. The job will be delivered by publishing a message to the given Pub/Sub topic.
+#'
+#' @param topicName The name of the Cloud Pub/Sub topic to which messages will be published when a job is delivered.
+#' @param data The message payload for PubsubMessage. An R object that will be turned into JSON via [jsonlite] and then base64 encoded into the PubSub format.
+#' @param attributes Attributes for PubsubMessage.
+#'
+#' @return PubsubTarget object
+#'
+#' @family Cloud Scheduler functions
+#' @export
+PubsubTarget <- function(
+  topicName = NULL,
+  data = NULL,
+  attributes = NULL
+){
+  structure(rmNullObs(
+    list(topicName = topicName,
+         data = data,
+         attributes = attributes)),
+    class = c("gar_pubsubTarget","list"))
+
+}
+
+is.gar_pubsubTarget <- function(x){
+  inherits(x, "gar_pubsubTarget")
+}
