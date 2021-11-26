@@ -4,12 +4,18 @@
 \alias{cr_buildtrigger_pubsub}
 \title{Create a buildtrigger pub/sub object}
 \usage{
-cr_buildtrigger_pubsub(topic, serviceAccountEmail = NULL)
+cr_buildtrigger_pubsub(
+  topic,
+  serviceAccountEmail = NULL,
+  projectId = cr_project_get()
+)
 }
 \arguments{
 \item{topic}{The name of the topic from which this subscription is receiving messages.}
 
 \item{serviceAccountEmail}{Service account that will make the push request.}
+
+\item{projectId}{The GCP project the topic is created within}
 }
 \description{
 Create a trigger from a Pub/Sub topic

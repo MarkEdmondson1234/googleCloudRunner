@@ -3,15 +3,18 @@
 #' Create a trigger from a Pub/Sub topic
 #'
 #' @inheritParams PubsubConfig
+#' @param projectId The GCP project the topic is created within
 #' @family BuildTrigger functions
 #' @export
-cr_buildtrigger_pubsub <- function(topic, serviceAccountEmail = NULL){
+cr_buildtrigger_pubsub <- function(topic,
+                                   serviceAccountEmail = NULL,
+                                   projectId = cr_project_get()){
 
   assert_that(
     is.string(topic)
   )
 
-  PubsubConfig(topic = topic,
+  PubsubConfig(topic = sprintf("projects/%s/topics/%s", projectId, topic),
                serviceAccountEmail = serviceAccountEmail)
 
 }
@@ -19,6 +22,7 @@ cr_buildtrigger_pubsub <- function(topic, serviceAccountEmail = NULL){
 #' Create a buildtrigger webhook object
 #'
 #' Create a trigger from a webhook
+#'
 #'
 #' @inheritParams WebhookConfig
 #' @family BuildTrigger functions
