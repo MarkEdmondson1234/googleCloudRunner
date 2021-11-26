@@ -108,7 +108,13 @@ cr_build_list <- function(filter = NULL,
                             page_method = "param",
                             page_arg = "pageToken")
 
-    build_list <- unlist(lapply(results, function(x) x$builds), recursive = FALSE)
+    #149
+    if(length(results) == 1 && length(results[[1]]) == 0){
+      build_list <- o$builds
+    } else {
+      build_list <- unlist(lapply(results, function(x) x$builds), recursive = FALSE)
+    }
+
   }
 
   if(length(build_list) == 0){

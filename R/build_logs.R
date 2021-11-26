@@ -102,7 +102,8 @@ cr_build_logs_last <- function(trigger_name = NULL,
     ts <- cr_buildtrigger_list(projectId = projectId)
 
     if(!trigger_name %in% ts$buildTriggerName){
-      stop("Could not find trigger with name: ", trigger_name, call. = FALSE)
+      stop("Could not find trigger with name: ", trigger_name,
+           "in projectId:", projectId, call. = FALSE)
     }
 
     trigger_id <- ts[ts$buildTriggerName == trigger_name,"buildTriggerId"]
@@ -113,6 +114,11 @@ cr_build_logs_last <- function(trigger_name = NULL,
     value = trigger_id)
   cli::cli_status_update(msg = "{symbol$arrow_right} Downloading builds")
   gcr_builds <- cr_build_list(gcr_bt, projectId = projectId)
+
+  if(is.null(gcr_builds)){
+    stop("Could not find any builds with filter ", gcr_bt,
+         " for projectId: ", projectId, call. = FALSE)
+  }
 
   # get logs for last build
   last_build <- gcr_builds[1,]

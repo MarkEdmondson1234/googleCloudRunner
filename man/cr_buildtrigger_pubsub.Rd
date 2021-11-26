@@ -20,6 +20,48 @@ cr_buildtrigger_pubsub(
 \description{
 Create a trigger from a Pub/Sub topic
 }
+\details{
+When using a PubSub trigger, you can use data within your PubSub message in substitution variables within the build.  The data from pubsub is available in the variable value: \code{$(body.message.data.x)} when x is a field in the pubsub message.
+}
+\examples{
+
+# create build object
+cloudbuild <- system.file("cloudbuild/cloudbuild_substitutions.yml",
+                          package = "googleCloudRunner")
+the_build <- cr_build_make(cloudbuild)
+
+# this build includes substitution variables that read from pubsub message var1
+the_build
+
+# using googlePubSubR to create pub/sub topic if needed
+\dontrun{
+ library(googlePubsubR)
+ pubsub_auth()
+ topics_create("test-topic")
+}
+
+# create build trigger that will work from pub/subscription
+pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
+cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trigger)
+
+# make base64 encoded json for pubsub
+library(jsonlite)
+
+# the message with the var1 that will be passed into the Cloud Build via substitution
+message <- list(var1 = "hello mum")
+
+# turning into JSON and encoding
+send_me <- base64_enc(toJSON(message))
+
+\dontrun{
+ # send a PubSub message with the encoded data message
+topics_publish(PubsubMessage(send_me), "test-topic")
+
+# did it work? After a while should see logs if it did
+cr_build_logs_last("pubsub-triggered-subs")
+}
+
+}
 \seealso{
 Other BuildTrigger functions: 
 \code{\link{BuildTrigger}()},

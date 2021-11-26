@@ -451,4 +451,103 @@ In `googleCloudRunner < v0.4.1` you can configure your build triggers to run fro
 
 See the [Creating Pub/Sub triggers documentation](https://cloud.google.com/build/docs/automating-builds/create-pubsub-triggers) on how to do this in the WebUI and gcloud.
 
+Below is an example that uses `library(googlePubSubR)` to create and send a message to PubSub, but any other service that publishes to PubSub could be used.
+
+For this example, the substitution variables will take its data from the PubSub message content.  It will look within the `body.message.data.x` variable, where `x` is the field sent in the pubsub message.  See how to use these [payload bindings](https://cloud.google.com/build/docs/configuring-builds/use-bash-and-bindings-in-substitutions) in other ways at the Google documentation.
+
+The cloud build yaml looks like:
+
+```yaml
+steps:
+- name: 'alpine'
+  id:  Hello Cloud Build
+  args: ["echo", "Hello Cloud Build"]
+- name: 'rocker/r-base'
+  id: Hello R
+  args: ["Rscript", "-e", "paste0('From PubSub message field1:', '${_VAR1}')"]
+substitutions:
+  _VAR1: '$(body.message.data.var1)'
+```
+
+Note `_VAR1` which will be filled in with the `var1` field coming from the PubSub message.
+
+```{r}
+# create build object
+cloudbuild <- system.file("cloudbuild/cloudbuild_substitutions.yml",
+                           package = "googleCloudRunner")
+the_build <- cr_build_make(cloudbuild)
+
+the_build
+```
+
+We then create the topic if it does not exist already:
+
+```r
+# create pub/sub topic if needed
+library(googlePubsubR)
+pubsub_auth()
+topics_create("test-topic")
+```
+
+We now use the function `cr_buildtrigger_pubsub()` to construct the trigger for the Cloud Build.
+
+```
+# create build trigger that will work from pub/subscription
+pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
+cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trigger)
+#==CloudBuildTriggerResponse==
+#id:  b7fb7d8d-534d-4408-9e0c-154be6577a7f 
+#name:  pubsub-triggered-subs 
+#createdTime:  2021-11-26T21:39:23.714950565Z 
+#==CloudBuildObject==
+#substitutions:
+#_VAR1 :  $(body.message.data.var1) 
+#steps:
+#- name: alpine
+#  args:
+#  - echo
+#  - Hello Cloud Build
+#  id: Hello Cloud Build
+#- name: rocker/r-base
+#  args:
+#  - Rscript
+#  - -e
+#  - paste0('From PubSub message field1:', '${_VAR1}')
+#  id: Hello R
+```
+
+The build trigger should now be deployed and available in your Cloud Console.
+
+We now simulate a PubSub message coming in with the `var1` field filled.  In real applications this PubSub trigger could come from another system, Cloud Storage files, or other R scripts.
+
+
+PubSub requires the message to be JSON and base64 encoded, so we use `library(jsonlite)` to do this and `library(googlePubsubR)` again to send the message:
+
+```r
+# make base64 encoded json
+library(jsonlite)                     
+message <- list(var1 = "hello mum")
+send_me <- base64_enc(toJSON(message))
+
+# send the message!
+topics_publish(PubsubMessage(send_me), "test-topic")
+```
+
+You should now see the Cloud build start in your console.  You can check the logs for the build after it has run to see if it worked:
+
+```r
+# did it work?
+cr_build_logs_last("pubsub-triggered-subs")
+
+# yep!
+#...
+#[55] "Step #1 - \"Hello R\": Status: Downloaded newer image for rocker/r-base:latest"                                  
+#[56] "Step #1 - \"Hello R\": docker.io/rocker/r-base:latest"                                                           
+#[57] "Step #1 - \"Hello R\": [1] \"From PubSub message field1:[\\\"hello mum\\\"]\""                                   
+#[58] "Finished Step #1 - \"Hello R\""                                                                                  
+#[59] "PUSH"                                                                                                            
+#[60] "DONE"                                                                                                            
+```
+
+See also `cr_build_schedule_pubsub()` which can use PubSub to trigger scheduled builds.
 

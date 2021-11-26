@@ -1,0 +1,9 @@
+steps:
+- name: 'alpine'
+  id:  Hello Cloud Build
+  args: ["echo", "Hello Cloud Build"]
+- name: 'rocker/r-base'
+  id: Hello R
+  args: ["Rscript", "-e", "paste0('From PubSub message field1:', '${_VAR1}')"]
+substitutions:
+  _VAR1: '$(body.message.data.var1)'

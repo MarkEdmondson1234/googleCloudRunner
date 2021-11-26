@@ -20,6 +20,8 @@
 * Add `cr_regions` data that lists available Cloud Run regions (thanks @muschellij2)
 * Allow specification of a target GCP project if it differs from the build project in `cr_deploy_docker_trigger()`
 * Force lowercase for docker image names as they are only valid for kaniko in `cr_deploy_docker_trigger()`
+* Fix bug parsing out listing build triggers in `cr_buildtrigger_list()`
+* Fix paging issue sometimes returning NULL for `cr_build_list()` (#149)
 
 # googleCloudRunner 0.4.1
 
