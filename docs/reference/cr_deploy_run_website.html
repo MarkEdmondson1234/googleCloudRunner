@@ -90,13 +90,13 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
      
@@ -116,28 +116,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fas fa-shapes"></span>
+    <span class="fa fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fas fa-running"></span>
+    <span class="fa fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fas fa-clock"></span>
+    <span class="fa fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-hands-helping"></span>
+    <span class="fa fa-hands-helping"></span>
      
     Use Cases
      
@@ -184,7 +184,7 @@
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-question"></span>
+    <span class="fa fa-question"></span>
      
     Functions
   </a>
@@ -282,8 +282,8 @@
 
     <p>This lets you render the Rmd (or other R functions that produce HTML) in a folder for your repo, which will then be hosted on a Cloud Run enabled with nginx.  Each time you push to git with modified Rmd code, it will build the new HTML and push an update to the website.</p>
 <p>This default R code is rendered in the rmd_folder:</p>
-<p><code><a href='https://rdrr.io/r/base/lapply.html'>lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
-      rmarkdown::render, output_format = 'html_document')</a></code></p>
+<p><code>lapply(list.files('.', pattern = '.Rmd', full.names = TRUE),
+      rmarkdown::render, output_format = 'html_document')</code></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><a href='cr_deploy_run.html'>cr_deploy_html</a> that lets you deploy just HTML files and <a href='cr_deploy_pkgdown.html'>cr_deploy_pkgdown</a> for running pkgdown websites.</p>
@@ -296,23 +296,23 @@
 <code><a href='cr_deploy_r.html'>cr_deploy_r</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
-<span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span><span class='op'>(</span><span class='st'>"europe-west1"</span><span class='op'>)</span>
-<span class='va'>your_repo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a></span><span class='op'>(</span><span class='st'>"MarkEdmondson1234/googleCloudRunner"</span><span class='op'>)</span>
-<span class='fu'>cr_deploy_run_website</span><span class='op'>(</span><span class='va'>your_repo</span>, rmd_folder <span class='op'>=</span> <span class='st'>"vignettes"</span><span class='op'>)</span>
-
-<span class='co'># change the Rmd rendering to pkgdown</span>
-<span class='va'>r</span> <span class='op'>&lt;-</span> <span class='st'>"devtools::install();pkgdown::build_site()"</span>
-
-<span class='fu'>cr_deploy_run_website</span><span class='op'>(</span><span class='va'>your_repo</span>,
-                   image <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>your_repo</span>, <span class='st'>"-pkgdown"</span><span class='op'>)</span>,
-                   rmd_folder <span class='op'>=</span> <span class='st'>"."</span>,
-                   edit_r <span class='op'>=</span> <span class='va'>r</span><span class='op'>)</span>
-
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span><span class='op'>(</span><span class='st'>"europe-west1"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>your_repo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a></span><span class='op'>(</span><span class='st'>"MarkEdmondson1234/googleCloudRunner"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>cr_deploy_run_website</span><span class='op'>(</span><span class='va'>your_repo</span>, rmd_folder <span class='op'>=</span> <span class='st'>"vignettes"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># change the Rmd rendering to pkgdown</span></span>
+<span class='r-in'><span class='va'>r</span> <span class='op'>&lt;-</span> <span class='st'>"devtools::install();pkgdown::build_site()"</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'>cr_deploy_run_website</span><span class='op'>(</span><span class='va'>your_repo</span>,</span>
+<span class='r-in'>                   image <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>your_repo</span>, <span class='st'>"-pkgdown"</span><span class='op'>)</span>,</span>
+<span class='r-in'>                   rmd_folder <span class='op'>=</span> <span class='st'>"."</span>,</span>
+<span class='r-in'>                   edit_r <span class='op'>=</span> <span class='va'>r</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='op'>}</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -90,13 +90,13 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
      
@@ -116,28 +116,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fas fa-shapes"></span>
+    <span class="fa fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fas fa-running"></span>
+    <span class="fa fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fas fa-clock"></span>
+    <span class="fa fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-hands-helping"></span>
+    <span class="fa fa-hands-helping"></span>
      
     Use Cases
      
@@ -184,7 +184,7 @@
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-question"></span>
+    <span class="fa fa-question"></span>
      
     Functions
   </a>
@@ -233,7 +233,7 @@
       <td><p>Arguments passed on to <code><a href='cr_buildstep.html'>cr_buildstep</a></code></p><dl>
     <dt><code>name</code></dt><dd><p>name of docker image to call appended to <code>prefix</code></p></dd>
     <dt><code>args</code></dt><dd><p>character vector of arguments</p></dd>
-    <dt><code>prefix</code></dt><dd><p>prefixed to name - set to "" to suppress.  Will be suppressed if <code>name</code> starts with gcr.io</p></dd>
+    <dt><code>prefix</code></dt><dd><p>prefixed to name - set to "" to suppress.  Will be suppressed if <code>name</code> starts with gcr.io or <code>*-docker.pkg.dev</code></p></dd>
     <dt><code>entrypoint</code></dt><dd><p>change the entrypoint for the docker container</p></dd>
     <dt><code>dir</code></dt><dd><p>The directory to use, relative to /workspace e.g. /workspace/deploy/</p></dd>
     <dt><code>id</code></dt><dd><p>Optional id for the step</p></dd>

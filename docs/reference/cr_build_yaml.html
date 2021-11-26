@@ -90,13 +90,13 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
      
@@ -116,28 +116,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fas fa-shapes"></span>
+    <span class="fa fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fas fa-running"></span>
+    <span class="fa fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fas fa-clock"></span>
+    <span class="fa fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-hands-helping"></span>
+    <span class="fa fa-hands-helping"></span>
      
     Use Cases
      
@@ -184,7 +184,7 @@
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-question"></span>
+    <span class="fa fa-question"></span>
      
     Functions
   </a>
@@ -229,7 +229,8 @@
   secrets <span class='op'>=</span> <span class='cn'>NULL</span>,
   availableSecrets <span class='op'>=</span> <span class='cn'>NULL</span>,
   images <span class='op'>=</span> <span class='cn'>NULL</span>,
-  artifacts <span class='op'>=</span> <span class='cn'>NULL</span>
+  artifacts <span class='op'>=</span> <span class='cn'>NULL</span>,
+  serviceAccount <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -275,6 +276,10 @@
       <th>artifacts</th>
       <td><p>What artifacts may be built from this cloudbuild - create via <a href='cr_build_yaml_artifact.html'>cr_build_yaml_artifact</a></p></td>
     </tr>
+    <tr>
+      <th>serviceAccount</th>
+      <td><p>What service account should the build be run under?</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -298,35 +303,38 @@
 <code><a href='cr_build.html'>cr_build</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-11-20 08:05:01 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='va'>image</span> <span class='op'>&lt;-</span> <span class='st'>"gcr.io/my-project/my-image"</span>
-<span class='fu'>cr_build_yaml</span><span class='op'>(</span>steps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
-    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span><span class='op'>(</span><span class='st'>"docker"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"build"</span>,<span class='st'>"-t"</span>,<span class='va'>image</span>,<span class='st'>"."</span><span class='op'>)</span><span class='op'>)</span>,
-    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span><span class='op'>(</span><span class='st'>"docker"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"push"</span>,<span class='va'>image</span><span class='op'>)</span><span class='op'>)</span>,
-    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span><span class='op'>(</span><span class='st'>"gcloud"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"beta"</span>,<span class='st'>"run"</span>,<span class='st'>"deploy"</span>, <span class='st'>"test1"</span>, <span class='st'>"--image"</span>, <span class='va'>image</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
-  images <span class='op'>=</span> <span class='va'>image</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; ==cloudRunnerYaml==
-#&gt; steps:
-#&gt; - name: gcr.io/cloud-builders/docker
-#&gt;   args:
-#&gt;   - build
-#&gt;   - -t
-#&gt;   - gcr.io/my-project/my-image
-#&gt;   - '.'
-#&gt; - name: gcr.io/cloud-builders/docker
-#&gt;   args:
-#&gt;   - push
-#&gt;   - gcr.io/my-project/my-image
-#&gt; - name: gcr.io/cloud-builders/gcloud
-#&gt;   args:
-#&gt;   - beta
-#&gt;   - run
-#&gt;   - deploy
-#&gt;   - test1
-#&gt;   - --image
-#&gt;   - gcr.io/my-project/my-image
-#&gt; images:
-#&gt; - gcr.io/my-project/my-image</div></span></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-26 15:36:28 &gt;</span> ProjectId set to  my-project</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "my-project"</span>
+<span class='r-in'><span class='va'>image</span> <span class='op'>&lt;-</span> <span class='st'>"gcr.io/my-project/my-image"</span></span>
+<span class='r-in'><span class='fu'>cr_build_yaml</span><span class='op'>(</span>steps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span></span>
+<span class='r-in'>    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span><span class='op'>(</span><span class='st'>"docker"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"build"</span>,<span class='st'>"-t"</span>,<span class='va'>image</span>,<span class='st'>"."</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span><span class='op'>(</span><span class='st'>"docker"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"push"</span>,<span class='va'>image</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>    <span class='fu'><a href='cr_buildstep.html'>cr_buildstep</a></span><span class='op'>(</span><span class='st'>"gcloud"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"beta"</span>,<span class='st'>"run"</span>,<span class='st'>"deploy"</span>, <span class='st'>"test1"</span>, <span class='st'>"--image"</span>, <span class='va'>image</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>  images <span class='op'>=</span> <span class='va'>image</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ==cloudRunnerYaml==</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> steps:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> - name: gcr.io/cloud-builders/docker</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   args:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - build</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - -t</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - gcr.io/my-project/my-image</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - '.'</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> - name: gcr.io/cloud-builders/docker</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   args:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - push</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - gcr.io/my-project/my-image</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> - name: gcr.io/cloud-builders/gcloud</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   args:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - beta</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - run</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - deploy</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - test1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --image</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - gcr.io/my-project/my-image</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> images:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> - gcr.io/my-project/my-image</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
