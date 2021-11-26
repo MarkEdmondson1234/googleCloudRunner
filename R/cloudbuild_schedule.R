@@ -50,6 +50,34 @@ cr_build_schedule_http <- function(build,
   )
 }
 
+#' Create a PubSub Target object for Cloud Scheduler
+#'
+#' @inheritParams PubsubTarget
+#' @param projectId The projectId for where the topic sits
+#' @family Cloud Scheduler functions
+#' @export
+#' @importFrom jsonlite base64_enc toJSON
+cr_build_schedule_pubsub <- function(
+  topicName,
+  data = NULL,
+  attributes = NULL,
+  projectId = cr_project_get()){
+
+  if(is.null(data)){
+    the_data <- topicName
+  } else {
+    the_data <- toJSON(data)
+  }
+
+  PubsubTarget(
+    topicName = sprintf("projects/%s/topics/%s", projectId, topicName),
+    data = base64_enc(the_data),
+    attributes = attributes
+  )
+}
+
+
+
 #' @rdname cr_build_schedule_http
 #' @export
 #' @param schedule A cron schedule e.g. \code{"15 5 * * *"}

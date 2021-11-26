@@ -140,6 +140,7 @@ reference:
       - matches("cr_schedule")
       - cr_build_schedule_http
       - cr_run_schedule_http
+      - cr_build_schedule_pubsub
       - Job
       - HttpTarget
 

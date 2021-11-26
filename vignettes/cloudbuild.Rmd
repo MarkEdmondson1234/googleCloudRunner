@@ -471,7 +471,7 @@ substitutions:
 
 Note `_VAR1` which will be filled in with the `var1` field coming from the PubSub message.
 
-```{r}
+```r
 # create build object
 cloudbuild <- system.file("cloudbuild/cloudbuild_substitutions.yml",
                            package = "googleCloudRunner")
