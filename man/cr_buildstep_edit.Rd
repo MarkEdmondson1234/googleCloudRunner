@@ -14,7 +14,7 @@ cr_buildstep_edit(x, ...)
   \describe{
     \item{\code{name}}{name of docker image to call appended to \code{prefix}}
     \item{\code{args}}{character vector of arguments}
-    \item{\code{prefix}}{prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io}
+    \item{\code{prefix}}{prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io or \code{*-docker.pkg.dev}}
     \item{\code{entrypoint}}{change the entrypoint for the docker container}
     \item{\code{dir}}{The directory to use, relative to /workspace e.g. /workspace/deploy/}
     \item{\code{id}}{Optional id for the step}

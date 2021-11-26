@@ -466,23 +466,22 @@ cr_buildstep_bash <- function(bash_script,
 #' # machine with 32 cores
 #'
 #' ## create storage source
-#` storage_source <- cr_build_upload_gcs("my-r-script.R")
-
-#` ## create the buildstep with the R script
-#' step1 <- cr_buildstep_r("deploy/my-r-script.R",
-#'                         r_source="runtime",
-#'                         rscript_args=c("args_1=<args1>", "args_2=<args_2>"))
+#' storage_source <- cr_build_upload_gcs(
+#'  "my-r-script.R"
+#' )
+#' ## create the buildstep with the R script
+#' step1 <- cr_buildstep_r("deploy/my-r-script.R", r_source="runtime",
+#'                rscript_args=c("args_1=<args1>", "args_2=<args_2>"))
 #'
-#' }
 #' ## run the script on Cloud Build
 #' cr_build(
 #'   cr_build_yaml(
 #'     steps=step1
 #'   ),
-#'   source = storage_source
-#'   options = list(machineType = "E2_HIGHCPU_32')
+#'   source = storage_source,
+#'   options = list(machineType = "E2_HIGHCPU_32")
 #' )
-#'
+#' }
 #' # use a different Rocker image e.g. rocker/verse
 #' cr_buildstep_r(c("library(dplyr)",
 #'                  "mtcars %>% select(mpg)",
@@ -670,6 +669,7 @@ cr_buildstep_decrypt <- function(cipher,
 #' @param secret The secret data name in Secret Manager
 #' @param decrypted The name of the file the secret will be decrypted into
 #' @param version The version of the secret
+#' @param binary_mode Should the file be treated in binary/raw format?
 #' @param ... Other arguments sent to \link{cr_buildstep_bash}
 #'
 #' @details
@@ -688,10 +688,14 @@ cr_buildstep_decrypt <- function(cipher,
 cr_buildstep_secret <- function(secret,
                                 decrypted,
                                 version = "latest",
+                                binary_mode = FALSE,
                                 ...){
-
-  script <- sprintf("gcloud secrets versions access %s --secret=%s > %s",
-    version, secret, decrypted
+  assertthat::assert_that(assertthat::is.flag(binary_mode))
+  # as per
+  # https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#a_note_on_resource_consistency
+  decode_it <- "--format='get(payload.data)' | tr '_-' '/+' | base64 -d"
+  script <- sprintf("gcloud secrets versions access %s --secret=%s %s > %s",
+    version, secret, ifelse(binary_mode, decode_it, ""), decrypted
   )
 
   cr_buildstep(

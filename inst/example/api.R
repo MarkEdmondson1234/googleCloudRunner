@@ -35,7 +35,7 @@ function(spec){
   }
 
   plot(myData$Sepal.Length, myData$Petal.Length,
-       main=title, xlab="Sepal Length", ylab="Petal Length")
+       main = title, xlab = "Sepal Length", ylab = "Petal Length")
 }
 
 
@@ -44,7 +44,9 @@ function(spec){
 #' @param message a pub/sub message
 function(message=NULL){
 
-  pub <- function(x){paste("Echo:", x)}
+  pub <- function(x) {
+    paste("Echo:", x)
+    }
   googleCloudRunner::cr_plumber_pubsub(message, pub)
 
 }

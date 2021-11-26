@@ -29,7 +29,8 @@ Build(
   statusDetail = NULL,
   artifacts = NULL,
   secrets = NULL,
-  availableSecrets = NULL
+  availableSecrets = NULL,
+  serviceAccount = NULL
 )
 }
 \arguments{
@@ -82,6 +83,8 @@ Build(
 \item{secrets}{Secrets to decrypt using Cloud Key Management Service [deprecated]}
 
 \item{availableSecrets}{preferred way to use Secrets, via Secret Manager}
+
+\item{serviceAccount}{service account email to be used for the build}
 }
 \value{
 Build object

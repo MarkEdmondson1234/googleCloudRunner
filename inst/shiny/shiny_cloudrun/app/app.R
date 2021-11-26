@@ -6,7 +6,7 @@ gar_set_client(web_json = "mark-edmondson-gde-web-client.json",
                scopes = "https://www.googleapis.com/auth/webmasters")
 
 ui <- fluidPage(
-  googleAuth_jsUI('auth', login_text = 'Login to Google'),
+  googleAuth_jsUI("auth", login_text = "Login to Google"),
   tableOutput("sc_accounts"),
   uiOutput("select_website"),
   tableOutput("sc_data")
@@ -63,4 +63,3 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui = ui, server = server)
-

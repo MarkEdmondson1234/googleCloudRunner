@@ -16,19 +16,22 @@ ui <- fluidPage(
                   "text/vnd.yaml"
                 )),
       textInput("schedule_name", label = "Schedule name",
-                value = paste0("my-schedule-", format(Sys.time(), "%Y%m%d%H%M%S"))),
+                value = paste0("my-schedule-",
+                               format(Sys.time(), "%Y%m%d%H%M%S"))),
       textInput("cron", "cron schedule", value = "15 9 * * *"),
       h4("Project:", cr_project_get()),
-      p(a(href=sprintf("https://console.cloud.google.com/cloudscheduler?project=%s",
+      p(a(href = sprintf(
+        "https://console.cloud.google.com/cloudscheduler?project=%s",
                        cr_project_get()), "Project schedule listings")),
-      p(a(href=sprintf("https://console.cloud.google.com/cloud-build/builds?project=%s",
+      p(a(href = sprintf(
+        "https://console.cloud.google.com/cloud-build/builds?project=%s",
               cr_project_get()), "Project build history")),
       uiOutput("logs_link")
   ),
     mainPanel(
       helpText("This app will take an existing cloudbuild.yml, validate a build and then schedule it"),
       helpText("Create the cloudbuild.yml file either via",
-               a(href="https://code.markedmondson.me/googleCloudRunner/reference/cr_build_write.html",
+               a(href = "https://code.markedmondson.me/googleCloudRunner/reference/cr_build_write.html",
                  "googleCloudRunner's cr_build_write() function"),
                "or manually following the",
                a(href = "https://cloud.google.com/cloud-build/docs/build-config",

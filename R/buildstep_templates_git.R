@@ -25,14 +25,18 @@
 #'      )
 #'  )
 #'
-cr_buildstep_gitsetup <- function(secret, post_setup = NULL){
+cr_buildstep_gitsetup <- function(secret,
+                                  post_setup = NULL){
 
-  github_setup <- system.file("ssh", "github_setup.sh",
+
+  github_setup <- system.file("ssh",
+                              "github_setup.sh",
                               package = "googleCloudRunner")
   c(
     cr_buildstep_secret(secret = secret,
                         decrypted = "/root/.ssh/id_rsa",
                         volumes = git_volume(),
+                        binary_mode = TRUE,
                         id = "git secret"),
     cr_buildstep_bash(github_setup,
                       name = "gcr.io/cloud-builders/git",

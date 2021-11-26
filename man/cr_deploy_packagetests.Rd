@@ -48,6 +48,7 @@ cr_deploy_packagetests(
     \item{\code{timeout}}{Amount of time that this build should be allowed to run, to second}
     \item{\code{images}}{A list of images to be pushed upon the successful completion of all build}
     \item{\code{substitutions}}{Substitutions data for `Build` resource}
+    \item{\code{serviceAccount}}{service account email to be used for the build}
   }}
 }
 \description{

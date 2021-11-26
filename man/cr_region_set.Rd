@@ -5,9 +5,7 @@
 \alias{cr_region_get}
 \title{Get/Set the endpoint for your CloudRun services}
 \usage{
-cr_region_set(
-  region = c("europe-west1", "us-central1", "asia-northeast1", "us-east1")
-)
+cr_region_set(region = googleCloudRunner::cr_regions)
 
 cr_region_get()
 }

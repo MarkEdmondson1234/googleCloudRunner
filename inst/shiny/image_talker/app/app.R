@@ -1,5 +1,5 @@
-Sys.setenv(GL_AUTH="auth.json")
-Sys.setenv(GCV_AUTH_FILE="auth.json")
+Sys.setenv(GL_AUTH = "auth.json")
+Sys.setenv(GCV_AUTH_FILE = "auth.json")
 
 library(shiny)
 library(googleAuthR)
@@ -17,7 +17,7 @@ ui <- navbarPage(title = "Image Talker",
                             sidebarPanel(
                               helpText("Upload an image, have it spoken back to you"),
                               radioButtons("input_choice", "Where is the image?",
-                                           choices = c("URL","Upload"), inline = TRUE),
+                                           choices = c("URL", "Upload"), inline = TRUE),
 
                               uiOutput("input_ui"),
                               actionButton("do_image", "Get/Change Image"),
@@ -74,7 +74,7 @@ server <- function(input, output, session){
   })
 
   output$show_image <- renderUI({
-    req(image_source())
+    shiny::req(image_source())
 
     message("image_source(): ", image_source())
     if(input$input_choice == "Upload"){
@@ -120,7 +120,7 @@ server <- function(input, output, session){
 
 
   annotations <- reactive({
-    req(image_source())
+    shiny::req(image_source())
 
     message("upload:", image_source())
     message("Calling vision API")
@@ -133,7 +133,7 @@ server <- function(input, output, session){
   })
 
   output$image_labels <- renderUI({
-    req(annotations())
+    shiny::req(annotations())
 
     choices <- annotations()$description
 
@@ -147,12 +147,12 @@ server <- function(input, output, session){
   })
 
   talk_me <- eventReactive(input$do_apis, {
-    req(input$say_me)
+    shiny::req(input$say_me)
     input$say_me
   })
 
   output$big_text <- renderText({
-    req(input$say_me)
+    shiny::req(input$say_me)
     input$say_me
   })
 

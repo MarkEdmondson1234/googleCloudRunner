@@ -9,10 +9,7 @@
 #' @examples
 #'
 #' cr_region_get()
-cr_region_set <- function(region = c("europe-west1",
-                                     "us-central1",
-                                     "asia-northeast1",
-                                     "us-east1")){
+cr_region_set <- function(region = googleCloudRunner::cr_regions){
 
   region <- match.arg(region)
 

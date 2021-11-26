@@ -34,6 +34,11 @@ cr_deploy_docker_trigger(
     \item{\code{projectId}}{The projectId}
     \item{\code{dockerfile}}{Specify the name of the Dockerfile found at \code{location}}
     \item{\code{kaniko_cache}}{If TRUE will use kaniko cache for Docker builds.}
+    \item{\code{build_args}}{additional arguments to pass to \code{docker build},
+should be a character vector.}
+    \item{\code{push_image}}{if \code{kaniko_cache = FALSE} and
+\code{push_image = FALSE}, then the docker image is simply built and not
+pushed}
   }}
 
 \item{substitutions}{A named list of Build macro variables}
