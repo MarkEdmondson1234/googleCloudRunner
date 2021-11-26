@@ -6,6 +6,10 @@
 #' @param projectId The GCP project the topic is created within
 #' @family BuildTrigger functions
 #' @export
+#'
+#' @details
+#'
+#' When using a PubSub trigger, you can use data within your PubSub message in substitution variables within the build.  The data from pubsub is available in the variable value: \code{$(body.message.data.x)} when x is a field in the pubsub message.
 cr_buildtrigger_pubsub <- function(topic,
                                    serviceAccountEmail = NULL,
                                    projectId = cr_project_get()){

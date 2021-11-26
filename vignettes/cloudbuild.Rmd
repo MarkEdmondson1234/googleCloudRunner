@@ -445,3 +445,10 @@ cr_buildtrigger(
 )
 ```
 
+### Pub/Sub Triggered Cloud Builds
+
+In `googleCloudRunner < v0.4.1` you can configure your build triggers to run from PubSub events.  These events are generated from a lot of different services around GCP, such as when a file hits Cloud Storage, when certain events occur in Cloud Logging, or when your budget alerts fire.  Triggering a Cloud Build can allow complex workflows responding to these events, including picking up data from the PubSub message to parametrise your code via Substitutions.
+
+See the [Creating Pub/Sub triggers documentation](https://cloud.google.com/build/docs/automating-builds/create-pubsub-triggers) on how to do this in the WebUI and gcloud.
+
+
