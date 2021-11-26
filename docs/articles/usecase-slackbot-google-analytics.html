@@ -45,13 +45,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
      
@@ -71,28 +71,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fas fa-shapes"></span>
+    <span class="fa fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fas fa-running"></span>
+    <span class="fa fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fas fa-clock"></span>
+    <span class="fa fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-hands-helping"></span>
+    <span class="fa fa-hands-helping"></span>
      
     Use Cases
      
@@ -139,7 +139,7 @@
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-question"></span>
+    <span class="fa fa-question"></span>
      
     Functions
   </a>
@@ -162,12 +162,12 @@
 
       
 
-      </header><script src="usecase-slackbot-google-analytics_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="usecase-slackbot-google-analytics_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Creating a Slackbot for Google Analytics reports</h1>
             
-            <h4 class="date">2021-11-20</h4>
+            <h4 class="date">2021-11-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-slackbot-google-analytics.Rmd"><code>vignettes/usecase-slackbot-google-analytics.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-slackbot-google-analytics.Rmd</code></div>
@@ -193,7 +193,7 @@
 <a href="#create-the-r-script-for-downloading-the-ga-data" class="anchor"></a>Create the R script for downloading the GA data</h2>
 <p>This will use <code>googleAnalyticsR</code> to get the data. I want to see what sessions came in the last 30 days with a referrer I haven’t seen before in the previous year.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">googleAnalyticsR</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/">googleAnalyticsR</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 
 <span class="va">ga_id</span> <span class="op">&lt;-</span> <span class="fl">12345678</span>
@@ -207,21 +207,21 @@
   rows_per_call <span class="op">=</span> <span class="fl">50000</span>,
   max <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>
 
-<span class="va">last30Days</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
-<span class="va">previousDays</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
+<span class="va">last30Days</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
+<span class="va">previousDays</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
 
 <span class="co"># the referrers seen in last30days but not previously</span>
 <span class="va">new_refs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">last30Days</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span>,
                     <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">previousDays</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span><span class="op">)</span>
 
-<span class="va">last_30_new_refs</span> <span class="op">&lt;-</span> <span class="va">last30Days</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">fullReferrer</span> <span class="op">%in%</span> <span class="va">new_refs</span><span class="op">)</span></code></pre></div>
+<span class="va">last_30_new_refs</span> <span class="op">&lt;-</span> <span class="va">last30Days</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">fullReferrer</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">new_refs</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="create-a-plumber-script-for-wrapping-the-ga-fetch" class="section level2">
 <h2 class="hasAnchor">
 <a href="#create-a-plumber-script-for-wrapping-the-ga-fetch" class="anchor"></a>Create a plumber script for wrapping the GA fetch</h2>
 <p>Now I’ll put the call behind a plumber API endpoint. The script will assume authentication will come from a local json auth file, that will be in the deployment. To make it a bit more general, the GA viewId will be able to be sent as a parameter, that will work for all GA accounts the auth file has access to.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">googleAnalyticsR</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/">googleAnalyticsR</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 
 <span class="co"># the function will be called from the endpoints</span>
@@ -235,15 +235,15 @@
     rows_per_call <span class="op">=</span> <span class="fl">50000</span>,
     max <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>
 
-  <span class="va">last30Days</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
-  <span class="va">previousDays</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
+  <span class="va">last30Days</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
+  <span class="va">previousDays</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
 
   <span class="co"># the referrers seen in last30days but not previously</span>
   <span class="va">new_refs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">last30Days</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span>,
                       <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">previousDays</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span><span class="op">)</span>
 
-  <span class="va">last_30_new_refs</span> <span class="op">&lt;-</span> <span class="va">last30Days</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">fullReferrer</span> <span class="op">%in%</span> <span class="va">new_refs</span><span class="op">)</span>
+  <span class="va">last_30_new_refs</span> <span class="op">&lt;-</span> <span class="va">last30Days</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">fullReferrer</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">new_refs</span><span class="op">)</span>
     
   <span class="va">last_30_new_refs</span>
 <span class="op">}</span>
@@ -453,7 +453,7 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <span class="op">)</span></code></pre></div>
 <p>The R API is now also modified to include the new endpoint <code>/trigger-slack</code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">googleAnalyticsR</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/">googleAnalyticsR</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
 

@@ -91,13 +91,13 @@ This creates steps to use git with an ssh created key." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
      
@@ -117,28 +117,28 @@ This creates steps to use git with an ssh created key." />
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fas fa-shapes"></span>
+    <span class="fa fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fas fa-running"></span>
+    <span class="fa fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fas fa-clock"></span>
+    <span class="fa fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-hands-helping"></span>
+    <span class="fa fa-hands-helping"></span>
      
     Use Cases
      
@@ -185,7 +185,7 @@ This creates steps to use git with an ssh created key." />
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-question"></span>
+    <span class="fa fa-question"></span>
      
     Functions
   </a>
@@ -277,58 +277,64 @@ This creates steps to use git with an ssh created key." />
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-11-20 08:05:04 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-11-20 08:05:04 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'>
-<span class='co'># assumes you have previously saved git ssh key called "github-ssh"</span>
-<span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span><span class='op'>(</span>
-     steps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
-          <span class='fu'>cr_buildstep_gitsetup</span><span class='op'>(</span><span class='st'>"github-ssh"</span><span class='op'>)</span>,
-          <span class='fu'>cr_buildstep_git</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"clone"</span>,
-                             <span class='st'>"git@github.com:github_name/repo_name"</span><span class='op'>)</span><span class='op'>)</span>
-     <span class='op'>)</span>
- <span class='op'>)</span>
-</div><div class='output co'>#&gt; ==cloudRunnerYaml==
-#&gt; steps:
-#&gt; - name: gcr.io/cloud-builders/gcloud
-#&gt;   entrypoint: bash
-#&gt;   args:
-#&gt;   - -c
-#&gt;   - gcloud secrets versions access latest --secret=github-ssh &gt; /root/.ssh/id_rsa
-#&gt;   id: git secret
-#&gt;   volumes:
-#&gt;   - name: ssh
-#&gt;     path: /root/.ssh
-#&gt; - name: gcr.io/cloud-builders/git
-#&gt;   entrypoint: bash
-#&gt;   args:
-#&gt;   - -c
-#&gt;   - |-
-#&gt;     chmod 600 /root/.ssh/id_rsa
-#&gt;     cat &lt;&lt;EOF &gt;known_hosts
-#&gt;     github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
-#&gt;     EOF
-#&gt;     cat &lt;&lt;EOF &gt;/root/.ssh/config
-#&gt;     Hostname github.com
-#&gt;     IdentityFile /root/.ssh/id_rsa
-#&gt;     EOF
-#&gt;     mv known_hosts /root/.ssh/known_hosts
-#&gt;     git config --global user.name "googleCloudRunner"
-#&gt;     git config --global user.email "cr_buildstep_gitsetup@googleCloudRunner.com"
-#&gt;   id: git setup script
-#&gt;   volumes:
-#&gt;   - name: ssh
-#&gt;     path: /root/.ssh
-#&gt; - name: gcr.io/cloud-builders/git
-#&gt;   args:
-#&gt;   - clone
-#&gt;   - git@github.com:github_name/repo_name
-#&gt;   volumes:
-#&gt;   - name: ssh
-#&gt;     path: /root/.ssh</div><div class='input'>
-
-
-</div></span></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-26 15:36:30 &gt;</span> ProjectId set to  my-project</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "my-project"</span>
+<span class='r-in'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-26 15:36:30 &gt;</span> Bucket set to  my-bucket</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "my-bucket"</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># assumes you have previously saved git ssh key called "github-ssh"</span></span>
+<span class='r-in'><span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span><span class='op'>(</span></span>
+<span class='r-in'>     steps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span></span>
+<span class='r-in'>          <span class='fu'>cr_buildstep_gitsetup</span><span class='op'>(</span><span class='st'>"github-ssh"</span><span class='op'>)</span>,</span>
+<span class='r-in'>          <span class='fu'>cr_buildstep_git</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"clone"</span>,</span>
+<span class='r-in'>                             <span class='st'>"git@github.com:github_name/repo_name"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'>     <span class='op'>)</span></span>
+<span class='r-in'> <span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ==cloudRunnerYaml==</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> steps:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> - name: gcr.io/cloud-builders/gcloud</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   entrypoint: bash</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   args:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - -c</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - gcloud secrets versions access latest --secret=github-ssh --format='get(payload.data)'</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     | tr '_-' '/+' | base64 -d &gt; /root/.ssh/id_rsa</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   id: git secret</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   volumes:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - name: ssh</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     path: /root/.ssh</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> - name: gcr.io/cloud-builders/git</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   entrypoint: bash</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   args:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - -c</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - |-</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     chmod 600 /root/.ssh/id_rsa</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     cat &lt;&lt;EOF &gt;known_hosts</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     EOF</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     cat &lt;&lt;EOF &gt;/root/.ssh/config</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     Hostname github.com</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     IdentityFile /root/.ssh/id_rsa</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     EOF</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     mv known_hosts /root/.ssh/known_hosts</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     git config --global user.name "googleCloudRunner"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     git config --global user.email "cr_buildstep_gitsetup@googleCloudRunner.com"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   id: git setup script</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   volumes:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - name: ssh</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     path: /root/.ssh</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> - name: gcr.io/cloud-builders/git</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   args:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - clone</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - git@github.com:github_name/repo_name</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   volumes:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - name: ssh</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     path: /root/.ssh</span>
+<span class='r-in'></span>
+<span class='r-in'></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

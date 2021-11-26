@@ -45,13 +45,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
      
@@ -71,28 +71,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fas fa-shapes"></span>
+    <span class="fa fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fas fa-running"></span>
+    <span class="fa fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fas fa-clock"></span>
+    <span class="fa fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-hands-helping"></span>
+    <span class="fa fa-hands-helping"></span>
      
     Use Cases
      
@@ -139,7 +139,7 @@
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-question"></span>
+    <span class="fa fa-question"></span>
      
     Functions
   </a>
@@ -162,12 +162,12 @@
 
       
 
-      </header><script src="usecase-scheduled-google-analytics_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="usecase-scheduled-google-analytics_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Scheduled Google Analytics API calls - GDPR User Deletions</h1>
             
-            <h4 class="date">2021-11-20</h4>
+            <h4 class="date">2021-11-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-scheduled-google-analytics.Rmd"><code>vignettes/usecase-scheduled-google-analytics.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-scheduled-google-analytics.Rmd</code></div>
@@ -188,7 +188,7 @@
 <a href="#r-script-for-google-analytics-user-deletions" class="anchor"></a>R script for Google Analytics user deletions</h3>
 <p>An example script is shown below:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">googleAnalyticsR</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/">googleAnalyticsR</a></span><span class="op">)</span>
 <span class="co"># enable scopes for user deletions and listing GA accounts</span>
 <span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>googleAuthR.scopes.selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
   <span class="st">"https://www.googleapis.com/auth/analytics.user.deletion"</span>,
@@ -305,7 +305,7 @@
 <div id="the-build" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-build" class="anchor"></a>The Build</h2>
-<p>We now create the build around the R script that will download the necessary files and upload the results. We save the above script locally to <code>delete.R</code> - then when we call <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r("delete.R")</a></code> it will pull that script in and create a build step with the R code embedded within it:</p>
+<p>We now create the build around the R script that will download the necessary files and upload the results. We save the above script locally to <code>delete.R</code> - then when we call <code>cr_buildstep_r("delete.R")</code> it will pull that script in and create a build step with the R code embedded within it:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
@@ -342,7 +342,7 @@
             schedule <span class="op">=</span> <span class="st">"5 1 * * *"</span>, 
             httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span></code></pre></div>
 <p>The build assumes you have uploaded the authentication service key to Secret Manager for use within <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> and then <code>ga_auth()</code>, and the required files are uploaded to a Cloud Storage bucket for use within <code><a href="../reference/cr_buildstep_gcloud.html">cr_buildstep_gcloud()</a></code>.</p>
-<p>It turns out 500 API deletions is just over the default of 10mins build run time, so the time out is increased to 20mins via <code><a href="../reference/cr_build_make.html">cr_build_make(yaml, timeout = 1200)</a></code></p>
+<p>It turns out 500 API deletions is just over the default of 10mins build run time, so the time out is increased to 20mins via <code>cr_build_make(yaml, timeout = 1200)</code></p>
 <p>The <code>googleAnalyticsR</code> API calls make use of the public Docker file that is built upon each commit to GitHub of the package, available at <code>gcr.io/gcer-public/googleAnalyticsR:master</code></p>
 </div>
   </div>

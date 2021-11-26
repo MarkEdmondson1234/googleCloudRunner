@@ -4,7 +4,7 @@
 #'
 #' @param name name of docker image to call appended to \code{prefix}
 #' @param args character vector of arguments
-#' @param prefix prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io
+#' @param prefix prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io or \code{*-docker.pkg.dev}
 #' @param entrypoint change the entrypoint for the docker container
 #' @param dir The directory to use, relative to /workspace e.g. /workspace/deploy/
 #' @param id Optional id for the step
@@ -103,7 +103,7 @@ cr_buildstep <- function(name,
 
   if(dir %in% c("",NA)) dir <- NULL
 
-  if(grepl("^gcr.io", name)){
+  if (has_registry_prefix(name)) {
     prefix <- ""
   }
 

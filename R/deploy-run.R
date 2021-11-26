@@ -9,16 +9,18 @@
 #' @param projectId The projectId where it all gets deployed to
 #' @param region The Cloud Run endpoint set by CR_REGION env arg
 #' @param bucket The Cloud Storage bucket that will hold the code
+#' @param pre_steps Other \link{cr_buildstep} to run before the docker build
+#' @param post_steps Other \link{cr_buildstep} to run after the docker build
 #' @param ... Other arguments passed to \link{cr_buildstep_run}
 #' @inheritDotParams cr_buildstep_run
 #' @inheritParams cr_buildstep_docker
 #' @inheritParams cr_build
 #' @family Deployment functions
 #' @details
+#' These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.
 #'
 #' @seealso For scheduling Cloud Run apps \link{cr_run_schedule_http}
 #'
-#' These deploy containers to Cloud Run, a scale 0-to-millions container-as-a-service on Google Cloud Platform.
 #'
 #' @export
 #' @examples
@@ -40,6 +42,9 @@ cr_deploy_run <- function(local,
                           projectId = cr_project_get(),
                           launch_browser = interactive(),
                           timeout=600L,
+                          kaniko_cache = TRUE,
+                          pre_steps = NULL,
+                          post_steps = NULL,
                           ...){
 
   assert_that(
@@ -61,7 +66,10 @@ cr_deploy_run <- function(local,
                             projectId = projectId,
                             launch_browser = launch_browser,
                             timeout=timeout,
-                            kaniko_cache=TRUE)
+                            kaniko_cache=kaniko_cache,
+                            pre_steps = pre_steps,
+                            post_steps = post_steps
+                            )
 
   if(built$status != "SUCCESS"){
     myMessage("Error building Dockerfile", level = 3)
@@ -146,7 +154,6 @@ cr_deploy_html <- function(html_folder,
 #' @param api A folder containing the R script using plumber called api.R and all its dependencies
 #' @param ... Other arguments passed to \link{cr_deploy_run} and eventually \link{cr_buildstep_run}
 #'
-#' @details
 #'
 #' @section cr_deploy_plumber:
 #'

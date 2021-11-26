@@ -2,12 +2,21 @@
 % Please edit documentation in R/cloudbuild_schedule.R
 \name{cr_build_schedule_http}
 \alias{cr_build_schedule_http}
+\alias{cr_schedule_build}
 \title{Create a Cloud Scheduler HTTP target from a Cloud Build object}
 \usage{
 cr_build_schedule_http(
   build,
   email = cr_email_get(),
   projectId = cr_project_get()
+)
+
+cr_schedule_build(
+  build,
+  schedule = NULL,
+  email = cr_email_get(),
+  projectId = cr_project_get(),
+  ...
 )
 }
 \arguments{
@@ -16,6 +25,10 @@ cr_build_schedule_http(
 \item{email}{The email that will authenticate the job set via \link{cr_email_set}}
 
 \item{projectId}{The projectId}
+
+\item{schedule}{A cron schedule e.g. \code{"15 5 * * *"}}
+
+\item{...}{additional arguments to pass to \code{\link{cr_schedule}}}
 }
 \value{
 A \link{HttpTarget} object for use in \link{cr_schedule}

@@ -45,13 +45,13 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
      
@@ -71,28 +71,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fas fa-shapes"></span>
+    <span class="fa fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fas fa-running"></span>
+    <span class="fa fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fas fa-clock"></span>
+    <span class="fa fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-hands-helping"></span>
+    <span class="fa fa-hands-helping"></span>
      
     Use Cases
      
@@ -139,7 +139,7 @@
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-question"></span>
+    <span class="fa fa-question"></span>
      
     Functions
   </a>
@@ -162,12 +162,12 @@
 
       
 
-      </header><script src="git_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="git_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>googleCloudRunner and git (GitHub, GitLab, BitBucket etc.)</h1>
             
-            <h4 class="date">2021-11-20</h4>
+            <h4 class="date">2021-11-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/git.Rmd"><code>vignettes/git.Rmd</code></a></small>
       <div class="hidden name"><code>git.Rmd</code></div>
@@ -192,7 +192,7 @@
 <div id="cloud-build-triggers" class="section level2">
 <h2 class="hasAnchor">
 <a href="#cloud-build-triggers" class="anchor"></a>Cloud Build Triggers</h2>
-<p>Cloud Build triggers let you automate builds based on git pushes or pull requests via <code><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo()</a></code> - <code><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo(type="github")</a></code> lets you link to push and pull events on GitHub repositories you have given permission for GCP to access via the <a href="https://github.com/marketplace/google-cloud-build">GitHub Cloud Build app</a> - <code><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo(type="cloud_source")</a></code> lets you link to push events to <a href="https://cloud.google.com/source-repositories">Google Cloud Source Repostitories</a> - this can include a mirror of GitHub or other git providers such as BitBucket</p>
+<p>Cloud Build triggers let you automate builds based on git pushes or pull requests via <code><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo()</a></code> - <code>cr_buildtrigger_repo(type="github")</code> lets you link to push and pull events on GitHub repositories you have given permission for GCP to access via the <a href="https://github.com/marketplace/google-cloud-build">GitHub Cloud Build app</a> - <code>cr_buildtrigger_repo(type="cloud_source")</code> lets you link to push events to <a href="https://cloud.google.com/source-repositories">Google Cloud Source Repostitories</a> - this can include a mirror of GitHub or other git providers such as BitBucket</p>
 <p>An example setting up <code><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo()</a></code> with GitHub is shown below - this will trigger builds when you push to the master branch:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild.yaml"</span>,

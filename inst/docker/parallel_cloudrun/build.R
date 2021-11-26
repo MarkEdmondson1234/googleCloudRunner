@@ -2,7 +2,7 @@ library(googleCloudRunner)
 
 bs <- c(
   cr_buildstep_secret("mark-edmondson-gde-auth",
-      decrypted = "inst/docker/parallel_cloudrun/plumber/auth.json"),
+                      decrypted = "inst/docker/parallel_cloudrun/plumber/auth.json"),
   cr_buildstep_docker("cloudrun_parallel",
                       dir = "inst/docker/parallel_cloudrun/plumber",
                       kaniko_cache = TRUE),
@@ -35,11 +35,11 @@ token <- cr_jwt_token(jwt, the_url)
 # call Cloud Run with token!
 library(httr)
 res <- cr_jwt_with_httr(GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/hello"),
-                   token)
+                        token)
 content(res)
 
 # interact with the API we made
-call_api <- function(region, industry, token){
+call_api <- function(region, industry, token) {
   api <- sprintf("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=%s&industry=%s",
                  URLencode(region), URLencode(industry))
 
@@ -88,9 +88,9 @@ plan(multicore)
 results <- future_lapply(regions, call_api, industry = "Software", token = token)
 
 # loop over all industries and regions
-all_results <- lapply(regions, function(x){
+all_results <- lapply(regions, function(x) {
 
-  future_lapply(industry, function(y){
+  future_lapply(industry, function(y) {
     call_api(region = x, industry = y, token = token)
   })
 
@@ -98,13 +98,17 @@ all_results <- lapply(regions, function(x){
 
 ## curl multi asynch
 # interact with the API we made
-make_urls <- function(regions, industry){
+make_urls <- function(regions, industry) {
 
   combos <- expand.grid(regions, industry, stringsAsFactors = FALSE)
 
-  unlist(mapply(function(x,y){sprintf("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=%s&industry=%s",URLencode(x), URLencode(y))},
-                SIMPLIFY = FALSE, USE.NAMES = FALSE,
-         combos$Var1 ,combos$Var2))
+  unlist(mapply(function(x, y) {
+    sprintf(
+      "https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=%s&industry=%s",
+      URLencode(x), URLencode(y))
+  },
+  SIMPLIFY = FALSE, USE.NAMES = FALSE,
+  combos$Var1 ,combos$Var2))
 }
 
 all_urls <- make_urls(regions = regions, industry = industry)

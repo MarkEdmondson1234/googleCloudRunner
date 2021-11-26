@@ -10,6 +10,7 @@ cr_build(
   timeout = NULL,
   images = NULL,
   substitutions = NULL,
+  serviceAccount = NULL,
   artifacts = NULL,
   options = NULL,
   projectId = cr_project_get(),
@@ -26,6 +27,8 @@ cr_build(
 \item{images}{A list of images to be pushed upon the successful completion of all build}
 
 \item{substitutions}{Substitutions data for `Build` resource}
+
+\item{serviceAccount}{service account email to be used for the build}
 
 \item{artifacts}{Artifacts produced by the build that should be uploaded upon}
 

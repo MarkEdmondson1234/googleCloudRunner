@@ -2,6 +2,7 @@
 % Please edit documentation in R/docker.R
 \name{cr_deploy_docker}
 \alias{cr_deploy_docker}
+\alias{cr_deploy_docker_construct}
 \title{Deploy a local Dockerfile to be built on ContainerRegistry}
 \usage{
 cr_deploy_docker(
@@ -16,6 +17,25 @@ cr_deploy_docker(
   launch_browser = interactive(),
   kaniko_cache = TRUE,
   predefinedAcl = "bucketOwnerFullControl",
+  pre_steps = NULL,
+  post_steps = NULL,
+  ...
+)
+
+cr_deploy_docker_construct(
+  local,
+  image_name = remote,
+  dockerfile = NULL,
+  remote = basename(local),
+  tag = c("latest", "$BUILD_ID"),
+  timeout = 600L,
+  bucket = cr_bucket_get(),
+  projectId = cr_project_get(),
+  launch_browser = interactive(),
+  kaniko_cache = TRUE,
+  predefinedAcl = "bucketOwnerFullControl",
+  pre_steps = NULL,
+  post_steps = NULL,
   ...
 )
 }
@@ -42,11 +62,20 @@ cr_deploy_docker(
 
 \item{predefinedAcl}{Access setting for the bucket used in deployed.  Set to "bucketLevel" if using bucket level access}
 
+\item{pre_steps}{Other \link{cr_buildstep} to run before the docker build}
+
+\item{post_steps}{Other \link{cr_buildstep} to run after the docker build}
+
 \item{...}{
   Arguments passed on to \code{\link[=cr_buildstep_docker]{cr_buildstep_docker}}
   \describe{
     \item{\code{image}}{The image tag that will be pushed, starting with gcr.io or created by combining with \code{projectId} if not starting with gcr.io}
     \item{\code{location}}{Where the Dockerfile to build is in relation to \code{dir}}
+    \item{\code{build_args}}{additional arguments to pass to \code{docker build},
+should be a character vector.}
+    \item{\code{push_image}}{if \code{kaniko_cache = FALSE} and
+\code{push_image = FALSE}, then the docker image is simply built and not
+pushed}
   }}
 }
 \description{
@@ -56,6 +85,11 @@ Build a local Dockerfile in the cloud. See googleCloudRunner website for help ho
 This lets you deploy local folders with Dockerfiles, automating saving the source on Google Cloud Storage.
 
 To deploy builds on git triggers and sources such as GitHub, see the examples of \link{cr_buildstep_docker} or the use cases on the website
+}
+\note{
+`cr_deploy_docker_construct` is a helper function to construct the arguments
+needed to deploy the docker, which may be combined with
+\code{\link{cr_deploy_r}} to combine Docker and R
 }
 \examples{
 

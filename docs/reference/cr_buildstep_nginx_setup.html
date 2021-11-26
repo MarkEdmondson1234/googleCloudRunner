@@ -90,13 +90,13 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa-home"></span>
+    <span class="fa fa-home"></span>
      
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-wrench"></span>
+    <span class="fa fa-wrench"></span>
      
     Setup
      
@@ -116,28 +116,28 @@
 </li>
 <li>
   <a href="../articles/cloudbuild.html">
-    <span class="fas fa-shapes"></span>
+    <span class="fa fa-shapes"></span>
      
     Cloud Build
   </a>
 </li>
 <li>
   <a href="../articles/cloudrun.html">
-    <span class="fas fa-running"></span>
+    <span class="fa fa-running"></span>
      
     Cloud Run
   </a>
 </li>
 <li>
   <a href="../articles/cloudscheduler.html">
-    <span class="fas fa-clock"></span>
+    <span class="fa fa-clock"></span>
      
     Cloud Scheduler
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa-hands-helping"></span>
+    <span class="fa fa-hands-helping"></span>
      
     Use Cases
      
@@ -184,7 +184,7 @@
 </li>
 <li>
   <a href="../reference/index.html">
-    <span class="fas fa-question"></span>
+    <span class="fa fa-question"></span>
      
     Functions
   </a>
@@ -255,102 +255,109 @@
 <code><a href='cr_buildstep.html'>cr_buildstep</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-11-20 08:05:04 &gt;</span><span> ProjectId set to  my-project</span></div><div class='output co'>#&gt; [1] "my-project"</div><div class='input'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-11-20 08:05:04 &gt;</span><span> Bucket set to  my-bucket</span></div><div class='output co'>#&gt; [1] "my-bucket"</div><div class='input'><span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span><span class='op'>(</span><span class='st'>"europe-west1"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BBBB;'>ℹ</span><span> </span><span style='color: #B2B2B2;'>2021-11-20 08:05:04 &gt;</span><span> Region set to  europe-west1</span></div><div class='output co'>#&gt; [1] "europe-west1"</div><div class='input'>
-<span class='va'>html_folder</span> <span class='op'>&lt;-</span> <span class='st'>"my_html"</span>
-<span class='va'>run_image</span> <span class='op'>&lt;-</span> <span class='st'>"gcr.io/my-project/my-image-for-cloudrun"</span>
-<span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span><span class='op'>(</span>
- steps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
-  <span class='fu'>cr_buildstep_nginx_setup</span><span class='op'>(</span><span class='va'>html_folder</span><span class='op'>)</span>,
-  <span class='fu'><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a></span><span class='op'>(</span><span class='va'>run_image</span>, dir <span class='op'>=</span> <span class='va'>html_folder</span><span class='op'>)</span>,
-  <span class='fu'><a href='cr_buildstep_run.html'>cr_buildstep_run</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>"running-nginx"</span>,
-                   image <span class='op'>=</span> <span class='va'>run_image</span>,
-                   concurrency <span class='op'>=</span> <span class='fl'>80</span><span class='op'>)</span>
-                   <span class='op'>)</span>
-           <span class='op'>)</span>
-</div><div class='output co'>#&gt; ==cloudRunnerYaml==
-#&gt; steps:
-#&gt; - name: ubuntu
-#&gt;   args:
-#&gt;   - bash
-#&gt;   - -c
-#&gt;   - |-
-#&gt;     echo "
-#&gt;     server {
-#&gt;         listen       \$$$${PORT};
-#&gt;         server_name  localhost;
-#&gt;         location / {
-#&gt;             root   /usr/share/nginx/html;
-#&gt;             index  index.html index.htm;
-#&gt;         }
-#&gt;     }" &gt; default.template
-#&gt; 
-#&gt;     cat &lt;&lt;EOF &gt;Dockerfile
-#&gt;     FROM nginx
-#&gt;     COPY . /usr/share/nginx/html
-#&gt;     COPY default.template /etc/nginx/conf.d/default.template
-#&gt;     CMD envsubst &lt; /etc/nginx/conf.d/default.template &gt; /etc/nginx/conf.d/default.conf &amp;&amp; exec nginx -g 'daemon off;'
-#&gt;     EOF
-#&gt; 
-#&gt;     cat default.template
-#&gt;     cat Dockerfile
-#&gt;   id: setup nginx
-#&gt;   dir: my_html
-#&gt; - name: gcr.io/cloud-builders/docker
-#&gt;   args:
-#&gt;   - build
-#&gt;   - -f
-#&gt;   - Dockerfile
-#&gt;   - --tag
-#&gt;   - gcr.io/my-project/my-image-for-cloudrun:latest
-#&gt;   - --tag
-#&gt;   - gcr.io/my-project/my-image-for-cloudrun:$BUILD_ID
-#&gt;   - '.'
-#&gt;   dir: my_html
-#&gt; - name: gcr.io/cloud-builders/docker
-#&gt;   args:
-#&gt;   - push
-#&gt;   - gcr.io/my-project/my-image-for-cloudrun
-#&gt;   dir: my_html
-#&gt; - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
-#&gt;   args:
-#&gt;   - gcloud
-#&gt;   - run
-#&gt;   - deploy
-#&gt;   - running-nginx
-#&gt;   - --image
-#&gt;   - gcr.io/my-project/my-image-for-cloudrun
-#&gt;   - --region
-#&gt;   - europe-west1
-#&gt;   - --platform
-#&gt;   - managed
-#&gt;   - --concurrency
-#&gt;   - '80'
-#&gt;   - --port
-#&gt;   - default
-#&gt;   - --max-instances
-#&gt;   - default
-#&gt;   - --memory
-#&gt;   - 256Mi
-#&gt;   - --cpu
-#&gt;   - '1'
-#&gt;   - --clear-env-vars
-#&gt;   - --allow-unauthenticated
-#&gt;   id: deploy cloudrun
-#&gt; - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
-#&gt;   args:
-#&gt;   - gcloud
-#&gt;   - run
-#&gt;   - services
-#&gt;   - add-iam-policy-binding
-#&gt;   - --region=europe-west1
-#&gt;   - --member=allUsers
-#&gt;   - --role=roles/run.invoker
-#&gt;   - --platform=managed
-#&gt;   - running-nginx
-#&gt;   id: auth cloudrun</div></span></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-26 15:36:31 &gt;</span> ProjectId set to  my-project</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "my-project"</span>
+<span class='r-in'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-26 15:36:31 &gt;</span> Bucket set to  my-bucket</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "my-bucket"</span>
+<span class='r-in'><span class='fu'><a href='cr_region_set.html'>cr_region_set</a></span><span class='op'>(</span><span class='st'>"europe-west1"</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-26 15:36:31 &gt;</span> Region set to  europe-west1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "europe-west1"</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>html_folder</span> <span class='op'>&lt;-</span> <span class='st'>"my_html"</span></span>
+<span class='r-in'><span class='va'>run_image</span> <span class='op'>&lt;-</span> <span class='st'>"gcr.io/my-project/my-image-for-cloudrun"</span></span>
+<span class='r-in'><span class='fu'><a href='cr_build_yaml.html'>cr_build_yaml</a></span><span class='op'>(</span></span>
+<span class='r-in'> steps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='fu'>cr_buildstep_nginx_setup</span><span class='op'>(</span><span class='va'>html_folder</span><span class='op'>)</span>,</span>
+<span class='r-in'>  <span class='fu'><a href='cr_buildstep_docker.html'>cr_buildstep_docker</a></span><span class='op'>(</span><span class='va'>run_image</span>, dir <span class='op'>=</span> <span class='va'>html_folder</span><span class='op'>)</span>,</span>
+<span class='r-in'>  <span class='fu'><a href='cr_buildstep_run.html'>cr_buildstep_run</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>"running-nginx"</span>,</span>
+<span class='r-in'>                   image <span class='op'>=</span> <span class='va'>run_image</span>,</span>
+<span class='r-in'>                   concurrency <span class='op'>=</span> <span class='fl'>80</span><span class='op'>)</span></span>
+<span class='r-in'>                   <span class='op'>)</span></span>
+<span class='r-in'>           <span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ==cloudRunnerYaml==</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> steps:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> - name: ubuntu</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   args:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - bash</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - -c</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - |-</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     echo "</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     server {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         listen       \$$$${PORT};</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         server_name  localhost;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         location / {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>             root   /usr/share/nginx/html;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>             index  index.html index.htm;</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }" &gt; default.template</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     cat &lt;&lt;EOF &gt;Dockerfile</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     FROM nginx</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     COPY . /usr/share/nginx/html</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     COPY default.template /etc/nginx/conf.d/default.template</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     CMD envsubst &lt; /etc/nginx/conf.d/default.template &gt; /etc/nginx/conf.d/default.conf &amp;&amp; exec nginx -g 'daemon off;'</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     EOF</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     cat default.template</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     cat Dockerfile</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   id: setup nginx</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   dir: my_html</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> - name: gcr.io/cloud-builders/docker</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   args:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - build</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - -f</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - Dockerfile</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --tag</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - gcr.io/my-project/my-image-for-cloudrun:latest</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --tag</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - gcr.io/my-project/my-image-for-cloudrun:$BUILD_ID</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - '.'</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   dir: my_html</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> - name: gcr.io/cloud-builders/docker</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   args:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - push</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - gcr.io/my-project/my-image-for-cloudrun</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   dir: my_html</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   args:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - gcloud</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - run</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - deploy</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - running-nginx</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --image</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - gcr.io/my-project/my-image-for-cloudrun</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --region</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - europe-west1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --platform</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - managed</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --concurrency</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - '80'</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --port</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - default</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --max-instances</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - default</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --memory</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - 256Mi</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --cpu</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - '1'</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --clear-env-vars</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --allow-unauthenticated</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   id: deploy cloudrun</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   args:</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - gcloud</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - run</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - services</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - add-iam-policy-binding</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --region=europe-west1</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --member=allUsers</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --role=roles/run.invoker</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - --platform=managed</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   - running-nginx</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   id: auth cloudrun</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

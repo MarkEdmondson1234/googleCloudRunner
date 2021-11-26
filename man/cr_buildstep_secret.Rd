@@ -4,7 +4,13 @@
 \alias{cr_buildstep_secret}
 \title{Create a buildstep for using Secret Manager}
 \usage{
-cr_buildstep_secret(secret, decrypted, version = "latest", ...)
+cr_buildstep_secret(
+  secret,
+  decrypted,
+  version = "latest",
+  binary_mode = FALSE,
+  ...
+)
 }
 \arguments{
 \item{secret}{The secret data name in Secret Manager}
@@ -12,6 +18,8 @@ cr_buildstep_secret(secret, decrypted, version = "latest", ...)
 \item{decrypted}{The name of the file the secret will be decrypted into}
 
 \item{version}{The version of the secret}
+
+\item{binary_mode}{Should the file be treated in binary/raw format?}
 
 \item{...}{Other arguments sent to \link{cr_buildstep_bash}}
 }

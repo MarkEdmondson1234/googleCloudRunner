@@ -3,12 +3,12 @@ library(dplyr)
 library(httr)
 
 # the function will be called from the endpoints
-do_ga <- function(ga_id){
+do_ga <- function(ga_id) {
   # get last years referrer data
   two_years <- google_analytics(
     ga_id,
     date_range = c(Sys.Date()-365, Sys.Date()),
-    dimensions = c("date","fullReferrer","landingPagePath"),
+    dimensions = c("date", "fullReferrer", "landingPagePath"),
     metrics = "sessions",
     rows_per_call = 50000,
     max = -1)
@@ -28,21 +28,21 @@ do_ga <- function(ga_id){
 
 #' @get /
 #' @serializer html
-function(){
+function() {
   "<html><h1>It works!</h1></html>"
 }
 
 
 #' @get /last-30-days
 #' @serializer csv
-function(ga_id){
+function(ga_id) {
   # get last years referrer data
   do_ga(ga_id)
 }
 
 #' @get /trigger-slack
 #' @serializer json
-function(ga_id){
+function(ga_id) {
   # get last years referrer data
   last_30_new_refs <- do_ga(ga_id)
 

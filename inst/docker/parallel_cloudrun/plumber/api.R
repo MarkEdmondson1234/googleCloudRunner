@@ -1,4 +1,4 @@
-if(Sys.getenv("PORT") == "") Sys.setenv(PORT = 8000)
+if (Sys.getenv("PORT") == "") Sys.setenv(PORT = 8000)
 
 #auth via BQ_AUTH_FILE environment argument
 library(bigQueryR)
@@ -7,21 +7,21 @@ library(forecast)
 
 #' @get /
 #' @html
-function(){
+function() {
   "<html><h1>It works!</h1></html>"
 }
 
 
 #' @get /hello
 #' @html
-function(){
+function() {
   "<html><h1>hello world</h1></html>"
 }
 
 #' @get /covid_traffic
 #' @param industry the industry to filter results down to e.g "Software"
 #' @param region the region to filter results down to e.g "Europe"
-function(region=NULL, industry=NULL, bqds = NULL, bqtbl = NULL){
+function(region=NULL, industry=NULL, bqds = NULL, bqtbl = NULL) {
 
   if(any(is.null(region), is.null(industry))){
     stop("Must supply region and industry parameters")
@@ -44,7 +44,7 @@ function(region=NULL, industry=NULL, bqds = NULL, bqtbl = NULL){
 
   # filter to industry in R this time
   test_data <- traffic[traffic$industry == industry,
-                       c("date","percent_of_baseline")]
+                       c("date", "percent_of_baseline")]
 
   tts <- xts(test_data$percent_of_baseline,
              order.by = test_data$date,
@@ -64,7 +64,7 @@ function(region=NULL, industry=NULL, bqds = NULL, bqtbl = NULL){
 
   message("Return: ", jsonlite::toJSON(o))
 
-  if(is.null(bqds) || is.null(bqtbl)){
+  if (is.null(bqds) || is.null(bqtbl)) {
     # return data directly
     return(o)
   }

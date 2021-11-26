@@ -260,19 +260,32 @@ cr_build_upload_gcs <- function(local,
                   paste0("gs://", bucket,"/",remote)),
             level = 3)
 
-  tar_file <- paste0(basename(local), ".tar.gz")
 
-  dir.create(deploy_folder, showWarnings = FALSE)
+  # make temporary folder (to avoid recursion issue)
+  tdir <- tempfile()
+  dir.create(tdir, showWarnings = FALSE, recursive = TRUE)
+  full_deploy_folder <- file.path(tdir, deploy_folder)
+
   myMessage(paste0("Copying files from ",
-                   local, " to /", deploy_folder),
+                   local, " to ", full_deploy_folder),
             level = 2)
-  file.copy(local, deploy_folder, recursive = TRUE)
-  myMessage(paste0("Compressing files from /",
-                   deploy_folder, " to ", tar_file),
+  # mirror the structure exactly
+  file.copy(local, tdir, recursive = TRUE)
+  file.rename(file.path(tdir, basename(local)), full_deploy_folder)
+  myMessage(paste0("Compressing files from ",
+                   full_deploy_folder, " to ", tar_file),
             level = 2)
+
+  owd <- getwd()
+  setwd(tdir)
+  on.exit(setwd(owd), add = TRUE)
+  tar_file <- paste0(basename(local), ".tar.gz")
   tar(tar_file,
       files = deploy_folder,
-      compression = "gzip")
+      compression = "gzip"
+  )
+  tar_file <- normalizePath(tar_file, mustWork = FALSE)
+  setwd(owd)
 
   on.exit(unlink(tar_file), add=TRUE)
   on.exit(unlink(deploy_folder, recursive = TRUE), add=TRUE)

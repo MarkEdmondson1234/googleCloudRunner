@@ -78,6 +78,8 @@ cr_deploy_docker_trigger <- function(
 #' @param bucket The GCS bucket that will be used to deploy code source
 #' @param image_name The name of the docker image to be built either full name starting with gcr.io or constructed from the image_name and projectId via \code{gcr.io/{projectId}/{image_name}}
 #' @param predefinedAcl Access setting for the bucket used in deployed.  Set to "bucketLevel" if using bucket level access
+#' @param pre_steps Other \link{cr_buildstep} to run before the docker build
+#' @param post_steps Other \link{cr_buildstep} to run after the docker build
 #' @param ... Other arguments passed to \link{cr_buildstep_docker}
 #' @inheritParams cr_buildstep_docker
 #' @inheritParams cr_build
@@ -91,6 +93,9 @@ cr_deploy_docker_trigger <- function(
 #'
 #' To deploy builds on git triggers and sources such as GitHub, see the examples of \link{cr_buildstep_docker} or the use cases on the website
 #'
+#' @note `cr_deploy_docker_construct` is a helper function to construct the arguments
+#' needed to deploy the docker, which may be combined with
+#' \code{\link{cr_deploy_r}} to combine Docker and R
 #' @examples
 #'
 #' \dontrun{
@@ -111,9 +116,70 @@ cr_deploy_docker <- function(local,
                              bucket = cr_bucket_get(),
                              projectId = cr_project_get(),
                              launch_browser = interactive(),
-                             kaniko_cache=TRUE,
-                             predefinedAcl="bucketOwnerFullControl",
+                             kaniko_cache = TRUE,
+                             predefinedAcl = "bucketOwnerFullControl",
+                             pre_steps = NULL,
+                             post_steps = NULL,
                              ...){
+
+  result <- cr_deploy_docker_construct(
+    local = local,
+    image_name = image_name,
+    dockerfile = dockerfile,
+    remote = remote,
+    tag = tag,
+    timeout = timeout,
+    bucket = bucket,
+    projectId = projectId,
+    launch_browser = launch_browser,
+    kaniko_cache = kaniko_cache,
+    predefinedAcl = predefinedAcl,
+    pre_steps = pre_steps,
+    post_steps = post_steps,
+    ...
+  )
+  build_yaml <- result$build_yaml
+  gcs_source <- result$gcs_source
+  image_tag <- result$image_tag
+  projectId <- result$projectId
+  launch_browser <- result$launch_browser
+  timeout <- result$timeout
+
+  docker_build <- cr_build(build_yaml,
+                           source = gcs_source,
+                           launch_browser = launch_browser,
+                           timeout = timeout)
+
+  b <- cr_build_wait(docker_build, projectId = projectId)
+
+  myMessage(image_tag, level = 3)
+
+  # to make it the same as non-kaniko docker builds
+  if(kaniko_cache){
+    b$results$images$name <- b$steps$args[[1]][[4]]
+  }
+
+  b
+
+}
+
+#' @export
+#' @rdname cr_deploy_docker
+cr_deploy_docker_construct <- function(
+  local,
+  image_name = remote,
+  dockerfile = NULL,
+  remote = basename(local),
+  tag = c("latest","$BUILD_ID"),
+  timeout = 600L,
+  bucket = cr_bucket_get(),
+  projectId = cr_project_get(),
+  launch_browser = interactive(),
+  kaniko_cache=TRUE,
+  predefinedAcl="bucketOwnerFullControl",
+  pre_steps = NULL,
+  post_steps = NULL,
+  ...){
   assert_that(
     dir.exists(local)
   )
@@ -122,31 +188,66 @@ cr_deploy_docker <- function(local,
             image_name, level = 2)
 
   myMessage(paste("Configuring Dockerfile"), level = 2)
-  find_dockerfile(local, dockerfile = dockerfile)
 
-  assert_that(
-    is.readable(file.path(local, "Dockerfile"))
+  # !!!
+  # Should likely move this to the step for cr_build_upload_gcs
+  # or simply make local into a tempdir and copy over
+  # as currently file.path(local, "Dockerfile") will
+  # be overwritten with dockerfile if !is.null(dockerfile)
+
+  # remove local/Dockerfile if it didn't exist before
+  # to keep local directory as is
+  # If you move this to find_dockerfile, then the
+  # on.exit may not be scoped correctly (exits on find_dockerfile)
+  docker_file_path <- file.path(local, "Dockerfile")
+  remove_docker_file_after <- !file.exists(docker_file_path)
+  remove_docker_file_after <- remove_docker_file_after &&
+    find_dockerfile(local, dockerfile = dockerfile)
+  if (remove_docker_file_after) {
+    on.exit({
+      file.remove(docker_file_path)
+    })
+  }
+
+  assertthat::assert_that(
+    is.readable(docker_file_path)
   )
 
   image <- make_image_name(image_name, projectId = projectId)
 
   #kaniko_cache will push image for you
   if(kaniko_cache){
-    push_image <- NULL
+    pushed_image <- NULL
   } else {
-    push_image <- image
+    pushed_image <- image
   }
 
+  # Adding this in for Artifacts Registry
+  pre_steps = add_docker_auth_prestep(image, pre_steps)
+
+  waitFor <- "-" # build concurrent tags
+  if (!is.null(pre_steps)) {
+    # want pre steps to run before the docker build
+    waitFor <- NULL
+  }
+
+  docker_step <- cr_buildstep_docker(
+    image,
+    tag = tag,
+    location = ".",
+    # dir=paste0("deploy/", basename(local)),
+    dir = "deploy",
+    projectId = projectId,
+    kaniko_cache = kaniko_cache,
+    waitFor = waitFor,
+    ...)
+  steps <- c(pre_steps,
+             docker_step,
+             post_steps
+  )
   build_yaml <- cr_build_yaml(
-    steps = cr_buildstep_docker(image,
-                                tag = tag,
-                                location = ".",
-                                dir=paste0("deploy/", basename(local)),
-                                projectId = projectId,
-                                kaniko_cache = kaniko_cache,
-                                waitFor = "-", # build concurrent tags
-                                ...),
-    images = push_image)
+    steps = steps,
+    images = pushed_image)
 
   image_tag <- paste0(image, ":", tag)
   myMessage("#Deploy docker build for image: ", image, level = 3)
@@ -160,21 +261,19 @@ cr_deploy_docker <- function(local,
                                     bucket = bucket,
                                     predefinedAcl=predefinedAcl)
 
-  docker_build <- cr_build(build_yaml,
-                           source = gcs_source,
-                           launch_browser = launch_browser,
-                           timeout=timeout)
-
-  b <- cr_build_wait(docker_build, projectId = projectId)
-
-  myMessage(image_tag, level = 3)
-
-  # to make it the same as non-kaniko docker builds
-  if(kaniko_cache){
-    b$results$images$name <- b$steps$args[[1]][[4]]
-  }
-
-  b
+  list(
+    steps = steps,
+    gcs_source = gcs_source,
+    images = pushed_image,
+    build_yaml = build_yaml,
+    projectId = projectId,
+    launch_browser = launch_browser,
+    timeout = timeout,
+    image_tag = image_tag,
+    pre_steps = pre_steps,
+    docker_step = docker_step,
+    post_steps = post_steps
+  )
 }
 
 
@@ -190,6 +289,11 @@ cr_deploy_docker <- function(local,
 #' @param projectId The projectId
 #' @param dockerfile Specify the name of the Dockerfile found at \code{location}
 #' @param kaniko_cache If TRUE will use kaniko cache for Docker builds.
+#' @param build_args additional arguments to pass to \code{docker build},
+#' should be a character vector.
+#' @param push_image if \code{kaniko_cache = FALSE} and
+#' \code{push_image = FALSE}, then the docker image is simply built and not
+#' pushed
 #'
 #' @details
 #'
@@ -239,6 +343,8 @@ cr_buildstep_docker <- function(image,
                                 projectId = cr_project_get(),
                                 dockerfile = "Dockerfile",
                                 kaniko_cache = FALSE,
+                                build_args = NULL,
+                                push_image = TRUE,
                                 ...){
   # don't allow dot names that would break things
   dots <- list(...)
@@ -250,12 +356,7 @@ cr_buildstep_docker <- function(image,
     is.null(dots$id)
   )
 
-  prefix <- grepl("^gcr.io", image)
-  if(prefix){
-    the_image <- image
-  } else {
-    the_image <- paste0("gcr.io/", projectId, "/", image)
-  }
+  the_image <- make_image_name(image, projectId = projectId)
 
   # has to be lowercase for kaniko so may as well do it here too
   the_image <- tolower(the_image)
@@ -268,16 +369,26 @@ cr_buildstep_docker <- function(image,
                                USE.NAMES = FALSE)
   )
 
+  if (!push_image && kaniko_cache) {
+    warning("push_image = FALSE, but using kaniko, so image is auto-pushed")
+  }
   if(!kaniko_cache){
-    return(c(
+    steps <- c(
       cr_buildstep("docker",
                    c("build",
                      "-f", dockerfile,
                      the_image_tagged,
-                     location),
-                   ...),
-      cr_buildstep("docker", c("push", the_image), ...)
-    ))
+                     location,
+                     build_args),
+                   ...)
+    )
+    if (push_image) {
+      steps <- c(steps,
+                 cr_buildstep("docker", c("push", the_image),
+                              ...)
+      )
+    }
+    return(steps)
   }
 
   # kaniko cache
@@ -338,7 +449,7 @@ find_dockerfile <- function(local, dockerfile){
   local_files <- list.files(local)
   if("Dockerfile" %in% local_files){
     myMessage("Dockerfile found in ",local, level = 3)
-    return(TRUE)
+    return(FALSE)
   }
 
   # if no dockerfile, attempt to create it
@@ -350,3 +461,19 @@ find_dockerfile <- function(local, dockerfile){
   TRUE
 }
 
+add_docker_auth_prestep = function(image, pre_steps) {
+  # Adding this in for Artifacts Registry
+  need_location <- grepl("^.*-docker.pkg.dev", tolower(image))
+  if (need_location) {
+    dev_location <- sub("^(.*-docker.pkg.dev).*", "\\1", tolower(image))
+    dev_location <- sub("^http(s|)://", "", dev_location)
+    pre_steps <- c(pre_steps,
+                   cr_buildstep_gcloud(
+                     "gcloud",
+                     c("gcloud", "auth", "configure-docker",
+                       dev_location)
+                   )
+    )
+  }
+  pre_steps
+}

@@ -24,7 +24,7 @@ cr_buildstep(
 
 \item{id}{Optional id for the step}
 
-\item{prefix}{prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io}
+\item{prefix}{prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io or \code{*-docker.pkg.dev}}
 
 \item{entrypoint}{change the entrypoint for the docker container}
 
