@@ -75,7 +75,7 @@ cr_schedule <- function(name,
 
   stem <- "https://cloudscheduler.googleapis.com/v1"
 
-  the_name <- contruct_name(name = name, region = region, project = projectId)
+  the_name <- construct_name(name = name, region = region, project = projectId)
   job <- Job(schedule=schedule,
              name = the_name,
              httpTarget = httpTarget,
@@ -236,7 +236,7 @@ cr_schedule_delete <- function(x,
 
 }
 
-contruct_name <- function(name, region, project){
+construct_name <- function(name, region, project){
   if(grepl("^projects", name)){
     return(name)
   }
@@ -526,6 +526,7 @@ PubsubTarget <- function(
   data = NULL,
   attributes = NULL
 ){
+
   structure(rmNullObs(
     list(topicName = topicName,
          data = data,
@@ -537,3 +538,30 @@ PubsubTarget <- function(
 is.gar_pubsubTarget <- function(x){
   inherits(x, "gar_pubsubTarget")
 }
+
+#' Create a PubSub Target object for Cloud Scheduler
+#'
+#' @inheritParams PubsubTarget
+#' @param projectId The projectId for where the topic sits
+#' @family Cloud Scheduler functions
+#' @export
+#' @importFrom jsonlite base64_enc toJSON
+cr_build_schedule_pubsub <- function(
+  topicName,
+  data = NULL,
+  attributes = NULL,
+  projectId = cr_project_get()){
+
+  if(is.null(data)){
+    the_data <- topicName
+  } else {
+    the_data <- toJSON(data)
+  }
+
+  PubsubTarget(
+    topicName = sprintf("projects/%s/topics/%s", projectId, topicName),
+    data = base64_enc(the_data),
+    attributes = attributes
+  )
+}
+

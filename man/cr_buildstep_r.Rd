@@ -39,6 +39,52 @@ If \code{r_source="local"} then it will copy over from a character string or loc
 
 If the R code location starts with \code{gs://} then an extra buildstep will be added that will download the R script from that location then run it as per \code{r_source="runtime"}.  This will consequently override your setting of \code{r_source}
 }
+\examples{
+cr_project_set("my-project")
+cr_bucket_set("my-bucket")
+
+# create an R buildstep inline
+cr_buildstep_r(c("paste('1+1=', 1+1)", "sessionInfo()"))
+
+\dontrun{
+
+# create an R buildstep from a local file
+cr_buildstep_r("my-r-file.R")
+
+# create an R buildstep from a file within the source of the Build
+cr_buildstep_r("inst/schedule/schedule.R", r_source = "runtime")
+
+# create an R buildstep with Rscript arguments and use a large
+# machine with 32 cores
+
+## create storage source
+step1 <- cr_buildstep_r("deploy/my-r-script.R",
+                        r_source="runtime",
+                        rscript_args=c("args_1=<args1>", "args_2=<args_2>"))
+
+}
+## run the script on Cloud Build
+cr_build(
+  cr_build_yaml(
+    steps=step1
+  ),
+  source = storage_source
+  options = list(machineType = "E2_HIGHCPU_32")
+)
+
+# use a different Rocker image e.g. rocker/verse
+cr_buildstep_r(c("library(dplyr)",
+                 "mtcars \%>\% select(mpg)",
+                 "sessionInfo()"),
+               name = "verse")
+
+# use your own R image with custom R
+my_r <- c("devtools::install()", "pkgdown::build_site()")
+br <-  cr_buildstep_r(my_r, name= "gcr.io/gcer-public/packagetools:latest")
+
+
+
+}
 \seealso{
 Other Cloud Buildsteps: 
 \code{\link{cr_buildstep_bash}()},

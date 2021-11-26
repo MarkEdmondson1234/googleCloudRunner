@@ -480,7 +480,7 @@ cr_buildstep_bash <- function(bash_script,
 #'     steps=step1
 #'   ),
 #'   source = storage_source
-#'   options = list(machineType = "E2_HIGHCPU_32')
+#'   options = list(machineType = "E2_HIGHCPU_32")
 #' )
 #'
 #' # use a different Rocker image e.g. rocker/verse
