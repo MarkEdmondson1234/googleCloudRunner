@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleCloudRunner</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1.9001</span>
       </span>
     </div>
 
@@ -180,6 +180,9 @@
     <li>
       <a href="../articles/usecase-scheduled-google-analytics.html">Schedule Google Analytics User Deletion API</a>
     </li>
+    <li>
+      <a href="../articles/usecase-rmarkdown-cloudrun.html">On-demand parameterised R Markdown reports</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -230,7 +233,9 @@
   includedFiles <span class='op'>=</span> <span class='cn'>NULL</span>,
   disabled <span class='op'>=</span> <span class='cn'>NULL</span>,
   triggerTemplate <span class='op'>=</span> <span class='cn'>NULL</span>,
-  description <span class='op'>=</span> <span class='cn'>NULL</span>
+  webhookConfig <span class='op'>=</span> <span class='cn'>NULL</span>,
+  description <span class='op'>=</span> <span class='cn'>NULL</span>,
+  pubsubConfig <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -277,8 +282,16 @@
       <td><p>a <a href='RepoSource.html'>RepoSource</a> object - mutually exclusive with <code>github</code></p></td>
     </tr>
     <tr>
+      <th>webhookConfig</th>
+      <td><p>WebhookConfig describes the configuration of a trigger that creates a build whenever a webhook is sent to a trigger's webhook URL.</p></td>
+    </tr>
+    <tr>
       <th>description</th>
       <td><p>Human-readable description of this trigger</p></td>
+    </tr>
+    <tr>
+      <th>pubsubConfig</th>
+      <td><p>PubsubConfig describes the configuration of a trigger that creates a build whenever a Pub/Sub message is published.</p></td>
     </tr>
     </table>
 
@@ -295,8 +308,10 @@
 <code><a href='cr_buildtrigger_edit.html'>cr_buildtrigger_edit</a>()</code>,
 <code><a href='cr_buildtrigger_get.html'>cr_buildtrigger_get</a>()</code>,
 <code><a href='cr_buildtrigger_list.html'>cr_buildtrigger_list</a>()</code>,
+<code><a href='cr_buildtrigger_pubsub.html'>cr_buildtrigger_pubsub</a>()</code>,
 <code><a href='cr_buildtrigger_repo.html'>cr_buildtrigger_repo</a>()</code>,
 <code><a href='cr_buildtrigger_run.html'>cr_buildtrigger_run</a>()</code>,
+<code><a href='cr_buildtrigger_webhook.html'>cr_buildtrigger_webhook</a>()</code>,
 <code><a href='cr_buildtrigger.html'>cr_buildtrigger</a>()</code></p></div>
 
   </div>

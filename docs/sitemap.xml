@@ -19,6 +19,12 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/Job.html</loc>
   </url>
   <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/PubsubConfig.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/PubsubTarget.html</loc>
+  </url>
+  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/RepoSource.html</loc>
   </url>
   <url>
@@ -26,6 +32,9 @@
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/StorageSource.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/WebhookConfig.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_bucket_set.html</loc>
@@ -47,6 +56,9 @@
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_schedule_http.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_schedule_pubsub.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_source.html</loc>
@@ -145,10 +157,16 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildtrigger_list.html</loc>
   </url>
   <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildtrigger_pubsub.html</loc>
+  </url>
+  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildtrigger_repo.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildtrigger_run.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildtrigger_webhook.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_deploy_badger.html</loc>
@@ -287,6 +305,9 @@
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/articles/usecase-r-results-github.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/articles/usecase-rmarkdown-cloudrun.html</loc>
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/articles/usecase-scheduled-google-analytics.html</loc>

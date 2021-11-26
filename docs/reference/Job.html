@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">googleCloudRunner</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1.9001</span>
       </span>
     </div>
 
@@ -180,6 +180,9 @@
     <li>
       <a href="../articles/usecase-scheduled-google-analytics.html">Schedule Google Analytics User Deletion API</a>
     </li>
+    <li>
+      <a href="../articles/usecase-rmarkdown-cloudrun.html">On-demand parameterised R Markdown reports</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -220,25 +223,65 @@
     </div>
 
     <pre class="usage"><span class='fu'>Job</span><span class='op'>(</span>
+  name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  description <span class='op'>=</span> <span class='cn'>NULL</span>,
+  schedule <span class='op'>=</span> <span class='cn'>NULL</span>,
+  timeZone <span class='op'>=</span> <span class='cn'>NULL</span>,
+  userUpdateTime <span class='op'>=</span> <span class='cn'>NULL</span>,
+  state <span class='op'>=</span> <span class='cn'>NULL</span>,
+  status <span class='op'>=</span> <span class='cn'>NULL</span>,
+  scheduleTime <span class='op'>=</span> <span class='cn'>NULL</span>,
+  lastAttemptTime <span class='op'>=</span> <span class='cn'>NULL</span>,
+  retryConfig <span class='op'>=</span> <span class='cn'>NULL</span>,
   attemptDeadline <span class='op'>=</span> <span class='cn'>NULL</span>,
   pubsubTarget <span class='op'>=</span> <span class='cn'>NULL</span>,
-  httpTarget <span class='op'>=</span> <span class='cn'>NULL</span>,
-  timeZone <span class='op'>=</span> <span class='cn'>NULL</span>,
-  description <span class='op'>=</span> <span class='cn'>NULL</span>,
   appEngineHttpTarget <span class='op'>=</span> <span class='cn'>NULL</span>,
-  status <span class='op'>=</span> <span class='cn'>NULL</span>,
-  retryConfig <span class='op'>=</span> <span class='cn'>NULL</span>,
-  state <span class='op'>=</span> <span class='cn'>NULL</span>,
-  name <span class='op'>=</span> <span class='cn'>NULL</span>,
-  lastAttemptTime <span class='op'>=</span> <span class='cn'>NULL</span>,
-  scheduleTime <span class='op'>=</span> <span class='cn'>NULL</span>,
-  schedule <span class='op'>=</span> <span class='cn'>NULL</span>,
-  userUpdateTime <span class='op'>=</span> <span class='cn'>NULL</span>
+  httpTarget <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>name</th>
+      <td><p>Optionally caller-specified in CreateJob, after</p></td>
+    </tr>
+    <tr>
+      <th>description</th>
+      <td><p>Optionally caller-specified in CreateJob or</p></td>
+    </tr>
+    <tr>
+      <th>schedule</th>
+      <td><p>A cron schedule e.g. <code>"15 5 * * *"</code></p></td>
+    </tr>
+    <tr>
+      <th>timeZone</th>
+      <td><p>Specifies the time zone to be used in interpreting schedule. If set to <code>NULL</code> will be "UTC". Note that some time zones include a provision for daylight savings time.</p></td>
+    </tr>
+    <tr>
+      <th>userUpdateTime</th>
+      <td><p>Output only</p></td>
+    </tr>
+    <tr>
+      <th>state</th>
+      <td><p>Output only</p></td>
+    </tr>
+    <tr>
+      <th>status</th>
+      <td><p>Output only</p></td>
+    </tr>
+    <tr>
+      <th>scheduleTime</th>
+      <td><p>Output only</p></td>
+    </tr>
+    <tr>
+      <th>lastAttemptTime</th>
+      <td><p>Output only</p></td>
+    </tr>
+    <tr>
+      <th>retryConfig</th>
+      <td><p>Settings that determine the retry behavior</p></td>
+    </tr>
     <tr>
       <th>attemptDeadline</th>
       <td><p>The deadline for job attempts</p></td>
@@ -248,52 +291,12 @@
       <td><p>Pub/Sub target</p></td>
     </tr>
     <tr>
-      <th>httpTarget</th>
-      <td><p>A HTTP target object <a href='HttpTarget.html'>HttpTarget</a></p></td>
-    </tr>
-    <tr>
-      <th>timeZone</th>
-      <td><p>Specifies the time zone to be used in interpreting schedule. If set to <code>NULL</code> will be "UTC". Note that some time zones include a provision for daylight savings time.</p></td>
-    </tr>
-    <tr>
-      <th>description</th>
-      <td><p>Optionally caller-specified in CreateJob or</p></td>
-    </tr>
-    <tr>
       <th>appEngineHttpTarget</th>
       <td><p>App Engine HTTP target</p></td>
     </tr>
     <tr>
-      <th>status</th>
-      <td><p>Output only</p></td>
-    </tr>
-    <tr>
-      <th>retryConfig</th>
-      <td><p>Settings that determine the retry behavior</p></td>
-    </tr>
-    <tr>
-      <th>state</th>
-      <td><p>Output only</p></td>
-    </tr>
-    <tr>
-      <th>name</th>
-      <td><p>Optionally caller-specified in CreateJob, after</p></td>
-    </tr>
-    <tr>
-      <th>lastAttemptTime</th>
-      <td><p>Output only</p></td>
-    </tr>
-    <tr>
-      <th>scheduleTime</th>
-      <td><p>Output only</p></td>
-    </tr>
-    <tr>
-      <th>schedule</th>
-      <td><p>A cron schedule e.g. <code>"15 5 * * *"</code></p></td>
-    </tr>
-    <tr>
-      <th>userUpdateTime</th>
-      <td><p>Output only</p></td>
+      <th>httpTarget</th>
+      <td><p>A HTTP target object <a href='HttpTarget.html'>HttpTarget</a></p></td>
     </tr>
     </table>
 
@@ -307,7 +310,9 @@
 
     <div class='dont-index'><p>Other Cloud Scheduler functions: 
 <code><a href='HttpTarget.html'>HttpTarget</a>()</code>,
+<code><a href='PubsubTarget.html'>PubsubTarget</a>()</code>,
 <code><a href='cr_build_schedule_http.html'>cr_build_schedule_http</a>()</code>,
+<code><a href='cr_build_schedule_pubsub.html'>cr_build_schedule_pubsub</a>()</code>,
 <code><a href='cr_run_schedule_http.html'>cr_run_schedule_http</a>()</code>,
 <code><a href='cr_schedule_delete.html'>cr_schedule_delete</a>()</code>,
 <code><a href='cr_schedule_get.html'>cr_schedule_get</a>()</code>,
