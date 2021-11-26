@@ -56,10 +56,37 @@
 #'
 #' cr_schedule("my-app-scheduled-1", schedule = "16 4 * * *",
 #'             httpTarget = app_sched)
+#'
+#'
+#' # creating build triggers that respond to pubsub events
+#'
+#' \dontrun{
+#' # create a pubsub topic either in webUI or via library(googlePubSubR)
+#' library(googlePubsubR)
+#' pubsub_auth()
+#' topics_create("test-topic")
+#' }
+#'
+#' # create build trigger that will work from pub/subscription
+#' pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
+#' pubsub_trigger
+#'
+#' \dontrun{
+#' # create the build trigger with in-line build
+#' cr_buildtrigger(bb, name = "pubsub-triggered", trigger = pubsub_trigger)
+#' # create scheduler that calls the pub/sub topic
+#'
+#' cr_schedule("cloud-build-pubsub",
+#'             "15 5 * * *",
+#'             pubsubTarget = cr_build_schedule_pubsub("test-topic"))
+#'
+#' }
+#'
 #' }
 cr_schedule <- function(name,
                         schedule=NULL,
                         httpTarget=NULL,
+                        pubsubTarget=NULL,
                         description=NULL,
                         overwrite=FALSE,
                         timeZone=Sys.timezone(),
@@ -68,15 +95,17 @@ cr_schedule <- function(name,
                         ) {
 
   assert_that(
-    is.string(region)
+    is.string(region),
+    xor(is.null(httpTarget), is.null(pubsubTarget))
   )
 
   stem <- "https://cloudscheduler.googleapis.com/v1"
 
-  the_name <- contruct_name(name = name, region = region, project = projectId)
+  the_name <- construct_name(name = name, region = region, project = projectId)
   job <- Job(schedule=schedule,
              name = the_name,
              httpTarget = httpTarget,
+             pubsubTarget = pubsubTarget,
              description = description,
              timeZone = timeZone)
 
@@ -233,7 +262,7 @@ cr_schedule_delete <- function(x,
 
 }
 
-contruct_name <- function(name, region, project){
+construct_name <- function(name, region, project){
   if(grepl("^projects", name)){
     return(name)
   }
@@ -469,20 +498,20 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
 #'
 #' @family Cloud Scheduler functions
 #' @export
-Job <- function(attemptDeadline = NULL,
-                pubsubTarget = NULL,
-                httpTarget = NULL,
-                timeZone = NULL,
+Job <- function(name = NULL,
                 description = NULL,
-                appEngineHttpTarget = NULL,
-                status = NULL,
-                retryConfig = NULL,
-                state = NULL,
-                name = NULL,
-                lastAttemptTime = NULL,
-                scheduleTime = NULL,
                 schedule = NULL,
-                userUpdateTime = NULL) {
+                timeZone = NULL,
+                userUpdateTime = NULL,
+                state = NULL,
+                status = NULL,
+                scheduleTime = NULL,
+                lastAttemptTime = NULL,
+                retryConfig = NULL,
+                attemptDeadline = NULL,
+                pubsubTarget = NULL,
+                appEngineHttpTarget = NULL,
+                httpTarget = NULL) {
 
   structure(rmNullObs(list(attemptDeadline = attemptDeadline,
                            pubsubTarget = pubsubTarget,
@@ -503,5 +532,62 @@ Job <- function(attemptDeadline = NULL,
 
 is.gar_scheduleJob <- function(x){
   inherits(x, "gar_scheduleJob")
+}
+
+
+#' Pubsub Target Object (Cloud Scheduler)
+#'
+#' @details Pub/Sub target. The job will be delivered by publishing a message to the given Pub/Sub topic.
+#'
+#' @param topicName The name of the Cloud Pub/Sub topic to which messages will be published when a job is delivered.
+#' @param data The message payload for PubsubMessage. An R object that will be turned into JSON via [jsonlite] and then base64 encoded into the PubSub format.
+#' @param attributes Attributes for PubsubMessage.
+#'
+#' @return PubsubTarget object
+#'
+#' @family Cloud Scheduler functions
+#' @export
+PubsubTarget <- function(
+  topicName = NULL,
+  data = NULL,
+  attributes = NULL
+){
+
+  structure(rmNullObs(
+    list(topicName = topicName,
+         data = data,
+         attributes = attributes)),
+    class = c("gar_pubsubTarget","list"))
+
+}
+
+is.gar_pubsubTarget <- function(x){
+  inherits(x, "gar_pubsubTarget")
+}
+
+#' Create a PubSub Target object for Cloud Scheduler
+#'
+#' @inheritParams PubsubTarget
+#' @param projectId The projectId for where the topic sits
+#' @family Cloud Scheduler functions
+#' @export
+#' @importFrom jsonlite base64_enc toJSON
+cr_build_schedule_pubsub <- function(
+  topicName,
+  data = NULL,
+  attributes = NULL,
+  projectId = cr_project_get()){
+
+  if(is.null(data)){
+    the_data <- topicName
+  } else {
+    the_data <- toJSON(data)
+  }
+
+  PubsubTarget(
+    topicName = sprintf("projects/%s/topics/%s", projectId, topicName),
+    data = base64_enc(the_data),
+    attributes = attributes
+  )
 }
 

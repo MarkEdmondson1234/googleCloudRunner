@@ -23,7 +23,7 @@ cr_buildtrigger(
 
 \item{name}{User assigned name of the trigger}
 
-\item{trigger}{The trigger source created via \link{cr_buildtrigger_repo}}
+\item{trigger}{The trigger source created via \link{cr_buildtrigger_repo} or a pubsub trigger made with \link{cr_buildtrigger_pubsub} or a webhook trigger made with \link{cr_buildtrigger_webhook}}
 
 \item{description}{Human-readable description of this trigger}
 
@@ -76,6 +76,32 @@ cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
 cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
                  name = "bt-cs-file", trigger = cs_trigger)
 }
+
+# creating build triggers that respond to pubsub events
+
+\dontrun{
+# create a pubsub topic either in webUI or via library(googlePubSubR)
+library(googlePubsubR)
+pubsub_auth()
+topics_create("test-topic")
+}
+
+# create build trigger that will work from pub/subscription
+pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
+pubsub_trigger
+
+\dontrun{
+# create the build trigger with in-line build
+cr_buildtrigger(bb, name = "pubsub-triggered", trigger = pubsub_trigger)
+# create scheduler that calls the pub/sub topic
+
+cr_schedule("cloud-build-pubsub",
+            "15 5 * * *",
+            pubsubTarget = cr_build_schedule_pubsub("test-topic"))
+
+}
+
+
 }
 \seealso{
 Other BuildTrigger functions: 
@@ -86,7 +112,9 @@ Other BuildTrigger functions:
 \code{\link{cr_buildtrigger_edit}()},
 \code{\link{cr_buildtrigger_get}()},
 \code{\link{cr_buildtrigger_list}()},
+\code{\link{cr_buildtrigger_pubsub}()},
 \code{\link{cr_buildtrigger_repo}()},
-\code{\link{cr_buildtrigger_run}()}
+\code{\link{cr_buildtrigger_run}()},
+\code{\link{cr_buildtrigger_webhook}()}
 }
 \concept{BuildTrigger functions}

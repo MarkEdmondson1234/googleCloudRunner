@@ -8,6 +8,7 @@ cr_schedule(
   name,
   schedule = NULL,
   httpTarget = NULL,
+  pubsubTarget = NULL,
   description = NULL,
   overwrite = FALSE,
   timeZone = Sys.timezone(),
@@ -21,6 +22,8 @@ cr_schedule(
 \item{schedule}{A cron schedule e.g. \code{"15 5 * * *"}}
 
 \item{httpTarget}{A HTTP target object \link{HttpTarget}}
+
+\item{pubsubTarget}{Pub/Sub target}
 
 \item{description}{Optionally caller-specified in CreateJob or}
 
@@ -83,6 +86,32 @@ app_sched <- cr_run_schedule_http(endpoint, http_method = "GET",
 
 cr_schedule("my-app-scheduled-1", schedule = "16 4 * * *",
             httpTarget = app_sched)
+
+
+# creating build triggers that respond to pubsub events
+
+\dontrun{
+# create a pubsub topic either in webUI or via library(googlePubSubR)
+library(googlePubsubR)
+pubsub_auth()
+topics_create("test-topic")
+}
+
+# create build trigger that will work from pub/subscription
+pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
+pubsub_trigger
+
+\dontrun{
+# create the build trigger with in-line build
+cr_buildtrigger(bb, name = "pubsub-triggered", trigger = pubsub_trigger)
+# create scheduler that calls the pub/sub topic
+
+cr_schedule("cloud-build-pubsub",
+            "15 5 * * *",
+            pubsubTarget = cr_build_schedule_pubsub("test-topic"))
+
+}
+
 }
 }
 \seealso{
@@ -91,7 +120,9 @@ cr_schedule("my-app-scheduled-1", schedule = "16 4 * * *",
 Other Cloud Scheduler functions: 
 \code{\link{HttpTarget}()},
 \code{\link{Job}()},
+\code{\link{PubsubTarget}()},
 \code{\link{cr_build_schedule_http}()},
+\code{\link{cr_build_schedule_pubsub}()},
 \code{\link{cr_run_schedule_http}()},
 \code{\link{cr_schedule_delete}()},
 \code{\link{cr_schedule_get}()},

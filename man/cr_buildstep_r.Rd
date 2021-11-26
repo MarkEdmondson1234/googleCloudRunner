@@ -58,12 +58,14 @@ cr_buildstep_r("inst/schedule/schedule.R", r_source = "runtime")
 # machine with 32 cores
 
 ## create storage source
+
 storage_source <- cr_build_upload_gcs(
  "my-r-script.R"
 )
 ## create the buildstep with the R script
 step1 <- cr_buildstep_r("deploy/my-r-script.R", r_source="runtime",
                rscript_args=c("args_1=<args1>", "args_2=<args_2>"))
+
 
 ## run the script on Cloud Build
 cr_build(
@@ -74,6 +76,7 @@ cr_build(
   options = list(machineType = "E2_HIGHCPU_32")
 )
 }
+
 # use a different Rocker image e.g. rocker/verse
 cr_buildstep_r(c("library(dplyr)",
                  "mtcars \%>\% select(mpg)",

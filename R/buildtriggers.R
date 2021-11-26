@@ -121,10 +121,11 @@ cr_buildtrigger_list <- function(projectId = cr_project_get()){
 
     bts_df <- Reduce(rbind, o)
 
-    bts_df$filename = if_null_na(bts_df$filename)
-    bts_df$ignoredFiles = if_null_na(bts_df$ignoredFiles)
-    bts_df$includedFiles = if_null_na(bts_df$includedFiles)
-    bts_df$disabled = if_null_na(bts_df$disabled)
+    parse_files <- function(x){
+      if(is.null(bts_df[[x]])) return(NA)
+      unlist(lapply(bts_df[[x]], paste, collapse = ", "))
+    }
+
     data.frame(
       stringsAsFactors = FALSE,
       buildTriggerName = bts_df$name,
@@ -133,10 +134,10 @@ cr_buildtrigger_list <- function(projectId = cr_project_get()){
       filename = bts_df$filename,
       description = bts_df$description,
       github_name = paste0(bts_df$github$owner,"/", bts_df$github$name),
-      ignoredFiles = unlist(lapply(bts_df$ignoredFiles, paste, collapse = ", ")),
-      includedFiles = unlist(lapply(bts_df$includedFiles, paste, collapse = ", ")),
-      tags = unlist(lapply(bts_df$tags, paste, collapse = ", ")),
-      disabled = bts_df$disabled
+      ignoredFiles = parse_files("ignoredFiles"),
+      includedFiles = parse_files("includedFiles"),
+      tags = parse_files("tags"),
+      disabled = if(!is.null(bts_df$disabled)) bts_df$disabled else NA
     )
 }
 
@@ -152,7 +153,7 @@ parse_buildtrigger_list <- function(x){
 #' Creates a new `BuildTrigger`.This API is experimental.
 #'
 #' @inheritParams BuildTrigger
-#' @param trigger The trigger source created via \link{cr_buildtrigger_repo}
+#' @param trigger The trigger source created via \link{cr_buildtrigger_repo} or a pubsub trigger made with \link{cr_buildtrigger_pubsub} or a webhook trigger made with \link{cr_buildtrigger_webhook}
 #' @param build The build to trigger created via \link{cr_build_make}, or the file location of the cloudbuild.yaml within the trigger source
 #' @param projectId ID of the project for which to configure automatic builds
 #' @param trigger_tags Tags for the buildtrigger listing
@@ -194,21 +195,50 @@ parse_buildtrigger_list <- function(x){
 #' cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
 #'                  name = "bt-cs-file", trigger = cs_trigger)
 #' }
-cr_buildtrigger <- function(build,
-                            name,
-                            trigger,
-                            description = paste("cr_buildtrigger: ", Sys.time()),
-                            disabled = FALSE,
-                            substitutions = NULL,
-                            ignoredFiles = NULL,
-                            includedFiles = NULL,
-                            trigger_tags = NULL,
-                            projectId = cr_project_get(),
-                            overwrite = FALSE) {
+#'
+#' # creating build triggers that respond to pubsub events
+#'
+#' \dontrun{
+#' # create a pubsub topic either in webUI or via library(googlePubSubR)
+#' library(googlePubsubR)
+#' pubsub_auth()
+#' topics_create("test-topic")
+#' }
+#'
+#' # create build trigger that will work from pub/subscription
+#' pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
+#' pubsub_trigger
+#'
+#' \dontrun{
+#' # create the build trigger with in-line build
+#' cr_buildtrigger(bb, name = "pubsub-triggered", trigger = pubsub_trigger)
+#' # create scheduler that calls the pub/sub topic
+#'
+#' cr_schedule("cloud-build-pubsub",
+#'             "15 5 * * *",
+#'             pubsubTarget = cr_build_schedule_pubsub("test-topic"))
+#'
+#' }
+#'
+#'
+cr_buildtrigger <- function(
+  build,
+  name,
+  trigger,
+  description = paste("cr_buildtrigger: ", Sys.time()),
+  disabled = FALSE,
+  substitutions = NULL,
+  ignoredFiles = NULL,
+  includedFiles = NULL,
+  trigger_tags = NULL,
+  projectId = cr_project_get(),
+  overwrite = FALSE) {
 
   assert_that(
     is.string(name),
-    is.buildtrigger_repo(trigger)
+    is.buildtrigger_repo(trigger) ||
+      is.gar_pubsubConfig(trigger) ||
+      is.gar_webhookConfig(trigger)
   )
 
   # build from a file in the repo
@@ -227,16 +257,30 @@ cr_buildtrigger <- function(build,
 
   trigger_cloudsource <- NULL
   trigger_github <- NULL
-  # trigger params
-  if(trigger$type == "github"){
-    trigger_github <- trigger$repo
-  } else if(trigger$type == "cloud_source"){
-    trigger_cloudsource <- trigger$repo
+  trigger_pubsub <- NULL
+  trigger_webhook <- NULL
+
+  if(is.gar_pubsubConfig(trigger)){
+    trigger_pubsub <- trigger
+  } else if(is.buildtrigger_repo(trigger)){
+    # trigger params
+    if(trigger$type == "github"){
+      trigger_github <- trigger$repo
+    } else if(trigger$type == "cloud_source"){
+      trigger_cloudsource <- trigger$repo
+    }
+  } else if(is.gar_webhookConfig(trigger)){
+    trigger_webhook <- trigger
+  } else {
+    stop("We should never be here - something wrong with trigger parameter", call. = FALSE)
   }
+
 
   buildTrigger <- BuildTrigger(
       name = name,
       github = trigger_github,
+      pubsubConfig = trigger_pubsub,
+      webhookConfig = trigger_webhook,
       triggerTemplate=trigger_cloudsource,
       build = the_build,
       filename = the_filename,
@@ -418,6 +462,8 @@ cr_buildtrigger_copy <- function(buildTrigger,
 #' @param disabled If true, the trigger will never result in a build
 #' @param triggerTemplate a \link{RepoSource} object - mutually exclusive with \code{github}
 #' @param description Human-readable description of this trigger
+#' @param pubsubConfig PubsubConfig describes the configuration of a trigger that creates a build whenever a Pub/Sub message is published.
+#' @param webhookConfig WebhookConfig describes the configuration of a trigger that creates a build whenever a webhook is sent to a trigger's webhook URL.
 #'
 #' @seealso \url{https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.triggers}
 #'
@@ -435,11 +481,15 @@ BuildTrigger <- function(filename = NULL,
                          includedFiles = NULL,
                          disabled = NULL,
                          triggerTemplate = NULL,
-                         description = NULL) {
+                         webhookConfig = NULL,
+                         description = NULL,
+                         pubsubConfig = NULL) {
 
     assert_that(
         xor(is.null(build), is.null(filename)),
-        xor(is.null(github), is.null(triggerTemplate))
+        !is.null(webhookConfig) ||
+          !is.null(pubsubConfig) ||
+          xor(is.null(github), is.null(triggerTemplate))
     )
 
     if(!is.null(github)){
@@ -460,6 +510,8 @@ BuildTrigger <- function(filename = NULL,
                    includedFiles = includedFiles,
                    disabled = disabled,
                    triggerTemplate = triggerTemplate,
+                   pubsubConfig = pubsubConfig,
+                   webhookConfig = webhookConfig,
                    description = description)),
             class = c("BuildTrigger","list"))
 }
@@ -483,4 +535,59 @@ as.BuildTrigger <- function(x){
                triggerTemplate = x$triggerTemplate,
                description = x$description)
 
+}
+
+
+#' Pubsub Config (Build Trigger)
+#'
+#' PubsubConfig describes the configuration of a trigger that creates a build whenever a Pub/Sub message is published.
+#'
+#' @param subscription Output only. Name of the subscription.
+#' @param topic The name of the topic from which this subscription is receiving messages.
+#' @param serviceAccountEmail Service account that will make the push request.
+#' @param state Potential issues with the underlying Pub/Sub subscription configuration. Only populated on get requests.
+#'
+#' @return A PubsubConfig object
+#' @seealso `https://cloud.google.com/build/docs/api/reference/rest/v1/projects.locations.triggers#BuildTrigger.PubsubConfig`
+#'
+#' @export
+PubsubConfig <- function(subscription = NULL,
+                         topic = NULL,
+                         serviceAccountEmail = NULL,
+                         state = NULL){
+
+  structure(rmNullObs(
+    list(subscription = subscription,
+         topic = topic,
+         serviceAccountEmail = serviceAccountEmail,
+         state = state)),
+    class = c("gar_pubsubConfig","list"))
+
+}
+
+is.gar_pubsubConfig <- function(x){
+  inherits(x, "gar_pubsubConfig")
+}
+
+#' WebhookConfig (Build Triggers)
+#'
+#' WebhookConfig describes the configuration of a trigger that creates a build whenever a webhook is sent to a trigger's webhook URL.
+#'
+#' @param state Potential issues with the underlying Pub/Sub subscription configuration. Only populated on get requests.
+#' @param secret Resource name for the secret required as a URL parameter.
+#'
+#' @return A WebhookConfig object
+#'
+#' @export
+WebhookConfig <- function(secret, state = NULL){
+
+  structure(rmNullObs(
+    list(secret = secret,
+         state = state)),
+    class = c("gar_webhookConfig","list"))
+
+}
+
+is.gar_webhookConfig <- function(x){
+  inherits(x, "gar_webhookConfig")
 }

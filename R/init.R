@@ -15,7 +15,7 @@ cr_region_set <- function(region = googleCloudRunner::cr_regions){
 
   .cr_env$region <- region
 
-  myMessage("Region set to ", .cr_env$region, level = 3)
+  myMessage("Region set to", .cr_env$region, level = 3)
   .cr_env$region
 }
 
@@ -52,7 +52,7 @@ cr_project_set <- function(projectId){
 
   .cr_env$project <- projectId
 
-  myMessage("ProjectId set to ", .cr_env$project, level = 3)
+  myMessage("ProjectId set to", .cr_env$project, level = 3)
   .cr_env$project
 }
 
@@ -90,7 +90,7 @@ cr_bucket_set <- function(bucket){
 
   .cr_env$bucket <- bucket
 
-  myMessage("Bucket set to ", .cr_env$bucket, level = 3)
+  myMessage("Bucket set to", .cr_env$bucket, level = 3)
   .cr_env$bucket
 }
 
@@ -144,6 +144,6 @@ cr_email_get <- function(){
 cr_email_set <- function(cloudbuildEmail){
   .cr_env$cloudbuildEmail <- cloudbuildEmail
 
-  myMessage("cloudbuildEmail set to ", .cr_env$cloudbuildEmail, level = 3)
+  myMessage("cloudbuildEmail set to", .cr_env$cloudbuildEmail, level = 3)
   .cr_env$cloudbuildEmail
 }

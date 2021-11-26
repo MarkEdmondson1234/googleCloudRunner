@@ -75,6 +75,8 @@ navbar:
           href: articles/usecase-slackbot-google-analytics.html
         - text: "Schedule Google Analytics User Deletion API"
           href: articles/usecase-scheduled-google-analytics.html
+        - text: "On-demand parameterised R Markdown reports"
+          href: articles/usecase-rmarkdown-cloudrun.html
     - text: "Functions"
       href: reference/index.html
       icon: fa-question
