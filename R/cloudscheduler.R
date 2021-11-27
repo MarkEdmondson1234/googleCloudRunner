@@ -94,10 +94,7 @@ cr_schedule <- function(name,
                         projectId = cr_project_get()
                         ) {
 
-  assert_that(
-    is.string(region),
-    xor(is.null(httpTarget), is.null(pubsubTarget))
-  )
+  assert_that(is.string(region))
 
   stem <- "https://cloudscheduler.googleapis.com/v1"
 
@@ -110,7 +107,10 @@ cr_schedule <- function(name,
              timeZone = timeZone)
 
   if(!overwrite){
-    assert_that(is.string(schedule))
+    assert_that(
+      is.string(schedule),
+      xor(is.null(httpTarget), is.null(pubsubTarget))
+      )
   }
 
   the_url <-
@@ -122,6 +122,7 @@ cr_schedule <- function(name,
 
   if(overwrite){
     scheds <- cr_schedule_list(region = region, projectId = projectId)
+
     if(the_name %in% scheds$name){
       myMessage("Overwriting schedule job: ", name, level=3)
       # https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/patch

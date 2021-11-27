@@ -9,8 +9,7 @@ test_that("[Online] Test Build Triggers",{
   gh_trigger <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
   cs_trigger <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
                                      type = "cloud_source")
-  ps_trigger <- cr_buildtrigger_pubsub("test-topic")
-
+  ps_trigger <- cr_buildtrigger_pubsub("test-topic", projectId = "learning-ga4")
 
   ps_bt <- cr_buildtrigger(bb,
                            name = "pubsub-test-triggered",

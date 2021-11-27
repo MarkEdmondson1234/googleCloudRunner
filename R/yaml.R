@@ -39,10 +39,6 @@ cr_build_yaml <- function(
   serviceAccount = NULL
   ){
 
-  assert_that(
-    all(unlist(lapply(steps, inherits, what = "cr_buildstep")))
-  )
-
   if(!is.null(artifacts)){
     assert_that(is.cr_build_artifact(artifacts))
   }
