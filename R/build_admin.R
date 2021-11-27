@@ -220,8 +220,22 @@ extract_build_id <- function(op){
 }
 
 parse_build_meta_to_obj <- function(o){
+
+  the_steps <- o$steps
+  if(is.null(the_steps)){
+    the_steps <- o$metadata$build$steps
+  }
+
+  if(all(vapply(the_steps, inherits, what = "cr_buildstep", TRUE))){
+    parsed_steps <- the_steps
+  } else if(is.data.frame(the_steps)){
+    parsed_steps <- unname(cr_buildstep_df(the_steps))
+  } else {
+    stop("Could not parse out build steps from given build meta object", call. = FALSE)
+  }
+
   yml <- cr_build_yaml(
-    steps = unname(cr_buildstep_df(o$steps)),
+    steps = parsed_steps,
     timeout = o$timeout,
     logsBucket = o$logsBucket,
     options = o$options,

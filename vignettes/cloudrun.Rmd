@@ -150,11 +150,6 @@ If you want this in the same Cloud Build, then this is available via the buildst
 
 You can deploy to any GCP region that supports Cloud Run.  A list is maintained and updated from the latest package build that you can see in `googleCloudRunner::cr_regions`
 
-```{r}
-paste0("Supported Cloud Run regions as of date: ", Sys.Date())
-googleCloudRunner::cr_regions
-```
-
 ## Pub/Sub
 
 Pub/Sub is a messaging service used throughout GCP to transfer messages to services.  For instance, Cloud Storage objects being created, logging filter conditions, BigQuery table updates.  It is useful to be able to react to these messages with R code which Cloud Run + Plumber enables by providing a HTTP endpoint for push Pub/Sub subscriptions. 

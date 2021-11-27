@@ -46,6 +46,8 @@ Creates a new `BuildTrigger`.This API is experimental.
 }
 \details{
 Any source specified in the build will be overwritten to use the trigger as a source (GitHub or Cloud Source Repositories)
+
+If you want multiple triggers for a build, then duplicate the build and create another build under a different name but with a different trigger.  Its easier to keep track of.
 }
 \examples{
 cr_project_set("my-project")

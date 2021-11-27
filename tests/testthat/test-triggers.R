@@ -12,7 +12,10 @@ test_that("[Online] Test Build Triggers",{
   ps_trigger <- cr_buildtrigger_pubsub("test-topic")
 
 
-  ps_bt <- cr_buildtrigger(bb, name = "pubsub-test-triggered", trigger = ps_trigger)
+  ps_bt <- cr_buildtrigger(bb,
+                           name = "pubsub-test-triggered",
+                           trigger = ps_trigger,
+                           projectId = "learning-ga4")
 
   # build with in-line build code
   gh_inline <- cr_buildtrigger(bb,

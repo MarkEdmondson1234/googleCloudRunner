@@ -16,7 +16,8 @@ test_that("[Online] Test schedule jobs", {
   expect_s3_class(ss, "data.frame")
 
   s1 <- cr_schedule(name=id, schedule = "11 11 * * *",
-                    httpTarget = cr_build_schedule_http(build1))
+                    httpTarget = cr_build_schedule_http(build1),
+                    overwrite = TRUE)
   expect_equal(s1$name, fid)
 
   s2 <- cr_schedule_get(id)

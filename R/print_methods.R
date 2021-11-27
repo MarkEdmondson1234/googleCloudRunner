@@ -185,3 +185,20 @@ print.gar_RepoSource <- function(x, ...){
   cat0("repoName: ", x$repoName)
   cat0("branchName: ", x$branchName)
 }
+
+#' @method print gar_pubsubTarget
+#' @export
+print.gar_pubsubTarget <- function(x, ...){
+  cat("==CloudSchedulerPubSubTarget==\n")
+  cat0("topicName: ", x$topicName)
+  cat0("data: ", x$data)
+  cat0("attributes: ", x$attributes)
+}
+
+#' @method print gar_pubsubConfig
+#' @export
+print.gar_pubsubConfig <- function(x, ...){
+  cat("==CloudBuildTriggerPubSubConfig==\n")
+  cat0("topic: ", x$topic)
+  cat0("serviceAccountEmail: ", x$serviceAccountEmail)
+}

@@ -160,7 +160,8 @@
       entrypoint: bash
       args:
       - -c
-      - gcloud secrets versions access latest --secret=github-ssh > /root/.ssh/id_rsa
+      - gcloud secrets versions access latest --secret=github-ssh --format='get(payload.data)'
+        | tr '_-' '/+' | base64 -d > /root/.ssh/id_rsa
       id: git secret
       volumes:
       - name: ssh
@@ -201,7 +202,8 @@
     entrypoint: bash
     args:
     - -c
-    - gcloud secrets versions access latest --secret=my_secret > /root/.ssh/id_rsa
+    - gcloud secrets versions access latest --secret=my_secret --format='get(payload.data)'
+      | tr '_-' '/+' | base64 -d > /root/.ssh/id_rsa
     id: git secret
     volumes:
     - name: ssh
@@ -360,7 +362,8 @@
       entrypoint: bash
       args:
       - -c
-      - gcloud secrets versions access latest --secret=my_github > /root/.ssh/id_rsa
+      - gcloud secrets versions access latest --secret=my_github --format='get(payload.data)'
+        | tr '_-' '/+' | base64 -d > /root/.ssh/id_rsa
       id: git secret
       volumes:
       - name: ssh
@@ -448,7 +451,7 @@
       - |-
         message("cran mirror: ", getOption("repos"))
         remotes::install_deps(dependencies = TRUE)
-        rcmdcheck::rcmdcheck(args = '--no-manual', error_on = 'warning')
+        rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "warning")
       env:
       - NOT_CRAN=true
     - name: gcr.io/gcer-public/packagetools:latest
@@ -459,11 +462,11 @@
         remotes::install_deps(dependencies = TRUE)
         remotes::install_local()
         cv <- covr::package_coverage()
-        up <- covr::codecov(coverage=cv,
-                      commit = '$COMMIT_SHA', branch = '$BRANCH_NAME',
+        up <- covr::codecov(coverage = cv,
+                      commit = "$COMMIT_SHA", branch = "$BRANCH_NAME",
                       quiet = FALSE)
         up
-        if(!up$uploaded) stop("Error uploading codecov reports")
+        if (!up$uploaded) stop("Error uploading codecov reports")
       env:
       - NOT_CRAN=true
       - CODECOV_TOKEN=$_CODECOV_TOKEN
@@ -500,7 +503,7 @@
     entrypoint: bash
     args:
     - -c
-    - gcloud secrets versions access latest --secret=my_secret > secret.json
+    - gcloud secrets versions access latest --secret=my_secret  > secret.json
     
 
 ---
@@ -540,7 +543,7 @@
     ==BuildTriggerRepo==
     Source Repository:  github_markedmondson1234_googlecloudrunner 
     Project:            mark-edmondson-gde 
-    Brnach:             .* 
+    Branch:             .* 
 
 ---
 
@@ -622,4 +625,15 @@
     id: setup nginx
     dir: folder
     
+
+---
+
+    ==CloudSchedulerPubSubTarget==
+    topicName:  projects/mark-edmondson-gde/topics/test-topic 
+    data:  dGVzdC10b3BpYw== 
+
+---
+
+    ==CloudBuildTriggerPubSubConfig==
+    topic:  projects/mark-edmondson-gde/topics/test-topic 
 

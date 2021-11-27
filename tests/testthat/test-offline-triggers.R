@@ -142,6 +142,14 @@ test_that("Render BuildStep objects", {
   expect_s3_class(ff[[1]], "cr_buildstep")
   expect_snapshot_output(ff)
 
+  # pubsub topic target
+  top <- cr_build_schedule_pubsub("test-topic")
+  expect_snapshot_output(top)
+
+  # pubsub config for buildtriggers
+  top2 <- cr_buildtrigger_pubsub("test-topic")
+  expect_snapshot_output(top2)
+
 })
 
 

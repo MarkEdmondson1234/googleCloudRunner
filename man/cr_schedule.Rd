@@ -23,7 +23,7 @@ cr_schedule(
 
 \item{httpTarget}{A HTTP target object \link{HttpTarget}}
 
-\item{pubsubTarget}{Pub/Sub target}
+\item{pubsubTarget}{A Pub/Sub target object \link{PubsubTarget} such as created via \link{cr_build_schedule_pubsub}}
 
 \item{description}{Optionally caller-specified in CreateJob or}
 

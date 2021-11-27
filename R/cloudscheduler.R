@@ -250,7 +250,7 @@ cr_schedule_delete <- function(x,
                                region = cr_region_get(),
                                projectId = cr_project_get()){
 
-  the_name <- contruct_name(name = extract_schedule_name(x),
+  the_name <- construct_name(name = extract_schedule_name(x),
                             region = region,
                             project = projectId)
 
@@ -303,7 +303,7 @@ cr_schedule_get <- function(name,
                             region = cr_region_get(),
                             projectId = cr_project_get()) {
 
-  the_name <- contruct_name(name = extract_schedule_name(name),
+  the_name <- construct_name(name = extract_schedule_name(name),
                             region = region,
                             project = projectId)
 
@@ -338,7 +338,7 @@ cr_schedule_run <- function(x,
                             region = cr_region_get(),
                             projectId = cr_project_get()) {
 
-  the_name <- contruct_name(name = extract_schedule_name(x),
+  the_name <- construct_name(name = extract_schedule_name(x),
                             region = region,
                             project = projectId)
 
@@ -380,7 +380,7 @@ cr_schedule_pause <- function(x,
                               region = cr_region_get(),
                               projectId = cr_project_get()) {
 
-  the_name <- contruct_name(name = extract_schedule_name(x),
+  the_name <- construct_name(name = extract_schedule_name(x),
                             region = region,
                             project = projectId)
 
@@ -408,7 +408,7 @@ cr_schedule_resume <- function(x,
                                region = cr_region_get(),
                                projectId = cr_project_get()) {
 
-  the_name <- contruct_name(name = extract_schedule_name(x),
+  the_name <- construct_name(name = extract_schedule_name(x),
                             region = region,
                             project = projectId)
 
@@ -480,7 +480,7 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
 #' Configuration for a job.The maximum allowed size for a job is 100KB.
 #'
 #' @param attemptDeadline The deadline for job attempts
-#' @param pubsubTarget Pub/Sub target
+#' @param pubsubTarget A Pub/Sub target object \link{PubsubTarget} such as created via \link{cr_build_schedule_pubsub}
 #' @param httpTarget A HTTP target object \link{HttpTarget}
 #' @param timeZone Specifies the time zone to be used in interpreting schedule. If set to \code{NULL} will be "UTC". Note that some time zones include a provision for daylight savings time.
 #' @param description Optionally caller-specified in CreateJob or

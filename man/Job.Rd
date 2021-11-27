@@ -44,7 +44,7 @@ Job(
 
 \item{attemptDeadline}{The deadline for job attempts}
 
-\item{pubsubTarget}{Pub/Sub target}
+\item{pubsubTarget}{A Pub/Sub target object \link{PubsubTarget} such as created via \link{cr_build_schedule_pubsub}}
 
 \item{appEngineHttpTarget}{App Engine HTTP target}
 
