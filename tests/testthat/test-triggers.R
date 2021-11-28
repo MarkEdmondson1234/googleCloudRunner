@@ -68,8 +68,7 @@ test_that("[Online] Test Build Triggers",{
   expect_false("bt-cs-file" %in% the_list2$buildTriggerName)
   expect_false("bt-github-source" %in% the_list2$buildTriggerName)
   expect_false("bt-cs-source" %in% the_list2$buildTriggerName)
-  expect_false("pubsub-test-triggered" %in% the_list2$buildTriggerName)
-  expect_false("pubsub-test-triggered" %in% pb_list2$buildTriggerName)
+  expect_false("pubsub-test-triggered-zzzzz" %in% pb_list2$buildTriggerName)
   info <- cr_buildtrigger_get("0a3cade0-425f-4adc-b86b-14cde51af674")
   expect_equal(info$name, "package-checks")
 

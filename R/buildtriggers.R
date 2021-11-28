@@ -298,7 +298,7 @@ cr_buildtrigger <- function(
     tryCatch(
       cr_buildtrigger_delete(name, projectId = projectId),
       error = function(err){
-        myMessage("No buildtrigger to overwrite called ", name, level = 3)
+        myMessage("overwrite=TRUE but no trigger to overwrite named:", name, level = 3)
       }
     )
   }
