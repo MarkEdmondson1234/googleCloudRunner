@@ -36,6 +36,7 @@ Remotes:
 Suggests: 
     googlePubsubR,
     knitr,
+    markdown,
     miniUI,
     rmarkdown,
     rstudioapi,
