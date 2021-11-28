@@ -288,6 +288,7 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Any source specified in the build will be overwritten to use the trigger as a source (GitHub or Cloud Source Repositories)</p>
+<p>If you want multiple triggers for a build, then duplicate the build and create another build under a different name but with a different trigger.  Its easier to keep track of.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other BuildTrigger functions: 
@@ -305,10 +306,10 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='r-in'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-26 22:11:13 &gt;</span> ProjectId set to my-project</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-28 13:31:39 &gt;</span> ProjectId set to my-project</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "my-project"</span>
 <span class='r-in'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-26 22:11:13 &gt;</span> Bucket set to my-bucket</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-28 13:31:39 &gt;</span> Bucket set to my-bucket</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "my-bucket"</span>
 <span class='r-in'><span class='va'>cloudbuild</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"cloudbuild/cloudbuild.yaml"</span>,</span>
 <span class='r-in'>                           package <span class='op'>=</span> <span class='st'>"googleCloudRunner"</span><span class='op'>)</span></span>
@@ -349,11 +350,8 @@
 <span class='r-in'><span class='co'># create build trigger that will work from pub/subscription</span></span>
 <span class='r-in'><span class='va'>pubsub_trigger</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_pubsub.html'>cr_buildtrigger_pubsub</a></span><span class='op'>(</span><span class='st'>"test-topic"</span><span class='op'>)</span></span>
 <span class='r-in'><span class='va'>pubsub_trigger</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> $topic</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "projects/my-project/topics/test-topic"</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> attr(,"class")</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "gar_pubsubConfig" "list"            </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ==CloudBuildTriggerPubSubConfig==</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> topic:  projects/my-project/topics/test-topic </span>
 <span class='r-in'></span>
 <span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
 <span class='r-in'><span class='co'># create the build trigger with in-line build</span></span>
