@@ -32,7 +32,8 @@ Imports:
     yaml (>= 2.2.0)
 Remotes:
   MarkEdmondson1234/googleAuthR,
-  r-lib/gargle
+  r-lib/gargle,
+  andodet/googlePubsubR
 Suggests: 
     googlePubsubR (>= 0.0.2),
     knitr,
