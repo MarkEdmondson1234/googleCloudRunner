@@ -76,14 +76,19 @@ cr_schedule_build <- function(build,
 #' Create a PubSub Target object for Cloud Scheduler
 #'
 #' @inheritParams PubsubTarget
+#' @param PubsubMessage A \code{PubsubMessage} object generated via \link[googlePubsubR]{PubsubMessage}.  If used, then do not send in `data` or `attributes` arguments as will be redundant since this variable will hold the information.
 #' @param projectId The projectId for where the topic sits
 #' @family Cloud Scheduler functions
 #' @export
 #' @importFrom jsonlite base64_enc toJSON
+#'
+#' @details
+#'
+#' You can parametise builds by sending in values within PubSub. To read the data in the message set a substitution varaible that picks up the data.  For example \code{_VAR1=$(body.message.data.var1)}
 #' @examples
 #' cr_project_set("my-project")
 #' cr_bucket_set("my-bucket")
-#' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
+#' cloudbuild <- system.file("cloudbuild/cloudbuild.yml",
 #'                            package = "googleCloudRunner")
 #' bb <- cr_build_make(cloudbuild)
 #'
@@ -110,12 +115,48 @@ cr_schedule_build <- function(build,
 #'
 #' }
 #'
+#' # builds can be also parametrised to respond to parameters within your pubsub topic
+#' # this cloudbuild echos back the value sent in 'var1'
+#' cloudbuild <- system.file("cloudbuild/cloudbuild_substitutions.yml",
+#'                            package = "googleCloudRunner")
+#' the_build <- cr_build_make(cloudbuild)
+#'
+#' # var1 is sent via Pubsub to the buildtrigger
+#' message <- list(var1 = "hello mum")
+#' send_me <- base64_enc(toJSON(message))
+#'
+#' # create build trigger that will work from pub/subscription
+#' pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
+#'
+#' \dontrun{
+#' cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trigger)
+#'
+#' # create scheduler that calls the pub/sub topic with a parameter
+#' cr_schedule("cloud-build-pubsub",
+#'             "15 5 * * *",
+#'             pubsubTarget = cr_schedule_pubsub("test-topic",
+#'                                               data = send_me))
+#'
+#' }
+#'
 #'
 cr_schedule_pubsub <- function(
   topicName,
+  PubsubMessage = NULL,
   data = NULL,
   attributes = NULL,
   projectId = cr_project_get()){
+
+  the_attributes <- attributes
+  if(!is.null(PubsubMessage)){
+    if(!inherits(PubsubMessage, "PubsubMessage")){
+      stop("Not a PubsubMessage object passed to function.", call. = FALSE)
+    }
+
+    the_data <- PubsubMessage$data
+    the_attributes <- PubsubMessage$attributes
+  }
+
 
   if(is.null(data)){
     the_data <- topicName
@@ -126,7 +167,7 @@ cr_schedule_pubsub <- function(
   PubsubTarget(
     topicName = sprintf("projects/%s/topics/%s", projectId, topicName),
     data = base64_enc(the_data),
-    attributes = attributes
+    attributes = the_attributes
   )
 }
 

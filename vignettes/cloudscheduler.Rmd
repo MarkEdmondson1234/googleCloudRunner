@@ -33,6 +33,69 @@ Update a schedule by specifying the same name and the `overwrite=TRUE` flag.  Yo
 cr_schedule("my-webhook", "12 6 * * *", overwrite=TRUE)
 ```
 
+## Schedule Builds Triggers using PubSub
+
+`cr_build_schedule_http()` works by creating an API call that will trigger a Cloud Build from the Cloud Scheduler service, but this can be harder to set-up from an authentication standpoint and also give unhelpful errors that are hard to debug.  
+
+For more robust and transparent scheduling of builds it is recommend you use PubSub to trigger Builds via a build trigger that has been set-up to respond to Pub/Sub messages.  This holds additional advantages such as being able to accept PubSub messages from other sources to trigger your builds such as Cloud Storage events and Cloud Logging, and being able to parametrise your builds using the content within the PubSub message data.
+
+The general strategy is:
+
+1. Create and test your build locally using `cr_build()`
+1. Create a PubSub topic either in the Google Cloud console or using `library(googlePubsubR)`
+1. Create a build trigger for your build using `cr_buildtrigger()` with a topic set using `cr_buildtrigger_pubsub()`
+1. Schedule pushes to the PubSub topic using `cr_schedule_pubsub()`.  You can choose to set up schedules with parameters that are passed into the Builds.
+
+An example is given below:
+
+```r
+cloudbuild <- system.file("cloudbuild/cloudbuild.yml",
+                        package = "googleCloudRunner")
+bb <- cr_build_make(cloudbuild)
+
+# create a pubsub topic either in Google Console webUI or library(googlePubSubR)
+library(googlePubsubR)
+pubsub_auth()
+topics_create("test-topic")
+
+# create build trigger that will watch for messages to your created topic
+pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
+
+# create the build trigger with in-line build
+cr_buildtrigger(bb, name = "pubsub-triggered", trigger = pubsub_trigger)
+
+# create scheduler that calls the pub/sub topic
+cr_schedule("cloud-build-pubsub",
+            "15 5 * * *",
+            pubsubTarget = cr_schedule_pubsub("test-topic"))
+```
+
+Builds can be also parametrised to respond to parameters within your PubSub topic.  The cloudbuild below echo back the value sent in `var1` of the PubSub message.
+
+```
+cloudbuild <- system.file("cloudbuild/cloudbuild_substitutions.yml",
+                           package = "googleCloudRunner")
+the_build <- cr_build_make(cloudbuild)
+
+# var1 is sent via Pubsub to the buildtrigger
+message <- list(var1 = "hello mum")
+send_me <- googlePubsubR::msg_encode(jsonlite::toJSON(message))
+
+# create build trigger that will work from pub/subscription
+pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
+
+cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trigger)
+
+# create scheduler that calls the pub/sub topic with a parameter
+cr_schedule("cloud-build-pubsub-params",
+            "15 5 * * *",
+            pubsubTarget = cr_schedule_pubsub("test-topic",
+                                              data = send_me))
+
+```
+
+This opens up a lot of possibilities of when and where your code can run in reaction to both events (git commits, files hitting cloud storage, generic events on GCP) and on a schedule.
+
 ## Schedule Cloud Run applications
 
 ### Public HTTP endpoints
