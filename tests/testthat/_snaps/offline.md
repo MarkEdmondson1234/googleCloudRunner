@@ -192,3 +192,28 @@
         - -e
         - paste0('1 + 1 = ', 1+1)
 
+---
+
+    Code
+      eemail
+    Output
+      [1] "mmmmark-invoker@mark-edmondson-gde.iam.gserviceaccount.com"
+
+---
+
+    Code
+      run_target
+    Output
+      ==CloudSchedulerHttpTarget==
+      uri:  https://a-url.com 
+      http method:  GET 
+      oidcToken.serviceAccountEmail:  mmmark 
+      oidcToken.audience:  https://a-url.com 
+
+---
+
+    Code
+      pubsub_message
+    Output
+      [1] "{\"a\":[\"hello mum\"]}"
+

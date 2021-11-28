@@ -202,3 +202,13 @@ print.gar_pubsubConfig <- function(x, ...){
   cat0("topic: ", x$topic)
   cat0("serviceAccountEmail: ", x$serviceAccountEmail)
 }
+
+#' @method print gar_HttpTarget
+#' @export
+print.gar_HttpTarget <- function(x, ...){
+  cat("==CloudSchedulerHttpTarget==\n")
+  cat0("uri: ", x$uri)
+  cat0("http method: ", x$httpMethod)
+  cat0("oidcToken.serviceAccountEmail: ", x$oidcToken$serviceAccountEmail)
+  cat0("oidcToken.audience: ", x$oidcToken$audience)
+}

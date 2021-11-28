@@ -85,5 +85,16 @@ test_that("Building Build Objects", {
   expect_equal(cr_region_set(or), or)
   expect_equal(cr_email_set(oe), oe)
 
+  eemail <- cr_run_email("mmmmark")
+  expect_snapshot(eemail)
+
+  run_target <- cr_run_schedule_http("https://a-url.com", "mmmark")
+  expect_snapshot(run_target)
+
+  # library(googlePubsubR)
+  # msg_encode(jsonlite::toJSON(list(a="hello mum")))
+  pubsub_message <- cr_plumber_pubsub(list(data = "eyJhIjpbImhlbGxvIG11bSJdfQ=="))
+  expect_snapshot(pubsub_message)
+
 
 })
