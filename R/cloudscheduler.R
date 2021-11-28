@@ -78,7 +78,7 @@
 #'
 #' cr_schedule("cloud-build-pubsub",
 #'             "15 5 * * *",
-#'             pubsubTarget = cr_build_schedule_pubsub("test-topic"))
+#'             pubsubTarget = cr_schedule_pubsub("test-topic"))
 #'
 #' }
 #'
@@ -481,7 +481,7 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
 #' Configuration for a job.The maximum allowed size for a job is 100KB.
 #'
 #' @param attemptDeadline The deadline for job attempts
-#' @param pubsubTarget A Pub/Sub target object \link{PubsubTarget} such as created via \link{cr_build_schedule_pubsub}
+#' @param pubsubTarget A Pub/Sub target object \link{PubsubTarget} such as created via \link{cr_schedule_pubsub}
 #' @param httpTarget A HTTP target object \link{HttpTarget}
 #' @param timeZone Specifies the time zone to be used in interpreting schedule. If set to \code{NULL} will be "UTC". Note that some time zones include a provision for daylight savings time.
 #' @param description Optionally caller-specified in CreateJob or
@@ -548,15 +548,24 @@ is.gar_scheduleJob <- function(x){
 #'
 #' @family Cloud Scheduler functions
 #' @export
+#' @importFrom jsonlite toJSON
+#' @importFrom openssl base64_encode base64_decode
 PubsubTarget <- function(
   topicName = NULL,
   data = NULL,
   attributes = NULL
 ){
 
+  if(!is.null(data)){
+    the_data <- toJSON(data, auto_unbox = TRUE)
+    myMessage("data json:", the_data, level = 2)
+    the_data <- base64_encode(the_data,linebreaks = FALSE)
+    myMessage("data encoded to: ", the_data, level = 2)
+  }
+
   structure(rmNullObs(
     list(topicName = topicName,
-         data = data,
+         data = the_data,
          attributes = attributes)),
     class = c("gar_pubsubTarget","list"))
 

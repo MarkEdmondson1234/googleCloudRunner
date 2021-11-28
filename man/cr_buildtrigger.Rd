@@ -99,7 +99,7 @@ cr_buildtrigger(bb, name = "pubsub-triggered", trigger = pubsub_trigger)
 
 cr_schedule("cloud-build-pubsub",
             "15 5 * * *",
-            pubsubTarget = cr_build_schedule_pubsub("test-topic"))
+            pubsubTarget = cr_schedule_pubsub("test-topic"))
 
 }
 

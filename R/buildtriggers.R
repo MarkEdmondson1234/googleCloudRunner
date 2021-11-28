@@ -218,7 +218,7 @@ parse_buildtrigger_list <- function(x){
 #'
 #' cr_schedule("cloud-build-pubsub",
 #'             "15 5 * * *",
-#'             pubsubTarget = cr_build_schedule_pubsub("test-topic"))
+#'             pubsubTarget = cr_schedule_pubsub("test-topic"))
 #'
 #' }
 #'

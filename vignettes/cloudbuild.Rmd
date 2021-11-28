@@ -548,5 +548,5 @@ cr_build_logs_last("pubsub-triggered-subs")
 #[60] "DONE"                                                                                                            
 ```
 
-See also `cr_build_schedule_pubsub()` which can use PubSub to trigger scheduled builds.
+See also `cr_schedule_pubsub()` which can use PubSub to trigger scheduled builds.
 

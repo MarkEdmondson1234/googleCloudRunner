@@ -143,7 +143,7 @@ test_that("Render BuildStep objects", {
   expect_snapshot_output(ff)
 
   # pubsub topic target
-  top <- cr_build_schedule_pubsub("test-topic")
+  top <- cr_schedule_pubsub("test-topic")
   expect_snapshot_output(top)
 
   # pubsub config for buildtriggers

@@ -23,7 +23,7 @@ cr_schedule(
 
 \item{httpTarget}{A HTTP target object \link{HttpTarget}}
 
-\item{pubsubTarget}{A Pub/Sub target object \link{PubsubTarget} such as created via \link{cr_build_schedule_pubsub}}
+\item{pubsubTarget}{A Pub/Sub target object \link{PubsubTarget} such as created via \link{cr_schedule_pubsub}}
 
 \item{description}{Optionally caller-specified in CreateJob or}
 
@@ -108,7 +108,7 @@ cr_buildtrigger(bb, name = "pubsub-triggered", trigger = pubsub_trigger)
 
 cr_schedule("cloud-build-pubsub",
             "15 5 * * *",
-            pubsubTarget = cr_build_schedule_pubsub("test-topic"))
+            pubsubTarget = cr_schedule_pubsub("test-topic"))
 
 }
 
@@ -122,12 +122,12 @@ Other Cloud Scheduler functions:
 \code{\link{Job}()},
 \code{\link{PubsubTarget}()},
 \code{\link{cr_build_schedule_http}()},
-\code{\link{cr_build_schedule_pubsub}()},
 \code{\link{cr_run_schedule_http}()},
 \code{\link{cr_schedule_delete}()},
 \code{\link{cr_schedule_get}()},
 \code{\link{cr_schedule_list}()},
 \code{\link{cr_schedule_pause}()},
+\code{\link{cr_schedule_pubsub}()},
 \code{\link{cr_schedule_run}()}
 }
 \concept{Cloud Scheduler functions}

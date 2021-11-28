@@ -13,7 +13,7 @@ cr_build_schedule_http(
 
 cr_schedule_build(
   build,
-  schedule = NULL,
+  schedule,
   email = cr_email_get(),
   projectId = cr_project_get(),
   ...
@@ -28,7 +28,17 @@ cr_schedule_build(
 
 \item{schedule}{A cron schedule e.g. \code{"15 5 * * *"}}
 
-\item{...}{additional arguments to pass to \code{\link{cr_schedule}}}
+\item{...}{
+  Arguments passed on to \code{\link[=cr_schedule]{cr_schedule}}
+  \describe{
+    \item{\code{region}}{The region usually set with \link{cr_region_set}}
+    \item{\code{overwrite}}{If TRUE and an existing job with the same name exists, will overwrite it with the new parameters}
+    \item{\code{name}}{Optionally caller-specified in CreateJob, after}
+    \item{\code{httpTarget}}{A HTTP target object \link{HttpTarget}}
+    \item{\code{pubsubTarget}}{A Pub/Sub target object \link{PubsubTarget} such as created via \link{cr_schedule_pubsub}}
+    \item{\code{description}}{Optionally caller-specified in CreateJob or}
+    \item{\code{timeZone}}{Specifies the time zone to be used in interpreting schedule. If set to \code{NULL} will be "UTC". Note that some time zones include a provision for daylight savings time.}
+  }}
 }
 \value{
 A \link{HttpTarget} object for use in \link{cr_schedule}
@@ -38,6 +48,8 @@ This enables Cloud Scheduler to trigger Cloud Builds
 }
 \details{
 Ensure you have a service email with \link{cr_email_set} of format \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com} with Cloud Scheduler Service Agent role as per https://cloud.google.com/scheduler/docs/http-target-auth#add
+
+See also \link{cr_schedule_pubsub} which you can use by creating a build trigger of your build via \link{cr_buildtrigger} that accepts Pub/Sub messages.  This method is recommended as being easier to maintain than using HTTP requests to the Cloud Build API that \link{cr_build_schedule_http} produces.
 }
 \examples{
 cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
@@ -65,12 +77,12 @@ Other Cloud Scheduler functions:
 \code{\link{HttpTarget}()},
 \code{\link{Job}()},
 \code{\link{PubsubTarget}()},
-\code{\link{cr_build_schedule_pubsub}()},
 \code{\link{cr_run_schedule_http}()},
 \code{\link{cr_schedule_delete}()},
 \code{\link{cr_schedule_get}()},
 \code{\link{cr_schedule_list}()},
 \code{\link{cr_schedule_pause}()},
+\code{\link{cr_schedule_pubsub}()},
 \code{\link{cr_schedule_run}()},
 \code{\link{cr_schedule}()}
 }

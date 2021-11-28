@@ -44,7 +44,7 @@ Job(
 
 \item{attemptDeadline}{The deadline for job attempts}
 
-\item{pubsubTarget}{A Pub/Sub target object \link{PubsubTarget} such as created via \link{cr_build_schedule_pubsub}}
+\item{pubsubTarget}{A Pub/Sub target object \link{PubsubTarget} such as created via \link{cr_schedule_pubsub}}
 
 \item{appEngineHttpTarget}{App Engine HTTP target}
 
@@ -64,12 +64,12 @@ Other Cloud Scheduler functions:
 \code{\link{HttpTarget}()},
 \code{\link{PubsubTarget}()},
 \code{\link{cr_build_schedule_http}()},
-\code{\link{cr_build_schedule_pubsub}()},
 \code{\link{cr_run_schedule_http}()},
 \code{\link{cr_schedule_delete}()},
 \code{\link{cr_schedule_get}()},
 \code{\link{cr_schedule_list}()},
 \code{\link{cr_schedule_pause}()},
+\code{\link{cr_schedule_pubsub}()},
 \code{\link{cr_schedule_run}()},
 \code{\link{cr_schedule}()}
 }
