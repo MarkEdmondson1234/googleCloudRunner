@@ -297,19 +297,25 @@
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># create build trigger that will work from pub/subscription</span></span>
 <span class='r-in'><span class='va'>pubsub_trigger</span> <span class='op'>&lt;-</span> <span class='fu'>cr_buildtrigger_pubsub</span><span class='op'>(</span><span class='st'>"test-topic"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>pubsub_trigger</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> ==CloudBuildTriggerPubSubConfig==</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> topic:  projects/my-project/topics/test-topic </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
 <span class='r-in'><span class='fu'><a href='cr_buildtrigger.html'>cr_buildtrigger</a></span><span class='op'>(</span><span class='va'>the_build</span>, name <span class='op'>=</span> <span class='st'>"pubsub-triggered-subs"</span>, trigger <span class='op'>=</span> <span class='va'>pubsub_trigger</span><span class='op'>)</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-28 13:31:41 &gt;</span> No authorization yet in this session!</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-28 13:31:41 &gt;</span> No  .httr-oauth  file exists in current working directory.  Do library authentication steps to provide credentials.</span>
-<span class='r-err co'><span class='r-pr'>#&gt;</span> <span class='error'>Error:</span> Invalid token</span>
+<span class='r-in'><span class='op'>}</span></span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># make base64 encoded json for pubsub</span></span>
 <span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://arxiv.org/abs/1403.2805'>jsonlite</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/andodet/googlePubsubR'>googlePubsubR</a></span><span class='op'>)</span></span>
+<span class='r-err co'><span class='r-pr'>#&gt;</span> <span class='error'>Error in library(googlePubsubR):</span> there is no package called ‘googlePubsubR’</span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># the message with the var1 that will be passed into the Cloud Build via substitution</span></span>
-<span class='r-in'><span class='va'>message</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>var1 <span class='op'>=</span> <span class='st'>"hello mum"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>message</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/jsonlite/man/fromJSON.html'>toJSON</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>var1 <span class='op'>=</span> <span class='st'>"hello mum"</span><span class='op'>)</span><span class='op'>)</span></span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># turning into JSON and encoding</span></span>
-<span class='r-in'><span class='va'>send_me</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/jsonlite/man/base64.html'>base64_enc</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/jsonlite/man/fromJSON.html'>toJSON</a></span><span class='op'>(</span><span class='va'>message</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>send_me</span> <span class='op'>&lt;-</span> <span class='fu'>msg_encode</span><span class='op'>(</span><span class='va'>message</span><span class='op'>)</span></span>
+<span class='r-err co'><span class='r-pr'>#&gt;</span> <span class='error'>Error in msg_encode(message):</span> could not find function "msg_encode"</span>
 <span class='r-in'></span>
 <span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
 <span class='r-in'> <span class='co'># send a PubSub message with the encoded data message</span></span>
