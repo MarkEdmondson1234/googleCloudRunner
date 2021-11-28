@@ -38,6 +38,8 @@ cr_deploy_run_website(
 \item{allowUnauthenticated}{TRUE if can be reached from public HTTP address. If FALSE will configure a service-email called \code{(name)-cloudrun-invoker@(project-id).iam.gserviceaccount.com}}
 
 \item{region}{The region for cloud run}
+
+\item{projectId}{The GCP projectId which will be deployed within}
 }
 \description{
 This lets you set up triggers that will update an R generated website each commit.

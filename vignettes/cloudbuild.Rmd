@@ -520,14 +520,13 @@ The build trigger should now be deployed and available in your Cloud Console.
 
 We now simulate a PubSub message coming in with the `var1` field filled.  In real applications this PubSub trigger could come from another system, Cloud Storage files, or other R scripts.
 
-
 PubSub requires the message to be JSON and base64 encoded, so we use `library(jsonlite)` to do this and `library(googlePubsubR)` again to send the message:
 
 ```r
 # make base64 encoded json
 library(jsonlite)                     
-message <- list(var1 = "hello mum")
-send_me <- base64_enc(toJSON(message))
+message <- toJSON(list(var1 = "hello mum"))
+send_me <- msg_encode(message)
 
 # send the message!
 topics_publish(PubsubMessage(send_me), "test-topic")

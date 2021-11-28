@@ -42,16 +42,21 @@ the_build
 
 # create build trigger that will work from pub/subscription
 pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
+pubsub_trigger
+
+\dontrun{
 cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trigger)
+}
 
 # make base64 encoded json for pubsub
 library(jsonlite)
+library(googlePubsubR)
 
 # the message with the var1 that will be passed into the Cloud Build via substitution
-message <- list(var1 = "hello mum")
+message <- toJSON(list(var1 = "hello mum"))
 
 # turning into JSON and encoding
-send_me <- base64_enc(toJSON(message))
+send_me <- msg_encode(message)
 
 \dontrun{
  # send a PubSub message with the encoded data message

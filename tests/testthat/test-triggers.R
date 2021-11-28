@@ -12,7 +12,7 @@ test_that("[Online] Test Build Triggers",{
   ps_trigger <- cr_buildtrigger_pubsub("test-topic", projectId = "learning-ga4")
 
   ps_bt <- cr_buildtrigger(bb,
-                           name = "pubsub-test-triggered",
+                           name = "pubsub-test-triggered-zzzzz",
                            trigger = ps_trigger,
                            projectId = "learning-ga4")
 
@@ -51,14 +51,14 @@ test_that("[Online] Test Build Triggers",{
   expect_true("bt-cs-file" %in% the_list$buildTriggerName)
   expect_true("bt-github-source" %in% the_list$buildTriggerName)
   expect_true("bt-cs-source" %in% the_list$buildTriggerName)
-  expect_true("pubsub-test-triggered" %in% pb_list$buildTriggerName)
+  expect_true("pubsub-test-triggered-zzzzz" %in% pb_list$buildTriggerName)
 
   cr_buildtrigger_delete("bt-github-inline")
   cr_buildtrigger_delete("bt-github-file")
   cr_buildtrigger_delete("bt-cs-file")
   cr_buildtrigger_delete("bt-github-source")
   cr_buildtrigger_delete("bt-cs-source")
-  cr_buildtrigger_delete("pubsub-test-triggered", projectId = "learning-ga4")
+  cr_buildtrigger_delete("pubsub-test-triggered-zzzzz", projectId = "learning-ga4")
 
   Sys.sleep(5)
   the_list2 <- cr_buildtrigger_list()
