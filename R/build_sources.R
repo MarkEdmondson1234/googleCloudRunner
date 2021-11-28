@@ -272,14 +272,17 @@ cr_build_upload_gcs <- function(local,
   # mirror the structure exactly
   file.copy(local, tdir, recursive = TRUE)
   file.rename(file.path(tdir, basename(local)), full_deploy_folder)
-  myMessage(paste0("Compressing files from ",
-                   full_deploy_folder, " to ", tar_file),
-            level = 2)
+
 
   owd <- getwd()
   setwd(tdir)
   on.exit(setwd(owd), add = TRUE)
   tar_file <- paste0(basename(local), ".tar.gz")
+
+  myMessage(paste0("Compressing files from ",
+                   full_deploy_folder, " to ", tar_file),
+            level = 2)
+
   tar(tar_file,
       files = deploy_folder,
       compression = "gzip"

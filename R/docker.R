@@ -223,7 +223,7 @@ cr_deploy_docker_construct <- function(
   }
 
   # Adding this in for Artifacts Registry
-  pre_steps = add_docker_auth_prestep(image, pre_steps)
+  pre_steps <- add_docker_auth_prestep(image, pre_steps)
 
   waitFor <- "-" # build concurrent tags
   if (!is.null(pre_steps)) {
@@ -461,7 +461,7 @@ find_dockerfile <- function(local, dockerfile){
   TRUE
 }
 
-add_docker_auth_prestep = function(image, pre_steps) {
+add_docker_auth_prestep <- function(image, pre_steps) {
   # Adding this in for Artifacts Registry
   need_location <- grepl("^.*-docker.pkg.dev", tolower(image))
   if (need_location) {

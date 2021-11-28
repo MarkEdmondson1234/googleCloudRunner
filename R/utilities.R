@@ -15,7 +15,7 @@ extract_repo <- function(x){
   }
 }
 
-has_registry_prefix = function(name) {
+has_registry_prefix <- function(name) {
   grepl("^(eu|asia|us|)([.]|)gcr.io", name) ||
     grepl("^.*-docker.pkg.dev", name)
 }
