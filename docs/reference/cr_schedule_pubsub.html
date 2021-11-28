@@ -224,6 +224,7 @@
 
     <pre class="usage"><span class='fu'>cr_schedule_pubsub</span><span class='op'>(</span>
   <span class='va'>topicName</span>,
+  PubsubMessage <span class='op'>=</span> <span class='cn'>NULL</span>,
   data <span class='op'>=</span> <span class='cn'>NULL</span>,
   attributes <span class='op'>=</span> <span class='cn'>NULL</span>,
   projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>
@@ -235,6 +236,10 @@
     <tr>
       <th>topicName</th>
       <td><p>The name of the Cloud Pub/Sub topic to which messages will be published when a job is delivered.</p></td>
+    </tr>
+    <tr>
+      <th>PubsubMessage</th>
+      <td><p>A <code>PubsubMessage</code> object generated via PubsubMessage.  If used, then do not send in `data` or `attributes` arguments as will be redundant since this variable will hold the information.</p></td>
     </tr>
     <tr>
       <th>data</th>
@@ -250,6 +255,9 @@
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>You can parametise builds by sending in values within PubSub. To read the data in the message set a substitution varaible that picks up the data.  For example <code>_VAR1=$(body.message.data.var1)</code></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other Cloud Scheduler functions: 
@@ -267,14 +275,15 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='r-in'><span class='fu'><a href='cr_project_set.html'>cr_project_set</a></span><span class='op'>(</span><span class='st'>"my-project"</span><span class='op'>)</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-28 20:24:10 &gt;</span> ProjectId set to my-project</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-28 21:22:11 &gt;</span> ProjectId set to my-project</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "my-project"</span>
 <span class='r-in'><span class='fu'><a href='cr_bucket_set.html'>cr_bucket_set</a></span><span class='op'>(</span><span class='st'>"my-bucket"</span><span class='op'>)</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-28 20:24:10 &gt;</span> Bucket set to my-bucket</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> <span style='color: #B2B2B2;'>2021-11-28 21:22:11 &gt;</span> Bucket set to my-bucket</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "my-bucket"</span>
-<span class='r-in'><span class='va'>cloudbuild</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"cloudbuild/cloudbuild.yaml"</span>,</span>
+<span class='r-in'><span class='va'>cloudbuild</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"cloudbuild/cloudbuild.yml"</span>,</span>
 <span class='r-in'>                           package <span class='op'>=</span> <span class='st'>"googleCloudRunner"</span><span class='op'>)</span></span>
 <span class='r-in'><span class='va'>bb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_make.html'>cr_build_make</a></span><span class='op'>(</span><span class='va'>cloudbuild</span><span class='op'>)</span></span>
+<span class='r-err co'><span class='r-pr'>#&gt;</span> <span class='error'>Error:</span> Path '' does not exist</span>
 <span class='r-in'></span>
 <span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
 <span class='r-in'><span class='co'># create a pubsub topic either in Google Console webUI or library(googlePubSubR)</span></span>
@@ -298,6 +307,30 @@
 <span class='r-in'><span class='fu'><a href='cr_schedule.html'>cr_schedule</a></span><span class='op'>(</span><span class='st'>"cloud-build-pubsub"</span>,</span>
 <span class='r-in'>            <span class='st'>"15 5 * * *"</span>,</span>
 <span class='r-in'>            pubsubTarget <span class='op'>=</span> <span class='fu'>cr_schedule_pubsub</span><span class='op'>(</span><span class='st'>"test-topic"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># builds can be also parametrised to respond to parameters within your pubsub topic</span></span>
+<span class='r-in'><span class='co'># this cloudbuild echos back the value sent in 'var1'</span></span>
+<span class='r-in'><span class='va'>cloudbuild</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"cloudbuild/cloudbuild_substitutions.yml"</span>,</span>
+<span class='r-in'>                           package <span class='op'>=</span> <span class='st'>"googleCloudRunner"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>the_build</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_build_make.html'>cr_build_make</a></span><span class='op'>(</span><span class='va'>cloudbuild</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># var1 is sent via Pubsub to the buildtrigger</span></span>
+<span class='r-in'><span class='va'>message</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>var1 <span class='op'>=</span> <span class='st'>"hello mum"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>send_me</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/jsonlite/man/base64.html'>base64_enc</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/jsonlite/man/fromJSON.html'>toJSON</a></span><span class='op'>(</span><span class='va'>message</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># create build trigger that will work from pub/subscription</span></span>
+<span class='r-in'><span class='va'>pubsub_trigger</span> <span class='op'>&lt;-</span> <span class='fu'><a href='cr_buildtrigger_pubsub.html'>cr_buildtrigger_pubsub</a></span><span class='op'>(</span><span class='st'>"test-topic"</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='fu'><a href='cr_buildtrigger.html'>cr_buildtrigger</a></span><span class='op'>(</span><span class='va'>the_build</span>, name <span class='op'>=</span> <span class='st'>"pubsub-triggered-subs"</span>, trigger <span class='op'>=</span> <span class='va'>pubsub_trigger</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># create scheduler that calls the pub/sub topic with a parameter</span></span>
+<span class='r-in'><span class='fu'><a href='cr_schedule.html'>cr_schedule</a></span><span class='op'>(</span><span class='st'>"cloud-build-pubsub"</span>,</span>
+<span class='r-in'>            <span class='st'>"15 5 * * *"</span>,</span>
+<span class='r-in'>            pubsubTarget <span class='op'>=</span> <span class='fu'>cr_schedule_pubsub</span><span class='op'>(</span><span class='st'>"test-topic"</span>,</span>
+<span class='r-in'>                                              data <span class='op'>=</span> <span class='va'>send_me</span><span class='op'>)</span><span class='op'>)</span></span>
 <span class='r-in'></span>
 <span class='r-in'><span class='op'>}</span></span>
 <span class='r-in'></span>

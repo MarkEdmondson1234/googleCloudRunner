@@ -199,6 +199,64 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"my-webhook"</span>, <span class="st">"12 6 * * *"</span>, overwrite<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
+<div id="schedule-builds-triggers-using-pubsub" class="section level2">
+<h2 class="hasAnchor">
+<a href="#schedule-builds-triggers-using-pubsub" class="anchor"></a>Schedule Builds Triggers using PubSub</h2>
+<p><code><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http()</a></code> works by creating an API call that will trigger a Cloud Build from the Cloud Scheduler service, but this can be harder to set-up from an authentication standpoint and also give unhelpful errors that are hard to debug.</p>
+<p>For more robust and transparent scheduling of builds it is recommend you use PubSub to trigger Builds via a build trigger that has been set-up to respond to Pub/Sub messages. This holds additional advantages such as being able to accept PubSub messages from other sources to trigger your builds such as Cloud Storage events and Cloud Logging, and being able to parametrise your builds using the content within the PubSub message data.</p>
+<p>The general strategy is:</p>
+<ol style="list-style-type: decimal">
+<li>Create and test your build locally using <code><a href="../reference/cr_build.html">cr_build()</a></code>
+</li>
+<li>Create a PubSub topic either in the Google Cloud console or using <code><a href="https://github.com/andodet/googlePubsubR">library(googlePubsubR)</a></code>
+</li>
+<li>Create a build trigger for your build using <code><a href="../reference/cr_buildtrigger.html">cr_buildtrigger()</a></code> with a topic set using <code><a href="../reference/cr_buildtrigger_pubsub.html">cr_buildtrigger_pubsub()</a></code>
+</li>
+<li>Schedule pushes to the PubSub topic using <code><a href="../reference/cr_schedule_pubsub.html">cr_schedule_pubsub()</a></code>. You can choose to set up schedules with parameters that are passed into the Builds.</li>
+</ol>
+<p>An example is given below:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild.yml"</span>,
+                        package <span class="op">=</span> <span class="st">"googleCloudRunner"</span><span class="op">)</span>
+<span class="va">bb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">cloudbuild</span><span class="op">)</span>
+
+<span class="co"># create a pubsub topic either in Google Console webUI or library(googlePubSubR)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/andodet/googlePubsubR">googlePubsubR</a></span><span class="op">)</span>
+<span class="fu">pubsub_auth</span><span class="op">(</span><span class="op">)</span>
+<span class="fu">topics_create</span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span>
+
+<span class="co"># create build trigger that will watch for messages to your created topic</span>
+<span class="va">pubsub_trigger</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_pubsub.html">cr_buildtrigger_pubsub</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span>
+
+<span class="co"># create the build trigger with in-line build</span>
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="va">bb</span>, name <span class="op">=</span> <span class="st">"pubsub-triggered"</span>, trigger <span class="op">=</span> <span class="va">pubsub_trigger</span><span class="op">)</span>
+
+<span class="co"># create scheduler that calls the pub/sub topic</span>
+<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-build-pubsub"</span>,
+            <span class="st">"15 5 * * *"</span>,
+            pubsubTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_schedule_pubsub.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Builds can be also parametrised to respond to parameters within your PubSub topic. The cloudbuild below echo back the value sent in <code>var1</code> of the PubSub message.</p>
+<pre><code>cloudbuild &lt;- system.file("cloudbuild/cloudbuild_substitutions.yml",
+                           package = "googleCloudRunner")
+the_build &lt;- cr_build_make(cloudbuild)
+
+# var1 is sent via Pubsub to the buildtrigger
+message &lt;- list(var1 = "hello mum")
+send_me &lt;- googlePubsubR::msg_encode(jsonlite::toJSON(message))
+
+# create build trigger that will work from pub/subscription
+pubsub_trigger &lt;- cr_buildtrigger_pubsub("test-topic")
+
+cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trigger)
+
+# create scheduler that calls the pub/sub topic with a parameter
+cr_schedule("cloud-build-pubsub-params",
+            "15 5 * * *",
+            pubsubTarget = cr_schedule_pubsub("test-topic",
+                                              data = send_me))
+</code></pre>
+<p>This opens up a lot of possibilities of when and where your code can run in reaction to both events (git commits, files hitting cloud storage, generic events on GCP) and on a schedule.</p>
+</div>
 <div id="schedule-cloud-run-applications" class="section level2">
 <h2 class="hasAnchor">
 <a href="#schedule-cloud-run-applications" class="anchor"></a>Schedule Cloud Run applications</h2>
@@ -206,7 +264,7 @@
 <h3 class="hasAnchor">
 <a href="#public-http-endpoints" class="anchor"></a>Public HTTP endpoints</h3>
 <p>Via Cloud Scheduler you can set up a scheduled hit of your HTTP endpoints, via GET, POST or any other methods you have coded into your app. <code><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http()</a></code> will help you create the HTTP endpoint for you to pass to <code><a href="../reference/cr_schedule.html">cr_schedule()</a></code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">run_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http</a></span><span class="op">(</span>
        <span class="st">"https://example-ewjogewawq-ew.a.run.app/echo?msg=blah"</span>,
       http_method <span class="op">=</span> <span class="st">"GET"</span>
@@ -218,7 +276,7 @@
 <h3 class="hasAnchor">
 <a href="#private-http-endpoints" class="anchor"></a>Private HTTP endpoints</h3>
 <p>When you create an app via <code>cr_deploy_run("my-app", allowUnauthenticated = TRUE)</code> a new service account will be created with the rights called “my-app-invoker”. Use that email to tell the scheduler how to call the app:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># for authenticated Cloud Run apps - create with allowUnauthenticated=FALSE</span>
 <span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span><span class="op">(</span><span class="st">"my-app"</span>, allowUnauthenticated <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
@@ -245,7 +303,7 @@
 <a href="#schedule-an-r-script" class="anchor"></a>Schedule an R script</h2>
 <p>A common use case is scheduling an R script. This is provided by <code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code></p>
 <p>A minimal example is:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create an r script that will echo the time</span>
 <span class="va">the_build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span><span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="st">"cat(Sys.time())"</span><span class="op">)</span><span class="op">)</span>
 
@@ -267,7 +325,7 @@
 <h3 class="hasAnchor">
 <a href="#a-more-complicated-r-script-example" class="anchor"></a>A more complicated R script example</h3>
 <p>This example shows running R scripts across a source such as GitHub or Cloud Respositories. This is used for builds such as package checks and website builds. This uses the helper deployment function, <code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code> which is also available as an RStudio gadget.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># this can be an R filepath or lines of R read in from a script</span>
 <span class="va">r_lines</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"list.files()"</span>,
               <span class="st">"library(dplyr)"</span>,
@@ -291,7 +349,7 @@
 <p>An alternative is to customise the Docker image so it includes the R packages you need. For instance, <code>rocker/tidyverse</code> would load the Tidyverse packages.</p>
 <p>You may also want to customise the R docker image further - in this case you can build your docker image first with your R libraries installed, then specify that image in your R deployment.</p>
 <p>Once you have your R Docker file, supply it to <code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code> via its <code>r_image</code> argument.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span><span class="op">(</span><span class="st">"my_folder_with_dockerfile"</span>, 
                  image_name <span class="op">=</span> <span class="st">"gcr.io/my-project/my-image"</span>,
                  tag <span class="op">=</span> <span class="st">"dev"</span><span class="op">)</span>
@@ -340,7 +398,7 @@
 <a href="#build-the-docker-image-on-cloud-build" class="anchor"></a>3. Build the Docker image on Cloud Build</h3>
 <p>Once you have your R script and Dockerfile in the same folder, you need to build the image.</p>
 <p>This can be automated via the <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> function supplying the folder containing the Dockerfile:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span><span class="op">(</span><span class="st">"my-scripts/"</span>, <span class="st">"gcr.io/your-project/your-name"</span><span class="op">)</span></code></pre></div>
 <p>Once the image is built successfully, you do not need to build it again for the scheduled calls - you could setup doing that only if the R code changes.</p>
 </div>
@@ -352,7 +410,7 @@
 <h4 class="hasAnchor">
 <a href="#repo-source" class="anchor"></a>Repo Source</h4>
 <p>This is if you have your code files within Cloud Source repositories - this can include mirrors from other git providers such as GitHub - see <a href="https://code.markedmondson.me/googleCloudRunner/articles/git.html">setting up git</a>.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
   steps <span class="op">=</span> <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span><span class="st">"your-r-image"</span>, 
                        <span class="st">"R -e my_r_script.R"</span>,
@@ -371,7 +429,7 @@
 <a href="#cloud-storage-source" class="anchor"></a>Cloud Storage Source</h4>
 <p>This keeps your R code source in a Cloud Storage bucket.</p>
 <p>The first method uses <code><a href="../reference/cr_build_upload_gcs.html">?cr_build_upload_gcs</a></code> to create a tar.gz that has zipped files in a folder that you upload:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
   steps <span class="op">=</span> <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span><span class="st">"your-r-image"</span>, 
                        <span class="st">"R -e my_r_script.R"</span>,
@@ -386,7 +444,7 @@
 <h4 class="hasAnchor">
 <a href="#download-files-in-an-initial-buildstep" class="anchor"></a>Download files in an initial buildstep</h4>
 <p>When only a few files, it may be easiest to include downloading the R file from your bucket first into the /workspace/ via a buildstep using <a href="https://cloud.google.com/storage/docs/gsutil">gsutil</a>, not using source at all:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
   steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
     <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span>
@@ -408,7 +466,7 @@
 <h4 class="hasAnchor">
 <a href="#download-files-via-git" class="anchor"></a>Download files via git</h4>
 <p>Another alternative is to use git within the buildsteps to clone from a repo - these can be private git repos if you have uploaded your git SSH key to Secret Manager:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
       steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
            <span class="fu"><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_gitsetup</a></span><span class="op">(</span><span class="st">"github-ssh"</span><span class="op">)</span>,
@@ -423,7 +481,7 @@
 <h3 class="hasAnchor">
 <a href="#testing" class="anchor"></a>Testing</h3>
 <p>You may want to test the build works with a one off build first:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># test your build works</span>
 <span class="va">schedule_build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">my_build</span><span class="op">)</span></code></pre></div>
 </div>
@@ -431,7 +489,7 @@
 <h3 class="hasAnchor">
 <a href="#schedule-calling-the-docker-image-using-cloud-scheduler" class="anchor"></a>5. Schedule calling the Docker image using Cloud Scheduler</h3>
 <p>Once you have a working build, schedule that build object by passing it to the <code><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http()</a></code> function, which constructs the Cloud Build API call for Cloud Scheduler to call at its scheduled times.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create a scheduler http endpoint that will trigger your build</span>
 <span class="va">cloud_build_target</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">my_build</span><span class="op">)</span>
 
