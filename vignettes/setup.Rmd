@@ -58,11 +58,7 @@ Once you get all green ticks in `cr_setup()` then you should be able to run the 
 * Reuses environment argument `GCE_DEFAULT_PROJECT_ID` from googleComputeEngineR
 * Reuses environment argument `GCS_DEFAULT_BUCKET` from [googleCloudStorageR](http://code.markedmondson.me/googleCloudStorageR/)
 * New environment argument `CR_BUILD_EMAIL` that is a Google service email (see [GCP setup](articles/setup-gcp.html))
-* New environment argument `CR_REGION` can be one of the regions listed in `cr_regions`:
-
-```{r}
-googleCloudRunner::cr_regions
-```
+* New environment argument `CR_REGION` can be one of the regions listed in `googleCloudRunner::cr_regions`
 
 e.g. at the end of all set-up your `.Renviron` should look like:
 

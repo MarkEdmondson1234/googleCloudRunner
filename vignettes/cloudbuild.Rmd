@@ -9,7 +9,9 @@ The first 120 mins per day are free.  [See here for more priceinfo.](https://clo
 
 If you want to run scripts that can be triggered one time, batch style, and set them up to trigger on GitHub events or pub/sub, or schedule them using Cloud Scheduler then Cloud Build is suited to your use case. 
 
-If you would also like to have your R code react in realtime to events such as HTTP or sub/sub events, such as a website or API endpoint, consider [Cloud Run](https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html). 
+If you would also like to have your R code react in real-time to events such as HTTP events, such as a website or API endpoint, consider [Cloud Run](https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html). 
+
+PubSub events can also trigger builds via Build Triggers which is good for long-running tasks in reaction to events such as a Cloud Storage file being uploaded, various events around Google Cloud such as billing alerts and via custom metrics set up in Cloud Logging for practically any logged event on Google Cloud.
 
 ## The cloudbuild.yaml format
 
@@ -447,11 +449,11 @@ cr_buildtrigger(
 
 ### Pub/Sub Triggered Cloud Builds
 
-In `googleCloudRunner < v0.4.1` you can configure your build triggers to run from PubSub events.  These events are generated from a lot of different services around GCP, such as when a file hits Cloud Storage, when certain events occur in Cloud Logging, or when your budget alerts fire.  Triggering a Cloud Build can allow complex workflows responding to these events, including picking up data from the PubSub message to parametrise your code via Substitutions.
+You can configure your build triggers to run from PubSub events.  These events are generated from a lot of different services around GCP, such as when a file hits Cloud Storage, when certain events occur in Cloud Logging, or when your budget alerts fire.  Triggering a Cloud Build can allow complex workflows responding to these events, including picking up data from the PubSub message to parametrise your code via Substitutions.
 
 See the [Creating Pub/Sub triggers documentation](https://cloud.google.com/build/docs/automating-builds/create-pubsub-triggers) on how to do this in the WebUI and gcloud.
 
-Below is an example that uses `library(googlePubSubR)` to create and send a message to PubSub, but any other service that publishes to PubSub could be used.
+Below is an example that uses [`googlePubSubR`](https://CRAN.R-project.org/package=googlePubsubR) to create and send a message to PubSub, but any other service that publishes to PubSub could be used.
 
 For this example, the substitution variables will take its data from the PubSub message content.  It will look within the `body.message.data.x` variable, where `x` is the field sent in the pubsub message.  See how to use these [payload bindings](https://cloud.google.com/build/docs/configuring-builds/use-bash-and-bindings-in-substitutions) in other ways at the Google documentation.
 
@@ -491,7 +493,7 @@ topics_create("test-topic")
 
 We now use the function `cr_buildtrigger_pubsub()` to construct the trigger for the Cloud Build.
 
-```
+```r
 # create build trigger that will work from pub/subscription
 pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
 cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trigger)
@@ -532,7 +534,7 @@ send_me <- msg_encode(message)
 topics_publish(PubsubMessage(send_me), "test-topic")
 ```
 
-You should now see the Cloud build start in your console.  You can check the logs for the build after it has run to see if it worked:
+You should now see the Cloud Build start in your GCP console.  You can check the logs for the build after it has run to see if it worked:
 
 ```r
 # did it work?
@@ -548,5 +550,5 @@ cr_build_logs_last("pubsub-triggered-subs")
 #[60] "DONE"                                                                                                            
 ```
 
-See `cr_schedule_pubsub()` which can use PubSub to trigger scheduled builds.  There is also a guide using [Cloud Scheduler to trigger Build Triggers via Pubsub](articles/cloudscheduler.html) 
+See also `cr_schedule_pubsub()` which can use PubSub to trigger scheduled builds.  There is a guide using that within [Cloud Scheduler to trigger Build Triggers via Pubsub](cloudscheduler.html) 
 

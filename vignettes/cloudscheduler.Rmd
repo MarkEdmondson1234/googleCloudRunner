@@ -37,7 +37,7 @@ cr_schedule("my-webhook", "12 6 * * *", overwrite=TRUE)
 
 `cr_build_schedule_http()` works by creating an API call that will trigger a Cloud Build from the Cloud Scheduler service, but this can be harder to set-up from an authentication standpoint and also give unhelpful errors that are hard to debug.  
 
-For more robust and transparent scheduling of builds it is recommend you use PubSub to trigger Builds via a build trigger that has been set-up to respond to Pub/Sub messages.  This holds additional advantages such as being able to accept PubSub messages from other sources to trigger your builds such as Cloud Storage events and Cloud Logging, and being able to parametrise your builds using the content within the PubSub message data.
+For more robust and transparent scheduling of builds it is recommend you use PubSub to trigger builds via a build trigger that has been set-up to respond to Pub/Sub messages.  This holds additional advantages such as being able to accept PubSub messages from other sources to trigger your builds, and being able to parametrise your builds using the content within the PubSub message data.
 
 The general strategy is:
 
@@ -70,9 +70,9 @@ cr_schedule("cloud-build-pubsub",
             pubsubTarget = cr_schedule_pubsub("test-topic"))
 ```
 
-Builds can be also parametrised to respond to parameters within your PubSub topic.  The cloudbuild below echo back the value sent in `var1` of the PubSub message.
+Builds can be also parametrised to respond to parameters within your PubSub topic.  The cloudbuild below echo back the value sent in `var1` of the PubSub message, and the scheduler is set-up to send in parameters.
 
-```
+```r
 cloudbuild <- system.file("cloudbuild/cloudbuild_substitutions.yml",
                            package = "googleCloudRunner")
 the_build <- cr_build_make(cloudbuild)
