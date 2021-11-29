@@ -170,7 +170,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Serverless batched R scripts via Cloud Build</h1>
             
-            <h4 class="date">2021-11-28</h4>
+            <h4 class="date">2021-11-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudbuild.Rmd"><code>vignettes/cloudbuild.Rmd</code></a></small>
       <div class="hidden name"><code>cloudbuild.Rmd</code></div>
@@ -182,7 +182,8 @@
 <p>Cloud Build uses <a href="https://www.docker.com/resources/what-container">Docker containers</a> to run everything. This means it can run almost any language/program or application including R. Having an easy way to create and trigger these builds from R means R can serve as a UI or gateway to any other program e.g. R can trigger a Cloud Build using <code>gcloud</code> to deploy Cloud Run applications.</p>
 <p>The first 120 mins per day are free. <a href="https://cloud.google.com/cloud-build/pricing">See here for more priceinfo.</a></p>
 <p>If you want to run scripts that can be triggered one time, batch style, and set them up to trigger on GitHub events or pub/sub, or schedule them using Cloud Scheduler then Cloud Build is suited to your use case.</p>
-<p>If you would also like to have your R code react in realtime to events such as HTTP or sub/sub events, such as a website or API endpoint, consider <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html">Cloud Run</a>.</p>
+<p>If you would also like to have your R code react in real-time to events such as HTTP events, such as a website or API endpoint, consider <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html">Cloud Run</a>.</p>
+<p>PubSub events can also trigger builds via Build Triggers which is good for long-running tasks in reaction to events such as a Cloud Storage file being uploaded, various events around Google Cloud such as billing alerts and via custom metrics set up in Cloud Logging for practically any logged event on Google Cloud.</p>
 <div id="the-cloudbuild-yaml-format" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-cloudbuild-yaml-format" class="anchor"></a>The cloudbuild.yaml format</h2>
@@ -572,9 +573,9 @@
 <div id="pubsub-triggered-cloud-builds" class="section level3">
 <h3 class="hasAnchor">
 <a href="#pubsub-triggered-cloud-builds" class="anchor"></a>Pub/Sub Triggered Cloud Builds</h3>
-<p>In <code>googleCloudRunner &lt; v0.4.1</code> you can configure your build triggers to run from PubSub events. These events are generated from a lot of different services around GCP, such as when a file hits Cloud Storage, when certain events occur in Cloud Logging, or when your budget alerts fire. Triggering a Cloud Build can allow complex workflows responding to these events, including picking up data from the PubSub message to parametrise your code via Substitutions.</p>
+<p>You can configure your build triggers to run from PubSub events. These events are generated from a lot of different services around GCP, such as when a file hits Cloud Storage, when certain events occur in Cloud Logging, or when your budget alerts fire. Triggering a Cloud Build can allow complex workflows responding to these events, including picking up data from the PubSub message to parametrise your code via Substitutions.</p>
 <p>See the <a href="https://cloud.google.com/build/docs/automating-builds/create-pubsub-triggers">Creating Pub/Sub triggers documentation</a> on how to do this in the WebUI and gcloud.</p>
-<p>Below is an example that uses <code><a href="https://rdrr.io/r/base/library.html">library(googlePubSubR)</a></code> to create and send a message to PubSub, but any other service that publishes to PubSub could be used.</p>
+<p>Below is an example that uses <a href="https://CRAN.R-project.org/package=googlePubsubR"><code>googlePubSubR</code></a> to create and send a message to PubSub, but any other service that publishes to PubSub could be used.</p>
 <p>For this example, the substitution variables will take its data from the PubSub message content. It will look within the <code>body.message.data.x</code> variable, where <code>x</code> is the field sent in the pubsub message. See how to use these <a href="https://cloud.google.com/build/docs/configuring-builds/use-bash-and-bindings-in-substitutions">payload bindings</a> in other ways at the Google documentation.</p>
 <p>The cloud build yaml looks like:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">steps</span><span class="kw">:</span></span>
@@ -601,28 +602,29 @@
 <span class="fu">pubsub_auth</span><span class="op">(</span><span class="op">)</span>
 <span class="fu">topics_create</span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span></code></pre></div>
 <p>We now use the function <code><a href="../reference/cr_buildtrigger_pubsub.html">cr_buildtrigger_pubsub()</a></code> to construct the trigger for the Cloud Build.</p>
-<pre><code># create build trigger that will work from pub/subscription
-pubsub_trigger &lt;- cr_buildtrigger_pubsub("test-topic")
-cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trigger)
-#==CloudBuildTriggerResponse==
-#id:  b7fb7d8d-534d-4408-9e0c-154be6577a7f 
-#name:  pubsub-triggered-subs 
-#createdTime:  2021-11-26T21:39:23.714950565Z 
-#==CloudBuildObject==
-#substitutions:
-#_VAR1 :  $(body.message.data.var1) 
-#steps:
-#- name: alpine
-#  args:
-#  - echo
-#  - Hello Cloud Build
-#  id: Hello Cloud Build
-#- name: rocker/r-base
-#  args:
-#  - Rscript
-#  - -e
-#  - paste0('From PubSub message field1:', '${_VAR1}')
-#  id: Hello R</code></pre>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># create build trigger that will work from pub/subscription</span>
+<span class="va">pubsub_trigger</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_pubsub.html">cr_buildtrigger_pubsub</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="va">the_build</span>, name <span class="op">=</span> <span class="st">"pubsub-triggered-subs"</span>, trigger <span class="op">=</span> <span class="va">pubsub_trigger</span><span class="op">)</span>
+<span class="co">#==CloudBuildTriggerResponse==</span>
+<span class="co">#id:  b7fb7d8d-534d-4408-9e0c-154be6577a7f </span>
+<span class="co">#name:  pubsub-triggered-subs </span>
+<span class="co">#createdTime:  2021-11-26T21:39:23.714950565Z </span>
+<span class="co">#==CloudBuildObject==</span>
+<span class="co">#substitutions:</span>
+<span class="co">#_VAR1 :  $(body.message.data.var1) </span>
+<span class="co">#steps:</span>
+<span class="co">#- name: alpine</span>
+<span class="co">#  args:</span>
+<span class="co">#  - echo</span>
+<span class="co">#  - Hello Cloud Build</span>
+<span class="co">#  id: Hello Cloud Build</span>
+<span class="co">#- name: rocker/r-base</span>
+<span class="co">#  args:</span>
+<span class="co">#  - Rscript</span>
+<span class="co">#  - -e</span>
+<span class="co">#  - paste0('From PubSub message field1:', '${_VAR1}')</span>
+<span class="co">#  id: Hello R</span></code></pre></div>
 <p>The build trigger should now be deployed and available in your Cloud Console.</p>
 <p>We now simulate a PubSub message coming in with the <code>var1</code> field filled. In real applications this PubSub trigger could come from another system, Cloud Storage files, or other R scripts.</p>
 <p>PubSub requires the message to be JSON and base64 encoded, so we use <code><a href="https://arxiv.org/abs/1403.2805">library(jsonlite)</a></code> to do this and <code><a href="https://github.com/andodet/googlePubsubR">library(googlePubsubR)</a></code> again to send the message:</p>
@@ -634,7 +636,7 @@ cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trig
 
 <span class="co"># send the message!</span>
 <span class="fu">topics_publish</span><span class="op">(</span><span class="fu">PubsubMessage</span><span class="op">(</span><span class="va">send_me</span><span class="op">)</span>, <span class="st">"test-topic"</span><span class="op">)</span></code></pre></div>
-<p>You should now see the Cloud build start in your console. You can check the logs for the build after it has run to see if it worked:</p>
+<p>You should now see the Cloud Build start in your GCP console. You can check the logs for the build after it has run to see if it worked:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># did it work?</span>
 <span class="fu"><a href="../reference/cr_build_logs.html">cr_build_logs_last</a></span><span class="op">(</span><span class="st">"pubsub-triggered-subs"</span><span class="op">)</span>
@@ -647,7 +649,7 @@ cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trig
 <span class="co">#[58] "Finished Step #1 - \"Hello R\""                                                                                  </span>
 <span class="co">#[59] "PUSH"                                                                                                            </span>
 <span class="co">#[60] "DONE"                                                                                                            </span></code></pre></div>
-<p>See <code><a href="../reference/cr_schedule_pubsub.html">cr_schedule_pubsub()</a></code> which can use PubSub to trigger scheduled builds. There is also a guide using <a href="articles/cloudscheduler.html">Cloud Scheduler to trigger Build Triggers via Pubsub</a></p>
+<p>See also <code><a href="../reference/cr_schedule_pubsub.html">cr_schedule_pubsub()</a></code> which can use PubSub to trigger scheduled builds. There is a guide using that within <a href="cloudscheduler.html">Cloud Scheduler to trigger Build Triggers via Pubsub</a></p>
 </div>
 </div>
   </div>

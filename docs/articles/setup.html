@@ -170,7 +170,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Setup</h1>
             
-            <h4 class="date">2021-11-28</h4>
+            <h4 class="date">2021-11-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/setup.Rmd"><code>vignettes/setup.Rmd</code></a></small>
       <div class="hidden name"><code>setup.Rmd</code></div>
@@ -236,24 +236,9 @@
 <li>Reuses environment argument <code>GCS_DEFAULT_BUCKET</code> from <a href="http://code.markedmondson.me/googleCloudStorageR/">googleCloudStorageR</a>
 </li>
 <li>New environment argument <code>CR_BUILD_EMAIL</code> that is a Google service email (see <a href="articles/setup-gcp.html">GCP setup</a>)</li>
-<li>New environment argument <code>CR_REGION</code> can be one of the regions listed in <code>cr_regions</code>:</li>
+<li>New environment argument <code>CR_REGION</code> can be one of the regions listed in <code><a href="../reference/cr_regions.html">googleCloudRunner::cr_regions</a></code>
+</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">googleCloudRunner</span><span class="fu">::</span><span class="va"><a href="../reference/cr_regions.html">cr_regions</a></span></code></pre></div>
-<pre><code>##  [1] "asia-east1"              "asia-east2"             
-##  [3] "asia-northeast1"         "asia-northeast2"        
-##  [5] "asia-northeast3"         "asia-south1"            
-##  [7] "asia-south2"             "asia-southeast1"        
-##  [9] "asia-southeast2"         "australia-southeast1"   
-## [11] "australia-southeast2"    "europe-central2"        
-## [13] "europe-north1"           "europe-west1"           
-## [15] "europe-west2"            "europe-west3"           
-## [17] "europe-west4"            "europe-west6"           
-## [19] "northamerica-northeast1" "northamerica-northeast2"
-## [21] "southamerica-east1"      "us-central1"            
-## [23] "us-east1"                "us-east4"               
-## [25] "us-west1"                "us-west2"               
-## [27] "us-west3"                "us-west4"</code></pre>
 <p>e.g. at the end of all set-up your <code>.Renviron</code> should look like:</p>
 <pre><code>GCE_AUTH_FILE="/Users/me/auth/auth.json"
 GCE_DEFAULT_PROJECT_ID="my-project"
@@ -261,9 +246,9 @@ GCS_DEFAULT_BUCKET="my-bucket"
 CR_REGION="europe-west1"
 CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com</code></pre>
 <p>And when you restart R and load the library you should see something like:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googleCloudRunner)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>✓ Setting scopes to https<span class="sc">:</span><span class="er">//</span>www.googleapis.com<span class="sc">/</span>auth<span class="sc">/</span>cloud<span class="sc">-</span>platform</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>✓ Successfully auto<span class="sc">-</span>authenticated via <span class="sc">/</span>Users<span class="sc">/</span>me<span class="sc">/</span>auth<span class="sc">/</span>keys<span class="sc">/</span>googlecloudrunner<span class="sc">-</span>auth<span class="sc">-</span>key.json</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googleCloudRunner)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>✓ Setting scopes to https<span class="sc">:</span><span class="er">//</span>www.googleapis.com<span class="sc">/</span>auth<span class="sc">/</span>cloud<span class="sc">-</span>platform</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>✓ Successfully auto<span class="sc">-</span>authenticated via <span class="sc">/</span>Users<span class="sc">/</span>me<span class="sc">/</span>auth<span class="sc">/</span>keys<span class="sc">/</span>googlecloudrunner<span class="sc">-</span>auth<span class="sc">-</span>key.json</span></code></pre></div>
 <p>This <code>.Renviron</code> file can be placed in the root of your project or as per what is described in <code><a href="https://rdrr.io/r/base/Startup.html">?Startup</a></code>.</p>
 <p>You can also set the above in the R scripts via:</p>
 <ul>
@@ -273,7 +258,7 @@ CR_BUILD_EMAIL=googlecloudrunner@your-project.iam.gserviceaccount.com</code></pr
 <li><code><a href="../reference/cr_email_get.html">cr_email_set()</a></code></li>
 </ul>
 <p>Or authenticate via</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">googleAuthR</span><span class="fu">::</span><span class="fu">gar_service_auth</span><span class="op">(</span><span class="st">"my_auth_json.com"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
