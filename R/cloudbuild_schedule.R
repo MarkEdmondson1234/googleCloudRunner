@@ -88,7 +88,7 @@ cr_schedule_build <- function(build,
 #' @examples
 #' cr_project_set("my-project")
 #' cr_bucket_set("my-bucket")
-#' cloudbuild <- system.file("cloudbuild/cloudbuild.yml",
+#' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
 #'                            package = "googleCloudRunner")
 #' bb <- cr_build_make(cloudbuild)
 #'
