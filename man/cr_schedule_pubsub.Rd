@@ -32,7 +32,7 @@ You can parametise builds by sending in values within PubSub. To read the data i
 \examples{
 cr_project_set("my-project")
 cr_bucket_set("my-bucket")
-cloudbuild <- system.file("cloudbuild/cloudbuild.yml",
+cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
                            package = "googleCloudRunner")
 bb <- cr_build_make(cloudbuild)
 
@@ -61,7 +61,7 @@ cr_schedule("cloud-build-pubsub",
 
 # builds can be also parametrised to respond to parameters within your pubsub topic
 # this cloudbuild echos back the value sent in 'var1'
-cloudbuild <- system.file("cloudbuild/cloudbuild_substitutions.yml",
+cloudbuild <- system.file("cloudbuild/cloudbuild_substitutions.yaml",
                            package = "googleCloudRunner")
 the_build <- cr_build_make(cloudbuild)
 

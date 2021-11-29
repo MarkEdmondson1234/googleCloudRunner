@@ -117,7 +117,7 @@ cr_schedule_build <- function(build,
 #'
 #' # builds can be also parametrised to respond to parameters within your pubsub topic
 #' # this cloudbuild echos back the value sent in 'var1'
-#' cloudbuild <- system.file("cloudbuild/cloudbuild_substitutions.yml",
+#' cloudbuild <- system.file("cloudbuild/cloudbuild_substitutions.yaml",
 #'                            package = "googleCloudRunner")
 #' the_build <- cr_build_make(cloudbuild)
 #'
