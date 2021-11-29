@@ -170,7 +170,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Scheduled R scripts via Cloud Scheduler</h1>
             
-            <h4 class="date">2021-11-28</h4>
+            <h4 class="date">2021-11-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/cloudscheduler.Rmd"><code>vignettes/cloudscheduler.Rmd</code></a></small>
       <div class="hidden name"><code>cloudscheduler.Rmd</code></div>
@@ -203,7 +203,7 @@
 <h2 class="hasAnchor">
 <a href="#schedule-builds-triggers-using-pubsub" class="anchor"></a>Schedule Builds Triggers using PubSub</h2>
 <p><code><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http()</a></code> works by creating an API call that will trigger a Cloud Build from the Cloud Scheduler service, but this can be harder to set-up from an authentication standpoint and also give unhelpful errors that are hard to debug.</p>
-<p>For more robust and transparent scheduling of builds it is recommend you use PubSub to trigger Builds via a build trigger that has been set-up to respond to Pub/Sub messages. This holds additional advantages such as being able to accept PubSub messages from other sources to trigger your builds such as Cloud Storage events and Cloud Logging, and being able to parametrise your builds using the content within the PubSub message data.</p>
+<p>For more robust and transparent scheduling of builds it is recommend you use PubSub to trigger builds via a build trigger that has been set-up to respond to Pub/Sub messages. This holds additional advantages such as being able to accept PubSub messages from other sources to trigger your builds, and being able to parametrise your builds using the content within the PubSub message data.</p>
 <p>The general strategy is:</p>
 <ol style="list-style-type: decimal">
 <li>Create and test your build locally using <code><a href="../reference/cr_build.html">cr_build()</a></code>
@@ -235,26 +235,26 @@
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-build-pubsub"</span>,
             <span class="st">"15 5 * * *"</span>,
             pubsubTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_schedule_pubsub.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Builds can be also parametrised to respond to parameters within your PubSub topic. The cloudbuild below echo back the value sent in <code>var1</code> of the PubSub message.</p>
-<pre><code>cloudbuild &lt;- system.file("cloudbuild/cloudbuild_substitutions.yml",
-                           package = "googleCloudRunner")
-the_build &lt;- cr_build_make(cloudbuild)
+<p>Builds can be also parametrised to respond to parameters within your PubSub topic. The cloudbuild below echo back the value sent in <code>var1</code> of the PubSub message, and the scheduler is set-up to send in parameters.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild_substitutions.yml"</span>,
+                           package <span class="op">=</span> <span class="st">"googleCloudRunner"</span><span class="op">)</span>
+<span class="va">the_build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">cloudbuild</span><span class="op">)</span>
 
-# var1 is sent via Pubsub to the buildtrigger
-message &lt;- list(var1 = "hello mum")
-send_me &lt;- googlePubsubR::msg_encode(jsonlite::toJSON(message))
+<span class="co"># var1 is sent via Pubsub to the buildtrigger</span>
+<span class="va">message</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>var1 <span class="op">=</span> <span class="st">"hello mum"</span><span class="op">)</span>
+<span class="va">send_me</span> <span class="op">&lt;-</span> <span class="fu">googlePubsubR</span><span class="fu">::</span><span class="fu">msg_encode</span><span class="op">(</span><span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html">toJSON</a></span><span class="op">(</span><span class="va">message</span><span class="op">)</span><span class="op">)</span>
 
-# create build trigger that will work from pub/subscription
-pubsub_trigger &lt;- cr_buildtrigger_pubsub("test-topic")
+<span class="co"># create build trigger that will work from pub/subscription</span>
+<span class="va">pubsub_trigger</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_pubsub.html">cr_buildtrigger_pubsub</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span>
 
-cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trigger)
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="va">the_build</span>, name <span class="op">=</span> <span class="st">"pubsub-triggered-subs"</span>, trigger <span class="op">=</span> <span class="va">pubsub_trigger</span><span class="op">)</span>
 
-# create scheduler that calls the pub/sub topic with a parameter
-cr_schedule("cloud-build-pubsub-params",
-            "15 5 * * *",
-            pubsubTarget = cr_schedule_pubsub("test-topic",
-                                              data = send_me))
-</code></pre>
+<span class="co"># create scheduler that calls the pub/sub topic with a parameter</span>
+<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-build-pubsub-params"</span>,
+            <span class="st">"15 5 * * *"</span>,
+            pubsubTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_schedule_pubsub.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="st">"test-topic"</span>,
+                                              data <span class="op">=</span> <span class="va">send_me</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>This opens up a lot of possibilities of when and where your code can run in reaction to both events (git commits, files hitting cloud storage, generic events on GCP) and on a schedule.</p>
 </div>
 <div id="schedule-cloud-run-applications" class="section level2">
