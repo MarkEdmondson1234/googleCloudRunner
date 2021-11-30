@@ -67,7 +67,7 @@ the_build <- cr_build_make(cloudbuild)
 
 # var1 is sent via Pubsub to the buildtrigger
 message <- list(var1 = "hello mum")
-send_me <- base64_enc(toJSON(message))
+send_me <- jsonlite::base64_enc(jsonlite::toJSON(message))
 
 # create build trigger that will work from pub/subscription
 pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
