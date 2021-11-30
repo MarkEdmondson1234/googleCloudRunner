@@ -331,9 +331,9 @@
 
 <p>If <code>schedule=NULL</code> then the R script will be run immediately on Cloud Build via <a href='cr_build.html'>cr_build</a>.</p>
 <p>If <code>schedule</code> carries a cron job string (e.g. <code>"15 5 * * *"</code>) then the build will be scheduled via Cloud Scheduler</p>
-<p>If <code>schedule_type="pubsub"</code> then scheduling will involve:</p>
+<p>If <code>schedule_type="pubsub"</code> then you will need <code>googlePubsubR</code> installed and set-up and scheduling will involve:</p>
 <ol>
-<li><p>Creating a PubSub topic called <code>"{run_name}-topic"</code> or subscribing to the one you provided in <code>schedule_pubsub</code>.  It is assumed you have created the PubSub topic beforehand if you do supply your own, or if its creating a new topic for you then you will need <code>googlePubsubR</code> installed and set-up.</p></li>
+<li><p>Creating a PubSub topic called <code>"{run_name}-topic"</code> or subscribing to the one you provided in <code>schedule_pubsub</code>.  It is assumed you have created the PubSub topic beforehand if you do supply your own.</p></li>
 <li><p>Create a Build Trigger called <code>"{run_name}-trigger"</code> that will run when the PubSub topic is called</p></li>
 <li><p>Create a Cloud Schedule called <code>"{run_name}-trigger"</code> that will send a pubsub message to the topic: either the default that contains just the name of the script, or the message you supplied in <code>schedule_pubsub</code>.</p></li>
 </ol>

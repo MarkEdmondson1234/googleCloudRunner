@@ -599,8 +599,8 @@
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create pub/sub topic if needed</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/andodet/googlePubsubR">googlePubsubR</a></span><span class="op">)</span>
-<span class="fu">pubsub_auth</span><span class="op">(</span><span class="op">)</span>
-<span class="fu">topics_create</span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/pubsub_auth.html">pubsub_auth</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/topics_create.html">topics_create</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span></code></pre></div>
 <p>We now use the function <code><a href="../reference/cr_buildtrigger_pubsub.html">cr_buildtrigger_pubsub()</a></code> to construct the trigger for the Cloud Build.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create build trigger that will work from pub/subscription</span>
@@ -632,10 +632,10 @@
 <code class="sourceCode R"><span class="co"># make base64 encoded json</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://arxiv.org/abs/1403.2805">jsonlite</a></span><span class="op">)</span>                     
 <span class="va">message</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html">toJSON</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>var1 <span class="op">=</span> <span class="st">"hello mum"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">send_me</span> <span class="op">&lt;-</span> <span class="fu">msg_encode</span><span class="op">(</span><span class="va">message</span><span class="op">)</span>
+<span class="va">send_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/msg_encode.html">msg_encode</a></span><span class="op">(</span><span class="va">message</span><span class="op">)</span>
 
 <span class="co"># send the message!</span>
-<span class="fu">topics_publish</span><span class="op">(</span><span class="fu">PubsubMessage</span><span class="op">(</span><span class="va">send_me</span><span class="op">)</span>, <span class="st">"test-topic"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/topics_publish.html">topics_publish</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/PubsubMessage.html">PubsubMessage</a></span><span class="op">(</span><span class="va">send_me</span><span class="op">)</span>, <span class="st">"test-topic"</span><span class="op">)</span></code></pre></div>
 <p>You should now see the Cloud Build start in your GCP console. You can check the logs for the build after it has run to see if it worked:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># did it work?</span>
