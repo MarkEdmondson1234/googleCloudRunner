@@ -232,6 +232,8 @@
   post_steps <span class='op'>=</span> <span class='cn'>NULL</span>,
   timeout <span class='op'>=</span> <span class='fl'>600L</span>,
   <span class='va'>...</span>,
+  schedule_type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"pubsub"</span>, <span class='st'>"http"</span><span class='op'>)</span>,
+  schedule_pubsub <span class='op'>=</span> <span class='cn'>NULL</span>,
   email <span class='op'>=</span> <span class='fu'><a href='cr_email_get.html'>cr_email_get</a></span><span class='op'>(</span><span class='op'>)</span>,
   region <span class='op'>=</span> <span class='fu'><a href='cr_region_set.html'>cr_region_get</a></span><span class='op'>(</span><span class='op'>)</span>,
   projectId <span class='op'>=</span> <span class='fu'><a href='cr_project_set.html'>cr_project_get</a></span><span class='op'>(</span><span class='op'>)</span>,
@@ -286,6 +288,14 @@
 </dl></td>
     </tr>
     <tr>
+      <th>schedule_type</th>
+      <td><p>If you have specified a schedule, this will select what strategy it will use to deploy it. See details</p></td>
+    </tr>
+    <tr>
+      <th>schedule_pubsub</th>
+      <td><p>If you have a custom pubsub message to send via an existing topic, use <a href='cr_schedule_pubsub.html'>cr_schedule_pubsub</a> to supply it here</p></td>
+    </tr>
+    <tr>
       <th>email</th>
       <td><p>The email that will authenticate the job set via <a href='cr_email_get.html'>cr_email_set</a></p></td>
     </tr>
@@ -312,10 +322,30 @@
     <p>If scheduling then a <a href='Job.html'>Job</a>, if building immediately then a <a href='Build.html'>Build</a></p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>If <code>schedule=NULL</code> then the R script will be run immediately on Cloud Build via <a href='cr_build.html'>cr_build</a>.</p>
-<p>If <code>schedule</code> carries a cron job string (e.g. <code>"15 5 * * *"</code>) then the build will be scheduled via Cloud Scheduler to run as described in <a href='cr_build_schedule_http.html'>cr_build_schedule_http</a></p>
-<p>The R script will execute within the root directory of which <a href='Source.html'>Source</a> you supply, usually created via <a href='cr_build_source.html'>cr_build_source</a>.  Bear in mind if the source changes then the code scheduled may need updating.</p>
+    <p>The R script will execute within the root directory of whichever <a href='Source.html'>Source</a> you supply, usually created via <a href='cr_build_source.html'>cr_build_source</a> representing a Cloud Storage bucket or a GitHub repository that is copied across before code execution.  Bear in mind if the source changes then the code scheduled may need updating.</p>
 <p>The <code>r_image</code> dictates what R libraries the R environment executing the code of <code>r</code> will have, via the underlying Docker container usually supplied by rocker-project.org.  If you want custom R libraries beyond the default, create a docker container with those R libraries installed (perhaps via <a href='cr_deploy_docker.html'>cr_deploy_docker</a>)</p>
+    <h2 class="hasAnchor" id="scheduling"><a class="anchor" href="#scheduling"></a>Scheduling</h2>
+
+    
+
+
+<p>If <code>schedule=NULL</code> then the R script will be run immediately on Cloud Build via <a href='cr_build.html'>cr_build</a>.</p>
+<p>If <code>schedule</code> carries a cron job string (e.g. <code>"15 5 * * *"</code>) then the build will be scheduled via Cloud Scheduler</p>
+<p>If <code>schedule_type="pubsub"</code> then scheduling will involve:</p>
+<ol>
+<li><p>Creating a PubSub topic called <code>"{run_name}-topic"</code> or subscribing to the one you provided in <code>schedule_pubsub</code>.  It is assumed you have created the PubSub topic beforehand if you do supply your own, or if its creating a new topic for you then you will need <code>googlePubsubR</code> installed and set-up.</p></li>
+<li><p>Create a Build Trigger called <code>"{run_name}-trigger"</code> that will run when the PubSub topic is called</p></li>
+<li><p>Create a Cloud Schedule called <code>"{run_name}-trigger"</code> that will send a pubsub message to the topic: either the default that contains just the name of the script, or the message you supplied in <code>schedule_pubsub</code>.</p></li>
+</ol>
+
+<p>Type "pubsub" is recommended for more complex R scripts as you will have more visibility for debugging schedules via inspecting the PubSub topic, build trigger and build logs, as well as enabling triggering the script from other PubSub topics and allowing to pass dynamic parameters into your schedule scripts via the PubSub message.</p>
+<p>If <code>schedule_type="http"</code> then scheduling will involve:</p>
+<ol>
+<li><p>Create a Cloud Build API call with your build embedded within it via <a href='cr_build_schedule_http.html'>cr_build_schedule_http</a></p></li>
+<li><p>Schedule the HTTP call using the authentication email supplied in <code>email</code> or the default <a href='cr_email_get.html'>cr_email_get</a></p></li>
+</ol>
+
+<p>This is the old default and is suitable for smaller R scripts or when you don't want to use the other  GCP services.  The authentication for the API call from Cloud Scheduler can cause opaque errors as it will give you invalid response codes whether its that or an error in your R script you wish to schedule.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>If you want to run R code upon certain events like GitHub pushes, look at <a href='cr_buildtrigger.html'>cr_buildtrigger</a></p>
