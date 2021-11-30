@@ -82,10 +82,10 @@ If \code{schedule=NULL} then the R script will be run immediately on Cloud Build
 
 If \code{schedule} carries a cron job string (e.g. \code{"15 5 * * *"}) then the build will be scheduled via Cloud Scheduler
 
-If \code{schedule_type="pubsub"} then scheduling will involve:
+If \code{schedule_type="pubsub"} then you will need \code{googlePubsubR} installed and set-up and scheduling will involve:
 
 \enumerate{
-  \item Creating a PubSub topic called \code{"{run_name}-topic"} or subscribing to the one you provided in \code{schedule_pubsub}.  It is assumed you have created the PubSub topic beforehand if you do supply your own, or if its creating a new topic for you then you will need \code{googlePubsubR} installed and set-up.
+  \item Creating a PubSub topic called \code{"{run_name}-topic"} or subscribing to the one you provided in \code{schedule_pubsub}.  It is assumed you have created the PubSub topic beforehand if you do supply your own.
   \item Create a Build Trigger called \code{"{run_name}-trigger"} that will run when the PubSub topic is called
   \item Create a Cloud Schedule called \code{"{run_name}-trigger"} that will send a pubsub message to the topic: either the default that contains just the name of the script, or the message you supplied in \code{schedule_pubsub}.
  }

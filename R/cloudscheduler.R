@@ -237,7 +237,9 @@ parse_schedule_list <- function(x){
 #' @param x The name of the scheduled job or a \link{Job} object
 #' @param region The region to run within
 #' @param projectId The projectId
+#' @param pubsub_cleanup If the Cloud Scheduler is pointing at a Build Trigger/PubSub as deployed by \link{cr_deploy_r} will attempt to clean up those resources too.
 #' @importFrom googleAuthR gar_api_generator
+#' @importFrom googlePubsubR topics_delete subscriptions_delete
 #' @export
 #'
 #' @examples
@@ -249,16 +251,48 @@ parse_schedule_list <- function(x){
 #' }
 cr_schedule_delete <- function(x,
                                region = cr_region_get(),
-                               projectId = cr_project_get()){
+                               projectId = cr_project_get(),
+                               pubsub_cleanup = TRUE){
 
-  the_name <- construct_name(name = extract_schedule_name(x),
-                            region = region,
-                            project = projectId)
+  assert_that(
+    assertthat::is.flag(pubsub_cleanup),
+    is.string(region),
+    is.string(projectId)
+  )
+
+  the_job <- as.gar_scheduleJob(x)
+  the_name <- the_job$name
+
+  if(!is.null(the_job) && pubsub_cleanup){
+
+    myMessage("PubSub triggered Cloud Build detected.  Attempting to delete topic and build trigger as well for", the_name, level = 3)
+
+    the_buildtrigger <- tryCatch(
+      cr_buildtrigger_get(basename(the_name), projectId = projectId),
+      error = function(err){
+        myMessage("Could not find build trigger", the_name, "to delete. Aborting. ",
+                  err$message, level = 3)
+        return(NULL)
+      })
+
+    if(!is.null(the_buildtrigger)){
+      cr_buildtrigger_delete(the_buildtrigger$id, projectId = projectId)
+
+      the_pubsub <- tryCatch({
+        topics_delete(the_buildtrigger$pubsubConfig$topic)
+        subscriptions_delete(the_buildtrigger$pubsubConfig$subscription)
+      }, error = function(err){
+        myMessage("Could not delete topic and/or subscription for ",
+                  the_name, "to delete. Aborting. ", err$message, level = 3)
+        return(NULL)
+      })
+    }
+
+  }
 
   url <- sprintf("https://cloudscheduler.googleapis.com/v1/%s", the_name)
   # cloudscheduler.projects.locations.jobs.delete
-  f <- googleAuthR::gar_api_generator(url, "DELETE",
-                                      data_parse_function = function(x) TRUE)
+  f <- gar_api_generator(url, "DELETE", data_parse_function = function(x) TRUE)
   f()
 
 }
@@ -270,16 +304,6 @@ construct_name <- function(name, region, project){
 
   sprintf("projects/%s/locations/%s/jobs/%s",
           project, region, name)
-}
-
-extract_schedule_name <- function(x){
-  if(is.gar_scheduleJob(x)){
-     return(x$name)
-  } else {
-    assert_that(is.string(x))
-  }
-
-  x
 }
 
 #' Gets a scheduler job.
@@ -535,6 +559,19 @@ is.gar_scheduleJob <- function(x){
   inherits(x, "gar_scheduleJob")
 }
 
+as.gar_scheduleJob <- function(x,
+                               region = cr_region_get(),
+                               projectId = cr_project_get()){
+  if(is.gar_scheduleJob(x)){
+    the_job <- x
+  } else {
+    assert_that(is.string(x))
+    the_job <- cr_schedule_get(x, region = region, projectId = projectId)
+  }
+
+  the_job
+}
+
 
 #' Pubsub Target Object (Cloud Scheduler)
 #'
@@ -575,3 +612,12 @@ is.gar_pubsubTarget <- function(x){
   inherits(x, "gar_pubsubTarget")
 }
 
+
+extract_schedule_name <- function(x){
+  if(is.gar_scheduleJob(x)){
+    return(x$name)
+  } else {
+    assert_that(is.string(x))
+  }
+  x
+}

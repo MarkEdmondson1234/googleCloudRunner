@@ -22,6 +22,7 @@ Imports:
     curl (>= 4.3),
     googleAuthR (>= 1.3.1),
     googleCloudStorageR (>= 0.5.1),
+    googlePubsubR (>= 0.0.2),
     httr (>= 1.4.1),
     jose (>= 1.0),
     jsonlite (>= 1.5),
@@ -35,7 +36,6 @@ Remotes:
   r-lib/gargle,
   andodet/googlePubsubR
 Suggests: 
-    googlePubsubR (>= 0.0.2),
     knitr,
     markdown,
     miniUI,

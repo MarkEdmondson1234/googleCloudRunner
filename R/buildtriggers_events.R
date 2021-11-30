@@ -62,7 +62,13 @@ cr_buildtrigger_pubsub <- function(topic,
     is.string(topic)
   )
 
-  PubsubConfig(topic = sprintf("projects/%s/topics/%s", projectId, topic),
+  if(grepl("^projects", topic)){
+    topic_name <- topic
+  } else {
+    topic_name <- sprintf("projects/%s/topics/%s", projectId, topic)
+  }
+
+  PubsubConfig(topic = topic_name,
                serviceAccountEmail = serviceAccountEmail)
 
 }

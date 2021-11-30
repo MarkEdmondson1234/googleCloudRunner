@@ -4,7 +4,12 @@
 \alias{cr_schedule_delete}
 \title{Deletes a scheduled job.}
 \usage{
-cr_schedule_delete(x, region = cr_region_get(), projectId = cr_project_get())
+cr_schedule_delete(
+  x,
+  region = cr_region_get(),
+  projectId = cr_project_get(),
+  pubsub_cleanup = TRUE
+)
 }
 \arguments{
 \item{x}{The name of the scheduled job or a \link{Job} object}
@@ -12,6 +17,8 @@ cr_schedule_delete(x, region = cr_region_get(), projectId = cr_project_get())
 \item{region}{The region to run within}
 
 \item{projectId}{The projectId}
+
+\item{pubsub_cleanup}{If the Cloud Scheduler is pointing at a Build Trigger/PubSub as deployed by \link{cr_deploy_r} will attempt to clean up those resources too.}
 }
 \description{
 Deletes a scheduled job.

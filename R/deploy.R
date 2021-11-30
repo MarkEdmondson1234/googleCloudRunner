@@ -26,10 +26,10 @@
 #'
 #' If \code{schedule} carries a cron job string (e.g. \code{"15 5 * * *"}) then the build will be scheduled via Cloud Scheduler
 #'
-#' If \code{schedule_type="pubsub"} then scheduling will involve:
+#' If \code{schedule_type="pubsub"} then you will need \code{googlePubsubR} installed and set-up and scheduling will involve:
 #'
 #' \enumerate{
-#'   \item Creating a PubSub topic called \code{"{run_name}-topic"} or subscribing to the one you provided in \code{schedule_pubsub}.  It is assumed you have created the PubSub topic beforehand if you do supply your own, or if its creating a new topic for you then you will need \code{googlePubsubR} installed and set-up.
+#'   \item Creating a PubSub topic called \code{"{run_name}-topic"} or subscribing to the one you provided in \code{schedule_pubsub}.  It is assumed you have created the PubSub topic beforehand if you do supply your own.
 #'   \item Create a Build Trigger called \code{"{run_name}-trigger"} that will run when the PubSub topic is called
 #'   \item Create a Cloud Schedule called \code{"{run_name}-trigger"} that will send a pubsub message to the topic: either the default that contains just the name of the script, or the message you supplied in \code{schedule_pubsub}.
 #'  }
@@ -143,10 +143,22 @@ cr_deploy_r <- function(r,
         # Create a pubsub topic
         topic_created <- googlePubsubR::topics_create(topic_basename)
       }
-      trigger_name <- paste0(run_name, "-trigger")
+
+      # check PubSub topic is there:
+      topic_got <- googlePubsubR::topics_get(topic_basename)
+
+      # May only contain alphanumeric characters and dashes
+      trigger_name <- gsub("[^a-zA-Z0-9\\-]","-",
+                           basename(
+                             paste0(topic_got$name, "-trigger")
+                             )
+                           )
+
       myMessage("Creating BuildTrigger topic:", trigger_name, level = 3)
       # Create a build trigger that will run when the pubsub topic is called
-      cr_buildtrigger(br, name = trigger_name, trigger = pubsub_target)
+      cr_buildtrigger(br,
+                      name = trigger_name,
+                      trigger = cr_buildtrigger_pubsub(basename(topic_got$name)))
 
       myMessage("Creating Cloud Schedule to trigger PubSub topicName:",
                 pubsub_target$topicName, level = 3)
