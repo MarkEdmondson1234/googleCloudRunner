@@ -16,6 +16,8 @@
 #' @import assertthat
 #' @family Cloud Scheduler functions
 #'
+#' @return a \link{HttpTarget} object for use in \link{cr_schedule}
+#'
 #' @examples
 #' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
 #' build1 <- cr_build_make(cloudbuild)
@@ -57,6 +59,7 @@ cr_build_schedule_http <- function(build,
 #' @param schedule A cron schedule e.g. \code{"15 5 * * *"}
 #' @param ... additional arguments to pass to \link{cr_schedule}
 #' @inheritDotParams cr_schedule
+#' @return A cloud scheduler \link{Job} object
 cr_schedule_build <- function(build,
                               schedule,
                               email = cr_email_get(),
@@ -81,6 +84,7 @@ cr_schedule_build <- function(build,
 #' @family Cloud Scheduler functions
 #' @export
 #' @importFrom jsonlite base64_enc toJSON
+#' @return A \link{PubsubTarget} object for use within \link{cr_schedule}
 #'
 #' @details
 #'

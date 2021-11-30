@@ -14,6 +14,8 @@ cr_deploy_r(
   post_steps = NULL,
   timeout = 600L,
   ...,
+  schedule_type = c("pubsub", "http"),
+  schedule_pubsub = NULL,
   email = cr_email_get(),
   region = cr_region_get(),
   projectId = cr_project_get(),
@@ -48,6 +50,10 @@ cr_deploy_r(
     \item{\code{prefix}}{prefixed to name - set to "" to suppress.  Will be suppressed if \code{name} starts with gcr.io or \code{*-docker.pkg.dev}}
   }}
 
+\item{schedule_type}{If you have specified a schedule, this will select what strategy it will use to deploy it. See details}
+
+\item{schedule_pubsub}{If you have a custom pubsub message to send via an existing topic, use \link{cr_schedule_pubsub} to supply it here}
+
 \item{email}{The email that will authenticate the job set via \link{cr_email_set}}
 
 \item{region}{The region usually set with \link{cr_region_set}}
@@ -65,14 +71,37 @@ If scheduling then a \link{Job}, if building immediately then a \link{Build}
 Will create a build to run an R script in Cloud Build with an optional schedule from Cloud Scheduler
 }
 \details{
-If \code{schedule=NULL} then the R script will be run immediately on Cloud Build via \link{cr_build}.
-
-If \code{schedule} carries a cron job string (e.g. \code{"15 5 * * *"}) then the build will be scheduled via Cloud Scheduler to run as described in \link{cr_build_schedule_http}
-
-The R script will execute within the root directory of which \link{Source} you supply, usually created via \link{cr_build_source}.  Bear in mind if the source changes then the code scheduled may need updating.
+The R script will execute within the root directory of whichever \link{Source} you supply, usually created via \link{cr_build_source} representing a Cloud Storage bucket or a GitHub repository that is copied across before code execution.  Bear in mind if the source changes then the code scheduled may need updating.
 
 The \code{r_image} dictates what R libraries the R environment executing the code of \code{r} will have, via the underlying Docker container usually supplied by rocker-project.org.  If you want custom R libraries beyond the default, create a docker container with those R libraries installed (perhaps via \link{cr_deploy_docker})
 }
+\section{Scheduling}{
+
+
+If \code{schedule=NULL} then the R script will be run immediately on Cloud Build via \link{cr_build}.
+
+If \code{schedule} carries a cron job string (e.g. \code{"15 5 * * *"}) then the build will be scheduled via Cloud Scheduler
+
+If \code{schedule_type="pubsub"} then scheduling will involve:
+
+\enumerate{
+  \item Creating a PubSub topic called \code{"{run_name}-topic"} or subscribing to the one you provided in \code{schedule_pubsub}.  It is assumed you have created the PubSub topic beforehand if you do supply your own, or if its creating a new topic for you then you will need \code{googlePubsubR} installed and set-up.
+  \item Create a Build Trigger called \code{"{run_name}-trigger"} that will run when the PubSub topic is called
+  \item Create a Cloud Schedule called \code{"{run_name}-trigger"} that will send a pubsub message to the topic: either the default that contains just the name of the script, or the message you supplied in \code{schedule_pubsub}.
+ }
+
+Type "pubsub" is recommended for more complex R scripts as you will have more visibility for debugging schedules via inspecting the PubSub topic, build trigger and build logs, as well as enabling triggering the script from other PubSub topics and allowing to pass dynamic parameters into your schedule scripts via the PubSub message.
+
+If \code{schedule_type="http"} then scheduling will involve:
+
+\enumerate{
+  \item Create a Cloud Build API call with your build embedded within it via \link{cr_build_schedule_http}
+  \item Schedule the HTTP call using the authentication email supplied in \code{email} or the default \link{cr_email_get}
+ }
+
+This is the old default and is suitable for smaller R scripts or when you don't want to use the other  GCP services.  The authentication for the API call from Cloud Scheduler can cause opaque errors as it will give you invalid response codes whether its that or an error in your R script you wish to schedule.
+}
+
 \examples{
 
 r_lines <- c("list.files()",

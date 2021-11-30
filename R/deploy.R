@@ -11,16 +11,39 @@
 #' @param pre_steps Other \link{cr_buildstep} to run before the R code executes
 #' @param post_steps Other \link{cr_buildstep} to run after the R code executes
 #' @param ... Other arguments passed through to \link{cr_buildstep_r}
+#' @param schedule_type If you have specified a schedule, this will select what strategy it will use to deploy it. See details
+#' @param schedule_pubsub If you have a custom pubsub message to send via an existing topic, use \link{cr_schedule_pubsub} to supply it here
 #' @inheritDotParams cr_buildstep_r
 #' @details
 #'
-#' If \code{schedule=NULL} then the R script will be run immediately on Cloud Build via \link{cr_build}.
-#'
-#' If \code{schedule} carries a cron job string (e.g. \code{"15 5 * * *"}) then the build will be scheduled via Cloud Scheduler to run as described in \link{cr_build_schedule_http}
-#'
-#' The R script will execute within the root directory of which \link{Source} you supply, usually created via \link{cr_build_source}.  Bear in mind if the source changes then the code scheduled may need updating.
+#' The R script will execute within the root directory of whichever \link{Source} you supply, usually created via \link{cr_build_source} representing a Cloud Storage bucket or a GitHub repository that is copied across before code execution.  Bear in mind if the source changes then the code scheduled may need updating.
 #'
 #' The \code{r_image} dictates what R libraries the R environment executing the code of \code{r} will have, via the underlying Docker container usually supplied by rocker-project.org.  If you want custom R libraries beyond the default, create a docker container with those R libraries installed (perhaps via \link{cr_deploy_docker})
+#'
+#' @section Scheduling:
+#'
+#' If \code{schedule=NULL} then the R script will be run immediately on Cloud Build via \link{cr_build}.
+#'
+#' If \code{schedule} carries a cron job string (e.g. \code{"15 5 * * *"}) then the build will be scheduled via Cloud Scheduler
+#'
+#' If \code{schedule_type="pubsub"} then scheduling will involve:
+#'
+#' \enumerate{
+#'   \item Creating a PubSub topic called \code{"{run_name}-topic"} or subscribing to the one you provided in \code{schedule_pubsub}.  It is assumed you have created the PubSub topic beforehand if you do supply your own, or if its creating a new topic for you then you will need \code{googlePubsubR} installed and set-up.
+#'   \item Create a Build Trigger called \code{"{run_name}-trigger"} that will run when the PubSub topic is called
+#'   \item Create a Cloud Schedule called \code{"{run_name}-trigger"} that will send a pubsub message to the topic: either the default that contains just the name of the script, or the message you supplied in \code{schedule_pubsub}.
+#'  }
+#'
+#' Type "pubsub" is recommended for more complex R scripts as you will have more visibility for debugging schedules via inspecting the PubSub topic, build trigger and build logs, as well as enabling triggering the script from other PubSub topics and allowing to pass dynamic parameters into your schedule scripts via the PubSub message.
+#'
+#' If \code{schedule_type="http"} then scheduling will involve:
+#'
+#' \enumerate{
+#'   \item Create a Cloud Build API call with your build embedded within it via \link{cr_build_schedule_http}
+#'   \item Schedule the HTTP call using the authentication email supplied in \code{email} or the default \link{cr_email_get}
+#'  }
+#'
+#' This is the old default and is suitable for smaller R scripts or when you don't want to use the other  GCP services.  The authentication for the API call from Cloud Scheduler can cause opaque errors as it will give you invalid response codes whether its that or an error in your R script you wish to schedule.
 #'
 #' @return If scheduling then a \link{Job}, if building immediately then a \link{Build}
 #' @family Deployment functions
@@ -58,11 +81,15 @@ cr_deploy_r <- function(r,
                         post_steps = NULL,
                         timeout = 600L,
                         ...,
+                        schedule_type = c("pubsub","http"),
+                        schedule_pubsub = NULL,
                         email = cr_email_get(),
                         region = cr_region_get(),
                         projectId = cr_project_get(),
                         serviceAccount = NULL,
                         launch_browser=interactive()){
+
+  schedule_type <- match.arg(schedule_type)
 
   if(is.null(run_name)){
     run_name <- paste0("cr_rscript_", format(Sys.time(), "%Y%m%s%H%M%S"))
@@ -90,15 +117,47 @@ cr_deploy_r <- function(r,
     myMessage(paste("Scheduling R script on cron schedule:", schedule),
               level = 3)
 
-    https <- cr_build_schedule_http(br,
-                                   email = email,
-                                   projectId = projectId)
+    if(schedule_type == "http"){
+      https <- cr_build_schedule_http(br,
+                                      email = email,
+                                      projectId = projectId)
 
-    brs <- cr_schedule(schedule,
-                       name=run_name,
-                       region = region,
-                       description = run_name,
-                       httpTarget = https)
+      brs <- cr_schedule(schedule,
+                         name=run_name,
+                         region = region,
+                         description = run_name,
+                         httpTarget = https)
+    } else if(schedule_type == "pubsub"){
+
+      if(!is.null(schedule_pubsub)){
+        assert_that(is.gar_pubsubTarget(schedule_pubsub))
+        topic_basename <- basename(schedule_pubsub$topicName)
+        pubsub_target <- schedule_pubsub
+      } else {
+
+        check_package_installed("googlePubsubR")
+        topic_basename <- paste0(run_name,"-topic")
+        pubsub_target <- cr_schedule_pubsub(topic_basename)
+
+        myMessage("Creating PubSub topic:", topic_basename, level = 3)
+        # Create a pubsub topic
+        topic_created <- googlePubsubR::topics_create(topic_basename)
+      }
+      trigger_name <- paste0(run_name, "-trigger")
+      myMessage("Creating BuildTrigger topic:", trigger_name, level = 3)
+      # Create a build trigger that will run when the pubsub topic is called
+      cr_buildtrigger(br, name = trigger_name, trigger = pubsub_target)
+
+      myMessage("Creating Cloud Schedule to trigger PubSub topicName:",
+                pubsub_target$topicName, level = 3)
+      # Schedule a pubsub message to the topic
+      brs <- cr_schedule(trigger_name,
+                         schedule = schedule,
+                         pubsubTarget = pubsub_target)
+
+    }
+
+
     return(brs)
   }
 

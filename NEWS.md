@@ -22,6 +22,7 @@
 * Force lowercase for docker image names as they are only valid for kaniko in `cr_deploy_docker_trigger()`
 * Fix bug parsing out listing build triggers in `cr_buildtrigger_list()`
 * Fix paging issue sometimes returning NULL for `cr_build_list()` (#149)
+* Update `cr_deploy_r()` to use PubSub/BuildTrigger as its default when scheduling (#148)
 
 # googleCloudRunner 0.4.1
 

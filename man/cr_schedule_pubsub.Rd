@@ -23,6 +23,9 @@ cr_schedule_pubsub(
 
 \item{projectId}{The projectId for where the topic sits}
 }
+\value{
+A \link{PubsubTarget} object for use within \link{cr_schedule}
+}
 \description{
 Create a PubSub Target object for Cloud Scheduler
 }

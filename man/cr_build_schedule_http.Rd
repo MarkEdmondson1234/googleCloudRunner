@@ -42,6 +42,10 @@ cr_schedule_build(
 }
 \value{
 A \link{HttpTarget} object for use in \link{cr_schedule}
+
+a \link{HttpTarget} object for use in \link{cr_schedule}
+
+A cloud scheduler \link{Job} object
 }
 \description{
 This enables Cloud Scheduler to trigger Cloud Builds

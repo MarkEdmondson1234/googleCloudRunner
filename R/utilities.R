@@ -19,6 +19,7 @@ has_registry_prefix <- function(name) {
   grepl("^(eu|asia|us|)([.]|)gcr.io", name) ||
     grepl("^.*-docker.pkg.dev", name)
 }
+
 make_image_name <- function(name, projectId){
   prefix <- has_registry_prefix(name)
   if(prefix){
