@@ -6,6 +6,8 @@ options:
   - 'GCS_DEFAULT_BUCKET=$_BUCKET'
   - 'GCE_AUTH_FILE=/workspace/auth.json'
   - 'NOT_CRAN=true'
+  - 'GCP_AUTH_FILE=/workspace/auth.json'
+  - 'GCP_PROJECT=$PROJECT_ID'
 timeout: "2400s"
 steps:
 - name: gcr.io/cloud-builders/gcloud

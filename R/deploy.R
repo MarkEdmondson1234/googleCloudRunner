@@ -141,7 +141,14 @@ cr_deploy_r <- function(r,
 
         myMessage("Creating PubSub topic:", topic_basename, level = 3)
         # Create a pubsub topic
-        topic_created <- googlePubsubR::topics_create(topic_basename)
+        topic_created <- tryCatch(
+          googlePubsubR::topics_create(topic_basename),
+            error = function(err){
+              stop("Could not create topic:",
+                   topic_basename,
+                   err$message,
+                   call. = FALSE)
+            })
       }
 
       # check PubSub topic is there:
