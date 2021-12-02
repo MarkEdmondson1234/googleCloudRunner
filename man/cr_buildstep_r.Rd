@@ -11,6 +11,7 @@ cr_buildstep_r(
   prefix = "rocker/",
   escape_dollar = TRUE,
   rscript_args = NULL,
+  r_cmd = c("Rscript", "R"),
   ...
 )
 }
@@ -26,6 +27,8 @@ cr_buildstep_r(
 \item{escape_dollar}{Default TRUE.  This will turn \code{$} into \code{$$} within the script to avoid them being recognised as Cloud Build variables.  Turn this off if you want that behaviour (e.g. \code{my_project="$PROJECT_ID"})}
 
 \item{rscript_args}{Optional arguments for the R script run by \code{Rscript}.}
+
+\item{r_cmd}{should `Rscript` be run or `R`?}
 
 \item{...}{Other arguments passed to \link{cr_buildstep}}
 }

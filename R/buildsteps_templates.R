@@ -436,6 +436,7 @@ cr_buildstep_bash <- function(bash_script,
 #' @param escape_dollar Default TRUE.  This will turn \code{$} into \code{$$} within the script to avoid them being recognised as Cloud Build variables.  Turn this off if you want that behaviour (e.g. \code{my_project="$PROJECT_ID"})
 #' @param rscript_args Optional arguments for the R script run by \code{Rscript}.
 #' @param ... Other arguments passed to \link{cr_buildstep}
+#' @param r_cmd should `Rscript` be run or `R`?
 #' @inheritParams cr_buildstep
 #' @family Cloud Buildsteps
 #'
@@ -501,6 +502,7 @@ cr_buildstep_r <- function(r,
                            prefix = "rocker/",
                            escape_dollar = TRUE,
                            rscript_args = NULL,
+                           r_cmd = c("Rscript", "R"),
                            ...){
 
   r_source <- match.arg(r_source)
@@ -509,6 +511,8 @@ cr_buildstep_r <- function(r,
   if(dirname(name) == "rocker"){
      name <- basename(name)
   }
+
+  r_cmd = match.arg(r_cmd)
 
   # don't allow dot names that would break things
   dots <- list(...)
@@ -549,12 +553,12 @@ cr_buildstep_r <- function(r,
                                 escape_dollar = escape_dollar)
 
   if(r_source == "local"){
-    r_args <- c("Rscript", "-e", rchars)
+    r_args <- c(r_cmd, "-e", rchars)
   } else if(r_source == "runtime"){
     if (!is.null(rscript_args)) {
-      r_args <- c("Rscript", rchars, paste0("--", rscript_args))
+      r_args <- c(r_cmd, rchars, paste0("--", rscript_args))
     } else {
-      r_args <- c("Rscript", rchars)
+      r_args <- c(r_cmd, rchars)
     }
   }
 
