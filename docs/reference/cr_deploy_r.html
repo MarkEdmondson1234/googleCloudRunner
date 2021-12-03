@@ -283,6 +283,7 @@
     <dt><code>r_source</code></dt><dd><p>Whether the R code will be from a runtime file within the source or at build time copying over from a local R file in your session</p></dd>
     <dt><code>escape_dollar</code></dt><dd><p>Default TRUE.  This will turn <code>$</code> into <code>$$</code> within the script to avoid them being recognised as Cloud Build variables.  Turn this off if you want that behaviour (e.g. <code>my_project="$PROJECT_ID"</code>)</p></dd>
     <dt><code>rscript_args</code></dt><dd><p>Optional arguments for the R script run by <code>Rscript</code>.</p></dd>
+    <dt><code>r_cmd</code></dt><dd><p>should `Rscript` be run or `R`?</p></dd>
     <dt><code>prefix</code></dt><dd><p>prefixed to name - set to "" to suppress.  Will be suppressed if <code>name</code> starts with gcr.io or <code>*-docker.pkg.dev</code></p></dd>
   
 </dl></td>
