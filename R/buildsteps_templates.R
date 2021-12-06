@@ -512,7 +512,7 @@ cr_buildstep_r <- function(r,
      name <- basename(name)
   }
 
-  r_cmd = match.arg(r_cmd)
+  r_cmd <- match.arg(r_cmd)
 
   # don't allow dot names that would break things
   dots <- list(...)

@@ -67,7 +67,9 @@ cr_run <- function(image,
 
   # use cloud build to deploy
   run_yaml <- cr_build_yaml(
-    steps = cr_buildstep_run(name = name,
+    steps = c(
+      add_docker_auth_prestep(image = image, pre_steps = NULL),
+      cr_buildstep_run(name = name,
                              image = image,
                              allowUnauthenticated = allowUnauthenticated,
                              region = region,
@@ -79,6 +81,7 @@ cr_run <- function(image,
                              env_vars = env_vars,
                              gcloud_args = gcloud_args,
                              ...)
+    )
   )
 
   build <- cr_build(run_yaml,
