@@ -1,6 +1,11 @@
 library(googleCloudStorageR)
-gargle::credentials_gce()
 
+# ridc hoops for client
+client <- '${_USER_CLIENT}'
+write(client, file = "client.json")
+googleAuthR::gar_set_client("client.json")
+
+gcs_auth(token=gargle::credentials_gce())
 gsuri <- '${_TARGET_BUCKET}'
 
 objs <-tryCatch(
@@ -13,10 +18,16 @@ objs <-tryCatch(
     return(NULL)
   })
 
+
 if(!is.null(objs)){
   lapply(objs[["name"]],
     function(x){
-      gcs_get_object(x, bucket = dirname(gsuri), saveToDisk = x)
+      target_file <- file.path("_targets","meta",basename(x))
+      message("Downloading ", x, "to", target_file)
+      gcs_get_object(x,
+                     bucket = dirname(gsuri),
+                     saveToDisk = target_file,
+                     overwrite = TRUE)
     })
 }
 

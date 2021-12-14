@@ -5,42 +5,36 @@
 #'   runs on every push to GitHub, or via a PubSub trigger (that could be scheduled). Historical runs accumulate in the
 #'   configured Google Cloud Storage bucket, and the latest output is downloaded before
 #'   [tar_make()] so up-to-date targets do not rerun.
-#' @details Steps to set up continuous deployment:
-#'   0. Create a Google Cloud Project with Cloud Build activated.
+#' @details Steps to set up your target task in Cloud Build:
+#'   1. Create your `targets` workflow.
 #'   1. Ensure your pipeline stays within the resource limitations of
 #'     Google Cloud Build, both for storage and compute.
 #'     For storage, you may wish to reduce the burden with
 #'     GCP-backed storage formats like `"gcp_qs"`.
-#'   2. Setup Cloud Build via `googleCloudRunner::cr_setup()`.
-#'   2. Call `targets::tar_renv(extras = character(0))`
-#'     to expose hidden package dependencies.
-#'   3. Set up `renv` for your project (with `renv::init()`
-#'     or `renv::snapshot()`). Details at
-#'     <https://rstudio.github.io/renv/articles/ci.html>.
-#'   4. Commit the `renv.lock` file to the `main` (recommended)
-#'     or `master` Git branch.
-#'   5. Run `tar_google_cloudbuild()` to create the workflow file.
-#'     Commit this file to `main` (recommended) or `master` in Git.
+#'   1. Create a Dockerfile that holds the R and system dependencies for your workflow.  You can test the image using `googleCloudRunner::cr_deploy_docker()`.  Include `targets`.
+#'   5. Run `tar_google_cloudbuild()` to create the cloudbuild yaml file.
 #'   6. Create a build trigger via `tar_google_trigger`.  A common trigger is a GitHub push created via `googleCloudRunner::cr_buildtrigger_repo()`.  The first event after the trigger is created will run the pipeline, subsequent runs will only recompute the outdated targets.
 #'   7. Inspect the Google Cloud Storage bucket you specified for the workflow artifacts.
-#' @return Nothing (invisibly). This function writes a Google Cloud Build yaml..
+#' @return Nothing (invisibly). This function writes a Google Cloud Build yaml.
 #' @param path Character of length 1, file path to write the Google Cloud Build yaml
 #'   workflow file.
-#' @param ask Logical, whether to ask before writing if the workflow file
-#'   already exists. If `NULL`, defaults to `Sys.getenv("TAR_ASK")`.
-#'   (Set to `"true"` or `"false"` with `Sys.setenv()`).
-#'   If `ask` and the `TAR_ASK` environment variable are both
-#'   indeterminate, defaults to `interactive()`.
+#' @param task_image An existing Docker image that will be used to run your targets workflow after the job state has been downloaded from Google Cloud Storage
 #' @examples
 #' tar_google_cloudbuild(tempfile())
-#' @param target_folder Where target metadata will sit within the Google Cloud Storage bucket as a folder
+#' @param target_folder Where target metadata will sit within the Google Cloud Storage bucket as a folder.  Defaults to RStudio project name.
 #' tar_google_cloudbuild(tempfile())
 #' @param bucket The Google Cloud Storage bucket the target metadata will be saved to in folder `target_folder`
+#' @param ... Other arguments passed to `cr_build_yaml()`
+#' @inheritDotParams cr_build_yaml
+#' @param task_args A named list of additional arguments to send to `cr_buildstep_r()` when its executing the `targets::tar_make()` command (such as environment arguments)
 tar_google_cloudbuild <- function(
+  task_image = "gcr.io/gcer-public/targets",
   target_folder = basename(rstudioapi::getActiveProject()),
   path = "cloudbuild_targets.yaml",
   ask = NULL,
-  bucket = googleCloudRunner::cr_bucket_get()
+  bucket = googleCloudRunner::cr_bucket_get(),
+  task_args = list(),
+  ...
 ) {
 
   assert_that(
@@ -65,22 +59,31 @@ tar_google_cloudbuild <- function(
       id = "check for existing _targets metadata",
       escape_dollar = FALSE
     ),
-    cr_buildstep_bash("ls -laR", id = "debug file list"),
-    cr_buildstep_r("renv::restore()",
-                   name = "gcr.io/gcer-public/targets",
-                   id = "Restore packages"),
-    cr_buildstep_r("targets::tar_make()", name = "gcr.io/gcer-public/targets",
-                   id = "target pipeline")
+    cr_buildstep_bash("ls -lR", id = "debug file list"),
+    do.call(
+      cr_buildstep_r,
+      args = c(task_args,
+               list(r ="targets::tar_make()",
+                    name = task_image,
+                    id = "target pipeline"))
+    )
   )
 
   target_bucket <- sprintf("gs://%s/%s", bucket, target_metadata)
 
+  #ridic?
+  client_file <- Sys.getenv("GAR_CLIENT_JSON")
+  client <- readChar(client_file, file.info(client_file)$size)
+
   yaml <- cr_build_yaml(
     bs,
-    substitutions = list(`_TARGET_BUCKET` = target_bucket),
-    artifacts = cr_build_yaml_artifact(paste0(target_metadata, "/**"),
-                                       bucket_dir = target_folder,
-                                       bucket = bucket)
+    substitutions = list(`_TARGET_BUCKET` = target_bucket,
+                         `_USER_CLIENT` = client),
+    artifacts = cr_build_yaml_artifact("/workspace/_targets/meta/**",
+                                       bucket_dir = paste0(target_metadata,"/meta"),
+                                       bucket = bucket),
+    timeout = 3600,
+    ...
   )
 
   cr_build_write(yaml, file = path)

@@ -26,3 +26,4 @@
 ^auth\.json$
 ^data-raw$
 ^NEWS\.txt$
+^\.github$
