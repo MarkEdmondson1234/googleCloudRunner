@@ -25,6 +25,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -150,7 +152,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
+  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -165,30 +167,30 @@
 
       
 
-      </header><script src="usecase-deploy-pkgdown-website_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Deploy a pkgdown website for your R package</h1>
             
-            <h4 class="date">2021-12-03</h4>
+            <h4 data-toc-skip class="date">2021-12-14</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-deploy-pkgdown-website.Rmd"><code>vignettes/usecase-deploy-pkgdown-website.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-deploy-pkgdown-website.Rmd" class="external-link"><code>vignettes/usecase-deploy-pkgdown-website.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-deploy-pkgdown-website.Rmd</code></div>
 
     </div>
 
     
     
-<p>When creating an R package <a href="https://pkgdown.r-lib.org/">pkgdown</a> is a fantastic resource for creating a package website from your R function’s documentation and vignettes.</p>
+<p>When creating an R package <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> is a fantastic resource for creating a package website from your R function’s documentation and vignettes.</p>
 <p>This workflow uses Google’s Secret Manager to securely hold your Git ssh login details, then use those details to commit a built website on each Git commit. This means you do not have to build the website locally.</p>
 <p>Each commit you make, a background task will build the website with your changes and commit it back to the repo - see example for this website:</p>
 <p><img src="pkgdown-commit.png"></p>
 <p>A suggested setup workflow to do this is below:</p>
 <ol style="list-style-type: decimal">
-<li>Go to <a href="https://console.cloud.google.com/cloud-build/triggers">GCP console &gt; Cloud Build &gt; Triggers</a> and link your git repo to Cloud Build.</li>
-<li>Create a git ssh key to make commits to your repo. <a href="https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent">GitHub has a guide here</a>
+<li>Go to <a href="https://console.cloud.google.com/cloud-build/triggers" class="external-link">GCP console &gt; Cloud Build &gt; Triggers</a> and link your git repo to Cloud Build.</li>
+<li>Create a git ssh key to make commits to your repo. <a href="https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent" class="external-link">GitHub has a guide here</a>
 </li>
-<li>Upload the ssh key secret to <a href="https://cloud.google.com/secret-manager">Google Cloud Secret Manager</a> - you can use this secret for all future builds.</li>
+<li>Upload the ssh key secret to <a href="https://cloud.google.com/secret-manager" class="external-link">Google Cloud Secret Manager</a> - you can use this secret for all future builds.</li>
 <li>Use <code><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown()</a></code> to create a cloudbuild.yml file in your R package’s directory, giving it your secret name from step 2. <code>create_trigger</code> can be <code>file</code> if you want the cloudbuild.yaml to be within your directory, or <code>inline</code> if the build will only be defined in the trigger.</li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -213,11 +215,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Mark Edmondson.</p>
+  <p></p>
+<p>Developed by Mark Edmondson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -225,6 +229,8 @@
 
   
 
+
+  
 
   </body>
 </html>
