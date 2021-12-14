@@ -42,6 +42,7 @@ Suggests:
     rmarkdown,
     rstudioapi,
     shiny,
+    targets,
     testthat (>= 2.1.0)
 License: MIT + file LICENSE
 Encoding: UTF-8

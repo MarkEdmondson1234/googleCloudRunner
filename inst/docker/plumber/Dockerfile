@@ -1,5 +1,5 @@
 FROM trestletech/plumber
-LABEL maintainer="cloudRunner"
+LABEL maintainer="googleCloudRunner"
 
 COPY [".", "./"]
 

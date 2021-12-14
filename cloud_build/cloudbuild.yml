@@ -7,7 +7,7 @@ steps:
       - gcr.io/gcer-public/googlecloudrunner:latest
       - --context=dir:///workspace/
       - --cache=true
-  - name: gcr.io/kaniko-project/executor:latest
+  - name: gcr.io/kaniko-project/executor:v1.6.0-debug
     args:
       - -f
       - cloud_build/Dockerfile
