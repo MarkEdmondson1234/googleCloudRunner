@@ -10,6 +10,7 @@ cr_build_targets(
   path = "cloudbuild_targets.yaml",
   bucket = cr_bucket_get(),
   task_args = list(),
+  tar_make = c("list.files(recursive=TRUE)", "targets::tar_make()"),
   ...
 )
 }
@@ -23,6 +24,8 @@ cr_build_targets(
 \item{bucket}{The Google Cloud Storage bucket the target metadata will be saved to in folder `target_folder`}
 
 \item{task_args}{A named list of additional arguments to send to \link{cr_buildstep_r()} when its executing the \link[targets]{tar_make()} command (such as environment arguments)}
+
+\item{tar_make}{The R script that will run in the tar_make() step. Modify to include custom settings such as "script"}
 
 \item{...}{
   Arguments passed on to \code{\link[=cr_build_yaml]{cr_build_yaml}}

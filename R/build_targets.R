@@ -24,6 +24,7 @@
 #' @param ... Other arguments passed to \link{cr_build_yaml()}
 #' @inheritDotParams cr_build_yaml
 #' @param task_args A named list of additional arguments to send to \link{cr_buildstep_r()} when its executing the \link[targets]{tar_make()} command (such as environment arguments)
+#' @param tar_make The R script that will run in the tar_make() step. Modify to include custom settings such as "script"
 #'
 #' @examples
 #'
@@ -43,6 +44,7 @@ cr_build_targets <- function(
   path = "cloudbuild_targets.yaml",
   bucket = cr_bucket_get(),
   task_args = list(),
+  tar_make = c("list.files(recursive=TRUE)","targets::tar_make()"),
   ...
 ) {
 
@@ -57,17 +59,16 @@ cr_build_targets <- function(
 
   bs <- c(
     cr_buildstep_bash(
-      "gsutil -m cp -r ${_TARGET_BUCKET}/* /workspace/_targets || exit 0",
+      "mkdir /workspace/_targets && gsutil -m cp -r ${_TARGET_BUCKET}/* /workspace/_targets || exit 0",
       name = "gcr.io/google.com/cloudsdktool/cloud-sdk:alpine",
       entrypoint = "bash",
       escape_dollar = FALSE,
       id = "get previous _targets metadata"
     ),
-    cr_buildstep_bash("ls -lR", id = "debug file list"),
     do.call(
       cr_buildstep_r,
       args = c(task_args,
-               list(r ="targets::tar_make()",
+               list(r =tar_make,
                     name = task_image,
                     id = "target pipeline"))
     )

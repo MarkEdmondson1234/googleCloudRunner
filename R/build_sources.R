@@ -244,13 +244,14 @@ is.gar_StorageSource <- function(x){
 #' }
 #' @family Cloud Build functions
 #' @importFrom utils tar
-cr_build_upload_gcs <- function(local,
-                                remote = paste0(local,
-                                                format(Sys.time(), "%Y%m%d%H%M%S"),
-                                                ".tar.gz"),
-                                bucket = cr_bucket_get(),
-                                predefinedAcl="bucketOwnerFullControl",
-                                deploy_folder = "deploy"){
+cr_build_upload_gcs <- function(
+  local,
+  remote = paste0(local,
+                  format(Sys.time(), "%Y%m%d%H%M%S"),
+                  ".tar.gz"),
+  bucket = cr_bucket_get(),
+  predefinedAcl="bucketOwnerFullControl",
+  deploy_folder = "deploy"){
 
   if(!grepl("tar\\.gz$", remote)){
     stop("remote argument name needs to end with .tar.gz", call. = FALSE)
@@ -262,40 +263,32 @@ cr_build_upload_gcs <- function(local,
 
 
   # make temporary folder (to avoid recursion issue)
-  tdir <- tempfile()
-  dir.create(tdir, showWarnings = FALSE, recursive = TRUE)
+  tdir <- tempdir()
+  dir.create(tdir, showWarnings = FALSE)
   full_deploy_folder <- file.path(tdir, deploy_folder)
 
   myMessage(paste0("Copying files from ",
                    local, " to ", full_deploy_folder),
-            level = 2)
-  # mirror the structure exactly
-  file.copy(local, tdir, recursive = TRUE)
-  file.rename(file.path(tdir, basename(local)), full_deploy_folder)
+            level = 3)
 
+  file.copy(list.files(local, full.names = TRUE),
+            tdir, recursive = TRUE)
 
-  owd <- getwd()
-  setwd(tdir)
-  on.exit(setwd(owd), add = TRUE)
   tar_file <- paste0(basename(local), ".tar.gz")
 
   myMessage(paste0("Compressing files from ",
                    full_deploy_folder, " to ", tar_file),
             level = 2)
 
-  tar(tar_file,
-      files = deploy_folder,
-      compression = "gzip"
-  )
+  tar(tar_file, files = deploy_folder, compression = "gzip")
   tar_file <- normalizePath(tar_file, mustWork = FALSE)
-  setwd(owd)
 
   on.exit(unlink(tar_file), add=TRUE)
-  on.exit(unlink(deploy_folder, recursive = TRUE), add=TRUE)
 
   myMessage(paste("Uploading",
                   tar_file, "to", paste0(bucket,"/", remote)),
             level = 3)
+
   gcs_upload(tar_file, bucket = bucket, name = remote,
              predefinedAcl = predefinedAcl)
 

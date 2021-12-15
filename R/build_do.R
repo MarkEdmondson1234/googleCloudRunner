@@ -55,16 +55,17 @@
 #' cr_build(build2, substitutions = list(`_SUB` = "yo"))
 #'
 #' }
-cr_build <- function(x,
-                     source = NULL,
-                     timeout=NULL,
-                     images=NULL,
-                     substitutions=NULL,
-                     serviceAccount = NULL,
-                     artifacts = NULL,
-                     options = NULL,
-                     projectId = cr_project_get(),
-                     launch_browser = interactive()) {
+cr_build <- function(
+  x,
+  source = NULL,
+  timeout=NULL,
+  images=NULL,
+  substitutions=NULL,
+  serviceAccount = NULL,
+  artifacts = NULL,
+  options = NULL,
+  projectId = cr_project_get(),
+  launch_browser = interactive()) {
 
   assert_that(
     is.flag(launch_browser),
@@ -84,14 +85,15 @@ cr_build <- function(x,
     x <- as.gar_Build(x)
     build <- safe_set(x, "status", "QUEUED")
   } else {
-    build <- cr_build_make(yaml = x,
-                           source = source,
-                           timeout = timeout,
-                           images = images,
-                           artifacts = artifacts,
-                           options = options,
-                           substitutions = substitutions,
-                           serviceAccount = serviceAccount)
+    build <- cr_build_make(
+      yaml = x,
+      source = source,
+      timeout = timeout,
+      images = images,
+      artifacts = artifacts,
+      options = options,
+      substitutions = substitutions,
+      serviceAccount = serviceAccount)
   }
 
 
