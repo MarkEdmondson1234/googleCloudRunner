@@ -78,7 +78,12 @@ cr_build_targets <- function(
                list(r =tar_make,
                     name = task_image,
                     id = "target pipeline"))
-    )
+    ),
+    cr_buildstep_gcloud(
+      "gsutil",
+      args = c("-m cp -r /workspace/_targets ${_TARGET_BUCKET}"),
+      id = "Upload Artifacts this way as artifacts doesn't support folders"
+      )
   )
 
   target_bucket <- sprintf("gs://%s/%s", bucket, target_metadata)
@@ -86,9 +91,6 @@ cr_build_targets <- function(
   yaml <- cr_build_yaml(
     bs,
     substitutions = list(`_TARGET_BUCKET` = target_bucket),
-    artifacts = cr_build_yaml_artifact("/workspace/_targets/**",
-                                       bucket_dir = target_metadata,
-                                       bucket = bucket),
     timeout = 3600,
     ...
   )

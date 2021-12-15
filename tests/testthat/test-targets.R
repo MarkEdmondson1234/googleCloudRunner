@@ -11,7 +11,7 @@ test_that("targets integrations", {
   target_yaml <- cr_build_targets(
     path = NULL,
     target_folder = "cr_build_target_tests",
-    tar_make = "targets::tar_make(script = 'tests/targets/_targets.R')"
+    tar_make = "list.files(recursive=TRUE);targets::tar_make(script = 'targets/_targets.R')"
   )
   expect_snapshot(target_yaml)
 
@@ -38,11 +38,15 @@ test_that("targets integrations", {
   result <- tar_read("result1")
   expect_snapshot(result)
 
-  target_source <- cr_build_upload_gcs(
-    "targets/",
-    remote = "cr_build_target_test_source.tar.gz",
-    deploy_folder = "tests"
-  )
+  upload_test_files <- function(){
+    cr_build_upload_gcs(
+      "targets",
+      remote = "cr_build_target_test_source.tar.gz",
+      deploy_folder = "targets"
+    )
+  }
+
+  target_source <- upload_test_files()
   expect_snapshot(target_source)
 
   build <- cr_build_make(target_yaml, source = target_source)
@@ -79,11 +83,7 @@ test_that("targets integrations", {
             file = "targets/mtcars.csv",
             row.names = FALSE)
 
-  target_source2 <- cr_build_upload_gcs(
-    "targets/",
-    remote = "cr_build_target_test_source.tar.gz",
-    deploy_folder = "tests"
-  )
+  target_source2 <- upload_test_files()
   expect_snapshot(target_source2)
 
   # same build, but source has been updated
