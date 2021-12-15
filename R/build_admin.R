@@ -146,8 +146,13 @@ wait_f <- function(init, projectId){
                       template = "{spin} - building ")
   cli_div(theme = list(span.status = list(color = "blue")))
 
+  tick <- 0
   while(wait){
-    status <- cr_build_status(op, projectId = projectId)
+
+    if(tick %% 5 == 0){
+      status <- cr_build_status(op, projectId = projectId)
+    }
+
 
     if(status$status %in%
        c("FAILURE","INTERNAL_ERROR","TIMEOUT","CANCELLED","EXPIRED")){
@@ -161,7 +166,9 @@ wait_f <- function(init, projectId){
       cli_status_update(id = sb,
         msg = "{symbol$arrow_right} ------------------- Build Id: {status$id} Status: {.status {status$status}}")
       sp1$spin()
-      Sys.sleep(5)
+
+      tick <- tick + 1
+      Sys.sleep(1)
     }
 
     if(status$status == "SUCCESS"){

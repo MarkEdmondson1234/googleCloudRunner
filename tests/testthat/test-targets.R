@@ -6,6 +6,8 @@ test_that("targets integrations", {
     skip("library(targets) not installed")
   }
 
+  dir.create("targets", showWarnings = FALSE)
+
   target_yaml <- cr_build_targets(
     path = NULL,
     target_folder = "cr_build_target_tests",
@@ -14,16 +16,16 @@ test_that("targets integrations", {
   expect_snapshot(target_yaml)
 
   tar_config_set(
-    script = "tests/targets/_targets.R"
+    script = "targets/_targets.R"
   )
 
   write.csv(mtcars,
-            file = "tests/targets/mtcars.csv",
+            file = "targets/mtcars.csv",
             row.names = FALSE)
 
   tar_script(
     list(
-      tar_target(file1, "tests/targets/mtcars.csv", format = "file"),
+      tar_target(file1, "targets/mtcars.csv", format = "file"),
       tar_target(input1, read.csv(file1)),
       tar_target(result1, sum(input1$mpg))
     ),
@@ -37,7 +39,7 @@ test_that("targets integrations", {
   expect_snapshot(result)
 
   target_source <- cr_build_upload_gcs(
-    "tests/targets/",
+    "targets/",
     remote = "cr_build_target_test_source.tar.gz",
     deploy_folder = "tests"
   )
@@ -45,30 +47,64 @@ test_that("targets integrations", {
 
   build <- cr_build_make(target_yaml, source = target_source)
   # initial run
-  bb1 <- cr_build(build)
+  bb1 <- cr_build(build, launch_browser = FALSE)
   built1 <- cr_build_wait(bb1)
   bb1logs <- cr_build_logs(built1)
 
+  target_logs <- function(log){
+    log[
+      which(log == "Step #2 - \"target pipeline\": gcr.io/gcer-public/targets:latest"):
+        which(log == "Finished Step #2 - \"target pipeline\"")]
+  }
 
-  # second run, expect it to skip stages as unchanged
-  bb2 <- cr_build(build)
+  logs_of_interest1 <- target_logs(bb1logs)
+  expect_snapshot(logs_of_interest1)
+  expect_equal(logs_of_interest1[2],
+               "Step #2 - \"target pipeline\": • start target file1")
+
+  # second run, expect it to skip target file1 as unchanged
+  bb2 <- cr_build(build, launch_browser = FALSE)
   built2 <- cr_build_wait(bb2)
   bb2logs <- cr_build_logs(built2)
+  logs_of_interest2 <- target_logs(bb2logs)
+  expect_snapshot(logs_of_interest2)
+  expect_equal(logs_of_interest1[2],
+               "Step #2 - \"target pipeline\": ✔ skip target file1")
+
 
   # make a change to the file, expect a rerun
   mtcars2 <- mtcars
   mtcars2$mpg <- mtcars$mpg * 2
   write.csv(mtcars2,
-            file = "tests/targets/mtcars.csv",
+            file = "targets/mtcars.csv",
             row.names = FALSE)
+
   target_source2 <- cr_build_upload_gcs(
-    "tests/targets/",
-    remote = "cr_build_target_test_source"
+    "targets/",
+    remote = "cr_build_target_test_source.tar.gz",
+    deploy_folder = "tests"
   )
+  expect_snapshot(target_source2)
 
-  bb3 <- cr_build(build, source = target_source2)
+  # same build, but source has been updated
+  bb3 <- cr_build(build, launch_browser = FALSE)
+  built3 <- cr_build_wait(bb3)
+  bb3logs <- cr_build_logs(built3)
+  logs_of_interest3 <- target_logs(bb3logs)
+  expect_snapshot(logs_of_interest3)
+  expect_equal(logs_of_interest1, logs_of_interest3)
 
+  # clean up - delete source for next test run
+  deletes <- googleCloudStorageR::gcs_list_objects(prefix = "cr_build_target_tests",
+                                                   bucket = cr_bucket_get())
+  done_deeds <- lapply(deletes$name,
+                       googleCloudStorageR::gcs_delete_object,
+                       bucket = cr_bucket_get())
+  expect_true(all(unlist(done_deeds)))
 
+  unlink("targets")
+  unlink("_targets")
+  unlink("_targets.yaml")
 
 
 })

@@ -18,3 +18,6 @@ inst/shiny/shiny_cloudrun/app/mark-edmondson-gde-web-client.json
 inst/shiny/image_talker/app/auth.json
 auth.json
 .Rprofile
+_targets.yaml
+tests/testthat/targets
+tests/testthat/_targets

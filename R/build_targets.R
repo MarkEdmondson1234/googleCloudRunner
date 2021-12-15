@@ -59,7 +59,14 @@ cr_build_targets <- function(
 
   bs <- c(
     cr_buildstep_bash(
-      "mkdir /workspace/_targets && gsutil -m cp -r ${_TARGET_BUCKET}/* /workspace/_targets || exit 0",
+      "gsutil mv ${_TARGET_BUCKET}/meta/artifacts- ${_TARGET_BUCKET}/artifacts/artifacts- || exit 0",
+      name = "gcr.io/google.com/cloudsdktool/cloud-sdk:alpine",
+      entrypoint = "bash",
+      escape_dollar = FALSE,
+      id = "move old artifact files if present"
+    ),
+    cr_buildstep_bash(
+      "mkdir /workspace/_targets && gsutil -m cp -r ${_TARGET_BUCKET}/meta/* /workspace/_targets/meta || exit 0",
       name = "gcr.io/google.com/cloudsdktool/cloud-sdk:alpine",
       entrypoint = "bash",
       escape_dollar = FALSE,
@@ -79,8 +86,8 @@ cr_build_targets <- function(
   yaml <- cr_build_yaml(
     bs,
     substitutions = list(`_TARGET_BUCKET` = target_bucket),
-    artifacts = cr_build_yaml_artifact("/workspace/_targets/meta/**",
-                                       bucket_dir = paste0(target_metadata,"/meta"),
+    artifacts = cr_build_yaml_artifact("/workspace/_targets/**",
+                                       bucket_dir = target_metadata,
                                        bucket = bucket),
     timeout = 3600,
     ...
@@ -91,3 +98,31 @@ cr_build_targets <- function(
   yaml
 }
 
+#' @rdname cr_build_targets
+#' @export
+#' @details
+#'   Use \code{cr_build_targets_artifacts} to download the return values of a
+#'   target Cloud Build, then \link[targets]{tar_read} to read the results
+#' @inheritParams cr_build_artifacts
+cr_build_targets_artifacts <- function(
+  build,
+  download_folder= "_targets_cloudbuild",
+  overwrite = overwrite){
+
+  bb <- build$source$storageSource$bucket
+  if(is.null(bb)){
+    stop("Could not find bucket.  Is this not a build from cr_build_targets()?")
+  }
+
+  build_folder <- gsub("gs://(.+)/(.+)/_targets/meta","\\2",build$artifacts$objects$location)
+
+  arts <- googleCloudStorageR::gcs_list_objects(
+    bucket = bb, prefix = build_folder
+  )
+
+  dir.create(download_folder, showWarnings = FALSE)
+
+  lapply(arts$name, function(x) {
+    gcs_get_object(x, bucket = bb, saveToDisk = file.path(download_folder, x))
+    })
+}
