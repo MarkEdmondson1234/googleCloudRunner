@@ -262,15 +262,25 @@ cr_build_upload_gcs <- function(
             level = 3)
 
   # make temporary folder (to avoid recursion issue)
-  tdir <- tempdir()
+  tdir <- tempdir_unique()
   full_deploy_folder <- file.path(tdir, deploy_folder)
   dir.create(full_deploy_folder, showWarnings = FALSE)
 
   myMessage(paste0("Copying files from ", local, "/ into tmpdir"),
             level = 3)
+  local_files <- list.files(local, full.names = TRUE)
+  if(length(local_files) == 0){
+    stop("Could not find any files to copy over in ", local,
+         call. = FALSE)
+  }
 
-  file.copy(list.files(local, full.names = TRUE),
-            full_deploy_folder, recursive = TRUE)
+  file.copy(local_files, full_deploy_folder, recursive = TRUE)
+
+  tmp_files <- list.files(full_deploy_folder, recursive = TRUE)
+  if(length(tmp_files) == 0){
+    stop("Could not copy files into tmp folder from ", local,
+         call. = FALSE)
+  }
 
   tar_file <- paste0(basename(local), ".tar.gz")
 
@@ -278,7 +288,7 @@ cr_build_upload_gcs <- function(
     tdir,
     {
       myMessage("tarring files: \n",
-                paste(list.files(recursive = TRUE), collapse = "\n "),
+                paste(tmp_files, collapse = "\n "),
                 level = 3)
       tar(tar_file, compression = "gzip")
       myMessage(paste("Uploading", basename(tar_file),

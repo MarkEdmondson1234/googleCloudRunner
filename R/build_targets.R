@@ -127,7 +127,8 @@ cr_build_targets_artifacts <- function(
   }
 
   build_folder <- build$substitutions$`_TARGET_BUCKET`
-  build_folder <- gsub(paste0("gs://",bb,"/"),"",build$substitutions$`_TARGET_BUCKET`)
+  build_folder <- gsub(paste0("gs://",bb,"/"),"",
+                       build$substitutions$`_TARGET_BUCKET`)
 
   if(!nzchar(build_folder)){
     stop("Could not find build folder in bucket.")
@@ -149,7 +150,8 @@ cr_build_targets_artifacts <- function(
 
   # create targets folder structure
   dir.create(download_folder, showWarnings = FALSE)
-  dir.create(file.path(download_folder, build_folder), showWarnings = FALSE)
+  dir.create(file.path(download_folder, build_folder),
+             showWarnings = FALSE)
   dir.create(file.path(download_folder, build_folder, "_targets"),
              showWarnings = FALSE)
   dir.create(file.path(download_folder, build_folder, "_targets","meta"),
