@@ -491,10 +491,10 @@ cr_buildstep_docker_auth = function(registry, ...) {
 cr_buildstep_docker_auth_auto <- function(image, ...) {
   # Adding this in for Artifacts Registry
   need_location <- grepl("^.*-docker.pkg.dev", tolower(image))
-  res = NULL
+  res <- NULL
   if (need_location) {
     registry <- sub("^(.*-docker.pkg.dev).*", "\\1", tolower(image))
-    res = cr_buildstep_docker_auth(registry, ...)
+    res <- cr_buildstep_docker_auth(registry, ...)
   }
   res
 }
