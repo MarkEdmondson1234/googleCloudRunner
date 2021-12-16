@@ -469,6 +469,7 @@ find_dockerfile <- function(local, dockerfile){
 #'
 #'
 #' @return A buildstep
+#' @export
 #'
 #' @examples
 #' cr_buildstep_docker_auth("us.gcr.io")
