@@ -244,60 +244,62 @@ is.gar_StorageSource <- function(x){
 #' }
 #' @family Cloud Build functions
 #' @importFrom utils tar
-cr_build_upload_gcs <- function(local,
-                                remote = paste0(local,
-                                                format(Sys.time(), "%Y%m%d%H%M%S"),
-                                                ".tar.gz"),
-                                bucket = cr_bucket_get(),
-                                predefinedAcl="bucketOwnerFullControl",
-                                deploy_folder = "deploy"){
+cr_build_upload_gcs <- function(
+  local,
+  remote = paste0(local,
+                  format(Sys.time(), "%Y%m%d%H%M%S"),
+                  ".tar.gz"),
+  bucket = cr_bucket_get(),
+  predefinedAcl="bucketOwnerFullControl",
+  deploy_folder = "deploy"){
 
   if(!grepl("tar\\.gz$", remote)){
     stop("remote argument name needs to end with .tar.gz", call. = FALSE)
   }
 
-  myMessage(paste("#Upload ", local, " to ",
+  myMessage(paste0("# Uploading ", local, "/ to ",
                   paste0("gs://", bucket,"/",remote)),
             level = 3)
 
-
   # make temporary folder (to avoid recursion issue)
-  tdir <- tempfile()
-  dir.create(tdir, showWarnings = FALSE, recursive = TRUE)
+  tdir <- tempdir_unique()
   full_deploy_folder <- file.path(tdir, deploy_folder)
+  dir.create(full_deploy_folder, showWarnings = FALSE)
 
-  myMessage(paste0("Copying files from ",
-                   local, " to ", full_deploy_folder),
-            level = 2)
-  # mirror the structure exactly
-  file.copy(local, tdir, recursive = TRUE)
-  file.rename(file.path(tdir, basename(local)), full_deploy_folder)
+  myMessage(paste0("Copying files from ", local, "/ into tmpdir"),
+            level = 3)
+  local_files <- list.files(local, full.names = TRUE)
+  if(length(local_files) == 0){
+    stop("Could not find any files to copy over in ", local,
+         call. = FALSE)
+  }
 
+  file.copy(local_files, full_deploy_folder, recursive = TRUE)
 
-  owd <- getwd()
-  setwd(tdir)
-  on.exit(setwd(owd), add = TRUE)
+  tmp_files <- list.files(full_deploy_folder, recursive = TRUE)
+  if(length(tmp_files) == 0){
+    stop("Could not copy files into tmp folder from ", local,
+         call. = FALSE)
+  }
+
   tar_file <- paste0(basename(local), ".tar.gz")
 
-  myMessage(paste0("Compressing files from ",
-                   full_deploy_folder, " to ", tar_file),
-            level = 2)
-
-  tar(tar_file,
-      files = deploy_folder,
-      compression = "gzip"
+  withr::with_dir(
+    tdir,
+    {
+      myMessage("tarring files: \n",
+                paste(tmp_files, collapse = "\n "),
+                level = 3)
+      tar(tar_file, compression = "gzip")
+      myMessage(paste("Uploading", basename(tar_file),
+                      "to", paste0(bucket,"/", remote)),
+                level = 3)
+      tar_file <- normalizePath(tar_file, mustWork = FALSE)
+      on.exit(unlink(tar_file), add=TRUE)
+      gcs_upload(tar_file, bucket = bucket, name = remote,
+                 predefinedAcl = predefinedAcl)
+    }
   )
-  tar_file <- normalizePath(tar_file, mustWork = FALSE)
-  setwd(owd)
-
-  on.exit(unlink(tar_file), add=TRUE)
-  on.exit(unlink(deploy_folder, recursive = TRUE), add=TRUE)
-
-  myMessage(paste("Uploading",
-                  tar_file, "to", paste0(bucket,"/", remote)),
-            level = 3)
-  gcs_upload(tar_file, bucket = bucket, name = remote,
-             predefinedAcl = predefinedAcl)
 
   myMessage("Google Cloud Storage Source enabled:",
             paste0("/workspace/",deploy_folder,"/"), level = 3)

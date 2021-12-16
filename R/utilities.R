@@ -1,3 +1,11 @@
+# unique per invocation, not per session like tempdir()
+tempdir_unique <- function(){
+  dd <- tempfile()
+  dir.create(dd)
+  dd
+}
+
+
 string_to_list <- function(x){
   if(assertthat::is.string(x)){
     return(list(x))

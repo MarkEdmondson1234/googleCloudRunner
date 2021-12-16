@@ -12,7 +12,8 @@
 #'   \item Create your `targets` workflow.
 #'   \item Create a Dockerfile that holds the R and system dependencies for your workflow.  You can test the image using \link{cr_deploy_docker()}.  Include \code{library(targets)} dependencies - a Docker image with \code{targets} installed is available at \code{gcr.io/gcer-public/targets}.
 #'   \item Run \code{cr_build_targets()} to create the cloudbuild yaml file.
-#'   \item Create a build trigger via \link{cr_buildtrigger}.
+#'   \item Run the build via \link{cr_build} or similar.  Each build should only recompute outdated targets.
+#'   \item Optionally create a build trigger via \link{cr_buildtrigger}.
 #'   \item Trigger a build. The first trigger will run the targets pipeline, subsequent runs will only recompute the outdated targets.
 #'  }
 #'
@@ -24,6 +25,7 @@
 #' @param ... Other arguments passed to \link{cr_build_yaml()}
 #' @inheritDotParams cr_build_yaml
 #' @param task_args A named list of additional arguments to send to \link{cr_buildstep_r()} when its executing the \link[targets]{tar_make()} command (such as environment arguments)
+#' @param tar_make The R script that will run in the tar_make() step. Modify to include custom settings such as "script"
 #'
 #' @examples
 #'
@@ -43,6 +45,7 @@ cr_build_targets <- function(
   path = "cloudbuild_targets.yaml",
   bucket = cr_bucket_get(),
   task_args = list(),
+  tar_make = "targets::tar_make()",
   ...
 ) {
 
@@ -50,37 +53,49 @@ cr_build_targets <- function(
     target_folder <- "targets_cloudbuild"
   }
 
-  myMessage(sprintf("targets metadata: gs://%s/%s", bucket, target_folder),
+  myMessage(sprintf("targets cloud location: gs://%s/%s", bucket, target_folder),
             level = 3)
-
-  target_metadata <- paste0(target_folder, "/_targets")
 
   bs <- c(
     cr_buildstep_bash(
-      "gsutil -m cp -r ${_TARGET_BUCKET}/* /workspace/_targets || exit 0",
+      "mkdir /workspace/_targets && mkdir /workspace/_targets/meta && gsutil -m cp -r ${_TARGET_BUCKET}/_targets/meta /workspace/_targets || exit 0",
       name = "gcr.io/google.com/cloudsdktool/cloud-sdk:alpine",
       entrypoint = "bash",
       escape_dollar = FALSE,
       id = "get previous _targets metadata"
     ),
-    cr_buildstep_bash("ls -lR", id = "debug file list"),
     do.call(
       cr_buildstep_r,
       args = c(task_args,
-               list(r ="targets::tar_make()",
+               list(r =tar_make,
                     name = task_image,
                     id = "target pipeline"))
+    ),
+    cr_buildstep_bash(
+      "date > buildtime.txt && gsutil cp buildtime.txt ${_TARGET_BUCKET}/_targets/buildtime.txt",
+      name = "gcr.io/google.com/cloudsdktool/cloud-sdk:alpine",
+      entrypoint = "bash",
+      escape_dollar = FALSE,
+      id = "Ensure ${_TARGET_BUCKET}/_targets/ always exists"
+    ),
+    cr_buildstep_gcloud(
+      "gsutil",
+      args = c("-m", "cp" ,"-r", "/workspace/_targets" ,"${_TARGET_BUCKET}"),
+      id = "Upload Artifacts this way as artifacts doesn't support folders"
+      ),
+    cr_buildstep_gcloud(
+      "gsutil",
+      args = c("ls", "-r","${_TARGET_BUCKET}"),
+      id = "Artifacts location"
     )
   )
 
-  target_bucket <- sprintf("gs://%s/%s", bucket, target_metadata)
+  # gs://bucket-name/target-folder
+  target_bucket <- sprintf("gs://%s/%s", bucket, target_folder)
 
   yaml <- cr_build_yaml(
     bs,
     substitutions = list(`_TARGET_BUCKET` = target_bucket),
-    artifacts = cr_build_yaml_artifact("/workspace/_targets/meta/**",
-                                       bucket_dir = paste0(target_metadata,"/meta"),
-                                       bucket = bucket),
     timeout = 3600,
     ...
   )
@@ -90,3 +105,74 @@ cr_build_targets <- function(
   yaml
 }
 
+#' @rdname cr_build_targets
+#' @export
+#' @details
+#'   Use \code{cr_build_targets_artifacts} to download the return values of a
+#'   target Cloud Build, then \link[targets]{tar_read} to read the results.  You can set the downloaded files as the target store via \code{targets::tar_config_set(store="_targets_cloudbuild")}.  Set \code{download_folder = "_targets"} to overwrite your local targets store.
+#' @inheritParams cr_build_artifacts
+#' @param target_subfolder If you only want to download a specific folder from the _targets/ folder on Cloud Build then specify it here.
+#' @return \code{cr_build_targets_artifacts} returns the file path to where the download occurred.
+cr_build_targets_artifacts <- function(
+  build,
+  download_folder = "_targets_cloudbuild",
+  target_subfolder = c("all","meta","objects","user"),
+  overwrite = TRUE){
+
+  target_subfolder <- match.arg(target_subfolder)
+
+  bb <- build$source$storageSource$bucket
+  if(is.null(bb)){
+    stop("Could not find bucket.  Is this not a build from cr_build_targets()?")
+  }
+
+  build_folder <- build$substitutions$`_TARGET_BUCKET`
+  build_folder <- gsub(paste0("gs://",bb,"/"),"",
+                       build$substitutions$`_TARGET_BUCKET`)
+
+  if(!nzchar(build_folder)){
+    stop("Could not find build folder in bucket.")
+  }
+
+  prefix <- build_folder
+  if(target_subfolder != "all"){
+    prefix <- paste0(prefix, "/", target_subfolder)
+  }
+
+  arts <- googleCloudStorageR::gcs_list_objects(
+    bucket = bb, prefix = prefix
+  )
+
+  if(nrow(arts) == 0){
+    myMessage("No target build artifacts found")
+    return(NULL)
+  }
+
+  # create targets folder structure
+  dir.create(download_folder, showWarnings = FALSE)
+  dir.create(file.path(download_folder, build_folder),
+             showWarnings = FALSE)
+  dir.create(file.path(download_folder, build_folder, "_targets"),
+             showWarnings = FALSE)
+  dir.create(file.path(download_folder, build_folder, "_targets","meta"),
+             showWarnings = FALSE)
+  dir.create(file.path(download_folder, build_folder, "_targets","objects"),
+             showWarnings = FALSE)
+  dir.create(file.path(download_folder, build_folder, "_targets","user"),
+             showWarnings = FALSE)
+
+  withr::with_dir(
+    download_folder,
+    {
+      lapply(arts$name, function(x) {
+        gcs_get_object(x,
+                       bucket = bb,
+                       saveToDisk = x,
+                       overwrite = overwrite)
+      })
+    }
+  )
+
+  normalizePath(file.path(download_folder, build_folder))
+
+}
