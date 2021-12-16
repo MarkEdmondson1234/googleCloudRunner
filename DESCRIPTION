@@ -30,6 +30,7 @@ Imports:
     plumber (>= 1.0.0),
     usethis (>= 1.6.0),
     utils,
+    withr,
     yaml (>= 2.2.0)
 Remotes:
   MarkEdmondson1234/googleAuthR,

@@ -21,3 +21,4 @@ auth.json
 _targets.yaml
 tests/testthat/targets
 tests/testthat/_targets
+tests/testthat/_targets_cloudbuild

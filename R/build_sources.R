@@ -257,18 +257,16 @@ cr_build_upload_gcs <- function(
     stop("remote argument name needs to end with .tar.gz", call. = FALSE)
   }
 
-  myMessage(paste("#Upload", local, "to",
+  myMessage(paste0("# Uploading ", local, "/ to ",
                   paste0("gs://", bucket,"/",remote)),
             level = 3)
-
 
   # make temporary folder (to avoid recursion issue)
   tdir <- tempdir()
   full_deploy_folder <- file.path(tdir, deploy_folder)
-  dir.create(full_deploy_folder)
+  dir.create(full_deploy_folder, showWarnings = FALSE)
 
-  myMessage(paste0("Copying files from ",
-                   local, " to ", full_deploy_folder),
+  myMessage(paste0("Copying files from ", local, "/ into tmpdir"),
             level = 3)
 
   file.copy(list.files(local, full.names = TRUE),
@@ -276,19 +274,18 @@ cr_build_upload_gcs <- function(
 
   tar_file <- paste0(basename(local), ".tar.gz")
 
-  myMessage(paste0("Compressing files from ",
-                   full_deploy_folder, " to ", tar_file),
-            level = 2)
-
   withr::with_dir(
     tdir,
     {
+      myMessage("tarring files: \n",
+                paste(list.files(recursive = TRUE), collapse = "\n "),
+                level = 3)
       tar(tar_file, compression = "gzip")
+      myMessage(paste("Uploading", basename(tar_file),
+                      "to", paste0(bucket,"/", remote)),
+                level = 3)
       tar_file <- normalizePath(tar_file, mustWork = FALSE)
       on.exit(unlink(tar_file), add=TRUE)
-      myMessage(paste("Uploading",
-                      tar_file, "to", paste0(bucket,"/", remote)),
-                level = 3)
       gcs_upload(tar_file, bucket = bucket, name = remote,
                  predefinedAcl = predefinedAcl)
     }

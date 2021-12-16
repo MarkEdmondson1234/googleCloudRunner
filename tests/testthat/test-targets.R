@@ -11,7 +11,8 @@ test_that("targets integrations", {
   target_yaml <- cr_build_targets(
     path = NULL,
     target_folder = "cr_build_target_tests",
-    tar_make = "list.files(recursive=TRUE);targets::tar_make(script = 'targets/_targets.R')"
+    tar_make = c("list.files(recursive=TRUE)",
+                 "targets::tar_make(script = 'targets/_targets.R')")
   )
   expect_snapshot(target_yaml)
 
@@ -19,9 +20,8 @@ test_that("targets integrations", {
     script = "targets/_targets.R"
   )
 
-  write.csv(mtcars,
-            file = "targets/mtcars.csv",
-            row.names = FALSE)
+  # test file
+  write.csv(mtcars, file = "targets/mtcars.csv", row.names = FALSE)
 
   tar_script(
     list(
@@ -57,23 +57,21 @@ test_that("targets integrations", {
 
   target_logs <- function(log){
     log[
-      which(log == "Step #2 - \"target pipeline\": gcr.io/gcer-public/targets:latest"):
-        which(log == "Finished Step #2 - \"target pipeline\"")]
+      which(grepl("\"target pipeline\": gcr.io/gcer-public/targets:latest", log)):
+        which(grepl("\"target pipeline\": • end pipeline", log))]
   }
 
   logs_of_interest1 <- target_logs(bb1logs)
-  expect_snapshot(logs_of_interest1)
-  expect_equal(logs_of_interest1[2],
-               "Step #2 - \"target pipeline\": • start target file1")
+  expect_true(any(grepl("\"target pipeline\": • start target file1",
+                        logs_of_interest1)))
 
   # second run, expect it to skip target file1 as unchanged
   bb2 <- cr_build(build, launch_browser = FALSE)
   built2 <- cr_build_wait(bb2)
   bb2logs <- cr_build_logs(built2)
   logs_of_interest2 <- target_logs(bb2logs)
-  expect_snapshot(logs_of_interest2)
-  expect_equal(logs_of_interest1[2],
-               "Step #2 - \"target pipeline\": ✔ skip target file1")
+  expect_true(any(grepl("\"target pipeline\": ✔ skip target file1",
+                        logs_of_interest2)))
 
 
   # make a change to the file, expect a rerun
@@ -85,16 +83,24 @@ test_that("targets integrations", {
 
   target_source2 <- upload_test_files()
   expect_snapshot(target_source2)
-
+  build <- cr_build_make(target_yaml, source = target_source2)
   # same build, but source has been updated
   bb3 <- cr_build(build, launch_browser = FALSE)
   built3 <- cr_build_wait(bb3)
   bb3logs <- cr_build_logs(built3)
   logs_of_interest3 <- target_logs(bb3logs)
-  expect_snapshot(logs_of_interest3)
-  expect_equal(logs_of_interest1, logs_of_interest3)
+  expect_true(any(grepl("\"target pipeline\": • start target file1",
+                        logs_of_interest3)))
+
+  tar_config_set(store="_targets_cloudbuild/cr_build_target_tests/_targets")
+  artifact_download <- cr_build_targets_artifacts(built3)
+  expect_snapshot(artifact_download)
+
+  expect_true(result != tar_read("result1"))
 
   # clean up - delete source for next test run
+  googleCloudStorageR::gcs_delete_object("cr_build_target_test_source.tar.gz",
+                                         bucket = cr_bucket_get())
   deletes <- googleCloudStorageR::gcs_list_objects(prefix = "cr_build_target_tests",
                                                    bucket = cr_bucket_get())
   done_deeds <- lapply(deletes$name,
@@ -102,9 +108,11 @@ test_that("targets integrations", {
                        bucket = cr_bucket_get())
   expect_true(all(unlist(done_deeds)))
 
-  unlink("targets")
-  unlink("_targets")
+  tar_destroy(ask = FALSE)
+
+  unlink("targets", recursive = TRUE)
   unlink("_targets.yaml")
+  unlink("_targets_cloudbuild", recursive = TRUE)
 
 
 })
