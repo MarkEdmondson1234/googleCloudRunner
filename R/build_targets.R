@@ -26,7 +26,7 @@
 #' @param task_args A named list of additional arguments to send to \link{cr_buildstep_r()} when its executing the \link[targets]{tar_make()} command (such as environment arguments)
 #'
 #' @examples
-#'
+#' if (rstudioapi::isAvailable())) {
 #' cr_build_targets(path=tempfile())
 #'
 #' # adding custom environment args and secrets to the build
@@ -36,10 +36,10 @@
 #'                          "ENV_USER=Dave")),
 #'   availableSecrets = cr_build_yaml_secrets("MY_PW","my-pw"),
 #'   task_args = list(secretEnv = "MY_PW"))
-#'
+#' }
 cr_build_targets <- function(
   task_image = "gcr.io/gcer-public/targets",
-  target_folder = basename(rstudioapi::getActiveProject()),
+  target_folder = if (rstudioapi::isAvailable()) basename(rstudioapi::getActiveProject()) else basename(getwd()),
   path = "cloudbuild_targets.yaml",
   bucket = cr_bucket_get(),
   task_args = list(),

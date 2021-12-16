@@ -223,7 +223,7 @@ cr_deploy_docker_construct <- function(
   }
 
   # Adding this in for Artifacts Registry
-  pre_steps <- add_docker_auth_prestep(image, pre_steps)
+  pre_steps <- c(pre_steps, cr_buildstep_docker_auth_auto(image = image))
 
   waitFor <- "-" # build concurrent tags
   if (!is.null(pre_steps)) {
@@ -427,7 +427,7 @@ cr_buildstep_docker <- function(image,
 #'
 #' @noRd
 #'
-#' @param deploy_folder The folder containing the assessts to deploy
+#' @param deploy_folder The folder containing the assets to deploy
 #' @param ... Other arguments pass to containerit::dockerfile
 #'
 #'
@@ -461,19 +461,39 @@ find_dockerfile <- function(local, dockerfile){
   TRUE
 }
 
-add_docker_auth_prestep <- function(image, pre_steps) {
+
+#' Authorize Docker using `gcloud auth configure-docker`
+#'
+#' @param registry The registry to authorize `docker`
+#' @param ... Other arguments pass to [googleCloudRunner::cr_buildstep_gcloud()]
+#'
+#'
+#' @return A buildstep
+#'
+#' @examples
+#' cr_buildstep_docker_auth("us.gcr.io")
+#' cr_buildstep_docker_auth_auto("https://asia.cr.io/myrepo/image")
+cr_buildstep_docker_auth = function(registry, ...) {
+  registry <- sub("^http(s|)://", "", registry)
+  cr_buildstep_gcloud(
+    "gcloud",
+    c("gcloud", "auth", "configure-docker", "-q",
+      registry),
+    ...)
+
+}
+
+#' @param image name of the Docker image to push or pull from that needs
+#' authorization
+#' @rdname cr_buildstep_docker_auth
+#' @export
+cr_buildstep_docker_auth_auto <- function(image, ...) {
   # Adding this in for Artifacts Registry
   need_location <- grepl("^.*-docker.pkg.dev", tolower(image))
+  res = NULL
   if (need_location) {
-    dev_location <- sub("^(.*-docker.pkg.dev).*", "\\1", tolower(image))
-    dev_location <- sub("^http(s|)://", "", dev_location)
-    pre_steps <- c(pre_steps,
-                   cr_buildstep_gcloud(
-                     "gcloud",
-                     c("gcloud", "auth", "configure-docker",
-                       dev_location)
-                   )
-    )
+    registry <- sub("^(.*-docker.pkg.dev).*", "\\1", tolower(image))
+    res = cr_buildstep_docker_auth(registry, ...)
   }
-  pre_steps
+  res
 }
