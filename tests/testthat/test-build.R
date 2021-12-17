@@ -13,7 +13,7 @@ test_that("Online auth", {
 })
 
 test_that("[Online] Test building from build object", {
-  skip_on_travis()
+  skip_on_ci()
   skip_on_cran()
   cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
                             package = "googleCloudRunner")
