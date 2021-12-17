@@ -31,7 +31,9 @@ function(region=NULL, industry=NULL, bqds = NULL, bqtbl = NULL) {
   region <- URLdecode(region)
   industry <- URLdecode(industry)
 
-  sql <- sprintf("SELECT date, industry, percent_of_baseline FROM `bigquery-public-data.covid19_geotab_mobility_impact.commercial_traffic_by_industry`  WHERE region = '%s' order by date LIMIT 1000", region)
+  sql <- sprintf("SELECT date, industry, percent_of_baseline
+                 FROM `bigquery-public-data.covid19_geotab_mobility_impact.commercial_traffic_by_industry`
+                 WHERE region = '%s' order by date LIMIT 1000", region)
 
   message("Query: ", sql)
 

@@ -44,7 +44,7 @@ call_api <- function(region, industry, token) {
                  URLencode(region), URLencode(industry))
 
   message("Request: ", api)
-  res <- cr_jwt_with_httr(httr::GET(api),token)
+  res <- cr_jwt_with_httr(httr::GET(api), token)
 
   httr::content(res, as = "text", encoding = "UTF-8")
 
@@ -54,7 +54,7 @@ call_api <- function(region, industry, token) {
 result <- call_api(region = "Europe", industry = "Software", token = token)
 
 # the variables to loop over
-regions <- c("North America", "Europe","South America","Australia")
+regions <- c("North America", "Europe", "South America", "Australia")
 industry <- c("Transportation (non-freight)",
               "Software",
               "Telecommunications",
@@ -108,7 +108,7 @@ make_urls <- function(regions, industry) {
       URLencode(x), URLencode(y))
   },
   SIMPLIFY = FALSE, USE.NAMES = FALSE,
-  combos$Var1 ,combos$Var2))
+  combos$Var1, combos$Var2))
 }
 
 all_urls <- make_urls(regions = regions, industry = industry)
