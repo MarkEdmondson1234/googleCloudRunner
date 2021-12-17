@@ -1,4 +1,6 @@
 test_that("Authentication and setup", {
+  skip_on_ci()
+  skip_on_cran()
 
   expect_true(nzchar(Sys.getenv("GCE_AUTH_FILE")))
   expect_true(nzchar(Sys.getenv("CR_REGION")))

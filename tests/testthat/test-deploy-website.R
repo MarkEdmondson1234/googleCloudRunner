@@ -1,5 +1,5 @@
 test_that("[Online] Test Deploy Website", {
-  skip_on_travis()
+  skip_on_ci()
   skip_on_cran()
 
   # deploy a website using package's NEWS.md

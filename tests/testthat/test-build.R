@@ -1,5 +1,5 @@
 test_that("Online auth", {
-  skip_on_travis()
+  skip_on_ci()
   skip_on_cran()
   # assumes auth and necessary args taken from env args already set
   builds <- cr_buildtrigger_list()
@@ -30,7 +30,7 @@ test_that("[Online] Test building from build object", {
 })
 
 test_that("[Online] Test Source Repo functions", {
-  skip_on_travis()
+  skip_on_ci()
   skip_on_cran()
 
   sr <- cr_sourcerepo_list()
@@ -39,7 +39,7 @@ test_that("[Online] Test Source Repo functions", {
 })
 
 test_that("[Online] Test build artifacts", {
-  skip_on_travis()
+  skip_on_ci()
   skip_on_cran()
   r <- "write.csv(mtcars,file = 'artifact.csv')"
   ba <- cr_build_yaml(
@@ -62,7 +62,7 @@ test_that("[Online] Test build artifacts", {
 
 
 test_that("availableSecrets works ok", {
-  skip_on_travis()
+  skip_on_ci()
   skip_on_cran()
 
   s1 <- cr_build_yaml_secrets("SECRET","test_secret")

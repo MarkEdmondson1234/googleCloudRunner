@@ -1,5 +1,5 @@
 test_that("[Online] Test Docker", {
-  skip_on_travis()
+  skip_on_ci()
   skip_on_cran()
 
   runme <- system.file("example/",

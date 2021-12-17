@@ -1,5 +1,5 @@
 test_that("Build Listings and Filters",{
-  skip_on_travis()
+  skip_on_ci()
   skip_on_cran()
 
   # builds for this package's buildtrigger
@@ -27,7 +27,7 @@ test_that("Build Listings and Filters",{
 })
 
 test_that("Build logs work",{
-  skip_on_travis()
+  skip_on_ci()
   skip_on_cran()
 
   last_logs <- cr_build_logs_last("package-checks")

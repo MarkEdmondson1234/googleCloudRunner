@@ -1,5 +1,5 @@
 test_that("targets integrations", {
-  skip_on_travis()
+  skip_on_ci()
   skip_on_cran()
 
   if(!require(targets)){

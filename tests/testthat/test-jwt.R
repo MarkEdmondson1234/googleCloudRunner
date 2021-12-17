@@ -1,5 +1,6 @@
 test_that("[Online] JWT fetches", {
-
+  skip_on_ci()
+  skip_on_cran()
   cr <- cr_run_get("parallel-cloudrun")
 
   # Interact with the authenticated Cloud Run service
