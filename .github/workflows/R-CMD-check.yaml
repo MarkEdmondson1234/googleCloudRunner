@@ -27,6 +27,11 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      GCE_DEFAULT_PROJECT_ID: dummy-project
+      CR_BUILD_EMAIL: dummy-email
+      CR_REGION: dummy-region
+      GCS_DEFAULT_BUCKET: dummy-bucket
+
 
     steps:
       - uses: actions/checkout@v2
