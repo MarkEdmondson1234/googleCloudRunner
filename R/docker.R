@@ -189,6 +189,15 @@ cr_deploy_docker_construct <- function(
 
   myMessage(paste("Configuring Dockerfile"), level = 2)
 
+  # needed if someone does something silly like:
+  # res = cr_buildstep_bash("echo hey")
+  # pre_steps = res[[1]]
+  if (inherits(pre_steps, "cr_buildstep")) {
+    pre_steps = list(pre_steps)
+  }
+  if (inherits(post_steps, "cr_buildstep")) {
+    post_steps = list(post_steps)
+  }
   # !!!
   # Should likely move this to the step for cr_build_upload_gcs
   # or simply make local into a tempdir and copy over
