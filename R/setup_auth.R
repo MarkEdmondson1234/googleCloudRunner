@@ -14,14 +14,13 @@
 #' @family setup functions
 cr_setup_auth <- function(email = Sys.getenv("GARGLE_EMAIL"),
                           file = "googlecloudrunner-auth-key.json",
-                          session_user = NULL){
-
-  gar_setup_auth_key(email = email,
-                     file = file,
-                     session_user = session_user,
-                     client_json = "GAR_CLIENT_JSON",
-                     roles = cr_setup_role_lookup("local"),
-                     default_key = "googlecloudrunner")
-
+                          session_user = NULL) {
+  gar_setup_auth_key(
+    email = email,
+    file = file,
+    session_user = session_user,
+    client_json = "GAR_CLIENT_JSON",
+    roles = cr_setup_role_lookup("local"),
+    default_key = "googlecloudrunner"
+  )
 }
-

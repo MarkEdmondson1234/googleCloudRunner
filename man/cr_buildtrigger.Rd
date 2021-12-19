@@ -53,7 +53,8 @@ If you want multiple triggers for a build, then duplicate the build and create a
 cr_project_set("my-project")
 cr_bucket_set("my-bucket")
 cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
-                           package = "googleCloudRunner")
+  package = "googleCloudRunner"
+)
 bb <- cr_build_make(cloudbuild)
 
 # repo hosted on GitHub
@@ -61,8 +62,8 @@ gh_trigger <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
 
 # repo mirrored to Cloud Source Repositories
 cs_trigger <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
-                                   type = "cloud_source")
-
+  type = "cloud_source"
+)
 \dontrun{
 # build with in-line build code
 cr_buildtrigger(bb, name = "bt-github-inline", trigger = gh_trigger)
@@ -72,15 +73,16 @@ cr_buildtrigger(bb, name = "bt-github-inline", trigger = cs_trigger)
 
 # build pointing to cloudbuild.yaml within the GitHub repo
 cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
-                 name = "bt-github-file", trigger = gh_trigger)
+  name = "bt-github-file", trigger = gh_trigger
+)
 
 # build with repo mirror from file
 cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
-                 name = "bt-cs-file", trigger = cs_trigger)
+  name = "bt-cs-file", trigger = cs_trigger
+)
 }
 
 # creating build triggers that respond to pubsub events
-
 \dontrun{
 # create a pubsub topic either in webUI or via library(googlePubSubR)
 library(googlePubsubR)
@@ -91,18 +93,16 @@ topics_create("test-topic")
 # create build trigger that will work from pub/subscription
 pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
 pubsub_trigger
-
 \dontrun{
 # create the build trigger with in-line build
 cr_buildtrigger(bb, name = "pubsub-triggered", trigger = pubsub_trigger)
 # create scheduler that calls the pub/sub topic
 
 cr_schedule("cloud-build-pubsub",
-            "15 5 * * *",
-            pubsubTarget = cr_schedule_pubsub("test-topic"))
-
+  "15 5 * * *",
+  pubsubTarget = cr_schedule_pubsub("test-topic")
+)
 }
-
 
 }
 \seealso{

@@ -33,14 +33,15 @@ s2 <- cr_build_yaml_secrets("PASSWORD", "my_password")
 # use one $ in scripts to use the secretEnv (will be replaced by $$)
 cr_build_yaml(
   steps = cr_buildstep(
-            "docker",
-             entrypoint = "bash",
-             args = c(
-               "-c",
-               "docker login --username=$USERNAME --password=$PASSWORD"),
-             secretEnv = c("USERNAME","PASSWORD")
-         ),
-   availableSecrets = list(s1, s2)
+    "docker",
+    entrypoint = "bash",
+    args = c(
+      "-c",
+      "docker login --username=$USERNAME --password=$PASSWORD"
+    ),
+    secretEnv = c("USERNAME", "PASSWORD")
+  ),
+  availableSecrets = list(s1, s2)
 )
 }
 \seealso{

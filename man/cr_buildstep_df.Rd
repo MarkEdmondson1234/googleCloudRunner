@@ -18,11 +18,13 @@ This helps convert the output of \link{cr_build} into valid \link{cr_buildstep} 
 If constructing arg list columns then \link{I} suppresses conversion of the list to columns that would otherwise break the yaml format
 }
 \examples{
-y <- data.frame(name = c("docker", "alpine"),
-                args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
-                id = c("Docker Version", "Hello Cloud Build"),
-                prefix = c(NA, ""),
-                stringsAsFactors = FALSE)
+y <- data.frame(
+  name = c("docker", "alpine"),
+  args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
+  id = c("Docker Version", "Hello Cloud Build"),
+  prefix = c(NA, ""),
+  stringsAsFactors = FALSE
+)
 cr_buildstep_df(y)
 }
 \seealso{

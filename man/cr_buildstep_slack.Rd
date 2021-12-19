@@ -40,15 +40,13 @@ Once set, the default is to set this webhook to a Build macro called \code{_SLAC
 \examples{
 # send a message to googleAuthRverse Slack
 webhook <-
- "https://hooks.slack.com/services/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"
+  "https://hooks.slack.com/services/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"
 cr_buildstep_slack("Hello Slack", webhook = webhook)
-
 \dontrun{
 
 bs <- cr_build_yaml(steps = cr_buildstep_slack("Hello Slack"))
 
 cr_build(bs, substitutions = list(`_SLACK_WEBHOOK` = webhook))
-
 }
 
 }

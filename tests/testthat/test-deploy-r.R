@@ -2,12 +2,15 @@ test_that("[Online] Test Deploy R", {
   skip_on_ci()
   skip_on_cran()
 
-  r_lines <- c("list.files()",
-               "library(dplyr)",
-               "mtcars %>% select(mpg)",
-               "sessionInfo()")
+  r_lines <- c(
+    "list.files()",
+    "library(dplyr)",
+    "mtcars %>% select(mpg)",
+    "sessionInfo()"
+  )
   source <- cr_build_source(RepoSource("googleCloudStorageR",
-                                       branchName = "master"))
+    branchName = "master"
+  ))
 
   # check the script runs ok
   rb <- cr_deploy_r(r_lines, source = source)
@@ -19,6 +22,4 @@ test_that("[Online] Test Deploy R", {
 
   deleteme <- cr_schedule_delete(rs)
   expect_true(deleteme)
-
-
 })

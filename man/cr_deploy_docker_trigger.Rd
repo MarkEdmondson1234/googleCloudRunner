@@ -58,7 +58,6 @@ This helps the common use case of building a Dockerfile based on the contents of
 This creates a buildtrigger to do a kamiko cache enabled Docker build upon each commit, as defined by your repo settings via \link{cr_buildtrigger_repo}.  It will build all tags concurrently.
 }
 \examples{
-
 \dontrun{
 repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
 # create trigger that will publish Docker image to gcr.io/your-project/test upon each GitHub commit

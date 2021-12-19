@@ -1,48 +1,57 @@
-test_that("[Online] Test Build Triggers",{
+test_that("[Online] Test Build Triggers", {
   skip_on_ci()
   skip_on_cran()
   cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
-                            package = "googleCloudRunner")
+    package = "googleCloudRunner"
+  )
 
   bb <- cr_build_make(cloudbuild)
 
   gh_trigger <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
   cs_trigger <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
-                                     type = "cloud_source")
+    type = "cloud_source"
+  )
   ps_trigger <- cr_buildtrigger_pubsub("test-topic", projectId = "learning-ga4")
 
   ps_bt <- cr_buildtrigger(bb,
-                           name = "pubsub-test-triggered-zzzzz",
-                           trigger = ps_trigger,
-                           projectId = "learning-ga4")
+    name = "pubsub-test-triggered-zzzzz",
+    trigger = ps_trigger,
+    projectId = "learning-ga4"
+  )
 
   # build with in-line build code
   gh_inline <- cr_buildtrigger(bb,
-                               name = "bt-github-inline",
-                               trigger = gh_trigger,
-                               overwrite = TRUE)
+    name = "bt-github-inline",
+    trigger = gh_trigger,
+    overwrite = TRUE
+  )
 
   # build pointing to cloudbuild.yaml within the GitHub repo
   gh_file <- cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
-                             name = "bt-github-file", trigger = gh_trigger,
-                             overwrite = TRUE)
+    name = "bt-github-file", trigger = gh_trigger,
+    overwrite = TRUE
+  )
 
   cs_file <- cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
-                             name = "bt-cs-file", trigger = cs_trigger,
-                             overwrite = TRUE)
+    name = "bt-cs-file", trigger = cs_trigger,
+    overwrite = TRUE
+  )
 
   # build inline with trigger source
   cloudbuild_rmd <- system.file("cloudbuild/cloudbuild_rmd.yml",
-                                package = "googleCloudRunner")
+    package = "googleCloudRunner"
+  )
   b_rmd <- cr_build_make(cloudbuild_rmd)
   gh_source_inline <- cr_buildtrigger(b_rmd,
-                                      name = "bt-github-source",
-                                      trigger = gh_trigger,
-                                      overwrite = TRUE)
+    name = "bt-github-source",
+    trigger = gh_trigger,
+    overwrite = TRUE
+  )
   cs_source_inline <- cr_buildtrigger(b_rmd,
-                                      name = "bt-cs-source",
-                                      trigger = cs_trigger,
-                                      overwrite = TRUE)
+    name = "bt-cs-source",
+    trigger = cs_trigger,
+    overwrite = TRUE
+  )
   Sys.sleep(5)
   the_list <- cr_buildtrigger_list()
   pb_list <- cr_buildtrigger_list(projectId = "learning-ga4")
@@ -71,5 +80,4 @@ test_that("[Online] Test Build Triggers",{
   expect_false("pubsub-test-triggered-zzzzz" %in% pb_list2$buildTriggerName)
   info <- cr_buildtrigger_get("0a3cade0-425f-4adc-b86b-14cde51af674")
   expect_equal(info$name, "package-checks")
-
 })

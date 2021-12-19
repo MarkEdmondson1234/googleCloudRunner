@@ -47,15 +47,20 @@ cr_bucket_set("my-bucket")
 
 my_repo <- cr_build_source(
   RepoSource("github_markedmondson1234_googlecloudrunner",
-             branchName="master"))
+    branchName = "master"
+  )
+)
 
 build <- cr_build(
-  cr_build_yaml(steps =
-    cr_buildstep("gcloud", c("-c","ls -la"),
-                  entrypoint = "bash",
-                  dir = "")),
- source = my_repo)
-
+  cr_build_yaml(
+    steps =
+      cr_buildstep("gcloud", c("-c", "ls -la"),
+        entrypoint = "bash",
+        dir = ""
+      )
+  ),
+  source = my_repo
+)
 }
 }
 \seealso{

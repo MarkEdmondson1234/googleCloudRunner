@@ -2,7 +2,7 @@ test_that("targets integrations", {
   skip_on_ci()
   skip_on_cran()
 
-  if(!require(targets)){
+  if (!require(targets)) {
     skip("library(targets) not installed")
   }
 
@@ -11,8 +11,10 @@ test_that("targets integrations", {
   target_yaml <- cr_build_targets(
     path = NULL,
     target_folder = "cr_build_target_tests",
-    tar_make = c("list.files(recursive=TRUE)",
-                 "targets::tar_make(script = 'targets/_targets.R')")
+    tar_make = c(
+      "list.files(recursive=TRUE)",
+      "targets::tar_make(script = 'targets/_targets.R')"
+    )
   )
   expect_snapshot(target_yaml)
 
@@ -38,7 +40,7 @@ test_that("targets integrations", {
   result <- tar_read("result1")
   expect_snapshot(result)
 
-  upload_test_files <- function(){
+  upload_test_files <- function() {
     cr_build_upload_gcs(
       "targets",
       remote = "cr_build_target_test_source.tar.gz",
@@ -55,31 +57,37 @@ test_that("targets integrations", {
   built1 <- cr_build_wait(bb1)
   bb1logs <- cr_build_logs(built1)
 
-  target_logs <- function(log){
+  target_logs <- function(log) {
     log[
       which(grepl("\"target pipeline\": gcr.io/gcer-public/targets:latest", log)):
-        which(grepl("\"target pipeline\": • end pipeline", log))]
+      which(grepl("\"target pipeline\": • end pipeline", log))
+    ]
   }
 
   logs_of_interest1 <- target_logs(bb1logs)
-  expect_true(any(grepl("\"target pipeline\": • start target file1",
-                        logs_of_interest1)))
+  expect_true(any(grepl(
+    "\"target pipeline\": • start target file1",
+    logs_of_interest1
+  )))
 
   # second run, expect it to skip target file1 as unchanged
   bb2 <- cr_build(build, launch_browser = FALSE)
   built2 <- cr_build_wait(bb2)
   bb2logs <- cr_build_logs(built2)
   logs_of_interest2 <- target_logs(bb2logs)
-  expect_true(any(grepl("\"target pipeline\": ✔ skip target file1",
-                        logs_of_interest2)))
+  expect_true(any(grepl(
+    "\"target pipeline\": ✔ skip target file1",
+    logs_of_interest2
+  )))
 
 
   # make a change to the file, expect a rerun
   mtcars2 <- mtcars
   mtcars2$mpg <- mtcars$mpg * 2
   write.csv(mtcars2,
-            file = "targets/mtcars.csv",
-            row.names = FALSE)
+    file = "targets/mtcars.csv",
+    row.names = FALSE
+  )
 
   target_source2 <- upload_test_files()
   expect_snapshot(target_source2)
@@ -89,10 +97,12 @@ test_that("targets integrations", {
   built3 <- cr_build_wait(bb3)
   bb3logs <- cr_build_logs(built3)
   logs_of_interest3 <- target_logs(bb3logs)
-  expect_true(any(grepl("\"target pipeline\": • start target file1",
-                        logs_of_interest3)))
+  expect_true(any(grepl(
+    "\"target pipeline\": • start target file1",
+    logs_of_interest3
+  )))
 
-  tar_config_set(store="_targets_cloudbuild/cr_build_target_tests/_targets")
+  tar_config_set(store = "_targets_cloudbuild/cr_build_target_tests/_targets")
   artifact_download <- cr_build_targets_artifacts(built3)
   expect_snapshot(artifact_download)
 
@@ -100,12 +110,16 @@ test_that("targets integrations", {
 
   # clean up - delete source for next test run
   googleCloudStorageR::gcs_delete_object("cr_build_target_test_source.tar.gz",
-                                         bucket = cr_bucket_get())
-  deletes <- googleCloudStorageR::gcs_list_objects(prefix = "cr_build_target_tests",
-                                                   bucket = cr_bucket_get())
+    bucket = cr_bucket_get()
+  )
+  deletes <- googleCloudStorageR::gcs_list_objects(
+    prefix = "cr_build_target_tests",
+    bucket = cr_bucket_get()
+  )
   done_deeds <- lapply(deletes$name,
-                       googleCloudStorageR::gcs_delete_object,
-                       bucket = cr_bucket_get())
+    googleCloudStorageR::gcs_delete_object,
+    bucket = cr_bucket_get()
+  )
   expect_true(all(unlist(done_deeds)))
 
   tar_destroy(ask = FALSE)
@@ -113,6 +127,4 @@ test_that("targets integrations", {
   unlink("targets", recursive = TRUE)
   unlink("_targets.yaml")
   unlink("_targets_cloudbuild", recursive = TRUE)
-
-
 })

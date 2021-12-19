@@ -47,20 +47,22 @@ cr_bucket_set("my-bucket")
 
 # set github repo directly to write it out via cr_build_write()
 cr_buildstep_pkgdown("MarkEdmondson1234/googleCloudRunner",
-                     git_email = "cloudbuild@google.com",
-                     secret = "github-ssh")
+  git_email = "cloudbuild@google.com",
+  secret = "github-ssh"
+)
 
 # github repo set via build trigger macro _GITHUB_REPO
 cr_buildstep_pkgdown("$_GITHUB_REPO",
-                     git_email = "cloudbuild@google.com",
-                     secret = "github-ssh")
+  git_email = "cloudbuild@google.com",
+  secret = "github-ssh"
+)
 
 # example including environment arguments for pkgdown build step
 cr_buildstep_pkgdown("$_GITHUB_REPO",
-                     git_email = "cloudbuild@google.com",
-                     secret = "github-ssh",
-                     env = c("MYVAR=$_MY_VAR", "PROJECT=$PROJECT_ID"))
-
+  git_email = "cloudbuild@google.com",
+  secret = "github-ssh",
+  env = c("MYVAR=$_MY_VAR", "PROJECT=$PROJECT_ID")
+)
 }
 \seealso{
 Other Cloud Buildsteps: 

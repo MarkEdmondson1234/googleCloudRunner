@@ -66,10 +66,8 @@ This build step adds some helpers to \link{cr_buildstep_gcloud} for deploying to
 bs <- cr_buildstep_compute_rstudio("mark", "securepassword1234")
 build <- cr_build_yaml(bs)
 build
-
 \dontrun{
 
 cr_build(build)
-
 }
 }

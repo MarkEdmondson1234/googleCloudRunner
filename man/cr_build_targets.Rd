@@ -88,16 +88,18 @@ Use \code{cr_build_targets_artifacts} to download the return values of a
 }
 \examples{
 
-cr_build_targets(path=tempfile())
+cr_build_targets(path = tempfile())
 
 # adding custom environment args and secrets to the build
 cr_build_targets(
   task_image = "gcr.io/my-project/my-targets-pipeline",
-  options = list(env = c("ENV1=1234",
-                         "ENV_USER=Dave")),
-  availableSecrets = cr_build_yaml_secrets("MY_PW","my-pw"),
-  task_args = list(secretEnv = "MY_PW"))
-
+  options = list(env = c(
+    "ENV1=1234",
+    "ENV_USER=Dave"
+  )),
+  availableSecrets = cr_build_yaml_secrets("MY_PW", "my-pw"),
+  task_args = list(secretEnv = "MY_PW")
+)
 }
 \seealso{
 Other Cloud Build functions: 

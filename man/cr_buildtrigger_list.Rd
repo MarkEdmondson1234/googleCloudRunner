@@ -13,10 +13,9 @@ cr_buildtrigger_list(projectId = cr_project_get())
 Lists existing `BuildTrigger`s.This API is experimental.
 }
 \examples{
-
 \dontrun{
 
-  cr_buildtrigger_list()
+cr_buildtrigger_list()
 }
 }
 \seealso{

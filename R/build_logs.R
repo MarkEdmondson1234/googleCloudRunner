@@ -14,9 +14,8 @@
 #' @seealso \url{https://cloud.google.com/cloud-build/docs/securing-builds/store-manage-build-logs}
 #' @family Cloud Build functions
 #' @examples
-#'
 #' \dontrun{
-#' s_yaml <- cr_build_yaml(steps = cr_buildstep( "gcloud","version"))
+#' s_yaml <- cr_build_yaml(steps = cr_buildstep("gcloud", "version"))
 #' build <- cr_build_make(s_yaml)
 #' built <- cr_build(build)
 #' the_build <- cr_build_wait(built)
@@ -30,34 +29,36 @@
 #' # [7] "alpha 2021.01.22"
 #' # [8] "app-engine-go 1.9.71"
 #' # ...
-#'  }
-cr_build_logs <- function(built = NULL, log_url = NULL){
-
-  if(is.null(built) && is.null(log_url)){
+#' }
+cr_build_logs <- function(built = NULL, log_url = NULL) {
+  if (is.null(built) && is.null(log_url)) {
     stop("Must supply one of built or log_url", call. = FALSE)
   }
 
-  if(is.null(log_url)){
+  if (is.null(log_url)) {
     assert_that(is.gar_Build(built))
     log_url <- make_bucket_log_url(built)
   }
 
-  if(is.na(log_url)) return(NULL)
+  if (is.na(log_url)) {
+    return(NULL)
+  }
 
   logs <- tryCatch(
     suppressMessages(googleCloudStorageR::gcs_get_object(log_url)),
-    error = function(err){
+    error = function(err) {
       cli::cli_alert_danger(
         "Could not download logs - check you have Viewer role for auth key"
       )
       NULL
-    })
+    }
+  )
 
   readLines(textConnection(logs))
 }
 
-make_bucket_log_url <- function(x){
-  if(!is.null(x$logsBucket) && !is.null(x$id)){
+make_bucket_log_url <- function(x) {
+  if (!is.null(x$logsBucket) && !is.null(x$id)) {
     return(sprintf("%s/log-%s.txt", x$logsBucket, x$id))
   }
   NA
@@ -73,7 +74,6 @@ make_bucket_log_url <- function(x){
 #'
 #' @export
 #' @examples
-#'
 #' \dontrun{
 #'
 #' # get your trigger name
@@ -85,43 +85,46 @@ make_bucket_log_url <- function(x){
 #'
 #' my_trigger_id <- "0a3cade0-425f-4adc-b86b-14cde51af674"
 #' last_logs <- cr_build_logs_last(trigger_id = my_trigger_id)
-#'
 #' }
 #' @rdname cr_build_logs
 cr_build_logs_last <- function(trigger_name = NULL,
                                trigger_id = NULL,
-                               projectId = cr_project_get()){
-
-  if(is.null(trigger_name) && is.null(trigger_id)){
+                               projectId = cr_project_get()) {
+  if (is.null(trigger_name) && is.null(trigger_id)) {
     stop("Must supply one of trigger_name or trigger_id", call. = FALSE)
   }
   cli::cli_process_start("Downloading logs")
 
-  if(is.null(trigger_id)){
+  if (is.null(trigger_id)) {
     cli::cli_status_update(msg = "{symbol$arrow_right} Downloading buildtriggers")
     ts <- cr_buildtrigger_list(projectId = projectId)
 
-    if(!trigger_name %in% ts$buildTriggerName){
+    if (!trigger_name %in% ts$buildTriggerName) {
       stop("Could not find trigger with name: ", trigger_name,
-           "in projectId:", projectId, call. = FALSE)
+        "in projectId:", projectId,
+        call. = FALSE
+      )
     }
 
-    trigger_id <- ts[ts$buildTriggerName == trigger_name,"buildTriggerId"]
+    trigger_id <- ts[ts$buildTriggerName == trigger_name, "buildTriggerId"]
   }
 
   gcr_bt <- cr_build_list_filter(
     "trigger_id",
-    value = trigger_id)
+    value = trigger_id
+  )
   cli::cli_status_update(msg = "{symbol$arrow_right} Downloading builds")
   gcr_builds <- cr_build_list(gcr_bt, projectId = projectId)
 
-  if(is.null(gcr_builds)){
+  if (is.null(gcr_builds)) {
     stop("Could not find any builds with filter ", gcr_bt,
-         " for projectId: ", projectId, call. = FALSE)
+      " for projectId: ", projectId,
+      call. = FALSE
+    )
   }
 
   # get logs for last build
-  last_build <- gcr_builds[1,]
+  last_build <- gcr_builds[1, ]
   last_build_logs <- cr_build_logs(log_url = last_build$bucketLogUrl)
 
   cli::cli_process_done()

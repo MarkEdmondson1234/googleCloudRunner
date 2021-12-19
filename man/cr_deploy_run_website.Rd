@@ -53,7 +53,6 @@ This default R code is rendered in the rmd_folder:
       rmarkdown::render, output_format = 'html_document')}
 }
 \examples{
-
 \dontrun{
 cr_project_set("my-project")
 cr_region_set("europe-west1")
@@ -64,10 +63,10 @@ cr_deploy_run_website(your_repo, rmd_folder = "vignettes")
 r <- "devtools::install();pkgdown::build_site()"
 
 cr_deploy_run_website(your_repo,
-                   image = paste0(your_repo, "-pkgdown"),
-                   rmd_folder = ".",
-                   edit_r = r)
-
+  image = paste0(your_repo, "-pkgdown"),
+  rmd_folder = ".",
+  edit_r = r
+)
 }
 }
 \seealso{

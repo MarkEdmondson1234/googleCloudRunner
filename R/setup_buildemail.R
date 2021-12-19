@@ -12,8 +12,7 @@
 cr_setup_service <- function(account_email,
                              roles = cr_setup_role_lookup("local"),
                              json = Sys.getenv("GAR_CLIENT_JSON"),
-                             email = Sys.getenv("GARGLE_EMAIL")
-                             ){
+                             email = Sys.getenv("GARGLE_EMAIL")) {
 
   # to prevent #94
   assert_that(is.string(account_email))
@@ -21,21 +20,23 @@ cr_setup_service <- function(account_email,
   the_roles <- paste(roles, collapse = " ")
   account_email <- trimws(account_email)
   projectId <- gar_set_client(json,
-                  scopes = "https://www.googleapis.com/auth/cloud-platform")
-  if(email == ""){
+    scopes = "https://www.googleapis.com/auth/cloud-platform"
+  )
+  if (email == "") {
     email <- NULL
   }
   cli::cli_alert_info("Adding {account_email} for project {projectId} with roles: {the_roles}")
   gar_auth(email = email)
 
-  if("roles/cloudscheduler.serviceAgent" %in% roles){
+  if ("roles/cloudscheduler.serviceAgent" %in% roles) {
     # needs special project
     projectId <- "gcp-sa-cloudscheduler"
   }
 
   gar_service_grant_roles(account_email,
-                          roles = roles,
-                          projectId = projectId)
+    roles = roles,
+    projectId = projectId
+  )
 
   cli::cli_alert_success("Configured {account_email} with roles: {the_roles}")
   the_roles
@@ -46,42 +47,44 @@ cr_setup_service <- function(account_email,
 #' @export
 #' @rdname cr_setup_service
 cr_setup_role_lookup <- function(type = c(
-  "local",
-  "cloudrun",
-  "bigquery",
-  "secrets",
-  "cloudbuild",
-  "cloudstorage",
-  "schedule_agent",
-  "run_agent",
-  "compute"
-)){
-
+                                   "local",
+                                   "cloudrun",
+                                   "bigquery",
+                                   "secrets",
+                                   "cloudbuild",
+                                   "cloudstorage",
+                                   "schedule_agent",
+                                   "run_agent",
+                                   "compute"
+                                 )) {
   type <- match.arg(type)
 
   switch(type,
-         local = c("roles/cloudbuild.builds.builder",
-                   "roles/secretmanager.secretAccessor",
-                   "roles/cloudscheduler.admin",
-                   "roles/iam.serviceAccountUser",
-                   "roles/run.admin",
-                   "roles/storage.admin",
-                   "roles/serviceusage.serviceUsageConsumer",
-                   "roles/viewer"),
-         cloudrun = c("roles/run.admin",
-                      "roles/iam.serviceAccountUser",
-                      "roles/serverless.serviceAgent"),
-         bigquery = "roles/bigquery.admin",
-         secrets = "roles/secretmanager.secretAccessor",
-         cloudbuild = c("roles/cloudbuild.builds.builder",
-                        "roles/iam.serviceAccountAdmin",
-                        "roles/serviceusage.serviceUsageConsumer"),
-         cloudstorage = c("roles/storage.admin","roles/viewer"),
-         schedule_agent = "roles/cloudscheduler.serviceAgent",
-         run_agent = "roles/serverless.serviceAgent",
-         compute = "roles/compute.admin"
-         )
-
-
-
+    local = c(
+      "roles/cloudbuild.builds.builder",
+      "roles/secretmanager.secretAccessor",
+      "roles/cloudscheduler.admin",
+      "roles/iam.serviceAccountUser",
+      "roles/run.admin",
+      "roles/storage.admin",
+      "roles/serviceusage.serviceUsageConsumer",
+      "roles/viewer"
+    ),
+    cloudrun = c(
+      "roles/run.admin",
+      "roles/iam.serviceAccountUser",
+      "roles/serverless.serviceAgent"
+    ),
+    bigquery = "roles/bigquery.admin",
+    secrets = "roles/secretmanager.secretAccessor",
+    cloudbuild = c(
+      "roles/cloudbuild.builds.builder",
+      "roles/iam.serviceAccountAdmin",
+      "roles/serviceusage.serviceUsageConsumer"
+    ),
+    cloudstorage = c("roles/storage.admin", "roles/viewer"),
+    schedule_agent = "roles/cloudscheduler.serviceAgent",
+    run_agent = "roles/serverless.serviceAgent",
+    compute = "roles/compute.admin"
+  )
 }

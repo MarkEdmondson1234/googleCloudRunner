@@ -64,13 +64,13 @@ Deploys an existing gcr.io image.
 Uses Cloud Build to deploy an image to Cloud Run
 }
 \examples{
-
 \dontrun{
 cr_project_set("my-project")
 cr_region_set("europe-west1")
 cr_run("gcr.io/my-project/my-image")
 cr_run("gcr.io/cloud-tagging-10302018/gtm-cloud-image:stable",
-       env_vars = c("CONTAINER_CONFIG=xxxxxxx"))
+  env_vars = c("CONTAINER_CONFIG=xxxxxxx")
+)
 }
 }
 \seealso{

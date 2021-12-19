@@ -33,8 +33,7 @@ If you need to escape build parameters in bash scripts, you need to escape Cloud
 cr_project_set("my-project")
 bs <- cr_build_yaml(
   steps = cr_buildstep_bash("echo 'Hello'")
- )
-
+)
 \dontrun{
 cr_build(bs)
 }

@@ -19,15 +19,16 @@
 #' @family Cloud Run functions
 #' @seealso \link{cr_build_schedule_http} and \link{cr_run} and \link{cr_deploy_run}
 #' @examples
-#'
 #' \dontrun{
 #' # for unauthenticated apps create a HttpTarget
 #' run_me <- HttpTarget(
 #'   uri = "https://public-ewjogewawq-ew.a.run.app/echo?msg=blah",
 #'   http_method = "GET"
 #' )
-#' cr_schedule("cloud-run-scheduled", schedule = "16 4 * * *",
-#'             httpTarget = run_me)
+#' cr_schedule("cloud-run-scheduled",
+#'   schedule = "16 4 * * *",
+#'   httpTarget = run_me
+#' )
 #'
 #' # for authenticated Cloud Run apps - create with allowUnauthenticated=FALSE
 #' cr_deploy_run("my-app", allowUnauthenticated = TRUE)
@@ -35,7 +36,6 @@
 #'
 #' # deploying via R will help create a service email called my-app-cloudrun-invoker
 #' cr_run_email("my-app")
-#'
 #' \dontrun{
 #' # use that email to schedule the Cloud Run private micro-service
 #'
@@ -46,19 +46,20 @@
 #' endpoint <- paste0(my_app$status$url, "/fetch_stuff")
 #'
 #' app_sched <- cr_run_schedule_http(endpoint,
-#'                                   http_method = "GET",
-#'                                   email = email)
+#'   http_method = "GET",
+#'   email = email
+#' )
 #'
 #' cr_schedule("cloud-run-scheduled-1",
-#'             schedule = "4 16 * * *",
-#'             httpTarget = app_sched)
+#'   schedule = "4 16 * * *",
+#'   httpTarget = app_sched
+#' )
 #' }
 #'
 cr_run_schedule_http <- function(uri,
                                  email,
                                  http_method = "GET",
-                                 body = NULL){
-
+                                 body = NULL) {
   assert_that(
     is.string(uri),
     is.string(http_method),
@@ -86,9 +87,11 @@ cr_run_schedule_http <- function(uri,
 #' @examples
 #'
 #' cr_run_email("my-run-app", "my-project")
-cr_run_email <- function(name, projectId = cr_project_get()){
-  service_name <- substr(paste0(name,"-invoker"),1,30)
-  if(is.null(projectId)) return(service_name)
+cr_run_email <- function(name, projectId = cr_project_get()) {
+  service_name <- substr(paste0(name, "-invoker"), 1, 30)
+  if (is.null(projectId)) {
+    return(service_name)
+  }
 
   sprintf("%s@%s.iam.gserviceaccount.com", service_name, projectId)
 }
