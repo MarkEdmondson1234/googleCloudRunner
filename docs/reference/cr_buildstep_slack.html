@@ -210,7 +210,7 @@
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># send a message to googleAuthRverse Slack</span></span>
 <span class="r-in"><span class="va">webhook</span> <span class="op">&lt;-</span></span>
-<span class="r-in"> <span class="st">"https://hooks.slack.com/services/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"</span></span>
+<span class="r-in">  <span class="st">"https://hooks.slack.com/services/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"</span></span>
 <span class="r-in"><span class="fu">cr_buildstep_slack</span><span class="op">(</span><span class="st">"Hello Slack"</span>, webhook <span class="op">=</span> <span class="va">webhook</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ==cloudRunnerBuildStep==</span>
@@ -222,13 +222,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> - SLACK_COLOR='#efefef'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - SLACK_USERNAME='googleCloudRunnerBot'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="fu">cr_buildstep_slack</span><span class="op">(</span><span class="st">"Hello Slack"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">bs</span>, substitutions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>`_SLACK_WEBHOOK` <span class="op">=</span> <span class="va">webhook</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 </code></pre></div>

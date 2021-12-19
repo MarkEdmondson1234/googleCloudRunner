@@ -200,13 +200,12 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="co">#' r &lt;- "write.csv(mtcars,file = 'artifact.csv')"</span></span>
 <span class="r-in"><span class="va">ba</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span></span>
-<span class="r-in">    steps <span class="op">=</span> <span class="fu"><a href="cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span>,</span>
-<span class="r-in">    artifacts <span class="op">=</span> <span class="fu"><a href="cr_build_yaml_artifact.html">cr_build_yaml_artifact</a></span><span class="op">(</span><span class="st">'artifact.csv'</span>, bucket <span class="op">=</span> <span class="st">"my-bucket"</span><span class="op">)</span></span>
-<span class="r-in">    <span class="op">)</span></span>
+<span class="r-in">  steps <span class="op">=</span> <span class="fu"><a href="cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span>,</span>
+<span class="r-in">  artifacts <span class="op">=</span> <span class="fu"><a href="cr_build_yaml_artifact.html">cr_build_yaml_artifact</a></span><span class="op">(</span><span class="st">"artifact.csv"</span>, bucket <span class="op">=</span> <span class="st">"my-bucket"</span><span class="op">)</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="va">ba</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">build</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">ba</span><span class="op">)</span></span>

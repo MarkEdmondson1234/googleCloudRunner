@@ -216,52 +216,52 @@ cr_build_list_filter outputs valid filters for cr_build_list's filter argument">
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"></span>
-<span class="r-in"> <span class="co"># merge with buildtrigger list</span></span>
-<span class="r-in"> <span class="fu">cr_build_list</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># merge with buildtrigger list</span></span>
+<span class="r-in"><span class="fu">cr_build_list</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"> <span class="co"># output a list of build objects</span></span>
-<span class="r-in"> <span class="fu">cr_build_list</span><span class="op">(</span>data_frame_output<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># output a list of build objects</span></span>
+<span class="r-in"><span class="fu">cr_build_list</span><span class="op">(</span>data_frame_output <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"> <span class="co"># output a list of builds that failed using raw string</span></span>
-<span class="r-in"> <span class="fu">cr_build_list</span><span class="op">(</span><span class="st">'status!="SUCCESS"'</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># output a list of builds that failed using raw string</span></span>
+<span class="r-in"><span class="fu">cr_build_list</span><span class="op">(</span><span class="st">'status!="SUCCESS"'</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"> <span class="co"># output builds for a specific trigger using raw string</span></span>
-<span class="r-in"> <span class="fu">cr_build_list</span><span class="op">(</span><span class="st">'trigger_id="af2c7ddc-e4eb-4170-b938-a4babb53bac6"'</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># output builds for a specific trigger using raw string</span></span>
+<span class="r-in"><span class="fu">cr_build_list</span><span class="op">(</span><span class="st">'trigger_id="af2c7ddc-e4eb-4170-b938-a4babb53bac6"'</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"> <span class="co"># use cr_build_list_filter to help validate filters</span></span>
-<span class="r-in"> <span class="va">failed_builds</span> <span class="op">&lt;-</span> <span class="fu">cr_build_list_filter</span><span class="op">(</span><span class="st">"status"</span>,<span class="st">"!="</span>,<span class="st">"SUCCESS"</span><span class="op">)</span></span>
-<span class="r-in"> <span class="fu">cr_build_list</span><span class="op">(</span><span class="va">failed_builds</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># use cr_build_list_filter to help validate filters</span></span>
+<span class="r-in"><span class="va">failed_builds</span> <span class="op">&lt;-</span> <span class="fu">cr_build_list_filter</span><span class="op">(</span><span class="st">"status"</span>, <span class="st">"!="</span>, <span class="st">"SUCCESS"</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu">cr_build_list</span><span class="op">(</span><span class="va">failed_builds</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"> <span class="va">f1</span> <span class="op">&lt;-</span> <span class="fu">cr_build_list_filter</span><span class="op">(</span></span>
-<span class="r-in">   <span class="st">"trigger_id"</span>,<span class="st">"="</span>,<span class="st">"af2c7ddc-e4eb-4170-b938-a4babb53bac6"</span><span class="op">)</span></span>
-<span class="r-in"> <span class="fu">cr_build_list</span><span class="op">(</span><span class="va">f1</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">f1</span> <span class="op">&lt;-</span> <span class="fu">cr_build_list_filter</span><span class="op">(</span></span>
+<span class="r-in">  <span class="st">"trigger_id"</span>, <span class="st">"="</span>, <span class="st">"af2c7ddc-e4eb-4170-b938-a4babb53bac6"</span></span>
+<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span class="fu">cr_build_list</span><span class="op">(</span><span class="va">f1</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"> <span class="co"># do AND (and other) filters via paste() and cr_build_list_filter()</span></span>
-<span class="r-in"> <span class="fu">cr_build_list</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">f1</span>, <span class="st">"AND"</span>, <span class="va">failed_builds</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># do AND (and other) filters via paste() and cr_build_list_filter()</span></span>
+<span class="r-in"><span class="fu">cr_build_list</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">f1</span>, <span class="st">"AND"</span>, <span class="va">failed_builds</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"> <span class="co"># builds in last 5 days</span></span>
-<span class="r-in"> <span class="va">last_five</span> <span class="op">&lt;-</span> <span class="fu">cr_build_list_filter</span><span class="op">(</span><span class="st">"create_time"</span>, <span class="st">"&gt;"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">5</span><span class="op">)</span></span>
-<span class="r-in"> <span class="fu">cr_build_list</span><span class="op">(</span><span class="va">last_five</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># builds in last 5 days</span></span>
+<span class="r-in"><span class="va">last_five</span> <span class="op">&lt;-</span> <span class="fu">cr_build_list_filter</span><span class="op">(</span><span class="st">"create_time"</span>, <span class="st">"&gt;"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">5</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu">cr_build_list</span><span class="op">(</span><span class="va">last_five</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"> <span class="co"># builds in last 60 mins</span></span>
-<span class="r-in"> <span class="va">last_hour</span> <span class="op">&lt;-</span> <span class="fu">cr_build_list_filter</span><span class="op">(</span><span class="st">"create_time"</span>, <span class="st">"&gt;"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">3600</span><span class="op">)</span></span>
-<span class="r-in"> <span class="fu">cr_build_list</span><span class="op">(</span><span class="va">last_hour</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># builds in last 60 mins</span></span>
+<span class="r-in"><span class="va">last_hour</span> <span class="op">&lt;-</span> <span class="fu">cr_build_list_filter</span><span class="op">(</span><span class="st">"create_time"</span>, <span class="st">"&gt;"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">3600</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu">cr_build_list</span><span class="op">(</span><span class="va">last_hour</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"> <span class="co"># builds for this package's buildtrigger</span></span>
-<span class="r-in"> <span class="va">gcr_trigger_id</span> <span class="op">&lt;-</span> <span class="st">"0a3cade0-425f-4adc-b86b-14cde51af674"</span></span>
-<span class="r-in"> <span class="va">gcr_bt</span> <span class="op">&lt;-</span> <span class="fu">cr_build_list_filter</span><span class="op">(</span></span>
-<span class="r-in">             <span class="st">"trigger_id"</span>,</span>
-<span class="r-in">             value <span class="op">=</span> <span class="va">gcr_trigger_id</span><span class="op">)</span></span>
-<span class="r-in"> <span class="va">gcr_builds</span> <span class="op">&lt;-</span> <span class="fu">cr_build_list</span><span class="op">(</span><span class="va">gcr_bt</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># builds for this package's buildtrigger</span></span>
+<span class="r-in"><span class="va">gcr_trigger_id</span> <span class="op">&lt;-</span> <span class="st">"0a3cade0-425f-4adc-b86b-14cde51af674"</span></span>
+<span class="r-in"><span class="va">gcr_bt</span> <span class="op">&lt;-</span> <span class="fu">cr_build_list_filter</span><span class="op">(</span></span>
+<span class="r-in">  <span class="st">"trigger_id"</span>,</span>
+<span class="r-in">  value <span class="op">=</span> <span class="va">gcr_trigger_id</span></span>
+<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span class="va">gcr_builds</span> <span class="op">&lt;-</span> <span class="fu">cr_build_list</span><span class="op">(</span><span class="va">gcr_bt</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"> <span class="co"># get logs for last build</span></span>
-<span class="r-in"> <span class="va">last_build</span> <span class="op">&lt;-</span> <span class="va">gcr_builds</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span></span>
-<span class="r-in"> <span class="va">last_build_logs</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_build_logs.html">cr_build_logs</a></span><span class="op">(</span>log_url <span class="op">=</span> <span class="va">last_build</span><span class="op">$</span><span class="va">bucketLogUrl</span><span class="op">)</span></span>
-<span class="r-in"> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">last_build_logs</span>, <span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span class="co"># get logs for last build</span></span>
+<span class="r-in"><span class="va">last_build</span> <span class="op">&lt;-</span> <span class="va">gcr_builds</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span>
+<span class="r-in"><span class="va">last_build_logs</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_build_logs.html">cr_build_logs</a></span><span class="op">(</span>log_url <span class="op">=</span> <span class="va">last_build</span><span class="op">$</span><span class="va">bucketLogUrl</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">last_build_logs</span>, <span class="fl">10</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 </code></pre></div>
     </div>
