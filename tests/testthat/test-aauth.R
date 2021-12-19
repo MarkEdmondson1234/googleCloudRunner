@@ -11,5 +11,4 @@ test_that("Authentication and setup", {
   expect_true(
     inherits(googleAuthR::gar_token()$auth_token, "TokenServiceAccount")
   )
-
 })

@@ -1,27 +1,30 @@
 test_that("Render BuildStep objects", {
-
-  bs1 <- cr_buildstep("alpine", c("-c","ls -la"), entrypoint = "bash", prefix="")
+  bs1 <- cr_buildstep("alpine", c("-c", "ls -la"), entrypoint = "bash", prefix = "")
   expect_snapshot_output(bs1)
 
   cloudbuild_dc <- cr_buildstep_decrypt("secret.json.enc",
-                                        plain = "secret.json",
-                                        keyring = "my_keyring",
-                                        key = "my_key")
+    plain = "secret.json",
+    keyring = "my_keyring",
+    key = "my_key"
+  )
   expect_snapshot_output(cloudbuild_dc)
 
   bsd <- cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")
   expect_snapshot_output(bsd)
 
-  y <- data.frame(name = c("docker", "alpine"),
-                  args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
-                  id = c("Docker Version", "Hello Cloud Build"),
-                  prefix = c(NA, ""),
-                  stringsAsFactors = FALSE)
+  y <- data.frame(
+    name = c("docker", "alpine"),
+    args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
+    id = c("Docker Version", "Hello Cloud Build"),
+    prefix = c(NA, ""),
+    stringsAsFactors = FALSE
+  )
   bsy <- cr_buildstep_df(y)
   expect_snapshot_output(bsy)
 
   package_build <- system.file("cloudbuild/cloudbuild_packages.yml",
-                               package = "googleCloudRunner")
+    package = "googleCloudRunner"
+  )
   bp <- cr_build_make(package_build)
   bp1 <- cr_buildstep_extract(bp, step = 2)
   bp2 <- cr_buildstep_extract(bp, step = 3)
@@ -47,9 +50,11 @@ test_that("Render BuildStep objects", {
 
   expect_snapshot_output(git_yaml)
 
-  pkgdown_steps <- cr_buildstep_pkgdown("$_GITHUB_REPO",
-                                        "cloudbuild@google.com",
-                                        "my_secret")
+  pkgdown_steps <- cr_buildstep_pkgdown(
+    "$_GITHUB_REPO",
+    "cloudbuild@google.com",
+    "my_secret"
+  )
 
   expect_snapshot_output(pkgdown_steps)
 
@@ -58,28 +63,34 @@ test_that("Render BuildStep objects", {
 
   # use your own R image with custom R
   my_r <- c("devtools::install()", "pkgdown::build_site()")
-  br <-  cr_buildstep_r(my_r, name = "gcr.io/gcer-public/packagetools:latest")
+  br <- cr_buildstep_r(my_r, name = "gcr.io/gcer-public/packagetools:latest")
   expect_snapshot_output(br)
 
   bs <- cr_build_yaml(steps = cr_buildstep_bash("echo Hello"))
   expect_equal(bs$steps[[1]]$args[[3]], "echo Hello")
 
-  mg <- cr_build_yaml(steps =
-                        cr_buildstep_mailgun("Hello from Cloud Build",
-                                             "x@x.me",
-                                             "Hello",
-                                             "googleCloudRunner@example.com"),
-                      substitutions = list(
-                        `_MAILGUN_URL` = "blah",
-                        `_MAILGUN_KEY` = "poo"))
+  mg <- cr_build_yaml(
+    steps =
+      cr_buildstep_mailgun(
+        "Hello from Cloud Build",
+        "x@x.me",
+        "Hello",
+        "googleCloudRunner@example.com"
+      ),
+    substitutions = list(
+      `_MAILGUN_URL` = "blah",
+      `_MAILGUN_KEY` = "poo"
+    )
+  )
 
   expect_snapshot_output(mg)
 
 
   # pkgdown builds
   pd <- cr_deploy_pkgdown("MarkEdmondson1234/googleCloudRunner",
-                          secret = "my_github",
-                          create_trigger = "no")
+    secret = "my_github",
+    create_trigger = "no"
+  )
   expect_true(file.exists("cloudbuild-pkgdown.yml"))
   expect_snapshot_output(pd)
   unlink("cloudbuild-pkgdown.yml")
@@ -96,36 +107,40 @@ test_that("Render BuildStep objects", {
   expect_snapshot_output(bs)
 
   # secrets
-  ss <- cr_buildstep_secret("my_secret","secret.json")
+  ss <- cr_buildstep_secret("my_secret", "secret.json")
   expect_snapshot_output(ss)
 
   # kaniko
-  kaniko <- cr_buildstep_docker("my-image", kaniko_cache = TRUE,
-                                projectId = "test-project")
+  kaniko <- cr_buildstep_docker("my-image",
+    kaniko_cache = TRUE,
+    projectId = "test-project"
+  )
   expect_snapshot_output(kaniko)
 
   # build triggers
   gh_trigger <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner",
-                                     type = "github")
+    type = "github"
+  )
   expect_s3_class(gh_trigger, "cr_buildtrigger_repo")
   expect_snapshot_output(gh_trigger)
 
   cs_trigger <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
-                                     type = "cloud_source")
+    type = "cloud_source"
+  )
 
   expect_s3_class(cs_trigger, "cr_buildtrigger_repo")
   expect_snapshot_output(cs_trigger)
 
-  #gcloud
-  gc <- cr_buildstep_gcloud("gcloud","ls")
+  # gcloud
+  gc <- cr_buildstep_gcloud("gcloud", "ls")
   expect_s3_class(gc[[1]], "cr_buildstep")
   expect_snapshot_output(gc)
 
-  bq <- cr_buildstep_gcloud("bq","ls")
+  bq <- cr_buildstep_gcloud("bq", "ls")
   expect_s3_class(bq[[1]], "cr_buildstep")
   expect_snapshot_output(bq)
 
-  kk <- cr_buildstep_gcloud("kubectl","ls")
+  kk <- cr_buildstep_gcloud("kubectl", "ls")
   expect_s3_class(kk[[1]], "cr_buildstep")
   expect_snapshot_output(kk)
 
@@ -149,7 +164,4 @@ test_that("Render BuildStep objects", {
   # pubsub config for buildtriggers
   top2 <- cr_buildtrigger_pubsub("test-topic")
   expect_snapshot_output(top2)
-
 })
-
-

@@ -18,31 +18,34 @@
 #'
 #' # assumes you have previously saved git ssh key called "github-ssh"
 #' cr_build_yaml(
-#'      steps = c(
-#'           cr_buildstep_gitsetup("github-ssh"),
-#'           cr_buildstep_git(c("clone",
-#'                              "git@github.com:github_name/repo_name"))
-#'      )
-#'  )
-#'
+#'   steps = c(
+#'     cr_buildstep_gitsetup("github-ssh"),
+#'     cr_buildstep_git(c(
+#'       "clone",
+#'       "git@github.com:github_name/repo_name"
+#'     ))
+#'   )
+#' )
 cr_buildstep_gitsetup <- function(secret,
-                                  post_setup = NULL){
-
-
+                                  post_setup = NULL) {
   github_setup <- system.file("ssh",
-                              "github_setup.sh",
-                              package = "googleCloudRunner")
+    "github_setup.sh",
+    package = "googleCloudRunner"
+  )
   c(
-    cr_buildstep_secret(secret = secret,
-                        decrypted = "/root/.ssh/id_rsa",
-                        volumes = git_volume(),
-                        binary_mode = TRUE,
-                        id = "git secret"),
+    cr_buildstep_secret(
+      secret = secret,
+      decrypted = "/root/.ssh/id_rsa",
+      volumes = git_volume(),
+      binary_mode = TRUE,
+      id = "git secret"
+    ),
     cr_buildstep_bash(github_setup,
-                      name = "gcr.io/cloud-builders/git",
-                      entrypoint = "bash",
-                      volumes = git_volume(),
-                      id = "git setup script"),
+      name = "gcr.io/cloud-builders/git",
+      entrypoint = "bash",
+      volumes = git_volume(),
+      id = "git setup script"
+    ),
     post_setup
   )
 }
@@ -60,11 +63,12 @@ cr_buildstep_gitsetup <- function(secret,
 #' @family Cloud Buildsteps
 #' @export
 #' @import assertthat
-cr_buildstep_git <- function(
-  git_args = c("clone",
-               "git@github.com:[GIT-USERNAME]/[REPOSITORY]",
-               "."),
-  ...){
+cr_buildstep_git <- function(git_args = c(
+                               "clone",
+                               "git@github.com:[GIT-USERNAME]/[REPOSITORY]",
+                               "."
+                             ),
+                             ...) {
   # don't allow dot names that would break things
   dots <- list(...)
   assert_that(
@@ -89,9 +93,9 @@ cr_buildstep_git <- function(
 #' Use \code{git_volume} to add the git credentials folder to other buildsteps
 #'
 #' @examples
-#'
-#'
-git_volume <- function(){
-  list(list(name = "ssh",
-            path = "/root/.ssh"))
+git_volume <- function() {
+  list(list(
+    name = "ssh",
+    path = "/root/.ssh"
+  ))
 }

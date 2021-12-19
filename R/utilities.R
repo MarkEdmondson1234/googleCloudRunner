@@ -1,23 +1,23 @@
 # unique per invocation, not per session like tempdir()
-tempdir_unique <- function(){
+tempdir_unique <- function() {
   dd <- tempfile()
   dir.create(dd)
   dd
 }
 
 
-string_to_list <- function(x){
-  if(assertthat::is.string(x)){
+string_to_list <- function(x) {
+  if (assertthat::is.string(x)) {
     return(list(x))
   }
   x
 }
 
-extract_repo <- function(x){
-  if(is.gar_RepoSource(x)){
+extract_repo <- function(x) {
+  if (is.gar_RepoSource(x)) {
     return(x$repoName)
-  } else if(is.gar_GitHubEventsConfig(x)){
-    return(paste0(x$owner,"/",x$name))
+  } else if (is.gar_GitHubEventsConfig(x)) {
+    return(paste0(x$owner, "/", x$name))
   } else {
     stop("Could not find repo from object of class ", class(x), call. = FALSE)
   }
@@ -28,9 +28,9 @@ has_registry_prefix <- function(name) {
     grepl("^.*-docker.pkg.dev", name)
 }
 
-make_image_name <- function(name, projectId){
+make_image_name <- function(name, projectId) {
   prefix <- has_registry_prefix(name)
-  if(prefix){
+  if (prefix) {
     the_image <- name
   } else {
     the_image <- sprintf("gcr.io/%s/%s", projectId, name)
@@ -38,23 +38,25 @@ make_image_name <- function(name, projectId){
   tolower(the_image)
 }
 
-lower_alpha_dash <- function(x){
-  gsub("[^-a-zA-Z0-9]","-", x)
+lower_alpha_dash <- function(x) {
+  gsub("[^-a-zA-Z0-9]", "-", x)
 }
 
 
-safe_set <- function(x, set, to){
-  if(!is.null(x[[set]]) && x[[set]] != to) x[[set]] <- to
+safe_set <- function(x, set, to) {
+  if (!is.null(x[[set]]) && x[[set]] != to) x[[set]] <- to
   x
 }
 
 #' check package installed
 #' @noRd
-check_package_installed <- function(y){
-  if (!requireNamespace(y, quietly = TRUE)){
-      nope <- sprintf("%s needed for this function to work. Please install it and try this function again.",
-                      y,y)
-      stop(nope, call. = FALSE)
+check_package_installed <- function(y) {
+  if (!requireNamespace(y, quietly = TRUE)) {
+    nope <- sprintf(
+      "%s needed for this function to work. Please install it and try this function again.",
+      y, y
+    )
+    stop(nope, call. = FALSE)
   }
   TRUE
 }
@@ -69,23 +71,20 @@ check_package_installed <- function(y){
 #' @keywords internal
 #' @noRd
 #' @import cli
-myMessage <- function(..., level = 2){
-
+myMessage <- function(..., level = 2) {
   compare_level <- getOption("googleAuthR.verbose")
 
-  if(level >= compare_level){
-    time <- paste(Sys.time(),">")
+  if (level >= compare_level) {
+    time <- paste(Sys.time(), ">")
     mm <- paste(...)
-    if(grepl("^#", mm[[1]])){
+    if (grepl("^#", mm[[1]])) {
       cli_h1(mm)
     } else {
       cli_div(theme = list(span.time = list(color = "grey")))
       cli_alert_info("{.time {time}} {mm}")
       cli_end()
     }
-
   }
-
 }
 
 #' A helper function that tests whether an object is either NULL _or_
@@ -106,8 +105,8 @@ rmNullObs <- function(x) {
 
 #' if argument is NULL, no line output
 #' @noRd
-cat0 <- function(prefix = "", x){
-  if(!is.null(x)){
+cat0 <- function(prefix = "", x) {
+  if (!is.null(x)) {
     cat(prefix, x, "\n")
   }
 }
@@ -115,12 +114,15 @@ cat0 <- function(prefix = "", x){
 #' Timestamp to R date
 #' @keywords internal
 #' @noRd
-timestamp_to_r <- function(t){
-  if(is.null(t)) return(t)
+timestamp_to_r <- function(t) {
+  if (is.null(t)) {
+    return(t)
+  }
   tryCatch(
-    as.POSIXct(t, format = "%Y-%m-%dT%H:%M:%S", tz="UTC"),
-    error = function(err){
+    as.POSIXct(t, format = "%Y-%m-%dT%H:%M:%S", tz = "UTC"),
+    error = function(err) {
       warning(err$message, " t=", t)
       return(t)
-    })
+    }
+  )
 }

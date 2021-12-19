@@ -32,18 +32,16 @@
 #' @examples
 #'
 #' cr_buildstep_packagetests()
-#'
-cr_buildstep_packagetests <- function(
-  test_script = NULL,
-  codecov_script = NULL,
-  codecov_token = "$_CODECOV_TOKEN",
-  build_image = "gcr.io/gcer-public/packagetools:latest",
-  env = c("NOT_CRAN=true")){
-
-  if(is.null(test_script)){
+cr_buildstep_packagetests <- function(test_script = NULL,
+                                      codecov_script = NULL,
+                                      codecov_token = "$_CODECOV_TOKEN",
+                                      build_image = "gcr.io/gcer-public/packagetools:latest",
+                                      env = c("NOT_CRAN=true")) {
+  if (is.null(test_script)) {
     test_script <- system.file("r_buildsteps", "devtools_tests.R",
-                               package = "googleCloudRunner",
-                               mustWork = TRUE)
+      package = "googleCloudRunner",
+      mustWork = TRUE
+    )
   }
 
 
@@ -54,31 +52,32 @@ cr_buildstep_packagetests <- function(
   )
 
   codecov_bs <- NULL
-  if(!is.null(codecov_token)){
+  if (!is.null(codecov_token)) {
     codecov_bs <- cr_buildstep_r(
       system.file("r_buildsteps", "codecov_tests.R",
-                  package = "googleCloudRunner", mustWork = TRUE),
+        package = "googleCloudRunner", mustWork = TRUE
+      ),
       name = build_image,
-      env = c(env,
-              paste0("CODECOV_TOKEN=", codecov_token),
-              paste0("CI=true"),
-              paste0("GCB_PROJECT_ID=$PROJECT_ID"),
-              paste0("GCB_BUILD_ID=$BUILD_ID"),
-              paste0("GCB_COMMIT_SHA=$COMMIT_SHA"),
-              paste0("GCB_REPO_NAME=$REPO_NAME"),
-              paste0("GCB_BRANCH_NAME=$BRANCH_NAME"),
-              paste0("GCB_TAG_NAME=$TAG_NAME"),
-              paste0("GCB_HEAD_BRANCH=$_HEAD_BRANCH"),
-              paste0("GCB_BASE_BRANCH=$_BASE_BRANCH"),
-              paste0("GCB_HEAD_REPO_URL=$_HEAD_REPO_URL"),
-              paste0("GCB_PR_NUMBER=$_PR_NUMBER")
-              ),
+      env = c(
+        env,
+        paste0("CODECOV_TOKEN=", codecov_token),
+        paste0("CI=true"),
+        paste0("GCB_PROJECT_ID=$PROJECT_ID"),
+        paste0("GCB_BUILD_ID=$BUILD_ID"),
+        paste0("GCB_COMMIT_SHA=$COMMIT_SHA"),
+        paste0("GCB_REPO_NAME=$REPO_NAME"),
+        paste0("GCB_BRANCH_NAME=$BRANCH_NAME"),
+        paste0("GCB_TAG_NAME=$TAG_NAME"),
+        paste0("GCB_HEAD_BRANCH=$_HEAD_BRANCH"),
+        paste0("GCB_BASE_BRANCH=$_BASE_BRANCH"),
+        paste0("GCB_HEAD_REPO_URL=$_HEAD_REPO_URL"),
+        paste0("GCB_PR_NUMBER=$_PR_NUMBER")
+      ),
       escape_dollar = FALSE
     )
   }
 
   c(test_bs, codecov_bs)
-
 }
 
 
@@ -103,15 +102,13 @@ cr_buildstep_packagetests <- function(
 #' @examples
 #' # send a message to googleAuthRverse Slack
 #' webhook <-
-#'  "https://hooks.slack.com/services/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"
+#'   "https://hooks.slack.com/services/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"
 #' cr_buildstep_slack("Hello Slack", webhook = webhook)
-#'
 #' \dontrun{
 #'
 #' bs <- cr_build_yaml(steps = cr_buildstep_slack("Hello Slack"))
 #'
 #' cr_build(bs, substitutions = list(`_SLACK_WEBHOOK` = webhook))
-#'
 #' }
 #'
 #' @family Cloud Buildsteps
@@ -122,19 +119,20 @@ cr_buildstep_slack <- function(message,
                                username = "googleCloudRunnerBot",
                                webhook = "$_SLACK_WEBHOOK",
                                icon = NULL,
-                               colour = "#efefef"){
+                               colour = "#efefef") {
+  envs <- c(
+    sprintf("SLACK_WEBHOOK=%s", webhook),
+    sprintf("SLACK_MESSAGE='%s'", message),
+    sprintf("SLACK_TITLE='%s'", title),
+    sprintf("SLACK_COLOR='%s'", colour),
+    sprintf("SLACK_USERNAME='%s'", username)
+  )
 
-  envs <- c(sprintf("SLACK_WEBHOOK=%s", webhook),
-            sprintf("SLACK_MESSAGE='%s'", message),
-            sprintf("SLACK_TITLE='%s'", title),
-            sprintf("SLACK_COLOR='%s'", colour),
-            sprintf("SLACK_USERNAME='%s'", username))
-
-  if(!is.null(channel)){
+  if (!is.null(channel)) {
     envs <- c(envs, sprintf("SLACK_CHANNEL=%s", channel))
   }
 
-  if(!is.null(icon)){
+  if (!is.null(icon)) {
     envs <- c(envs, sprintf("SLACK_ICON=%s", icon))
   }
 
@@ -143,7 +141,6 @@ cr_buildstep_slack <- function(message,
     prefix = "",
     env = envs
   )
-
 }
 
 
@@ -164,15 +161,17 @@ cr_buildstep_slack <- function(message,
 #' html_folder <- "my_html"
 #' run_image <- "gcr.io/my-project/my-image-for-cloudrun"
 #' cr_build_yaml(
-#'  steps = c(
-#'   cr_buildstep_nginx_setup(html_folder),
-#'   cr_buildstep_docker(run_image, dir = html_folder),
-#'   cr_buildstep_run(name = "running-nginx",
-#'                    image = run_image,
-#'                    concurrency = 80)
-#'                    )
-#'            )
-cr_buildstep_nginx_setup <- function(html_folder, ...){
+#'   steps = c(
+#'     cr_buildstep_nginx_setup(html_folder),
+#'     cr_buildstep_docker(run_image, dir = html_folder),
+#'     cr_buildstep_run(
+#'       name = "running-nginx",
+#'       image = run_image,
+#'       concurrency = 80
+#'     )
+#'   )
+#' )
+cr_buildstep_nginx_setup <- function(html_folder, ...) {
 
   # don't allow dot names that would break things
   dots <- list(...)
@@ -184,9 +183,9 @@ cr_buildstep_nginx_setup <- function(html_folder, ...){
   )
 
   bash_script <- system.file("docker", "nginx", "setup.bash",
-                             package = "googleCloudRunner")
+    package = "googleCloudRunner"
+  )
   cr_buildstep_bash(bash_script, dir = html_folder, id = "setup nginx", ...)
-
 }
 
 
@@ -215,27 +214,30 @@ cr_buildstep_nginx_setup <- function(html_folder, ...){
 #' cr_bucket_set("my-bucket")
 #' mailgun_url <- "https://api.mailgun.net/v3/sandboxXXX.mailgun.org"
 #' mailgun_key <- "key-XXXX"
-#'
 #' \dontrun{
 #' # assumes you have verified the email
 #' cr_build(
-#'   cr_build_yaml(steps = cr_buildstep_mailgun(
-#'                            "Hello from Cloud Build",
-#'                            to = "me@verfied_email.com",
-#'                            subject = "Hello",
-#'                            from = "googleCloudRunner@example.com"),
-#'                 substitutions = list(
-#'                   `_MAILGUN_URL` = mailgun_url,
-#'                   `_MAILGUN_KEY` = mailgun_key)
-#'           ))
+#'   cr_build_yaml(
+#'     steps = cr_buildstep_mailgun(
+#'       "Hello from Cloud Build",
+#'       to = "me@verfied_email.com",
+#'       subject = "Hello",
+#'       from = "googleCloudRunner@example.com"
+#'     ),
+#'     substitutions = list(
+#'       `_MAILGUN_URL` = mailgun_url,
+#'       `_MAILGUN_KEY` = mailgun_key
+#'     )
+#'   )
+#' )
 #' }
 cr_buildstep_mailgun <- function(message,
-                               to,
-                               subject,
-                               from,
-                               mailgun_url = "$_MAILGUN_URL",
-                               mailgun_key = "$_MAILGUN_KEY",
-                               ...){
+                                 to,
+                                 subject,
+                                 from,
+                                 mailgun_url = "$_MAILGUN_URL",
+                                 mailgun_key = "$_MAILGUN_KEY",
+                                 ...) {
 
   # don't allow dot names that would break things
   dots <- list(...)
@@ -260,11 +262,10 @@ cr_buildstep_mailgun <- function(message,
   )
 
   cr_buildstep_r(r,
-                 id = "send mailgun",
-                 name= "gcr.io/gcer-public/packagetools:master",
-                 ...
-                 )
-
+    id = "send mailgun",
+    name = "gcr.io/gcer-public/packagetools:master",
+    ...
+  )
 }
 
 #' Create buildsteps to deploy to Cloud Run
@@ -284,7 +285,7 @@ cr_buildstep_run <- function(name,
                              cpu = 1,
                              env_vars = NULL,
                              gcloud_args = NULL,
-                             ...){
+                             ...) {
 
   # don't allow dot names that would break things
   dots <- list(...)
@@ -297,8 +298,8 @@ cr_buildstep_run <- function(name,
 
   create_service <- NULL
 
-  if(allowUnauthenticated){
-    #sometimes unauth fails, so attempt to fix as per warning suggestion
+  if (allowUnauthenticated) {
+    # sometimes unauth fails, so attempt to fix as per warning suggestion
     auth_calls <- "--allow-unauthenticated"
     member <- "allUsers"
   } else {
@@ -307,10 +308,14 @@ cr_buildstep_run <- function(name,
     desc <- paste("Cloud Run Invoker for", name)
     script <-
       paste(
-        sprintf("gcloud iam service-accounts describe %s || ",
-                cr_run_email(name)),
-        sprintf("gcloud iam service-accounts create %s --display-name='%s'",
-                cr_run_email(name, NULL), desc)
+        sprintf(
+          "gcloud iam service-accounts describe %s || ",
+          cr_run_email(name)
+        ),
+        sprintf(
+          "gcloud iam service-accounts create %s --display-name='%s'",
+          cr_run_email(name, NULL), desc
+        )
       )
     create_service <- cr_buildstep_bash(
       name = "gcr.io/google.com/cloudsdktool/cloud-sdk:alpine",
@@ -323,49 +328,54 @@ cr_buildstep_run <- function(name,
   }
 
   auth_step <- cr_buildstep_gcloud(
-    args = c("gcloud",
-             "run", "services", "add-iam-policy-binding",
-             paste0("--region=", region),
-             paste0("--member=", member),
-             "--role=roles/run.invoker",
-             "--platform=managed",
-             name),
+    args = c(
+      "gcloud",
+      "run", "services", "add-iam-policy-binding",
+      paste0("--region=", region),
+      paste0("--member=", member),
+      "--role=roles/run.invoker",
+      "--platform=managed",
+      name
+    ),
     id = "auth cloudrun",
-    ...)
+    ...
+  )
 
-  if(is.null(port)){
+  if (is.null(port)) {
     port <- "default"
   }
 
 
-  if(!is.null(env_vars)){
+  if (!is.null(env_vars)) {
     env_vars <- paste0("--set-env-vars=", paste(env_vars, collapse = ","))
   } else {
     env_vars <- "--clear-env-vars"
   }
 
-  if(!is.null(gcloud_args)){
+  if (!is.null(gcloud_args)) {
     assert_that(is.character(gcloud_args))
   }
 
   deploy_step <- cr_buildstep_gcloud(
-    args = c("gcloud",
-             "run","deploy", name,
-             "--image", image,
-             "--region", region,
-             "--platform", "managed",
-             "--concurrency", concurrency,
-             "--port", port,
-             "--max-instances", max_instances,
-             "--memory", memory,
-             "--cpu", cpu,
-             env_vars,
-             auth_calls,
-             gcloud_args),
-    id = "deploy cloudrun",...)
+    args = c(
+      "gcloud",
+      "run", "deploy", name,
+      "--image", image,
+      "--region", region,
+      "--platform", "managed",
+      "--concurrency", concurrency,
+      "--port", port,
+      "--max-instances", max_instances,
+      "--memory", memory,
+      "--cpu", cpu,
+      env_vars,
+      auth_calls,
+      gcloud_args
+    ),
+    id = "deploy cloudrun", ...
+  )
 
   c(create_service, deploy_step, auth_step)
-
 }
 
 #' Run a bash script in a Cloud Build step
@@ -388,8 +398,7 @@ cr_buildstep_run <- function(name,
 #' cr_project_set("my-project")
 #' bs <- cr_build_yaml(
 #'   steps = cr_buildstep_bash("echo 'Hello'")
-#'  )
-#'
+#' )
 #' \dontrun{
 #' cr_build(bs)
 #' }
@@ -397,8 +406,7 @@ cr_buildstep_bash <- function(bash_script,
                               name = "ubuntu",
                               bash_source = c("local", "runtime"),
                               escape_dollar = TRUE,
-                              ...){
-
+                              ...) {
   bash_source <- match.arg(bash_source)
 
   # don't allow dot names that would break things
@@ -410,20 +418,23 @@ cr_buildstep_bash <- function(bash_script,
   )
 
   bchars <- read_buildstep_file(bash_script,
-                                code_source = bash_source,
-                                file_grep = "\\.(bash|sh)$",
-                                escape_dollar = escape_dollar)
+    code_source = bash_source,
+    file_grep = "\\.(bash|sh)$",
+    escape_dollar = escape_dollar
+  )
 
   # avoid having two bashes
-  arg <- c("bash","-c", bchars)
-  if(!is.null(dots$entrypoint) && dots$entrypoint == "bash"){
+  arg <- c("bash", "-c", bchars)
+  if (!is.null(dots$entrypoint) && dots$entrypoint == "bash") {
     arg <- c("-c", bchars)
   }
 
-  cr_buildstep(name = name,
-               prefix = "",
-               args = arg,
-               ...)
+  cr_buildstep(
+    name = name,
+    prefix = "",
+    args = arg,
+    ...
+  )
 }
 
 #' Run an R script in a Cloud Build R step
@@ -454,7 +465,6 @@ cr_buildstep_bash <- function(bash_script,
 #'
 #' # create an R buildstep inline
 #' cr_buildstep_r(c("paste('1+1=', 1+1)", "sessionInfo()"))
-#'
 #' \dontrun{
 #'
 #' # create an R buildstep from a local file
@@ -468,33 +478,35 @@ cr_buildstep_bash <- function(bash_script,
 #'
 #' ## create storage source
 #' storage_source <- cr_build_upload_gcs(
-#'  "my-r-script.R"
+#'   "my-r-script.R"
 #' )
 #' ## create the buildstep with the R script
-#' step1 <- cr_buildstep_r("deploy/my-r-script.R", r_source="runtime",
-#'                rscript_args=c("args_1=<args1>", "args_2=<args_2>"))
+#' step1 <- cr_buildstep_r("deploy/my-r-script.R",
+#'   r_source = "runtime",
+#'   rscript_args = c("args_1=<args1>", "args_2=<args_2>")
+#' )
 #'
 #' ## run the script on Cloud Build
 #' cr_build(
 #'   cr_build_yaml(
-#'     steps=step1
+#'     steps = step1
 #'   ),
 #'   source = storage_source,
 #'   options = list(machineType = "E2_HIGHCPU_32")
 #' )
 #' }
 #' # use a different Rocker image e.g. rocker/verse
-#' cr_buildstep_r(c("library(dplyr)",
-#'                  "mtcars %>% select(mpg)",
-#'                  "sessionInfo()"),
-#'                name = "verse")
+#' cr_buildstep_r(c(
+#'   "library(dplyr)",
+#'   "mtcars %>% select(mpg)",
+#'   "sessionInfo()"
+#' ),
+#' name = "verse"
+#' )
 #'
 #' # use your own R image with custom R
 #' my_r <- c("devtools::install()", "pkgdown::build_site()")
-#' br <-  cr_buildstep_r(my_r, name= "gcr.io/gcer-public/packagetools:latest")
-#'
-#'
-#'
+#' br <- cr_buildstep_r(my_r, name = "gcr.io/gcer-public/packagetools:latest")
 #' @export
 cr_buildstep_r <- function(r,
                            name = "r-base",
@@ -503,13 +515,12 @@ cr_buildstep_r <- function(r,
                            escape_dollar = TRUE,
                            rscript_args = NULL,
                            r_cmd = c("Rscript", "R"),
-                           ...){
-
+                           ...) {
   r_source <- match.arg(r_source)
 
   # catches name=rocker/verse etc.
-  if(dirname(name) == "rocker"){
-     name <- basename(name)
+  if (dirname(name) == "rocker") {
+    name <- basename(name)
   }
 
   r_cmd <- match.arg(r_cmd)
@@ -523,10 +534,11 @@ cr_buildstep_r <- function(r,
   )
 
   # ability to call R scripts from Cloud Storage
-  if(grepl("^gs://", r[[1]])){
+  if (grepl("^gs://", r[[1]])) {
     r_here <- paste0("/workspace/", basename(r))
     myMessage(paste0("Buildstep will download R script from ", r),
-              level = 3)
+      level = 3
+    )
     gs <- c(
       cr_buildstep_gcloud(
         "gsutil",
@@ -544,17 +556,17 @@ cr_buildstep_r <- function(r,
     )
 
     return(gs)
-
   }
 
   rchars <- read_buildstep_file(r,
-                                code_source = r_source,
-                                file_grep = "\\.R$",
-                                escape_dollar = escape_dollar)
+    code_source = r_source,
+    file_grep = "\\.R$",
+    escape_dollar = escape_dollar
+  )
 
-  if(r_source == "local"){
+  if (r_source == "local") {
     r_args <- c(r_cmd, "-e", rchars)
-  } else if(r_source == "runtime"){
+  } else if (r_source == "runtime") {
     if (!is.null(rscript_args)) {
       r_args <- c(r_cmd, rchars, paste0("--", rscript_args))
     } else {
@@ -562,26 +574,26 @@ cr_buildstep_r <- function(r,
     }
   }
 
-  cr_buildstep(name = name,
-               args = r_args,
-               prefix = prefix,
-               ...)
-
+  cr_buildstep(
+    name = name,
+    args = r_args,
+    prefix = prefix,
+    ...
+  )
 }
 
 # use escape_dollar=FALSE to keep dollars in the script
 read_buildstep_file <- function(x,
-                                code_source = c("local","runtime"),
+                                code_source = c("local", "runtime"),
                                 file_grep = ".*",
                                 escape_dollar = TRUE) {
-
   code_source <- match.arg(code_source)
   rchars <- x
-  if(code_source == "local"){
+  if (code_source == "local") {
     assert_that(is.character(x))
 
     rchars <- x
-    if(grepl(file_grep, x[[1]], ignore.case = TRUE)){
+    if (grepl(file_grep, x[[1]], ignore.case = TRUE)) {
       # filepath
       assert_that(assertthat::is.readable(x), is.string(x))
       rchars <- readLines(x)
@@ -590,17 +602,16 @@ read_buildstep_file <- function(x,
 
     rchars <- paste(rchars, collapse = "\n")
 
-    if(escape_dollar){
+    if (escape_dollar) {
       # issue 103 - replace $ with $$ to avoid running as substitution vars
-      rchars <- gsub("\\$","$$", rchars)
+      rchars <- gsub("\\$", "$$", rchars)
     }
-
-  } else if(code_source == "runtime"){
-    #filepath in source, not much we can do to check it
+  } else if (code_source == "runtime") {
+    # filepath in source, not much we can do to check it
     myMessage("Will read code in source from filepath ", rchars, level = 3)
   }
 
-  if(nchar(rchars) == 0){
+  if (nchar(rchars) == 0) {
     stop("No code found to input into buildstep", call. = FALSE)
   }
 
@@ -634,15 +645,16 @@ read_buildstep_file <- function(x,
 #' cr_project_set("my-project")
 #' cr_bucket_set("my-bucket")
 #' cr_buildstep_decrypt("secret.json.enc",
-#'                      plain = "secret.json",
-#'                      keyring = "my_keyring",
-#'                      key = "my_key")
+#'   plain = "secret.json",
+#'   keyring = "my_keyring",
+#'   key = "my_key"
+#' )
 cr_buildstep_decrypt <- function(cipher,
                                  plain,
                                  keyring,
                                  key,
-                                 location="global",
-                                 ...){
+                                 location = "global",
+                                 ...) {
   # don't allow dot names that would break things
   dots <- list(...)
   assert_that(
@@ -652,14 +664,17 @@ cr_buildstep_decrypt <- function(cipher,
     is.null(dots$entrypoint)
   )
   cr_buildstep_gcloud(
-    args = c("gcloud",
-             "kms", "decrypt",
-             "--ciphertext-file", cipher,
-             "--plaintext-file", plain,
-             "--location", location,
-             "--keyring", keyring,
-             "--key", key),
-    ...)
+    args = c(
+      "gcloud",
+      "kms", "decrypt",
+      "--ciphertext-file", cipher,
+      "--plaintext-file", plain,
+      "--location", location,
+      "--keyring", keyring,
+      "--key", key
+    ),
+    ...
+  )
 }
 
 #' Create a buildstep for using Secret Manager
@@ -688,17 +703,17 @@ cr_buildstep_decrypt <- function(cipher,
 #' @export
 #' @examples
 #' cr_buildstep_secret("my_secret", decrypted = "/workspace/secret.json")
-#'
 cr_buildstep_secret <- function(secret,
                                 decrypted,
                                 version = "latest",
                                 binary_mode = FALSE,
-                                ...){
+                                ...) {
   assertthat::assert_that(assertthat::is.flag(binary_mode))
   # as per
   # https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#a_note_on_resource_consistency
   decode_it <- "--format='get(payload.data)' | tr '_-' '/+' | base64 -d"
-  script <- sprintf("gcloud secrets versions access %s --secret=%s %s > %s",
+  script <- sprintf(
+    "gcloud secrets versions access %s --secret=%s %s > %s",
     version, secret, ifelse(binary_mode, decode_it, ""), decrypted
   )
 
@@ -708,7 +723,6 @@ cr_buildstep_secret <- function(secret,
     entrypoint = "bash",
     ...
   )
-
 }
 
 
@@ -741,51 +755,56 @@ cr_buildstep_secret <- function(secret,
 #'
 #' # set github repo directly to write it out via cr_build_write()
 #' cr_buildstep_pkgdown("MarkEdmondson1234/googleCloudRunner",
-#'                      git_email = "cloudbuild@google.com",
-#'                      secret = "github-ssh")
+#'   git_email = "cloudbuild@google.com",
+#'   secret = "github-ssh"
+#' )
 #'
 #' # github repo set via build trigger macro _GITHUB_REPO
 #' cr_buildstep_pkgdown("$_GITHUB_REPO",
-#'                      git_email = "cloudbuild@google.com",
-#'                      secret = "github-ssh")
+#'   git_email = "cloudbuild@google.com",
+#'   secret = "github-ssh"
+#' )
 #'
 #' # example including environment arguments for pkgdown build step
 #' cr_buildstep_pkgdown("$_GITHUB_REPO",
-#'                      git_email = "cloudbuild@google.com",
-#'                      secret = "github-ssh",
-#'                      env = c("MYVAR=$_MY_VAR", "PROJECT=$PROJECT_ID"))
-#'
-cr_buildstep_pkgdown <- function(
-           github_repo,
-           git_email,
-           secret,
-           env = NULL,
-           build_image = "gcr.io/gcer-public/packagetools:latest",
-           post_setup = NULL,
-           post_clone = NULL){
-
+#'   git_email = "cloudbuild@google.com",
+#'   secret = "github-ssh",
+#'   env = c("MYVAR=$_MY_VAR", "PROJECT=$PROJECT_ID")
+#' )
+cr_buildstep_pkgdown <- function(github_repo,
+                                 git_email,
+                                 secret,
+                                 env = NULL,
+                                 build_image = "gcr.io/gcer-public/packagetools:latest",
+                                 post_setup = NULL,
+                                 post_clone = NULL) {
   repo <- paste0("git@github.com:", github_repo)
 
   c(
     cr_buildstep_gitsetup(secret, post_setup = post_setup),
-    cr_buildstep_git(c("clone",repo, "repo"), id = "clone to repo dir"),
+    cr_buildstep_git(c("clone", repo, "repo"), id = "clone to repo dir"),
     post_clone,
-    cr_buildstep_r(c("devtools::install_deps(dependencies=TRUE)",
-                     "devtools::install_local()",
-                     "pkgdown::build_site()"),
-                   name = build_image,
-                   dir = "repo",
-                   env = env,
-                   id = "build pkgdown"),
+    cr_buildstep_r(c(
+      "devtools::install_deps(dependencies=TRUE)",
+      "devtools::install_local()",
+      "pkgdown::build_site()"
+    ),
+    name = build_image,
+    dir = "repo",
+    env = env,
+    id = "build pkgdown"
+    ),
     cr_buildstep_git(c("add", "--all"), dir = "repo"),
-    cr_buildstep_git(c("commit", "-a", "-m",
-                       "[skip travis] Build website from commit ${COMMIT_SHA}: \
-$(date +\"%Y%m%dT%H:%M:%S\")"),
-                     dir = "repo"),
+    cr_buildstep_git(c(
+      "commit", "-a", "-m",
+      "[skip travis] Build website from commit ${COMMIT_SHA}: \
+$(date +\"%Y%m%dT%H:%M:%S\")"
+    ),
+    dir = "repo"
+    ),
     cr_buildstep_git("status", dir = "repo"),
     cr_buildstep_git("push", dir = "repo")
   )
-
 }
 
 #' A buildstep template for gcloud
@@ -800,9 +819,8 @@ $(date +\"%Y%m%dT%H:%M:%S\")"),
 #' @export
 #' @family Cloud Buildsteps
 #' @import assertthat
-cr_buildstep_gcloud <- function(component = c("gcloud","bq","gsutil","kubectl"),
-                                ...){
-
+cr_buildstep_gcloud <- function(component = c("gcloud", "bq", "gsutil", "kubectl"),
+                                ...) {
   component <- match.arg(component)
 
   # don't allow dot names that would break things
@@ -814,12 +832,12 @@ cr_buildstep_gcloud <- function(component = c("gcloud","bq","gsutil","kubectl"),
   )
 
   the_name <- "cloud-sdk:alpine"
-  if(component == "kubectl"){
+  if (component == "kubectl") {
     the_name <- "cloud-sdk:latest"
   }
 
   entrypoint <- NULL
-  if(component != "gcloud"){
+  if (component != "gcloud") {
     entrypoint <- component
   }
 
@@ -829,6 +847,4 @@ cr_buildstep_gcloud <- function(component = c("gcloud","bq","gsutil","kubectl"),
     entrypoint = entrypoint,
     ...
   )
-
 }
-

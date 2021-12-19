@@ -29,32 +29,32 @@
 #'
 #' @examples
 #'
-#' cr_build_targets(path=tempfile())
+#' cr_build_targets(path = tempfile())
 #'
 #' # adding custom environment args and secrets to the build
 #' cr_build_targets(
 #'   task_image = "gcr.io/my-project/my-targets-pipeline",
-#'   options = list(env = c("ENV1=1234",
-#'                          "ENV_USER=Dave")),
-#'   availableSecrets = cr_build_yaml_secrets("MY_PW","my-pw"),
-#'   task_args = list(secretEnv = "MY_PW"))
-#'
-cr_build_targets <- function(
-  task_image = "gcr.io/gcer-public/targets",
-  target_folder = basename(rstudioapi::getActiveProject()),
-  path = "cloudbuild_targets.yaml",
-  bucket = cr_bucket_get(),
-  task_args = list(),
-  tar_make = "targets::tar_make()",
-  ...
-) {
-
-  if(is.null(target_folder)){
+#'   options = list(env = c(
+#'     "ENV1=1234",
+#'     "ENV_USER=Dave"
+#'   )),
+#'   availableSecrets = cr_build_yaml_secrets("MY_PW", "my-pw"),
+#'   task_args = list(secretEnv = "MY_PW")
+#' )
+cr_build_targets <- function(task_image = "gcr.io/gcer-public/targets",
+                             target_folder = basename(rstudioapi::getActiveProject()),
+                             path = "cloudbuild_targets.yaml",
+                             bucket = cr_bucket_get(),
+                             task_args = list(),
+                             tar_make = "targets::tar_make()",
+                             ...) {
+  if (is.null(target_folder)) {
     target_folder <- "targets_cloudbuild"
   }
 
   myMessage(sprintf("targets cloud location: gs://%s/%s", bucket, target_folder),
-            level = 3)
+    level = 3
+  )
 
   bs <- c(
     cr_buildstep_bash(
@@ -66,10 +66,14 @@ cr_build_targets <- function(
     ),
     do.call(
       cr_buildstep_r,
-      args = c(task_args,
-               list(r =tar_make,
-                    name = task_image,
-                    id = "target pipeline"))
+      args = c(
+        task_args,
+        list(
+          r = tar_make,
+          name = task_image,
+          id = "target pipeline"
+        )
+      )
     ),
     cr_buildstep_bash(
       "date > buildtime.txt && gsutil cp buildtime.txt ${_TARGET_BUCKET}/_targets/buildtime.txt",
@@ -80,12 +84,12 @@ cr_build_targets <- function(
     ),
     cr_buildstep_gcloud(
       "gsutil",
-      args = c("-m", "cp" ,"-r", "/workspace/_targets" ,"${_TARGET_BUCKET}"),
+      args = c("-m", "cp", "-r", "/workspace/_targets", "${_TARGET_BUCKET}"),
       id = "Upload Artifacts this way as artifacts doesn't support folders"
-      ),
+    ),
     cr_buildstep_gcloud(
       "gsutil",
-      args = c("ls", "-r","${_TARGET_BUCKET}"),
+      args = c("ls", "-r", "${_TARGET_BUCKET}"),
       id = "Artifacts location"
     )
   )
@@ -100,7 +104,7 @@ cr_build_targets <- function(
     ...
   )
 
-  if(!is.null(path)) cr_build_write(yaml, file = path)
+  if (!is.null(path)) cr_build_write(yaml, file = path)
 
   yaml
 }
@@ -113,29 +117,29 @@ cr_build_targets <- function(
 #' @inheritParams cr_build_artifacts
 #' @param target_subfolder If you only want to download a specific folder from the _targets/ folder on Cloud Build then specify it here.
 #' @return \code{cr_build_targets_artifacts} returns the file path to where the download occurred.
-cr_build_targets_artifacts <- function(
-  build,
-  download_folder = "_targets_cloudbuild",
-  target_subfolder = c("all","meta","objects","user"),
-  overwrite = TRUE){
-
+cr_build_targets_artifacts <- function(build,
+                                       download_folder = "_targets_cloudbuild",
+                                       target_subfolder = c("all", "meta", "objects", "user"),
+                                       overwrite = TRUE) {
   target_subfolder <- match.arg(target_subfolder)
 
   bb <- build$source$storageSource$bucket
-  if(is.null(bb)){
+  if (is.null(bb)) {
     stop("Could not find bucket.  Is this not a build from cr_build_targets()?")
   }
 
   build_folder <- build$substitutions$`_TARGET_BUCKET`
-  build_folder <- gsub(paste0("gs://",bb,"/"),"",
-                       build$substitutions$`_TARGET_BUCKET`)
+  build_folder <- gsub(
+    paste0("gs://", bb, "/"), "",
+    build$substitutions$`_TARGET_BUCKET`
+  )
 
-  if(!nzchar(build_folder)){
+  if (!nzchar(build_folder)) {
     stop("Could not find build folder in bucket.")
   }
 
   prefix <- build_folder
-  if(target_subfolder != "all"){
+  if (target_subfolder != "all") {
     prefix <- paste0(prefix, "/", target_subfolder)
   }
 
@@ -143,7 +147,7 @@ cr_build_targets_artifacts <- function(
     bucket = bb, prefix = prefix
   )
 
-  if(nrow(arts) == 0){
+  if (nrow(arts) == 0) {
     myMessage("No target build artifacts found")
     return(NULL)
   }
@@ -151,28 +155,33 @@ cr_build_targets_artifacts <- function(
   # create targets folder structure
   dir.create(download_folder, showWarnings = FALSE)
   dir.create(file.path(download_folder, build_folder),
-             showWarnings = FALSE)
+    showWarnings = FALSE
+  )
   dir.create(file.path(download_folder, build_folder, "_targets"),
-             showWarnings = FALSE)
-  dir.create(file.path(download_folder, build_folder, "_targets","meta"),
-             showWarnings = FALSE)
-  dir.create(file.path(download_folder, build_folder, "_targets","objects"),
-             showWarnings = FALSE)
-  dir.create(file.path(download_folder, build_folder, "_targets","user"),
-             showWarnings = FALSE)
+    showWarnings = FALSE
+  )
+  dir.create(file.path(download_folder, build_folder, "_targets", "meta"),
+    showWarnings = FALSE
+  )
+  dir.create(file.path(download_folder, build_folder, "_targets", "objects"),
+    showWarnings = FALSE
+  )
+  dir.create(file.path(download_folder, build_folder, "_targets", "user"),
+    showWarnings = FALSE
+  )
 
   withr::with_dir(
     download_folder,
     {
       lapply(arts$name, function(x) {
         gcs_get_object(x,
-                       bucket = bb,
-                       saveToDisk = x,
-                       overwrite = overwrite)
+          bucket = bb,
+          saveToDisk = x,
+          overwrite = overwrite
+        )
       })
     }
   )
 
   normalizePath(file.path(download_folder, build_folder))
-
 }
