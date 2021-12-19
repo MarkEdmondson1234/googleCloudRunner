@@ -202,15 +202,16 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="co"># for unauthenticated apps create a HttpTarget</span></span>
 <span class="r-in"><span class="va">run_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="HttpTarget.html">HttpTarget</a></span><span class="op">(</span></span>
 <span class="r-in">  uri <span class="op">=</span> <span class="st">"https://public-ewjogewawq-ew.a.run.app/echo?msg=blah"</span>,</span>
 <span class="r-in">  http_method <span class="op">=</span> <span class="st">"GET"</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-run-scheduled"</span>, schedule <span class="op">=</span> <span class="st">"16 4 * * *"</span>,</span>
-<span class="r-in">            httpTarget <span class="op">=</span> <span class="va">run_me</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-run-scheduled"</span>,</span>
+<span class="r-in">  schedule <span class="op">=</span> <span class="st">"16 4 * * *"</span>,</span>
+<span class="r-in">  httpTarget <span class="op">=</span> <span class="va">run_me</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># for authenticated Cloud Run apps - create with allowUnauthenticated=FALSE</span></span>
 <span class="r-in"><span class="fu"><a href="cr_deploy_run.html">cr_deploy_run</a></span><span class="op">(</span><span class="st">"my-app"</span>, allowUnauthenticated <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -219,7 +220,6 @@
 <span class="r-in"><span class="co"># deploying via R will help create a service email called my-app-cloudrun-invoker</span></span>
 <span class="r-in"><span class="fu"><a href="cr_run_email.html">cr_run_email</a></span><span class="op">(</span><span class="st">"my-app"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-app-invoker@my-project.iam.gserviceaccount.com"</span>
-<span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="co"># use that email to schedule the Cloud Run private micro-service</span></span>
 <span class="r-in"></span>
@@ -230,12 +230,14 @@
 <span class="r-in"><span class="va">endpoint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">my_app</span><span class="op">$</span><span class="va">status</span><span class="op">$</span><span class="va">url</span>, <span class="st">"/fetch_stuff"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">app_sched</span> <span class="op">&lt;-</span> <span class="fu">cr_run_schedule_http</span><span class="op">(</span><span class="va">endpoint</span>,</span>
-<span class="r-in">                                  http_method <span class="op">=</span> <span class="st">"GET"</span>,</span>
-<span class="r-in">                                  email <span class="op">=</span> <span class="va">email</span><span class="op">)</span></span>
+<span class="r-in">  http_method <span class="op">=</span> <span class="st">"GET"</span>,</span>
+<span class="r-in">  email <span class="op">=</span> <span class="va">email</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-run-scheduled-1"</span>,</span>
-<span class="r-in">            schedule <span class="op">=</span> <span class="st">"4 16 * * *"</span>,</span>
-<span class="r-in">            httpTarget <span class="op">=</span> <span class="va">app_sched</span><span class="op">)</span></span>
+<span class="r-in">  schedule <span class="op">=</span> <span class="st">"4 16 * * *"</span>,</span>
+<span class="r-in">  httpTarget <span class="op">=</span> <span class="va">app_sched</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 </code></pre></div>

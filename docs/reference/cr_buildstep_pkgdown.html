@@ -212,16 +212,17 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="cr_project_set.html">cr_project_set</a></span><span class="op">(</span><span class="st">"my-project"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-19 18:29:11 &gt;</span> ProjectId set to my-project</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-19 21:33:34 &gt;</span> ProjectId set to my-project</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-project"</span>
 <span class="r-in"><span class="fu"><a href="cr_bucket_set.html">cr_bucket_set</a></span><span class="op">(</span><span class="st">"my-bucket"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-19 18:29:11 &gt;</span> Bucket set to my-bucket</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-19 21:33:34 &gt;</span> Bucket set to my-bucket</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-bucket"</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># set github repo directly to write it out via cr_build_write()</span></span>
 <span class="r-in"><span class="fu">cr_buildstep_pkgdown</span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span>,</span>
-<span class="r-in">                     git_email <span class="op">=</span> <span class="st">"cloudbuild@google.com"</span>,</span>
-<span class="r-in">                     secret <span class="op">=</span> <span class="st">"github-ssh"</span><span class="op">)</span></span>
+<span class="r-in">  git_email <span class="op">=</span> <span class="st">"cloudbuild@google.com"</span>,</span>
+<span class="r-in">  secret <span class="op">=</span> <span class="st">"github-ssh"</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ==cloudRunnerBuildStep==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> name: gcr.io/cloud-builders/gcloud</span>
@@ -330,8 +331,9 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># github repo set via build trigger macro _GITHUB_REPO</span></span>
 <span class="r-in"><span class="fu">cr_buildstep_pkgdown</span><span class="op">(</span><span class="st">"$_GITHUB_REPO"</span>,</span>
-<span class="r-in">                     git_email <span class="op">=</span> <span class="st">"cloudbuild@google.com"</span>,</span>
-<span class="r-in">                     secret <span class="op">=</span> <span class="st">"github-ssh"</span><span class="op">)</span></span>
+<span class="r-in">  git_email <span class="op">=</span> <span class="st">"cloudbuild@google.com"</span>,</span>
+<span class="r-in">  secret <span class="op">=</span> <span class="st">"github-ssh"</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ==cloudRunnerBuildStep==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> name: gcr.io/cloud-builders/gcloud</span>
@@ -440,9 +442,10 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># example including environment arguments for pkgdown build step</span></span>
 <span class="r-in"><span class="fu">cr_buildstep_pkgdown</span><span class="op">(</span><span class="st">"$_GITHUB_REPO"</span>,</span>
-<span class="r-in">                     git_email <span class="op">=</span> <span class="st">"cloudbuild@google.com"</span>,</span>
-<span class="r-in">                     secret <span class="op">=</span> <span class="st">"github-ssh"</span>,</span>
-<span class="r-in">                     env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MYVAR=$_MY_VAR"</span>, <span class="st">"PROJECT=$PROJECT_ID"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">  git_email <span class="op">=</span> <span class="st">"cloudbuild@google.com"</span>,</span>
+<span class="r-in">  secret <span class="op">=</span> <span class="st">"github-ssh"</span>,</span>
+<span class="r-in">  env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MYVAR=$_MY_VAR"</span>, <span class="st">"PROJECT=$PROJECT_ID"</span><span class="op">)</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ==cloudRunnerBuildStep==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> name: gcr.io/cloud-builders/gcloud</span>
@@ -551,7 +554,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> - name: ssh</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   path: /root/.ssh</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
 </code></pre></div>
     </div>
   </div>

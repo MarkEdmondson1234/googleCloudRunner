@@ -184,23 +184,21 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># within a plumber api.R script:</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># example function echos back pubsub message</span></span>
-<span class="r-in"><span class="va">pub</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
+<span class="r-in"><span class="va">pub</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Echo:"</span>, <span class="va">x</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#' Recieve pub/sub message</span></span>
 <span class="r-in"><span class="co">#' @post /pubsub</span></span>
 <span class="r-in"><span class="co">#' @param message a pub/sub message</span></span>
-<span class="r-in"><span class="kw">function</span><span class="op">(</span><span class="va">message</span><span class="op">=</span><span class="cn">NULL</span><span class="op">)</span><span class="op">{</span></span>
+<span class="r-in"><span class="kw">function</span><span class="op">(</span><span class="va">message</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in">  <span class="fu">googleCloudRunner</span><span class="fu">::</span><span class="fu">cr_plumber_pubsub</span><span class="op">(</span><span class="va">message</span>, <span class="va">pub</span><span class="op">)</span></span>
-<span class="r-in">  <span class="op">}</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span class="op">}</span></span>
 <span class="r-in"><span class="op">}</span></span>
 </code></pre></div>
     </div>

@@ -194,7 +194,8 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
 <span class="r-in"><span class="co"># create build object</span></span>
 <span class="r-in"><span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild_substitutions.yml"</span>,</span>
-<span class="r-in">                          package <span class="op">=</span> <span class="st">"googleCloudRunner"</span><span class="op">)</span></span>
+<span class="r-in">  package <span class="op">=</span> <span class="st">"googleCloudRunner"</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="va">the_build</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">cloudbuild</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># this build includes substitution variables that read from pubsub message var1</span></span>
@@ -217,9 +218,9 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># using googlePubSubR to create pub/sub topic if needed</span></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"> <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/andodet/googlePubsubR" class="external-link">googlePubsubR</a></span><span class="op">)</span></span>
-<span class="r-in"> <span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/pubsub_auth.html" class="external-link">pubsub_auth</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"> <span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/topics_create.html" class="external-link">topics_create</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span></span>
+<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/andodet/googlePubsubR" class="external-link">googlePubsubR</a></span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/pubsub_auth.html" class="external-link">pubsub_auth</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/topics_create.html" class="external-link">topics_create</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># create build trigger that will work from pub/subscription</span></span>
@@ -227,7 +228,6 @@
 <span class="r-in"><span class="va">pubsub_trigger</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ==CloudBuildTriggerPubSubConfig==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> topic:  projects/my-project/topics/test-topic </span>
-<span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="fu"><a href="cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="va">the_build</span>, name <span class="op">=</span> <span class="st">"pubsub-triggered-subs"</span>, trigger <span class="op">=</span> <span class="va">pubsub_trigger</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
@@ -241,9 +241,8 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># turning into JSON and encoding</span></span>
 <span class="r-in"><span class="va">send_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/msg_encode.html" class="external-link">msg_encode</a></span><span class="op">(</span><span class="va">message</span><span class="op">)</span></span>
-<span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"> <span class="co"># send a PubSub message with the encoded data message</span></span>
+<span class="r-in"><span class="co"># send a PubSub message with the encoded data message</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/topics_publish.html" class="external-link">topics_publish</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/PubsubMessage.html" class="external-link">PubsubMessage</a></span><span class="op">(</span><span class="va">send_me</span><span class="op">)</span>, <span class="st">"test-topic"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># did it work? After a while should see logs if it did</span></span>
