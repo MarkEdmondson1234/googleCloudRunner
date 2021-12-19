@@ -51,21 +51,19 @@ This lets you use the response from \link{cr_buildtrigger_get} for an existing b
 Overwrite settings for the build trigger you are copying by supplying it as one of the other arguments from \link{BuildTrigger}.
 }
 \examples{
-
 \dontrun{
-#copying a GitHub buildtrigger across projects and git repos
+# copying a GitHub buildtrigger across projects and git repos
 bt <- cr_buildtrigger_get("my-trigger", projectId = "my-project-1")
 
 # a new GitHub project
 gh <- GitHubEventsConfig("username/new-repo",
-                         event = "push",
-                         branch = "^master$")
+  event = "push",
+  branch = "^master$"
+)
 
 # give 'Cloud Build Editor' role to your service auth key in new project
 # then copy configuration across
 cr_buildtrigger_copy(bt, github = gh, projectId = "my-new-project")
-
-
 }
 }
 \seealso{

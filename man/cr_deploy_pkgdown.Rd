@@ -51,17 +51,17 @@ The git ssh keys need to be deployed to Google Secret Manager for the deployment
 \examples{
 
 pd <- cr_deploy_pkgdown("MarkEdmondson1234/googleCloudRunner",
-                        secret = "my_git_secret",
-                        create_trigger = "no")
+  secret = "my_git_secret",
+  create_trigger = "no"
+)
 pd
 file.exists("cloudbuild-pkgdown.yml")
 unlink("cloudbuild-pkgdown.yml")
-
 \dontrun{
 cr_deploy_pkgdown("MarkEdmondson1234/googleCloudRunner",
-                  secret = "my_git_secret",
-                  create_trigger = "inline")
-
+  secret = "my_git_secret",
+  create_trigger = "inline"
+)
 }
 
 }

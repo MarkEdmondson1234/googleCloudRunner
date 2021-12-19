@@ -42,15 +42,14 @@ cr_bucket_set("my-bucket")
 
 # assumes you have previously saved git ssh key called "github-ssh"
 cr_build_yaml(
-     steps = c(
-          cr_buildstep_gitsetup("github-ssh"),
-          cr_buildstep_git(c("clone",
-                             "git@github.com:github_name/repo_name"))
-     )
- )
-
-
-
+  steps = c(
+    cr_buildstep_gitsetup("github-ssh"),
+    cr_buildstep_git(c(
+      "clone",
+      "git@github.com:github_name/repo_name"
+    ))
+  )
+)
 }
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/access-private-github-repos}{Accessing private GitHub repositories using Cloud Build (google article)}

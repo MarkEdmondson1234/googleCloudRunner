@@ -36,7 +36,6 @@ Once you have uploaded your secret file and named it, it is available for Cloud
 }
 \examples{
 cr_buildstep_secret("my_secret", decrypted = "/workspace/secret.json")
-
 }
 \seealso{
 How to set up secrets using \href{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials}{Secret Manager}

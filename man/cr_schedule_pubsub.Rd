@@ -36,9 +36,9 @@ You can parametise builds by sending in values within PubSub. To read the data i
 cr_project_set("my-project")
 cr_bucket_set("my-bucket")
 cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
-                           package = "googleCloudRunner")
+  package = "googleCloudRunner"
+)
 bb <- cr_build_make(cloudbuild)
-
 \dontrun{
 # create a pubsub topic either in Google Console webUI or library(googlePubSubR)
 library(googlePubsubR)
@@ -49,7 +49,6 @@ topics_create("test-topic")
 # create build trigger that will watch for messages to your created topic
 pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
 pubsub_trigger
-
 \dontrun{
 # create the build trigger with in-line build
 cr_buildtrigger(bb, name = "pubsub-triggered", trigger = pubsub_trigger)
@@ -57,15 +56,16 @@ cr_buildtrigger(bb, name = "pubsub-triggered", trigger = pubsub_trigger)
 
 # create scheduler that calls the pub/sub topic
 cr_schedule("cloud-build-pubsub",
-            "15 5 * * *",
-            pubsubTarget = cr_schedule_pubsub("test-topic"))
-
+  "15 5 * * *",
+  pubsubTarget = cr_schedule_pubsub("test-topic")
+)
 }
 
 # builds can be also parametrised to respond to parameters within your pubsub topic
 # this cloudbuild echos back the value sent in 'var1'
 cloudbuild <- system.file("cloudbuild/cloudbuild_substitutions.yml",
-                           package = "googleCloudRunner")
+  package = "googleCloudRunner"
+)
 the_build <- cr_build_make(cloudbuild)
 
 # var1 is sent via Pubsub to the buildtrigger
@@ -74,18 +74,17 @@ send_me <- jsonlite::base64_enc(jsonlite::toJSON(message))
 
 # create build trigger that will work from pub/subscription
 pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
-
 \dontrun{
 cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trigger)
 
 # create scheduler that calls the pub/sub topic with a parameter
 cr_schedule("cloud-build-pubsub",
-            "15 5 * * *",
-            pubsubTarget = cr_schedule_pubsub("test-topic",
-                                              data = send_me))
-
+  "15 5 * * *",
+  pubsubTarget = cr_schedule_pubsub("test-topic",
+    data = send_me
+  )
+)
 }
-
 
 }
 \seealso{

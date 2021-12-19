@@ -46,7 +46,6 @@ If using codecov, these environment arguments are added to aid with the codecove
 \examples{
 
 cr_buildstep_packagetests()
-
 }
 \seealso{
 \url{https://docs.codecov.io/reference#upload}

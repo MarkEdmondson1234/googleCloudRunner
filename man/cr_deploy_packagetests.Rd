@@ -80,8 +80,8 @@ cr_deploy_packagetests(
 
 # creating a buildtrigger repo for trigger_repo
 repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner",
-                             branch = "master")
-
+  branch = "master"
+)
 \dontrun{
 
 # will create the file in the repo, and point a buildtrigger at it
@@ -93,7 +93,6 @@ cr_deploy_packagetests(create_trigger = "inline", trigger_repo = repo)
 }
 
 unlink("cloudbuild-tests.yml")
-
 }
 \seealso{
 Create your own custom deployment using \link{cr_buildstep_packagetests} which this function uses with some defaults

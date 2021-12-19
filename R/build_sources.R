@@ -300,11 +300,10 @@ cr_build_upload_gcs <- function(local,
   tar_file <- paste0(basename(local), ".tar.gz")
 
   withr::with_dir(
-    tdir,
-    {
+    tdir, {
       myMessage("tarring files: \n",
-        paste(tmp_files, collapse = "\n "),
-        level = 3
+                paste(tmp_files, collapse = "\n "),
+                level = 3
       )
       tar(tar_file, compression = "gzip")
       myMessage(paste(

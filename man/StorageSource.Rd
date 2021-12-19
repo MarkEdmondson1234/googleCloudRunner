@@ -25,19 +25,19 @@ StorageSource Object
 Location of the source in an archive file in Google Cloud Storage.
 }
 \examples{
-
 \dontrun{
 cr_project_set("my-project")
 cr_bucket_set("my-bucket")
 # construct Source object
-my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
-                                                    "gs://my-bucket"))
+my_gcs_source <- Source(storageSource = StorageSource(
+  "my_code.tar.gz",
+  "gs://my-bucket"
+))
 build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 
 # helper that tars and adds to Source() for you
 my_gcs_source2 <- cr_build_upload_gcs("my_folder")
 build2 <- cr_build("cloudbuild.yaml", source = my_gcs_source2)
-
 }
 }
 \seealso{

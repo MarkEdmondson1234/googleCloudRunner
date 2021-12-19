@@ -31,9 +31,8 @@ This lets you download the logs to your local R session, rather than viewing the
 By default, Cloud Build stores your build logs in a Google-created Cloud Storage bucket. You can view build logs store in the Google-created Cloud Storage bucket, but you cannot make any other changes to it. If you require full control over your logs bucket, store the logs in a user-created Cloud Storage bucket.
 }
 \examples{
-
 \dontrun{
-s_yaml <- cr_build_yaml(steps = cr_buildstep( "gcloud","version"))
+s_yaml <- cr_build_yaml(steps = cr_buildstep("gcloud", "version"))
 build <- cr_build_make(s_yaml)
 built <- cr_build(build)
 the_build <- cr_build_wait(built)
@@ -47,8 +46,7 @@ cr_build_logs(the_build)
 # [7] "alpha 2021.01.22"
 # [8] "app-engine-go 1.9.71"
 # ...
- }
-
+}
 \dontrun{
 
 # get your trigger name
@@ -60,7 +58,6 @@ last_logs <- cr_build_logs_last(my_trigger)
 
 my_trigger_id <- "0a3cade0-425f-4adc-b86b-14cde51af674"
 last_logs <- cr_build_logs_last(trigger_id = my_trigger_id)
-
 }
 }
 \seealso{

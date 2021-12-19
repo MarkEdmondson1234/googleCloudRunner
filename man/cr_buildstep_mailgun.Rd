@@ -41,19 +41,22 @@ cr_project_set("my-project")
 cr_bucket_set("my-bucket")
 mailgun_url <- "https://api.mailgun.net/v3/sandboxXXX.mailgun.org"
 mailgun_key <- "key-XXXX"
-
 \dontrun{
 # assumes you have verified the email
 cr_build(
-  cr_build_yaml(steps = cr_buildstep_mailgun(
-                           "Hello from Cloud Build",
-                           to = "me@verfied_email.com",
-                           subject = "Hello",
-                           from = "googleCloudRunner@example.com"),
-                substitutions = list(
-                  `_MAILGUN_URL` = mailgun_url,
-                  `_MAILGUN_KEY` = mailgun_key)
-          ))
+  cr_build_yaml(
+    steps = cr_buildstep_mailgun(
+      "Hello from Cloud Build",
+      to = "me@verfied_email.com",
+      subject = "Hello",
+      from = "googleCloudRunner@example.com"
+    ),
+    substitutions = list(
+      `_MAILGUN_URL` = mailgun_url,
+      `_MAILGUN_KEY` = mailgun_key
+    )
+  )
+)
 }
 }
 \seealso{

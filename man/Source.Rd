@@ -26,16 +26,17 @@ Location of the source in a supported storage service.
 
 cr_project_set("my-project")
 cr_bucket_set("my-bucket")
-my_gcs_source <- Source(storageSource=StorageSource("my_code.tar.gz",
-                                                    "gs://my-bucket"))
-my_repo_source <- Source(repoSource=RepoSource("https://my-repo.com",
-                                               branchName="master"))
-
+my_gcs_source <- Source(storageSource = StorageSource(
+  "my_code.tar.gz",
+  "gs://my-bucket"
+))
+my_repo_source <- Source(repoSource = RepoSource("https://my-repo.com",
+  branchName = "master"
+))
 \dontrun{
 
 build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
-
 }
 }
 \seealso{

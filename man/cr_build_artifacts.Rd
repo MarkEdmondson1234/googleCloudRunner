@@ -27,13 +27,12 @@ If a completed build includes artifact files this downloads them to local files
 If your artifacts are using file glob (e.g. \code{myfolder/**}) to decide which workspace files are uploaded to Cloud Storage, you will need to create a path_regex of similar functionality (\code{"^myfolder/"}).  This is not needed if you use absolute path names such as \code{"myfile.csv"}
 }
 \examples{
-
 \dontrun{
 #' r <- "write.csv(mtcars,file = 'artifact.csv')"
 ba <- cr_build_yaml(
-    steps = cr_buildstep_r(r),
-    artifacts = cr_build_yaml_artifact('artifact.csv', bucket = "my-bucket")
-    )
+  steps = cr_buildstep_r(r),
+  artifacts = cr_build_yaml_artifact("artifact.csv", bucket = "my-bucket")
+)
 ba
 
 build <- cr_build(ba)
