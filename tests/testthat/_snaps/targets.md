@@ -25,23 +25,13 @@
         args:
         - -c
         - date > buildtime.txt && gsutil cp buildtime.txt ${_TARGET_BUCKET}/_targets/buildtime.txt
-        id: Ensure ${_TARGET_BUCKET}/_targets/ always exists
+        id: Ensure bucket/_targets/ always exists
       - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
-        entrypoint: gsutil
+        entrypoint: bash
         args:
-        - -m
-        - cp
-        - -r
-        - /workspace/_targets
-        - ${_TARGET_BUCKET}
-        id: Upload Artifacts this way as artifacts doesn't support folders
-      - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
-        entrypoint: gsutil
-        args:
-        - ls
-        - -r
-        - ${_TARGET_BUCKET}
-        id: Artifacts location
+        - -c
+        - gsutil -m cp -r /workspace/_targets ${_TARGET_BUCKET} && gsutil ls -r ${_TARGET_BUCKET}
+        id: Upload Artifacts
       timeout: 3600s
       substitutions:
         _TARGET_BUCKET: gs://mark-edmondson-public-files/cr_build_target_tests

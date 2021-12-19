@@ -92,7 +92,6 @@ cr_buildstep_git <- function(git_args = c(
 #'
 #' Use \code{git_volume} to add the git credentials folder to other buildsteps
 #'
-#' @examples
 git_volume <- function() {
   list(list(
     name = "ssh",
