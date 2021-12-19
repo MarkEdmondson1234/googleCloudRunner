@@ -40,6 +40,6 @@ jobs:
       - name: Lint
         run: |
           out <- lintr::lint_package()
-          print(out)
+          lapply(out, function(x){print(paste(x$filename, x$line_number, x$message))})
           if (length(out)) stop("lints found")
         shell: Rscript {0}
