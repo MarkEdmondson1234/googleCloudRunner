@@ -32,7 +32,7 @@ cr_buildstep_targets_teardown(bucket_folder, last_id = NULL)
 This is a buildstep to help upload a targets pipeline, see \link{cr_build_targets} for examples and suggested workflow
 }
 \seealso{
-Other Cloud Buildsteps:
+Other Cloud Buildsteps: 
 \code{\link{cr_buildstep_bash}()},
 \code{\link{cr_buildstep_decrypt}()},
 \code{\link{cr_buildstep_df}()},
