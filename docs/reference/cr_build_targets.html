@@ -276,7 +276,43 @@ Historical runs accumulate in the
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
+<span class="r-in"><span class="fu">cr_build_targets</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-20 07:37:21 &gt;</span> targets cloud location: gs://my-bucket/targets_cloudbuild</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-20 07:37:21 &gt;</span> Writing to cloudbuild_targets.yaml</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ==cloudRunnerYaml==</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> steps:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   entrypoint: bash</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   args:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - -c</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - mkdir /workspace/_targets &amp;&amp; mkdir /workspace/_targets/meta &amp;&amp; gsutil -m cp -r</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     ${_TARGET_BUCKET}/_targets/meta /workspace/_targets || exit 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id: get previous _targets metadata</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - name: gcr.io/gcer-public/targets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   args:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - Rscript</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - -e</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - targets::tar_make()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id: target pipeline</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   entrypoint: bash</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   args:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - -c</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - date &gt; buildtime.txt &amp;&amp; gsutil cp buildtime.txt ${_TARGET_BUCKET}/_targets/buildtime.txt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id: Ensure bucket/_targets/ always exists</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   entrypoint: bash</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   args:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - -c</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   - gsutil -m cp -r /workspace/_targets ${_TARGET_BUCKET} &amp;&amp; gsutil ls -r ${_TARGET_BUCKET}</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id: Upload Artifacts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> timeout: 3600s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> substitutions:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   _TARGET_BUCKET: gs://my-bucket/targets_cloudbuild</span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="st">"cloudbuild_targets.yaml"</span><span class="op">)</span></span>
+<span class="r-in"></span>
+</code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
