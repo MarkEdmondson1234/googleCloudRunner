@@ -204,9 +204,8 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">s_yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="fu"><a href="cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span> <span class="st">"gcloud"</span>,<span class="st">"version"</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in"><span class="va">s_yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="fu"><a href="cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span><span class="st">"gcloud"</span>, <span class="st">"version"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">build</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">s_yaml</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">build</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">the_build</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_build_wait.html">cr_build_wait</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span></span>
@@ -220,8 +219,7 @@
 <span class="r-in"><span class="co"># [7] "alpha 2021.01.22"</span></span>
 <span class="r-in"><span class="co"># [8] "app-engine-go 1.9.71"</span></span>
 <span class="r-in"><span class="co"># ...</span></span>
-<span class="r-in"> <span class="op">}</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span class="op">}</span></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># get your trigger name</span></span>
@@ -233,7 +231,6 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="va">my_trigger_id</span> <span class="op">&lt;-</span> <span class="st">"0a3cade0-425f-4adc-b86b-14cde51af674"</span></span>
 <span class="r-in"><span class="va">last_logs</span> <span class="op">&lt;-</span> <span class="fu">cr_build_logs_last</span><span class="op">(</span>trigger_id <span class="op">=</span> <span class="va">my_trigger_id</span><span class="op">)</span></span>
-<span class="r-in"></span>
 <span class="r-in"><span class="op">}</span></span>
 </code></pre></div>
     </div>

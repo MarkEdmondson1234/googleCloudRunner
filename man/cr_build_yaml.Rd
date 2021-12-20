@@ -47,11 +47,14 @@ This can be written to disk or used directly with functions such as \link{cr_bui
 \examples{
 cr_project_set("my-project")
 image <- "gcr.io/my-project/my-image"
-cr_build_yaml(steps = c(
-    cr_buildstep("docker", c("build","-t",image,".")),
-    cr_buildstep("docker", c("push",image)),
-    cr_buildstep("gcloud", c("beta","run","deploy", "test1", "--image", image))),
-  images = image)
+cr_build_yaml(
+  steps = c(
+    cr_buildstep("docker", c("build", "-t", image, ".")),
+    cr_buildstep("docker", c("push", image)),
+    cr_buildstep("gcloud", c("beta", "run", "deploy", "test1", "--image", image))
+  ),
+  images = image
+)
 }
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/build-config}{Build configuration overview for cloudbuild.yaml}

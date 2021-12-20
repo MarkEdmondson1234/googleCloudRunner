@@ -7,17 +7,18 @@
 #' @export
 cr_buildtrigger_get <- function(triggerId,
                                 projectId = cr_project_get()) {
+  triggerId <- get_buildTriggerResponseId(triggerId)
 
-    triggerId <- get_buildTriggerResponseId(triggerId)
-
-    url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers/%s",
-        projectId, triggerId)
-    # cloudbuild.projects.triggers.get
-    f <- gar_api_generator(url,
-                           "GET",
-                           data_parse_function = as.buildTriggerResponse)
-    f()
-
+  url <- sprintf(
+    "https://cloudbuild.googleapis.com/v1/projects/%s/triggers/%s",
+    projectId, triggerId
+  )
+  # cloudbuild.projects.triggers.get
+  f <- gar_api_generator(url,
+    "GET",
+    data_parse_function = as.buildTriggerResponse
+  )
+  f()
 }
 
 #' Updates a `BuildTrigger` by its project ID and trigger ID.This API is experimental.
@@ -31,44 +32,46 @@ cr_buildtrigger_get <- function(triggerId,
 #' @family BuildTrigger functions
 #'
 #' @examples
-#'
 #' \dontrun{
 #'
 #' github <- GitHubEventsConfig("MarkEdmondson1234/googleCloudRunner",
-#'                             branch = "master")
+#'   branch = "master"
+#' )
 #' bt2 <- cr_buildtrigger("trig2",
-#'                        trigger = github,
-#'                        build = "inst/cloudbuild/cloudbuild.yaml")
+#'   trigger = github,
+#'   build = "inst/cloudbuild/cloudbuild.yaml"
+#' )
 #' bt3 <- BuildTrigger(
 #'   filename = "inst/cloudbuild/cloudbuild.yaml",
 #'   name = "edited1",
 #'   tags = "edit",
 #'   github = github,
 #'   disabled = TRUE,
-#'   description = "edited trigger")
+#'   description = "edited trigger"
+#' )
 #'
 #' edited <- cr_buildtrigger_edit(bt3, triggerId = bt2)
-#'
 #' }
 #'
 #' @export
 cr_buildtrigger_edit <- function(BuildTrigger,
                                  triggerId,
                                  projectId = cr_project_get()) {
+  triggerId <- get_buildTriggerResponseId(triggerId)
+  BuildTrigger$id <- triggerId
 
-    triggerId <- get_buildTriggerResponseId(triggerId)
-    BuildTrigger$id <- triggerId
+  url <- sprintf(
+    "https://cloudbuild.googleapis.com/v1/projects/%s/triggers/%s",
+    projectId, triggerId
+  )
+  # cloudbuild.projects.triggers.patch
+  f <- gar_api_generator(url, "PATCH",
+    data_parse_function = as.buildTriggerResponse,
+    checkTrailingSlash = TRUE
+  )
+  stopifnot(inherits(BuildTrigger, "BuildTrigger"))
 
-    url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers/%s",
-        projectId, triggerId)
-    # cloudbuild.projects.triggers.patch
-    f <- gar_api_generator(url, "PATCH",
-                           data_parse_function = as.buildTriggerResponse,
-                           checkTrailingSlash = TRUE)
-    stopifnot(inherits(BuildTrigger, "BuildTrigger"))
-
-    f(the_body = BuildTrigger)
-
+  f(the_body = BuildTrigger)
 }
 
 #' Deletes a `BuildTrigger` by its project ID and trigger ID.This API is experimental.
@@ -79,16 +82,17 @@ cr_buildtrigger_edit <- function(BuildTrigger,
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 cr_buildtrigger_delete <- function(triggerId, projectId = cr_project_get()) {
+  triggerId <- get_buildTriggerResponseId(triggerId)
 
-    triggerId <- get_buildTriggerResponseId(triggerId)
-
-    url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers/%s",
-        projectId, triggerId)
-    # cloudbuild.projects.triggers.delete
-    f <- gar_api_generator(url, "DELETE",
-                           data_parse_function = function(x) TRUE)
-    f()
-
+  url <- sprintf(
+    "https://cloudbuild.googleapis.com/v1/projects/%s/triggers/%s",
+    projectId, triggerId
+  )
+  # cloudbuild.projects.triggers.delete
+  f <- gar_api_generator(url, "DELETE",
+    data_parse_function = function(x) TRUE
+  )
+  f()
 }
 
 #' Lists existing `BuildTrigger`s.This API is experimental.
@@ -99,49 +103,53 @@ cr_buildtrigger_delete <- function(triggerId, projectId = cr_project_get()) {
 #' @export
 #' @seealso \link{cr_build_list} which merges with this list
 #' @examples
-#'
 #' \dontrun{
 #'
-#'   cr_buildtrigger_list()
+#' cr_buildtrigger_list()
 #' }
-cr_buildtrigger_list <- function(projectId = cr_project_get()){
+cr_buildtrigger_list <- function(projectId = cr_project_get()) {
+  url <- sprintf(
+    "https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
+    projectId
+  )
+  # cloudbuild.projects.triggers.list
+  pars <- list(pageToken = "", pageSize = 500)
+  f <- gar_api_generator(url, "GET",
+    pars_args = rmNullObs(pars),
+    data_parse_function = parse_buildtrigger_list
+  )
 
-    url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
-                   projectId)
-    # cloudbuild.projects.triggers.list
-    pars <-  list(pageToken = "", pageSize = 500)
-    f <- gar_api_generator(url, "GET",
-                           pars_args = rmNullObs(pars),
-                           data_parse_function = parse_buildtrigger_list)
+  o <- gar_api_page(f,
+    page_f = function(x) x$nextPageToken,
+    page_method = "param",
+    page_arg = "pageToken"
+  )
 
-    o <- gar_api_page(f,
-                      page_f = function(x) x$nextPageToken,
-                      page_method = "param",
-                      page_arg = "pageToken")
+  bts_df <- Reduce(rbind, o)
 
-    bts_df <- Reduce(rbind, o)
-
-    parse_files <- function(x){
-      if(is.null(bts_df[[x]])) return(NA)
-      unlist(lapply(bts_df[[x]], paste, collapse = ", "))
+  parse_files <- function(x) {
+    if (is.null(bts_df[[x]])) {
+      return(NA)
     }
+    unlist(lapply(bts_df[[x]], paste, collapse = ", "))
+  }
 
-    data.frame(
-      stringsAsFactors = FALSE,
-      buildTriggerName = bts_df$name,
-      buildTriggerId = bts_df$id,
-      buildTriggerCreateTime = bts_df$createTime,
-      filename = bts_df$filename,
-      description = bts_df$description,
-      github_name = paste0(bts_df$github$owner,"/", bts_df$github$name),
-      ignoredFiles = parse_files("ignoredFiles"),
-      includedFiles = parse_files("includedFiles"),
-      tags = parse_files("tags"),
-      disabled = if(!is.null(bts_df$disabled)) bts_df$disabled else NA
-    )
+  data.frame(
+    stringsAsFactors = FALSE,
+    buildTriggerName = bts_df$name,
+    buildTriggerId = bts_df$id,
+    buildTriggerCreateTime = bts_df$createTime,
+    filename = bts_df$filename,
+    description = bts_df$description,
+    github_name = paste0(bts_df$github$owner, "/", bts_df$github$name),
+    ignoredFiles = parse_files("ignoredFiles"),
+    includedFiles = parse_files("includedFiles"),
+    tags = parse_files("tags"),
+    disabled = if (!is.null(bts_df$disabled)) bts_df$disabled else NA
+  )
 }
 
-parse_buildtrigger_list <- function(x){
+parse_buildtrigger_list <- function(x) {
   o <- x$triggers
   o$build <- NULL # use cr_buildtrigger_get to get build info of a build
   o$substitutions <- NULL
@@ -172,7 +180,8 @@ parse_buildtrigger_list <- function(x){
 #' cr_project_set("my-project")
 #' cr_bucket_set("my-bucket")
 #' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
-#'                            package = "googleCloudRunner")
+#'   package = "googleCloudRunner"
+#' )
 #' bb <- cr_build_make(cloudbuild)
 #'
 #' # repo hosted on GitHub
@@ -180,8 +189,8 @@ parse_buildtrigger_list <- function(x){
 #'
 #' # repo mirrored to Cloud Source Repositories
 #' cs_trigger <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
-#'                                    type = "cloud_source")
-#'
+#'   type = "cloud_source"
+#' )
 #' \dontrun{
 #' # build with in-line build code
 #' cr_buildtrigger(bb, name = "bt-github-inline", trigger = gh_trigger)
@@ -191,15 +200,16 @@ parse_buildtrigger_list <- function(x){
 #'
 #' # build pointing to cloudbuild.yaml within the GitHub repo
 #' cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
-#'                  name = "bt-github-file", trigger = gh_trigger)
+#'   name = "bt-github-file", trigger = gh_trigger
+#' )
 #'
 #' # build with repo mirror from file
 #' cr_buildtrigger("inst/cloudbuild/cloudbuild.yaml",
-#'                  name = "bt-cs-file", trigger = cs_trigger)
+#'   name = "bt-cs-file", trigger = cs_trigger
+#' )
 #' }
 #'
 #' # creating build triggers that respond to pubsub events
-#'
 #' \dontrun{
 #' # create a pubsub topic either in webUI or via library(googlePubSubR)
 #' library(googlePubsubR)
@@ -210,32 +220,28 @@ parse_buildtrigger_list <- function(x){
 #' # create build trigger that will work from pub/subscription
 #' pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
 #' pubsub_trigger
-#'
 #' \dontrun{
 #' # create the build trigger with in-line build
 #' cr_buildtrigger(bb, name = "pubsub-triggered", trigger = pubsub_trigger)
 #' # create scheduler that calls the pub/sub topic
 #'
 #' cr_schedule("cloud-build-pubsub",
-#'             "15 5 * * *",
-#'             pubsubTarget = cr_schedule_pubsub("test-topic"))
-#'
+#'   "15 5 * * *",
+#'   pubsubTarget = cr_schedule_pubsub("test-topic")
+#' )
 #' }
 #'
-#'
-cr_buildtrigger <- function(
-  build,
-  name,
-  trigger,
-  description = paste("cr_buildtrigger: ", Sys.time()),
-  disabled = FALSE,
-  substitutions = NULL,
-  ignoredFiles = NULL,
-  includedFiles = NULL,
-  trigger_tags = NULL,
-  projectId = cr_project_get(),
-  overwrite = FALSE) {
-
+cr_buildtrigger <- function(build,
+                            name,
+                            trigger,
+                            description = paste("cr_buildtrigger: ", Sys.time()),
+                            disabled = FALSE,
+                            substitutions = NULL,
+                            ignoredFiles = NULL,
+                            includedFiles = NULL,
+                            trigger_tags = NULL,
+                            projectId = cr_project_get(),
+                            overwrite = FALSE) {
   assert_that(
     is.string(name),
     is.buildtrigger_repo(trigger) ||
@@ -244,7 +250,7 @@ cr_buildtrigger <- function(
   )
 
   # build from a file in the repo
-  if(is.string(build)){
+  if (is.string(build)) {
     the_build <- NULL
     the_filename <- build
   } else {
@@ -254,7 +260,6 @@ cr_buildtrigger <- function(
     # remove builds source
     build$source <- NULL
     the_build <- cr_build_make(build, source = NULL)
-
   }
 
   trigger_cloudsource <- NULL
@@ -262,16 +267,16 @@ cr_buildtrigger <- function(
   trigger_pubsub <- NULL
   trigger_webhook <- NULL
 
-  if(is.gar_pubsubConfig(trigger)){
+  if (is.gar_pubsubConfig(trigger)) {
     trigger_pubsub <- trigger
-  } else if(is.buildtrigger_repo(trigger)){
+  } else if (is.buildtrigger_repo(trigger)) {
     # trigger params
-    if(trigger$type == "github"){
+    if (trigger$type == "github") {
       trigger_github <- trigger$repo
-    } else if(trigger$type == "cloud_source"){
+    } else if (trigger$type == "cloud_source") {
       trigger_cloudsource <- trigger$repo
     }
-  } else if(is.gar_webhookConfig(trigger)){
+  } else if (is.gar_webhookConfig(trigger)) {
     trigger_webhook <- trigger
   } else {
     stop("We should never be here - something wrong with trigger parameter", call. = FALSE)
@@ -279,46 +284,47 @@ cr_buildtrigger <- function(
 
 
   buildTrigger <- BuildTrigger(
-      name = name,
-      github = trigger_github,
-      pubsubConfig = trigger_pubsub,
-      webhookConfig = trigger_webhook,
-      triggerTemplate=trigger_cloudsource,
-      build = the_build,
-      filename = the_filename,
-      description = description,
-      tags = trigger_tags,
-      disabled = disabled,
-      substitutions = substitutions,
-      ignoredFiles = ignoredFiles,
-      includedFiles = includedFiles
-    )
+    name = name,
+    github = trigger_github,
+    pubsubConfig = trigger_pubsub,
+    webhookConfig = trigger_webhook,
+    triggerTemplate = trigger_cloudsource,
+    build = the_build,
+    filename = the_filename,
+    description = description,
+    tags = trigger_tags,
+    disabled = disabled,
+    substitutions = substitutions,
+    ignoredFiles = ignoredFiles,
+    includedFiles = includedFiles
+  )
 
-  if(overwrite){
+  if (overwrite) {
     tryCatch(
       cr_buildtrigger_delete(name, projectId = projectId),
-      error = function(err){
+      error = function(err) {
         myMessage("overwrite=TRUE but no trigger to overwrite named:", name, level = 3)
       }
     )
   }
 
-  url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
-                   projectId)
+  url <- sprintf(
+    "https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
+    projectId
+  )
   # cloudbuild.projects.triggers.create
   f <- gar_api_generator(url, "POST",
-                         data_parse_function = as.buildTriggerResponse,
-                         simplifyVector = FALSE)
+    data_parse_function = as.buildTriggerResponse,
+    simplifyVector = FALSE
+  )
   stopifnot(inherits(buildTrigger, "BuildTrigger"))
 
   f(the_body = buildTrigger)
-
 }
 
-as.buildTriggerResponse <- function(x){
-
+as.buildTriggerResponse <- function(x) {
   o <- x
-  if(!is.null(o$build)){
+  if (!is.null(o$build)) {
     o$build <- as.gar_Build(x$build)
   }
 
@@ -328,12 +334,12 @@ as.buildTriggerResponse <- function(x){
   )
 }
 
-is.buildTriggerResponse <- function(x){
-    inherits(x, "BuildTriggerResponse")
+is.buildTriggerResponse <- function(x) {
+  inherits(x, "BuildTriggerResponse")
 }
 
-get_buildTriggerResponseId <- function(x){
-  if(is.buildTriggerResponse(x)){
+get_buildTriggerResponseId <- function(x) {
+  if (is.buildTriggerResponse(x)) {
     return(x$id)
   } else {
     assert_that(is.string(x))
@@ -352,20 +358,21 @@ get_buildTriggerResponseId <- function(x){
 #' @export
 cr_buildtrigger_run <- function(triggerId,
                                 RepoSource,
-                                projectId = cr_project_get()){
+                                projectId = cr_project_get()) {
+  triggerId <- get_buildTriggerResponseId(triggerId)
 
-    triggerId <- get_buildTriggerResponseId(triggerId)
+  url <- sprintf(
+    "https://cloudbuild.googleapis.com/v1/projects/%s/triggers/%s:run",
+    projectId, triggerId
+  )
 
-    url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers/%s:run",
-        projectId, triggerId)
+  # cloudbuild.projects.triggers.run
+  f <- gar_api_generator(url, "POST",
+    data_parse_function = as.buildTriggerResponse
+  )
+  stopifnot(inherits(RepoSource, "gar_RepoSource"))
 
-    # cloudbuild.projects.triggers.run
-    f <- gar_api_generator(url, "POST",
-                           data_parse_function = as.buildTriggerResponse)
-    stopifnot(inherits(RepoSource, "gar_RepoSource"))
-
-    f(the_body = RepoSource)
-
+  f(the_body = RepoSource)
 }
 
 #' Copy a buildtrigger
@@ -383,21 +390,19 @@ cr_buildtrigger_run <- function(triggerId,
 #' @family BuildTrigger functions
 #' @import assertthat
 #' @examples
-#'
 #' \dontrun{
-#' #copying a GitHub buildtrigger across projects and git repos
+#' # copying a GitHub buildtrigger across projects and git repos
 #' bt <- cr_buildtrigger_get("my-trigger", projectId = "my-project-1")
 #'
 #' # a new GitHub project
 #' gh <- GitHubEventsConfig("username/new-repo",
-#'                          event = "push",
-#'                          branch = "^master$")
+#'   event = "push",
+#'   branch = "^master$"
+#' )
 #'
 #' # give 'Cloud Build Editor' role to your service auth key in new project
 #' # then copy configuration across
 #' cr_buildtrigger_copy(bt, github = gh, projectId = "my-new-project")
-#'
-#'
 #' }
 cr_buildtrigger_copy <- function(buildTrigger,
                                  filename = NULL,
@@ -410,43 +415,44 @@ cr_buildtrigger_copy <- function(buildTrigger,
                                  includedFiles = NULL,
                                  disabled = NULL,
                                  triggerTemplate = NULL,
-                                 projectId = cr_project_get()){
-
+                                 projectId = cr_project_get()) {
   assert_that(is.buildTriggerResponse(buildTrigger))
 
-  if(!is.null(name)) buildTrigger$name <- name
-  if(!is.null(filename)){
+  if (!is.null(name)) buildTrigger$name <- name
+  if (!is.null(filename)) {
     buildTrigger$filename <- filename
     buildTrigger$build <- NULL
   }
-  if(!is.null(build)){
+  if (!is.null(build)) {
     buildTrigger$build <- build
     buildTrigger$filename <- NULL
   }
-  if(!is.null(tags)) buildTrigger$tags <- tags
-  if(!is.null(ignoredFiles)) buildTrigger$ignoredFiles <- ignoredFiles
-  if(!is.null(includedFiles)) buildTrigger$includedFiles <- includedFiles
-  if(!is.null(substitutions)) buildTrigger$substitutions <- substitutions
-  if(!is.null(github)){
+  if (!is.null(tags)) buildTrigger$tags <- tags
+  if (!is.null(ignoredFiles)) buildTrigger$ignoredFiles <- ignoredFiles
+  if (!is.null(includedFiles)) buildTrigger$includedFiles <- includedFiles
+  if (!is.null(substitutions)) buildTrigger$substitutions <- substitutions
+  if (!is.null(github)) {
     buildTrigger$github <- github
     buildTrigger$triggerTemplate <- NULL
   }
-  if(!is.null(triggerTemplate)){
+  if (!is.null(triggerTemplate)) {
     buildTrigger$github <- NULL
     buildTrigger$triggerTemplate <- triggerTemplate
   }
-  if(!is.null(disabled)) buildTrigger$disabled <- disabled
+  if (!is.null(disabled)) buildTrigger$disabled <- disabled
 
   buildTrigger <- as.BuildTrigger(buildTrigger)
-  url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
-                 projectId)
+  url <- sprintf(
+    "https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
+    projectId
+  )
   # cloudbuild.projects.triggers.create
   f <- gar_api_generator(url, "POST",
-                         data_parse_function = as.buildTriggerResponse)
+    data_parse_function = as.buildTriggerResponse
+  )
   stopifnot(inherits(buildTrigger, "BuildTrigger"))
 
   f(the_body = buildTrigger)
-
 }
 
 #' BuildTrigger Object
@@ -486,57 +492,60 @@ BuildTrigger <- function(filename = NULL,
                          webhookConfig = NULL,
                          description = NULL,
                          pubsubConfig = NULL) {
+  assert_that(
+    xor(is.null(build), is.null(filename)),
+    !is.null(webhookConfig) ||
+      !is.null(pubsubConfig) ||
+      xor(is.null(github), is.null(triggerTemplate))
+  )
 
-    assert_that(
-        xor(is.null(build), is.null(filename)),
-        !is.null(webhookConfig) ||
-          !is.null(pubsubConfig) ||
-          xor(is.null(github), is.null(triggerTemplate))
-    )
+  if (!is.null(github)) {
+    assert_that(is.gar_GitHubEventsConfig(github))
+  }
 
-    if(!is.null(github)){
-        assert_that(is.gar_GitHubEventsConfig(github))
-    }
+  if (!is.null(triggerTemplate)) {
+    assert_that(is.gar_RepoSource(triggerTemplate))
+  }
 
-    if(!is.null(triggerTemplate)){
-        assert_that(is.gar_RepoSource(triggerTemplate))
-    }
-
-    structure(rmNullObs(list(filename = filename,
-                   name = name,
-                   tags = tags,
-                   build = build,
-                   ignoredFiles = ignoredFiles,
-                   github = github,
-                   substitutions = substitutions,
-                   includedFiles = includedFiles,
-                   disabled = disabled,
-                   triggerTemplate = triggerTemplate,
-                   pubsubConfig = pubsubConfig,
-                   webhookConfig = webhookConfig,
-                   description = description)),
-            class = c("BuildTrigger","list"))
+  structure(rmNullObs(list(
+    filename = filename,
+    name = name,
+    tags = tags,
+    build = build,
+    ignoredFiles = ignoredFiles,
+    github = github,
+    substitutions = substitutions,
+    includedFiles = includedFiles,
+    disabled = disabled,
+    triggerTemplate = triggerTemplate,
+    pubsubConfig = pubsubConfig,
+    webhookConfig = webhookConfig,
+    description = description
+  )),
+  class = c("BuildTrigger", "list")
+  )
 }
 
-is.gar_BuildTrigger <- function(x){
-    inherits(x, "BuildTrigger")
+is.gar_BuildTrigger <- function(x) {
+  inherits(x, "BuildTrigger")
 }
 
-as.BuildTrigger <- function(x){
+as.BuildTrigger <- function(x) {
   assert_that(is.buildTriggerResponse(x))
 
-  BuildTrigger(filename = x$filename,
-               name = x$name,
-               tags = x$tags,
-               build = x$build,
-               ignoredFiles = x$ignoredFiles,
-               github = x$github,
-               substitutions = x$substitutions,
-               includedFiles = x$includedFiles,
-               disabled = x$disabled,
-               triggerTemplate = x$triggerTemplate,
-               description = x$description)
-
+  BuildTrigger(
+    filename = x$filename,
+    name = x$name,
+    tags = x$tags,
+    build = x$build,
+    ignoredFiles = x$ignoredFiles,
+    github = x$github,
+    substitutions = x$substitutions,
+    includedFiles = x$includedFiles,
+    disabled = x$disabled,
+    triggerTemplate = x$triggerTemplate,
+    description = x$description
+  )
 }
 
 
@@ -556,18 +565,20 @@ as.BuildTrigger <- function(x){
 PubsubConfig <- function(subscription = NULL,
                          topic = NULL,
                          serviceAccountEmail = NULL,
-                         state = NULL){
-
+                         state = NULL) {
   structure(rmNullObs(
-    list(subscription = subscription,
-         topic = topic,
-         serviceAccountEmail = serviceAccountEmail,
-         state = state)),
-    class = c("gar_pubsubConfig","list"))
-
+    list(
+      subscription = subscription,
+      topic = topic,
+      serviceAccountEmail = serviceAccountEmail,
+      state = state
+    )
+  ),
+  class = c("gar_pubsubConfig", "list")
+  )
 }
 
-is.gar_pubsubConfig <- function(x){
+is.gar_pubsubConfig <- function(x) {
   inherits(x, "gar_pubsubConfig")
 }
 
@@ -581,15 +592,17 @@ is.gar_pubsubConfig <- function(x){
 #' @return A WebhookConfig object
 #'
 #' @export
-WebhookConfig <- function(secret, state = NULL){
-
+WebhookConfig <- function(secret, state = NULL) {
   structure(rmNullObs(
-    list(secret = secret,
-         state = state)),
-    class = c("gar_webhookConfig","list"))
-
+    list(
+      secret = secret,
+      state = state
+    )
+  ),
+  class = c("gar_webhookConfig", "list")
+  )
 }
 
-is.gar_webhookConfig <- function(x){
+is.gar_webhookConfig <- function(x) {
   inherits(x, "gar_webhookConfig")
 }

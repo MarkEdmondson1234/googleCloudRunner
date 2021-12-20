@@ -27,6 +27,11 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      GCE_DEFAULT_PROJECT_ID: mark-edmondson-gde
+      CR_BUILD_EMAIL: dummy-email
+      CR_REGION: europe-west6
+      GCS_DEFAULT_BUCKET: dummy-bucket
+
 
     steps:
       - uses: actions/checkout@v2

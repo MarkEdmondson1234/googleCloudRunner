@@ -233,8 +233,7 @@ pushed</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span></span>
 <span class="r-in"><span class="co"># create trigger that will publish Docker image to gcr.io/your-project/test upon each GitHub commit</span></span>
 <span class="r-in"><span class="fu">cr_deploy_docker_trigger</span><span class="op">(</span><span class="va">repo</span>, <span class="st">"test"</span>, dir <span class="op">=</span> <span class="st">"cloud_build"</span><span class="op">)</span></span>

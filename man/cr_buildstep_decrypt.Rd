@@ -36,9 +36,10 @@ You will need to set up the \href{https://cloud.google.com/cloud-build/docs/secu
 cr_project_set("my-project")
 cr_bucket_set("my-bucket")
 cr_buildstep_decrypt("secret.json.enc",
-                     plain = "secret.json",
-                     keyring = "my_keyring",
-                     key = "my_key")
+  plain = "secret.json",
+  keyring = "my_keyring",
+  key = "my_key"
+)
 }
 \seealso{
 Other Cloud Buildsteps: 
@@ -51,11 +52,13 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_gitsetup}()},
 \code{\link{cr_buildstep_mailgun}()},
 \code{\link{cr_buildstep_nginx_setup}()},
+\code{\link{cr_buildstep_packagetests}()},
 \code{\link{cr_buildstep_pkgdown}()},
 \code{\link{cr_buildstep_run}()},
 \code{\link{cr_buildstep_r}()},
 \code{\link{cr_buildstep_secret}()},
 \code{\link{cr_buildstep_slack}()},
+\code{\link{cr_buildstep_targets}()},
 \code{\link{cr_buildstep}()}
 }
 \concept{Cloud Buildsteps}

@@ -217,13 +217,14 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="cr_project_set.html">cr_project_set</a></span><span class="op">(</span><span class="st">"my-project"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-14 21:38:53 &gt;</span> ProjectId set to my-project</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-20 08:29:19 &gt;</span> ProjectId set to my-project</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-project"</span>
 <span class="r-in"><span class="fu"><a href="cr_bucket_set.html">cr_bucket_set</a></span><span class="op">(</span><span class="st">"my-bucket"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-14 21:38:53 &gt;</span> Bucket set to my-bucket</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-20 08:29:19 &gt;</span> Bucket set to my-bucket</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-bucket"</span>
 <span class="r-in"><span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild.yaml"</span>,</span>
-<span class="r-in">                           package <span class="op">=</span> <span class="st">"googleCloudRunner"</span><span class="op">)</span></span>
+<span class="r-in">  package <span class="op">=</span> <span class="st">"googleCloudRunner"</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="va">bb</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">cloudbuild</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># repo hosted on GitHub</span></span>
@@ -231,8 +232,8 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># repo mirrored to Cloud Source Repositories</span></span>
 <span class="r-in"><span class="va">cs_trigger</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"github_markedmondson1234_googlecloudrunner"</span>,</span>
-<span class="r-in">                                   type <span class="op">=</span> <span class="st">"cloud_source"</span><span class="op">)</span></span>
-<span class="r-in"></span>
+<span class="r-in">  type <span class="op">=</span> <span class="st">"cloud_source"</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="co"># build with in-line build code</span></span>
 <span class="r-in"><span class="fu">cr_buildtrigger</span><span class="op">(</span><span class="va">bb</span>, name <span class="op">=</span> <span class="st">"bt-github-inline"</span>, trigger <span class="op">=</span> <span class="va">gh_trigger</span><span class="op">)</span></span>
@@ -242,15 +243,16 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># build pointing to cloudbuild.yaml within the GitHub repo</span></span>
 <span class="r-in"><span class="fu">cr_buildtrigger</span><span class="op">(</span><span class="st">"inst/cloudbuild/cloudbuild.yaml"</span>,</span>
-<span class="r-in">                 name <span class="op">=</span> <span class="st">"bt-github-file"</span>, trigger <span class="op">=</span> <span class="va">gh_trigger</span><span class="op">)</span></span>
+<span class="r-in">  name <span class="op">=</span> <span class="st">"bt-github-file"</span>, trigger <span class="op">=</span> <span class="va">gh_trigger</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># build with repo mirror from file</span></span>
 <span class="r-in"><span class="fu">cr_buildtrigger</span><span class="op">(</span><span class="st">"inst/cloudbuild/cloudbuild.yaml"</span>,</span>
-<span class="r-in">                 name <span class="op">=</span> <span class="st">"bt-cs-file"</span>, trigger <span class="op">=</span> <span class="va">cs_trigger</span><span class="op">)</span></span>
+<span class="r-in">  name <span class="op">=</span> <span class="st">"bt-cs-file"</span>, trigger <span class="op">=</span> <span class="va">cs_trigger</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># creating build triggers that respond to pubsub events</span></span>
-<span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="co"># create a pubsub topic either in webUI or via library(googlePubSubR)</span></span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/andodet/googlePubsubR" class="external-link">googlePubsubR</a></span><span class="op">)</span></span>
@@ -263,18 +265,16 @@
 <span class="r-in"><span class="va">pubsub_trigger</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ==CloudBuildTriggerPubSubConfig==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> topic:  projects/my-project/topics/test-topic </span>
-<span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="co"># create the build trigger with in-line build</span></span>
 <span class="r-in"><span class="fu">cr_buildtrigger</span><span class="op">(</span><span class="va">bb</span>, name <span class="op">=</span> <span class="st">"pubsub-triggered"</span>, trigger <span class="op">=</span> <span class="va">pubsub_trigger</span><span class="op">)</span></span>
 <span class="r-in"><span class="co"># create scheduler that calls the pub/sub topic</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-build-pubsub"</span>,</span>
-<span class="r-in">            <span class="st">"15 5 * * *"</span>,</span>
-<span class="r-in">            pubsubTarget <span class="op">=</span> <span class="fu"><a href="cr_schedule_pubsub.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
+<span class="r-in">  <span class="st">"15 5 * * *"</span>,</span>
+<span class="r-in">  pubsubTarget <span class="op">=</span> <span class="fu"><a href="cr_schedule_pubsub.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

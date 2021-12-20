@@ -17,21 +17,23 @@ Write out a Build object to cloudbuild.yaml
 \examples{
 cr_project_set("my-project")
 # write from creating a Yaml object
-image = "gcr.io/my-project/my-image$BUILD_ID"
-run_yaml <- cr_build_yaml(steps = c(
-    cr_buildstep("docker", c("build","-t",image,".")),
-    cr_buildstep("docker", c("push",image)),
-    cr_buildstep("gcloud", c("beta","run","deploy", "test1", "--image", image))),
-  images = image)
-
+image <- "gcr.io/my-project/my-image$BUILD_ID"
+run_yaml <- cr_build_yaml(
+  steps = c(
+    cr_buildstep("docker", c("build", "-t", image, ".")),
+    cr_buildstep("docker", c("push", image)),
+    cr_buildstep("gcloud", c("beta", "run", "deploy", "test1", "--image", image))
+  ),
+  images = image
+)
 \dontrun{
 cr_build_write(run_yaml)
 }
 
 # write from a Build object
 build <- cr_build_make(system.file("cloudbuild/cloudbuild.yaml",
-                                   package = "googleCloudRunner"))
-
+  package = "googleCloudRunner"
+))
 \dontrun{
 cr_build_write(build)
 }

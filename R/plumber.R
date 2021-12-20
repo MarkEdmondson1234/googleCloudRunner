@@ -17,30 +17,28 @@
 #'
 #' @export
 #' @examples
-#'
 #' \dontrun{
 #'
 #' # within a plumber api.R script:
 #'
 #' # example function echos back pubsub message
-#' pub <- function(x){
+#' pub <- function(x) {
 #'   paste("Echo:", x)
 #' }
 #'
 #' #' Recieve pub/sub message
 #' #' @post /pubsub
 #' #' @param message a pub/sub message
-#' function(message=NULL){
+#' function(message = NULL) {
 #'   googleCloudRunner::cr_plumber_pubsub(message, pub)
-#'   }
-#'
+#' }
 #' }
 #' @seealso \href{https://cloud.google.com/run/docs/tutorials/pubsub}{Google Pub/Sub tutorial for Cloud Run}.  You can set up Pub/Sub messages from Google Cloud Storage buckets via \link[googleCloudStorageR]{gcs_create_pubsub}
 #' @family Cloud Run functions
-cr_plumber_pubsub <- function(message=NULL,
-                              pass_f=function(x) x){
+cr_plumber_pubsub <- function(message = NULL,
+                              pass_f = function(x) x) {
   #
-  if(is.null(message)) stop("pub/sub message not found")
+  if (is.null(message)) stop("pub/sub message not found")
   stopifnot(
     is.list(message),
     !is.null(message$data)
@@ -49,7 +47,6 @@ cr_plumber_pubsub <- function(message=NULL,
   the_data <- rawToChar(jsonlite::base64_dec(message$data))
 
   pass_f(the_data)
-
 }
 
 #' Send a message to pubsub
@@ -62,14 +59,17 @@ cr_plumber_pubsub <- function(message=NULL,
 #' @export
 #' @importFrom httr content POST
 #' @importFrom jsonlite base64_enc
-cr_pubsub <- function(endpoint, payload = jsonlite::toJSON("hello")){
+cr_pubsub <- function(endpoint, payload = jsonlite::toJSON("hello")) {
   content(
     POST(endpoint,
-         body = list(message = list(
-           data = base64_enc(payload))),
-         encode="json"))
+      body = list(message = list(
+        data = base64_enc(payload)
+      )),
+      encode = "json"
+    )
+  )
 }
 
-cran_check_plumber <- function(){
+cran_check_plumber <- function() {
   plumber::available_apis()
 }

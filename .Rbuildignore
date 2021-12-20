@@ -27,4 +27,8 @@
 ^data-raw$
 ^NEWS\.txt$
 ^\.github$
+<<<<<<< HEAD
 ^lint\.yaml$
+=======
+^\.lintr$
+>>>>>>> upstream/master

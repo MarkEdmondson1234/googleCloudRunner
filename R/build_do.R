@@ -17,17 +17,20 @@
 #' @examples
 #' cr_project_set("my-project")
 #' my_gcs_source <- cr_build_source(StorageSource("my_code.tar.gz",
-#'                                              bucket = "gs://my-bucket"))
+#'   bucket = "gs://my-bucket"
+#' ))
 #' my_gcs_source
 #'
 #' my_repo_source <- cr_build_source(RepoSource("github_username_my-repo.com",
-#'                                            branchName="master"))
+#'   branchName = "master"
+#' ))
 #' my_repo_source
 #' \dontrun{
 #'
 #' # build from a cloudbuild.yaml file
 #' cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml",
-#'                                package="googleCloudRunner")
+#'   package = "googleCloudRunner"
+#' )
 #'
 #' # asynchronous, will launch log browser by default
 #' b1 <- cr_build(cloudbuild_file)
@@ -41,10 +44,12 @@
 #'
 #' # build from a cloud storage source
 #' build1 <- cr_build(cloudbuild_file,
-#'                    source = my_gcs_source)
+#'   source = my_gcs_source
+#' )
 #' # build from a git repository source
 #' build2 <- cr_build(cloudbuild_file,
-#'                    source = my_repo_source)
+#'   source = my_repo_source
+#' )
 #'
 #' # you can send in results for previous builds to trigger
 #' # the same build under a new Id
@@ -53,19 +58,17 @@
 #'
 #' # a build with substitutions (Cloud Build macros)
 #' cr_build(build2, substitutions = list(`_SUB` = "yo"))
-#'
 #' }
 cr_build <- function(x,
                      source = NULL,
-                     timeout=NULL,
-                     images=NULL,
-                     substitutions=NULL,
+                     timeout = NULL,
+                     images = NULL,
+                     substitutions = NULL,
                      serviceAccount = NULL,
                      artifacts = NULL,
                      options = NULL,
                      projectId = cr_project_get(),
                      launch_browser = interactive()) {
-
   assert_that(
     is.flag(launch_browser),
     is.string(projectId)
@@ -73,34 +76,38 @@ cr_build <- function(x,
 
   timeout <- check_timeout(timeout)
 
-  url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds",
-                 projectId)
+  url <- sprintf(
+    "https://cloudbuild.googleapis.com/v1/projects/%s/builds",
+    projectId
+  )
 
-  if(is.gar_Build(x)){
+  if (is.gar_Build(x)) {
     # turn existing build into a valid new build
     build <- safe_set(x, "status", "QUEUED")
-
-  } else if(is.BuildOperationMetadata(x)){
+  } else if (is.BuildOperationMetadata(x)) {
     x <- as.gar_Build(x)
     build <- safe_set(x, "status", "QUEUED")
   } else {
-    build <- cr_build_make(yaml = x,
-                           source = source,
-                           timeout = timeout,
-                           images = images,
-                           artifacts = artifacts,
-                           options = options,
-                           substitutions = substitutions,
-                           serviceAccount = serviceAccount)
+    build <- cr_build_make(
+      yaml = x,
+      source = source,
+      timeout = timeout,
+      images = images,
+      artifacts = artifacts,
+      options = options,
+      substitutions = substitutions,
+      serviceAccount = serviceAccount
+    )
   }
 
 
-  parse_f <- function(x){
-    structure(x,class = "BuildOperationMetadata")
+  parse_f <- function(x) {
+    structure(x, class = "BuildOperationMetadata")
   }
   # cloudbuild.projects.builds.create
   f <- gar_api_generator(url, "POST",
-         data_parse_function = parse_f)
+    data_parse_function = parse_f
+  )
   stopifnot(is.gar_Build(build))
 
   o <- f(the_body = build)
@@ -109,23 +116,23 @@ cr_build <- function(x,
   cli::cli_alert_info("Cloud Build started - logs:")
   cli::cli_text("{.url {logs}}")
 
-  if(launch_browser){
+  if (launch_browser) {
     utils::browseURL(logs)
   }
 
   invisible(o)
 }
 
-is.BuildOperationMetadata <- function(x){
+is.BuildOperationMetadata <- function(x) {
   inherits(x, "BuildOperationMetadata")
 }
 
 
 
-extract_logs <- function(o){
-  if(is.BuildOperationMetadata(o)){
+extract_logs <- function(o) {
+  if (is.BuildOperationMetadata(o)) {
     return(o$metadata$build$logUrl)
-  } else if(is.gar_Build(o)){
+  } else if (is.gar_Build(o)) {
     return(o$logUrl)
   } else {
     warning("Could not extract logUrl from class: ", class(o))
@@ -150,73 +157,73 @@ extract_logs <- function(o){
 #' @family Cloud Build functions
 #' @examples
 #' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
-#'                            package = "googleCloudRunner")
+#'   package = "googleCloudRunner"
+#' )
 #' cr_build_make(cloudbuild)
 cr_build_make <- function(yaml,
                           source = NULL,
-                          timeout=NULL,
-                          images=NULL,
+                          timeout = NULL,
+                          images = NULL,
                           artifacts = NULL,
                           options = NULL,
                           substitutions = NULL,
                           availableSecrets = NULL,
                           serviceAccount = NULL,
-                          logsBucket = NULL){
-
+                          logsBucket = NULL) {
   stepsy <- get_cr_yaml(yaml)
-  if(is.null(stepsy$steps)){
+  if (is.null(stepsy$steps)) {
     stop("Invalid cloudbuild yaml - 'steps:' not found.", call. = FALSE)
   }
 
   timeout <- check_timeout(timeout)
-  if(is.null(timeout) && !is.null(stepsy$timeout)){
+  if (is.null(timeout) && !is.null(stepsy$timeout)) {
     timeout <- stepsy$timeout
   }
 
-  if(!is.null(source)){
+  if (!is.null(source)) {
     assert_that(is.gar_Source(source))
   }
 
-  if(is.null(images) && !is.null(stepsy$images)){
+  if (is.null(images) && !is.null(stepsy$images)) {
     images <- stepsy$images
   }
 
-  if(is.null(artifacts) && !is.null(stepsy$artifacts)){
+  if (is.null(artifacts) && !is.null(stepsy$artifacts)) {
     artifacts <- stepsy$artifacts
   }
 
-  if(is.null(options) && !is.null(stepsy$options)){
+  if (is.null(options) && !is.null(stepsy$options)) {
     options <- stepsy$options
   }
 
-  if(is.null(substitutions) && !is.null(stepsy$substitutions)){
+  if (is.null(substitutions) && !is.null(stepsy$substitutions)) {
     substitutions <- stepsy$substitutions
   }
 
-  if(is.null(logsBucket) && !is.null(stepsy$logsBucket)){
+  if (is.null(logsBucket) && !is.null(stepsy$logsBucket)) {
     logsBucket <- stepsy$logsBucket
   }
 
-  if(is.null(availableSecrets) && !is.null(stepsy$availableSecrets)){
+  if (is.null(availableSecrets) && !is.null(stepsy$availableSecrets)) {
     as <- stepsy$availableSecrets
   } else {
     as <- parse_yaml_secret_list(availableSecrets)
   }
 
-  if(is.null(serviceAccount) && !is.null(stepsy$serviceAccount)){
+  if (is.null(serviceAccount) && !is.null(stepsy$serviceAccount)) {
     serviceAccount <- stepsy$serviceAccount
   }
 
-  Build(steps = stepsy$steps,
-        timeout = timeout,
-        images = images,
-        source = source,
-        options = options,
-        substitutions = substitutions,
-        artifacts = artifacts,
-        availableSecrets = as,
-        logsBucket = logsBucket,
-        serviceAccount = serviceAccount)
+  Build(
+    steps = stepsy$steps,
+    timeout = timeout,
+    images = images,
+    source = source,
+    options = options,
+    substitutions = substitutions,
+    artifacts = artifacts,
+    availableSecrets = as,
+    logsBucket = logsBucket,
+    serviceAccount = serviceAccount
+  )
 }
-
-

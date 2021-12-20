@@ -29,7 +29,8 @@ Useful for editing existing buildsteps
 }
 \examples{
 package_build <- system.file("cloudbuild/cloudbuild.yaml",
-                             package = "googleCloudRunner")
+  package = "googleCloudRunner"
+)
 build <- cr_build_make(package_build)
 build
 cr_buildstep_extract(build, step = 1)
@@ -38,7 +39,7 @@ cr_buildstep_extract(build, step = 2)
 edit_me <- cr_buildstep_extract(build, step = 2)
 cr_buildstep_edit(edit_me, name = "blah")
 cr_buildstep_edit(edit_me, name = "gcr.io/blah")
-cr_buildstep_edit(edit_me, args = c("blah1","blah2"), dir = "meh")
+cr_buildstep_edit(edit_me, args = c("blah1", "blah2"), dir = "meh")
 }
 \seealso{
 Other Cloud Buildsteps: 
@@ -51,11 +52,13 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_gitsetup}()},
 \code{\link{cr_buildstep_mailgun}()},
 \code{\link{cr_buildstep_nginx_setup}()},
+\code{\link{cr_buildstep_packagetests}()},
 \code{\link{cr_buildstep_pkgdown}()},
 \code{\link{cr_buildstep_run}()},
 \code{\link{cr_buildstep_r}()},
 \code{\link{cr_buildstep_secret}()},
 \code{\link{cr_buildstep_slack}()},
+\code{\link{cr_buildstep_targets}()},
 \code{\link{cr_buildstep}()}
 }
 \concept{Cloud Buildsteps}

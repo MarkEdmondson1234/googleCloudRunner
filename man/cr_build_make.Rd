@@ -43,7 +43,8 @@ This creates a \link{Build} object via the standard cloudbuild.yaml format
 }
 \examples{
 cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
-                           package = "googleCloudRunner")
+  package = "googleCloudRunner"
+)
 cr_build_make(cloudbuild)
 }
 \seealso{

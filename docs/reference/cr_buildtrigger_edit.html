@@ -183,24 +183,25 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">github</span> <span class="op">&lt;-</span> <span class="fu"><a href="GitHubEventsConfig.html">GitHubEventsConfig</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span>,</span>
-<span class="r-in">                            branch <span class="op">=</span> <span class="st">"master"</span><span class="op">)</span></span>
+<span class="r-in">  branch <span class="op">=</span> <span class="st">"master"</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="va">bt2</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"trig2"</span>,</span>
-<span class="r-in">                       trigger <span class="op">=</span> <span class="va">github</span>,</span>
-<span class="r-in">                       build <span class="op">=</span> <span class="st">"inst/cloudbuild/cloudbuild.yaml"</span><span class="op">)</span></span>
+<span class="r-in">  trigger <span class="op">=</span> <span class="va">github</span>,</span>
+<span class="r-in">  build <span class="op">=</span> <span class="st">"inst/cloudbuild/cloudbuild.yaml"</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="va">bt3</span> <span class="op">&lt;-</span> <span class="fu"><a href="BuildTrigger.html">BuildTrigger</a></span><span class="op">(</span></span>
 <span class="r-in">  filename <span class="op">=</span> <span class="st">"inst/cloudbuild/cloudbuild.yaml"</span>,</span>
 <span class="r-in">  name <span class="op">=</span> <span class="st">"edited1"</span>,</span>
 <span class="r-in">  tags <span class="op">=</span> <span class="st">"edit"</span>,</span>
 <span class="r-in">  github <span class="op">=</span> <span class="va">github</span>,</span>
 <span class="r-in">  disabled <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span class="r-in">  description <span class="op">=</span> <span class="st">"edited trigger"</span><span class="op">)</span></span>
+<span class="r-in">  description <span class="op">=</span> <span class="st">"edited trigger"</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">edited</span> <span class="op">&lt;-</span> <span class="fu">cr_buildtrigger_edit</span><span class="op">(</span><span class="va">bt3</span>, triggerId <span class="op">=</span> <span class="va">bt2</span><span class="op">)</span></span>
-<span class="r-in"></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 </code></pre></div>

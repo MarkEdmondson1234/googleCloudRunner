@@ -176,37 +176,41 @@
 <code><a href="cr_buildstep_gcloud.html">cr_buildstep_gcloud</a>()</code>,
 <code><a href="cr_buildstep_git.html">cr_buildstep_gitsetup</a>()</code>,
 <code><a href="cr_buildstep_mailgun.html">cr_buildstep_mailgun</a>()</code>,
+<code><a href="cr_buildstep_packagetests.html">cr_buildstep_packagetests</a>()</code>,
 <code><a href="cr_buildstep_pkgdown.html">cr_buildstep_pkgdown</a>()</code>,
 <code><a href="cr_buildstep_run.html">cr_buildstep_run</a>()</code>,
 <code><a href="cr_buildstep_r.html">cr_buildstep_r</a>()</code>,
 <code><a href="cr_buildstep_secret.html">cr_buildstep_secret</a>()</code>,
 <code><a href="cr_buildstep_slack.html">cr_buildstep_slack</a>()</code>,
+<code><a href="cr_buildstep_targets.html">cr_buildstep_targets</a>()</code>,
 <code><a href="cr_buildstep.html">cr_buildstep</a>()</code></p></div>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="cr_project_set.html">cr_project_set</a></span><span class="op">(</span><span class="st">"my-project"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-14 21:38:50 &gt;</span> ProjectId set to my-project</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-20 08:29:17 &gt;</span> ProjectId set to my-project</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-project"</span>
 <span class="r-in"><span class="fu"><a href="cr_bucket_set.html">cr_bucket_set</a></span><span class="op">(</span><span class="st">"my-bucket"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-14 21:38:50 &gt;</span> Bucket set to my-bucket</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-20 08:29:17 &gt;</span> Bucket set to my-bucket</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-bucket"</span>
 <span class="r-in"><span class="fu"><a href="cr_region_set.html">cr_region_set</a></span><span class="op">(</span><span class="st">"europe-west1"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-14 21:38:50 &gt;</span> Region set to europe-west1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-20 08:29:17 &gt;</span> Region set to europe-west1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "europe-west1"</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">html_folder</span> <span class="op">&lt;-</span> <span class="st">"my_html"</span></span>
 <span class="r-in"><span class="va">run_image</span> <span class="op">&lt;-</span> <span class="st">"gcr.io/my-project/my-image-for-cloudrun"</span></span>
 <span class="r-in"><span class="fu"><a href="cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span></span>
-<span class="r-in"> steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu">cr_buildstep_nginx_setup</span><span class="op">(</span><span class="va">html_folder</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu"><a href="cr_buildstep_docker.html">cr_buildstep_docker</a></span><span class="op">(</span><span class="va">run_image</span>, dir <span class="op">=</span> <span class="va">html_folder</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu"><a href="cr_buildstep_run.html">cr_buildstep_run</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"running-nginx"</span>,</span>
-<span class="r-in">                   image <span class="op">=</span> <span class="va">run_image</span>,</span>
-<span class="r-in">                   concurrency <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></span>
-<span class="r-in">                   <span class="op">)</span></span>
-<span class="r-in">           <span class="op">)</span></span>
+<span class="r-in">  steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span class="r-in">    <span class="fu">cr_buildstep_nginx_setup</span><span class="op">(</span><span class="va">html_folder</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu"><a href="cr_buildstep_docker.html">cr_buildstep_docker</a></span><span class="op">(</span><span class="va">run_image</span>, dir <span class="op">=</span> <span class="va">html_folder</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu"><a href="cr_buildstep_run.html">cr_buildstep_run</a></span><span class="op">(</span></span>
+<span class="r-in">      name <span class="op">=</span> <span class="st">"running-nginx"</span>,</span>
+<span class="r-in">      image <span class="op">=</span> <span class="va">run_image</span>,</span>
+<span class="r-in">      concurrency <span class="op">=</span> <span class="fl">80</span></span>
+<span class="r-in">    <span class="op">)</span></span>
+<span class="r-in">  <span class="op">)</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ==cloudRunnerYaml==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> steps:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - name: ubuntu</span>

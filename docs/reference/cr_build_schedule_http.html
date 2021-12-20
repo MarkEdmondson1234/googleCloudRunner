@@ -250,18 +250,20 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - Rscript</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - -e</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - paste0('1 + 1 = ', 1+1)</span>
-<span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu"><a href="cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-build-test1"</span>, schedule<span class="op">=</span><span class="st">"15 5 * * *"</span>,</span>
-<span class="r-in">            httpTarget <span class="op">=</span> <span class="fu">cr_build_schedule_http</span><span class="op">(</span><span class="va">build1</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-build-test1"</span>,</span>
+<span class="r-in">  schedule <span class="op">=</span> <span class="st">"15 5 * * *"</span>,</span>
+<span class="r-in">  httpTarget <span class="op">=</span> <span class="fu">cr_build_schedule_http</span><span class="op">(</span><span class="va">build1</span><span class="op">)</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># a cloud build you would like to schedule</span></span>
 <span class="r-in"><span class="va">itworks</span> <span class="op">&lt;-</span> <span class="fu"><a href="cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, launch_browser <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># once working, pass in the build to the scheduler</span></span>
-<span class="r-in"><span class="fu"><a href="cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"itworks-schedule"</span>, schedule <span class="op">=</span> <span class="st">"15 5 * * *"</span>,</span>
-<span class="r-in">            httpTarget <span class="op">=</span> <span class="fu">cr_build_schedule_http</span><span class="op">(</span><span class="va">itworks</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span class="fu"><a href="cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"itworks-schedule"</span>,</span>
+<span class="r-in">  schedule <span class="op">=</span> <span class="st">"15 5 * * *"</span>,</span>
+<span class="r-in">  httpTarget <span class="op">=</span> <span class="fu">cr_build_schedule_http</span><span class="op">(</span><span class="va">itworks</span><span class="op">)</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 </code></pre></div>

@@ -22,31 +22,34 @@
 #' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
 #' build1 <- cr_build_make(cloudbuild)
 #' build1
-#'
 #' \dontrun{
-#' cr_schedule("cloud-build-test1", schedule="15 5 * * *",
-#'             httpTarget = cr_build_schedule_http(build1))
+#' cr_schedule("cloud-build-test1",
+#'   schedule = "15 5 * * *",
+#'   httpTarget = cr_build_schedule_http(build1)
+#' )
 #'
 #' # a cloud build you would like to schedule
 #' itworks <- cr_build("cloudbuild.yaml", launch_browser = FALSE)
 #'
 #' # once working, pass in the build to the scheduler
-#' cr_schedule("itworks-schedule", schedule = "15 5 * * *",
-#'             httpTarget = cr_build_schedule_http(itworks))
-#'
+#' cr_schedule("itworks-schedule",
+#'   schedule = "15 5 * * *",
+#'   httpTarget = cr_build_schedule_http(itworks)
+#' )
 #' }
 #'
 cr_build_schedule_http <- function(build,
                                    email = cr_email_get(),
-                                   projectId = cr_project_get()){
-
+                                   projectId = cr_project_get()) {
   build <- as.gar_Build(build)
   build <- safe_set(build, "status", "QUEUED")
 
   HttpTarget(
     httpMethod = "POST",
-    uri = sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds",
-                  projectId),
+    uri = sprintf(
+      "https://cloudbuild.googleapis.com/v1/projects/%s/builds",
+      projectId
+    ),
     body = build,
     oauthToken = list(serviceAccountEmail = email)
   )
@@ -65,15 +68,16 @@ cr_schedule_build <- function(build,
                               email = cr_email_get(),
                               projectId = cr_project_get(),
                               ...) {
-
   https <- cr_build_schedule_http(build,
-                                  email = email,
-                                  projectId = projectId)
+    email = email,
+    projectId = projectId
+  )
 
   cr_schedule(
     schedule = schedule,
     httpTarget = https,
-    ...)
+    ...
+  )
 }
 
 #' Create a PubSub Target object for Cloud Scheduler
@@ -93,9 +97,9 @@ cr_schedule_build <- function(build,
 #' cr_project_set("my-project")
 #' cr_bucket_set("my-bucket")
 #' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
-#'                            package = "googleCloudRunner")
+#'   package = "googleCloudRunner"
+#' )
 #' bb <- cr_build_make(cloudbuild)
-#'
 #' \dontrun{
 #' # create a pubsub topic either in Google Console webUI or library(googlePubSubR)
 #' library(googlePubsubR)
@@ -106,7 +110,6 @@ cr_schedule_build <- function(build,
 #' # create build trigger that will watch for messages to your created topic
 #' pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
 #' pubsub_trigger
-#'
 #' \dontrun{
 #' # create the build trigger with in-line build
 #' cr_buildtrigger(bb, name = "pubsub-triggered", trigger = pubsub_trigger)
@@ -114,15 +117,16 @@ cr_schedule_build <- function(build,
 #'
 #' # create scheduler that calls the pub/sub topic
 #' cr_schedule("cloud-build-pubsub",
-#'             "15 5 * * *",
-#'             pubsubTarget = cr_schedule_pubsub("test-topic"))
-#'
+#'   "15 5 * * *",
+#'   pubsubTarget = cr_schedule_pubsub("test-topic")
+#' )
 #' }
 #'
 #' # builds can be also parametrised to respond to parameters within your pubsub topic
 #' # this cloudbuild echos back the value sent in 'var1'
 #' cloudbuild <- system.file("cloudbuild/cloudbuild_substitutions.yml",
-#'                            package = "googleCloudRunner")
+#'   package = "googleCloudRunner"
+#' )
 #' the_build <- cr_build_make(cloudbuild)
 #'
 #' # var1 is sent via Pubsub to the buildtrigger
@@ -131,29 +135,26 @@ cr_schedule_build <- function(build,
 #'
 #' # create build trigger that will work from pub/subscription
 #' pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
-#'
 #' \dontrun{
 #' cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trigger)
 #'
 #' # create scheduler that calls the pub/sub topic with a parameter
 #' cr_schedule("cloud-build-pubsub",
-#'             "15 5 * * *",
-#'             pubsubTarget = cr_schedule_pubsub("test-topic",
-#'                                               data = send_me))
-#'
+#'   "15 5 * * *",
+#'   pubsubTarget = cr_schedule_pubsub("test-topic",
+#'     data = send_me
+#'   )
+#' )
 #' }
 #'
-#'
-cr_schedule_pubsub <- function(
-  topicName,
-  PubsubMessage = NULL,
-  data = NULL,
-  attributes = NULL,
-  projectId = cr_project_get()){
-
+cr_schedule_pubsub <- function(topicName,
+                               PubsubMessage = NULL,
+                               data = NULL,
+                               attributes = NULL,
+                               projectId = cr_project_get()) {
   the_attributes <- attributes
-  if(!is.null(PubsubMessage)){
-    if(!inherits(PubsubMessage, "PubsubMessage")){
+  if (!is.null(PubsubMessage)) {
+    if (!inherits(PubsubMessage, "PubsubMessage")) {
       stop("Not a PubsubMessage object passed to function.", call. = FALSE)
     }
 
@@ -162,7 +163,7 @@ cr_schedule_pubsub <- function(
   }
 
 
-  if(is.null(data)){
+  if (is.null(data)) {
     the_data <- topicName
   } else {
     the_data <- toJSON(data)
@@ -174,5 +175,3 @@ cr_schedule_pubsub <- function(
     attributes = the_attributes
   )
 }
-
-

@@ -105,13 +105,15 @@ This is the old default and is suitable for smaller R scripts or when you don't 
 
 \examples{
 
-r_lines <- c("list.files()",
-             "library(dplyr)",
-             "mtcars \%>\% select(mpg)",
-             "sessionInfo()")
+r_lines <- c(
+  "list.files()",
+  "library(dplyr)",
+  "mtcars \%>\% select(mpg)",
+  "sessionInfo()"
+)
 source <- cr_build_source(RepoSource("googleCloudStorageR",
-                                     branchName = "master"))
-
+  branchName = "master"
+))
 \dontrun{
 cr_project_set("my-project")
 cr_region_set("europe-west1")

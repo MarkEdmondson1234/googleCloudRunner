@@ -24,13 +24,11 @@
 #'
 #' @export
 #' @examples
-#'
 #' \dontrun{
 #' cr_project_set("my-project")
 #' cr_region_set("europe-west1")
 #' cr_bucket_set("my-bucket")
 #' cr_deploy_run(system.file("example/", package = "googleCloudRunner"))
-#'
 #' }
 cr_deploy_run <- function(local,
                           remote = basename(local),
@@ -41,12 +39,11 @@ cr_deploy_run <- function(local,
                           bucket = cr_bucket_get(),
                           projectId = cr_project_get(),
                           launch_browser = interactive(),
-                          timeout=600L,
+                          timeout = 600L,
                           kaniko_cache = TRUE,
                           pre_steps = NULL,
                           post_steps = NULL,
-                          ...){
-
+                          ...) {
   assert_that(
     is.dir(local),
     is.string(remote),
@@ -58,39 +55,39 @@ cr_deploy_run <- function(local,
   image_name <- make_image_name(image_name, projectId)
 
   built <- cr_deploy_docker(local,
-                            image_name = image_name,
-                            dockerfile = dockerfile,
-                            remote = remote,
-                            tag = tag,
-                            bucket = bucket,
-                            projectId = projectId,
-                            launch_browser = launch_browser,
-                            timeout=timeout,
-                            kaniko_cache=kaniko_cache,
-                            pre_steps = pre_steps,
-                            post_steps = post_steps
-                            )
+    image_name = image_name,
+    dockerfile = dockerfile,
+    remote = remote,
+    tag = tag,
+    bucket = bucket,
+    projectId = projectId,
+    launch_browser = launch_browser,
+    timeout = timeout,
+    kaniko_cache = kaniko_cache,
+    pre_steps = pre_steps,
+    post_steps = post_steps
+  )
 
-  if(built$status != "SUCCESS"){
+  if (built$status != "SUCCESS") {
     myMessage("Error building Dockerfile", level = 3)
     return(built)
   }
 
   built_image <- paste0(image_name, ":", built$id)
 
-  if(is.null(built_image)){
+  if (is.null(built_image)) {
     stop("Could not find image name in built response", call. = FALSE)
   }
   myMessage("Built Docker image: ", built_image, level = 3)
 
   cr_run(built_image,
-         name = lower_alpha_dash(remote),
-         region = region,
-         projectId = projectId,
-         launch_browser=launch_browser,
-         timeout=timeout,
-         ...)
-
+    name = lower_alpha_dash(remote),
+    region = region,
+    projectId = projectId,
+    launch_browser = launch_browser,
+    timeout = timeout,
+    ...
+  )
 }
 
 #' @param html_folder the folder containing all the html
@@ -109,14 +106,12 @@ cr_deploy_run <- function(local,
 #' @export
 #' @import assertthat
 #' @examples
-#'
 #' \dontrun{
 #' cr_project_set("my-project")
 #' cr_region_set("europe-west1")
 #' cr_bucket_set("my-bucket")
 #'
 #' cr_deploy_html("my_folder")
-#'
 #' }
 #' @rdname cr_deploy_run
 cr_deploy_html <- function(html_folder,
@@ -127,26 +122,31 @@ cr_deploy_html <- function(html_folder,
                            bucket = cr_bucket_get(),
                            projectId = cr_project_get(),
                            launch_browser = interactive(),
-                           timeout=600L,
-                           ...){
+                           timeout = 600L,
+                           ...) {
+  file.copy(
+    from = system.file("docker", "nginx", "default.template",
+      package = "googleCloudRunner"
+    ),
+    to = file.path(html_folder, "default.template"),
+    overwrite = TRUE
+  )
 
-  file.copy(from = system.file("docker","nginx","default.template",
-                               package = "googleCloudRunner"),
-            to = file.path(html_folder, "default.template"),
-            overwrite = TRUE)
-
-  cr_deploy_run(local = html_folder,
-                remote = remote,
-                dockerfile = system.file("docker","nginx","Dockerfile",
-                                         package = "googleCloudRunner"),
-                image_name = image_name,
-                tag = tag,
-                region =  region,
-                bucket = bucket,
-                projectId = projectId,
-                launch_browser = launch_browser,
-                timeout=timeout,
-                ...)
+  cr_deploy_run(
+    local = html_folder,
+    remote = remote,
+    dockerfile = system.file("docker", "nginx", "Dockerfile",
+      package = "googleCloudRunner"
+    ),
+    image_name = image_name,
+    tag = tag,
+    region = region,
+    bucket = bucket,
+    projectId = projectId,
+    launch_browser = launch_browser,
+    timeout = timeout,
+    ...
+  )
 }
 
 #' Deploy a plumber API
@@ -164,14 +164,12 @@ cr_deploy_html <- function(html_folder,
 #'
 #' @export
 #' @examples
-#'
 #' \dontrun{
 #' cr_project_set("my-project")
 #' cr_region_set("europe-west1")
 #' cr_bucket_set("my-bucket")
 #'
 #' cr_deploy_plumber(system.file("example/", package = "googleCloudRunner"))
-#'
 #' }
 cr_deploy_plumber <- function(api,
                               remote = basename(api),
@@ -182,38 +180,37 @@ cr_deploy_plumber <- function(api,
                               bucket = cr_bucket_get(),
                               projectId = cr_project_get(),
                               launch_browser = interactive(),
-                              timeout=600L,
-                              ...){
-
+                              timeout = 600L,
+                              ...) {
   local <- api
   local_files <- list.files(local)
-  if(!"api.R" %in% local_files){
+  if (!"api.R" %in% local_files) {
     stop("Must include api.R in local deployment folder
          with library(plumber) implementation
          for Cloud Run deployments", call. = FALSE)
   }
 
   # if no dockerfile, attempt to create it
-  if(is.null(dockerfile)){
-    if(!"Dockerfile" %in% local_files){
-      myMessage("No Dockerfile detected in ",local, level = 3)
+  if (is.null(dockerfile)) {
+    if (!"Dockerfile" %in% local_files) {
+      myMessage("No Dockerfile detected in ", local, level = 3)
       cr_dockerfile_plumber(local)
     } else {
       myMessage("Using existing Dockerfile found in folder", level = 3)
     }
   }
 
-  cr_deploy_run(local = local,
-                remote = remote,
-                dockerfile = dockerfile,
-                image_name = image_name,
-                tag = tag,
-                region =  region,
-                bucket = bucket,
-                projectId = projectId,
-                launch_browser = launch_browser,
-                timeout=timeout,
-                ...)
-
+  cr_deploy_run(
+    local = local,
+    remote = remote,
+    dockerfile = dockerfile,
+    image_name = image_name,
+    tag = tag,
+    region = region,
+    bucket = bucket,
+    projectId = projectId,
+    launch_browser = launch_browser,
+    timeout = timeout,
+    ...
+  )
 }
-

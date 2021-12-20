@@ -32,13 +32,13 @@
 #'
 #' @export
 #' @examples
-#'
 #' \dontrun{
 #' cr_project_set("my-project")
 #' cr_region_set("europe-west1")
 #' cr_run("gcr.io/my-project/my-image")
 #' cr_run("gcr.io/cloud-tagging-10302018/gtm-cloud-image:stable",
-#'        env_vars = c("CONTAINER_CONFIG=xxxxxxx"))
+#'   env_vars = c("CONTAINER_CONFIG=xxxxxxx")
+#' )
 #' }
 cr_run <- function(image,
                    name = basename(image),
@@ -48,16 +48,16 @@ cr_run <- function(image,
                    max_instances = "default",
                    memory = "256Mi",
                    cpu = 1,
-                   timeout=600L,
+                   timeout = 600L,
                    region = cr_region_get(),
                    projectId = cr_project_get(),
-                   launch_browser=interactive(),
+                   launch_browser = interactive(),
                    env_vars = NULL,
                    gcloud_args = NULL,
                    ...) {
-
-  myMessage(paste("#> Launching CloudRun image: ",image),
-            level = 3)
+  myMessage(paste("#> Launching CloudRun image: ", image),
+    level = 3
+  )
 
   assert_that(
     is.string(image),
@@ -70,33 +70,36 @@ cr_run <- function(image,
     steps = c(
       cr_buildstep_docker_auth_auto(image = image),
       cr_buildstep_run(name = name,
-                             image = image,
-                             allowUnauthenticated = allowUnauthenticated,
-                             region = region,
-                             concurrency = concurrency,
-                             port = port,
-                             max_instances = max_instances,
-                             memory = memory,
-                             cpu = cpu,
-                             env_vars = env_vars,
-                             gcloud_args = gcloud_args,
-                             ...)
+                       image = image,
+                       allowUnauthenticated = allowUnauthenticated,
+                       region = region,
+                       concurrency = concurrency,
+                       port = port,
+                       max_instances = max_instances,
+                       memory = memory,
+                       cpu = cpu,
+                       env_vars = env_vars,
+                       gcloud_args = gcloud_args,
+                       ...)
     )
   )
 
   build <- cr_build(run_yaml,
-                    projectId=projectId,
-                    timeout = timeout,
-                    launch_browser=launch_browser)
+    projectId = projectId,
+    timeout = timeout,
+    launch_browser = launch_browser
+  )
 
   result <- cr_build_wait(build, projectId = projectId)
 
-  if(result$status == "SUCCESS"){
+  if (result$status == "SUCCESS") {
     run <- cr_run_get(name, projectId = projectId)
-    myMessage(paste("#> Running at: ",
-                     run$status$url), level = 3)
+    myMessage(paste(
+      "#> Running at: ",
+      run$status$url
+    ), level = 3)
 
-    if(launch_browser) utils::browseURL(run$status$url)
+    if (launch_browser) utils::browseURL(run$status$url)
 
     return(run)
   } else {
@@ -107,30 +110,37 @@ cr_run <- function(image,
 
 
 
-make_endpoint <- function(endbit){
+make_endpoint <- function(endbit) {
   region <- .cr_env$region
 
-  if(is.null(region)){
+  if (is.null(region)) {
     region <- Sys.getenv("CR_REGION")
     .cr_env$region <- region
   }
 
-  if(is.null(region) || region == ""){
+  if (is.null(region) || region == "") {
     stop("Must select region via cr_region_set() or set environment CR_REGION",
-         call. = FALSE)
+      call. = FALSE
+    )
   }
 
-  endpoints <- c("us-central1",
-                 "asia-northeast1",
-                 "europe-west1",
-                 "us-east1")
-  if(!region %in% endpoints){
-    warning("Endpoint is not one of ",
-            paste(endpoints, collapse = " "), " got: ", region)
+  endpoints <- c(
+    "us-central1",
+    "asia-northeast1",
+    "europe-west1",
+    "us-east1"
+  )
+  if (!region %in% endpoints) {
+    warning(
+      "Endpoint is not one of ",
+      paste(endpoints, collapse = " "), " got: ", region
+    )
   }
 
-  sprintf("https://%s-run.googleapis.com/apis/serving.knative.dev/v1/%s",
-          region, endbit)
+  sprintf(
+    "https://%s-run.googleapis.com/apis/serving.knative.dev/v1/%s",
+    region, endbit
+  )
 }
 
 
@@ -151,55 +161,57 @@ cr_run_list <- function(projectId = cr_project_get(),
                         labelSelector = NULL,
                         limit = NULL,
                         summary = TRUE) {
-
   assert_that(
     is.flag(summary)
   )
 
   url <- make_endpoint(sprintf("namespaces/%s/services", projectId))
   myMessage("Cloud Run services in region: ",
-            .cr_env$region, level = 3)
+    .cr_env$region,
+    level = 3
+  )
   # run.namespaces.services.list
-  #TODO: paging
-  pars <-  list(labelSelector = labelSelector,
-                continue = NULL,
-                limit = limit)
+  # TODO: paging
+  pars <- list(
+    labelSelector = labelSelector,
+    continue = NULL,
+    limit = limit
+  )
   f <- gar_api_generator(url,
-                         "GET",
-                         pars_args = rmNullObs(pars),
-                         data_parse_function = parse_service_list,
-                         checkTrailingSlash=FALSE)
+    "GET",
+    pars_args = rmNullObs(pars),
+    data_parse_function = parse_service_list,
+    checkTrailingSlash = FALSE
+  )
   o <- f()
 
-  if(!summary){
+  if (!summary) {
     return(o)
   }
 
   parse_service_list_post(o)
-
 }
 
 #' @noRd
 #' @import assertthat
-parse_service_list <- function(x){
+parse_service_list <- function(x) {
   assert_that(
     x$kind == "ServiceList"
   )
 
   x$items
-
 }
 
-parse_service_list_post <- function(x){
-
+parse_service_list_post <- function(x) {
   data.frame(
     name = x$metadata$name,
-    container = unlist(lapply(x$spec$template$spec$containers,
-                              function(x) x$image)),
+    container = unlist(lapply(
+      x$spec$template$spec$containers,
+      function(x) x$image
+    )),
     url = x$status$url,
     stringsAsFactors = FALSE
   )
-
 }
 
 #' Get information about a Cloud Run service.
@@ -216,21 +228,22 @@ parse_service_list_post <- function(x){
 #' @family Cloud Run functions
 #' @export
 cr_run_get <- function(name, projectId = cr_project_get()) {
-
-  url <- make_endpoint(sprintf("namespaces/%s/services/%s",
-                               projectId, name))
+  url <- make_endpoint(sprintf(
+    "namespaces/%s/services/%s",
+    projectId, name
+  ))
 
   # run.namespaces.services.get
   f <- gar_api_generator(url, "GET",
-                         data_parse_function = parse_service_get,
-                         checkTrailingSlash = FALSE)
+    data_parse_function = parse_service_get,
+    checkTrailingSlash = FALSE
+  )
   f()
-
 }
 
 #' @import assertthat
 #' @noRd
-parse_service_get <- function(x){
+parse_service_get <- function(x) {
   assert_that(
     x$kind == "Service"
   )

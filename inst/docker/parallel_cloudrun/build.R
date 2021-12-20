@@ -1,15 +1,17 @@
 library(googleCloudRunner)
 
 bs <- c(
-  cr_buildstep_secret("mark-edmondson-gde-auth",
-                      decrypted = "inst/docker/parallel_cloudrun/plumber/auth.json"),
+  cr_buildstep_secret(
+    "mark-edmondson-gde-auth",
+    decrypted = "inst/docker/parallel_cloudrun/plumber/auth.json"),
   cr_buildstep_docker("cloudrun_parallel",
                       dir = "inst/docker/parallel_cloudrun/plumber",
                       kaniko_cache = TRUE),
-  cr_buildstep_run("parallel-cloudrun",
-                   image = "gcr.io/$PROJECT_ID/cloudrun_parallel:$BUILD_ID",
-                   allowUnauthenticated = FALSE,
-                   env_vars = "BQ_AUTH_FILE=auth.json,BQ_DEFAULT_PROJECT_ID=$PROJECT_ID")
+  cr_buildstep_run(
+    "parallel-cloudrun",
+    image = "gcr.io/$PROJECT_ID/cloudrun_parallel:$BUILD_ID",
+    allowUnauthenticated = FALSE,
+    env_vars = "BQ_AUTH_FILE=auth.json,BQ_DEFAULT_PROJECT_ID=$PROJECT_ID")
 )
 
 # make a buildtrigger pointing at above steps
@@ -34,17 +36,19 @@ token <- cr_jwt_token(jwt, the_url)
 
 # call Cloud Run with token!
 library(httr)
-res <- cr_jwt_with_httr(GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/hello"),
-                        token)
+res <- cr_jwt_with_httr(
+  GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/hello"),
+  token)
 content(res)
 
 # interact with the API we made
 call_api <- function(region, industry, token) {
-  api <- sprintf("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=%s&industry=%s",
-                 URLencode(region), URLencode(industry))
+  endpoint <- "https://parallel-cloudrun-ewjogewawq-ew.a.run.app"
+  api <- sprintf("%s/covid_traffic?region=%s&industry=%s",
+                 endpoint, URLencode(region), URLencode(industry))
 
   message("Request: ", api)
-  res <- cr_jwt_with_httr(httr::GET(api),token)
+  res <- cr_jwt_with_httr(httr::GET(api), token)
 
   httr::content(res, as = "text", encoding = "UTF-8")
 
@@ -54,7 +58,7 @@ call_api <- function(region, industry, token) {
 result <- call_api(region = "Europe", industry = "Software", token = token)
 
 # the variables to loop over
-regions <- c("North America", "Europe","South America","Australia")
+regions <- c("North America", "Europe", "South America", "Australia")
 industry <- c("Transportation (non-freight)",
               "Software",
               "Telecommunications",
@@ -82,10 +86,15 @@ industry <- c("Transportation (non-freight)",
 # loop over all variables for parallel processing
 library(future.apply)
 
-# not multisession to avoid https://github.com/HenrikBengtsson/future.apply/issues/4
+# not multisession to avoid
+# https://github.com/HenrikBengtsson/future.apply/issues/4
 plan(multicore)
 
-results <- future_lapply(regions, call_api, industry = "Software", token = token)
+results <- future_lapply(
+  regions,
+  call_api,
+  industry = "Software",
+  token = token)
 
 # loop over all industries and regions
 all_results <- lapply(regions, function(x) {
@@ -101,14 +110,15 @@ all_results <- lapply(regions, function(x) {
 make_urls <- function(regions, industry) {
 
   combos <- expand.grid(regions, industry, stringsAsFactors = FALSE)
+  endpoint <- "https://parallel-cloudrun-ewjogewawq-ew.a.run.app"
 
   unlist(mapply(function(x, y) {
     sprintf(
-      "https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=%s&industry=%s",
-      URLencode(x), URLencode(y))
+      "%s/covid_traffic?region=%s&industry=%s",
+      endpoint, URLencode(x), URLencode(y))
   },
   SIMPLIFY = FALSE, USE.NAMES = FALSE,
-  combos$Var1 ,combos$Var2))
+  combos$Var1, combos$Var2))
 }
 
 all_urls <- make_urls(regions = regions, industry = industry)

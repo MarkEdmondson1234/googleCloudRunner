@@ -195,31 +195,35 @@ This creates steps to use git with an ssh created key."><!-- mathjax --><script 
 <code><a href="cr_buildstep_gcloud.html">cr_buildstep_gcloud</a>()</code>,
 <code><a href="cr_buildstep_mailgun.html">cr_buildstep_mailgun</a>()</code>,
 <code><a href="cr_buildstep_nginx_setup.html">cr_buildstep_nginx_setup</a>()</code>,
+<code><a href="cr_buildstep_packagetests.html">cr_buildstep_packagetests</a>()</code>,
 <code><a href="cr_buildstep_pkgdown.html">cr_buildstep_pkgdown</a>()</code>,
 <code><a href="cr_buildstep_run.html">cr_buildstep_run</a>()</code>,
 <code><a href="cr_buildstep_r.html">cr_buildstep_r</a>()</code>,
 <code><a href="cr_buildstep_secret.html">cr_buildstep_secret</a>()</code>,
 <code><a href="cr_buildstep_slack.html">cr_buildstep_slack</a>()</code>,
+<code><a href="cr_buildstep_targets.html">cr_buildstep_targets</a>()</code>,
 <code><a href="cr_buildstep.html">cr_buildstep</a>()</code></p></div>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="cr_project_set.html">cr_project_set</a></span><span class="op">(</span><span class="st">"my-project"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-14 21:38:49 &gt;</span> ProjectId set to my-project</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-20 08:29:16 &gt;</span> ProjectId set to my-project</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-project"</span>
 <span class="r-in"><span class="fu"><a href="cr_bucket_set.html">cr_bucket_set</a></span><span class="op">(</span><span class="st">"my-bucket"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-14 21:38:50 &gt;</span> Bucket set to my-bucket</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-20 08:29:16 &gt;</span> Bucket set to my-bucket</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-bucket"</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># assumes you have previously saved git ssh key called "github-ssh"</span></span>
 <span class="r-in"><span class="fu"><a href="cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span></span>
-<span class="r-in">     steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span class="r-in">          <span class="fu">cr_buildstep_gitsetup</span><span class="op">(</span><span class="st">"github-ssh"</span><span class="op">)</span>,</span>
-<span class="r-in">          <span class="fu">cr_buildstep_git</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"clone"</span>,</span>
-<span class="r-in">                             <span class="st">"git@github.com:github_name/repo_name"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">     <span class="op">)</span></span>
-<span class="r-in"> <span class="op">)</span></span>
+<span class="r-in">  steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span class="r-in">    <span class="fu">cr_buildstep_gitsetup</span><span class="op">(</span><span class="st">"github-ssh"</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu">cr_buildstep_git</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span class="r-in">      <span class="st">"clone"</span>,</span>
+<span class="r-in">      <span class="st">"git@github.com:github_name/repo_name"</span></span>
+<span class="r-in">    <span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">  <span class="op">)</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ==cloudRunnerYaml==</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> steps:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - name: gcr.io/cloud-builders/gcloud</span>
@@ -259,9 +263,6 @@ This creates steps to use git with an ssh created key."><!-- mathjax --><script 
 <span class="r-out co"><span class="r-pr">#&gt;</span>   volumes:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - name: ssh</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     path: /root/.ssh</span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
 </code></pre></div>
     </div>
   </div>

@@ -44,7 +44,6 @@ For certain Google services a JWT is needed to authenticate access, which is dis
 The token is set to expire in 1 hour, so it will need refreshing before then by calling this function again.
 }
 \examples{
-
 \dontrun{
 
 # The private authenticated access only Cloud Run service
@@ -58,7 +57,8 @@ token <- cr_jwt_token(jwt, the_url)
 library(httr)
 res <- cr_jwt_with_httr(
   GET("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello"),
-  token)
+  token
+)
 content(res)
 
 # call Cloud Run app with curl - you can pass in a curl handle
@@ -71,8 +71,10 @@ r <- curl_fetch_memory("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/h
 cat(rawToChar(r$content))
 
 # use curls multi-asynch functions
-many_urls <- paste0("https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello",
-                    paste0("?param="),1:6)
+many_urls <- paste0(
+  "https://authenticated-cloudrun-ewjogewawq-ew.a.run.app/hello",
+  paste0("?param="), 1:6
+)
 cr_jwt_async(many_urls, token = token)
 }
 

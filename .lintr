@@ -1,0 +1,5 @@
+linters: with_defaults(
+  trailing_whitespace_linter = NULL,
+  spaces_left_parentheses_linter = NULL,
+  object_name_linter = NULL,
+  paren_brace_linter = NULL)

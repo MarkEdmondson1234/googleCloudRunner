@@ -24,14 +24,16 @@ cr_region_set("europe-west1")
 html_folder <- "my_html"
 run_image <- "gcr.io/my-project/my-image-for-cloudrun"
 cr_build_yaml(
- steps = c(
-  cr_buildstep_nginx_setup(html_folder),
-  cr_buildstep_docker(run_image, dir = html_folder),
-  cr_buildstep_run(name = "running-nginx",
-                   image = run_image,
-                   concurrency = 80)
-                   )
-           )
+  steps = c(
+    cr_buildstep_nginx_setup(html_folder),
+    cr_buildstep_docker(run_image, dir = html_folder),
+    cr_buildstep_run(
+      name = "running-nginx",
+      image = run_image,
+      concurrency = 80
+    )
+  )
+)
 }
 \seealso{
 Other Cloud Buildsteps: 
@@ -44,11 +46,13 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_gcloud}()},
 \code{\link{cr_buildstep_gitsetup}()},
 \code{\link{cr_buildstep_mailgun}()},
+\code{\link{cr_buildstep_packagetests}()},
 \code{\link{cr_buildstep_pkgdown}()},
 \code{\link{cr_buildstep_run}()},
 \code{\link{cr_buildstep_r}()},
 \code{\link{cr_buildstep_secret}()},
 \code{\link{cr_buildstep_slack}()},
+\code{\link{cr_buildstep_targets}()},
 \code{\link{cr_buildstep}()}
 }
 \concept{Cloud Buildsteps}
