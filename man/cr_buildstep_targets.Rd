@@ -9,7 +9,6 @@
 cr_buildstep_targets(
   task_args = list(),
   tar_make = "targets::tar_make()",
-
   task_image = "gcr.io/gcer-public/targets",
   id = "target pipeline"
 )
@@ -18,13 +17,16 @@ cr_buildstep_targets_setup(bucket_folder)
 
 cr_buildstep_targets_teardown(bucket_folder, last_id = NULL)
 
-  task_image = "gcr.io/gcer-public/targets"
+cr_buildstep_targets(
+  task_args = list(),
+  tar_make = "targets::tar_make()",
+  task_image = "gcr.io/gcer-public/targets",
+  id = "target pipeline"
 )
 
-cr_buildstep_targets_setup(bucket)
+cr_buildstep_targets_setup(bucket_folder)
 
-cr_buildstep_targets_teardown(bucket = cr_bucket_get())
-
+cr_buildstep_targets_teardown(bucket_folder, last_id = NULL)
 }
 \arguments{
 \item{task_args}{A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments or waitFor ids)}
@@ -33,19 +35,38 @@ cr_buildstep_targets_teardown(bucket = cr_bucket_get())
 
 \item{task_image}{An existing Docker image that will be used to run your targets workflow after the targets meta has been downloaded from Google Cloud Storage}
 
-
 \item{bucket_folder}{The Google Cloud Storage bucket and folder the target metadata will be saved to, e.g. \code{gs://my-bucket/my_target_project}   You can also pass in build substitution variables such as \code{"${_MY_BUCKET}"}.}
 
 \item{last_id}{The final buildstep that needs to complete before the upload.  If left NULL then will default to the last tar_target step.}
 
 \item{bucket}{The Google Cloud Storage bucket and folder the target metadata will be saved to, e.g. \code{gs://my-bucket/my_target_project}   You can also pass in build substitution variables such as \code{"${_MY_BUCKET}"}.}
-
 }
 \description{
 This is a buildstep to help upload a targets pipeline, see \link{cr_build_targets} for examples and suggested workflow
+
+This is a buildstep to help upload a targets pipeline, see \link{cr_build_targets} for examples and suggested workflow
 }
 \seealso{
-Other Cloud Buildsteps:
+Other Cloud Buildsteps: 
+\code{\link{cr_buildstep_bash}()},
+\code{\link{cr_buildstep_decrypt}()},
+\code{\link{cr_buildstep_df}()},
+\code{\link{cr_buildstep_docker}()},
+\code{\link{cr_buildstep_edit}()},
+\code{\link{cr_buildstep_extract}()},
+\code{\link{cr_buildstep_gcloud}()},
+\code{\link{cr_buildstep_gitsetup}()},
+\code{\link{cr_buildstep_mailgun}()},
+\code{\link{cr_buildstep_nginx_setup}()},
+\code{\link{cr_buildstep_packagetests}()},
+\code{\link{cr_buildstep_pkgdown}()},
+\code{\link{cr_buildstep_run}()},
+\code{\link{cr_buildstep_r}()},
+\code{\link{cr_buildstep_secret}()},
+\code{\link{cr_buildstep_slack}()},
+\code{\link{cr_buildstep}()}
+
+Other Cloud Buildsteps: 
 \code{\link{cr_buildstep_bash}()},
 \code{\link{cr_buildstep_decrypt}()},
 \code{\link{cr_buildstep_df}()},

@@ -9,8 +9,6 @@
 \usage{
 cr_build_targets(
   buildsteps = cr_buildstep_targets_multi(),
-  task_image = "gcr.io/gcer-public/targets",
-  target_folder = NULL,
   path = "cloudbuild_targets.yaml",
   bucket = cr_bucket_get(),
   ...
@@ -40,18 +38,10 @@ cr_buildstep_targets_multi(
 }
 \arguments{
 \item{buildsteps}{Generated buildsteps that create the targets build}
-\item{task_image}{An existing Docker image that will be used to run your targets workflow after the targets meta has been downloaded from Google Cloud Storage}
-
-\item{target_folder}{Where target metadata will sit within the Google Cloud Storage bucket as a folder.  If NULL defaults to RStudio project name or "targets_cloudbuild" if no RStudio project found.}
 
 \item{path}{File path to write the Google Cloud Build yaml workflow file. Set to NULL to write no file and just return the \code{Yaml} object.}
 
 \item{bucket}{The Google Cloud Storage bucket the target metadata will be saved to in folder `target_folder`}
-
-
-\item{task_args}{A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments)}
-
-\item{tar_make}{The R script that will run in the \code{tar_make()} step. Modify to include custom settings}
 
 \item{...}{
   Arguments passed on to \code{\link[=cr_build_yaml]{cr_build_yaml}}, \code{\link[=cr_build_yaml]{cr_build_yaml}}
@@ -69,7 +59,7 @@ cr_buildstep_targets_multi(
     \item{\code{serviceAccount}}{What service account should the build be run under?}
   }}
 
-\item{target_folder}{Where target metadata will sit within the Google Cloud Storage bucket as a folder.  Defaults to RStudio project name.}
+\item{target_folder}{Where target metadata will sit within the Google Cloud Storage bucket as a folder.  If NULL defaults to RStudio project name or "targets_cloudbuild" if no RStudio project found.}
 
 \item{task_image}{An existing Docker image that will be used to run your targets workflow after the targets meta has been downloaded from Google Cloud Storage}
 
@@ -117,11 +107,8 @@ Use \code{cr_build_targets_artifacts} to download the return values of a
 \section{DAGs}{
 
 
-
 If your target workflow has parallel processing steps then leaving this as default \code{cr_buildstep_targets_multi()} will create a build that uses waitFor and build ids to create a DAG.  Setting this to \code{cr_buildstep_targets_single()} will be single thread but you can then customise the \code{targets::tar_make} script.  Or add your own custom target buildsteps here using \link{cr_buildstep_targets}
 }
-cr_build_targets()
-unlink("cloudbuild_targets.yaml")
 
 \examples{
 
@@ -130,7 +117,7 @@ cr_build_targets(path=tempfile())
 \seealso{
 \link{cr_buildstep_targets} if you want to customise the build
 
-Other Cloud Build functions:
+Other Cloud Build functions: 
 \code{\link{Build}()},
 \code{\link{RepoSource}()},
 \code{\link{Source}()},
