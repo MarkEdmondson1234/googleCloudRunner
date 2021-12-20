@@ -279,7 +279,7 @@ cr_build_upload_gcs <- function(local,
   dir.create(full_deploy_folder, showWarnings = FALSE)
 
   myMessage(paste0("Copying files from ", local, "/ into tmpdir"),
-    level = 3
+    level = 2
   )
   local_files <- list.files(local, full.names = TRUE)
   if (length(local_files) == 0) {
@@ -301,8 +301,8 @@ cr_build_upload_gcs <- function(local,
 
   withr::with_dir(
     tdir, {
-      myMessage("tarring files: \n",
-                paste(tmp_files, collapse = "\n "),
+      myMessage("Tarring files: \n",
+                paste(tmp_files, collapse = " \n"),
                 level = 3
       )
       tar(tar_file, compression = "gzip")
@@ -321,13 +321,15 @@ cr_build_upload_gcs <- function(local,
     }
   )
 
-  myMessage("Google Cloud Storage Source enabled:",
+  myMessage("StorageSource available for builds in directory:",
     paste0("/workspace/", deploy_folder, "/"),
     level = 3
   )
 
-  cr_build_source(StorageSource(
-    bucket = bucket,
-    object = remote
-  ))
+  cr_build_source(
+    StorageSource(
+      bucket = bucket,
+      object = remote
+    )
+  )
 }
