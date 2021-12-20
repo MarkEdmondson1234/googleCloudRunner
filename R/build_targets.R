@@ -26,22 +26,12 @@
 #' @inheritDotParams cr_build_yaml
 #' @param task_args A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments)
 #' @param tar_make The R script that will run in the \code{tar_make()} step. Modify to include custom settings
-#'
+#' @seealso \link{cr_buildstep_targets} if you want to customise the build
 #' @examples
 #'
-#' cr_build_targets(path = tempfile())
+#' cr_build_targets()
+#' unlink("cloudbuild_targets.yaml")
 #'
-#' # adding custom environment args and secrets to the build
-#' cr_build_targets(
-#'   task_image = "gcr.io/my-project/my-targets-pipeline",
-#'   target_folder = "my_targets_project",
-#'   options = list(env = c(
-#'     "ENV1=1234",
-#'     "ENV_USER=Dave"
-#'   )),
-#'   availableSecrets = cr_build_yaml_secrets("MY_PW", "my-pw"),
-#'   task_args = list(secretEnv = "MY_PW")
-#' @seealso \link{cr_buildstep_targets} if you want to customise the build
 cr_build_targets <- function(task_image = "gcr.io/gcer-public/targets",
                              target_folder = NULL,
                              path = "cloudbuild_targets.yaml",
