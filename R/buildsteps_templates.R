@@ -797,7 +797,7 @@ cr_buildstep_pkgdown <- function(github_repo,
     cr_buildstep_git(c("add", "--all"), dir = "repo"),
     cr_buildstep_git(c(
       "commit", "-a", "-m",
-      "[skip travis] Build website from commit ${COMMIT_SHA}: \
+      "[skip ci] Build website from commit ${COMMIT_SHA}: \
 $(date +\"%Y%m%dT%H:%M:%S\")"
     ),
     dir = "repo"

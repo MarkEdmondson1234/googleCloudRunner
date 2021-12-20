@@ -172,7 +172,7 @@ cr_build_targets_artifacts <- function(build,
 #'
 #' This is a buildstep to help upload a targets pipeline, see \link{cr_build_targets} for examples and suggested workflow
 #' @export
-#' @param task_args A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments)
+#' @param task_args A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments or waitFor ids)
 #' @param tar_make The R script that will run in the \code{tar_make()} step. Modify to include custom settings
 #' @param task_image An existing Docker image that will be used to run your targets workflow after the targets meta has been downloaded from Google Cloud Storage
 #' @family Cloud Buildsteps
