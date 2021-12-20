@@ -9,14 +9,15 @@ test_that("targets integrations", {
   dir.create("targets", showWarnings = FALSE)
   on.exit(unlink("targets", recursive = TRUE), add = TRUE)
 
-  target_yaml <- cr_build_targets(
-    path = NULL,
+  bs <- cr_buildstep_targets_single(
     target_folder = "cr_build_target_tests",
     tar_make = c(
       "list.files(recursive=TRUE)",
       "targets::tar_make(script = 'targets/_targets.R')"
     )
   )
+
+  target_yaml <- cr_build_targets(bs, path = NULL)
   expect_snapshot(target_yaml)
 
   targets::tar_config_set(
@@ -146,17 +147,7 @@ test_that("targets integrations - parallel builds", {
   dir.create("targets", showWarnings = FALSE)
   on.exit(unlink("targets", recursive = TRUE), add = TRUE)
 
-  target_folder <- "cr_build_target_tests"
-
-  target_yaml <- cr_build_targets(
-    path = NULL,
-    target_folder = target_folder,
-    tar_make = c(
-      "list.files(recursive=TRUE)",
-      "targets::tar_make(script = 'targets/_targets.R')"
-    )
-  )
-  expect_snapshot(target_yaml)
+  target_folder <- "cr_build_target_tests_multi"
 
   targets::tar_config_set(
     script = "targets/_targets.R"
@@ -179,33 +170,28 @@ test_that("targets integrations - parallel builds", {
   )
 
   targets::tar_make()
-
   # get local result to compare
   result <- targets::tar_read("merge1")
   expect_snapshot(result)
 
+  bs <- cr_buildstep_targets_multi(
+    target_folder = target_folder
+  )
+  expect_snapshot(bs)
+
+  par_yaml <- cr_build_targets(bs, path = NULL)
+  expect_snapshot(par_yaml)
+
   upload_test_files <- function() {
     cr_build_upload_gcs(
       "targets",
-      remote = "cr_build_target_test_source.tar.gz",
+      remote = "cr_build_target_test_source_multi.tar.gz",
       deploy_folder = "targets"
     )
   }
 
   target_source <- upload_test_files()
   expect_snapshot(target_source)
-
-  test_bucket <- sprintf("gs://%s/%s", cr_bucket_get(), target_folder)
-
-  bs <- cr_build_targets_dag(test_bucket)
-  expect_snapshot(bs)
-
-  par_yaml <- cr_build_targets(
-    path = NULL,
-    target_folder = target_folder,
-    create_dag = TRUE
-  )
-  expect_snapshot(par_yaml)
 
   build <- cr_build_make(par_yaml, source = target_source)
   # initial run
@@ -217,27 +203,19 @@ test_that("targets integrations - parallel builds", {
     log[which(grepl("target pipeline", log))]
   }
 
-  logs_of_interest1 <- target_logs(bb1logs)
-  expect_true(
-    any(
-      grepl(
-        "start target file1",
-        logs_of_interest1
-      ))
-  )
-
   targets::tar_config_set(
-    store = "_targets_cloudbuild/cr_build_target_tests/_targets")
-  artifact_download <- cr_build_targets_artifacts(built3)
+    store = "_targets_cloudbuild/cr_build_target_tests_multi/_targets")
+  artifact_download <- cr_build_targets_artifacts(built1, target_folder = target_folder)
 
   expect_true(result != targets::tar_read("merge1"))
 
   # clean up - delete source for next test run
-  googleCloudStorageR::gcs_delete_object("cr_build_target_test_source.tar.gz",
-                                         bucket = cr_bucket_get()
+  googleCloudStorageR::gcs_delete_object(
+    "cr_build_target_test_source_multi.tar.gz",
+    bucket = cr_bucket_get()
   )
   deletes <- googleCloudStorageR::gcs_list_objects(
-    prefix = "cr_build_target_tests",
+    prefix = target_folder,
     bucket = cr_bucket_get()
   )
   done_deeds <- lapply(deletes$name,

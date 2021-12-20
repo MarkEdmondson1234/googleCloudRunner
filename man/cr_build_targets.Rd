@@ -24,6 +24,8 @@ cr_buildstep_targets_single(
 
 cr_build_targets_artifacts(
   build,
+  bucket = cr_bucket_get(),
+  target_folder = NULL,
   download_folder = "_targets_cloudbuild",
   target_subfolder = c("all", "meta", "objects", "user"),
   overwrite = TRUE
@@ -32,6 +34,7 @@ cr_build_targets_artifacts(
 cr_buildstep_targets_multi(
   target_folder = NULL,
   bucket = cr_bucket_get(),
+  tar_config = "targets::tar_config_set(script = 'targets/_targets.R')",
   task_image = "gcr.io/gcer-public/targets",
   last_id = NULL
 )
@@ -75,6 +78,8 @@ cr_buildstep_targets_multi(
 
 \item{overwrite}{Whether to overwrite existing local data}
 
+\item{tar_config}{An R script that will run before \code{targets::tar_make()} in the build}
+
 \item{last_id}{The final buildstep that needs to complete before the upload.  If left NULL then will default to the last tar_target step.}
 }
 \value{
@@ -107,7 +112,7 @@ Use \code{cr_build_targets_artifacts} to download the return values of a
 \section{DAGs}{
 
 
-If your target workflow has parallel processing steps then leaving this as default \code{cr_buildstep_targets_multi()} will create a build that uses waitFor and build ids to create a DAG.  Setting this to \code{cr_buildstep_targets_single()} will be single thread but you can then customise the \code{targets::tar_make} script.  Or add your own custom target buildsteps here using \link{cr_buildstep_targets}
+If your target workflow has parallel processing steps then leaving this as default \code{cr_buildstep_targets_multi()} will create a build that uses waitFor and build ids to create a DAG.  Setting this to \code{cr_buildstep_targets_single()} will be single thread but you can then customise the \code{targets::tar_make} script.  Or add your own custom target buildsteps here using \link{cr_buildstep_targets} - for example you could create the docker environment targets runs within before the main pipeline.
 }
 
 \examples{
