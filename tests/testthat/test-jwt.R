@@ -1,4 +1,7 @@
 test_that("[Online] JWT creation", {
+  skip_on_ci()
+  skip_on_cran()
+
   test_url <- "https://fake.a.run.app"
   jwt <- cr_jwt_create(test_url)
   expect_true(is.character(jwt))
