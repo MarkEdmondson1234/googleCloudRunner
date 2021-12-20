@@ -53,7 +53,8 @@ cr_build_targets <- function(task_image = "gcr.io/gcer-public/targets",
     }
   }
 
-  myMessage(sprintf("targets cloud location: gs://%s/%s", bucket, target_folder),
+  myMessage(
+    sprintf("targets cloud location: gs://%s/%s", bucket, target_folder),
     level = 3
   )
 

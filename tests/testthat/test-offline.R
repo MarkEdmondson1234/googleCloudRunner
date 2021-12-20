@@ -1,12 +1,3 @@
-test_that("JWT creation", {
-  test_url <- "https://fake.a.run.app"
-  jwt <- cr_jwt_create(test_url)
-  expect_true(is.character(jwt))
-
-  token <- cr_jwt_token(jwt, test_url)
-  expect_true(is.character(token))
-})
-
 test_that("Building Build Objects", {
   yaml <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
 
