@@ -36,7 +36,6 @@ Once you have uploaded your secret file and named it, it is available for Cloud
 }
 \examples{
 cr_buildstep_secret("my_secret", decrypted = "/workspace/secret.json")
-
 }
 \seealso{
 How to set up secrets using \href{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials}{Secret Manager}
@@ -54,6 +53,7 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_gitsetup}()},
 \code{\link{cr_buildstep_mailgun}()},
 \code{\link{cr_buildstep_nginx_setup}()},
+\code{\link{cr_buildstep_packagetests}()},
 \code{\link{cr_buildstep_pkgdown}()},
 \code{\link{cr_buildstep_run}()},
 \code{\link{cr_buildstep_r}()},

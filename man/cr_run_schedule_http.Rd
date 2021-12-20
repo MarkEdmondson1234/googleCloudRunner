@@ -25,15 +25,16 @@ This enables Cloud Scheduler to trigger Cloud Run endpoints when they are not pu
 Ensure you have a service email with \link{cr_email_set} of format \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com} with Cloud Scheduler Service Agent role as per https://cloud.google.com/scheduler/docs/http-target-auth#add
 }
 \examples{
-
 \dontrun{
 # for unauthenticated apps create a HttpTarget
 run_me <- HttpTarget(
   uri = "https://public-ewjogewawq-ew.a.run.app/echo?msg=blah",
   http_method = "GET"
 )
-cr_schedule("cloud-run-scheduled", schedule = "16 4 * * *",
-            httpTarget = run_me)
+cr_schedule("cloud-run-scheduled",
+  schedule = "16 4 * * *",
+  httpTarget = run_me
+)
 
 # for authenticated Cloud Run apps - create with allowUnauthenticated=FALSE
 cr_deploy_run("my-app", allowUnauthenticated = TRUE)
@@ -41,7 +42,6 @@ cr_deploy_run("my-app", allowUnauthenticated = TRUE)
 
 # deploying via R will help create a service email called my-app-cloudrun-invoker
 cr_run_email("my-app")
-
 \dontrun{
 # use that email to schedule the Cloud Run private micro-service
 
@@ -52,12 +52,14 @@ email <- cr_run_email(my_run_name)
 endpoint <- paste0(my_app$status$url, "/fetch_stuff")
 
 app_sched <- cr_run_schedule_http(endpoint,
-                                  http_method = "GET",
-                                  email = email)
+  http_method = "GET",
+  email = email
+)
 
 cr_schedule("cloud-run-scheduled-1",
-            schedule = "4 16 * * *",
-            httpTarget = app_sched)
+  schedule = "4 16 * * *",
+  httpTarget = app_sched
+)
 }
 
 }

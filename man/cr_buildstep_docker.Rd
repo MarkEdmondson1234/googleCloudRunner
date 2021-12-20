@@ -57,7 +57,8 @@ cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")
 # setting up a build to trigger off a Git source:
 my_image <- "gcr.io/my-project/my-image"
 my_repo <- RepoSource("github_markedmondson1234_googlecloudrunner",
-                      branchName="master")
+  branchName = "master"
+)
 \dontrun{
 docker_yaml <- cr_build_yaml(steps = cr_buildstep_docker(my_image))
 built_docker <- cr_build(docker_yaml, source = my_repo)
@@ -72,10 +73,11 @@ cr_buildstep_docker("my-image", kaniko_cache = TRUE)
 # building using manual buildsteps to clone from git
 bs <- c(
   cr_buildstep_gitsetup("github-ssh"),
-  cr_buildstep_git(c("clone","git@github.com:MarkEdmondson1234/googleCloudRunner",".")),
+  cr_buildstep_git(c("clone", "git@github.com:MarkEdmondson1234/googleCloudRunner", ".")),
   cr_buildstep_docker("gcr.io/gcer-public/packagetools",
-                      dir = "inst/docker/packages/")
+    dir = "inst/docker/packages/"
   )
+)
 
 built <- cr_build(cr_build_yaml(bs))
 }
@@ -91,6 +93,7 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_gitsetup}()},
 \code{\link{cr_buildstep_mailgun}()},
 \code{\link{cr_buildstep_nginx_setup}()},
+\code{\link{cr_buildstep_packagetests}()},
 \code{\link{cr_buildstep_pkgdown}()},
 \code{\link{cr_buildstep_run}()},
 \code{\link{cr_buildstep_r}()},

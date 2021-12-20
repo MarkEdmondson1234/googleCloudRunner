@@ -92,15 +92,13 @@ needed to deploy the docker, which may be combined with
 \code{\link{cr_deploy_r}} to combine Docker and R
 }
 \examples{
-
 \dontrun{
 cr_project_set("my-project")
 cr_region_set("europe-west1")
 cr_email_set("123456@projectid.iam.gserviceaccount.com")
 cr_bucket_set("my-bucket")
 
-b <- cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
-
+b <- cr_deploy_docker(system.file("example/", package = "googleCloudRunner"))
 }
 }
 \seealso{

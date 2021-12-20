@@ -25,6 +25,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -150,7 +152,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
+  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -165,14 +167,14 @@
 
       
 
-      </header><script src="usecase-polygot-ga-imports-to-bigquery_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>GA imports into BigQuery via Polygot Cloud Builds - integrating R code with other languages</h1>
             
-            <h4 class="date">2021-12-03</h4>
+            <h4 data-toc-skip class="date">2021-12-20</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-polygot-ga-imports-to-bigquery.Rmd"><code>vignettes/usecase-polygot-ga-imports-to-bigquery.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-polygot-ga-imports-to-bigquery.Rmd" class="external-link"><code>vignettes/usecase-polygot-ga-imports-to-bigquery.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-polygot-ga-imports-to-bigquery.Rmd</code></div>
 
     </div>
@@ -183,9 +185,9 @@
 <p>An example below uses:</p>
 <ul>
 <li>
-<code>gcloud</code> - <a href="https://cloud.google.com/sdk/gcloud/">Google’s Cloud command line tool</a> to access Google’s key management store and download an authentication file, and pushes to BigQuery</li>
+<code>gcloud</code> - <a href="https://cloud.google.com/sdk/gcloud/" class="external-link">Google’s Cloud command line tool</a> to access Google’s key management store and download an authentication file, and pushes to BigQuery</li>
 <li>
-<code>gago</code> - <a href="https://github.com/MarkEdmondson1234/gago">A Go package for fast downloads of Google Analytics data</a>
+<code>gago</code> - <a href="https://github.com/MarkEdmondson1234/gago" class="external-link">A Go package for fast downloads of Google Analytics data</a>
 </li>
 <li>
 <code>R</code> - R code to create an Rmd file that will hold interactive forecasts of the Google Analytics data via <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>
@@ -196,13 +198,13 @@
 </ul>
 <p>And will perform downloading unsampled data from Google Analytics, creating a statistical report of the data and then uploading the raw data to BigQuery for further analysis.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 <span class="va">polygot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
-  steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+  steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
     <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span>
       id <span class="op">=</span> <span class="st">"download encrypted auth file"</span>,
       name <span class="op">=</span> <span class="st">"gsutil"</span>,
-      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
+      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
                <span class="st">"gs://marks-bucket-of-stuff/auth.json.enc"</span>,
                <span class="st">"/workspace/auth.json.enc"</span><span class="op">)</span>,
     <span class="op">)</span>,
@@ -216,8 +218,8 @@
     <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span>
       id <span class="op">=</span> <span class="st">"download google analytics"</span>,
       name <span class="op">=</span> <span class="st">"gcr.io/gcer-public/gago:master"</span>,
-      env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"GAGO_AUTH=/workspace/auth.json"</span><span class="op">)</span>,
-      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"reports"</span>,
+      env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GAGO_AUTH=/workspace/auth.json"</span><span class="op">)</span>,
+      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"reports"</span>,
                <span class="st">"--view=81416156"</span>,
                <span class="st">"--dims=ga:date,ga:medium"</span>,
                <span class="st">"--mets=ga:sessions"</span>,
@@ -231,7 +233,7 @@
     <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span>
       id <span class="op">=</span> <span class="st">"download Rmd template"</span>,
       name <span class="op">=</span> <span class="st">"gsutil"</span>,
-      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
+      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
                <span class="st">"gs://mark-edmondson-public-read/polygot.Rmd"</span>,
                <span class="st">"/workspace/build/polygot.Rmd"</span><span class="op">)</span>
     <span class="op">)</span>,
@@ -244,7 +246,7 @@
       <span class="op">)</span>,
     <span class="fu"><a href="../reference/cr_buildstep_bash.html">cr_buildstep_bash</a></span><span class="op">(</span>
       id <span class="op">=</span> <span class="st">"setup nginx"</span>,
-      bash_script <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"docker"</span>, <span class="st">"nginx"</span>, <span class="st">"setup.bash"</span>,
+      bash_script <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"docker"</span>, <span class="st">"nginx"</span>, <span class="st">"setup.bash"</span>,
                                 package <span class="op">=</span> <span class="st">"googleCloudRunner"</span><span class="op">)</span>,
       dir <span class="op">=</span> <span class="st">"build"</span>
       <span class="op">)</span>,
@@ -262,7 +264,7 @@
       id <span class="op">=</span> <span class="st">"load BigQuery"</span>,
       name <span class="op">=</span> <span class="st">"gcr.io/google.com/cloudsdktool/cloud-sdk:alpine"</span>,
       entrypoint <span class="op">=</span> <span class="st">"bq"</span>,
-      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"--location=EU"</span>,
+      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"--location=EU"</span>,
                <span class="st">"load"</span>,
                <span class="st">"--autodetect"</span>,
                <span class="st">"--source_format=CSV"</span>,
@@ -290,7 +292,7 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"polygot-example"</span>, <span class="st">"15 8 * * *"</span>, httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span></code></pre></div>
-<p>An example of the cloudbuild.yaml is on GitHub <a href="https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml">here</a>.</p>
+<p>An example of the cloudbuild.yaml is on GitHub <a href="https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml" class="external-link">here</a>.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -302,11 +304,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Mark Edmondson.</p>
+  <p></p>
+<p>Developed by Mark Edmondson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -314,6 +318,8 @@
 
   
 
+
+  
 
   </body>
 </html>

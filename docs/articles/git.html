@@ -25,6 +25,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -150,7 +152,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
+  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -165,14 +167,14 @@
 
       
 
-      </header><script src="git_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>googleCloudRunner and git (GitHub, GitLab, BitBucket etc.)</h1>
             
-            <h4 class="date">2021-12-03</h4>
+            <h4 data-toc-skip class="date">2021-12-20</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/git.Rmd"><code>vignettes/git.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/git.Rmd" class="external-link"><code>vignettes/git.Rmd</code></a></small>
       <div class="hidden name"><code>git.Rmd</code></div>
 
     </div>
@@ -180,10 +182,10 @@
     
     
 <p>A lot of the features of Cloud Build rely on connection with git workflows.</p>
-<div id="cloud-build" class="section level2">
-<h2 class="hasAnchor">
-<a href="#cloud-build" class="anchor"></a>Cloud Build</h2>
-<p>Cloud Build can use two different sources created via <code><a href="../reference/cr_build_source.html">cr_build_source()</a></code> - <code><a href="../reference/RepoSource.html">RepoSource()</a></code> is from <a href="https://cloud.google.com/source-repositories">Google Cloud Source Repostitories</a> - <code><a href="../reference/StorageSource.html">StorageSource()</a></code> is from <a href="https://cloud.google.com/storage">Google Cloud Storage</a> buckets.</p>
+<div class="section level2">
+<h2 id="cloud-build">Cloud Build<a class="anchor" aria-label="anchor" href="#cloud-build"></a>
+</h2>
+<p>Cloud Build can use two different sources created via <code><a href="../reference/cr_build_source.html">cr_build_source()</a></code> - <code><a href="../reference/RepoSource.html">RepoSource()</a></code> is from <a href="https://cloud.google.com/source-repositories" class="external-link">Google Cloud Source Repostitories</a> - <code><a href="../reference/StorageSource.html">StorageSource()</a></code> is from <a href="https://cloud.google.com/storage" class="external-link">Google Cloud Storage</a> buckets.</p>
 <p><code><a href="../reference/RepoSource.html">RepoSource()</a></code> could be a mirror of your GitHub or other git provider. If you are using a Build Trigger (next section) then the source is automatically configured to be your trigger source.</p>
 <p>Once your repo is mirrored it gives you a Cloud Repository name which is of the form <code>github_username_repo</code> - this you can add to a <code><a href="../reference/RepoSource.html">RepoSource()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -192,13 +194,13 @@
   <span class="fu"><a href="../reference/RepoSource.html">RepoSource</a></span><span class="op">(</span><span class="st">"github_markedmondson1234_googlecloudrunner"</span>,
              branchName<span class="op">=</span><span class="st">"master"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="cloud-build-triggers" class="section level2">
-<h2 class="hasAnchor">
-<a href="#cloud-build-triggers" class="anchor"></a>Cloud Build Triggers</h2>
-<p>Cloud Build triggers let you automate builds based on git pushes or pull requests via <code><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo()</a></code> - <code>cr_buildtrigger_repo(type="github")</code> lets you link to push and pull events on GitHub repositories you have given permission for GCP to access via the <a href="https://github.com/marketplace/google-cloud-build">GitHub Cloud Build app</a> - <code>cr_buildtrigger_repo(type="cloud_source")</code> lets you link to push events to <a href="https://cloud.google.com/source-repositories">Google Cloud Source Repostitories</a> - this can include a mirror of GitHub or other git providers such as BitBucket</p>
+<div class="section level2">
+<h2 id="cloud-build-triggers">Cloud Build Triggers<a class="anchor" aria-label="anchor" href="#cloud-build-triggers"></a>
+</h2>
+<p>Cloud Build triggers let you automate builds based on git pushes or pull requests via <code><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo()</a></code> - <code>cr_buildtrigger_repo(type="github")</code> lets you link to push and pull events on GitHub repositories you have given permission for GCP to access via the <a href="https://github.com/marketplace/google-cloud-build" class="external-link">GitHub Cloud Build app</a> - <code>cr_buildtrigger_repo(type="cloud_source")</code> lets you link to push events to <a href="https://cloud.google.com/source-repositories" class="external-link">Google Cloud Source Repostitories</a> - this can include a mirror of GitHub or other git providers such as BitBucket</p>
 <p>An example setting up <code><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo()</a></code> with GitHub is shown below - this will trigger builds when you push to the master branch:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild.yaml"</span>,
+<code class="sourceCode R"><span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild.yaml"</span>,
                            package <span class="op">=</span> <span class="st">"googleCloudRunner"</span><span class="op">)</span>
 <span class="va">bb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">cloudbuild</span>, projectId <span class="op">=</span> <span class="st">"test-project"</span><span class="op">)</span>
 
@@ -207,14 +209,14 @@
 
 <span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="va">bb</span>, name <span class="op">=</span> <span class="st">"trig1"</span>, trigger <span class="op">=</span> <span class="va">github</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="calling-git-within-buildsteps" class="section level2">
-<h2 class="hasAnchor">
-<a href="#calling-git-within-buildsteps" class="anchor"></a>Calling git within buildsteps</h2>
+<div class="section level2">
+<h2 id="calling-git-within-buildsteps">Calling git within buildsteps<a class="anchor" aria-label="anchor" href="#calling-git-within-buildsteps"></a>
+</h2>
 <p>By default the above will act via cloning your repo at the start of any build. You may want to use git further within your cloud build steps, such as commiting the results of your build back to the repository.</p>
-<p>This can be done within your build by using <code><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_gitsetup()</a></code> and <code><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_git()</a></code>. If you are doing non-public operations (such as committing and pushing) then you will need to set up GitHub authorization for the build to do so - the easiest method is to use <a href="https://cloud.google.com/secret-manager">Google Secret Manager</a> to save a ssh key for your git securely, and then accessible via <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code>. This can be set up once and then used for any future builds you create.</p>
-<div id="using-google-secret-manager-to-manage-git-ssh-keys" class="section level3">
-<h3 class="hasAnchor">
-<a href="#using-google-secret-manager-to-manage-git-ssh-keys" class="anchor"></a>Using Google Secret Manager to manage git ssh keys</h3>
+<p>This can be done within your build by using <code><a href="../reference/cr_buildstep_git.html">cr_buildstep_gitsetup()</a></code> and <code><a href="../reference/cr_buildstep_git.html">cr_buildstep_git()</a></code>. If you are doing non-public operations (such as committing and pushing) then you will need to set up GitHub authorization for the build to do so - the easiest method is to use <a href="https://cloud.google.com/secret-manager" class="external-link">Google Secret Manager</a> to save a ssh key for your git securely, and then accessible via <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code>. This can be set up once and then used for any future builds you create.</p>
+<div class="section level3">
+<h3 id="using-google-secret-manager-to-manage-git-ssh-keys">Using Google Secret Manager to manage git ssh keys<a class="anchor" aria-label="anchor" href="#using-google-secret-manager-to-manage-git-ssh-keys"></a>
+</h3>
 <p>Cloud Build needs permission to commit to git, so the first step is to create an ssh key secret that it will use to work on your behalf.</p>
 <p>The guide is for GitHub, adapt it if you use another git provider:</p>
 <ol style="list-style-type: decimal">
@@ -226,32 +228,32 @@
 </ol>
 <p><img src="secret-ui.png"></p>
 <ol start="4" style="list-style-type: decimal">
-<li>Ensure you have <code>Secret Manager Secret Accessor</code> <a href="https://console.cloud.google.com/iam-admin/iam">IAM role</a> assigned to the cloudbuild service email (<code>{project-number}@cloudbuild.gserviceaccount.com</code>)</li>
+<li>Ensure you have <code>Secret Manager Secret Accessor</code> <a href="https://console.cloud.google.com/iam-admin/iam" class="external-link">IAM role</a> assigned to the cloudbuild service email (<code>{project-number}@cloudbuild.gserviceaccount.com</code>)</li>
 <li>Use in your buildsteps by calling and using the git secret:</li>
 </ol>
 <p>In general the secret can be downloaded via <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> which takes two arguments - the name of the secret and the location of where the decrypted file should be within your workspace.</p>
-<p><code><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_gitsetup()</a></code> wraps <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> when you supply it the Secret Manager name:</p>
+<p><code><a href="../reference/cr_buildstep_git.html">cr_buildstep_gitsetup()</a></code> wraps <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> when you supply it the Secret Manager name:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># assumes you have previously saved git ssh key called "github-ssh"</span>
 <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
-      steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
-           <span class="fu"><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_gitsetup</a></span><span class="op">(</span><span class="st">"github-ssh"</span><span class="op">)</span>,
-           <span class="fu"><a href="../reference/cr_buildstep_gitsetup.html">cr_buildstep_git</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"clone"</span>,
+      steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+           <span class="fu"><a href="../reference/cr_buildstep_git.html">cr_buildstep_gitsetup</a></span><span class="op">(</span><span class="st">"github-ssh"</span><span class="op">)</span>,
+           <span class="fu"><a href="../reference/cr_buildstep_git.html">cr_buildstep_git</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"clone"</span>,
                               <span class="st">"git@github.com:github_name/repo_name"</span><span class="op">)</span><span class="op">)</span>
       <span class="op">)</span>
   <span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="examples-of-git-workflows" class="section level2">
-<h2 class="hasAnchor">
-<a href="#examples-of-git-workflows" class="anchor"></a>Examples of Git workflows</h2>
+<div class="section level2">
+<h2 id="examples-of-git-workflows">Examples of Git workflows<a class="anchor" aria-label="anchor" href="#examples-of-git-workflows"></a>
+</h2>
 <p>A rundown on some common workflows and connections are detailed here.</p>
-<div id="clone-your-repo-build-and-commit-back-to-same-repo" class="section level3">
-<h3 class="hasAnchor">
-<a href="#clone-your-repo-build-and-commit-back-to-same-repo" class="anchor"></a>Clone your repo, build and commit back to same repo</h3>
+<div class="section level3">
+<h3 id="clone-your-repo-build-and-commit-back-to-same-repo">Clone your repo, build and commit back to same repo<a class="anchor" aria-label="anchor" href="#clone-your-repo-build-and-commit-back-to-same-repo"></a>
+</h3>
 <p>A common use case is creating a pkgdown website of your package. This involves building the website upon each git commit, creating the new pkgdown HTML then committing that back to the GitHub repo so it can display the page using GitHub page hosting.</p>
 <ol style="list-style-type: decimal">
-<li>Connect your GitHub repo via the <a href="https://github.com/marketplace/google-cloud-build">GitHub Cloud Build app</a>
+<li>Connect your GitHub repo via the <a href="https://github.com/marketplace/google-cloud-build" class="external-link">GitHub Cloud Build app</a>
 </li>
 <li>Setup a git ssh key in Secret Manager using the guide above</li>
 <li>Use <code><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown()</a></code>:</li>
@@ -263,9 +265,9 @@
 </ol>
 <p>By default this will create a cloudbuild-pkgdown.yml file in your repo that holds the buildsteps to build and commit your website, and create the buildtrigger that will run this build upon each commit to the master branch.</p>
 </div>
-<div id="create-docker-image-of-repository-each-commit" class="section level3">
-<h3 class="hasAnchor">
-<a href="#create-docker-image-of-repository-each-commit" class="anchor"></a>Create Docker image of repository each commit</h3>
+<div class="section level3">
+<h3 id="create-docker-image-of-repository-each-commit">Create Docker image of repository each commit<a class="anchor" aria-label="anchor" href="#create-docker-image-of-repository-each-commit"></a>
+</h3>
 <p>If you want the Docker image to rebuild each git commit, then you also need a build trigger. This can be enabled using <code><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger()</a></code></p>
 <ol style="list-style-type: decimal">
 <li>Create your Dockerfile and place it in your repo</li>
@@ -294,11 +296,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Mark Edmondson.</p>
+  <p></p>
+<p>Developed by Mark Edmondson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -306,6 +310,8 @@
 
   
 
+
+  
 
   </body>
 </html>

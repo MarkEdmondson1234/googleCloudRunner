@@ -25,6 +25,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -150,7 +152,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
+  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -165,14 +167,14 @@
 
       
 
-      </header><script src="usecase-slackbot-google-analytics_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Creating a Slackbot for Google Analytics reports</h1>
             
-            <h4 class="date">2021-12-03</h4>
+            <h4 data-toc-skip class="date">2021-12-20</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-slackbot-google-analytics.Rmd"><code>vignettes/usecase-slackbot-google-analytics.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-slackbot-google-analytics.Rmd" class="external-link"><code>vignettes/usecase-slackbot-google-analytics.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-slackbot-google-analytics.Rmd</code></div>
 
     </div>
@@ -191,62 +193,62 @@
 <li>Modifying the R script to get the right format for Slack</li>
 <li>Scheduling the webhook to fire</li>
 </ol>
-<div id="create-the-r-script-for-downloading-the-ga-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#create-the-r-script-for-downloading-the-ga-data" class="anchor"></a>Create the R script for downloading the GA data</h2>
+<div class="section level2">
+<h2 id="create-the-r-script-for-downloading-the-ga-data">Create the R script for downloading the GA data<a class="anchor" aria-label="anchor" href="#create-the-r-script-for-downloading-the-ga-data"></a>
+</h2>
 <p>This will use <code>googleAnalyticsR</code> to get the data. I want to see what sessions came in the last 30 days with a referrer I haven’t seen before in the previous year.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/">googleAnalyticsR</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/" class="external-link">googleAnalyticsR</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 
 <span class="va">ga_id</span> <span class="op">&lt;-</span> <span class="fl">12345678</span>
 
 <span class="co"># get last years referrer data</span>
 <span class="va">two_years</span> <span class="op">&lt;-</span> <span class="fu">google_analytics</span><span class="op">(</span>
   <span class="va">ga_id</span>, 
-  date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="op">(</span><span class="fl">365</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, 
-  dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"date"</span>,<span class="st">"fullReferrer"</span>,<span class="st">"landingPagePath"</span><span class="op">)</span>, 
+  date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="op">(</span><span class="fl">365</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, 
+  dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"date"</span>,<span class="st">"fullReferrer"</span>,<span class="st">"landingPagePath"</span><span class="op">)</span>, 
   metrics <span class="op">=</span> <span class="st">"sessions"</span>, 
   rows_per_call <span class="op">=</span> <span class="fl">50000</span>,
   max <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>
 
-<span class="va">last30Days</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
-<span class="va">previousDays</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
+<span class="va">last30Days</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
+<span class="va">previousDays</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
 
 <span class="co"># the referrers seen in last30days but not previously</span>
-<span class="va">new_refs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">last30Days</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span>,
-                    <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">previousDays</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span><span class="op">)</span>
+<span class="va">new_refs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">last30Days</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span>,
+                    <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">previousDays</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span><span class="op">)</span>
 
-<span class="va">last_30_new_refs</span> <span class="op">&lt;-</span> <span class="va">last30Days</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">fullReferrer</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">new_refs</span><span class="op">)</span></code></pre></div>
+<span class="va">last_30_new_refs</span> <span class="op">&lt;-</span> <span class="va">last30Days</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">fullReferrer</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">new_refs</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="create-a-plumber-script-for-wrapping-the-ga-fetch" class="section level2">
-<h2 class="hasAnchor">
-<a href="#create-a-plumber-script-for-wrapping-the-ga-fetch" class="anchor"></a>Create a plumber script for wrapping the GA fetch</h2>
+<div class="section level2">
+<h2 id="create-a-plumber-script-for-wrapping-the-ga-fetch">Create a plumber script for wrapping the GA fetch<a class="anchor" aria-label="anchor" href="#create-a-plumber-script-for-wrapping-the-ga-fetch"></a>
+</h2>
 <p>Now I’ll put the call behind a plumber API endpoint. The script will assume authentication will come from a local json auth file, that will be in the deployment. To make it a bit more general, the GA viewId will be able to be sent as a parameter, that will work for all GA accounts the auth file has access to.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/">googleAnalyticsR</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/" class="external-link">googleAnalyticsR</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
 
 <span class="co"># the function will be called from the endpoints</span>
 <span class="va">do_ga</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ga_id</span><span class="op">)</span><span class="op">{</span>
   <span class="co"># get last years referrer data</span>
   <span class="va">two_years</span> <span class="op">&lt;-</span> <span class="fu">google_analytics</span><span class="op">(</span>
     <span class="va">ga_id</span>, 
-    date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="op">(</span><span class="fl">365</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, 
-    dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"date"</span>,<span class="st">"fullReferrer"</span>,<span class="st">"landingPagePath"</span><span class="op">)</span>, 
+    date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="op">(</span><span class="fl">365</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, 
+    dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"date"</span>,<span class="st">"fullReferrer"</span>,<span class="st">"landingPagePath"</span><span class="op">)</span>, 
     metrics <span class="op">=</span> <span class="st">"sessions"</span>, 
     rows_per_call <span class="op">=</span> <span class="fl">50000</span>,
     max <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>
 
-  <span class="va">last30Days</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
-  <span class="va">previousDays</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
+  <span class="va">last30Days</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
+  <span class="va">previousDays</span> <span class="op">&lt;-</span> <span class="va">two_years</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span><span class="op">)</span>
 
   <span class="co"># the referrers seen in last30days but not previously</span>
-  <span class="va">new_refs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">last30Days</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span>,
-                      <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">previousDays</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">new_refs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/setops.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">last30Days</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span>,
+                      <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">previousDays</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span><span class="op">)</span>
 
-  <span class="va">last_30_new_refs</span> <span class="op">&lt;-</span> <span class="va">last30Days</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">fullReferrer</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">new_refs</span><span class="op">)</span>
+  <span class="va">last_30_new_refs</span> <span class="op">&lt;-</span> <span class="va">last30Days</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">fullReferrer</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">new_refs</span><span class="op">)</span>
     
   <span class="va">last_30_new_refs</span>
 <span class="op">}</span>
@@ -266,8 +268,8 @@
 <span class="op">}</span></code></pre></div>
 <p>To support the plumber API a server file is also created:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pr</span> <span class="op">&lt;-</span> <span class="fu">plumber</span><span class="fu">::</span><span class="fu"><a href="https://www.rplumber.io/reference/plumb.html">plumb</a></span><span class="op">(</span><span class="st">"api.R"</span><span class="op">)</span>
-<span class="va">pr</span><span class="op">$</span><span class="fu">run</span><span class="op">(</span>host<span class="op">=</span><span class="st">'0.0.0.0'</span>, port<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">'PORT'</span><span class="op">)</span><span class="op">)</span>, swagger<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">pr</span> <span class="op">&lt;-</span> <span class="fu">plumber</span><span class="fu">::</span><span class="fu"><a href="https://www.rplumber.io/reference/plumb.html" class="external-link">plumb</a></span><span class="op">(</span><span class="st">"api.R"</span><span class="op">)</span>
+<span class="va">pr</span><span class="op">$</span><span class="fu">run</span><span class="op">(</span>host<span class="op">=</span><span class="st">'0.0.0.0'</span>, port<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">'PORT'</span><span class="op">)</span><span class="op">)</span>, swagger<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>And a Dockerfile that needs plumber, googleAnalyticsR and readr</p>
 <pre><code>FROM rstudio/plumber
 RUN install2.r --error \
@@ -282,12 +284,12 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 |- Dockerfile
 |- server.R</code></pre>
 </div>
-<div id="deploying-the-plumber-api-for-cloud-run" class="section level2">
-<h2 class="hasAnchor">
-<a href="#deploying-the-plumber-api-for-cloud-run" class="anchor"></a>Deploying the plumber API for Cloud Run</h2>
+<div class="section level2">
+<h2 id="deploying-the-plumber-api-for-cloud-run">Deploying the plumber API for Cloud Run<a class="anchor" aria-label="anchor" href="#deploying-the-plumber-api-for-cloud-run"></a>
+</h2>
 <p>The app is now deployed to Cloud Run via <code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span><span class="op">(</span><span class="st">"slackbot/"</span><span class="op">)</span>
 <span class="co">#ℹ 2021-03-19 10:09:23 &gt; Using existing Dockerfile found in folder</span>
@@ -321,17 +323,17 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <p>Once finished the build should return the Cloud Run URL.</p>
 <p>The homepage should work but the Google Analytics endpoint (<code>/last-30days?ga_id=1234567</code>) won’t yet as we haven’t included the authentication file.</p>
 </div>
-<div id="setting-up-a-build-trigger-to-redeploy-the-r-script-on-each-git-commit" class="section level2">
-<h2 class="hasAnchor">
-<a href="#setting-up-a-build-trigger-to-redeploy-the-r-script-on-each-git-commit" class="anchor"></a>Setting up a build trigger to redeploy the R script on each git commit</h2>
+<div class="section level2">
+<h2 id="setting-up-a-build-trigger-to-redeploy-the-r-script-on-each-git-commit">Setting up a build trigger to redeploy the R script on each git commit<a class="anchor" aria-label="anchor" href="#setting-up-a-build-trigger-to-redeploy-the-r-script-on-each-git-commit"></a>
+</h2>
 <p>To make working and updating the API easier, a build trigger will build the Dockerfile and deploy the API upon each git commit.</p>
 <p>The project files above are added to a git repository and published on say GitHub, and the GitHub repo is added to Cloud Build as <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html#build-triggers">described in the Build Triggers docs</a> - in my case its the googleCloudRunner’s own repo and I put everything in the <code>inst/slackbot</code> folder so that alters the directory in the buildsteps below.</p>
 <p>Once the files are on GitHub a build trigger is created which will mimic what <code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code> did earlier - it will build the Dockerfile and re-deploy the Cloud Run app. To have more control, we now use <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code> templates to make the build ourselves.</p>
-<p>If you tried to run the GA endpoint in the logs you can see that the default Client Id for Google Analytics won’t allow non-interactive use - we need to use our own clientId and auth file. These sensitive files are uploaded to <a href="https://console.cloud.google.com/security/secret-manager">Secret Manager</a> so they can be used more securely within builds via <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code></p>
+<p>If you tried to run the GA endpoint in the logs you can see that the default Client Id for Google Analytics won’t allow non-interactive use - we need to use our own clientId and auth file. These sensitive files are uploaded to <a href="https://console.cloud.google.com/security/secret-manager" class="external-link">Secret Manager</a> so they can be used more securely within builds via <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
-<span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+<span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
   <span class="co"># get secret files</span>
   <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"mark-edmondson-gde-clientid"</span>, <span class="st">"client.json"</span>,
                       dir <span class="op">=</span> <span class="st">"inst/slackbot/"</span><span class="op">)</span>,
@@ -348,7 +350,7 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
     <span class="st">"slackbot"</span>,
     image <span class="op">=</span> <span class="st">"gcr.io/$PROJECT_ID/slackbot:$BUILD_ID"</span>,
     memory <span class="op">=</span> <span class="st">"1Gi"</span>,
-    env_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"GAR_CLIENT_JSON=client.json"</span>,
+    env_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GAR_CLIENT_JSON=client.json"</span>,
                  <span class="st">"GA_AUTH_FILE=auth.json"</span><span class="op">)</span>
   <span class="op">)</span>
 <span class="op">)</span>
@@ -366,27 +368,27 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
   includedFiles <span class="op">=</span> <span class="st">"inst/slackbot/**"</span>
 <span class="op">)</span></code></pre></div>
 </div>
-<div id="creating-the-slack-webhook-for-the-slack-bot" class="section level2">
-<h2 class="hasAnchor">
-<a href="#creating-the-slack-webhook-for-the-slack-bot" class="anchor"></a>Creating the Slack webhook for the Slack bot</h2>
-<p>I now reference <a href="https://api.slack.com/apps/">Slack’s dev docs</a> on how to create a Webhook URL which is of the form <code>https://hooks.slack.com/services/XXXX6/B0YYYYYY/3rNZZZZZ</code> There is also useful info on the <a href="https://api.slack.com/reference/messaging/payload">formatting of the messaging</a> and you can make test calls with <code>curl</code> and <code><a href="https://httr.r-lib.org/reference/POST.html">httr::POST()</a></code>.</p>
-<p>I will use <code><a href="https://httr.r-lib.org/reference/POST.html">httr::POST()</a></code> in the API to pass along the GA data, so now is a good time to test with the Slack format.</p>
+<div class="section level2">
+<h2 id="creating-the-slack-webhook-for-the-slack-bot">Creating the Slack webhook for the Slack bot<a class="anchor" aria-label="anchor" href="#creating-the-slack-webhook-for-the-slack-bot"></a>
+</h2>
+<p>I now reference <a href="https://api.slack.com/apps/" class="external-link">Slack’s dev docs</a> on how to create a Webhook URL which is of the form <code>https://hooks.slack.com/services/XXXX6/B0YYYYYY/3rNZZZZZ</code> There is also useful info on the <a href="https://api.slack.com/reference/messaging/payload" class="external-link">formatting of the messaging</a> and you can make test calls with <code>curl</code> and <code><a href="https://httr.r-lib.org/reference/POST.html" class="external-link">httr::POST()</a></code>.</p>
+<p>I will use <code><a href="https://httr.r-lib.org/reference/POST.html" class="external-link">httr::POST()</a></code> in the API to pass along the GA data, so now is a good time to test with the Slack format.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/" class="external-link">httr</a></span><span class="op">)</span>
 <span class="va">slack_url</span> <span class="op">&lt;-</span> <span class="st">"https://hooks.slack.com/services/XXXX6/B0YYYYYY/3rNZZZZZ"</span>
 
 <span class="co"># it works!</span>
-<span class="fu"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, <span class="fu"><a href="https://httr.r-lib.org/reference/verbose.html">verbose</a></span><span class="op">(</span><span class="op">)</span>, body <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>text <span class="op">=</span> <span class="st">"Hello World"</span><span class="op">)</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span>
+<span class="fu"><a href="https://httr.r-lib.org/reference/POST.html" class="external-link">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, <span class="fu"><a href="https://httr.r-lib.org/reference/verbose.html" class="external-link">verbose</a></span><span class="op">(</span><span class="op">)</span>, body <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>text <span class="op">=</span> <span class="st">"Hello World"</span><span class="op">)</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span>
 
 <span class="co"># what does CSV format looks like?</span>
-<span class="va">the_body</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-  text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"```\n"</span>, 
-                <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="st">"\n"</span>,<span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>,
+<span class="va">the_body</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"```\n"</span>, 
+                <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="st">"\n"</span>,<span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>,
                 <span class="st">"```\n"</span>
           <span class="op">)</span>
 <span class="op">)</span>
 
-<span class="fu"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, <span class="fu"><a href="https://httr.r-lib.org/reference/verbose.html">verbose</a></span><span class="op">(</span><span class="op">)</span>, body <span class="op">=</span> <span class="va">the_body</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://httr.r-lib.org/reference/POST.html" class="external-link">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, <span class="fu"><a href="https://httr.r-lib.org/reference/verbose.html" class="external-link">verbose</a></span><span class="op">(</span><span class="op">)</span>, body <span class="op">=</span> <span class="va">the_body</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span></code></pre></div>
 <p>I played around with what exactly to send to Slack for a data.frame and ended up with the above, which looked like this in Slack:</p>
 <p><img src="csv_slack.png"></p>
 <p>It won’t work with large tables, so limit the table down if using kable, or in the end I ended up with just a list of the referral URLs:</p>
@@ -394,24 +396,24 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <code class="sourceCode R"><span class="co"># get last years referrer data</span>
 <span class="va">last_30_new_refs</span> <span class="op">&lt;-</span> <span class="fu">do_ga</span><span class="op">(</span><span class="va">ga_id</span><span class="op">)</span>
   
-<span class="va">the_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">last_30_new_refs</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span>
+<span class="va">the_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">last_30_new_refs</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span>
   
-<span class="va">the_body</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-    text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"GoogleAnalyticsLast30DaysNewReferrals\n```\n"</span>, 
-                 <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="st">"\n"</span>,<span class="va">the_data</span><span class="op">)</span>,
+<span class="va">the_body</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+    text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"GoogleAnalyticsLast30DaysNewReferrals\n```\n"</span>, 
+                 <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="st">"\n"</span>,<span class="va">the_data</span><span class="op">)</span>,
                 <span class="st">"\n```\n"</span><span class="op">)</span>
                 <span class="op">)</span>
-<span class="fu"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, body <span class="op">=</span> <span class="va">the_body</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://httr.r-lib.org/reference/POST.html" class="external-link">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, body <span class="op">=</span> <span class="va">the_body</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span></code></pre></div>
 <p><img src="list_slack.png"></p>
 </div>
-<div id="modifying-the-r-script-to-get-the-right-format-for-slack" class="section level2">
-<h2 class="hasAnchor">
-<a href="#modifying-the-r-script-to-get-the-right-format-for-slack" class="anchor"></a>Modifying the R script to get the right format for Slack</h2>
+<div class="section level2">
+<h2 id="modifying-the-r-script-to-get-the-right-format-for-slack">Modifying the R script to get the right format for Slack<a class="anchor" aria-label="anchor" href="#modifying-the-r-script-to-get-the-right-format-for-slack"></a>
+</h2>
 <p>To call the Slack bot, the API needs to collect the data then make a HTTP request itself to pass on the data to the Slack URL. I don’t want to include the Slack URL in the code, so I’ll also alter the Build Trigger to accept a substitution variable in the build, that will hold the Slack URL - this way I can swap out to other Slack webhooks more easily.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
-<span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+<span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
   <span class="co"># get secret files</span>
   <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"mark-edmondson-gde-clientid"</span>, <span class="st">"client.json"</span>,
                       dir <span class="op">=</span> <span class="st">"inst/slackbot/"</span><span class="op">)</span>,
@@ -428,7 +430,7 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
     <span class="st">"slackbot"</span>,
     image <span class="op">=</span> <span class="st">"gcr.io/$PROJECT_ID/slackbot:$BUILD_ID"</span>,
     memory <span class="op">=</span> <span class="st">"1Gi"</span>, <span class="co"># make the cloud run app a bit bigger</span>
-    env_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"GAR_CLIENT_JSON=client.json"</span>,
+    env_vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GAR_CLIENT_JSON=client.json"</span>,
                  <span class="st">"GA_AUTH_FILE=auth.json"</span>,
                  <span class="st">"SLACK_URL=$_SLACK_URL"</span><span class="op">)</span> <span class="co"># will get from substitution variable</span>
   <span class="op">)</span>
@@ -449,16 +451,16 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
   description <span class="op">=</span> <span class="st">"Deploying the Slackbot example"</span>,
   includedFiles <span class="op">=</span> <span class="st">"inst/slackbot/**"</span>,
   substitutions <span class="op">=</span> 
-     <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+     <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
        `_SLACK_URL`<span class="op">=</span><span class="va">slack_url</span> <span class="co"># used in the builds, can modify in build Web UI</span>
       <span class="op">)</span>,
   overwrite<span class="op">=</span><span class="cn">TRUE</span>
 <span class="op">)</span></code></pre></div>
 <p>The R API is now also modified to include the new endpoint <code>/trigger-slack</code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/">googleAnalyticsR</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/" class="external-link">googleAnalyticsR</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/" class="external-link">httr</a></span><span class="op">)</span>
 
 <span class="co">#...as above...</span>
 
@@ -468,18 +470,18 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
   <span class="co"># get last years referrer data</span>
   <span class="va">last_30_new_refs</span> <span class="op">&lt;-</span> <span class="fu">do_ga</span><span class="op">(</span><span class="va">ga_id</span><span class="op">)</span>
   
-  <span class="va">the_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">last_30_new_refs</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span>
+  <span class="va">the_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">last_30_new_refs</span><span class="op">$</span><span class="va">fullReferrer</span><span class="op">)</span>
   
-  <span class="va">the_body</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-    text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"GoogleAnalyticsLast30DaysNewReferrals\n```\n"</span>, 
-                 <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="st">"\n"</span>,<span class="va">the_data</span><span class="op">)</span>,
+  <span class="va">the_body</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+    text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"GoogleAnalyticsLast30DaysNewReferrals\n```\n"</span>, 
+                 <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="st">"\n"</span>,<span class="va">the_data</span><span class="op">)</span>,
                 <span class="st">"\n```\n"</span><span class="op">)</span>
                 <span class="op">)</span>
   <span class="co"># get the Slack URL from an env var</span>
-  <span class="va">slack_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">"SLACK_URL"</span><span class="op">)</span>
-  <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, body <span class="op">=</span> <span class="va">the_body</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span>
+  <span class="va">slack_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"SLACK_URL"</span><span class="op">)</span>
+  <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr.r-lib.org/reference/POST.html" class="external-link">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, body <span class="op">=</span> <span class="va">the_body</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span>
   
-  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>slack_http_response <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">status_code</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>slack_http_response <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">status_code</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p>We also add knitr to help with rendering the output in the Dockerfile (httr is already a dependency for googleAnalyticsR):</p>
 <pre><code>FROM rstudio/plumber
@@ -491,36 +493,36 @@ COPY ["./", "./"]
 ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <p>After making the changes to the Dockerfile and api.R, we commit the changes to redeploy via the Build Trigger (~5mins)</p>
 </div>
-<div id="testing-the-app-and-scheduling" class="section level2">
-<h2 class="hasAnchor">
-<a href="#testing-the-app-and-scheduling" class="anchor"></a>Testing the App and Scheduling</h2>
+<div class="section level2">
+<h2 id="testing-the-app-and-scheduling">Testing the App and Scheduling<a class="anchor" aria-label="anchor" href="#testing-the-app-and-scheduling"></a>
+</h2>
 <p>After deployment it should now be able to respond to the GA endpoint:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/" class="external-link">httr</a></span><span class="op">)</span>
 <span class="va">ga_id</span> <span class="op">&lt;-</span> <span class="fl">1234557</span>
 <span class="va">my_app</span> <span class="op">&lt;-</span> <span class="st">"https://slackbot-xxxx-ew.a.run.ap"</span>
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">my_app</span>, <span class="st">"/last-30-days?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr.r-lib.org/reference/GET.html" class="external-link">GET</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">my_app</span>, <span class="st">"/last-30-days?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://httr.r-lib.org/reference/content.html" class="external-link">content</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
 <p>Check the logs for Cloud Build and Cloud Run to see if its all working.</p>
 <p>The first time I tried it the memory was too low for the app, which is why above it specifies “1Gi” for the Cloud Run size.</p>
 <p>But if all goes well then you should be able to see the CSV file come back. (yay!)</p>
 <p><img src="slackbot_csv_download.png"></p>
 <p>The URL endpoint <code>/trigger-slack?ga_id=12345</code> should send the same data you see at <code>/last-30-days?ga_id=12345</code> but send that data to Slack:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/">httr</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/" class="external-link">httr</a></span><span class="op">)</span>
 <span class="va">ga_id</span> <span class="op">&lt;-</span> <span class="fl">1234557</span>
 <span class="va">my_app</span> <span class="op">&lt;-</span> <span class="st">"https://slackbot-xxxx-ew.a.run.ap"</span>
-<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr.r-lib.org/reference/GET.html">GET</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">my_app</span>, <span class="st">"/trigger-slack?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://httr.r-lib.org/reference/content.html">content</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
+<span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr.r-lib.org/reference/GET.html" class="external-link">GET</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">my_app</span>, <span class="st">"/trigger-slack?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://httr.r-lib.org/reference/content.html" class="external-link">content</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
 <p><img src="list_slack.png"></p>
-<div id="scheduling" class="section level3">
-<h3 class="hasAnchor">
-<a href="#scheduling" class="anchor"></a>Scheduling</h3>
+<div class="section level3">
+<h3 id="scheduling">Scheduling<a class="anchor" aria-label="anchor" href="#scheduling"></a>
+</h3>
 <p>Now we can schedule the URL via Cloud Scheduler. I’d like it every Friday with my coffee but before my tea.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ga_id</span> <span class="op">&lt;-</span> <span class="fl">1233456</span>
 <span class="va">my_app</span> <span class="op">&lt;-</span> <span class="st">"https://slackbot-xxxxxxx-ew.a.run.app"</span>
-<span class="va">my_endpoint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">my_app</span>,<span class="st">"/trigger-slack?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span>
+<span class="va">my_endpoint</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">my_app</span>,<span class="st">"/trigger-slack?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span>
 
 <span class="va">http_target</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HttpTarget.html">HttpTarget</a></span><span class="op">(</span>
   uri <span class="op">=</span> <span class="va">my_endpoint</span>,
@@ -534,9 +536,9 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
             overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="where-to-go-from-here" class="section level2">
-<h2 class="hasAnchor">
-<a href="#where-to-go-from-here" class="anchor"></a>Where to go from here</h2>
+<div class="section level2">
+<h2 id="where-to-go-from-here">Where to go from here<a class="anchor" aria-label="anchor" href="#where-to-go-from-here"></a>
+</h2>
 <p>Once the app is deployed you can spend most of your time developing the R code rather than worrying about the deployment, which upon each commit will recreate itself.</p>
 <p>You could try adding other endpoints for different GA functions, or making the API/webhook compatible with other services other than Slack.</p>
 <p>You may also want to make the Cloud Run API private, and should if its controlling private of expensive operations, so then look at <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> or <code><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http()</a></code> as your private API options.</p>
@@ -554,11 +556,13 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 
 
       <footer><div class="copyright">
-  <p>Developed by Mark Edmondson.</p>
+  <p></p>
+<p>Developed by Mark Edmondson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -566,6 +570,8 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 
   
 
+
+  
 
   </body>
 </html>

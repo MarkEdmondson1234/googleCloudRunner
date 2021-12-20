@@ -79,38 +79,47 @@ Within the code passed to \code{args} those secrets are referred to via \code{$$
 cr_project_set("my-project")
 cr_bucket_set("my-bucket")
 # creating yaml for use in deploying cloud run
-image = "gcr.io/my-project/my-image:$BUILD_ID"
+image <- "gcr.io/my-project/my-image:$BUILD_ID"
 cr_build_yaml(
-    steps = c(
-         cr_buildstep("docker", c("build","-t",image,".")),
-         cr_buildstep("docker", c("push",image)),
-         cr_buildstep("gcloud", c("beta","run","deploy", "test1",
-                                   "--image", image))),
-    images = image)
+  steps = c(
+    cr_buildstep("docker", c("build", "-t", image, ".")),
+    cr_buildstep("docker", c("push", image)),
+    cr_buildstep("gcloud", c(
+      "beta", "run", "deploy", "test1",
+      "--image", image
+    ))
+  ),
+  images = image
+)
 
 # use premade docker buildstep - combine using c()
-image = "gcr.io/my-project/my-image"
+image <- "gcr.io/my-project/my-image"
 cr_build_yaml(
-    steps = c(cr_buildstep_docker(image),
-              cr_buildstep("gcloud",
-                     args = c("beta","run","deploy",
-                              "test1","--image", image))
-             ),
-    images = image)
+  steps = c(
+    cr_buildstep_docker(image),
+    cr_buildstep("gcloud",
+      args = c(
+        "beta", "run", "deploy",
+        "test1", "--image", image
+      )
+    )
+  ),
+  images = image
+)
 
 # list files with a new entrypoint for gcloud
-cr_build_yaml(steps = cr_buildstep("gcloud", c("-c","ls -la"),
-                                   entrypoint = "bash"))
+cr_build_yaml(steps = cr_buildstep("gcloud", c("-c", "ls -la"),
+  entrypoint = "bash"
+))
 
 # to call from images not using gcr.io/cloud-builders stem
-cr_buildstep("alpine", c("-c","ls -la"), entrypoint = "bash", prefix="")
+cr_buildstep("alpine", c("-c", "ls -la"), entrypoint = "bash", prefix = "")
 
 # to add environment arguments to the step
 cr_buildstep("docker", "version", env = c("ENV1=env1", "ENV2=$PROJECT_ID"))
 
 # to add volumes wrap in list()
 cr_buildstep("test", "ls", volumes = list(list(name = "ssh", path = "/root/.ssh")))
-
 }
 \seealso{
 \href{https://cloud.google.com/cloud-build/docs/configuring-builds/use-community-and-custom-builders}{Creating custom build steps how-to guide}
@@ -126,6 +135,7 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_gitsetup}()},
 \code{\link{cr_buildstep_mailgun}()},
 \code{\link{cr_buildstep_nginx_setup}()},
+\code{\link{cr_buildstep_packagetests}()},
 \code{\link{cr_buildstep_pkgdown}()},
 \code{\link{cr_buildstep_run}()},
 \code{\link{cr_buildstep_r}()},

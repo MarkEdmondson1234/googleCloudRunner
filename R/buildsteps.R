@@ -50,38 +50,47 @@
 #' cr_project_set("my-project")
 #' cr_bucket_set("my-bucket")
 #' # creating yaml for use in deploying cloud run
-#' image = "gcr.io/my-project/my-image:$BUILD_ID"
+#' image <- "gcr.io/my-project/my-image:$BUILD_ID"
 #' cr_build_yaml(
-#'     steps = c(
-#'          cr_buildstep("docker", c("build","-t",image,".")),
-#'          cr_buildstep("docker", c("push",image)),
-#'          cr_buildstep("gcloud", c("beta","run","deploy", "test1",
-#'                                    "--image", image))),
-#'     images = image)
+#'   steps = c(
+#'     cr_buildstep("docker", c("build", "-t", image, ".")),
+#'     cr_buildstep("docker", c("push", image)),
+#'     cr_buildstep("gcloud", c(
+#'       "beta", "run", "deploy", "test1",
+#'       "--image", image
+#'     ))
+#'   ),
+#'   images = image
+#' )
 #'
 #' # use premade docker buildstep - combine using c()
-#' image = "gcr.io/my-project/my-image"
+#' image <- "gcr.io/my-project/my-image"
 #' cr_build_yaml(
-#'     steps = c(cr_buildstep_docker(image),
-#'               cr_buildstep("gcloud",
-#'                      args = c("beta","run","deploy",
-#'                               "test1","--image", image))
-#'              ),
-#'     images = image)
+#'   steps = c(
+#'     cr_buildstep_docker(image),
+#'     cr_buildstep("gcloud",
+#'       args = c(
+#'         "beta", "run", "deploy",
+#'         "test1", "--image", image
+#'       )
+#'     )
+#'   ),
+#'   images = image
+#' )
 #'
 #' # list files with a new entrypoint for gcloud
-#' cr_build_yaml(steps = cr_buildstep("gcloud", c("-c","ls -la"),
-#'                                    entrypoint = "bash"))
+#' cr_build_yaml(steps = cr_buildstep("gcloud", c("-c", "ls -la"),
+#'   entrypoint = "bash"
+#' ))
 #'
 #' # to call from images not using gcr.io/cloud-builders stem
-#' cr_buildstep("alpine", c("-c","ls -la"), entrypoint = "bash", prefix="")
+#' cr_buildstep("alpine", c("-c", "ls -la"), entrypoint = "bash", prefix = "")
 #'
 #' # to add environment arguments to the step
 #' cr_buildstep("docker", "version", env = c("ENV1=env1", "ENV2=$PROJECT_ID"))
 #'
 #' # to add volumes wrap in list()
 #' cr_buildstep("test", "ls", volumes = list(list(name = "ssh", path = "/root/.ssh")))
-#'
 cr_buildstep <- function(name,
                          args = NULL,
                          id = NULL,
@@ -91,17 +100,16 @@ cr_buildstep <- function(name,
                          env = NULL,
                          waitFor = NULL,
                          volumes = NULL,
-                         secretEnv = NULL){
-
-  if(is.null(prefix) || is.na(prefix)){
+                         secretEnv = NULL) {
+  if (is.null(prefix) || is.na(prefix)) {
     prefix <- "gcr.io/cloud-builders/"
   }
 
-  if(!is.null(entrypoint)){
+  if (!is.null(entrypoint)) {
     assert_that(is.string(entrypoint))
   }
 
-  if(dir %in% c("",NA)) dir <- NULL
+  if (dir %in% c("", NA)) dir <- NULL
 
   if (has_registry_prefix(name)) {
     prefix <- ""
@@ -118,10 +126,12 @@ cr_buildstep <- function(name,
       volumes = volumes,
       waitFor = string_to_list(waitFor),
       secretEnv = string_to_list(secretEnv)
-    )), class = c("cr_buildstep","list")))
+    )),
+    class = c("cr_buildstep", "list")
+  ))
 }
 
-is.cr_buildstep <- function(x){
+is.cr_buildstep <- function(x) {
   inherits(x, "cr_buildstep")
 }
 
@@ -138,53 +148,58 @@ is.cr_buildstep <- function(x){
 #' @export
 #' @family Cloud Buildsteps
 #' @examples
-#' y <- data.frame(name = c("docker", "alpine"),
-#'                 args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
-#'                 id = c("Docker Version", "Hello Cloud Build"),
-#'                 prefix = c(NA, ""),
-#'                 stringsAsFactors = FALSE)
+#' y <- data.frame(
+#'   name = c("docker", "alpine"),
+#'   args = I(list(c("version"), c("echo", "Hello Cloud Build"))),
+#'   id = c("Docker Version", "Hello Cloud Build"),
+#'   prefix = c(NA, ""),
+#'   stringsAsFactors = FALSE
+#' )
 #' cr_buildstep_df(y)
-cr_buildstep_df <- function(x){
+cr_buildstep_df <- function(x) {
   assert_that(
     is.data.frame(x),
-    all(c('name') %in% names(x))
+    all(c("name") %in% names(x))
   )
 
   myMessage("Turning buildstep df into list", level = 2)
 
-  if(is.null(x$prefix)){
-    #probably from API
+  if (is.null(x$prefix)) {
+    # probably from API
     x$prefix <- ""
   }
 
-  if(is.null(x$dir)){
+  if (is.null(x$dir)) {
     x$dir <- ""
   }
 
-  xx <- x[, intersect(c("name",
-                        "args",
-                        "id",
-                        "prefix",
-                        "entrypoint",
-                        "dir",
-                        "env",
-                        "volumes",
-                        "waitFor"), names(x))]
+  xx <- x[, intersect(c(
+    "name",
+    "args",
+    "id",
+    "prefix",
+    "entrypoint",
+    "dir",
+    "env",
+    "volumes",
+    "waitFor"
+  ), names(x))]
 
-  steps <- apply(xx, 1, function(row){
-    cr_buildstep(name = row[["name"]],
-                 args = row[["args"]],
-                 id = row[["id"]],
-                 prefix = row[["prefix"]],
-                 entrypoint = row[["entrypoint"]],
-                 env = row[["env"]],
-                 volumes = row[["volumes"]],
-                 waitFor = row[["waitFor"]],
-                 dir = row[["dir"]])[[1]]
+  steps <- apply(xx, 1, function(row) {
+    cr_buildstep(
+      name = row[["name"]],
+      args = row[["args"]],
+      id = row[["id"]],
+      prefix = row[["prefix"]],
+      entrypoint = row[["entrypoint"]],
+      env = row[["env"]],
+      volumes = row[["volumes"]],
+      waitFor = row[["waitFor"]],
+      dir = row[["dir"]]
+    )[[1]]
   })
 
   unname(steps)
-
 }
 
 
@@ -198,20 +213,19 @@ cr_buildstep_df <- function(x){
 #' @export
 #' @examples
 #' package_build <- system.file("cloudbuild/cloudbuild.yaml",
-#'                              package = "googleCloudRunner")
+#'   package = "googleCloudRunner"
+#' )
 #' build <- cr_build_make(package_build)
 #' build
 #' cr_buildstep_extract(build, step = 1)
 #' cr_buildstep_extract(build, step = 2)
-cr_buildstep_extract <- function(x, step = NULL){
-
+cr_buildstep_extract <- function(x, step = NULL) {
   assert_that(is.gar_Build(x))
 
   the_step <- x$steps[[step]]
   the_step$prefix <- ""
 
   do.call(cr_buildstep, args = the_step)
-
 }
 
 #' Modify an existing buildstep with new parameters
@@ -224,7 +238,8 @@ cr_buildstep_extract <- function(x, step = NULL){
 #' @family Cloud Buildsteps
 #' @examples
 #' package_build <- system.file("cloudbuild/cloudbuild.yaml",
-#'                              package = "googleCloudRunner")
+#'   package = "googleCloudRunner"
+#' )
 #' build <- cr_build_make(package_build)
 #' build
 #' cr_buildstep_extract(build, step = 1)
@@ -233,12 +248,12 @@ cr_buildstep_extract <- function(x, step = NULL){
 #' edit_me <- cr_buildstep_extract(build, step = 2)
 #' cr_buildstep_edit(edit_me, name = "blah")
 #' cr_buildstep_edit(edit_me, name = "gcr.io/blah")
-#' cr_buildstep_edit(edit_me, args = c("blah1","blah2"), dir = "meh")
+#' cr_buildstep_edit(edit_me, args = c("blah1", "blah2"), dir = "meh")
 #' @importFrom utils modifyList
 cr_buildstep_edit <- function(x,
-                              ...){
-  #buildsteps are in a list()
-  xx  <- x[[1]]
+                              ...) {
+  # buildsteps are in a list()
+  xx <- x[[1]]
 
   assert_that(is.cr_buildstep(xx))
 
@@ -246,12 +261,11 @@ cr_buildstep_edit <- function(x,
 
   # make sure required params are there
   the_name <- dots$name
-  if(is.null(the_name)){
+  if (is.null(the_name)) {
     the_name <- xx$name
   }
 
   dots$name <- the_name
 
   do.call(cr_buildstep, args = modifyList(xx, dots))
-
 }

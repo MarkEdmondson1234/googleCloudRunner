@@ -15,7 +15,8 @@
 #'
 #' # create build object
 #' cloudbuild <- system.file("cloudbuild/cloudbuild_substitutions.yml",
-#'                           package = "googleCloudRunner")
+#'   package = "googleCloudRunner"
+#' )
 #' the_build <- cr_build_make(cloudbuild)
 #'
 #' # this build includes substitution variables that read from pubsub message var1
@@ -23,15 +24,14 @@
 #'
 #' # using googlePubSubR to create pub/sub topic if needed
 #' \dontrun{
-#'  library(googlePubsubR)
-#'  pubsub_auth()
-#'  topics_create("test-topic")
+#' library(googlePubsubR)
+#' pubsub_auth()
+#' topics_create("test-topic")
 #' }
 #'
 #' # create build trigger that will work from pub/subscription
 #' pubsub_trigger <- cr_buildtrigger_pubsub("test-topic")
 #' pubsub_trigger
-#'
 #' \dontrun{
 #' cr_buildtrigger(the_build, name = "pubsub-triggered-subs", trigger = pubsub_trigger)
 #' }
@@ -45,9 +45,8 @@
 #'
 #' # turning into JSON and encoding
 #' send_me <- msg_encode(message)
-#'
 #' \dontrun{
-#'  # send a PubSub message with the encoded data message
+#' # send a PubSub message with the encoded data message
 #' topics_publish(PubsubMessage(send_me), "test-topic")
 #'
 #' # did it work? After a while should see logs if it did
@@ -56,21 +55,21 @@
 #'
 cr_buildtrigger_pubsub <- function(topic,
                                    serviceAccountEmail = NULL,
-                                   projectId = cr_project_get()){
-
+                                   projectId = cr_project_get()) {
   assert_that(
     is.string(topic)
   )
 
-  if(grepl("^projects", topic)){
+  if (grepl("^projects", topic)) {
     topic_name <- topic
   } else {
     topic_name <- sprintf("projects/%s/topics/%s", projectId, topic)
   }
 
-  PubsubConfig(topic = topic_name,
-               serviceAccountEmail = serviceAccountEmail)
-
+  PubsubConfig(
+    topic = topic_name,
+    serviceAccountEmail = serviceAccountEmail
+  )
 }
 
 #' Create a buildtrigger webhook object
@@ -81,10 +80,8 @@ cr_buildtrigger_pubsub <- function(topic,
 #' @inheritParams WebhookConfig
 #' @family BuildTrigger functions
 #' @export
-cr_buildtrigger_webhook <- function(secret){
-
+cr_buildtrigger_webhook <- function(secret) {
   WebhookConfig(secret)
-
 }
 
 
@@ -105,45 +102,47 @@ cr_buildtrigger_webhook <- function(secret){
 cr_buildtrigger_repo <- function(repo_name,
                                  branch = ".*",
                                  tag = NULL,
-                                 type = c("github","cloud_source"),
+                                 type = c("github", "cloud_source"),
                                  github_secret = NULL,
-                                 ...){
-
-  assert_that(is.string(repo_name),
-              is.string(branch))
+                                 ...) {
+  assert_that(
+    is.string(repo_name),
+    is.string(branch)
+  )
   type <- match.arg(type)
   dots <- list(...)
 
-  if(type == "github"){
-
+  if (type == "github") {
     repo <- GitHubEventsConfig(repo_name,
-                               branch = branch,
-                               tag = NULL,
-                               ...)
-  } else if(type == "cloud_source"){
-
-    if(is.null(dots$projectId)){
+      branch = branch,
+      tag = NULL,
+      ...
+    )
+  } else if (type == "cloud_source") {
+    if (is.null(dots$projectId)) {
       projectId <- cr_project_get()
     } else {
       projectId <- dots$projectId
     }
 
     repo <- RepoSource(repo_name,
-                       branchName = branch,
-                       tagName = tag,
-                       projectId = projectId,
-                       ...)
-
+      branchName = branch,
+      tagName = tag,
+      projectId = projectId,
+      ...
+    )
   }
 
-  structure(list(repo = repo,
-                 github_secret = github_secret,
-                 type = type),
-            class = c("cr_buildtrigger_repo","list"))
-
+  structure(list(
+    repo = repo,
+    github_secret = github_secret,
+    type = type
+  ),
+  class = c("cr_buildtrigger_repo", "list")
+  )
 }
 
-is.buildtrigger_repo <- function(x){
+is.buildtrigger_repo <- function(x) {
   inherits(x, "cr_buildtrigger_repo")
 }
 
@@ -169,9 +168,10 @@ GitHubEventsConfig <- function(x,
                                event = c("push", "pull"),
                                branch = ".*",
                                tag = NULL,
-                               commentControl = c("COMMENTS_DISABLED",
-                                                  "COMMENTS_ENABLED")) {
-
+                               commentControl = c(
+                                 "COMMENTS_DISABLED",
+                                 "COMMENTS_ENABLED"
+                               )) {
   repo <- split_github(x)
 
   event <- match.arg(event)
@@ -179,31 +179,36 @@ GitHubEventsConfig <- function(x,
   pullRequest <- NULL
   push <- NULL
 
-  if(!is.null(tag)){
+  if (!is.null(tag)) {
     branch <- NULL
   }
 
-  if(event == "pull"){
+  if (event == "pull") {
     pullRequest <- list(branch = branch, commentControl = commentControl)
-  } else if(event == "push"){
+  } else if (event == "push") {
     push <- list(branch = branch, tag = tag)
   }
 
-  assert_that(xor(is.null(pullRequest), is.null(push)),
-              xor(is.null(branch), is.null(tag)))
+  assert_that(
+    xor(is.null(pullRequest), is.null(push)),
+    xor(is.null(branch), is.null(tag))
+  )
 
-  structure(rmNullObs(list(pullRequest = pullRequest,
-                           push = push,
-                           owner = repo$owner,
-                           name = repo$name)),
-            class = c("GitHubEventsConfig","list"))
+  structure(rmNullObs(list(
+    pullRequest = pullRequest,
+    push = push,
+    owner = repo$owner,
+    name = repo$name
+  )),
+  class = c("GitHubEventsConfig", "list")
+  )
 }
 
-is.gar_GitHubEventsConfig <- function(x){
+is.gar_GitHubEventsConfig <- function(x) {
   inherits(x, "GitHubEventsConfig")
 }
 
-split_github <- function(x){
+split_github <- function(x) {
   o <- list(owner = dirname(x), name = basename(x))
   assert_that(o$owner != "", o$name != "")
   o

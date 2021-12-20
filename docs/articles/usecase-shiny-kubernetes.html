@@ -25,6 +25,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -150,7 +152,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
+  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -165,14 +167,14 @@
 
       
 
-      </header><script src="usecase-shiny-kubernetes_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Deploy a Shiny app to Google Kubernetes Engine</h1>
             
-            <h4 class="date">2021-12-03</h4>
+            <h4 data-toc-skip class="date">2021-12-20</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-shiny-kubernetes.Rmd"><code>vignettes/usecase-shiny-kubernetes.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-shiny-kubernetes.Rmd" class="external-link"><code>vignettes/usecase-shiny-kubernetes.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-shiny-kubernetes.Rmd</code></div>
 
     </div>
@@ -181,9 +183,9 @@
     
 <p>If you have a Shiny app and a Google Kubernetes Engine (GKE) instance you can automate deployment of that app upon each git commit.</p>
 <p>Each commit the buildsteps need to re-build the Docker container with the Shiny app code and environment, then deploy it to the GKE instance.</p>
-<div id="dockerfile" class="section level3">
-<h3 class="hasAnchor">
-<a href="#dockerfile" class="anchor"></a>Dockerfile</h3>
+<div class="section level3">
+<h3 id="dockerfile">Dockerfile<a class="anchor" aria-label="anchor" href="#dockerfile"></a>
+</h3>
 <p>Assuming you have a shiny app in <code>./shiny/</code> relative to the Dockerfile, then a Dockerfile could look like:</p>
 <pre><code>FROM rocker/shiny
 
@@ -207,11 +209,11 @@ RUN install2.r --error \
 
 ## assume shiny app is in build folder /shiny
 COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
-<p>Depending on how your ingress is setup, this would appear on your Kubernetes cluster at <code>/my-app/</code> - see this blog post on details for <a href="https://code.markedmondson.me/r-on-kubernetes-serverless-shiny-r-apis-and-scheduled-scripts/">setting up R on Kubernetes</a></p>
+<p>Depending on how your ingress is setup, this would appear on your Kubernetes cluster at <code>/my-app/</code> - see this blog post on details for <a href="https://code.markedmondson.me/r-on-kubernetes-serverless-shiny-r-apis-and-scheduled-scripts/" class="external-link">setting up R on Kubernetes</a></p>
 </div>
-<div id="kubernetes-deployment-file" class="section level3">
-<h3 class="hasAnchor">
-<a href="#kubernetes-deployment-file" class="anchor"></a>Kubernetes deployment file</h3>
+<div class="section level3">
+<h3 id="kubernetes-deployment-file">Kubernetes deployment file<a class="anchor" aria-label="anchor" href="#kubernetes-deployment-file"></a>
+</h3>
 <p>You can then also have a deployment file for Kubernetes that will govern its configuration after the new docker image is built. An example deployment file is below:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apiVersion</span><span class="kw">:</span><span class="at"> extensions/v1beta1</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kind</span><span class="kw">:</span><span class="at"> Deployment</span></span>
@@ -246,19 +248,19 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 <span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> varlog</span></span>
 <span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">mountPath</span><span class="kw">:</span><span class="at"> /var/log/shiny-server/</span></span></code></pre></div>
 </div>
-<div id="cloud-build" class="section level3">
-<h3 class="hasAnchor">
-<a href="#cloud-build" class="anchor"></a>Cloud Build</h3>
-<p>Your cloudbuild steps will then build the Dockerfile, then use <code>gcr.io/cloud-builders/gke-deploy</code> to deploy it to the cluster - see this <a href="https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-gke">Google guide on deployment to GKE via Cloud Build</a> for details</p>
+<div class="section level3">
+<h3 id="cloud-build">Cloud Build<a class="anchor" aria-label="anchor" href="#cloud-build"></a>
+</h3>
+<p>Your cloudbuild steps will then build the Dockerfile, then use <code>gcr.io/cloud-builders/gke-deploy</code> to deploy it to the cluster - see this <a href="https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-gke" class="external-link">Google guide on deployment to GKE via Cloud Build</a> for details</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
-<span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+<span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
   <span class="fu"><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker</a></span><span class="op">(</span><span class="st">"shiny-your-app"</span>,
-                      tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"latest"</span>,<span class="st">"$SHORT_SHA"</span><span class="op">)</span>,
+                      tag <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"latest"</span>,<span class="st">"$SHORT_SHA"</span><span class="op">)</span>,
                       kaniko_cache <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
   <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span><span class="st">"gke-deploy"</span>,
-               args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"run"</span>,
+               args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"run"</span>,
                         <span class="st">"--filename=deployment-k8s.yml"</span>,
                         <span class="st">"--image=gcr.io/$PROJECT_ID/shiny-your-app:$SHORT_SHA"</span>,
                         <span class="st">"--location=europe-west1-b"</span>,
@@ -296,11 +298,13 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 
 
       <footer><div class="copyright">
-  <p>Developed by Mark Edmondson.</p>
+  <p></p>
+<p>Developed by Mark Edmondson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -308,6 +312,8 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 
   
 
+
+  
 
   </body>
 </html>

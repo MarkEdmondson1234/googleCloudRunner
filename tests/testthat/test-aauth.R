@@ -1,4 +1,6 @@
 test_that("Authentication and setup", {
+  skip_on_ci()
+  skip_on_cran()
 
   expect_true(nzchar(Sys.getenv("GCE_AUTH_FILE")))
   expect_true(nzchar(Sys.getenv("CR_REGION")))
@@ -9,5 +11,4 @@ test_that("Authentication and setup", {
   expect_true(
     inherits(googleAuthR::gar_token()$auth_token, "TokenServiceAccount")
   )
-
 })

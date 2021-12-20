@@ -15,7 +15,6 @@ cr_setup_test(
 This allows you to check if your setup works - run \link{cr_setup} first.
 }
 \examples{
-
 \dontrun{
 # start the menu for interactive use
 cr_setup_test()
@@ -25,7 +24,6 @@ cr_setup_test("all")
 
 # run just the plumber deployment test
 cr_setup_test("plumber")
-
 }
 }
 \seealso{

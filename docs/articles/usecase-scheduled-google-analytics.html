@@ -25,6 +25,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -150,7 +152,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
+  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -165,35 +167,35 @@
 
       
 
-      </header><script src="usecase-scheduled-google-analytics_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Scheduled Google Analytics API calls - GDPR User Deletions</h1>
             
-            <h4 class="date">2021-12-03</h4>
+            <h4 data-toc-skip class="date">2021-12-20</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-scheduled-google-analytics.Rmd"><code>vignettes/usecase-scheduled-google-analytics.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-scheduled-google-analytics.Rmd" class="external-link"><code>vignettes/usecase-scheduled-google-analytics.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-scheduled-google-analytics.Rmd</code></div>
 
     </div>
 
     
     
-<p>A very common use case in my line of work is to make Google Analytics API scheduled calls. This example shows how to use <a href="https://code.markedmondson.me/googleAnalyticsR/"><code>googleAnalyticsR</code></a> within your build steps, then <code>gcloud</code> to interact with other Google Cloud Platform services, such as BigQuery or Cloud Storage.</p>
-<div id="user-deletions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#user-deletions" class="anchor"></a>User Deletions</h2>
-<p>This example supposes you have a lot of GDPR requests to delete data in your Google Analytics set-up via the <a href="https://developers.google.com/analytics/devguides/config/userdeletion/v3">User Deletion API</a>. This API only allows 500 requests per day, so if you have more than that you need to schedule the batches.</p>
+<p>A very common use case in my line of work is to make Google Analytics API scheduled calls. This example shows how to use <a href="https://code.markedmondson.me/googleAnalyticsR/" class="external-link"><code>googleAnalyticsR</code></a> within your build steps, then <code>gcloud</code> to interact with other Google Cloud Platform services, such as BigQuery or Cloud Storage.</p>
+<div class="section level2">
+<h2 id="user-deletions">User Deletions<a class="anchor" aria-label="anchor" href="#user-deletions"></a>
+</h2>
+<p>This example supposes you have a lot of GDPR requests to delete data in your Google Analytics set-up via the <a href="https://developers.google.com/analytics/devguides/config/userdeletion/v3" class="external-link">User Deletion API</a>. This API only allows 500 requests per day, so if you have more than that you need to schedule the batches.</p>
 <p>To perform the deletions, we suppose we have a csv file on Google Cloud Storage that has two columns: cid and UA property. The script will download this file, perform user deletions on 500 of them via <code>googleAnalyticsR::ga_clientid_deletion()</code> and then upload a record of the deleted rows to cross-reference the next day.</p>
 <p>A user could update the <code>delete-all.csv</code> on Google Cloud Storage with the requested deletions for GDPR compliance, and check the <code>deletes.csv</code> for which have been deleted already.</p>
-<div id="r-script-for-google-analytics-user-deletions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#r-script-for-google-analytics-user-deletions" class="anchor"></a>R script for Google Analytics user deletions</h3>
+<div class="section level3">
+<h3 id="r-script-for-google-analytics-user-deletions">R script for Google Analytics user deletions<a class="anchor" aria-label="anchor" href="#r-script-for-google-analytics-user-deletions"></a>
+</h3>
 <p>An example script is shown below:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/">googleAnalyticsR</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/" class="external-link">googleAnalyticsR</a></span><span class="op">)</span>
 <span class="co"># enable scopes for user deletions and listing GA accounts</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>googleAuthR.scopes.selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>googleAuthR.scopes.selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
   <span class="st">"https://www.googleapis.com/auth/analytics.user.deletion"</span>,
   <span class="st">"https://www.googleapis.com/auth/analytics.edit"</span><span class="op">)</span><span class="op">)</span>
 
@@ -201,45 +203,45 @@
 <span class="fu">ga_auth</span><span class="op">(</span>json_file <span class="op">=</span> <span class="st">"auth.json"</span><span class="op">)</span>
 
 <span class="co"># what we want to delete</span>
-<span class="va">todo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"delete-all.csv"</span>, 
+<span class="va">todo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"delete-all.csv"</span>, 
                  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, 
                  colClasses <span class="op">=</span> <span class="st">"character"</span><span class="op">)</span>
                  
 <span class="co"># what has been deleted already</span>
-<span class="va">old_deletes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"deletes.csv"</span>, 
+<span class="va">old_deletes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"deletes.csv"</span>, 
                         stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, 
                         colClasses <span class="op">=</span> <span class="st">"character"</span><span class="op">)</span>
 
 <span class="co"># all rows without a delete flag</span>
-<span class="va">todo_filtered</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html">anti_join</a></span><span class="op">(</span><span class="va">todo</span>, <span class="va">old_deletes</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>cid <span class="op">=</span> <span class="st">"userId"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">todo_filtered</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter-joins.html" class="external-link">anti_join</a></span><span class="op">(</span><span class="va">todo</span>, <span class="va">old_deletes</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>cid <span class="op">=</span> <span class="st">"userId"</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># we can only do 500 per day</span>
-<span class="va">todo_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">todo_filtered</span>, n <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>
+<span class="va">todo_filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">todo_filtered</span>, n <span class="op">=</span> <span class="fl">500</span><span class="op">)</span>
 
 <span class="co"># we only do one UA code per run</span>
-<span class="va">splits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html">split</a></span><span class="op">(</span><span class="va">todo_filtered</span>, <span class="va">todo_filtered</span><span class="op">$</span><span class="va">ua</span><span class="op">)</span>
+<span class="va">splits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">todo_filtered</span>, <span class="va">todo_filtered</span><span class="op">$</span><span class="va">ua</span><span class="op">)</span>
 
 <span class="va">do_these_cids</span> <span class="op">&lt;-</span> <span class="va">splits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">cid</span>
-<span class="va">do_this_ua</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">splits</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
+<span class="va">do_this_ua</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">splits</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"Deleting IDs - should take around 6 mins to do 500"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Deleting IDs - should take around 6 mins to do 500"</span><span class="op">)</span>
 <span class="co"># to have more logs in the build</span>
-<span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>googleAuthR.verbose <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>googleAuthR.verbose <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> 
 
 <span class="co"># 500 APIs calls</span>
 <span class="va">deleted</span> <span class="op">&lt;-</span> <span class="fu">ga_clientid_deletion</span><span class="op">(</span><span class="va">do_these_cids</span>, propertyId <span class="op">=</span> <span class="va">do_this_ua</span><span class="op">)</span>
-<span class="va">upload_deletes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">old_deletes</span>, <span class="va">deleted</span><span class="op">)</span>
+<span class="va">upload_deletes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">old_deletes</span>, <span class="va">deleted</span><span class="op">)</span>
 
-<span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">deleted</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span><span class="op">{</span>
+<span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">deleted</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span><span class="op">{</span>
   <span class="co"># upload this file to Google Cloud STorage so they aren't deleted again</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">deleted</span>, file <span class="op">=</span> <span class="st">"deletes.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">deleted</span>, file <span class="op">=</span> <span class="st">"deletes.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-  <span class="kw"><a href="https://rdrr.io/r/base/warning.html">warning</a></span><span class="op">(</span><span class="st">"No deletions were made"</span>, call. <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/warning.html" class="external-link">warning</a></span><span class="op">(</span><span class="st">"No deletions were made"</span>, call. <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p>The script assumes three files existing in the folder: the authentication file <code>auth.json</code> which is a service account key whose email has been added to the GA accounts; and the two files tracking ID progress - you will need to create <code>delete-all.csv</code> and <code>deletes.csv</code>.</p>
-<div id="delete-all-csv" class="section level4">
-<h4 class="hasAnchor">
-<a href="#delete-all-csv" class="anchor"></a>delete-all.csv</h4>
+<div class="section level4">
+<h4 id="delete-all-csv">delete-all.csv<a class="anchor" aria-label="anchor" href="#delete-all-csv"></a>
+</h4>
 <p>This should be a CSV file with cid and ua columns:</p>
 <table class="table">
 <thead><tr class="header">
@@ -262,17 +264,17 @@
 </tbody>
 </table>
 </div>
-<div id="deletes-csv" class="section level4">
-<h4 class="hasAnchor">
-<a href="#deletes-csv" class="anchor"></a>deletes.csv</h4>
+<div class="section level4">
+<h4 id="deletes-csv">deletes.csv<a class="anchor" aria-label="anchor" href="#deletes-csv"></a>
+</h4>
 <p>There won’t be any deleted IDs the first time it runs, so you can generate an empty <code>deletes.csv</code> file via:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">deleted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>userId <span class="op">=</span> <span class="cn">NA</span>, 
+<code class="sourceCode R"><span class="va">deleted</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>userId <span class="op">=</span> <span class="cn">NA</span>, 
                       id_type <span class="op">=</span> <span class="cn">NA</span>, 
                       property <span class="op">=</span> <span class="cn">NA</span>, 
                       deletionRequestTime <span class="op">=</span> <span class="cn">NA</span>,
                       stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">deleted</span>, <span class="st">"deletes.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">deleted</span>, <span class="st">"deletes.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p>Once the first run is made, this file will be appended to with the 500 entries it has deleted - it looks like this:</p>
 <table class="table">
 <thead><tr class="header">
@@ -305,22 +307,22 @@
 </div>
 </div>
 </div>
-<div id="the-build" class="section level2">
-<h2 class="hasAnchor">
-<a href="#the-build" class="anchor"></a>The Build</h2>
+<div class="section level2">
+<h2 id="the-build">The Build<a class="anchor" aria-label="anchor" href="#the-build"></a>
+</h2>
 <p>We now create the build around the R script that will download the necessary files and upload the results. We save the above script locally to <code>delete.R</code> - then when we call <code>cr_buildstep_r("delete.R")</code> it will pull that script in and create a build step with the R code embedded within it:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
-<span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
+<span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
   <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"user-deletion-key"</span>,
                       <span class="st">"auth.json"</span><span class="op">)</span>,
   <span class="fu"><a href="../reference/cr_buildstep_gcloud.html">cr_buildstep_gcloud</a></span><span class="op">(</span><span class="st">"gsutil"</span>,
-                      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
+                      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
                                <span class="st">"gs://your-bucket/delete-all.csv"</span>,
                                <span class="st">"delete-all.csv"</span><span class="op">)</span><span class="op">)</span>,
   <span class="fu"><a href="../reference/cr_buildstep_gcloud.html">cr_buildstep_gcloud</a></span><span class="op">(</span><span class="st">"gsutil"</span>,
-                      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
+                      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
                                <span class="st">"gs://your-bucket/deletes.csv"</span>,
                                <span class="st">"deletes.csv"</span><span class="op">)</span><span class="op">)</span>,
   <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span>
@@ -328,7 +330,7 @@
     name <span class="op">=</span> <span class="st">"gcr.io/gcer-public/googleanalyticsr:master"</span>
   <span class="op">)</span>,
   <span class="fu"><a href="../reference/cr_buildstep_gcloud.html">cr_buildstep_gcloud</a></span><span class="op">(</span><span class="st">"gsutil"</span>,
-                      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
+                      args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cp"</span>,
                                <span class="st">"deletes.csv"</span>,
                                <span class="st">"gs://your-bucket/deletes.csv"</span><span class="op">)</span><span class="op">)</span>
 <span class="op">)</span>
@@ -361,11 +363,13 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Mark Edmondson.</p>
+  <p></p>
+<p>Developed by Mark Edmondson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -373,6 +377,8 @@
 
   
 
+
+  
 
   </body>
 </html>

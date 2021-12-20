@@ -12,20 +12,21 @@
 #' @family Cloud Build functions
 #' @return A gar_Build object \link{Build}
 cr_build_status <- function(id = .Last.value,
-                            projectId = cr_project_get()){
-
+                            projectId = cr_project_get()) {
   the_id <- extract_build_id(id)
 
-  url <- sprintf("https://cloudbuild.googleapis.com/v1/projects/%s/builds/%s",
-                 projectId, the_id)
+  url <- sprintf(
+    "https://cloudbuild.googleapis.com/v1/projects/%s/builds/%s",
+    projectId, the_id
+  )
 
 
   # cloudbuild.projects.builds.get
   f <- gar_api_generator(url, "GET",
-                         data_parse_function = as.gar_Build)
+    data_parse_function = as.gar_Build
+  )
 
   f()
-
 }
 
 #' Download artifacts from a build
@@ -48,13 +49,12 @@ cr_build_status <- function(id = .Last.value,
 #' @seealso \href{https://cloud.google.com/cloud-build/docs/building/store-build-artifacts}{Storing images and artifacts}
 #'
 #' @examples
-#'
 #' \dontrun{
 #' #' r <- "write.csv(mtcars,file = 'artifact.csv')"
 #' ba <- cr_build_yaml(
-#'     steps = cr_buildstep_r(r),
-#'     artifacts = cr_build_yaml_artifact('artifact.csv', bucket = "my-bucket")
-#'     )
+#'   steps = cr_buildstep_r(r),
+#'   artifacts = cr_build_yaml_artifact("artifact.csv", bucket = "my-bucket")
+#' )
 #' ba
 #'
 #' build <- cr_build(ba)
@@ -66,8 +66,7 @@ cr_build_status <- function(id = .Last.value,
 cr_build_artifacts <- function(build,
                                download_folder = getwd(),
                                overwrite = FALSE,
-                               path_regex = NULL){
-
+                               path_regex = NULL) {
   assert_that(
     is.gar_Build(build),
     !is.null(build$artifacts$objects),
@@ -77,33 +76,34 @@ cr_build_artifacts <- function(build,
 
   bucket <- build$artifacts$objects$location
   paths <- build$artifacts$objects$paths
-  just_bucket <- gsub("(gs://.+?)/(.+)$","\\1",bucket)
-  if(dirname(bucket) == "gs:"){
+  just_bucket <- gsub("(gs://.+?)/(.+)$", "\\1", bucket)
+  if (dirname(bucket) == "gs:") {
     just_path <- NULL
   } else {
-    just_path <- gsub("(gs://.+?)/(.+)$","\\2",bucket)
+    just_path <- gsub("(gs://.+?)/(.+)$", "\\2", bucket)
   }
 
   cloud_files <- gcs_list_objects(basename(just_bucket),
-                                  prefix = just_path)
+    prefix = just_path
+  )
 
   # does not support glob
-  if(is.null(path_regex)){
-    cloud_files <- cloud_files[cloud_files$name %in% paths,]
+  if (is.null(path_regex)) {
+    cloud_files <- cloud_files[cloud_files$name %in% paths, ]
   } else {
     assert_that(is.string(path_regex))
     cloud_files <- cloud_files[grepl(path_regex, cloud_files$name), ]
   }
 
-  lapply(cloud_files$name, function(x){
+  lapply(cloud_files$name, function(x) {
     o <- paste0(just_bucket, x)
     gcs_get_object(o,
-                   saveToDisk = x,
-                   overwrite = overwrite)
+      saveToDisk = x,
+      overwrite = overwrite
+    )
   })
 
   cloud_files$name
-
 }
 
 #' Wait for a Build to run
@@ -116,12 +116,11 @@ cr_build_artifacts <- function(build,
 #' @family Cloud Build functions
 #' @return A gar_Build object \link{Build}
 cr_build_wait <- function(op = .Last.value,
-                          projectId = cr_project_get()){
-
+                          projectId = cr_project_get()) {
   the_id <- extract_build_id(op)
 
   init <- cr_build_status(the_id, projectId = projectId)
-  if(!init$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
+  if (!init$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")) {
     return(init)
   }
 
@@ -135,75 +134,87 @@ cr_build_wait <- function(op = .Last.value,
 
 #' @noRd
 #' @importFrom cli cli_alert_info cli_process_failed cli_process_done
-#' @importFrom cli cli_status cli_status_update make_spinner
-wait_f <- function(init, projectId){
+#' @importFrom cli cli_status cli_status_update make_spinner cli_div
+wait_f <- function(init, projectId) {
   op <- init
   wait <- TRUE
 
   sb <- cli_status("Launching Cloud Build...")
-  favs <- c("bouncingBall","triangle","runner","shark","arrow3","circleHalves")
-  sp1 <- make_spinner(which = favs[sample.int(6, size = 1)],
-                      template = "{spin} - building ")
+  favs <- c("bouncingBall", "triangle",
+            "runner", "shark", "arrow3", "circleHalves")
+  sp1 <- make_spinner(
+    which = favs[sample.int(6, size = 1)],
+    template = "{spin} - building "
+  )
   cli_div(theme = list(span.status = list(color = "blue")))
 
   tick <- 0
-  while(wait){
-
-    if(tick %% 5 == 0){
+  start_time <- Sys.time()
+  while (wait) {
+    if (tick %% 5 == 0) {
       status <- cr_build_status(op, projectId = projectId)
     }
 
+    build_time <- format(round(difftime(Sys.time(),start_time, units = "auto")))
 
-    if(status$status %in%
-       c("FAILURE","INTERNAL_ERROR","TIMEOUT","CANCELLED","EXPIRED")){
+    if (status$status %in%
+      c("FAILURE", "INTERNAL_ERROR", "TIMEOUT", "CANCELLED", "EXPIRED")) {
       cli_process_failed(
         id = sb,
-        msg_failed = "Build failed with status: {status$status}")
+        msg_failed = "Build failed with status: {status$status} and took ~{build_time}"
+      )
       wait <- FALSE
     }
 
-    if(status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")){
-      cli_status_update(id = sb,
-        msg = "{symbol$arrow_right} ------------------- Build Id: {status$id} Status: {.status {status$status}}")
+    if (status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")) {
+      cli_status_update(
+        id = sb,
+        msg = "{symbol$arrow_right} ------------------- Build Id: {status$id} Status: {.status {status$status}} ~{build_time}"
+      )
       sp1$spin()
 
       tick <- tick + 1
       Sys.sleep(1)
     }
 
-    if(status$status == "SUCCESS"){
+    if (status$status == "SUCCESS") {
+
       cli_process_done(
         id = sb,
-        msg_done = "Build finished with status: {status$status}")
+        msg_done = "Build finished with status: {status$status} and took ~{build_time}"
+      )
       wait <- FALSE
     }
 
     op <- status
-
   }
 
   status
 }
 
 
-extract_runtime <- function(start_time){
+extract_runtime <- function(start_time) {
   started <- tryCatch(
-    timestamp_to_r(start_time), error = function(err){
+    timestamp_to_r(start_time),
+    error = function(err) {
       # sometimes starttime is returned from API NULL, so we fill one in
       tt <- Sys.time()
       message("Could not parse starttime: ", start_time,
-              " setting starttime to:", tt, level = 2)
+        " setting starttime to:", tt,
+        level = 2
+      )
       tt
-    })
-  as.integer(difftime(Sys.time(), started, units  = "secs"))
+    }
+  )
+  as.integer(difftime(Sys.time(), started, units = "secs"))
 }
 
-extract_timeout <- function(op=NULL){
-  if(is.BuildOperationMetadata(op)){
+extract_timeout <- function(op = NULL) {
+  if (is.BuildOperationMetadata(op)) {
     the_timeout <- as.integer(gsub("s", "", op$metadata$build$timeout))
-  } else if(is.gar_Build(op)){
+  } else if (is.gar_Build(op)) {
     the_timeout <- as.integer(gsub("s", "", op$timeout))
-  } else if(is.null(op)){
+  } else if (is.null(op)) {
     the_timeout <- 600L
   } else {
     assert_that(is.integer(op))
@@ -213,10 +224,10 @@ extract_timeout <- function(op=NULL){
   the_timeout
 }
 
-extract_build_id <- function(op){
-  if(is.BuildOperationMetadata(op)){
+extract_build_id <- function(op) {
+  if (is.BuildOperationMetadata(op)) {
     the_id <- op$metadata$build$id
-  } else if (is.gar_Build(op)){
+  } else if (is.gar_Build(op)) {
     the_id <- op$id
   } else {
     assert_that(is.string(op))
@@ -226,16 +237,15 @@ extract_build_id <- function(op){
   the_id
 }
 
-parse_build_meta_to_obj <- function(o){
-
+parse_build_meta_to_obj <- function(o) {
   the_steps <- o$steps
-  if(is.null(the_steps)){
+  if (is.null(the_steps)) {
     the_steps <- o$metadata$build$steps
   }
 
-  if(all(vapply(the_steps, inherits, what = "cr_buildstep", TRUE))){
+  if (all(vapply(the_steps, inherits, what = "cr_buildstep", TRUE))) {
     parsed_steps <- the_steps
-  } else if(is.data.frame(the_steps)){
+  } else if (is.data.frame(the_steps)) {
     parsed_steps <- unname(cr_buildstep_df(the_steps))
   } else {
     stop("Could not parse out build steps from given build meta object", call. = FALSE)
@@ -257,10 +267,11 @@ parse_build_meta_to_obj <- function(o){
   cr_build_make(yml)
 }
 
-as.gar_Build <- function(x){
-  if(is.BuildOperationMetadata(x)){
+as.gar_Build <- function(x) {
+  if (is.BuildOperationMetadata(x)) {
     bb <- cr_build_status(extract_build_id(x),
-                          projectId = x$metadata$build$projectId)
+      projectId = x$metadata$build$projectId
+    )
     o <- parse_build_meta_to_obj(bb)
   } else if (is.gar_Build(x)) {
     o <- x # maybe more here later...
@@ -270,14 +281,14 @@ as.gar_Build <- function(x){
   }
   assert_that(is.gar_Build(o))
 
-  if(is.data.frame(o$steps)){
+  if (is.data.frame(o$steps)) {
     o$steps <- cr_buildstep_df(o$steps)
   }
 
   o
 }
 
-is.gar_Build <- function(x){
+is.gar_Build <- function(x) {
   inherits(x, "gar_Build")
 }
 
@@ -359,33 +370,34 @@ Build <- function(Build.substitutions = NULL,
                   secrets = NULL,
                   availableSecrets = NULL,
                   serviceAccount = NULL) {
-
-  structure(rmNullObs(list(Build.substitutions = Build.substitutions,
-                           Build.timing = Build.timing,
-                           results = results,
-                           logsBucket = logsBucket,
-                           steps = steps,
-                           buildTriggerId = buildTriggerId,
-                           id = id,
-                           tags = tags,
-                           startTime = startTime,
-                           substitutions = substitutions,
-                           timing = timing,
-                           sourceProvenance = sourceProvenance,
-                           createTime = createTime,
-                           images = images,
-                           projectId = projectId,
-                           logUrl = logUrl,
-                           finishTime = finishTime,
-                           source = source,
-                           options = options,
-                           timeout = timeout,
-                           status = status,
-                           statusDetail = statusDetail,
-                           artifacts = artifacts,
-                           secrets = secrets,
-                           availableSecrets = availableSecrets,
-                           serviceAccount = serviceAccount)),
-            class = c("gar_Build", "list"))
+  structure(rmNullObs(list(
+    Build.substitutions = Build.substitutions,
+    Build.timing = Build.timing,
+    results = results,
+    logsBucket = logsBucket,
+    steps = steps,
+    buildTriggerId = buildTriggerId,
+    id = id,
+    tags = tags,
+    startTime = startTime,
+    substitutions = substitutions,
+    timing = timing,
+    sourceProvenance = sourceProvenance,
+    createTime = createTime,
+    images = images,
+    projectId = projectId,
+    logUrl = logUrl,
+    finishTime = finishTime,
+    source = source,
+    options = options,
+    timeout = timeout,
+    status = status,
+    statusDetail = statusDetail,
+    artifacts = artifacts,
+    secrets = secrets,
+    availableSecrets = availableSecrets,
+    serviceAccount = serviceAccount
+  )),
+  class = c("gar_Build", "list")
+  )
 }
-

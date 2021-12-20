@@ -25,6 +25,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -150,7 +152,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/">
+  <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -165,14 +167,14 @@
 
       
 
-      </header><script src="usecase-r-event-driven-pubsub_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Trigger an R function from pub/sub</h1>
             
-            <h4 class="date">2021-12-03</h4>
+            <h4 data-toc-skip class="date">2021-12-20</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/master/vignettes/usecase-r-event-driven-pubsub.Rmd"><code>vignettes/usecase-r-event-driven-pubsub.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-r-event-driven-pubsub.Rmd" class="external-link"><code>vignettes/usecase-r-event-driven-pubsub.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-r-event-driven-pubsub.Rmd</code></div>
 
     </div>
@@ -186,7 +188,7 @@
 <code class="sourceCode R"><span class="co"># example function echos back pubsub message</span>
 <span class="co"># change to do something more interesting with event data</span>
 <span class="va">pub</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Echo:"</span>, <span class="va">x</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Echo:"</span>, <span class="va">x</span><span class="op">)</span>
 <span class="op">}</span>
 
 <span class="co">#' Receive pub/sub message</span>
@@ -220,27 +222,27 @@ CMD ["api.R"]</code></pre>
 <span class="va">pub</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
   <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">x</span>, source <span class="op">=</span> <span class="va">my_source</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p>If you would like to trigger a pub/sub message when a file arrives on Google Cloud Storage, use <code><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_create_pubsub.html">googleCloudStorageR::gcs_create_pubsub()</a></code></p>
-<div id="run-r-code-when-a-pubsub-message-is-created-from-a-new-file-in-google-cloud-storage" class="section level2">
-<h2 class="hasAnchor">
-<a href="#run-r-code-when-a-pubsub-message-is-created-from-a-new-file-in-google-cloud-storage" class="anchor"></a>Run R code when a pub/sub message is created from a new file in Google Cloud Storage</h2>
-<p>This is a demo to show how to make use of <a href="https://cloud.google.com/pubsub/docs/overview">Pub/Sub messages</a>. Pub/Sub messages are used throughout the Google Cloud Platform, for this example we will use one for when a new object is created in a Google Cloud Storage bucket.</p>
-<p>A video walkthrough of the below is available <a href="https://www.youtube.com/watch?v=MoKHsFr1B88">here</a></p>
+<p>If you would like to trigger a pub/sub message when a file arrives on Google Cloud Storage, use <code><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_create_pubsub.html" class="external-link">googleCloudStorageR::gcs_create_pubsub()</a></code></p>
+<div class="section level2">
+<h2 id="run-r-code-when-a-pubsub-message-is-created-from-a-new-file-in-google-cloud-storage">Run R code when a pub/sub message is created from a new file in Google Cloud Storage<a class="anchor" aria-label="anchor" href="#run-r-code-when-a-pubsub-message-is-created-from-a-new-file-in-google-cloud-storage"></a>
+</h2>
+<p>This is a demo to show how to make use of <a href="https://cloud.google.com/pubsub/docs/overview" class="external-link">Pub/Sub messages</a>. Pub/Sub messages are used throughout the Google Cloud Platform, for this example we will use one for when a new object is created in a Google Cloud Storage bucket.</p>
+<p>A video walkthrough of the below is available <a href="https://www.youtube.com/watch?v=MoKHsFr1B88" class="external-link">here</a></p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/MoKHsFr1B88" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
-<div id="the-plumber-api-with-pubsub" class="section level3">
-<h3 class="hasAnchor">
-<a href="#the-plumber-api-with-pubsub" class="anchor"></a>The plumber API with pub/sub</h3>
+<div class="section level3">
+<h3 id="the-plumber-api-with-pubsub">The plumber API with pub/sub<a class="anchor" aria-label="anchor" href="#the-plumber-api-with-pubsub"></a>
+</h3>
 <p>The API endpoint in plumber needs an endpoint to recieve Pub/Sub messages, then an R function to process and do what you want with that message. In this case we shall email the file name to an end user. This could be expanded to do some R analysis, or what ever you need.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#' Send an email via mailgun</span>
 <span class="va">send_email</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">message</span><span class="op">)</span><span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"sending email with message: "</span>, <span class="va">message</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"sending email with message: "</span>, <span class="va">message</span><span class="op">)</span>
 
-  <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/POST.html">POST</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">"MAILGUN_URL"</span><span class="op">)</span>,<span class="st">"/messages"</span><span class="op">)</span>,
-             <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/authenticate.html">authenticate</a></span><span class="op">(</span><span class="st">"api"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span><span class="op">(</span><span class="st">"MAILGUN_KEY"</span><span class="op">)</span><span class="op">)</span>,
+  <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/POST.html" class="external-link">POST</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"MAILGUN_URL"</span><span class="op">)</span>,<span class="st">"/messages"</span><span class="op">)</span>,
+             <span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/authenticate.html" class="external-link">authenticate</a></span><span class="op">(</span><span class="st">"api"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"MAILGUN_KEY"</span><span class="op">)</span><span class="op">)</span>,
              encode <span class="op">=</span> <span class="st">"form"</span>,
-             body <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+             body <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
                from<span class="op">=</span><span class="st">"googlecloudrunner@you.me"</span>,
                to<span class="op">=</span><span class="st">"test@you.me"</span>,
                subject<span class="op">=</span><span class="st">"Message from Pub/Sub"</span>,
@@ -256,9 +258,9 @@ CMD ["api.R"]</code></pre>
 <span class="kw">function</span><span class="op">(</span><span class="va">message</span><span class="op">=</span><span class="cn">NULL</span><span class="op">)</span><span class="op">{</span>
 
   <span class="va">pub</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span>
-    <span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html">fromJSON</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/message.html">message</a></span><span class="op">(</span><span class="st">"Echo:"</span>, <span class="va">o</span><span class="op">)</span>
-    <span class="fu">send_email</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"We got this file: "</span>, <span class="va">o</span><span class="op">$</span><span class="va">name</span><span class="op">)</span><span class="op">)</span>
+    <span class="va">o</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"Echo:"</span>, <span class="va">o</span><span class="op">)</span>
+    <span class="fu">send_email</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"We got this file: "</span>, <span class="va">o</span><span class="op">$</span><span class="va">name</span><span class="op">)</span><span class="op">)</span>
   <span class="op">}</span>
 
   <span class="fu">googleCloudRunner</span><span class="fu">::</span><span class="fu"><a href="../reference/cr_plumber_pubsub.html">cr_plumber_pubsub</a></span><span class="op">(</span><span class="va">message</span>, <span class="va">pub</span><span class="op">)</span>
@@ -271,9 +273,9 @@ COPY ["./", "./"]
 ENTRYPOINT ["R", "-e", "pr &lt;- plumber::plumb(commandArgs()[4]); pr$run(host='0.0.0.0', port=as.numeric(Sys.getenv('PORT')))"]
 CMD ["api.R"]</code></pre>
 </div>
-<div id="deployment" class="section level3">
-<h3 class="hasAnchor">
-<a href="#deployment" class="anchor"></a>Deployment</h3>
+<div class="section level3">
+<h3 id="deployment">Deployment<a class="anchor" aria-label="anchor" href="#deployment"></a>
+</h3>
 <p>This can be deployed via the RStudio Addin, or via the code below:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span><span class="op">(</span><span class="st">"folder/with-api/"</span>, 
@@ -283,24 +285,24 @@ CMD ["api.R"]</code></pre>
 <p>You can test the Pub/Sub API is working from R with the below code:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_pubsub.html">cr_pubsub</a></span><span class="op">(</span><span class="st">"https://your-cloudendpoint.run.app/pubsub"</span>,
-          <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html">toJSON</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"test_file_from_r"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+          <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">toJSON</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"test_file_from_r"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="setup-pubsub" class="section level3">
-<h3 class="hasAnchor">
-<a href="#setup-pubsub" class="anchor"></a>Setup Pub/Sub</h3>
+<div class="section level3">
+<h3 id="setup-pubsub">Setup Pub/Sub<a class="anchor" aria-label="anchor" href="#setup-pubsub"></a>
+</h3>
 <p>To activate Pub/Sub messages from a Google Cloud Storage bucket, use a service account with Cloud Storage Admin rights (note not Cloud Storage Object Admin).</p>
 <p>In the Web UI of Pub/Sub set up a Topic:</p>
 <p><img src="pubsub-topic.png"></p>
 <p>You can only setup cloud storage pub/sub messages to this topic using the API, which can be done using <code>googleCloudStorageR::gce_create_pubsub()</code>:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudStorageR/">googleCloudStorageR</a></span><span class="op">)</span>
-<span class="fu"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_create_pubsub.html">gcs_create_pubsub</a></span><span class="op">(</span><span class="st">"your-topic"</span>, <span class="st">"your-project"</span>, <span class="st">"your-bucket"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudStorageR/" class="external-link">googleCloudStorageR</a></span><span class="op">)</span>
+<span class="fu"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_create_pubsub.html" class="external-link">gcs_create_pubsub</a></span><span class="op">(</span><span class="st">"your-topic"</span>, <span class="st">"your-project"</span>, <span class="st">"your-bucket"</span><span class="op">)</span></code></pre></div>
 <p>Each topic can have many subscriptions. One of these will push to the Cloud Run URL set up in the previous step:</p>
 <p><img src="pubsub-sub.png"></p>
 </div>
-<div id="add-files-to-google-cloud-storage" class="section level3">
-<h3 class="hasAnchor">
-<a href="#add-files-to-google-cloud-storage" class="anchor"></a>Add files to Google Cloud Storage</h3>
+<div class="section level3">
+<h3 id="add-files-to-google-cloud-storage">Add files to Google Cloud Storage<a class="anchor" aria-label="anchor" href="#add-files-to-google-cloud-storage"></a>
+</h3>
 <p>Now when a new file arrives into the bucket, it will:</p>
 <ol style="list-style-type: decimal">
 <li>Trigger a Pub/Sub to the Subscription</li>
@@ -311,8 +313,8 @@ CMD ["api.R"]</code></pre>
 </ol>
 <p>You can test it by uploading files either in the web UI or via</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">googleCloudStorageR</span><span class="fu">::</span><span class="fu"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_upload.html">gcs_upload</a></span><span class="op">(</span><span class="va">mtcars</span>, bucket <span class="op">=</span> <span class="st">"your-bucket"</span>, 
-                                name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"test"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">googleCloudStorageR</span><span class="fu">::</span><span class="fu"><a href="https://cloudyr.github.io/googleCloudStorageR//reference/gcs_upload.html" class="external-link">gcs_upload</a></span><span class="op">(</span><span class="va">mtcars</span>, bucket <span class="op">=</span> <span class="st">"your-bucket"</span>, 
+                                name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"test"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>You will need to setup mailgun to stop it appearing in your spam folder, by verifying your domain etc.</p>
 </div>
 </div>
@@ -329,11 +331,13 @@ CMD ["api.R"]</code></pre>
 
 
       <footer><div class="copyright">
-  <p>Developed by Mark Edmondson.</p>
+  <p></p>
+<p>Developed by Mark Edmondson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -341,6 +345,8 @@ CMD ["api.R"]</code></pre>
 
   
 
+
+  
 
   </body>
 </html>

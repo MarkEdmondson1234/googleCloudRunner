@@ -53,13 +53,15 @@
 #'
 #' @examples
 #'
-#' r_lines <- c("list.files()",
-#'              "library(dplyr)",
-#'              "mtcars %>% select(mpg)",
-#'              "sessionInfo()")
+#' r_lines <- c(
+#'   "list.files()",
+#'   "library(dplyr)",
+#'   "mtcars %>% select(mpg)",
+#'   "sessionInfo()"
+#' )
 #' source <- cr_build_source(RepoSource("googleCloudStorageR",
-#'                                      branchName = "master"))
-#'
+#'   branchName = "master"
+#' ))
 #' \dontrun{
 #' cr_project_set("my-project")
 #' cr_region_set("europe-west1")
@@ -81,99 +83,111 @@ cr_deploy_r <- function(r,
                         post_steps = NULL,
                         timeout = 600L,
                         ...,
-                        schedule_type = c("pubsub","http"),
+                        schedule_type = c("pubsub", "http"),
                         schedule_pubsub = NULL,
                         email = cr_email_get(),
                         region = cr_region_get(),
                         projectId = cr_project_get(),
                         serviceAccount = NULL,
-                        launch_browser=interactive()){
-
+                        launch_browser = interactive()) {
   schedule_type <- match.arg(schedule_type)
 
-  if(is.null(run_name)){
+  if (is.null(run_name)) {
     run_name <- paste0("cr_rscript_", format(Sys.time(), "%Y%m%s%H%M%S"))
   }
 
   myMessage(paste("Deploy R script", run_name, "to Cloud Build"),
-            level = 3)
+    level = 3
+  )
 
   build <- cr_build_yaml(
-    steps = c(pre_steps,
-              cr_buildstep_r(r = r,
-                             name = r_image,
-                             id = run_name,
-                             ...),
-              post_steps)
+    steps = c(
+      pre_steps,
+      cr_buildstep_r(
+        r = r,
+        name = r_image,
+        id = run_name,
+        ...
+      ),
+      post_steps
+    )
   )
 
   br <- cr_build_make(build,
-                      source = source,
-                      timeout = timeout,
-                      serviceAccount = serviceAccount)
+    source = source,
+    timeout = timeout,
+    serviceAccount = serviceAccount
+  )
 
-  if(!is.null(schedule)){
+  if (!is.null(schedule)) {
     # a cloud build you would like to schedule
     myMessage(paste("Scheduling R script on cron schedule:", schedule),
-              level = 3)
+      level = 3
+    )
 
-    if(schedule_type == "http"){
+    if (schedule_type == "http") {
       https <- cr_build_schedule_http(br,
-                                      email = email,
-                                      projectId = projectId)
+        email = email,
+        projectId = projectId
+      )
 
       brs <- cr_schedule(schedule,
-                         name=run_name,
-                         region = region,
-                         description = run_name,
-                         httpTarget = https)
-    } else if(schedule_type == "pubsub"){
-
-      if(!is.null(schedule_pubsub)){
+        name = run_name,
+        region = region,
+        description = run_name,
+        httpTarget = https
+      )
+    } else if (schedule_type == "pubsub") {
+      if (!is.null(schedule_pubsub)) {
         assert_that(is.gar_pubsubTarget(schedule_pubsub))
         topic_basename <- basename(schedule_pubsub$topicName)
         pubsub_target <- schedule_pubsub
       } else {
-
         check_package_installed("googlePubsubR")
-        topic_basename <- paste0(run_name,"-topic")
+        topic_basename <- paste0(run_name, "-topic")
         pubsub_target <- cr_schedule_pubsub(topic_basename)
 
         myMessage("Creating PubSub topic:", topic_basename, level = 3)
         # Create a pubsub topic
         topic_created <- tryCatch(
           googlePubsubR::topics_create(topic_basename),
-            error = function(err){
-              stop("Could not create topic:",
-                   topic_basename,
-                   err$message,
-                   call. = FALSE)
-            })
+          error = function(err) {
+            stop("Could not create topic:",
+              topic_basename,
+              err$message,
+              call. = FALSE
+            )
+          }
+        )
       }
 
       # check PubSub topic is there:
       topic_got <- googlePubsubR::topics_get(topic_basename)
 
       # May only contain alphanumeric characters and dashes
-      trigger_name <- gsub("[^a-zA-Z0-9\\-]","-",
-                           basename(
-                             paste0(topic_got$name, "-trigger")
-                             )
-                           )
+      trigger_name <- gsub(
+        "[^a-zA-Z0-9\\-]", "-",
+        basename(
+          paste0(topic_got$name, "-trigger")
+        )
+      )
 
       myMessage("Creating BuildTrigger topic:", trigger_name, level = 3)
       # Create a build trigger that will run when the pubsub topic is called
       cr_buildtrigger(br,
-                      name = trigger_name,
-                      trigger = cr_buildtrigger_pubsub(basename(topic_got$name)))
+        name = trigger_name,
+        trigger = cr_buildtrigger_pubsub(basename(topic_got$name))
+      )
 
       myMessage("Creating Cloud Schedule to trigger PubSub topicName:",
-                pubsub_target$topicName, level = 3)
+        pubsub_target$topicName,
+        level = 3
+      )
       # Schedule a pubsub message to the topic
       brs <- cr_schedule(trigger_name,
-                         schedule = schedule,
-                         pubsubTarget = pubsub_target)
-
+        schedule = schedule,
+        pubsubTarget = pubsub_target
+      )
     }
 
 
@@ -181,10 +195,9 @@ cr_deploy_r <- function(r,
   }
 
   # build it now
-  br1 <- cr_build(br, launch_browser=launch_browser)
+  br1 <- cr_build(br, launch_browser = launch_browser)
 
   cr_build_wait(br1, projectId = projectId)
-
 }
 
 
@@ -212,51 +225,53 @@ cr_deploy_r <- function(r,
 #' @examples
 #'
 #' pd <- cr_deploy_pkgdown("MarkEdmondson1234/googleCloudRunner",
-#'                         secret = "my_git_secret",
-#'                         create_trigger = "no")
+#'   secret = "my_git_secret",
+#'   create_trigger = "no"
+#' )
 #' pd
 #' file.exists("cloudbuild-pkgdown.yml")
 #' unlink("cloudbuild-pkgdown.yml")
-#'
 #' \dontrun{
 #' cr_deploy_pkgdown("MarkEdmondson1234/googleCloudRunner",
-#'                   secret = "my_git_secret",
-#'                   create_trigger = "inline")
-#'
+#'   secret = "my_git_secret",
+#'   create_trigger = "inline"
+#' )
 #' }
 #'
 cr_deploy_pkgdown <- function(github_repo,
                               secret,
                               steps = NULL,
-                              create_trigger = c("file","inline","no"),
+                              create_trigger = c("file", "inline", "no"),
                               cloudbuild_file = "cloudbuild-pkgdown.yml",
                               git_email = "googlecloudrunner@r.com",
                               env = NULL,
-                              build_image = 'gcr.io/gcer-public/packagetools:latest',
+                              build_image = "gcr.io/gcer-public/packagetools:latest",
                               post_setup = NULL,
-                              post_clone = NULL){
-
+                              post_clone = NULL) {
   create_trigger <- match.arg(create_trigger)
 
   build_yaml <-
-    cr_build_yaml(steps = c(steps,
-                   cr_buildstep_pkgdown(github_repo,
-                                      git_email = git_email,
-                                      secret = secret,
-                                      env = env,
-                                      build_image = build_image,
-                                      post_setup = post_setup,
-                                      post_clone = post_clone))
-         )
+    cr_build_yaml(steps = c(
+      steps,
+      cr_buildstep_pkgdown(github_repo,
+        git_email = git_email,
+        secret = secret,
+        env = env,
+        build_image = build_image,
+        post_setup = post_setup,
+        post_clone = post_clone
+      )
+    ))
 
-  if(create_trigger == "no"){
+  if (create_trigger == "no") {
     cr_build_write(build_yaml, file = cloudbuild_file)
     usethis::ui_line()
     usethis::ui_info("Complete deployment of pkgdown Cloud Build yaml:")
     usethis::ui_todo(c(
       "Go to https://console.cloud.google.com/cloud-build/triggers and
             make a build trigger pointing at this file in your repo:
-            {cloudbuild_file} "))
+            {cloudbuild_file} "
+    ))
 
     usethis::ui_info(c("Ignored files filter (glob): docs/**, inst/**, tests/**"))
 
@@ -265,10 +280,10 @@ cr_deploy_pkgdown <- function(github_repo,
 
   myMessage("#Creating pkgdown build trigger for", github_repo, level = 3)
 
-  if(create_trigger == "file"){
+  if (create_trigger == "file") {
     cr_build_write(build_yaml, file = cloudbuild_file)
     the_build <- cloudbuild_file
-  } else if(create_trigger == "inline"){
+  } else if (create_trigger == "inline") {
     the_build <- cr_build_make(build_yaml)
   }
 
@@ -276,13 +291,15 @@ cr_deploy_pkgdown <- function(github_repo,
 
   cr_buildtrigger(
     the_build,
-    name = paste0("cr-deploy-pkgdown-",format(Sys.Date(),"%Y%m%d")),
+    name = paste0("cr-deploy-pkgdown-", format(Sys.Date(), "%Y%m%d")),
     trigger = trig,
     description = "Build pkgdown website on master branch",
-    ignoredFiles = c("docs/**",
-                     "inst/**",
-                     "tests/**"))
-
+    ignoredFiles = c(
+      "docs/**",
+      "inst/**",
+      "tests/**"
+    )
+  )
 }
 
 #' Deploy a cloudbuild.yml for R package tests and upload to Codecov
@@ -328,8 +345,8 @@ cr_deploy_pkgdown <- function(github_repo,
 #'
 #' # creating a buildtrigger repo for trigger_repo
 #' repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner",
-#'                              branch = "master")
-#'
+#'   branch = "master"
+#' )
 #' \dontrun{
 #'
 #' # will create the file in the repo, and point a buildtrigger at it
@@ -341,35 +358,34 @@ cr_deploy_pkgdown <- function(github_repo,
 #' }
 #'
 #' unlink("cloudbuild-tests.yml")
-#'
-cr_deploy_packagetests <- function(
-  steps = NULL,
-  cloudbuild_file = "cloudbuild-tests.yml",
-  env = c("NOT_CRAN=true"),
-  test_script = NULL,
-  codecov_script = NULL,
-  codecov_token = "$_CODECOV_TOKEN",
-  build_image = 'gcr.io/gcer-public/packagetools:latest',
-  create_trigger = c("file","inline","no"),
-  trigger_repo = NULL,
-  ...){
-
-
+cr_deploy_packagetests <- function(steps = NULL,
+                                   cloudbuild_file = "cloudbuild-tests.yml",
+                                   env = c("NOT_CRAN=true"),
+                                   test_script = NULL,
+                                   codecov_script = NULL,
+                                   codecov_token = "$_CODECOV_TOKEN",
+                                   build_image = "gcr.io/gcer-public/packagetools:latest",
+                                   create_trigger = c("file", "inline", "no"),
+                                   trigger_repo = NULL,
+                                   ...) {
   create_trigger <- match.arg(create_trigger)
 
   build_yaml <-
-    cr_build_yaml(steps = c(steps,
-                            cr_buildstep_packagetests(
-                              test_script = test_script,
-                              codecov_script = codecov_script,
-                              codecov_token = codecov_token,
-                              build_image = build_image,
-                              env = env)
-                            ),
-                  ...
-                  )
+    cr_build_yaml(
+      steps = c(
+        steps,
+        cr_buildstep_packagetests(
+          test_script = test_script,
+          codecov_script = codecov_script,
+          codecov_token = codecov_token,
+          build_image = build_image,
+          env = env
+        )
+      ),
+      ...
+    )
 
-  if(create_trigger == "no"){
+  if (create_trigger == "no") {
     cr_build_write(build_yaml, file = cloudbuild_file)
 
     usethis::ui_line()
@@ -377,10 +393,13 @@ cr_deploy_packagetests <- function(
     usethis::ui_todo(c(
       "Go to https://console.cloud.google.com/cloud-build/triggers and
             make a build trigger pointing at this file in your repo:
-            {cloudbuild_file} "))
-    usethis::ui_info(c("Build Trigger substitution variable settings:",
-                       "_CODECOV_TOKEN = your-codecov-token",
-                       "Ignored files filter (glob): docs/** and vignettes/**"))
+            {cloudbuild_file} "
+    ))
+    usethis::ui_info(c(
+      "Build Trigger substitution variable settings:",
+      "_CODECOV_TOKEN = your-codecov-token",
+      "Ignored files filter (glob): docs/** and vignettes/**"
+    ))
 
     return(build_yaml)
   }
@@ -389,32 +408,32 @@ cr_deploy_packagetests <- function(
   myMessage("#Creating tests build trigger", level = 3)
   assert_that(is.buildtrigger_repo(trigger_repo))
 
-  if(create_trigger == "file"){
+  if (create_trigger == "file") {
     cr_build_write(build_yaml, file = cloudbuild_file)
     the_build <- cloudbuild_file
-  } else if(create_trigger == "inline"){
+  } else if (create_trigger == "inline") {
     the_build <- cr_build_make(yaml = build_yaml)
   }
 
-  if(is.null(codecov_token) || codecov_token == "$_CODECOV_TOKEN"){
+  if (is.null(codecov_token) || codecov_token == "$_CODECOV_TOKEN") {
     myMessage("If you want to use Code Covr, add the Code Covr token in a substitution varaible in the Build Trigger", level = 3)
     subs <- NULL
   } else {
     assert_that(is.string(codecov_token))
-    subs <- list(`_CODECOV_TOKEN`=codecov_token)
+    subs <- list(`_CODECOV_TOKEN` = codecov_token)
   }
 
   cr_buildtrigger(the_build,
-                  name = paste0("cr-deploy-tests-",
-                                format(Sys.Date(),"%Y%m%d")),
-                  trigger = trigger_repo,
-                  description = "Tests for package",
-                  substitutions = subs,
-                  ignoredFiles = c("docs/**",
-                                   "vignettes/**"))
-
-
+    name = paste0(
+      "cr-deploy-tests-",
+      format(Sys.Date(), "%Y%m%d")
+    ),
+    trigger = trigger_repo,
+    description = "Tests for package",
+    substitutions = subs,
+    ignoredFiles = c(
+      "docs/**",
+      "vignettes/**"
+    )
+  )
 }
-
-
-

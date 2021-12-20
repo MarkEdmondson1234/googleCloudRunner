@@ -275,7 +275,7 @@
     - commit
     - -a
     - -m
-    - "[skip travis] Build website from commit ${COMMIT_SHA}: \n$(date +\"%Y%m%dT%H:%M:%S\")"
+    - "[skip ci] Build website from commit ${COMMIT_SHA}: \n$(date +\"%Y%m%dT%H:%M:%S\")"
     dir: repo
     volumes:
     - name: ssh
@@ -420,7 +420,7 @@
       - commit
       - -a
       - -m
-      - "[skip travis] Build website from commit ${COMMIT_SHA}: \n$(date +\"%Y%m%dT%H:%M:%S\")"
+      - "[skip ci] Build website from commit ${COMMIT_SHA}: \n$(date +\"%Y%m%dT%H:%M:%S\")"
       dir: repo
       volumes:
       - name: ssh
@@ -510,7 +510,7 @@
 
     [[1]]
     ==cloudRunnerBuildStep==
-    name: gcr.io/kaniko-project/executor:latest
+    name: gcr.io/kaniko-project/executor:v1.6.0-debug
     args:
     - -f
     - Dockerfile
@@ -521,7 +521,7 @@
     
     [[2]]
     ==cloudRunnerBuildStep==
-    name: gcr.io/kaniko-project/executor:latest
+    name: gcr.io/kaniko-project/executor:v1.6.0-debug
     args:
     - -f
     - Dockerfile

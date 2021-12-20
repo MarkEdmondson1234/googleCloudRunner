@@ -21,19 +21,17 @@ Build a source object
 \examples{
 
 repo <- RepoSource("my_repo", branchName = "master")
-gcs  <- StorageSource("my_code.tar.gz","gs://my-bucket")
+gcs <- StorageSource("my_code.tar.gz", "gs://my-bucket")
 
 cr_build_source(repo)
 cr_build_source(gcs)
 
 my_gcs_source <- cr_build_source(gcs)
 my_repo_source <- cr_build_source(repo)
-
 \dontrun{
 
 build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 build2 <- cr_build("cloudbuild.yaml", source = my_repo_source)
-
 }
 
 }

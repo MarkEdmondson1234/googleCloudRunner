@@ -7,7 +7,7 @@ if(Sys.getenv("PORT") == "") Sys.setenv(PORT = 8000) #local testing
 function(cyl = NULL){
 
   # to avoid caching a timestamp is added
-  outfile <- sprintf("mtcars-%s.html", gsub("[^0-9]","",Sys.time()))
+  outfile <- sprintf("mtcars-%s.html", gsub("[^0-9]", "", Sys.time()))
 
   # render markdown to the file
   rmarkdown::render(

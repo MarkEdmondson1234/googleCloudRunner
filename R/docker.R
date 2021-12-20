@@ -21,7 +21,6 @@
 #'
 #' @export
 #' @examples
-#'
 #' \dontrun{
 #' repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
 #' # create trigger that will publish Docker image to gcr.io/your-project/test upon each GitHub commit
@@ -30,38 +29,39 @@
 #' # build in one project, publish the docker image to another project (gcr.io/another-project/test)
 #' cr_deploy_docker_trigger(repo, "test", projectId_target = "another-project", dir = "cloud_build")
 #' }
-cr_deploy_docker_trigger <- function(
-  repo,
-  image,
-  trigger_name = paste0("docker-", image),
-  image_tag = c("latest","$SHORT_SHA","$BRANCH_NAME"),
-  ...,
-  substitutions = NULL,
-  ignoredFiles = NULL,
-  includedFiles = NULL,
-  timeout = NULL,
-  projectId_target = cr_project_get()){
-
+cr_deploy_docker_trigger <- function(repo,
+                                     image,
+                                     trigger_name = paste0("docker-", image),
+                                     image_tag = c("latest", "$SHORT_SHA", "$BRANCH_NAME"),
+                                     ...,
+                                     substitutions = NULL,
+                                     ignoredFiles = NULL,
+                                     includedFiles = NULL,
+                                     timeout = NULL,
+                                     projectId_target = cr_project_get()) {
   build_docker <- cr_build_make(
     cr_build_yaml(
       steps = cr_buildstep_docker(image,
-                                  tag = image_tag,
-                                  projectId = projectId_target,
-                                  ...,
-                                  kaniko_cache = TRUE)
+        tag = image_tag,
+        projectId = projectId_target,
+        ...,
+        kaniko_cache = TRUE
+      )
     ),
-    timeout = timeout)
+    timeout = timeout
+  )
 
-  safe_name <- gsub("[^a-zA-Z1-9]","-", trigger_name)
+  safe_name <- gsub("[^a-zA-Z1-9]", "-", trigger_name)
 
   cr_buildtrigger(build_docker,
-                  name = safe_name,
-                  trigger = repo,
-                  description = paste0(safe_name,Sys.time()),
-                  trigger_tags = "docker-build",
-                  substitutions = substitutions,
-                  ignoredFiles = ignoredFiles,
-                  includedFiles = includedFiles)
+    name = safe_name,
+    trigger = repo,
+    description = paste0(safe_name, Sys.time()),
+    trigger_tags = "docker-build",
+    substitutions = substitutions,
+    ignoredFiles = ignoredFiles,
+    includedFiles = includedFiles
+  )
 }
 
 
@@ -97,21 +97,19 @@ cr_deploy_docker_trigger <- function(
 #' needed to deploy the docker, which may be combined with
 #' \code{\link{cr_deploy_r}} to combine Docker and R
 #' @examples
-#'
 #' \dontrun{
 #' cr_project_set("my-project")
 #' cr_region_set("europe-west1")
 #' cr_email_set("123456@projectid.iam.gserviceaccount.com")
 #' cr_bucket_set("my-bucket")
 #'
-#' b <- cr_deploy_docker(system.file("example/", package="googleCloudRunner"))
-#'
+#' b <- cr_deploy_docker(system.file("example/", package = "googleCloudRunner"))
 #' }
 cr_deploy_docker <- function(local,
                              image_name = remote,
                              dockerfile = NULL,
                              remote = basename(local),
-                             tag = c("latest","$BUILD_ID"),
+                             tag = c("latest", "$BUILD_ID"),
                              timeout = 600L,
                              bucket = cr_bucket_get(),
                              projectId = cr_project_get(),
@@ -120,8 +118,7 @@ cr_deploy_docker <- function(local,
                              predefinedAcl = "bucketOwnerFullControl",
                              pre_steps = NULL,
                              post_steps = NULL,
-                             ...){
-
+                             ...) {
   result <- cr_deploy_docker_construct(
     local = local,
     image_name = image_name,
@@ -146,21 +143,21 @@ cr_deploy_docker <- function(local,
   timeout <- result$timeout
 
   docker_build <- cr_build(build_yaml,
-                           source = gcs_source,
-                           launch_browser = launch_browser,
-                           timeout = timeout)
+    source = gcs_source,
+    launch_browser = launch_browser,
+    timeout = timeout
+  )
 
   b <- cr_build_wait(docker_build, projectId = projectId)
 
   myMessage(image_tag, level = 3)
 
   # to make it the same as non-kaniko docker builds
-  if(kaniko_cache){
+  if (kaniko_cache) {
     b$results$images$name <- b$steps$args[[1]][[4]]
   }
 
   b
-
 }
 
 #' @export
@@ -170,22 +167,24 @@ cr_deploy_docker_construct <- function(
   image_name = remote,
   dockerfile = NULL,
   remote = basename(local),
-  tag = c("latest","$BUILD_ID"),
+  tag = c("latest", "$BUILD_ID"),
   timeout = 600L,
   bucket = cr_bucket_get(),
   projectId = cr_project_get(),
   launch_browser = interactive(),
-  kaniko_cache=TRUE,
-  predefinedAcl="bucketOwnerFullControl",
+  kaniko_cache = TRUE,
+  predefinedAcl = "bucketOwnerFullControl",
   pre_steps = NULL,
   post_steps = NULL,
-  ...){
+  ...) {
   assert_that(
     dir.exists(local)
   )
 
   myMessage("Building", local, "folder for Docker image: ",
-            image_name, level = 2)
+    image_name,
+    level = 2
+  )
 
   myMessage(paste("Configuring Dockerfile"), level = 2)
 
@@ -215,8 +214,8 @@ cr_deploy_docker_construct <- function(
 
   image <- make_image_name(image_name, projectId = projectId)
 
-  #kaniko_cache will push image for you
-  if(kaniko_cache){
+  # kaniko_cache will push image for you
+  if (kaniko_cache) {
     pushed_image <- NULL
   } else {
     pushed_image <- image
@@ -240,26 +239,31 @@ cr_deploy_docker_construct <- function(
     projectId = projectId,
     kaniko_cache = kaniko_cache,
     waitFor = waitFor,
-    ...)
-  steps <- c(pre_steps,
-             docker_step,
-             post_steps
+    ...
+  )
+  steps <- c(
+    pre_steps,
+    docker_step,
+    post_steps
   )
   build_yaml <- cr_build_yaml(
     steps = steps,
-    images = pushed_image)
+    images = pushed_image
+  )
 
   image_tag <- paste0(image, ":", tag)
-  myMessage("#Deploy docker build for image: ", image, level = 3)
+  myMessage("# Deploy docker build for image: ", image, level = 3)
 
   remote_tar <- remote
-  if(!grepl("tar\\.gz$", remote)){
+  if (!grepl("tar\\.gz$", remote)) {
     remote_tar <- paste0(remote, ".tar.gz")
   }
-  gcs_source <- cr_build_upload_gcs(local,
-                                    remote = remote_tar,
-                                    bucket = bucket,
-                                    predefinedAcl=predefinedAcl)
+  gcs_source <- cr_build_upload_gcs(
+    local,
+    remote = remote_tar,
+    bucket = bucket,
+    predefinedAcl = predefinedAcl
+  )
 
   list(
     steps = steps,
@@ -315,7 +319,8 @@ cr_deploy_docker_construct <- function(
 #' # setting up a build to trigger off a Git source:
 #' my_image <- "gcr.io/my-project/my-image"
 #' my_repo <- RepoSource("github_markedmondson1234_googlecloudrunner",
-#'                       branchName="master")
+#'   branchName = "master"
+#' )
 #' \dontrun{
 #' docker_yaml <- cr_build_yaml(steps = cr_buildstep_docker(my_image))
 #' built_docker <- cr_build(docker_yaml, source = my_repo)
@@ -330,22 +335,24 @@ cr_deploy_docker_construct <- function(
 #' # building using manual buildsteps to clone from git
 #' bs <- c(
 #'   cr_buildstep_gitsetup("github-ssh"),
-#'   cr_buildstep_git(c("clone","git@github.com:MarkEdmondson1234/googleCloudRunner",".")),
+#'   cr_buildstep_git(c("clone", "git@github.com:MarkEdmondson1234/googleCloudRunner", ".")),
 #'   cr_buildstep_docker("gcr.io/gcer-public/packagetools",
-#'                       dir = "inst/docker/packages/")
+#'     dir = "inst/docker/packages/"
 #'   )
+#' )
 #'
 #' built <- cr_build(cr_build_yaml(bs))
 #' }
-cr_buildstep_docker <- function(image,
-                                tag = c("latest","$BUILD_ID"),
-                                location = ".",
-                                projectId = cr_project_get(),
-                                dockerfile = "Dockerfile",
-                                kaniko_cache = FALSE,
-                                build_args = NULL,
-                                push_image = TRUE,
-                                ...){
+cr_buildstep_docker <- function(
+  image,
+  tag = c("latest", "$BUILD_ID"),
+  location = ".",
+  projectId = cr_project_get(),
+  dockerfile = "Dockerfile",
+  kaniko_cache = FALSE,
+  build_args = NULL,
+  push_image = TRUE,
+  ...) {
   # don't allow dot names that would break things
   dots <- list(...)
   assert_that(
@@ -364,28 +371,35 @@ cr_buildstep_docker <- function(image,
   myMessage("Image to be built: ", the_image, level = 2)
 
   the_image_tagged <- c(vapply(tag,
-                               function(x) c("--tag", paste0(the_image, ":", x)),
-                               character(2),
-                               USE.NAMES = FALSE)
-  )
+    function(x) c("--tag", paste0(the_image, ":", x)),
+    character(2),
+    USE.NAMES = FALSE
+  ))
 
   if (!push_image && kaniko_cache) {
     warning("push_image = FALSE, but using kaniko, so image is auto-pushed")
   }
-  if(!kaniko_cache){
+  if (!kaniko_cache) {
     steps <- c(
-      cr_buildstep("docker",
-                   c("build",
-                     "-f", dockerfile,
-                     the_image_tagged,
-                     location,
-                     build_args),
-                   ...)
+      cr_buildstep(
+        "docker",
+        c(
+          "build",
+          "-f", dockerfile,
+          the_image_tagged,
+          location,
+          build_args
+        ),
+        ...
+      )
     )
     if (push_image) {
-      steps <- c(steps,
-                 cr_buildstep("docker", c("push", the_image),
-                              ...)
+      steps <- c(
+        steps,
+        cr_buildstep(
+          "docker", c("push", the_image),
+          ...
+        )
       )
     }
     return(steps)
@@ -394,30 +408,31 @@ cr_buildstep_docker <- function(image,
   # kaniko cache
   build_context <- "dir:///workspace/"
 
-  if(!is.null(dots$dir)){
+  if (!is.null(dots$dir)) {
     build_context <- paste0(build_context, dots$dir)
   }
 
-  if(location != "."){
+  if (location != ".") {
     build_context <- paste0(build_context, "/", location)
   }
 
   vapply(tag,
-         function(x){
-           cr_buildstep(
-             name = "gcr.io/kaniko-project/executor:latest",
-             args = c(
-               "-f",dockerfile,
-               "--destination", paste0(the_image,":",x),
-               sprintf("--context=%s", build_context),
-               "--cache=true"
-             ),
-             ...)
-         },
-         FUN.VALUE = list(length(tag)),
-         USE.NAMES = FALSE)
-
-
+    function(x) {
+      cr_buildstep(
+        # :latest is broken as of 2021-12-20 (#136)
+        name = "gcr.io/kaniko-project/executor:v1.6.0-debug",
+        args = c(
+          "-f", dockerfile,
+          "--destination", paste0(the_image, ":", x),
+          sprintf("--context=%s", build_context),
+          "--cache=true"
+        ),
+        ...
+      )
+    },
+    FUN.VALUE = list(length(tag)),
+    USE.NAMES = FALSE
+  )
 }
 
 
@@ -434,28 +449,27 @@ cr_buildstep_docker <- function(image,
 #' @return An object of class Dockerfile
 #'
 #' @examples
-#'
 #' \dontrun{
 #' cr_dockerfile_plumber(system.file("example/", package = "googleCloudRunner"))
 #' }
-cr_dockerfile_plumber <- function(deploy_folder, ...){
+cr_dockerfile_plumber <- function(deploy_folder, ...) {
   stop(
-    "No Dockerfile detected.  Please create one in the deployment folder.  See a guide on website on how to use library(containerit) to do so: https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html#creating-a-dockerfile-with-containerit"
-    , call. = FALSE)
+    "No Dockerfile detected.  Please create one in the deployment folder.  See a guide on website on how to use library(containerit) to do so: https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html#creating-a-dockerfile-with-containerit",
+    call. = FALSE
+  )
 }
 
-find_dockerfile <- function(local, dockerfile){
-
+find_dockerfile <- function(local, dockerfile) {
   local_files <- list.files(local)
-  if("Dockerfile" %in% local_files){
-    myMessage("Dockerfile found in ",local, level = 3)
+  if ("Dockerfile" %in% local_files) {
+    myMessage("Dockerfile found in ", local, level = 3)
     return(FALSE)
   }
 
   # if no dockerfile, attempt to create it
   assert_that(is.readable(dockerfile))
 
-  myMessage("Copying Dockerfile from ", dockerfile," to ",local, level = 3)
+  myMessage("Copying Dockerfile from ", dockerfile, " to ", local, level = 3)
   file.copy(dockerfile, file.path(local, "Dockerfile"))
 
   TRUE
@@ -467,12 +481,15 @@ add_docker_auth_prestep <- function(image, pre_steps) {
   if (need_location) {
     dev_location <- sub("^(.*-docker.pkg.dev).*", "\\1", tolower(image))
     dev_location <- sub("^http(s|)://", "", dev_location)
-    pre_steps <- c(pre_steps,
-                   cr_buildstep_gcloud(
-                     "gcloud",
-                     c("gcloud", "auth", "configure-docker",
-                       dev_location)
-                   )
+    pre_steps <- c(
+      pre_steps,
+      cr_buildstep_gcloud(
+        "gcloud",
+        c(
+          "gcloud", "auth", "configure-docker",
+          dev_location
+        )
+      )
     )
   }
   pre_steps

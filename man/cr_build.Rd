@@ -44,17 +44,20 @@ This method returns a long-running `Operation`, which includes the buildID. Pass
 \examples{
 cr_project_set("my-project")
 my_gcs_source <- cr_build_source(StorageSource("my_code.tar.gz",
-                                             bucket = "gs://my-bucket"))
+  bucket = "gs://my-bucket"
+))
 my_gcs_source
 
 my_repo_source <- cr_build_source(RepoSource("github_username_my-repo.com",
-                                           branchName="master"))
+  branchName = "master"
+))
 my_repo_source
 \dontrun{
 
 # build from a cloudbuild.yaml file
 cloudbuild_file <- system.file("cloudbuild/cloudbuild.yaml",
-                               package="googleCloudRunner")
+  package = "googleCloudRunner"
+)
 
 # asynchronous, will launch log browser by default
 b1 <- cr_build(cloudbuild_file)
@@ -68,10 +71,12 @@ cr_build_status(b2)
 
 # build from a cloud storage source
 build1 <- cr_build(cloudbuild_file,
-                   source = my_gcs_source)
+  source = my_gcs_source
+)
 # build from a git repository source
 build2 <- cr_build(cloudbuild_file,
-                   source = my_repo_source)
+  source = my_repo_source
+)
 
 # you can send in results for previous builds to trigger
 # the same build under a new Id
@@ -80,7 +85,6 @@ cr_build(build2)
 
 # a build with substitutions (Cloud Build macros)
 cr_build(build2, substitutions = list(`_SUB` = "yo"))
-
 }
 }
 \seealso{
