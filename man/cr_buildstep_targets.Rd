@@ -4,7 +4,7 @@
 \alias{cr_buildstep_targets}
 \alias{cr_buildstep_targets_setup}
 \alias{cr_buildstep_targets_teardown}
-\title{Buildstep to run a targets pipeline on Cloud build}
+\title{Buildstep to run a targets pipeline on Cloud Build}
 \usage{
 cr_buildstep_targets(
   task_args = list(),
@@ -17,7 +17,7 @@ cr_buildstep_targets_setup(bucket)
 cr_buildstep_targets_teardown(bucket = cr_bucket_get())
 }
 \arguments{
-\item{task_args}{A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments)}
+\item{task_args}{A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments or waitFor ids)}
 
 \item{tar_make}{The R script that will run in the \code{tar_make()} step. Modify to include custom settings}
 

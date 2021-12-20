@@ -162,20 +162,21 @@ cr_deploy_docker <- function(local,
 
 #' @export
 #' @rdname cr_deploy_docker
-cr_deploy_docker_construct <- function(local,
-                                       image_name = remote,
-                                       dockerfile = NULL,
-                                       remote = basename(local),
-                                       tag = c("latest", "$BUILD_ID"),
-                                       timeout = 600L,
-                                       bucket = cr_bucket_get(),
-                                       projectId = cr_project_get(),
-                                       launch_browser = interactive(),
-                                       kaniko_cache = TRUE,
-                                       predefinedAcl = "bucketOwnerFullControl",
-                                       pre_steps = NULL,
-                                       post_steps = NULL,
-                                       ...) {
+cr_deploy_docker_construct <- function(
+  local,
+  image_name = remote,
+  dockerfile = NULL,
+  remote = basename(local),
+  tag = c("latest", "$BUILD_ID"),
+  timeout = 600L,
+  bucket = cr_bucket_get(),
+  projectId = cr_project_get(),
+  launch_browser = interactive(),
+  kaniko_cache = TRUE,
+  predefinedAcl = "bucketOwnerFullControl",
+  pre_steps = NULL,
+  post_steps = NULL,
+  ...) {
   assert_that(
     dir.exists(local)
   )
@@ -251,13 +252,14 @@ cr_deploy_docker_construct <- function(local,
   )
 
   image_tag <- paste0(image, ":", tag)
-  myMessage("#Deploy docker build for image: ", image, level = 3)
+  myMessage("# Deploy docker build for image: ", image, level = 3)
 
   remote_tar <- remote
   if (!grepl("tar\\.gz$", remote)) {
     remote_tar <- paste0(remote, ".tar.gz")
   }
-  gcs_source <- cr_build_upload_gcs(local,
+  gcs_source <- cr_build_upload_gcs(
+    local,
     remote = remote_tar,
     bucket = bucket,
     predefinedAcl = predefinedAcl
@@ -341,15 +343,16 @@ cr_deploy_docker_construct <- function(local,
 #'
 #' built <- cr_build(cr_build_yaml(bs))
 #' }
-cr_buildstep_docker <- function(image,
-                                tag = c("latest", "$BUILD_ID"),
-                                location = ".",
-                                projectId = cr_project_get(),
-                                dockerfile = "Dockerfile",
-                                kaniko_cache = FALSE,
-                                build_args = NULL,
-                                push_image = TRUE,
-                                ...) {
+cr_buildstep_docker <- function(
+  image,
+  tag = c("latest", "$BUILD_ID"),
+  location = ".",
+  projectId = cr_project_get(),
+  dockerfile = "Dockerfile",
+  kaniko_cache = FALSE,
+  build_args = NULL,
+  push_image = TRUE,
+  ...) {
   # don't allow dot names that would break things
   dots <- list(...)
   assert_that(
@@ -416,7 +419,8 @@ cr_buildstep_docker <- function(image,
   vapply(tag,
     function(x) {
       cr_buildstep(
-        name = "gcr.io/kaniko-project/executor:latest",
+        # :latest is broken as of 2021-12-20 (#136)
+        name = "gcr.io/kaniko-project/executor:v1.6.0-debug",
         args = c(
           "-f", dockerfile,
           "--destination", paste0(the_image, ":", x),

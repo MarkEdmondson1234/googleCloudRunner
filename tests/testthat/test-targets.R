@@ -18,26 +18,26 @@ test_that("targets integrations", {
   )
   expect_snapshot(target_yaml)
 
-  tar_config_set(
+  targets::tar_config_set(
     script = "targets/_targets.R"
   )
 
   # test file
   write.csv(mtcars, file = "targets/mtcars.csv", row.names = FALSE)
 
-  tar_script(
+  targets::tar_script(
     list(
-      tar_target(file1, "targets/mtcars.csv", format = "file"),
-      tar_target(input1, read.csv(file1)),
-      tar_target(result1, sum(input1$mpg))
+      targets::tar_target(file1, "targets/mtcars.csv", format = "file"),
+      targets::tar_target(input1, read.csv(file1)),
+      targets::tar_target(result1, sum(input1$mpg))
     ),
     ask = FALSE
   )
 
-  tar_make()
+  targets::tar_make()
 
   # get local result to compare
-  result <- tar_read("result1")
+  result <- targets::tar_read("result1")
   expect_snapshot(result)
 
   upload_test_files <- function() {
@@ -59,8 +59,10 @@ test_that("targets integrations", {
 
   target_logs <- function(log) {
     log[
-      which(grepl("\"target pipeline\": gcr.io/gcer-public/targets:latest", log)):
-      which(grepl("\"target pipeline\": • end pipeline", log))
+      which(grepl("\"target pipeline\": gcr.io/gcer-public/targets:latest",
+                  log)):
+      which(grepl("\"target pipeline\": • end pipeline",
+                  log))
     ]
   }
 
@@ -102,11 +104,11 @@ test_that("targets integrations", {
     logs_of_interest3
   )))
 
-  tar_config_set(store = "_targets_cloudbuild/cr_build_target_tests/_targets")
+  targets::tar_config_set(
+    store = "_targets_cloudbuild/cr_build_target_tests/_targets")
   artifact_download <- cr_build_targets_artifacts(built3)
-  expect_snapshot(artifact_download)
 
-  expect_true(result != tar_read("result1"))
+  expect_true(result != targets::tar_read("result1"))
 
   # clean up - delete source for next test run
   googleCloudStorageR::gcs_delete_object("cr_build_target_test_source.tar.gz",
@@ -122,7 +124,7 @@ test_that("targets integrations", {
   )
   expect_true(all(unlist(done_deeds)))
 
-  tar_destroy(ask = FALSE)
+  targets::tar_destroy(ask = FALSE)
 
   unlink("targets", recursive = TRUE)
   unlink("_targets.yaml")

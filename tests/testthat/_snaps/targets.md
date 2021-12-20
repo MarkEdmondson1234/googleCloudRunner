@@ -65,8 +65,3 @@
 
 ---
 
-    Code
-      artifact_download
-    Output
-      [1] "/Users/mark/dev/R/_packages/googleCloudRunner/tests/testthat/_targets_cloudbuild/cr_build_target_tests"
-
