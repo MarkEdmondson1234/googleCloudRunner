@@ -7,6 +7,7 @@ test_that("targets integrations", {
   }
 
   dir.create("targets", showWarnings = FALSE)
+  on.exit(unlink("targets", recursive = TRUE), add = TRUE)
 
   target_yaml <- cr_build_targets(
     path = NULL,
@@ -58,29 +59,30 @@ test_that("targets integrations", {
   bb1logs <- cr_build_logs(built1)
 
   target_logs <- function(log) {
-    log[
-      which(grepl("\"target pipeline\": gcr.io/gcer-public/targets:latest",
-                  log)):
-      which(grepl("\"target pipeline\": • end pipeline",
-                  log))
-    ]
+    log[which(grepl("target pipeline", log))]
   }
 
   logs_of_interest1 <- target_logs(bb1logs)
-  expect_true(any(grepl(
-    "\"target pipeline\": • start target file1",
-    logs_of_interest1
-  )))
+  expect_true(
+    any(
+      grepl(
+        "start target file1",
+        logs_of_interest1
+      ))
+    )
 
   # second run, expect it to skip target file1 as unchanged
   bb2 <- cr_build(build, launch_browser = FALSE)
   built2 <- cr_build_wait(bb2)
   bb2logs <- cr_build_logs(built2)
   logs_of_interest2 <- target_logs(bb2logs)
-  expect_true(any(grepl(
-    "\"target pipeline\": ✔ skip target file1",
-    logs_of_interest2
-  )))
+  expect_true(
+    any(
+      grepl(
+        "skip target file1",
+        logs_of_interest2
+      ))
+    )
 
 
   # make a change to the file, expect a rerun
@@ -99,10 +101,13 @@ test_that("targets integrations", {
   built3 <- cr_build_wait(bb3)
   bb3logs <- cr_build_logs(built3)
   logs_of_interest3 <- target_logs(bb3logs)
-  expect_true(any(grepl(
-    "\"target pipeline\": • start target file1",
-    logs_of_interest3
-  )))
+  expect_true(
+    any(
+      grepl(
+        "start target file1",
+        logs_of_interest3
+      ))
+    )
 
   targets::tar_config_set(
     store = "_targets_cloudbuild/cr_build_target_tests/_targets")
@@ -126,7 +131,6 @@ test_that("targets integrations", {
 
   targets::tar_destroy(ask = FALSE)
 
-  unlink("targets", recursive = TRUE)
   unlink("_targets.yaml")
   unlink("_targets_cloudbuild", recursive = TRUE)
 })
