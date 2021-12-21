@@ -32,7 +32,7 @@
 #'
 #' # adding custom environment args and secrets to the build
 #' cr_build_targets(
-#'   path = tempfil(),
+#'   path = tempfile(),
 #'   task_image = "gcr.io/my-project/my-targets-pipeline",
 #'   options = list(env = c("ENV1=1234",
 #'                          "ENV_USER=Dave")),
