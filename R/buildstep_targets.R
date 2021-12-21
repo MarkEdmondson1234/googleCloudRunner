@@ -20,26 +20,6 @@ cr_buildstep_targets_single <- function(
   )
 }
 
-
-#' @export
-#' @rdname cr_buildstep_targets
-#' @param bucket The Google Cloud Storage bucket and folder the target metadata will be saved to, e.g. \code{gs://my-bucket/my_target_project}   You can also pass in build substitution variables such as \code{"${_MY_BUCKET}"}.
-cr_buildstep_targets_setup <- function(bucket){
-  cr_buildstep_bash(
-    bash_script = paste(
-      c("mkdir /workspace/_targets &&",
-        "mkdir /workspace/_targets/meta &&",
-        "gsutil -m cp -r",
-        sprintf("%s/_targets/meta",bucket),
-        "/workspace/_targets",
-        "|| exit 0"), collapse = " "),
-    name = "gcr.io/google.com/cloudsdktool/cloud-sdk:alpine",
-    entrypoint = "bash",
-    escape_dollar = FALSE,
-    id = "get previous _targets metadata"
-  )
-}
-
 #' Buildstep to run a targets pipeline on Cloud Build
 #'
 #' This is a buildstep to help upload a targets pipeline, see \link{cr_build_targets} for examples and suggested workflow

@@ -29,7 +29,7 @@
 #' @param bucket The Google Cloud Storage bucket the target metadata will be saved to in folder `target_folder`
 #' @param ... Other arguments passed to \link{cr_build_yaml}
 #' @inheritDotParams cr_build_yaml
-#' @param task_args A named list of additional arguments to send to \link{cr_buildstep_r()} when its executing the \link[targets]{tar_make()} command (such as environment arguments)
+#' @param task_args A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments)
 #' @param tar_make The R script that will run in the tar_make() step. Modify to include custom settings such as "script"
 #' @param buildsteps Generated buildsteps that create the targets build
 #'
