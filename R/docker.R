@@ -42,10 +42,10 @@ cr_deploy_docker_trigger <- function(repo,
   build_docker <- cr_build_make(
     cr_build_yaml(
       steps = cr_buildstep_docker(image,
-        tag = image_tag,
-        projectId = projectId_target,
-        ...,
-        kaniko_cache = TRUE
+                                  tag = image_tag,
+                                  projectId = projectId_target,
+                                  ...,
+                                  kaniko_cache = TRUE
       )
     ),
     timeout = timeout
@@ -54,13 +54,13 @@ cr_deploy_docker_trigger <- function(repo,
   safe_name <- gsub("[^a-zA-Z1-9]", "-", trigger_name)
 
   cr_buildtrigger(build_docker,
-    name = safe_name,
-    trigger = repo,
-    description = paste0(safe_name, Sys.time()),
-    trigger_tags = "docker-build",
-    substitutions = substitutions,
-    ignoredFiles = ignoredFiles,
-    includedFiles = includedFiles
+                  name = safe_name,
+                  trigger = repo,
+                  description = paste0(safe_name, Sys.time()),
+                  trigger_tags = "docker-build",
+                  substitutions = substitutions,
+                  ignoredFiles = ignoredFiles,
+                  includedFiles = includedFiles
   )
 }
 
@@ -143,9 +143,9 @@ cr_deploy_docker <- function(local,
   timeout <- result$timeout
 
   docker_build <- cr_build(build_yaml,
-    source = gcs_source,
-    launch_browser = launch_browser,
-    timeout = timeout
+                           source = gcs_source,
+                           launch_browser = launch_browser,
+                           timeout = timeout
   )
 
   b <- cr_build_wait(docker_build, projectId = projectId)
@@ -182,8 +182,8 @@ cr_deploy_docker_construct <- function(
   )
 
   myMessage("Building", local, "folder for Docker image: ",
-    image_name,
-    level = 2
+            image_name,
+            level = 2
   )
 
   myMessage(paste("Configuring Dockerfile"), level = 2)
@@ -380,9 +380,9 @@ cr_buildstep_docker <- function(
   myMessage("Image to be built: ", the_image, level = 2)
 
   the_image_tagged <- c(vapply(tag,
-    function(x) c("--tag", paste0(the_image, ":", x)),
-    character(2),
-    USE.NAMES = FALSE
+                               function(x) c("--tag", paste0(the_image, ":", x)),
+                               character(2),
+                               USE.NAMES = FALSE
   ))
 
   if (!push_image && kaniko_cache) {
@@ -426,21 +426,21 @@ cr_buildstep_docker <- function(
   }
 
   vapply(tag,
-    function(x) {
-      cr_buildstep(
-        # :latest is broken as of 2021-12-20 (#136)
-        name = "gcr.io/kaniko-project/executor:v1.6.0-debug",
-        args = c(
-          "-f", dockerfile,
-          "--destination", paste0(the_image, ":", x),
-          sprintf("--context=%s", build_context),
-          "--cache=true"
-        ),
-        ...
-      )
-    },
-    FUN.VALUE = list(length(tag)),
-    USE.NAMES = FALSE
+         function(x) {
+           cr_buildstep(
+             # :latest is broken as of 2021-12-20 (#136)
+             name = "gcr.io/kaniko-project/executor:v1.6.0-debug",
+             args = c(
+               "-f", dockerfile,
+               "--destination", paste0(the_image, ":", x),
+               sprintf("--context=%s", build_context),
+               "--cache=true"
+             ),
+             ...
+           )
+         },
+         FUN.VALUE = list(length(tag)),
+         USE.NAMES = FALSE
   )
 }
 
@@ -496,13 +496,15 @@ find_dockerfile <- function(local, dockerfile) {
 #'
 #' @examples
 #' cr_buildstep_docker_auth("us.gcr.io")
+#' cr_buildstep_docker_auth(c("us.gcr.io", "asia.gcr.io"))
 #' cr_buildstep_docker_auth_auto("https://asia.cr.io/myrepo/image")
 cr_buildstep_docker_auth = function(registry, ...) {
   registry <- sub("^http(s|)://", "", registry)
   cr_buildstep_gcloud(
     "gcloud",
     c("gcloud", "auth", "configure-docker", "-q",
-      registry),
+      paste(registry, collapse = ",")
+    ),
     ...)
 
 }
@@ -513,10 +515,11 @@ cr_buildstep_docker_auth = function(registry, ...) {
 #' @export
 cr_buildstep_docker_auth_auto <- function(image, ...) {
   # Adding this in for Artifacts Registry
-  need_location <- grepl("^.*-docker.pkg.dev", tolower(image))
+  image <- tolower(image)
+  need_location <- grepl("^.*-docker.pkg.dev", image)
   res <- NULL
-  if (need_location) {
-    registry <- sub("^(.*-docker.pkg.dev).*", "\\1", tolower(image))
+  if (any(need_location)) {
+    registry <- sub("^(.*-docker.pkg.dev).*", "\\1", image[need_location])
     res <- cr_buildstep_docker_auth(registry, ...)
   }
   res
