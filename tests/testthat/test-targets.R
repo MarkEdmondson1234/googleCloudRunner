@@ -134,6 +134,7 @@ test_that("targets integrations", {
 
   targets::tar_destroy(ask = FALSE)
   unlink("targets", recursive = TRUE)
+  unlink("_targets", recursive = TRUE)
   unlink("_targets.yaml")
   unlink("_targets_cloudbuild", recursive = TRUE)
 })
@@ -208,10 +209,14 @@ test_that("targets integrations - parallel builds", {
   targets::tar_config_set(
     store = "_targets_cloudbuild/cr_build_target_tests_multi/_targets")
 
-  artifact_download <- cr_build_targets_artifacts(built1,
-                                                  target_folder = target_folder)
+  artifact_download <- cr_build_targets_artifacts(
+    built1,
+    target_folder = target_folder)
 
-  expect_true(result != targets::tar_read("merge1"))
+  result2 <- targets::tar_read("merge1")
+  expect_snapshot(result2)
+
+  expect_true(result == result2)
 
   # clean up - delete source for next test run
   googleCloudStorageR::gcs_delete_object(
@@ -230,6 +235,7 @@ test_that("targets integrations - parallel builds", {
 
   targets::tar_destroy(ask = FALSE)
   unlink("targets", recursive = TRUE)
+  unlink("_targets", recursive = TRUE)
   unlink("_targets.yaml")
   unlink("_targets_cloudbuild", recursive = TRUE)
 })

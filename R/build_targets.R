@@ -118,12 +118,14 @@ resolve_bucket_folder <- function(target_folder, bucket){
 #' @inheritParams cr_build_artifacts
 #' @param target_subfolder If you only want to download a specific folder from the _targets/ folder on Cloud Build then specify it here.
 #' @return \code{cr_build_targets_artifacts} returns the file path to where the download occurred.
-cr_build_targets_artifacts <- function(build,
-                                       bucket = cr_bucket_get(),
-                                       target_folder = NULL,
-                                       download_folder = "_targets_cloudbuild",
-                                       target_subfolder = c("all", "meta", "objects", "user"),
-                                       overwrite = TRUE) {
+cr_build_targets_artifacts <- function(
+  build,
+  bucket = cr_bucket_get(),
+  target_folder = NULL,
+  download_folder = "_targets_cloudbuild",
+  target_subfolder = c("all", "meta", "objects", "user"),
+  overwrite = TRUE) {
+
   target_subfolder <- match.arg(target_subfolder)
 
   target_bucket <- resolve_bucket_folder(target_folder, bucket)
@@ -144,23 +146,17 @@ cr_build_targets_artifacts <- function(build,
     return(NULL)
   }
 
+  df_bf <- file.path(download_folder, build_folder)
+
+  myMessage("Downloading to download_folder:", df_bf)
+
   # create targets folder structure
-  dir.create(download_folder, showWarnings = FALSE)
-  dir.create(file.path(download_folder, build_folder),
-    showWarnings = FALSE
-  )
-  dir.create(file.path(download_folder, build_folder, "_targets"),
-    showWarnings = FALSE
-  )
-  dir.create(file.path(download_folder, build_folder, "_targets", "meta"),
-    showWarnings = FALSE
-  )
-  dir.create(file.path(download_folder, build_folder, "_targets", "objects"),
-    showWarnings = FALSE
-  )
-  dir.create(file.path(download_folder, build_folder, "_targets", "user"),
-    showWarnings = FALSE
-  )
+  dir.create(download_folder)
+  dir.create(df_bf)
+  dir.create(file.path(df_bf, "_targets"))
+  dir.create(file.path(df_bf, "_targets", "meta"))
+  dir.create(file.path(df_bf, "_targets", "objects"))
+  dir.create(file.path(df_bf, "_targets", "user"))
 
   withr::with_dir(
     download_folder,
