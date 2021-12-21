@@ -7,10 +7,11 @@ test_that("targets integrations", {
   }
 
   dir.create("targets", showWarnings = FALSE)
-  on.exit(unlink("targets", recursive = TRUE), add = TRUE)
+
+  target_folder = "cr_build_target_tests"
 
   bs <- cr_buildstep_targets_single(
-    target_folder = "cr_build_target_tests",
+    target_folder = target_folder,
     tar_make = c(
       "list.files(recursive=TRUE)",
       "targets::tar_make(script = 'targets/_targets.R')"
@@ -112,7 +113,8 @@ test_that("targets integrations", {
 
   targets::tar_config_set(
     store = "_targets_cloudbuild/cr_build_target_tests/_targets")
-  artifact_download <- cr_build_targets_artifacts(built3)
+  artifact_download <- cr_build_targets_artifacts(built3,
+                                                  target_folder = target_folder)
 
   expect_true(result != targets::tar_read("result1"))
 
@@ -131,7 +133,7 @@ test_that("targets integrations", {
   expect_true(all(unlist(done_deeds)))
 
   targets::tar_destroy(ask = FALSE)
-
+  unlink("targets", recursive = TRUE)
   unlink("_targets.yaml")
   unlink("_targets_cloudbuild", recursive = TRUE)
 })
@@ -145,7 +147,7 @@ test_that("targets integrations - parallel builds", {
   }
 
   dir.create("targets", showWarnings = FALSE)
-  on.exit(unlink("targets", recursive = TRUE), add = TRUE)
+
 
   target_folder <- "cr_build_target_tests_multi"
 
@@ -205,7 +207,9 @@ test_that("targets integrations - parallel builds", {
 
   targets::tar_config_set(
     store = "_targets_cloudbuild/cr_build_target_tests_multi/_targets")
-  artifact_download <- cr_build_targets_artifacts(built1, target_folder = target_folder)
+
+  artifact_download <- cr_build_targets_artifacts(built1,
+                                                  target_folder = target_folder)
 
   expect_true(result != targets::tar_read("merge1"))
 
@@ -225,7 +229,7 @@ test_that("targets integrations - parallel builds", {
   expect_true(all(unlist(done_deeds)))
 
   targets::tar_destroy(ask = FALSE)
-
+  unlink("targets", recursive = TRUE)
   unlink("_targets.yaml")
   unlink("_targets_cloudbuild", recursive = TRUE)
 })

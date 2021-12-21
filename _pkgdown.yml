@@ -142,4 +142,10 @@ reference:
       - cr_run_schedule_http
       - Job
       - HttpTarget
+  - title: "library(targets) integrations"
+    desc: >
+      Functions for working with targets workflows on Cloud Build
+    contents:
+      - matches("cr_buildstep_targets")
+      - matches("cr_build_targets")
 
