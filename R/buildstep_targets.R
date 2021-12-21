@@ -146,6 +146,9 @@ cr_buildstep_targets_multi <- function(
   }
   last_id <- nodes$name[[nrow(nodes)]]
 
+
+  myMessage("[",last_id,"] -> [ Upload Artifacts ]", level = 3)
+
   c(
     cr_buildstep_targets_setup(target_bucket),
     bst,
