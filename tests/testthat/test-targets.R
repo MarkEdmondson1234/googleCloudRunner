@@ -8,7 +8,7 @@ test_that("targets integrations", {
 
   dir.create("targets", showWarnings = FALSE)
 
-  target_folder = "cr_build_target_tests"
+  target_folder <- "cr_build_target_tests"
 
   bs <- cr_buildstep_targets_single(
     target_folder = target_folder,

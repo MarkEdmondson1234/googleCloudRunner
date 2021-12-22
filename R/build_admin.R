@@ -155,7 +155,7 @@ wait_f <- function(init, projectId) {
       status <- cr_build_status(op, projectId = projectId)
     }
 
-    build_time <- format(round(difftime(Sys.time(),start_time, units = "auto"), 1))
+    build_time <- format(round(difftime(Sys.time(), start_time, units = "auto"), 1)) #nolint
 
     if (status$status %in%
       c("FAILURE", "INTERNAL_ERROR", "TIMEOUT", "CANCELLED", "EXPIRED")) {
