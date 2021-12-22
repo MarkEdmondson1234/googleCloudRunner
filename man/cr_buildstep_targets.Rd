@@ -7,7 +7,7 @@
 \title{Buildstep to run a targets pipeline on Cloud Build}
 \usage{
 cr_buildstep_targets(
-  task_args = list(),
+  task_args = NULL,
   tar_make = "targets::tar_make()",
   task_image = "gcr.io/gcer-public/targets",
   id = "target pipeline"
@@ -18,7 +18,7 @@ cr_buildstep_targets_setup(bucket_folder)
 cr_buildstep_targets_teardown(bucket_folder, last_id = NULL)
 }
 \arguments{
-\item{task_args}{A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments or waitFor ids)}
+\item{task_args}{If not NULL, a named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments or waitFor ids)}
 
 \item{tar_make}{The R script that will run in the \code{tar_make()} step. Modify to include custom settings}
 
