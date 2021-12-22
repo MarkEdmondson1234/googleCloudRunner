@@ -27,7 +27,7 @@ cr_buildstep_targets_single(
   target_folder = NULL,
   bucket = cr_bucket_get(),
   task_image = "gcr.io/gcer-public/targets",
-  task_args = list(),
+  task_args = NULL,
   tar_make = "targets::tar_make()"
 )
 
@@ -36,7 +36,8 @@ cr_buildstep_targets_multi(
   bucket = cr_bucket_get(),
   tar_config = NULL,
   task_image = "gcr.io/gcer-public/targets",
-  last_id = NULL
+  last_id = NULL,
+  task_args = NULL
 )
 }
 \arguments{

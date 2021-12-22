@@ -5,7 +5,7 @@ cr_buildstep_targets_single <- function(
   target_folder = NULL,
   bucket = cr_bucket_get(),
   task_image = "gcr.io/gcer-public/targets",
-  task_args = list(),
+  task_args = NULL,
   tar_make = "targets::tar_make()"
 ){
 
@@ -24,13 +24,13 @@ cr_buildstep_targets_single <- function(
 #'
 #' This is a buildstep to help upload a targets pipeline, see \link{cr_build_targets} for examples and suggested workflow
 #' @export
-#' @param task_args A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments or waitFor ids)
+#' @param task_args If not NULL, a named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments or waitFor ids)
 #' @param tar_make The R script that will run in the \code{tar_make()} step. Modify to include custom settings
 #' @param task_image An existing Docker image that will be used to run your targets workflow after the targets meta has been downloaded from Google Cloud Storage
 #' @param id The id of the buildstep.  In link{cr_buildstep_targets_multi} this is used along with \code{waitFor} to determine the order of execution
 #' @family Cloud Buildsteps
 cr_buildstep_targets <- function(
-  task_args = list(),
+  task_args = NULL,
   tar_make = "targets::tar_make()",
   task_image = "gcr.io/gcer-public/targets",
   id = "target pipeline"){
@@ -55,8 +55,8 @@ cr_buildstep_targets <- function(
 cr_buildstep_targets_setup <- function(bucket_folder){
   cr_buildstep_bash(
     bash_script = paste(
-      c("mkdir /workspace/_targets &&",
-        "mkdir /workspace/_targets/meta &&",
+      c("mkdir -p /workspace/_targets &&",
+        "mkdir -p /workspace/_targets/meta &&",
         "gsutil -m cp -r",
         sprintf("%s/_targets/meta",bucket_folder),
         "/workspace/_targets",
@@ -101,7 +101,8 @@ cr_buildstep_targets_multi <- function(
   bucket = cr_bucket_get(),
   tar_config = NULL,
   task_image = "gcr.io/gcer-public/targets",
-  last_id = NULL
+  last_id = NULL,
+  task_args = NULL
 ){
 
   target_bucket <- resolve_bucket_folder(target_folder,
@@ -109,9 +110,16 @@ cr_buildstep_targets_multi <- function(
 
   myMessage("Resolving targets::tar_manifest()", level = 3)
   nodes <- targets::tar_manifest()
-  edges <- targets::tar_network()$edges
+  edges <- targets::tar_network(targets_only = TRUE)$edges
 
   first_id <- nodes$name[[1]]
+
+  if(!is.null(task_args)){
+    if(!is.null(task_args[["waitFor"]])){
+      task_args[["waitFor"]] <- NULL
+      warning("waitFor task_args overwritten as needed for DAG creation")
+    }
+  }
 
   myMessage("# Building DAG:", level = 3)
   bst <- lapply(nodes$name, function(x){
@@ -129,10 +137,10 @@ cr_buildstep_targets_multi <- function(
               "] -> [", x, "]",
               level = 3)
 
+    task_args <- c(task_args, list(waitFor = wait_for))
+
     cr_buildstep_targets(
-      task_args = list(
-        waitFor = wait_for
-      ),
+      task_args = task_args,
       tar_make = c(tar_config, sprintf("targets::tar_make('%s')", x)),
       task_image = task_image,
       id = x
@@ -144,8 +152,6 @@ cr_buildstep_targets_multi <- function(
   if(is.null(last_id)){
     last_id <- nodes$name[[nrow(nodes)]]
   }
-  last_id <- nodes$name[[nrow(nodes)]]
-
 
   myMessage("[",last_id,"] -> [ Upload Artifacts ]", level = 3)
 
