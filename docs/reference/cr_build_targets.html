@@ -179,16 +179,17 @@ Historical runs accumulate in the
   target_folder <span class="op">=</span> <span class="cn">NULL</span>,
   bucket <span class="op">=</span> <span class="fu"><a href="cr_bucket_set.html">cr_bucket_get</a></span><span class="op">(</span><span class="op">)</span>,
   task_image <span class="op">=</span> <span class="st">"gcr.io/gcer-public/targets"</span>,
-  task_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
+  task_args <span class="op">=</span> <span class="cn">NULL</span>,
   tar_make <span class="op">=</span> <span class="st">"targets::tar_make()"</span>
 <span class="op">)</span>
 
 <span class="fu">cr_buildstep_targets_multi</span><span class="op">(</span>
   target_folder <span class="op">=</span> <span class="cn">NULL</span>,
   bucket <span class="op">=</span> <span class="fu"><a href="cr_bucket_set.html">cr_bucket_get</a></span><span class="op">(</span><span class="op">)</span>,
-  tar_config <span class="op">=</span> <span class="st">"targets::tar_config_set(script = 'targets/_targets.R')"</span>,
+  tar_config <span class="op">=</span> <span class="cn">NULL</span>,
   task_image <span class="op">=</span> <span class="st">"gcr.io/gcer-public/targets"</span>,
-  last_id <span class="op">=</span> <span class="cn">NULL</span>
+  last_id <span class="op">=</span> <span class="cn">NULL</span>,
+  task_args <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -253,7 +254,7 @@ Historical runs accumulate in the
 <dt>tar_make</dt>
 <dd><p>The R script that will run in the tar_make() step. Modify to include custom settings such as "script"</p></dd>
 <dt>tar_config</dt>
-<dd><p>An R script that will run before <code>targets::tar_make()</code> in the build</p></dd>
+<dd><p>An R script that will run before <code>targets::tar_make()</code> in the build e.g. <code>"targets::tar_config_set(script = 'targets/_targets.R')"</code></p></dd>
 <dt>last_id</dt>
 <dd><p>The final buildstep that needs to complete before the upload.  If left NULL then will default to the last tar_target step.</p></dd>
 </dl></div>
@@ -328,8 +329,8 @@ Historical runs accumulate in the
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘targets’</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu">cr_buildstep_targets_multi</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-21 11:51:06 &gt;</span> targets cloud location: gs://my-bucket/targets_cloudbuild</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-21 11:51:06 &gt;</span> Resolving targets::tar_manifest()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-22 17:26:06 &gt;</span> targets cloud location: gs://my-bucket/targets_cloudbuild</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-22 17:26:06 &gt;</span> Resolving targets::tar_manifest()</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘targets’</span>
 <span class="r-in"><span class="va">par_build</span> <span class="op">&lt;-</span> <span class="fu">cr_build_targets</span><span class="op">(</span><span class="va">bs</span>, path <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in lapply(x, f):</span> object 'bs' not found</span>
