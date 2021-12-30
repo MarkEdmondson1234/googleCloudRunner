@@ -46,7 +46,8 @@ cr_deploy_docker_trigger <- function(repo,
                                   projectId = projectId_target,
                                   ...,
                                   kaniko_cache = TRUE
-      )
+      ),
+      timeout = timeout
     ),
     timeout = timeout
   )
@@ -242,7 +243,6 @@ cr_deploy_docker_construct <- function(
   # allow for ... to contain arguments to cr_build_yaml as well
   args = list(...)
 
-  timeout <- args$timeout
   logsBucket <- args$logsBucket
   options <- args$options
   substitutions <- args$substitutions
@@ -253,7 +253,6 @@ cr_deploy_docker_construct <- function(
   serviceAccount <- args$serviceAccount
 
   # remove the cr_build_yaml arguments
-  args$timeout <- NULL
   args$logsBucket <- NULL
   args$options <- NULL
   args$substitutions <- NULL
