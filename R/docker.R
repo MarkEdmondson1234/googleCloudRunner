@@ -531,8 +531,11 @@ find_dockerfile <- function(local, dockerfile) {
 #' @examples
 #' cr_buildstep_docker_auth("us.gcr.io")
 #' cr_buildstep_docker_auth(c("us.gcr.io", "asia.gcr.io"))
-#' cr_buildstep_docker_auth_auto("https://asia.cr.io/myrepo/image")
+#' cr_buildstep_docker_auth_auto("https://asia.gcr.io/myrepo/image")
 cr_buildstep_docker_auth = function(registry, ...) {
+  if (is.null(registry) || length(registry) == 0) {
+    return(NULL)
+  }
   registry <- sub("^http(s|)://", "", registry)
   cr_buildstep_gcloud(
     "gcloud",
@@ -550,10 +553,10 @@ cr_buildstep_docker_auth = function(registry, ...) {
 cr_buildstep_docker_auth_auto <- function(image, ...) {
   # Adding this in for Artifacts Registry
   image <- tolower(image)
-  need_location <- grepl("^.*-docker.pkg.dev", image)
+  need_location <- grepl("^.*(-docker.pkg.dev|gcr.io)", image)
   res <- NULL
   if (any(need_location)) {
-    registry <- sub("^(.*-docker.pkg.dev).*", "\\1", image[need_location])
+    registry <- sub("^(.*(-docker.pkg.dev|gcr.io)).*", "\\1", image[need_location])
     res <- cr_buildstep_docker_auth(registry, ...)
   }
   res

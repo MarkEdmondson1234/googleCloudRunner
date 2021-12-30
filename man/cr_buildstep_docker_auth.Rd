@@ -26,5 +26,5 @@ Authorize Docker using `gcloud auth configure-docker`
 \examples{
 cr_buildstep_docker_auth("us.gcr.io")
 cr_buildstep_docker_auth(c("us.gcr.io", "asia.gcr.io"))
-cr_buildstep_docker_auth_auto("https://asia.cr.io/myrepo/image")
+cr_buildstep_docker_auth_auto("https://asia.gcr.io/myrepo/image")
 }
