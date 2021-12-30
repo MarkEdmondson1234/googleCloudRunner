@@ -239,17 +239,42 @@ cr_deploy_docker_construct <- function(
     waitFor <- NULL
   }
 
-  docker_step <- cr_buildstep_docker(
-    image,
-    tag = tag,
-    location = ".",
-    # dir=paste0("deploy/", basename(local)),
-    dir = "deploy",
-    projectId = projectId,
-    kaniko_cache = kaniko_cache,
-    waitFor = waitFor,
-    ...
-  )
+  # allow for ... to contain arguments to cr_build_yaml as well
+  args = list(...)
+
+  timeout <- args$timeout
+  logsBucket <- args$logsBucket
+  options <- args$options
+  substitutions <- args$substitutions
+  tags <- args$tags
+  secrets <- args$secrets
+  availableSecrets <- args$availableSecrets
+  artifacts <- args$artifacts
+  serviceAccount <- args$serviceAccount
+
+  # remove the cr_build_yaml arguments
+  args$timeout <- NULL
+  args$logsBucket <- NULL
+  args$options <- NULL
+  args$substitutions <- NULL
+  args$tags <- NULL
+  args$secrets <- NULL
+  args$availableSecrets <- NULL
+  args$artifacts <- NULL
+  args$serviceAccount <- NULL
+
+  # assign arguments for cr_buildstep_docker
+  args$image <- image
+  args$tag <- tag
+  args$location <- "."
+  # dir<-paste0("deploy/", basename(local))
+  args$dir <- "deploy"
+  args$projectId <- projectId
+  args$kaniko_cache <- kaniko_cache
+  args$waitFor <- waitFor
+
+
+  docker_step <- do.call(cr_buildstep_docker, args = args)
   steps <- c(
     pre_steps,
     docker_step,
@@ -257,7 +282,16 @@ cr_deploy_docker_construct <- function(
   )
   build_yaml <- cr_build_yaml(
     steps = steps,
-    images = pushed_image
+    images = pushed_image,
+    timeout = timeout,
+    logsBucket = logsBucket,
+    options = options,
+    substitutions = substitutions,
+    tags = tags,
+    secrets = secrets,
+    availableSecrets = availableSecrets,
+    artifacts = artifacts,
+    serviceAccount = serviceAccount
   )
 
   image_tag <- paste0(image, ":", tag)
