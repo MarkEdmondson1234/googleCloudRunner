@@ -27,16 +27,17 @@ cr_buildstep_targets_single(
   target_folder = NULL,
   bucket = cr_bucket_get(),
   task_image = "gcr.io/gcer-public/targets",
-  task_args = list(),
+  task_args = NULL,
   tar_make = "targets::tar_make()"
 )
 
 cr_buildstep_targets_multi(
   target_folder = NULL,
   bucket = cr_bucket_get(),
-  tar_config = "targets::tar_config_set(script = 'targets/_targets.R')",
+  tar_config = NULL,
   task_image = "gcr.io/gcer-public/targets",
-  last_id = NULL
+  last_id = NULL,
+  task_args = NULL
 )
 }
 \arguments{
@@ -78,7 +79,7 @@ cr_buildstep_targets_multi(
 
 \item{tar_make}{The R script that will run in the tar_make() step. Modify to include custom settings such as "script"}
 
-\item{tar_config}{An R script that will run before \code{targets::tar_make()} in the build}
+\item{tar_config}{An R script that will run before \code{targets::tar_make()} in the build e.g. \code{"targets::tar_config_set(script = 'targets/_targets.R')"}}
 
 \item{last_id}{The final buildstep that needs to complete before the upload.  If left NULL then will default to the last tar_target step.}
 }

@@ -46,26 +46,26 @@ ui <- fluidPage(
 server <- function(input, output, session){
 
   do_build <- reactive({
-    req(input$cbfile)
+    req(input$cbfile) #nolint
     bb <- input$cbfile$datapath
     cr_build(bb)
   })
 
   output$logs_link <- renderUI({
-    req(do_build())
+    req(do_build()) #nolint
 
-    a(href=do_build()$metadata$build$logUrl, "Build Log")
+    a(href = do_build()$metadata$build$logUrl, "Build Log") #nolint
 
   })
 
   built <- reactive({
-    req(do_build())
+    req(do_build()) #nolint
     shinyjs::show("working")
     cr_build_wait(do_build())
   })
 
   output$validated <- renderText({
-    req(built())
+    req(built()) #nolint
     shinyjs::hide("working")
 
     if(built()$status == "SUCCESS"){
@@ -76,7 +76,7 @@ server <- function(input, output, session){
   })
 
   output$scheduled <- renderUI({
-    req(built())
+    req(built()) #nolint
 
     if(built()$status == "SUCCESS"){
       bb <- cr_build_schedule_http(built())
@@ -102,7 +102,7 @@ server <- function(input, output, session){
       )
     }
 
-    h3("Build Error - not scheduling - see build logs")
+    h3("Build Error - not scheduling - see build logs") #nolint
 
     })
 }

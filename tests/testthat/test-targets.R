@@ -8,7 +8,7 @@ test_that("targets integrations", {
 
   dir.create("targets", showWarnings = FALSE)
 
-  target_folder = "cr_build_target_tests"
+  target_folder <- "cr_build_target_tests"
 
   bs <- cr_buildstep_targets_single(
     target_folder = target_folder,
@@ -178,7 +178,8 @@ test_that("targets integrations - parallel builds", {
   expect_snapshot(result)
 
   bs <- cr_buildstep_targets_multi(
-    target_folder = target_folder
+    target_folder = target_folder,
+    tar_config = "targets::tar_config_set(script = 'targets/_targets.R')",
   )
   expect_snapshot(bs)
 

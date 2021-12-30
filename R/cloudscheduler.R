@@ -99,7 +99,7 @@ cr_schedule <- function(name,
   stem <- "https://cloudscheduler.googleapis.com/v1"
 
   the_name <- construct_name(name = name, region = region, project = projectId)
-  job <- Job(schedule=schedule,
+  job <- Job(schedule = schedule,
              name = the_name,
              httpTarget = httpTarget,
              pubsubTarget = pubsubTarget,
@@ -124,9 +124,9 @@ cr_schedule <- function(name,
     scheds <- cr_schedule_list(region = region, projectId = projectId)
 
     if(the_name %in% scheds$name){
-      myMessage("Overwriting schedule job: ", name, level=3)
+      myMessage("Overwriting schedule job: ", name, level = 3)
       # https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/patch
-      the_url <- paste0(stem,"/", the_name)
+      the_url <- paste0(stem, "/", the_name)
       updateMask <- rmNullObs(list(schedule = schedule,
                                    httpTarget = httpTarget,
                                    description = description))
@@ -220,10 +220,10 @@ parse_schedule_list <- function(x){
   }
 
   df <- x$jobs
-  cols <- intersect(names(df), c("name","userUpdateTime",
+  cols <- intersect(names(df), c("name", "userUpdateTime",
                              "state", "scheduleTime",
                              "lastAttemptTime",
-                             "schedule","timeZone",
+                             "schedule", "timeZone",
                              "attemptDeadline"))
 
   df[, cols]
@@ -370,7 +370,7 @@ cr_schedule_run <- function(x,
   url <- sprintf("https://cloudscheduler.googleapis.com/v1/%s:run",
                  the_name)
   # cloudscheduler.projects.locations.jobs.run
-  f <- gar_api_generator(url,"POST",
+  f <- gar_api_generator(url, "POST",
                          data_parse_function = parse_schedule)
 
   f()
@@ -480,7 +480,7 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
   myMessage("Body parsed: ", the_body, level = 2)
 
   if(!is.null(body)){
-    body <- base64_encode(the_body,linebreaks = FALSE)
+    body <- base64_encode(the_body, linebreaks = FALSE)
     if(getOption("googleAuthR.verbose") < 3){
       myMessage("Body unencoded: ", rawToChar(base64_decode(body)))
     }
@@ -552,7 +552,7 @@ Job <- function(name = NULL,
                            scheduleTime = scheduleTime,
                            schedule = schedule,
                            userUpdateTime = userUpdateTime)),
-            class = c("gar_scheduleJob","list"))
+            class = c("gar_scheduleJob", "list"))
 }
 
 is.gar_scheduleJob <- function(x){
@@ -596,7 +596,7 @@ PubsubTarget <- function(
   if(!is.null(data)){
     the_data <- toJSON(data, auto_unbox = TRUE)
     myMessage("data json:", the_data, level = 2)
-    the_data <- base64_encode(the_data,linebreaks = FALSE)
+    the_data <- base64_encode(the_data, linebreaks = FALSE)
     myMessage("data encoded to: ", the_data, level = 2)
   }
 
@@ -604,7 +604,7 @@ PubsubTarget <- function(
     list(topicName = topicName,
          data = the_data,
          attributes = attributes)),
-    class = c("gar_pubsubTarget","list"))
+    class = c("gar_pubsubTarget", "list"))
 
 }
 

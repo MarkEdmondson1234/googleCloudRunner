@@ -75,7 +75,7 @@ myMessage <- function(..., level = 2) {
   compare_level <- getOption("googleAuthR.verbose")
 
   if (level >= compare_level) {
-    time <- paste(Sys.time(), ">")
+    time <- paste(Sys.time(), ">") #nolint
     mm <- paste(...)
     if (grepl("^#", mm[[1]])) {
       cli::cli_h1(mm)
