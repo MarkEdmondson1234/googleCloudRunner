@@ -521,7 +521,7 @@ find_dockerfile <- function(local, dockerfile) {
 #' Authorize Docker using `gcloud auth configure-docker`
 #'
 #' @param registry The registry to authorize `docker`
-#' @param ... Other arguments pass to [googleCloudRunner::cr_buildstep_gcloud()]
+#' @param ... Other arguments passed to \link{cr_buildstep_gcloud}
 #'
 #'
 #' @return A buildstep
