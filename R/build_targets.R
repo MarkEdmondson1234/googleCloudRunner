@@ -169,36 +169,6 @@ cr_build_tar_target <- function(x,
   targets::tar_load(x)
 }
 
-#' Splits a target workflow across Cloud Build jobs
-# cr_build_targets_deployment <- function(
-#
-# ){
-#
-#   # get which workflows are needed locally and which on Cloud Build
-#   targets <- eval(parse(text = readLines(targets::tar_config_get("script"),
-#                                          warn = FALSE)))
-#
-#   deployments <- unlist(
-#     lapply(targets, function(x) x[["settings"]][["deployment"]])
-#   )
-#
-#   build_me <- targets[deployments == "worker"]
-#   local_me <- targets[deployments == "main"]
-#
-#   if(length(local_me) == 0){
-#     myMessage(
-#       "# No local targets found, aborting. Specify deployment='main' to split
-#       target workloads across local and Cloud Build resources",
-#       level = 3)
-#     return(NULL)
-#   }
-#
-#   # create a Cloud Build job per worker step
-#   builds <- lapply(build_me, function(x){
-#
-#   })
-# }
-
 resolve_bucket_folder <- function(target_folder, bucket){
   if(is.null(target_folder)) {
     target_folder <- tryCatch(
