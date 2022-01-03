@@ -1,7 +1,7 @@
 library(shiny)
 library(shinyjs)
 library(googleCloudRunner)
-
+# nolint start
 ui <- fluidPage(
   shinyjs::useShinyjs(),
   titlePanel("Cloud Build Scheduler"),
@@ -109,3 +109,4 @@ server <- function(input, output, session){
 
 
 shinyApp(ui, server)
+# nolint end

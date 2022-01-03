@@ -1,6 +1,6 @@
 Sys.setenv(GL_AUTH = "auth.json")
 Sys.setenv(GCV_AUTH_FILE = "auth.json")
-
+# nolint start
 library(shiny)
 library(googleAuthR)
 library(googleLanguageR)
@@ -164,3 +164,4 @@ server <- function(input, output, session){
 }
 
 shinyApp(ui = ui, server = server)
+# nolint end
