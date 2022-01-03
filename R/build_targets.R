@@ -27,6 +27,7 @@
 #' @param task_image An existing Docker image that will be used to run your targets workflow after the targets meta has been downloaded from Google Cloud Storage
 #' @param target_folder Where target metadata will sit within the Google Cloud Storage bucket as a folder.  If NULL defaults to RStudio project name or "targets_cloudbuild" if no RStudio project found.
 #' @param bucket The Google Cloud Storage bucket the target metadata will be saved to in folder `target_folder`
+#' @param predefinedAcl The ACL rules for the object uploaded. Set to "bucketLevel" for buckets with bucket level access enabled
 #' @param ... Other arguments passed to \link{cr_build_yaml}
 #' @inheritDotParams cr_build_yaml
 #' @param task_args A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments)

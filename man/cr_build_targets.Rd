@@ -53,6 +53,8 @@ cr_buildstep_targets_multi(
 
 \item{local}{If executing now, the local folder that will be uploaded as the context for the target build}
 
+\item{predefinedAcl}{The ACL rules for the object uploaded. Set to "bucketLevel" for buckets with bucket level access enabled}
+
 \item{bucket}{The Google Cloud Storage bucket the target metadata will be saved to in folder `target_folder`}
 
 \item{download_folder}{If NULL will download to current directory}
