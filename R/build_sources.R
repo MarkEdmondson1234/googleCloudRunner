@@ -301,10 +301,14 @@ cr_build_upload_gcs <- function(local,
 
   withr::with_dir(
     tdir, {
-      myMessage("Tarring files: \n",
-                paste(tmp_files, collapse = " \n"),
-                level = 3
-      )
+
+      myMessage("Tarring files:", level = 3)
+      cli::cli_div(theme = list(span.files = list(color = "grey")))
+      lapply(tmp_files, function(x){
+        cli::cli_li("{.files {x}}")
+      })
+      cli::cli_end()
+
       tar(tar_file, compression = "gzip")
       myMessage(paste(
         "Uploading", basename(tar_file),

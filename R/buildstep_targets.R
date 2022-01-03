@@ -9,8 +9,7 @@ cr_buildstep_targets_single <- function(
   tar_make = "targets::tar_make()"
 ){
 
-  target_bucket <- resolve_bucket_folder(target_folder,
-                                         bucket)
+  target_bucket <- resolve_bucket_folder(target_folder, bucket)
   c(
     cr_buildstep_targets_setup(target_bucket),
     cr_buildstep_targets(task_args = task_args,
@@ -105,8 +104,7 @@ cr_buildstep_targets_multi <- function(
   task_args = NULL
 ){
 
-  target_bucket <- resolve_bucket_folder(target_folder,
-                                         bucket)
+  target_bucket <- resolve_bucket_folder(target_folder, bucket)
 
   myMessage("Resolving targets::tar_manifest()", level = 3)
   nodes <- targets::tar_manifest()
@@ -162,4 +160,5 @@ cr_buildstep_targets_multi <- function(
                                   last_id = last_id)
   )
 }
+
 

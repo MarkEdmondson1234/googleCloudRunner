@@ -9,8 +9,12 @@
 \usage{
 cr_build_targets(
   buildsteps = cr_buildstep_targets_multi(),
+  execute = c("trigger", "now"),
   path = "cloudbuild_targets.yaml",
+  local = ".",
+  predefinedAcl = "bucketLevel",
   bucket = cr_bucket_get(),
+  download_folder = getwd(),
   ...
 )
 
@@ -43,9 +47,15 @@ cr_buildstep_targets_multi(
 \arguments{
 \item{buildsteps}{Generated buildsteps that create the targets build}
 
+\item{execute}{Whether to run the Cloud Build now or to write to a file for use within triggers or otherwise}
+
 \item{path}{File path to write the Google Cloud Build yaml workflow file. Set to NULL to write no file and just return the \code{Yaml} object.}
 
+\item{local}{If executing now, the local folder that will be uploaded as the context for the target build}
+
 \item{bucket}{The Google Cloud Storage bucket the target metadata will be saved to in folder `target_folder`}
+
+\item{download_folder}{If NULL will download to current directory}
 
 \item{...}{
   Arguments passed on to \code{\link[=cr_build_yaml]{cr_build_yaml}}, \code{\link[=cr_build_yaml]{cr_build_yaml}}
@@ -66,8 +76,6 @@ cr_buildstep_targets_multi(
 \item{build}{A \link{Build} object that includes the artifact location}
 
 \item{target_folder}{Where target metadata will sit within the Google Cloud Storage bucket as a folder.  If NULL defaults to RStudio project name or "targets_cloudbuild" if no RStudio project found.}
-
-\item{download_folder}{Where to download the artifact files}
 
 \item{target_subfolder}{If you only want to download a specific folder from the _targets/ folder on Cloud Build then specify it here.}
 
