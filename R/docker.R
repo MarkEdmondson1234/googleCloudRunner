@@ -247,7 +247,7 @@ cr_deploy_docker_construct <- function(
                 "secrets", "availableSecrets", "artifacts", "serviceAccount")
   yaml_args <- args[yaml_names]
   yaml_args$timeout <- timeout
-  yaml_args = yaml_args[!sapply(yaml_args, is.null)]
+  yaml_args <- yaml_args[!sapply(yaml_args, is.null)]
   yaml_args$images <- pushed_image
 
   # remove the cr_build_yaml arguments
