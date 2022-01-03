@@ -18,17 +18,17 @@ cr_deploy_badger <- function(badger_image = "gcr.io/hightowerlabs/badger:0.0.1",
     "Authenticate the service key that badger will use to check Cloud Build status:",
     level = 3)
 
-  projectId <- gar_set_client(json,
+  projectId <- googleAuthR::gar_set_client(json,
     scopes = "https://www.googleapis.com/auth/cloud-platform"
   )
   gar_auth(cache = FALSE)
 
-  created <- gar_service_create("badger",
+  created <- googleAuthR::gar_service_create("badger",
     projectId = projectId,
     serviceDescription = "Enables build badges for Cloud Build"
   )
 
-  gar_service_grant_roles(created$email,
+  googleAuthR::gar_service_grant_roles(created$email,
     roles = "roles/cloudbuild.builds.viewer",
     projectId = projectId
   )
