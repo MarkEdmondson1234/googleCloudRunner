@@ -12,7 +12,7 @@ cr_buildstep_docker_auth_auto(image, ...)
 \arguments{
 \item{registry}{The registry to authorize `docker`}
 
-\item{...}{Other arguments pass to [googleCloudRunner::cr_buildstep_gcloud()]}
+\item{...}{Other arguments passed to \link{cr_buildstep_gcloud}}
 
 \item{image}{name of the Docker image to push or pull from that needs
 authorization}
