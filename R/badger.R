@@ -21,7 +21,7 @@ cr_deploy_badger <- function(badger_image = "gcr.io/hightowerlabs/badger:0.0.1",
   projectId <- googleAuthR::gar_set_client(json,
     scopes = "https://www.googleapis.com/auth/cloud-platform"
   )
-  gar_auth(cache = FALSE)
+  googleAuthR::gar_auth(cache = FALSE)
 
   created <- googleAuthR::gar_service_create("badger",
     projectId = projectId,

@@ -19,21 +19,21 @@ cr_setup_service <- function(account_email,
 
   the_roles <- paste(roles, collapse = " ")
   account_email <- trimws(account_email)
-  projectId <- gar_set_client(json,
+  projectId <- googleAuthR::gar_set_client(json,
     scopes = "https://www.googleapis.com/auth/cloud-platform"
   )
   if (email == "") {
     email <- NULL
   }
   cli::cli_alert_info("Adding {account_email} for project {projectId} with roles: {the_roles}")
-  gar_auth(email = email)
+  googleAuthR::gar_auth(email = email)
 
   if ("roles/cloudscheduler.serviceAgent" %in% roles) {
     # needs special project
     projectId <- "gcp-sa-cloudscheduler"
   }
 
-  gar_service_grant_roles(account_email,
+  googleAuthR::gar_service_grant_roles(account_email,
     roles = roles,
     projectId = projectId
   )
