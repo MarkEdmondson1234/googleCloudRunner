@@ -32,12 +32,15 @@
 #' @param task_args A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments)
 #' @param tar_make The R script that will run in the tar_make() step. Modify to include custom settings such as "script"
 #' @param buildsteps Generated buildsteps that create the targets build
-#'
+#' @param execute Whether to run the Cloud Build now or to write to a file for use within triggers or otherwise
+#' @param local If executing now, the local folder that will be uploaded as the context for the target build
 #' @param ... Other arguments passed to \link{cr_build_yaml}
 #' @inheritDotParams cr_build_yaml
+
 #' @inheritParams cr_buildstep_targets
 #' @inheritParams cr_buildstep_targets_setup
 #' @inheritParams cr_buildstep_targets_teardown
+#' @inheritParams cr_build_targets_artifacts
 #' @seealso \link{cr_buildstep_targets} if you want to customise the build
 #' @examples
 #'
@@ -71,21 +74,128 @@
 #'
 cr_build_targets <- function(
   buildsteps = cr_buildstep_targets_multi(),
+  execute = c("trigger","now"),
   path = "cloudbuild_targets.yaml",
+  local = ".",
+  predefinedAcl = "bucketLevel",
   bucket = cr_bucket_get(),
+  download_folder = getwd(),
   ...) {
 
-  #checks here it is targets related?
+  execute <- match.arg(execute)
 
-  yaml <- cr_build_yaml(
-    buildsteps,
-    ...
+  if(execute == "trigger"){
+    yaml <- cr_build_yaml(buildsteps, ...)
+
+    if (!is.null(path)) cr_build_write(yaml, file = path)
+    return(yaml)
+  }
+
+  target_folder <- "targets"
+
+  store <- cr_build_upload_gcs(local,
+                               bucket = bucket,
+                               predefinedAcl = predefinedAcl,
+                               deploy_folder = target_folder)
+
+  move_it <- cr_buildstep_bash(
+    sprintf("cd /workspace/%s && mv * ../", target_folder),
+    id = "move source files"
+  )
+  buildsteps <- c(move_it, buildsteps)
+
+  yaml <- cr_build_yaml(buildsteps, ...)
+
+  myMessage(
+    paste("Running Cloud Build for targets workflow in",
+          normalizePath(local)),
+    level = 3)
+
+  print(yaml)
+
+  build <- cr_build(yaml, launch_browser = FALSE, source = store)
+  built <- cr_build_wait(build)
+
+  extract_upload <- strsplit(bs[[length(bs)]]$args[[2]], " ")[[1]]
+  uploaded <- extract_upload[[length(extract_upload)]]
+
+  withr::with_dir(
+    "../",
+    artifact_download <- cr_build_targets_artifacts(
+      built,
+      bucket = bucket,
+      target_folder = basename(uploaded),
+      download_folder = NULL)
   )
 
-  if (!is.null(path)) cr_build_write(yaml, file = path)
+  myMessage(
+    sprintf("# Built targets on Cloud Build with status: %s", built$status),
+    level = 3)
 
-  yaml
+  if(!is.null(artifact_download)){
+    myMessage(
+      sprintf("Build artifacts downloaded to %s", artifact_download),
+      level = 3)
+  }
+
+  TRUE
+
 }
+
+#' Use this within your _targets functions to send the step to Cloud Build
+#' @export
+#' @param ... The arguments to send to the function that will run on Cloud Build
+#' @param x The tar_target node name (maybe derive this?)
+#' @inheritParams cr_buildstep_targets_single
+cr_build_tar_target <- function(x,
+                                ...,
+                                bucket = cr_bucket_get(),
+                                target_folder = NULL,
+                                task_args = NULL,
+                                task_image = task_image){
+
+  bs <- cr_buildstep_targets_single(
+    target_folder = target_folder,
+    bucket = bucket,
+    task_image = task_image,
+    task_args = task_args,
+    tar_make = sprintf("targets::tar_make('%s')", x)
+  )
+
+  cr_build_targets(bs, path = NULL, execute = "now")
+
+  targets::tar_load(x)
+}
+
+#' Splits a target workflow across Cloud Build jobs
+# cr_build_targets_deployment <- function(
+#
+# ){
+#
+#   # get which workflows are needed locally and which on Cloud Build
+#   targets <- eval(parse(text = readLines(targets::tar_config_get("script"),
+#                                          warn = FALSE)))
+#
+#   deployments <- unlist(
+#     lapply(targets, function(x) x[["settings"]][["deployment"]])
+#   )
+#
+#   build_me <- targets[deployments == "worker"]
+#   local_me <- targets[deployments == "main"]
+#
+#   if(length(local_me) == 0){
+#     myMessage(
+#       "# No local targets found, aborting. Specify deployment='main' to split
+#       target workloads across local and Cloud Build resources",
+#       level = 3)
+#     return(NULL)
+#   }
+#
+#   # create a Cloud Build job per worker step
+#   builds <- lapply(build_me, function(x){
+#
+#   })
+# }
 
 resolve_bucket_folder <- function(target_folder, bucket){
   if(is.null(target_folder)) {
@@ -116,6 +226,7 @@ resolve_bucket_folder <- function(target_folder, bucket){
 #'   Use \code{cr_build_targets_artifacts} to download the return values of a
 #'   target Cloud Build, then \link[targets]{tar_read} to read the results.  You can set the downloaded files as the target store via \code{targets::tar_config_set(store="_targets_cloudbuild")}.  Set \code{download_folder = "_targets"} to overwrite your local targets store.
 #' @inheritParams cr_build_artifacts
+#' @param download_folder If NULL will download to current directory
 #' @param target_subfolder If you only want to download a specific folder from the _targets/ folder on Cloud Build then specify it here.
 #' @return \code{cr_build_targets_artifacts} returns the file path to where the download occurred.
 cr_build_targets_artifacts <- function(
@@ -142,16 +253,22 @@ cr_build_targets_artifacts <- function(
   )
 
   if (nrow(arts) == 0) {
-    myMessage("No build artifacts found in ", target_bucket, level = 3)
+    myMessage("No build artifacts found in", target_bucket, level = 3)
     return(NULL)
+  }
+
+  if(!is.null(download_folder)){
+    dir.create(download_folder)
+  } else {
+    download_folder <- "."
   }
 
   df_bf <- file.path(download_folder, build_folder)
 
-  myMessage("Downloading to download_folder:", df_bf)
+  myMessage("Downloading to download_folder:", df_bf, level = 3)
 
   # create targets folder structure
-  dir.create(download_folder)
+
   dir.create(df_bf)
   dir.create(file.path(df_bf, "_targets"))
   dir.create(file.path(df_bf, "_targets", "meta"))
