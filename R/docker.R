@@ -243,24 +243,18 @@ cr_deploy_docker_construct <- function(
   # allow for ... to contain arguments to cr_build_yaml as well
   args = list(...)
 
-  logsBucket <- args$logsBucket
-  options <- args$options
-  substitutions <- args$substitutions
-  tags <- args$tags
-  secrets <- args$secrets
-  availableSecrets <- args$availableSecrets
-  artifacts <- args$artifacts
-  serviceAccount <- args$serviceAccount
+  yaml_names <- c("timeout", "logsBucket", "options", "substitutions", "tags",
+                "secrets", "availableSecrets", "artifacts", "serviceAccount")
+  yaml_args <- args[yaml_names]
+  yaml_args$timeout <- timeout
+  yaml_args = yaml_args[!sapply(yaml_args, is.null)]
+  yaml_args$images <- pushed_image
 
   # remove the cr_build_yaml arguments
-  args$logsBucket <- NULL
-  args$options <- NULL
-  args$substitutions <- NULL
-  args$tags <- NULL
-  args$secrets <- NULL
-  args$availableSecrets <- NULL
-  args$artifacts <- NULL
-  args$serviceAccount <- NULL
+  for (iarg in yaml_names) {
+    args[[iarg]] <- NULL
+  }
+  args$timeout <- NULL
 
   # assign arguments for cr_buildstep_docker
   args$image <- image
@@ -279,19 +273,9 @@ cr_deploy_docker_construct <- function(
     docker_step,
     post_steps
   )
-  build_yaml <- cr_build_yaml(
-    steps = steps,
-    images = pushed_image,
-    timeout = timeout,
-    logsBucket = logsBucket,
-    options = options,
-    substitutions = substitutions,
-    tags = tags,
-    secrets = secrets,
-    availableSecrets = availableSecrets,
-    artifacts = artifacts,
-    serviceAccount = serviceAccount
-  )
+  yaml_args$steps <- steps
+
+  build_yaml <- do.call(cr_build_yaml, args = yaml_args)
 
   image_tag <- paste0(image, ":", tag)
   myMessage("# Deploy docker build for image: ", image, level = 3)
