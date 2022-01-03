@@ -251,7 +251,6 @@ test_that("targets integrations - selected deployments", {
 
   dir.create("targets", showWarnings = FALSE)
 
-
   target_folder <- "cr_build_target_tests_deployments"
 
   targets::tar_config_set(
@@ -285,36 +284,13 @@ test_that("targets integrations - selected deployments", {
   )
   expect_snapshot(bs)
 
-  par_yaml <- cr_build_targets(bs, path = NULL)
-  expect_snapshot(par_yaml)
+  built <- cr_build_targets(bs, path = NULL, execute = "now")
 
-  upload_test_files <- function() {
-    cr_build_upload_gcs(
-      "targets",
-      remote = "cr_build_target_tests_deployments.tar.gz",
-      deploy_folder = "targets"
-    )
-  }
-
-  target_source <- upload_test_files()
-  expect_snapshot(target_source)
-
-  build <- cr_build_make(par_yaml, source = target_source)
-  # initial run
-  bb1 <- cr_build(build, launch_browser = FALSE)
-  built1 <- cr_build_wait(bb1)
-  bb1logs <- cr_build_logs(built1)
+  bb1logs <- cr_build_logs(built)
 
   target_logs <- function(log) {
     log[which(grepl("target pipeline", log))]
   }
-
-  targets::tar_config_set(
-    store = "_targets_cloudbuild/cr_build_target_tests_deployments/_targets")
-
-  artifact_download <- cr_build_targets_artifacts(
-    built1,
-    target_folder = target_folder)
 
   result2 <- targets::tar_read("merge1")
   expect_snapshot(result2)
@@ -322,10 +298,6 @@ test_that("targets integrations - selected deployments", {
   expect_true(result == result2)
 
   # clean up - delete source for next test run
-  googleCloudStorageR::gcs_delete_object(
-    "cr_build_target_tests_deployments.tar.gz",
-    bucket = cr_bucket_get()
-  )
   deletes <- googleCloudStorageR::gcs_list_objects(
     prefix = target_folder,
     bucket = cr_bucket_get()

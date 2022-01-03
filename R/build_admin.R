@@ -169,7 +169,7 @@ wait_f <- function(init, projectId) {
     if (status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")) {
       cli_status_update(
         id = sb,
-        msg = "{symbol$arrow_right} ------------------- Build Id: {status$id} Status: {.status {status$status}} ~{build_time}"
+        msg = "{symbol$arrow_right} ------------------- Status: {.status {status$status}} ~{build_time}"
       )
       sp1$spin()
 

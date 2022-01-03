@@ -1,0 +1,9 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|iteration|parent|children|seconds|warnings|error
+.Random.seed|object|ddee3f8b5b91076f||||||||||||||
+file1|stem|48c73eef04b242dd|04cfa6c891c58ae1|ef46db3751d8e999|1783999986|targets/mtcars.csv|t18995.9244212963s|2d214356c7805c7d|1303|file|vector|||0.002||
+input1|stem|30c2e1d19f74f0bb|2c9b94e57a473e26|db7ac3199d634293|-1036030678||t18995.9244212963s|6168bd1d73e2c7a9|860|rds|vector|||0.002||
+result4|stem|49b82b37ccd98605|c8b784cfa0a79341|01413a664d2553a2|251776564||t18995.9244212963s|b6d2e014b07bc296|51|rds|vector|||0||
+result2|stem|b846e1d89b32472b|cb3284462c1c0468|bc9057259e2a2c48|-345045233||t18995.9244212963s|b6d2e014b07bc296|51|rds|vector|||0.001||
+result3|stem|4ad0680cb8f2c25f|5202793bdd6a6135|bb0fda816899dd0d|-643013750||t18995.9244212963s|b6d2e014b07bc296|51|rds|vector|||0||
+result1|stem|5bac1a887d56c35c|37232e6e9ce262c3|96c0845cccb74c03|1155906047||t18995.9244212963s|b6d2e014b07bc296|51|rds|vector|||0||
+merge1|stem|9918d0c8457f3930|d888b8a95525e80a|5c71f2c7ffb1316b|-360378238||t18995.9244212963s|abbdb7fe746336f0|76|rds|vector|||0||
