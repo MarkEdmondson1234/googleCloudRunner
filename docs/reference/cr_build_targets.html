@@ -161,8 +161,12 @@ Historical runs accumulate in the
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">cr_build_targets</span><span class="op">(</span>
   buildsteps <span class="op">=</span> <span class="fu">cr_buildstep_targets_multi</span><span class="op">(</span><span class="op">)</span>,
+  execute <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trigger"</span>, <span class="st">"now"</span><span class="op">)</span>,
   path <span class="op">=</span> <span class="st">"cloudbuild_targets.yaml"</span>,
+  local <span class="op">=</span> <span class="st">"."</span>,
+  predefinedAcl <span class="op">=</span> <span class="st">"bucketLevel"</span>,
   bucket <span class="op">=</span> <span class="fu"><a href="cr_bucket_set.html">cr_bucket_get</a></span><span class="op">(</span><span class="op">)</span>,
+  download_folder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,
   <span class="va">...</span>
 <span class="op">)</span>
 
@@ -197,10 +201,16 @@ Historical runs accumulate in the
     <h2>Arguments</h2>
     <dl><dt>buildsteps</dt>
 <dd><p>Generated buildsteps that create the targets build</p></dd>
+<dt>execute</dt>
+<dd><p>Whether to run the Cloud Build now or to write to a file for use within triggers or otherwise</p></dd>
 <dt>path</dt>
 <dd><p>File path to write the Google Cloud Build yaml workflow file. Set to NULL to write no file and just return the <code>Yaml</code> object.</p></dd>
+<dt>local</dt>
+<dd><p>If executing now, the local folder that will be uploaded as the context for the target build</p></dd>
 <dt>bucket</dt>
 <dd><p>The Google Cloud Storage bucket the target metadata will be saved to in folder `target_folder`</p></dd>
+<dt>download_folder</dt>
+<dd><p>If NULL will download to current directory</p></dd>
 <dt>...</dt>
 <dd><p>Arguments passed on to <code><a href="cr_build_yaml.html">cr_build_yaml</a></code>, <code><a href="cr_build_yaml.html">cr_build_yaml</a></code></p><dl><dt><code>steps</code></dt>
 <dd><p>A vector of <a href="cr_buildstep.html">cr_buildstep</a></p></dd>
@@ -241,8 +251,6 @@ Historical runs accumulate in the
 <dd><p>A <a href="Build.html">Build</a> object that includes the artifact location</p></dd>
 <dt>target_folder</dt>
 <dd><p>Where target metadata will sit within the Google Cloud Storage bucket as a folder.  If NULL defaults to RStudio project name or "targets_cloudbuild" if no RStudio project found.</p></dd>
-<dt>download_folder</dt>
-<dd><p>Where to download the artifact files</p></dd>
 <dt>target_subfolder</dt>
 <dd><p>If you only want to download a specific folder from the _targets/ folder on Cloud Build then specify it here.</p></dd>
 <dt>overwrite</dt>
@@ -329,8 +337,8 @@ Historical runs accumulate in the
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘targets’</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu">cr_buildstep_targets_multi</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-22 17:37:33 &gt;</span> targets cloud location: gs://my-bucket/targets_cloudbuild</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-22 17:37:33 &gt;</span> Resolving targets::tar_manifest()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-03 16:25:43 &gt;</span> targets cloud location: gs://my-bucket/targets_cloudbuild</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-03 16:25:43 &gt;</span> Resolving targets::tar_manifest()</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘targets’</span>
 <span class="r-in"><span class="va">par_build</span> <span class="op">&lt;-</span> <span class="fu">cr_build_targets</span><span class="op">(</span><span class="va">bs</span>, path <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in lapply(x, f):</span> object 'bs' not found</span>

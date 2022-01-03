@@ -286,6 +286,27 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> id: Hello Cloud Build</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dir: meh</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># to edit multiple buildsteps at once</span></span>
+<span class="r-in"><span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="cr_buildstep_extract.html">cr_buildstep_extract</a></span><span class="op">(</span><span class="va">build</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="cr_buildstep_extract.html">cr_buildstep_extract</a></span><span class="op">(</span><span class="va">build</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">bs</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">cr_buildstep_edit</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, dir <span class="op">=</span> <span class="st">"blah"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ==cloudRunnerBuildStep==</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> name: gcr.io/cloud-builders/docker</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> args:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> id: Docker Version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dir: blah</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ==cloudRunnerBuildStep==</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> name: gcr.io/cloud-builders/alpine</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> args:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - echo</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - Hello Cloud Build</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> id: Hello Cloud Build</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dir: blah</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
   </div>

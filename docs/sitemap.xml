@@ -148,6 +148,9 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_status.html</loc>
   </url>
   <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_tar_target.html</loc>
+  </url>
+  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_build_targets.html</loc>
   </url>
   <url>
@@ -398,5 +401,8 @@
   </url>
   <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/resolve_bucket_folder.html</loc>
   </url>
 </urlset>
