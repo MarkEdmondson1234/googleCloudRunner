@@ -241,7 +241,7 @@ cr_deploy_docker_construct <- function(
   }
 
   # allow for ... to contain arguments to cr_build_yaml as well
-  args = list(...)
+  args <- list(...)
 
   yaml_names <- c("timeout", "logsBucket", "options", "substitutions", "tags",
                 "secrets", "availableSecrets", "artifacts", "serviceAccount")
@@ -260,7 +260,6 @@ cr_deploy_docker_construct <- function(
   args$image <- image
   args$tag <- tag
   args$location <- "."
-  # dir<-paste0("deploy/", basename(local))
   args$dir <- "deploy"
   args$projectId <- projectId
   args$kaniko_cache <- kaniko_cache
@@ -515,7 +514,7 @@ find_dockerfile <- function(local, dockerfile) {
 #' cr_buildstep_docker_auth("us.gcr.io")
 #' cr_buildstep_docker_auth(c("us.gcr.io", "asia.gcr.io"))
 #' cr_buildstep_docker_auth_auto("https://asia.gcr.io/myrepo/image")
-cr_buildstep_docker_auth = function(registry, ...) {
+cr_buildstep_docker_auth <- function(registry, ...) {
   if (is.null(registry) || length(registry) == 0) {
     return(NULL)
   }

@@ -6,7 +6,7 @@
 #' @importFrom utils menu packageVersion
 #' @family setup functions
 cr_setup <- function() {
-  op <- gar_setup_menu(
+  op <- googleAuthR::gar_setup_menu(
     choices = c(
       "Configure/check all googleCloudRunner settings",
       "Configure GCP Project Id",
@@ -19,12 +19,12 @@ cr_setup <- function() {
     package_name = "googleCloudRunner"
   )
 
-  session_user <- gar_setup_check_session()
+  session_user <- googleAuthR::gar_setup_check_session()
 
   we_edit <- op == 2
-  project_id <- gar_setup_menu_do(op,
+  project_id <- googleAuthR::gar_setup_menu_do(op,
     trigger = c(1, 2),
-    do_function = gar_setup_env_check,
+    do_function = googleAuthR::gar_setup_env_check,
     stop = TRUE,
     env_arg = "GCE_DEFAULT_PROJECT_ID",
     set_to = get_project_setup(),
@@ -37,13 +37,13 @@ cr_setup <- function() {
     return(invisible(""))
   }
 
-  cli_rule()
+  cli::cli_rule()
   we_edit <- op == 3
-  auth_file <- gar_setup_menu_do(op,
+  auth_file <- googleAuthR::gar_setup_menu_do(op,
     trigger = c(1, 3),
-    do_function = gar_setup_env_check,
+    do_function = googleAuthR::gar_setup_env_check,
     env_arg = "GCE_AUTH_FILE",
-    set_to = gar_setup_get_authenv(
+    set_to = googleAuthR::gar_setup_get_authenv(
       session_user = session_user,
       env_arg = "GCE_AUTH_FILE",
       file = "googlecloudrunner-auth-key.json",
@@ -60,15 +60,15 @@ cr_setup <- function() {
     return(invisible(""))
   }
 
-  gar_setup_auth_check("GCE_AUTH_FILE",
+  googleAuthR::gar_setup_auth_check("GCE_AUTH_FILE",
     scope = "https://www.googleapis.com/auth/cloud-platform"
   )
 
-  cli_rule()
+  cli::cli_rule()
   we_edit <- op == 4
-  bucket <- gar_setup_menu_do(op,
+  bucket <- googleAuthR::gar_setup_menu_do(op,
     trigger = c(1, 4),
-    do_function = gar_setup_env_check,
+    do_function = googleAuthR::gar_setup_env_check,
     env_arg = "GCS_DEFAULT_BUCKET",
     set_to = get_bucket_setup(),
     edit_option = we_edit,
@@ -77,11 +77,11 @@ cr_setup <- function() {
   if (we_edit) {
     return(invisible(""))
   }
-  cli_rule()
+  cli::cli_rule()
   we_edit <- op == 5
-  region <- gar_setup_menu_do(op,
+  region <- googleAuthR::gar_setup_menu_do(op,
     trigger = c(1, 5),
-    do_function = gar_setup_env_check,
+    do_function = googleAuthR::gar_setup_env_check,
     env_arg = "CR_REGION",
     set_to = get_region_setup(),
     edit_option = we_edit,
@@ -90,11 +90,11 @@ cr_setup <- function() {
   if (we_edit) {
     return(invisible(""))
   }
-  cli_rule()
+  cli::cli_rule()
   we_edit <- op == 6
-  email <- gar_setup_menu_do(op,
+  email <- googleAuthR::gar_setup_menu_do(op,
     trigger = c(1, 6),
-    do_function = gar_setup_env_check,
+    do_function = googleAuthR::gar_setup_env_check,
     env_arg = "CR_BUILD_EMAIL",
     set_to = get_email_setup(),
     edit_option = we_edit,
@@ -103,9 +103,9 @@ cr_setup <- function() {
   if (we_edit) {
     return(invisible(""))
   }
-  cli_rule()
+  cli::cli_rule()
   we_edit <- op == 7
-  build_service <- gar_setup_menu_do(op,
+  build_service <- googleAuthR::gar_setup_menu_do(op,
     trigger = c(1, 7),
     do_function = do_build_service_setup
   )
@@ -113,17 +113,17 @@ cr_setup <- function() {
   if (we_edit) {
     return(invisible(""))
   }
-  cli_rule()
+  cli::cli_rule()
 
 
   if (all(email, region, bucket, auth_file, project_id, build_service)) {
-    cli_alert_success("Setup complete! You can test it with cr_setup_test()")
-    cli_rule()
+    cli::cli_alert_success("Setup complete! You can test it with cr_setup_test()")
+    cli::cli_rule()
     return(invisible(""))
   }
 
-  cli_alert_info("Some setup still to complete.
+  cli::cli_alert_info("Some setup still to complete.
                  Restart R and/or rerun cr_setup() when ready")
 
-  cli_rule()
+  cli::cli_rule()
 }

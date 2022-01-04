@@ -140,10 +140,10 @@ cr_build_yaml_secrets <- function(secretEnv,
                                   version = "latest",
                                   projectId = cr_project_get()) {
   assert_that(
-    is.string(secretEnv),
-    is.string(secret),
-    is.string(version),
-    is.string(projectId)
+    assertthat::is.string(secretEnv),
+    assertthat::is.string(secret),
+    assertthat::is.string(version),
+    assertthat::is.string(projectId)
   )
 
   structure(list(
@@ -186,7 +186,7 @@ check_timeout <- function(timeout) {
     return(NULL)
   }
 
-  if (is.string(timeout)) {
+  if (assertthat::is.string(timeout)) {
     assert_that(grepl("s$", timeout))
     return(timeout)
   }

@@ -190,12 +190,12 @@ get_region_setup <- function() {
 #' @return NULL if no changes, ENV_ARG="blah" if change
 get_bucket_setup <- function() {
   if (Sys.getenv("GCE_AUTH_FILE") == "") {
-    cli_alert_info("You need to setup the auth environment argument before configuring a bucket.  Rerun the wizard once it is setup")
+    cli::cli_alert_info("You need to setup the auth environment argument before configuring a bucket.  Rerun the wizard once it is setup")
     return(NULL)
   }
 
   if (Sys.getenv("GCE_DEFAULT_PROJECT_ID") == "") {
-    cli_alert_info("You need to setup the project-id environment argument before configuring a bucket.  Rerun the wizard once it is setup")
+    cli::cli_alert_info("You need to setup the project-id environment argument before configuring a bucket.  Rerun the wizard once it is setup")
     return(NULL)
   }
 
@@ -203,7 +203,7 @@ get_bucket_setup <- function() {
   if (bucket) {
     has_bucket <- usethis::ui_yeah("Do you have an existing Cloud Storage bucket you want to use?")
     if (has_bucket) {
-      cli_alert_info(paste(
+      cli::cli_alert_info(paste(
         "Fetching your buckets under the project-id: ",
         Sys.getenv("GCE_DEFAULT_PROJECT_ID")
       ))
@@ -224,17 +224,17 @@ get_bucket_setup <- function() {
         }
       )
       if (!is.null(check_bucket$kind) && check_bucket$kind == "storage#bucket") {
-        cli_alert_info("Validated Cloud Storage bucket")
+        cli::cli_alert_info("Validated Cloud Storage bucket")
         return(paste0("GCS_DEFAULT_BUCKET=", the_bucket))
       } else {
-        cli_alert_danger("Invalid bucket: {the_bucket}")
+        cli::cli_alert_danger("Invalid bucket: {the_bucket}")
         return(NULL)
       }
     } else {
       make_bucket <- usethis::ui_yeah("Do you want to make a new Cloud Storage bucket?")
       if (make_bucket) {
         if (Sys.getenv("GCE_DEFAULT_PROJECT_ID") == "") {
-          cli_alert_info("You need to setup a project-id before creating a bucket")
+          cli::cli_alert_info("You need to setup a project-id before creating a bucket")
           return(NULL)
         }
         make_bucket_name <- readline(
@@ -245,16 +245,16 @@ get_bucket_setup <- function() {
           projectId = cr_project_get()
         )
         if (!is.null(new_bucket$kind) && new_bucket$kind == "storage#bucket") {
-          cli_alert_success("Successfully created bucket {make_bucket_name}")
+          cli::cli_alert_success("Successfully created bucket {make_bucket_name}")
           return(paste0("GCS_DEFAULT_BUCKET=", make_bucket_name))
         }
       } else {
-        cli_ul("No bucket set")
+        cli::cli_ul("No bucket set")
       }
     }
   }
 
-  cli_alert_danger("Some Cloud Build (cr_build_*) functionality will not be available
+  cli::cli_alert_danger("Some Cloud Build (cr_build_*) functionality will not be available
           with a bucket unless configured via cr_bucket_set()")
 
   NULL
@@ -270,13 +270,13 @@ get_project_setup <- function() {
   )
   if (project) {
     project_id <- readline("project-id: ")
-    cli_alert_success("Selected project-id: {project_id}")
+    cli::cli_alert_success("Selected project-id: {project_id}")
     return(paste0("GCE_DEFAULT_PROJECT_ID=", project_id))
   }
 
-  cli_ul("Create a Google Cloud Project with billing attached and get its project-id.  Re-do this wizard when you have one or use cr_project_set()")
+  cli::cli_ul("Create a Google Cloud Project with billing attached and get its project-id.  Re-do this wizard when you have one or use cr_project_set()")
 
-  cli_ul("Visit https://cloud.google.com/docs/overview to get started")
+  cli::cli_ul("Visit https://cloud.google.com/docs/overview to get started")
 
   NULL
 }
