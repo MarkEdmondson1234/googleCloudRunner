@@ -174,7 +174,7 @@ Historical runs accumulate in the
   <span class="va">build</span>,
   bucket <span class="op">=</span> <span class="fu"><a href="cr_bucket_set.html">cr_bucket_get</a></span><span class="op">(</span><span class="op">)</span>,
   target_folder <span class="op">=</span> <span class="cn">NULL</span>,
-  download_folder <span class="op">=</span> <span class="st">"_targets_cloudbuild"</span>,
+  download_folder <span class="op">=</span> <span class="cn">NULL</span>,
   target_subfolder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"meta"</span>, <span class="st">"objects"</span>, <span class="st">"user"</span><span class="op">)</span>,
   overwrite <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span>
@@ -212,7 +212,7 @@ Historical runs accumulate in the
 <dt>bucket</dt>
 <dd><p>The Google Cloud Storage bucket the target metadata will be saved to in folder `target_folder`</p></dd>
 <dt>download_folder</dt>
-<dd><p>If NULL will download to current directory</p></dd>
+<dd><p>Set to NULL to overwrite local _target folder: <code>_targets/*</code> otherwise will write to <code>download_folder/_targets/*</code></p></dd>
 <dt>...</dt>
 <dd><p>Arguments passed on to <code><a href="cr_build_yaml.html">cr_build_yaml</a></code>, <code><a href="cr_build_yaml.html">cr_build_yaml</a></code></p><dl><dt><code>steps</code></dt>
 <dd><p>A vector of <a href="cr_buildstep.html">cr_buildstep</a></p></dd>
@@ -339,8 +339,8 @@ Historical runs accumulate in the
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘targets’</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu">cr_buildstep_targets_multi</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-03 22:50:14 &gt;</span> targets cloud location: gs://my-bucket/targets_cloudbuild</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-03 22:50:14 &gt;</span> Resolving targets::tar_manifest()</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-05 14:04:07 &gt;</span> targets cloud location: gs://my-bucket/targets_cloudbuild</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-05 14:04:07 &gt;</span> Resolving targets::tar_manifest()</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘targets’</span>
 <span class="r-in"><span class="va">par_build</span> <span class="op">&lt;-</span> <span class="fu">cr_build_targets</span><span class="op">(</span><span class="va">bs</span>, path <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in lapply(x, f):</span> object 'bs' not found</span>

@@ -22,7 +22,7 @@ cr_build_targets_artifacts(
   build,
   bucket = cr_bucket_get(),
   target_folder = NULL,
-  download_folder = "_targets_cloudbuild",
+  download_folder = NULL,
   target_subfolder = c("all", "meta", "objects", "user"),
   overwrite = TRUE
 )
@@ -57,7 +57,7 @@ cr_buildstep_targets_multi(
 
 \item{bucket}{The Google Cloud Storage bucket the target metadata will be saved to in folder `target_folder`}
 
-\item{download_folder}{If NULL will download to current directory}
+\item{download_folder}{Set to NULL to overwrite local _target folder: \code{_targets/*} otherwise will write to \code{download_folder/_targets/*}}
 
 \item{...}{
   Arguments passed on to \code{\link[=cr_build_yaml]{cr_build_yaml}}, \code{\link[=cr_build_yaml]{cr_build_yaml}}

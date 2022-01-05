@@ -133,14 +133,11 @@ cr_build_targets <- function(
   extract_upload <- strsplit(buildsteps[[length(buildsteps)]]$args[[2]], " ")[[1]]
   uploaded <- extract_upload[[length(extract_upload)]]
 
-  withr::with_dir(
-    "../",
-    artifact_download <- cr_build_targets_artifacts(
-      built,
-      bucket = bucket,
-      target_folder = basename(uploaded),
-      download_folder = NULL)
-  )
+  artifact_download <- cr_build_targets_artifacts(
+    built,
+    bucket = bucket,
+    target_folder = basename(uploaded),
+    download_folder = NULL)
 
   myMessage(
     sprintf("# Built targets on Cloud Build with status: %s", built$status),
@@ -210,14 +207,14 @@ resolve_bucket_folder <- function(target_folder, bucket){
 #'   Use \code{cr_build_targets_artifacts} to download the return values of a
 #'   target Cloud Build, then \link[targets]{tar_read} to read the results.  You can set the downloaded files as the target store via \code{targets::tar_config_set(store="_targets_cloudbuild")}.  Set \code{download_folder = "_targets"} to overwrite your local targets store.
 #' @inheritParams cr_build_artifacts
-#' @param download_folder If NULL will download to current directory
+#' @param download_folder Set to NULL to overwrite local _target folder: \code{_targets/*} otherwise will write to \code{download_folder/_targets/*}
 #' @param target_subfolder If you only want to download a specific folder from the _targets/ folder on Cloud Build then specify it here.
 #' @return \code{cr_build_targets_artifacts} returns the file path to where the download occurred.
 cr_build_targets_artifacts <- function(
   build,
   bucket = cr_bucket_get(),
   target_folder = NULL,
-  download_folder = "_targets_cloudbuild",
+  download_folder = NULL,
   target_subfolder = c("all", "meta", "objects", "user"),
   overwrite = TRUE) {
 
@@ -247,31 +244,34 @@ cr_build_targets_artifacts <- function(
     download_folder <- "."
   }
 
-  df_bf <- file.path(download_folder, build_folder)
+  df_bf <- normalizePath(download_folder)
+  tar_store <- targets::tar_config_get("store")
 
-  myMessage("Downloading to download_folder:", df_bf, level = 3)
+  myMessage("Downloading to download_folder:", file.path(df_bf, tar_store),
+            level = 3)
+
+  tar_store <- targets::tar_config_get("store")
 
   # create targets folder structure
-
   dir.create(df_bf, showWarnings = FALSE)
-  dir.create(file.path(df_bf, "_targets"), showWarnings = FALSE)
-  dir.create(file.path(df_bf, "_targets", "meta"), showWarnings = FALSE)
-  dir.create(file.path(df_bf, "_targets", "objects"), showWarnings = FALSE)
-  dir.create(file.path(df_bf, "_targets", "user"), showWarnings = FALSE)
+  dir.create(file.path(df_bf, tar_store), showWarnings = FALSE)
+  dir.create(file.path(df_bf, tar_store, "meta"), showWarnings = FALSE)
+  dir.create(file.path(df_bf, tar_store, "objects"), showWarnings = FALSE)
+  dir.create(file.path(df_bf, tar_store, "user"), showWarnings = FALSE)
 
-  withr::with_dir(
-    download_folder,
-    {
-      lapply(arts$name, function(x) {
-        googleCloudStorageR::gcs_get_object(
+  # download to the local _target folder
+  lapply(arts$name, function(x) {
+    googleCloudStorageR::gcs_get_object(
           x,
           bucket = bucket,
-          saveToDisk = x,
+          saveToDisk = only_target_dir(x),
           overwrite = overwrite
         )
-      })
-    }
-  )
+     })
 
-  normalizePath(file.path(download_folder, build_folder))
+  file.path(df_bf, tar_store)
+}
+
+only_target_dir <- function(path){
+  gsub("(.+)/(_targets/.+)","\\2",path)
 }
