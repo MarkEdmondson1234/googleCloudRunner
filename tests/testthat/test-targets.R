@@ -111,10 +111,9 @@ test_that("targets integrations", {
       ))
     )
 
-  targets::tar_config_set(
-    store = "_targets_cloudbuild/cr_build_target_tests/_targets")
-  artifact_download <- cr_build_targets_artifacts(built3,
-                                                  target_folder = target_folder)
+  cr_build_targets_artifacts(
+    built3,
+    target_folder = target_folder)
 
   expect_true(result != targets::tar_read("result1"))
 
@@ -207,9 +206,6 @@ test_that("targets integrations - parallel builds", {
     log[which(grepl("target pipeline", log))]
   }
 
-  targets::tar_config_set(
-    store = "_targets_cloudbuild/cr_build_target_tests_multi/_targets")
-
   artifact_download <- cr_build_targets_artifacts(
     built1,
     target_folder = target_folder)
@@ -278,6 +274,9 @@ test_that("targets integrations - selected deployments", {
   result <- targets::tar_read("merge1")
   expect_snapshot(result)
 
+  # local build time
+  local_time <- file.info(file.path("_targets","objects","merge1"))
+
   bs <- cr_buildstep_targets_multi(
     target_folder = target_folder,
     tar_config = "targets::tar_config_set(script = 'targets/_targets.R')",
@@ -286,11 +285,9 @@ test_that("targets integrations - selected deployments", {
 
   built <- cr_build_targets(bs, path = NULL, execute = "now")
 
-  bb1logs <- cr_build_logs(built)
+  built_time <- file.info(file.path("_targets","objects","merge1"))
 
-  target_logs <- function(log) {
-    log[which(grepl("target pipeline", log))]
-  }
+  expect_gt(built_time$mtime, local_time$mtime)
 
   result2 <- targets::tar_read("merge1")
   expect_snapshot(result2)

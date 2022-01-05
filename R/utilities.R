@@ -126,3 +126,28 @@ timestamp_to_r <- function(t) {
     }
   )
 }
+
+#' difftime formatting
+#' @keywords internal
+#' @noRd
+#' @seealso https://stackoverflow.com/questions/51236962/how-to-format-a-difftime-object-to-a-string-with-hhmmss
+difftime_format <- function(start, end){
+  stopifnot(inherits(start, "POSIXct"),
+            inherits(end, "POSIXct"))
+  duration <- difftime(end, start, units="secs")
+  x <- abs(as.numeric(duration))
+
+  if(x < 60){
+    sprintf("%02d secs", x %% 60 %/% 1)
+  } else if (x < 3600) {
+    sprintf("%02dmins %02dsecs",
+            x %% 3600 %/% 60,
+            x %% 60 %/% 1)
+  } else {
+    sprintf("%02d hrs %02dmins %02dsecs",
+            x %% 86400 %/% 3600,
+            x %% 3600 %/% 60,
+            x %% 60 %/% 1)
+  }
+
+}
