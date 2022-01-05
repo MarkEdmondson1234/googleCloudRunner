@@ -108,7 +108,7 @@ cr_buildstep_targets_multi <- function(
 
   myMessage("Resolving targets::tar_manifest()", level = 3)
 
-  if(requireNamespace("visNetwork", quietly = TRUE)){
+  if(nzchar(system.file(package = "visNetwork"))){
     print(targets::tar_visnetwork())
   }
 
