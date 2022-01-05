@@ -107,7 +107,11 @@ cr_buildstep_targets_multi <- function(
   target_bucket <- resolve_bucket_folder(target_folder, bucket)
 
   myMessage("Resolving targets::tar_manifest()", level = 3)
-  print(targets::tar_visnetwork())
+
+  if(requireNamespace("visNetwork", quietly = TRUE)){
+    print(targets::tar_visnetwork())
+  }
+
   nodes <- targets::tar_manifest()
   edges <- targets::tar_network(targets_only = TRUE)$edges
 
