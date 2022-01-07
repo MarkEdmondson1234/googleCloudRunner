@@ -4,16 +4,21 @@
 cr_buildstep_targets_single <- function(
   target_folder = NULL,
   bucket = cr_bucket_get(),
+  tar_config = NULL,
   task_image = "gcr.io/gcer-public/targets",
   task_args = NULL,
   tar_make = "targets::tar_make()"
 ){
 
+  if(!is.null(tar_config)){
+    assert_that(is.character(tar_config))
+  }
+
   target_bucket <- resolve_bucket_folder(target_folder, bucket)
   c(
     cr_buildstep_targets_setup(target_bucket),
     cr_buildstep_targets(task_args = task_args,
-                         tar_make = tar_make,
+                         tar_make = c(tar_config, tar_make),
                          task_image = task_image),
     cr_buildstep_targets_teardown(target_bucket)
   )
@@ -33,6 +38,13 @@ cr_buildstep_targets <- function(
   tar_make = "targets::tar_make()",
   task_image = "gcr.io/gcer-public/targets",
   id = "target pipeline"){
+
+  assert_that(is.character(tar_make),
+              is.string(task_image))
+
+  if(!is.null(task_args)){
+    assert_that(is.character(task_args))
+  }
 
   do.call(
     cr_buildstep_r,
@@ -95,13 +107,15 @@ cr_buildstep_targets_teardown <- function(bucket_folder, last_id = NULL){
 #' @rdname cr_build_targets
 #' @export
 #' @param tar_config An R script that will run before \code{targets::tar_make()} in the build e.g. \code{"targets::tar_config_set(script = 'targets/_targets.R')"}
+#' @importFrom cli cli cli_ul
+#' @importFrom targets tar_manifest tar_network tar_visnetwork
 cr_buildstep_targets_multi <- function(
   target_folder = NULL,
   bucket = cr_bucket_get(),
   tar_config = NULL,
   task_image = "gcr.io/gcer-public/targets",
-  last_id = NULL,
-  task_args = NULL
+  task_args = NULL,
+  last_id = NULL
 ){
 
   target_bucket <- resolve_bucket_folder(target_folder, bucket)
@@ -109,19 +123,17 @@ cr_buildstep_targets_multi <- function(
   myMessage("Resolving targets::tar_manifest()", level = 3)
 
   if(nzchar(system.file(package = "visNetwork"))){
-    print(targets::tar_visnetwork())
+    print(tar_visnetwork())
   }
 
-  nodes <- targets::tar_manifest()
-  edges <- targets::tar_network(targets_only = TRUE)$edges
+  nodes <- tar_manifest()
+  edges <- tar_network(targets_only = TRUE)$edges
 
   first_id <- nodes$name[[1]]
 
-  if(!is.null(task_args)){
-    if(!is.null(task_args[["waitFor"]])){
-      task_args[["waitFor"]] <- NULL
-      warning("waitFor task_args overwritten as needed for DAG creation")
-    }
+  if(!is.null(task_args) && !is.null(task_args[["waitFor"]])){
+    task_args[["waitFor"]] <- NULL
+    warning("waitFor task_args overwritten as needed for DAG creation")
   }
 
   myMessage("# Building DAG:", level = 3)
@@ -135,10 +147,7 @@ cr_buildstep_targets_multi <- function(
       wait_for <- "get previous _targets metadata"
     }
 
-    myMessage("[",
-              paste(wait_for, collapse = ", "),
-              "] -> [", x, "]",
-              level = 3)
+    cli(cli_ul(paste0("[",paste(wait_for, collapse = ", "), "] -> [", x, "]")))
 
     task_args <- c(task_args, list(waitFor = wait_for))
 
@@ -156,7 +165,7 @@ cr_buildstep_targets_multi <- function(
     last_id <- nodes$name[[nrow(nodes)]]
   }
 
-  myMessage("[",last_id,"] -> [ Upload Artifacts ]", level = 3)
+  cli(cli_ul(paste0("[",last_id,"] -> [ Upload Artifacts ]")))
 
   c(
     cr_buildstep_targets_setup(target_bucket),

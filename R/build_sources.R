@@ -253,6 +253,8 @@ is.gar_StorageSource <- function(x) {
 #' }
 #' @family Cloud Build functions
 #' @importFrom utils tar
+#' @importFrom withr with_dir
+#' @importFrom cli cli_li
 cr_build_upload_gcs <- function(local,
                                 remote = paste0(
                                   local,
@@ -299,15 +301,13 @@ cr_build_upload_gcs <- function(local,
 
   tar_file <- paste0(basename(local), ".tar.gz")
 
-  withr::with_dir(
+  with_dir(
     tdir, {
 
       myMessage("Tarring files:", level = 3)
-      cli::cli_div(theme = list(span.files = list(color = "grey")))
       lapply(tmp_files, function(x){
-        cli::cli_li("{.files {x}}")
+        cli_li("{.file {x}}")
       })
-      cli::cli_end()
 
       tar(tar_file, compression = "gzip")
       myMessage(paste(
