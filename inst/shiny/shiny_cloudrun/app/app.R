@@ -13,10 +13,10 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  auth <- callModule(googleAuth_js, "auth")
+  auth <- callModule(googleAuth_js, "auth") #nolint
 
   sc_accounts <- reactive({
-    req(auth())
+    req(auth()) #nolint
 
     with_shiny(
       list_websites,
@@ -30,14 +30,14 @@ server <- function(input, output, session) {
   })
 
   output$select_website <- renderUI({
-    req(sc_accounts())
+    req(sc_accounts()) #nolint
 
     selectInput("website", "Select a website",
                 choices = sc_accounts()$siteUrl)
   })
 
   sc_data <- reactive({
-    req(input$website)
+    req(input$website) #nolint
 
     o <- with_shiny(
       search_analytics,

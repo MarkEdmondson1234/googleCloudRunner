@@ -1,6 +1,6 @@
 Sys.setenv(GL_AUTH = "auth.json")
 Sys.setenv(GCV_AUTH_FILE = "auth.json")
-
+# nolint start
 library(shiny)
 library(googleAuthR)
 library(googleLanguageR)
@@ -8,29 +8,30 @@ library(googleCloudVisionR)
 library(shinythemes)
 library(shinydashboard)
 
-ui <- navbarPage(title = "Image Talker",
-                 windowTitle="Turn images into speech using machine learning",
-                 theme = shinytheme("sandstone"),
-                 footer = helpText("Demo via MarkEdmondson1234/googleCloudRunner"),
-                 tabPanel(title = "Talking Images",
-                          sidebarLayout(
-                            sidebarPanel(
-                              helpText("Upload an image, have it spoken back to you"),
-                              radioButtons("input_choice", "Where is the image?",
-                                           choices = c("URL", "Upload"), inline = TRUE),
+ui <- navbarPage(
+  title = "Image Talker",
+  windowTitle = "Turn images into speech using machine learning",
+  theme = shinytheme("sandstone"),
+  footer = helpText("Demo via MarkEdmondson1234/googleCloudRunner"),
+  tabPanel(title = "Talking Images",
+           sidebarLayout(
+             sidebarPanel(
+               helpText("Upload an image, have it spoken back to you"),
+               radioButtons("input_choice", "Where is the image?",
+                            choices = c("URL", "Upload"), inline = TRUE),
 
-                              uiOutput("input_ui"),
-                              actionButton("do_image", "Get/Change Image"),
-                              br()
-                            ),
-                            mainPanel(
-                              uiOutput("show_image"),
-                              br()
+               uiOutput("input_ui"),
+               actionButton("do_image", "Get/Change Image"),
+               br()
+             ),
+             mainPanel(
+               uiOutput("show_image"),
+               br()
 
-                            ))
-                 ),
-                 tabPanel(title = "Examples",
-                 )
+             ))
+  ),
+  tabPanel(title = "Examples",
+  )
 )
 
 server <- function(input, output, session){
@@ -38,7 +39,7 @@ server <- function(input, output, session){
   output$input_ui <- renderUI({
     if(input$input_choice == "Upload"){
       fileInput("image_input", "Upload an image",
-                accept = c("jpeg","png","gif"))
+                accept = c("jpeg", "png", "gif"))
     } else {
       textInput("image_input", label = "Paste in URL to image",
                 value = "https://bit.ly/2IhUzdE")
@@ -59,7 +60,7 @@ server <- function(input, output, session){
       if(is.null(input$image_input$datapath)) return(NULL)
 
       # copy to www folder
-      src <-  tempfile("img","www")
+      src <-  tempfile("img", "www")
       file.copy(input$image_input$datapath, src)
     } else {
       message("A URL to copy")
@@ -78,7 +79,7 @@ server <- function(input, output, session){
 
     message("image_source(): ", image_source())
     if(input$input_choice == "Upload"){
-      src <- gsub("www/","",image_source())
+      src <- gsub("www/", "", image_source())
     } else {
       src <- input$image_input
     }
@@ -103,11 +104,11 @@ server <- function(input, output, session){
       width = 12,
       fluidRow(
             column(width = 8,
-                   tags$img(src=src, width="100%", height="100%")
+                   tags$img(src = src, width = "100%", height = "100%")
             ),
             column(width = 4,
                    actionButton("do_apis", "Speak this image"),
-                   textInput("override_label","Override image label" ,
+                   textInput("override_label", "Override image label" ,
                              placeholder = "Provide your own image label to talk"),
                    uiOutput("image_labels")
 
@@ -163,4 +164,4 @@ server <- function(input, output, session){
 }
 
 shinyApp(ui = ui, server = server)
-
+# nolint end

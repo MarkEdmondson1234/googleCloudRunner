@@ -249,6 +249,10 @@ cr_buildstep_extract <- function(x, step = NULL) {
 #' cr_buildstep_edit(edit_me, name = "blah")
 #' cr_buildstep_edit(edit_me, name = "gcr.io/blah")
 #' cr_buildstep_edit(edit_me, args = c("blah1", "blah2"), dir = "meh")
+#'
+#' # to edit multiple buildsteps at once
+#' bs <- c(cr_buildstep_extract(build, 1), cr_buildstep_extract(build, 2))
+#' lapply(bs, function(x) cr_buildstep_edit(list(x), dir = "blah")[[1]])
 #' @importFrom utils modifyList
 cr_buildstep_edit <- function(x,
                               ...) {

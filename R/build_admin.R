@@ -155,13 +155,13 @@ wait_f <- function(init, projectId) {
       status <- cr_build_status(op, projectId = projectId)
     }
 
-    build_time <- format(round(difftime(Sys.time(),start_time, units = "auto"), 1))
+    build_time <- difftime_format(start_time, Sys.time())
 
     if (status$status %in%
       c("FAILURE", "INTERNAL_ERROR", "TIMEOUT", "CANCELLED", "EXPIRED")) {
       cli_process_failed(
         id = sb,
-        msg_failed = "Build failed with status: {status$status} and took ~{build_time}"
+        msg_failed = "Build failed with status: {status$status} and took ~{.timestamp {build_time}}"
       )
       wait <- FALSE
     }
@@ -169,7 +169,7 @@ wait_f <- function(init, projectId) {
     if (status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")) {
       cli_status_update(
         id = sb,
-        msg = "{symbol$arrow_right} ------------------- Build Id: {status$id} Status: {.status {status$status}} ~{build_time}"
+        msg = "{symbol$arrow_right} ------------------- Status: {.status {status$status}} ~{.timestamp {build_time}}"
       )
       sp1$spin()
 
@@ -181,7 +181,7 @@ wait_f <- function(init, projectId) {
 
       cli_process_done(
         id = sb,
-        msg_done = "Build finished with status: {status$status} and took ~{build_time}"
+        msg_done = "Build finished with status: {status$status} and took ~{.timestamp {build_time}}"
       )
       wait <- FALSE
     }

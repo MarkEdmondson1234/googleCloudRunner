@@ -147,7 +147,7 @@ Historical runs accumulate in the
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Set up Google Cloud Build to run a targets pipeline</h1>
-    <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/R/build_targets.R" class="external-link"><code>R/build_targets.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/R/build_targets.R" class="external-link"><code>R/build_targets.R</code></a>, <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/R/buildstep_targets.R" class="external-link"><code>R/buildstep_targets.R</code></a></small>
     <div class="hidden name"><code>cr_build_targets.Rd</code></div>
     </div>
 
@@ -160,39 +160,61 @@ Historical runs accumulate in the
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">cr_build_targets</span><span class="op">(</span>
-  task_image <span class="op">=</span> <span class="st">"gcr.io/gcer-public/targets"</span>,
-  target_folder <span class="op">=</span> <span class="cn">NULL</span>,
+  buildsteps <span class="op">=</span> <span class="fu">cr_buildstep_targets_multi</span><span class="op">(</span><span class="op">)</span>,
+  execute <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trigger"</span>, <span class="st">"now"</span><span class="op">)</span>,
   path <span class="op">=</span> <span class="st">"cloudbuild_targets.yaml"</span>,
+  local <span class="op">=</span> <span class="st">"."</span>,
+  predefinedAcl <span class="op">=</span> <span class="st">"bucketLevel"</span>,
   bucket <span class="op">=</span> <span class="fu"><a href="cr_bucket_set.html">cr_bucket_get</a></span><span class="op">(</span><span class="op">)</span>,
-  task_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,
-  tar_make <span class="op">=</span> <span class="st">"targets::tar_make()"</span>,
+  download_folder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,
   <span class="va">...</span>
 <span class="op">)</span>
 
 <span class="fu">cr_build_targets_artifacts</span><span class="op">(</span>
   <span class="va">build</span>,
-  download_folder <span class="op">=</span> <span class="st">"_targets_cloudbuild"</span>,
+  bucket <span class="op">=</span> <span class="fu"><a href="cr_bucket_set.html">cr_bucket_get</a></span><span class="op">(</span><span class="op">)</span>,
+  target_folder <span class="op">=</span> <span class="cn">NULL</span>,
+  download_folder <span class="op">=</span> <span class="cn">NULL</span>,
   target_subfolder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"all"</span>, <span class="st">"meta"</span>, <span class="st">"objects"</span>, <span class="st">"user"</span><span class="op">)</span>,
   overwrite <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
+
+<span class="fu">cr_buildstep_targets_single</span><span class="op">(</span>
+  target_folder <span class="op">=</span> <span class="cn">NULL</span>,
+  bucket <span class="op">=</span> <span class="fu"><a href="cr_bucket_set.html">cr_bucket_get</a></span><span class="op">(</span><span class="op">)</span>,
+  task_image <span class="op">=</span> <span class="st">"gcr.io/gcer-public/targets"</span>,
+  task_args <span class="op">=</span> <span class="cn">NULL</span>,
+  tar_make <span class="op">=</span> <span class="st">"targets::tar_make()"</span>
+<span class="op">)</span>
+
+<span class="fu">cr_buildstep_targets_multi</span><span class="op">(</span>
+  target_folder <span class="op">=</span> <span class="cn">NULL</span>,
+  bucket <span class="op">=</span> <span class="fu"><a href="cr_bucket_set.html">cr_bucket_get</a></span><span class="op">(</span><span class="op">)</span>,
+  tar_config <span class="op">=</span> <span class="cn">NULL</span>,
+  task_image <span class="op">=</span> <span class="st">"gcr.io/gcer-public/targets"</span>,
+  last_id <span class="op">=</span> <span class="cn">NULL</span>,
+  task_args <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>task_image</dt>
-<dd><p>An existing Docker image that will be used to run your targets workflow after the targets meta has been downloaded from Google Cloud Storage</p></dd>
-<dt>target_folder</dt>
-<dd><p>Where target metadata will sit within the Google Cloud Storage bucket as a folder.  If NULL defaults to RStudio project name or "targets_cloudbuild" if no RStudio project found.</p></dd>
+    <dl><dt>buildsteps</dt>
+<dd><p>Generated buildsteps that create the targets build</p></dd>
+<dt>execute</dt>
+<dd><p>Whether to run the Cloud Build now or to write to a file for use within triggers or otherwise</p></dd>
 <dt>path</dt>
 <dd><p>File path to write the Google Cloud Build yaml workflow file. Set to NULL to write no file and just return the <code>Yaml</code> object.</p></dd>
+<dt>local</dt>
+<dd><p>If executing now, the local folder that will be uploaded as the context for the target build</p></dd>
+<dt>predefinedAcl</dt>
+<dd><p>The ACL rules for the object uploaded. Set to "bucketLevel" for buckets with bucket level access enabled</p></dd>
 <dt>bucket</dt>
 <dd><p>The Google Cloud Storage bucket the target metadata will be saved to in folder `target_folder`</p></dd>
-<dt>task_args</dt>
-<dd><p>A named list of additional arguments to send to <a href="cr_buildstep_r.html">cr_buildstep_r</a> when its executing the tar_make command (such as environment arguments)</p></dd>
-<dt>tar_make</dt>
-<dd><p>The R script that will run in the <code>tar_make()</code> step. Modify to include custom settings</p></dd>
+<dt>download_folder</dt>
+<dd><p>Set to NULL to overwrite local _target folder: <code>_targets/*</code> otherwise will write to <code>download_folder/_targets/*</code></p></dd>
 <dt>...</dt>
-<dd><p>Arguments passed on to <code><a href="cr_build_yaml.html">cr_build_yaml</a></code></p><dl><dt><code>steps</code></dt>
+<dd><p>Arguments passed on to <code><a href="cr_build_yaml.html">cr_build_yaml</a></code>, <code><a href="cr_build_yaml.html">cr_build_yaml</a></code></p><dl><dt><code>steps</code></dt>
 <dd><p>A vector of <a href="cr_buildstep.html">cr_buildstep</a></p></dd>
 
     <dt><code>timeout</code></dt>
@@ -229,16 +251,26 @@ Historical runs accumulate in the
 </dl></dd>
 <dt>build</dt>
 <dd><p>A <a href="Build.html">Build</a> object that includes the artifact location</p></dd>
-<dt>download_folder</dt>
-<dd><p>Where to download the artifact files</p></dd>
+<dt>target_folder</dt>
+<dd><p>Where target metadata will sit within the Google Cloud Storage bucket as a folder.  If NULL defaults to RStudio project name or "targets_cloudbuild" if no RStudio project found.</p></dd>
 <dt>target_subfolder</dt>
 <dd><p>If you only want to download a specific folder from the _targets/ folder on Cloud Build then specify it here.</p></dd>
 <dt>overwrite</dt>
 <dd><p>Whether to overwrite existing local data</p></dd>
+<dt>task_image</dt>
+<dd><p>An existing Docker image that will be used to run your targets workflow after the targets meta has been downloaded from Google Cloud Storage</p></dd>
+<dt>task_args</dt>
+<dd><p>A named list of additional arguments to send to <a href="cr_buildstep_r.html">cr_buildstep_r</a> when its executing the tar_make command (such as environment arguments)</p></dd>
+<dt>tar_make</dt>
+<dd><p>The R script that will run in the tar_make() step. Modify to include custom settings such as "script"</p></dd>
+<dt>tar_config</dt>
+<dd><p>An R script that will run before <code>targets::tar_make()</code> in the build e.g. <code>"targets::tar_config_set(script = 'targets/_targets.R')"</code></p></dd>
+<dt>last_id</dt>
+<dd><p>The final buildstep that needs to complete before the upload.  If left NULL then will default to the last tar_target step.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A Yaml object as generated by <a href="cr_build_yaml.html">cr_build_yaml</a><code>cr_build_targets_artifacts</code> returns the file path to where the download occurred.</p>
+    <p>A Yaml object as generated by <a href="cr_build_yaml.html">cr_build_yaml</a> if <code>execute="trigger"</code> or the built object if <code>execute="now"</code><code>cr_build_targets_artifacts</code> returns the file path to where the download occurred.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -251,6 +283,13 @@ Historical runs accumulate in the
 <li><p>Trigger a build. The first trigger will run the targets pipeline, subsequent runs will only recompute the outdated targets.</p></li>
 </ul><p>Use <code>cr_build_targets_artifacts</code> to download the return values of a
   target Cloud Build, then tar_read to read the results.  You can set the downloaded files as the target store via <code>targets::tar_config_set(store="_targets_cloudbuild")</code>.  Set <code>download_folder = "_targets"</code> to overwrite your local targets store.</p>
+    </div>
+    <div id="dags">
+    <h2>DAGs</h2>
+    
+
+
+<p>If your target workflow has parallel processing steps then leaving this as default <code>cr_buildstep_targets_multi()</code> will create a build that uses waitFor and build ids to create a DAG.  Setting this to <code>cr_buildstep_targets_single()</code> will be single thread but you can then customise the <code>targets::tar_make</code> script.  Or add your own custom target buildsteps here using <a href="cr_buildstep_targets.html">cr_buildstep_targets</a> - for example you could create the docker environment targets runs within before the main pipeline.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -277,40 +316,39 @@ Historical runs accumulate in the
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="fu">cr_build_targets</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-20 08:29:11 &gt;</span> targets cloud location: gs://my-bucket/targets_cloudbuild</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2021-12-20 08:29:11 &gt;</span> Writing to cloudbuild_targets.yaml</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ==cloudRunnerYaml==</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> steps:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   entrypoint: bash</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   args:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   - -c</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   - mkdir /workspace/_targets &amp;&amp; mkdir /workspace/_targets/meta &amp;&amp; gsutil -m cp -r</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     ${_TARGET_BUCKET}/_targets/meta /workspace/_targets || exit 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   id: get previous _targets metadata</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - name: gcr.io/gcer-public/targets</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   args:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   - Rscript</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   - -e</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   - targets::tar_make()</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   id: target pipeline</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   entrypoint: bash</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   args:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   - -c</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   - date &gt; buildtime.txt &amp;&amp; gsutil cp buildtime.txt ${_TARGET_BUCKET}/_targets/buildtime.txt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   id: Ensure bucket/_targets/ always exists</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   entrypoint: bash</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   args:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   - -c</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   - gsutil -m cp -r /workspace/_targets ${_TARGET_BUCKET} &amp;&amp; gsutil ls -r ${_TARGET_BUCKET}</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   id: Upload Artifacts</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> timeout: 3600s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> substitutions:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   _TARGET_BUCKET: gs://my-bucket/targets_cloudbuild</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="st">"cloudbuild_targets.yaml"</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">mtcars</span>, file <span class="op">=</span> <span class="st">"mtcars.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_script</span><span class="op">(</span></span>
+<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">file1</span>,</span>
+<span class="r-in">      <span class="st">"mtcars.csv"</span>, format <span class="op">=</span> <span class="st">"file"</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">input1</span>,</span>
+<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">file1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">result1</span>,</span>
+<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">input1</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">result2</span>,</span>
+<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">input1</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">result3</span>,</span>
+<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">input1</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">result4</span>,</span>
+<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">input1</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">merge1</span>,</span>
+<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">result1</span>, <span class="va">result2</span>, <span class="va">result3</span>, <span class="va">result4</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">    <span class="op">)</span>,</span>
+<span class="r-in"> ask <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘targets’</span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu">cr_buildstep_targets_multi</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-05 14:04:07 &gt;</span> targets cloud location: gs://my-bucket/targets_cloudbuild</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-05 14:04:07 &gt;</span> Resolving targets::tar_manifest()</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘targets’</span>
+<span class="r-in"><span class="va">par_build</span> <span class="op">&lt;-</span> <span class="fu">cr_build_targets</span><span class="op">(</span><span class="va">bs</span>, path <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in lapply(x, f):</span> object 'bs' not found</span>
+<span class="r-in"><span class="va">par_build</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'par_build' not found</span>
+<span class="r-in"></span>
+<span class="r-in"></span>
+<span class="r-in"></span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

@@ -7,11 +7,16 @@
 #' @param region The Cloud Run region
 #'
 #' @export
+#' @importFrom googleAuthR gar_auth gar_service_create gar_service_grant_roles
 cr_deploy_badger <- function(badger_image = "gcr.io/hightowerlabs/badger:0.0.1",
                              json = Sys.getenv("GAR_CLIENT_JSON"),
                              region = cr_region_get()) {
-  myMessage("#Deploying a badger instance on Cloud Run", level = 3)
-  myMessage("Authenticate the service key that badger will use to check Cloud Build status:", level = 3)
+
+  myMessage("# Deploying a badger instance on Cloud Run", level = 3)
+
+  myMessage(
+    "Authenticate the service key that badger will use to check Cloud Build status:",
+    level = 3)
 
   projectId <- gar_set_client(json,
     scopes = "https://www.googleapis.com/auth/cloud-platform"

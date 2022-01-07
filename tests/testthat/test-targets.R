@@ -8,7 +8,7 @@ test_that("targets integrations", {
 
   dir.create("targets", showWarnings = FALSE)
 
-  target_folder = "cr_build_target_tests"
+  target_folder <- "cr_build_target_tests"
 
   bs <- cr_buildstep_targets_single(
     target_folder = target_folder,
@@ -111,10 +111,9 @@ test_that("targets integrations", {
       ))
     )
 
-  targets::tar_config_set(
-    store = "_targets_cloudbuild/cr_build_target_tests/_targets")
-  artifact_download <- cr_build_targets_artifacts(built3,
-                                                  target_folder = target_folder)
+  cr_build_targets_artifacts(
+    built3,
+    target_folder = target_folder)
 
   expect_true(result != targets::tar_read("result1"))
 
@@ -207,9 +206,6 @@ test_that("targets integrations - parallel builds", {
     log[which(grepl("target pipeline", log))]
   }
 
-  targets::tar_config_set(
-    store = "_targets_cloudbuild/cr_build_target_tests_multi/_targets")
-
   artifact_download <- cr_build_targets_artifacts(
     built1,
     target_folder = target_folder)
@@ -224,6 +220,81 @@ test_that("targets integrations - parallel builds", {
     "cr_build_target_test_source_multi.tar.gz",
     bucket = cr_bucket_get()
   )
+  deletes <- googleCloudStorageR::gcs_list_objects(
+    prefix = target_folder,
+    bucket = cr_bucket_get()
+  )
+  done_deeds <- lapply(deletes$name,
+                       googleCloudStorageR::gcs_delete_object,
+                       bucket = cr_bucket_get()
+  )
+  expect_true(all(unlist(done_deeds)))
+
+  targets::tar_destroy(ask = FALSE)
+  unlink("targets", recursive = TRUE)
+  unlink("_targets", recursive = TRUE)
+  unlink("_targets.yaml")
+  unlink("_targets_cloudbuild", recursive = TRUE)
+})
+
+test_that("targets integrations - selected deployments", {
+  skip_on_ci()
+  skip_on_cran()
+
+  if (!require(targets)) {
+    skip("library(targets) not installed")
+  }
+
+  dir.create("targets", showWarnings = FALSE)
+
+  target_folder <- "cr_build_target_tests_deployments"
+
+  targets::tar_config_set(
+    script = "targets/_targets.R"
+  )
+
+  # test file
+  write.csv(mtcars, file = "targets/mtcars.csv", row.names = FALSE)
+
+  targets::tar_script(
+    list(
+      targets::tar_target(file1, "targets/mtcars.csv", format = "file"),
+      targets::tar_target(input1, read.csv(file1)),
+      targets::tar_target(result1, sum(input1$mpg), deployment = "main"),
+      targets::tar_target(result2, mean(input1$mpg)),
+      targets::tar_target(result3, max(input1$mpg)),
+      targets::tar_target(result4, min(input1$mpg)),
+      targets::tar_target(merge1, paste(result1, result2, result3, result4))
+    ),
+    ask = FALSE
+  )
+
+  targets::tar_make()
+  # get local result to compare
+  result <- targets::tar_read("merge1")
+  expect_snapshot(result)
+
+  # local build time
+  local_time <- file.info(file.path("_targets","objects","merge1"))
+
+  bs <- cr_buildstep_targets_multi(
+    target_folder = target_folder,
+    tar_config = "targets::tar_config_set(script = 'targets/_targets.R')",
+  )
+  expect_snapshot(bs)
+
+  built <- cr_build_targets(bs, path = NULL, execute = "now")
+
+  built_time <- file.info(file.path("_targets","objects","merge1"))
+
+  expect_gt(built_time$mtime, local_time$mtime)
+
+  result2 <- targets::tar_read("merge1")
+  expect_snapshot(result2)
+
+  expect_true(result == result2)
+
+  # clean up - delete source for next test run
   deletes <- googleCloudStorageR::gcs_list_objects(
     prefix = target_folder,
     bucket = cr_bucket_get()

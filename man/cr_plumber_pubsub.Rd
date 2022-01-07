@@ -34,7 +34,7 @@ pub <- function(x) {
 }
 
 #' Recieve pub/sub message
-#' @post /pubsub
+#' @post /pubsub #nolint
 #' @param message a pub/sub message
 function(message = NULL) {
   googleCloudRunner::cr_plumber_pubsub(message, pub)

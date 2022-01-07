@@ -1,5 +1,5 @@
 library(googleCloudRunner)
-
+# nolint start
 bs <- c(
   cr_buildstep_secret(
     "mark-edmondson-gde-auth",
@@ -124,3 +124,4 @@ make_urls <- function(regions, industry) {
 all_urls <- make_urls(regions = regions, industry = industry)
 
 cr_jwt_async(all_urls[1:5], token = token)
+# nolint end

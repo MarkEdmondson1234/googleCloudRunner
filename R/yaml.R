@@ -160,7 +160,6 @@ is.yaml_secret <- function(x) {
 }
 
 parse_yaml_secret_list <- function(availableSecrets) {
-  as <- NULL
 
   if (is.null(availableSecrets)) {
     return(NULL)

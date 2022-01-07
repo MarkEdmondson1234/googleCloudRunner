@@ -93,8 +93,8 @@ test_that("Building Build Objects", {
   run_target <- cr_run_schedule_http("https://a-url.com", "mmmark")
   expect_snapshot(run_target)
 
-  # library(googlePubsubR)
-  # msg_encode(jsonlite::toJSON(list(a="hello mum")))
+  # library(googlePubsubR) #nolint
+  # msg_encode(jsonlite::toJSON(list(a="hello mum"))) #nolint
   pubsub_message <- cr_plumber_pubsub(list(data = "eyJhIjpbImhlbGxvIG11bSJdfQ=="))
   expect_snapshot(pubsub_message)
 })

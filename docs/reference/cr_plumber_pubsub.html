@@ -194,7 +194,7 @@
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#' Recieve pub/sub message</span></span>
-<span class="r-in"><span class="co">#' @post /pubsub</span></span>
+<span class="r-in"><span class="co">#' @post /pubsub #nolint</span></span>
 <span class="r-in"><span class="co">#' @param message a pub/sub message</span></span>
 <span class="r-in"><span class="kw">function</span><span class="op">(</span><span class="va">message</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in">  <span class="fu">googleCloudRunner</span><span class="fu">::</span><span class="fu">cr_plumber_pubsub</span><span class="op">(</span><span class="va">message</span>, <span class="va">pub</span><span class="op">)</span></span>

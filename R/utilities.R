@@ -75,7 +75,7 @@ myMessage <- function(..., level = 2) {
   compare_level <- getOption("googleAuthR.verbose")
 
   if (level >= compare_level) {
-    time <- paste(Sys.time(), ">")
+    time <- paste(Sys.time(), ">") #nolint
     mm <- paste(...)
     if (grepl("^#", mm[[1]])) {
       cli::cli_h1(mm)
@@ -125,4 +125,29 @@ timestamp_to_r <- function(t) {
       return(t)
     }
   )
+}
+
+#' difftime formatting
+#' @keywords internal
+#' @noRd
+#' @seealso https://stackoverflow.com/questions/51236962/how-to-format-a-difftime-object-to-a-string-with-hhmmss
+difftime_format <- function(start, end){
+  stopifnot(inherits(start, "POSIXct"),
+            inherits(end, "POSIXct"))
+  duration <- difftime(end, start, units="secs")
+  x <- abs(as.numeric(duration))
+
+  if(x < 60){
+    sprintf("%02d secs", x %% 60 %/% 1)
+  } else if (x < 3600) {
+    sprintf("%02dmins %02dsecs",
+            x %% 3600 %/% 60,
+            x %% 60 %/% 1)
+  } else {
+    sprintf("%02d hrs %02dmins %02dsecs",
+            x %% 86400 %/% 3600,
+            x %% 3600 %/% 60,
+            x %% 60 %/% 1)
+  }
+
 }
