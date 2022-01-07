@@ -44,7 +44,7 @@ cr_deploy_docker_construct(
 
 \item{image_name}{The name of the docker image to be built either full name starting with gcr.io or constructed from the image_name and projectId via \code{gcr.io/{projectId}/{image_name}}}
 
-\item{dockerfile}{An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"}
+\item{dockerfile}{An optional Dockerfile built to support the script.  Not needed if "Dockerfile" exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"}
 
 \item{remote}{The folder on Google Cloud Storage}
 

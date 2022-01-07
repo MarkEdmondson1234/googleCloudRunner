@@ -138,13 +138,13 @@ difftime_format <- function(start, end){
   x <- abs(as.numeric(duration))
 
   if(x < 60){
-    sprintf("%02d secs", x %% 60 %/% 1)
+    sprintf("%02ds", x %% 60 %/% 1)
   } else if (x < 3600) {
-    sprintf("%02dmins %02dsecs",
+    sprintf("%02dm%02ds",
             x %% 3600 %/% 60,
             x %% 60 %/% 1)
   } else {
-    sprintf("%02d hrs %02dmins %02dsecs",
+    sprintf("%02dh%02dm%02ds",
             x %% 86400 %/% 3600,
             x %% 3600 %/% 60,
             x %% 60 %/% 1)

@@ -100,10 +100,7 @@ cr_build_targets <- function(
     predefinedAcl = predefinedAcl,
     deploy_folder = target_folder)
 
-  move_it <- cr_buildstep_bash(
-    sprintf("ls -R && cd /workspace/%s && mv * ../", target_folder),
-    id = "move source files"
-  )
+  move_it <- cr_buildstep_source_move(target_folder)
   buildsteps <- c(move_it, buildsteps)
 
   yaml <- cr_build_yaml(buildsteps, ...)

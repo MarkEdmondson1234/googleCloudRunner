@@ -30,6 +30,7 @@ cr_build_targets_artifacts(
 cr_buildstep_targets_single(
   target_folder = NULL,
   bucket = cr_bucket_get(),
+  tar_config = NULL,
   task_image = "gcr.io/gcer-public/targets",
   task_args = NULL,
   tar_make = "targets::tar_make()"
@@ -40,8 +41,8 @@ cr_buildstep_targets_multi(
   bucket = cr_bucket_get(),
   tar_config = NULL,
   task_image = "gcr.io/gcer-public/targets",
-  last_id = NULL,
-  task_args = NULL
+  task_args = NULL,
+  last_id = NULL
 )
 }
 \arguments{
@@ -83,13 +84,13 @@ cr_buildstep_targets_multi(
 
 \item{overwrite}{Whether to overwrite existing local data}
 
+\item{tar_config}{An R script that will run before \code{targets::tar_make()} in the build e.g. \code{"targets::tar_config_set(script = 'targets/_targets.R')"}}
+
 \item{task_image}{An existing Docker image that will be used to run your targets workflow after the targets meta has been downloaded from Google Cloud Storage}
 
 \item{task_args}{A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments)}
 
 \item{tar_make}{The R script that will run in the tar_make() step. Modify to include custom settings such as "script"}
-
-\item{tar_config}{An R script that will run before \code{targets::tar_make()} in the build e.g. \code{"targets::tar_config_set(script = 'targets/_targets.R')"}}
 
 \item{last_id}{The final buildstep that needs to complete before the upload.  If left NULL then will default to the last tar_target step.}
 }

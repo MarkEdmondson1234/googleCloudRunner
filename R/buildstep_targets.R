@@ -42,10 +42,6 @@ cr_buildstep_targets <- function(
   assert_that(is.character(tar_make),
               is.string(task_image))
 
-  if(!is.null(task_args)){
-    assert_that(is.character(task_args))
-  }
-
   do.call(
     cr_buildstep_r,
     args = c(

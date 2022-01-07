@@ -95,11 +95,13 @@
         - --tag
         - gcr.io/my-project/my-image:$BUILD_ID
         - '.'
+        id: building image
         dir: deploy
       - name: gcr.io/cloud-builders/docker
         args:
         - push
         - gcr.io/my-project/my-image
+        id: pushing image
         dir: deploy
       - name: gcr.io/cloud-builders/gcloud
         args:
@@ -130,11 +132,13 @@
         - --tag
         - gcr.io/my-project/my-image:$BUILD_ID
         - '.'
+        id: building image
         dir: deploy
       - name: gcr.io/cloud-builders/docker
         args:
         - push
         - gcr.io/my-project/my-image
+        id: pushing image
         dir: deploy
       - name: gcr.io/cloud-builders/gcloud
         args:

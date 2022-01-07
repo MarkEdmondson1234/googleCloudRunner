@@ -237,8 +237,7 @@ is.gar_StorageSource <- function(x) {
 #'
 #' @details
 #'
-#' It copies the files into a folder call "deploy" in your working directory,
-#'   then tars it for upload
+#' \code{cr_build_upload_gcs} copies the files into the \code{deploy_folder} in your working directory, then tars it for upload.  Files will be available on Cloud Build at \code{/workspace/deploy_folder/*}.
 #'
 #' @export
 #' @importFrom googleCloudStorageR gcs_upload
@@ -268,21 +267,17 @@ cr_build_upload_gcs <- function(local,
     stop("remote argument name needs to end with .tar.gz", call. = FALSE)
   }
 
-  myMessage(paste0(
-    "# Uploading ", local, "/ to ",
-    paste0("gs://", bucket, "/", remote)
-  ),
-  level = 3
-  )
+  myMessage("# Uploading", local, " to gs://", bucket, "/", remote,
+            level = 3)
 
   # make temporary folder (to avoid recursion issue)
   tdir <- tempdir_unique()
   full_deploy_folder <- file.path(tdir, deploy_folder)
   dir.create(full_deploy_folder, showWarnings = FALSE)
 
-  myMessage(paste0("Copying files from ", local, "/ into tmpdir"),
-    level = 2
-  )
+  myMessage("Copying files from ", local, " into tmpdir",
+            level = 2)
+
   local_files <- list.files(local, full.names = TRUE)
   if (length(local_files) == 0) {
     stop("Could not find any files to copy over in ", local,
@@ -303,8 +298,7 @@ cr_build_upload_gcs <- function(local,
 
   with_dir(
     tdir, {
-
-      myMessage("Tarring files:", level = 3)
+      myMessage("Tarring files in tmpdir:", level = 3)
       lapply(tmp_files, function(x){
         cli_li("{.file {x}}")
       })
@@ -326,14 +320,33 @@ cr_build_upload_gcs <- function(local,
   )
 
   myMessage("StorageSource available for builds in directory:",
-    paste0("/workspace/", deploy_folder, "/"),
+    paste0("/workspace/", deploy_folder),
     level = 3
   )
+  myMessage("See ?cr_buildstep_source_move for a buildstep to move files into /workspace/",
+            level = 3)
 
   cr_build_source(
     StorageSource(
       bucket = bucket,
       object = remote
     )
+  )
+}
+
+#' Move Storage Source files to /workspace/ container
+#' @rdname cr_build_upload_gcs
+#' @export
+#' @details
+#'
+#' \code{cr_buildstep_source_move} is a way to move the StorageSource files in \code{/workspace/deploy_folder/*} into the root code{/workspace/*} location, which is more consistent with RepoSource() such as GitHub build triggers.
+#' @examples
+#' cr_buildstep_source_move("deploy")
+#'
+cr_buildstep_source_move <- function(deploy_folder){
+  cr_buildstep_bash(
+    sprintf("ls -R /workspace/ && cd /workspace/%s && mv * ../ && ls -R /workspace/",
+            deploy_folder),
+    id = "move source files"
   )
 }

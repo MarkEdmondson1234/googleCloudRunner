@@ -74,7 +74,7 @@ cr_deploy_docker_trigger <- function(repo,
 #'
 #' @param local The folder containing the Dockerfile to build
 #' @param remote The folder on Google Cloud Storage
-#' @param dockerfile An optional Dockerfile built to support the script.  Not needed if 'Dockerfile' exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"
+#' @param dockerfile An optional Dockerfile built to support the script.  Not needed if "Dockerfile" exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"
 #' @param bucket The GCS bucket that will be used to deploy code source
 #' @param image_name The name of the docker image to be built either full name starting with gcr.io or constructed from the image_name and projectId via \code{gcr.io/{projectId}/{image_name}}
 #' @param predefinedAcl Access setting for the bucket used in deployed.  Set to "bucketLevel" if using bucket level access
@@ -135,26 +135,30 @@ cr_deploy_docker <- function(local,
     post_steps = post_steps,
     ...
   )
-  build_yaml <- result$build_yaml
-  gcs_source <- result$gcs_source
-  image_tag <- result$image_tag
-  projectId <- result$projectId
-  launch_browser <- result$launch_browser
-  timeout <- result$timeout
 
-  docker_build <- cr_build(build_yaml,
-    source = gcs_source,
+  docker_build <- cr_build(
+    result$build_yaml,
+    source = result$gcs_source,
     launch_browser = launch_browser,
-    timeout = timeout
+    timeout = result$timeout
   )
 
-  b <- cr_build_wait(docker_build, projectId = projectId)
+  b <- cr_build_wait(docker_build, projectId = result$projectId)
 
-  myMessage(image_tag, level = 3)
+  if(b$status == "SUCCESS"){
+    myMessage("# Docker images pushed:", level = 3)
 
-  # to make it the same as non-kaniko docker builds
-  if (kaniko_cache) {
-    b$results$images$name <- b$steps$args[[1]][[4]]
+    if(!kaniko_cache){
+      step_images <- b$results$images$name
+    } else {
+      step_images <-
+        unlist(
+          lapply(b$steps,
+                 function(x) x$args[which(x$args == "--destination") + 1]))
+    }
+
+    lapply(step_images, function(x) cli::cli_text("{.url {x}}"))
+
   }
 
   b
@@ -177,71 +181,58 @@ cr_deploy_docker_construct <- function(
   pre_steps = NULL,
   post_steps = NULL,
   ...) {
+
   assert_that(
     dir.exists(local)
   )
 
-  myMessage("Building", local, "folder for Docker image: ",
-    image_name,
+  myMessage("Building", local, "folder for Docker image:", image_name,
     level = 2
   )
 
-  myMessage(paste("Configuring Dockerfile"), level = 2)
-
-  # !!!
-  # Should likely move this to the step for cr_build_upload_gcs
-  # or simply make local into a tempdir and copy over
-  # as currently file.path(local, "Dockerfile") will
-  # be overwritten with dockerfile if !is.null(dockerfile)
-
+  myMessage("Configuring Dockerfile", level = 2)
   # remove local/Dockerfile if it didn't exist before
-  # to keep local directory as is
-  # If you move this to find_dockerfile, then the
-  # on.exit may not be scoped correctly (exits on find_dockerfile)
-  docker_file_path <- file.path(local, "Dockerfile")
-  remove_docker_file_after <- !file.exists(docker_file_path)
-  remove_docker_file_after <- remove_docker_file_after &&
-    find_dockerfile(local, dockerfile = dockerfile)
+  remove_docker_file_after <- find_dockerfile(local, dockerfile = dockerfile)
   if (remove_docker_file_after) {
     on.exit({
-      file.remove(docker_file_path)
+      file.remove(file.path(local, "Dockerfile"))
     })
   }
-
-  assertthat::assert_that(
-    is.readable(docker_file_path)
-  )
 
   image <- make_image_name(image_name, projectId = projectId)
 
   # kaniko_cache will push image for you
-  if (kaniko_cache) {
-    pushed_image <- NULL
-  } else {
-    pushed_image <- image
-  }
+  pushed_image <- if(kaniko_cache) NULL else image
 
   # Adding this in for Artifacts Registry
   pre_steps <- add_docker_auth_prestep(image, pre_steps)
 
-  waitFor <- "-" # build concurrent tags
-  if (!is.null(pre_steps)) {
-    # want pre steps to run before the docker build
-    waitFor <- NULL
-  }
+  image_tag <- paste0(image, ":", tag)
+  myMessage("# Deploy docker build for image:", image, level = 3)
 
-  docker_step <- cr_buildstep_docker(
-    image,
-    tag = tag,
-    location = ".",
-    # dir=paste0("deploy/", basename(local)),
-    dir = "deploy",
-    projectId = projectId,
-    kaniko_cache = kaniko_cache,
-    waitFor = waitFor,
-    ...
+  remote_tar <- remote
+  remote_tar <- if(!grepl("tar\\.gz$", remote_tar)) paste0(remote, ".tar.gz")
+
+  gcs_source <- cr_build_upload_gcs(
+    local,
+    remote = remote_tar,
+    bucket = bucket,
+    predefinedAcl = predefinedAcl,
+    deploy_folder = "deploy" # files moved from here into /workspace/
   )
+
+  docker_step <-
+    cr_buildstep_docker(
+      image,
+      tag = tag,
+      location = ".",
+      projectId = projectId,
+      kaniko_cache = kaniko_cache,
+      ...
+    )
+
   steps <- c(
+    cr_buildstep_source_move("deploy"),
     pre_steps,
     docker_step,
     post_steps
@@ -249,20 +240,6 @@ cr_deploy_docker_construct <- function(
   build_yaml <- cr_build_yaml(
     steps = steps,
     images = pushed_image
-  )
-
-  image_tag <- paste0(image, ":", tag)
-  myMessage("# Deploy docker build for image: ", image, level = 3)
-
-  remote_tar <- remote
-  if (!grepl("tar\\.gz$", remote)) {
-    remote_tar <- paste0(remote, ".tar.gz")
-  }
-  gcs_source <- cr_build_upload_gcs(
-    local,
-    remote = remote_tar,
-    bucket = bucket,
-    predefinedAcl = predefinedAcl
   )
 
   list(
@@ -390,6 +367,7 @@ cr_buildstep_docker <- function(
           location,
           build_args
         ),
+        id = "building image",
         ...
       )
     )
@@ -398,6 +376,7 @@ cr_buildstep_docker <- function(
         steps,
         cr_buildstep(
           "docker", c("push", the_image),
+          id = "pushing image",
           ...
         )
       )
@@ -462,12 +441,13 @@ cr_dockerfile_plumber <- function(deploy_folder, ...) {
 find_dockerfile <- function(local, dockerfile) {
   local_files <- list.files(local)
   if ("Dockerfile" %in% local_files) {
-    myMessage("Dockerfile found in ", local, level = 3)
+    myMessage("Dockerfile found in", local,
+              "- using it and ignoring dockerfile argument", level = 3)
     return(FALSE)
   }
 
   # if no dockerfile, attempt to create it
-  assert_that(is.readable(dockerfile))
+  assert_that(assertthat::is.readable(dockerfile))
 
   myMessage("Copying Dockerfile from ", dockerfile, " to ", local, level = 3)
   file.copy(dockerfile, file.path(local, "Dockerfile"))
