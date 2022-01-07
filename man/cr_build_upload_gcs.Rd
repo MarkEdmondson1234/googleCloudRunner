@@ -2,6 +2,7 @@
 % Please edit documentation in R/build_sources.R
 \name{cr_build_upload_gcs}
 \alias{cr_build_upload_gcs}
+\alias{cr_buildstep_source_move}
 \title{Create a StorageSource}
 \usage{
 cr_build_upload_gcs(
@@ -11,6 +12,8 @@ cr_build_upload_gcs(
   predefinedAcl = "bucketOwnerFullControl",
   deploy_folder = "deploy"
 )
+
+cr_buildstep_source_move(deploy_folder)
 }
 \arguments{
 \item{local}{Local directory containing the Dockerfile etc. you wish to deploy}
@@ -30,8 +33,9 @@ A Source object
 This creates a \link{StorageSource} object after uploading to Google Cloud Storage
 }
 \details{
-It copies the files into a folder call "deploy" in your working directory,
-  then tars it for upload
+\code{cr_build_upload_gcs} copies the files into the \code{deploy_folder} in your working directory, then tars it for upload.  Files will be available on Cloud Build at \code{/workspace/deploy_folder/*}.
+
+\code{cr_buildstep_source_move} is a way to move the StorageSource files in \code{/workspace/deploy_folder/*} into the root code{/workspace/*} location, which is more consistent with RepoSource() such as GitHub build triggers.
 }
 \examples{
 \dontrun{
@@ -40,6 +44,8 @@ cr_bucket_set("my-bucket")
 my_gcs_source <- cr_build_upload_gcs("my_folder")
 build1 <- cr_build("cloudbuild.yaml", source = my_gcs_source)
 }
+cr_buildstep_source_move("deploy")
+
 }
 \seealso{
 Other Cloud Build functions: 

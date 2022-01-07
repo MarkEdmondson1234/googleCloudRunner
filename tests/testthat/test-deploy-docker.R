@@ -7,12 +7,10 @@ test_that("[Online] Test Docker", {
     mustWork = TRUE
   )
 
-  cd <- cr_deploy_docker(runme, launch_browser = FALSE)
+  cd <- cr_deploy_docker(runme, kaniko_cache = FALSE)
   expect_equal(cd$status, "SUCCESS")
 
   # test kaniko_cache
-  ccd <- cr_deploy_docker(system.file("example/", package = "googleCloudRunner"),
-    kaniko_cache = TRUE
-  )
+  ccd <- cr_deploy_docker(runme, kaniko_cache = TRUE)
   expect_equal(ccd$status, "SUCCESS")
 })

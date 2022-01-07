@@ -42,6 +42,7 @@
     - --tag
     - gcr.io/mark-edmondson-gde/my-image:$BRANCH_NAME
     - '.'
+    id: building image
     
     [[2]]
     ==cloudRunnerBuildStep==
@@ -49,6 +50,7 @@
     args:
     - push
     - gcr.io/mark-edmondson-gde/my-image
+    id: pushing image
     
 
 ---

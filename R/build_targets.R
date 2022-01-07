@@ -112,10 +112,7 @@ cr_build_targets <- function(
     predefinedAcl = predefinedAcl,
     deploy_folder = target_folder)
 
-  move_it <- cr_buildstep_bash(
-    sprintf("ls -R && cd /workspace/%s && mv * ../", target_folder),
-    id = "move source files"
-  )
+  move_it <- cr_buildstep_source_move(target_folder)
   buildsteps <- c(move_it, buildsteps)
 
   yaml <- cr_build_yaml(buildsteps, ...)
@@ -153,30 +150,7 @@ cr_build_targets <- function(
 
 }
 
-#' Use this within your _targets functions to send the step to Cloud Build
-#' @export
-#' @param ... The arguments to send to the function that will run on Cloud Build
-#' @param x The tar_target node name (maybe derive this?)
-#' @inheritParams cr_buildstep_targets_single
-cr_build_tar_target <- function(x,
-                                ...,
-                                bucket = cr_bucket_get(),
-                                target_folder = NULL,
-                                task_args = NULL,
-                                task_image = task_image){
 
-  bs <- cr_buildstep_targets_single(
-    target_folder = target_folder,
-    bucket = bucket,
-    task_image = task_image,
-    task_args = task_args,
-    tar_make = sprintf("targets::tar_make('%s')", x)
-  )
-
-  cr_build_targets(bs, path = NULL, execute = "now")
-
-  targets::tar_load(x)
-}
 
 resolve_bucket_folder <- function(target_folder, bucket){
   if(is.null(target_folder)) {

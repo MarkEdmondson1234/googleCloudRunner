@@ -848,3 +848,21 @@ cr_buildstep_gcloud <- function(component = c("gcloud", "bq", "gsutil", "kubectl
     ...
   )
 }
+
+#' @rdname cr_buildstep_gcloud
+#' @export
+cr_buildstep_gsutil <- function(...) {
+  cr_buildstep_gcloud(component = "gsutil", ...)
+}
+
+#' @rdname cr_buildstep_gcloud
+#' @export
+cr_buildstep_bq <- function(...) {
+  cr_buildstep_gcloud(component = "bq", ...)
+}
+
+#' @rdname cr_buildstep_gcloud
+#' @export
+cr_buildstep_kubectl <- function(...) {
+  cr_buildstep_gcloud(component = "kubectl", ...)
+}
