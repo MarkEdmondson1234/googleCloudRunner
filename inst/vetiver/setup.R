@@ -34,7 +34,7 @@ cr_deploy_docker_trigger(repo, "vetiver",
 run <- cr_deploy_plumber(file.path(root,"plumber"), remote = "vetiver")
 
 # on succesful deployment
-endpoint <- vetiver::vetiver_endpoint(paste0(jj$status$url, "/predict"))
+endpoint <- vetiver::vetiver_endpoint(paste0(run$status$url, "/predict"))
 library(tidyverse)
 data(Sacramento, package = "modeldata")
 new_sac <- Sacramento %>%
