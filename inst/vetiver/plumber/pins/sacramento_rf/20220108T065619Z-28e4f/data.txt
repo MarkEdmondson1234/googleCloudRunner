@@ -1,0 +1,9 @@
+file: sacramento_rf.rds
+file_size: 594388
+pin_hash: 28e4fd44c9b80a43
+type: rds
+title: 'sacramento_rf: a pinned list'
+description: A ranger regression modeling workflow
+created: 20220108T065619Z
+api_version: 1.0
+user: []
