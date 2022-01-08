@@ -406,6 +406,7 @@ cr_buildstep_docker <- function(
           sprintf("--context=%s", build_context),
           "--cache=true"
         ),
+        waitFor = "-",
         ...
       )
     },

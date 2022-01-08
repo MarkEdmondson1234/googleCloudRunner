@@ -3,7 +3,7 @@ if(Sys.getenv("PORT") == "") Sys.setenv(PORT = 8000)
 #' @get /
 #' @html
 function(){
-  "<html><h1>It works!</h1></html>"
+  "<html><h1>It works! Vetiver deployment</h1></html>"
 }
 
 

@@ -31,4 +31,14 @@ cr_deploy_docker_trigger(repo, "vetiver",
                          projectId_target = "gcer-public",
                          timeout = 3600)
 
-cr_deploy_plumber(file.path(root,"plumber"), timeout = 3600)
+run <- cr_deploy_plumber(file.path(root,"plumber"), remote = "vetiver")
+
+# on succesful deployment
+endpoint <- vetiver::vetiver_endpoint(paste0(jj$status$url, "/predict"))
+library(tidyverse)
+data(Sacramento, package = "modeldata")
+new_sac <- Sacramento %>%
+  slice_sample(n = 20) %>%
+  select(type, sqft, beds, baths)
+
+
