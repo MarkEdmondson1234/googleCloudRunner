@@ -267,7 +267,8 @@ cr_build_upload_gcs <- function(local,
     stop("remote argument name needs to end with .tar.gz", call. = FALSE)
   }
 
-  myMessage("# Uploading", local, " to gs://", bucket, "/", remote,
+  myMessage("# Uploading", local, "to",
+            paste0("gs://", bucket, "/", remote),
             level = 3)
 
   # make temporary folder (to avoid recursion issue)
@@ -339,7 +340,7 @@ cr_build_upload_gcs <- function(local,
 #' @export
 #' @details
 #'
-#' \code{cr_buildstep_source_move} is a way to move the StorageSource files in \code{/workspace/deploy_folder/*} into the root code{/workspace/*} location, which is more consistent with RepoSource() such as GitHub build triggers.
+#' \code{cr_buildstep_source_move} is a way to move the StorageSource files in \code{/workspace/deploy_folder/*} into the root \code{/workspace/*} location, which is more consistent with \link{RepoSource} objects or GitHub build triggers created using \link{cr_buildtrigger_repo}.  This means the same runtime code can run for both sources.
 #' @examples
 #' cr_buildstep_source_move("deploy")
 #'
