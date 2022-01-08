@@ -189,13 +189,13 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="cr_project_set.html">cr_project_set</a></span><span class="op">(</span><span class="st">"my-project"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-05 14:04:13 &gt;</span> ProjectId set to my-project</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-08 08:58:51 &gt;</span> ProjectId set to my-project</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-project"</span>
 <span class="r-in"><span class="fu"><a href="cr_bucket_set.html">cr_bucket_set</a></span><span class="op">(</span><span class="st">"my-bucket"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-05 14:04:13 &gt;</span> Bucket set to my-bucket</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-08 08:58:51 &gt;</span> Bucket set to my-bucket</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-bucket"</span>
 <span class="r-in"><span class="fu"><a href="cr_region_set.html">cr_region_set</a></span><span class="op">(</span><span class="st">"europe-west1"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-05 14:04:13 &gt;</span> Region set to europe-west1</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-08 08:58:51 &gt;</span> Region set to europe-west1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "europe-west1"</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">html_folder</span> <span class="op">&lt;-</span> <span class="st">"my_html"</span></span>
@@ -249,11 +249,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - --tag</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - gcr.io/my-project/my-image-for-cloudrun:$BUILD_ID</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - '.'</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id: building image</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   dir: my_html</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - name: gcr.io/cloud-builders/docker</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   args:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - push</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   - gcr.io/my-project/my-image-for-cloudrun</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id: pushing image</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   dir: my_html</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   args:</span>
