@@ -110,7 +110,9 @@ cr_build_targets <- function(
           normalizePath(local)),
     level = 3)
 
-  print(yaml)
+  if(getOption("googleAuthR.verbose") < 3){
+    print(yaml)
+  }
 
   build <- cr_build(yaml, launch_browser = FALSE, source = store)
   built <- cr_build_wait(build)
