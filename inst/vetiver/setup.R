@@ -21,11 +21,14 @@ model_board %>% vetiver_pin_write(v)
 library(googleCloudRunner)
 
 # the docker takes a long time to install arrow so build it first to cache
-repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+repo <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner",
+                             branch = "vetiver")
 
+#cr_buildtrigger_delete("docker-vetiver")
 cr_deploy_docker_trigger(repo, "vetiver",
                          location = "inst/vetiver/docker/",
                          includedFiles = "inst/vetiver/**",
-                         projectId_target = "gcer-public")
+                         projectId_target = "gcer-public",
+                         timeout = 3600)
 
 cr_deploy_plumber(file.path(root,"plumber"), timeout = 3600)
