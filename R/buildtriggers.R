@@ -154,7 +154,7 @@ cr_buildtrigger_list <- function(projectId = cr_project_get(),
     if (NROW(df) == 0 || length(df) == 0) return(NULL)
     trigger_data <- lapply(df$buildTriggerId, function(triggerId) {
       x <- cr_buildtrigger_get(triggerId = triggerId,
-                                                 projectId = projectId)
+                               projectId = projectId)
       data.frame(buildTriggerId = triggerId, build = I(list(x)))
     })
     trigger_data <- do.call(rbind, trigger_data)
