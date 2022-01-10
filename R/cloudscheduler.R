@@ -282,7 +282,7 @@ cr_schedule_delete <- function(x,
         # it deletes subscriptions too
         topics_delete(the_buildtrigger$pubsubConfig$topic)
       }, error = function(err){
-        myMessage("Could not delete topic and/or subscription for ",
+        myMessage("Could not delete topic for ",
                   the_name, "to delete. Aborting. ", err$message, level = 3)
         return(NULL)
       })
