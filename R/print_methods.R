@@ -158,6 +158,14 @@ print.gar_scheduleJob <- function(x, ...) {
       googlePubsubR::msg_decode(x$httpTarget$data)
     )
   }
+
+  if (!is.null(x$httpTarget$body)) {
+    cat0("httpTarget.body: ", x$httpTarget$body)
+    cat0(
+      "httpTarget.body (unencoded): ",
+      googlePubsubR::msg_decode(x$httpTarget$body)
+    )
+  }
   cat0("pubsubTarget.topicName: ", x$pubsubTarget$topicName)
   if (!is.null(x$pubsubTarget$data)) {
     cat0("pubsubTarget.data: ", x$pubsubTarget$data)
