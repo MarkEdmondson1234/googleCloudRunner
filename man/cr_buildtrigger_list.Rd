@@ -4,10 +4,13 @@
 \alias{cr_buildtrigger_list}
 \title{Lists existing `BuildTrigger`s.This API is experimental.}
 \usage{
-cr_buildtrigger_list(projectId = cr_project_get())
+cr_buildtrigger_list(projectId = cr_project_get(), full = FALSE)
 }
 \arguments{
 \item{projectId}{ID of the project for which to list BuildTriggers}
+
+\item{full}{Return the trigger list with the build information from
+\code{\link{cr_buildtrigger_get}}}
 }
 \description{
 Lists existing `BuildTrigger`s.This API is experimental.

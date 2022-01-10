@@ -99,6 +99,8 @@ cr_buildtrigger_delete <- function(triggerId, projectId = cr_project_get()) {
 #'
 #' @family BuildTrigger functions
 #' @param projectId ID of the project for which to list BuildTriggers
+#' @param full Return the trigger list with the build information from
+#' \code{\link{cr_buildtrigger_get}}
 #' @importFrom googleAuthR gar_api_generator
 #' @export
 #' @seealso \link{cr_build_list} which merges with this list
@@ -107,7 +109,8 @@ cr_buildtrigger_delete <- function(triggerId, projectId = cr_project_get()) {
 #'
 #' cr_buildtrigger_list()
 #' }
-cr_buildtrigger_list <- function(projectId = cr_project_get()) {
+cr_buildtrigger_list <- function(projectId = cr_project_get(),
+                                 full = FALSE) {
   url <- sprintf(
     "https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
     projectId
@@ -134,7 +137,7 @@ cr_buildtrigger_list <- function(projectId = cr_project_get()) {
     unlist(lapply(bts_df[[x]], paste, collapse = ", "))
   }
 
-  data.frame(
+  df <- data.frame(
     stringsAsFactors = FALSE,
     buildTriggerName = bts_df$name,
     buildTriggerId = bts_df$id,
@@ -147,7 +150,19 @@ cr_buildtrigger_list <- function(projectId = cr_project_get()) {
     tags = parse_files("tags"),
     disabled = if (!is.null(bts_df$disabled)) bts_df$disabled else NA
   )
+  if (full) {
+    if (NROW(df) == 0 || length(df) == 0) return(NULL)
+    trigger_data <- lapply(df$buildTriggerId, function(triggerId) {
+      x <- cr_buildtrigger_get(triggerId = triggerId,
+                                                 projectId = projectId)
+      data.frame(buildTriggerId = triggerId, build = I(list(x)))
+    })
+    trigger_data <- do.call(rbind, trigger_data)
+    df <- merge(df, trigger_data, all = TRUE, sort = FALSE)
+  }
+  df
 }
+
 
 parse_buildtrigger_list <- function(x) {
   o <- x$triggers
