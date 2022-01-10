@@ -104,7 +104,6 @@ cr_buildstep_targets_teardown <- function(bucket_folder, last_id = NULL){
 #' @export
 #' @param tar_config An R script that will run before \code{targets::tar_make()} in the build e.g. \code{"targets::tar_config_set(script = 'targets/_targets.R')"}
 #' @importFrom cli cli cli_ul
-#' @importFrom targets tar_manifest tar_network tar_visnetwork
 cr_buildstep_targets_multi <- function(
   target_folder = NULL,
   bucket = cr_bucket_get(),
@@ -119,11 +118,11 @@ cr_buildstep_targets_multi <- function(
   myMessage("Resolving targets::tar_manifest()", level = 3)
 
   if(nzchar(system.file(package = "visNetwork"))){
-    print(tar_visnetwork())
+    print(targets::tar_visnetwork())
   }
 
-  nodes <- tar_manifest()
-  edges <- tar_network(targets_only = TRUE)$edges
+  nodes <- targets::tar_manifest()
+  edges <- targets::tar_network(targets_only = TRUE)$edges
 
   first_id <- nodes$name[[1]]
 

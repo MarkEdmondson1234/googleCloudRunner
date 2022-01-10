@@ -35,7 +35,7 @@ This creates a \link{StorageSource} object after uploading to Google Cloud Stora
 \details{
 \code{cr_build_upload_gcs} copies the files into the \code{deploy_folder} in your working directory, then tars it for upload.  Files will be available on Cloud Build at \code{/workspace/deploy_folder/*}.
 
-\code{cr_buildstep_source_move} is a way to move the StorageSource files in \code{/workspace/deploy_folder/*} into the root code{/workspace/*} location, which is more consistent with RepoSource() such as GitHub build triggers.
+\code{cr_buildstep_source_move} is a way to move the StorageSource files in \code{/workspace/deploy_folder/*} into the root \code{/workspace/*} location, which is more consistent with \link{RepoSource} objects or GitHub build triggers created using \link{cr_buildtrigger_repo}.  This means the same runtime code can run for both sources.
 }
 \examples{
 \dontrun{

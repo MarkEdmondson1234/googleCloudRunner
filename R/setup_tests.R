@@ -63,7 +63,7 @@ cr_setup_test <- function(option = c(
   )
 
   if (run_tests %in% c(1, 2)) {
-    cli_alert_info("Attempting Docker deployment on Cloud Build via cr_deploy_docker()")
+    cli_h2("Attempting Docker deployment on Cloud Build via cr_deploy_docker()")
 
     # check has access to the bucket
     tryCatch(googleCloudStorageR::gcs_list_objects(cr_bucket_get()),
@@ -87,7 +87,7 @@ cr_setup_test <- function(option = c(
   }
 
   if (run_tests %in% c(1, 3)) {
-    cli_alert_info("Attempting deployment of plumber API on Cloud Run via cr_deploy_plumber()")
+    cli_h2("Attempting deployment of plumber API on Cloud Run via cr_deploy_plumber()")
 
     cr <- cr_deploy_plumber(runme,
       dockerfile = paste0(runme, "Dockerfile")
@@ -120,7 +120,7 @@ cr_setup_test <- function(option = c(
   )
 
   if (run_tests %in% c(1, 4)) {
-    cli_alert_info("Testing Cloud Build R scripts deployments via cr_deploy_r()")
+    cli_h2("Testing Cloud Build R scripts deployments via cr_deploy_r()")
 
     # check the script runs ok
     rb <- cr_deploy_r(r_lines)
@@ -134,14 +134,15 @@ cr_setup_test <- function(option = c(
   }
 
   if (run_tests %in% c(1, 5)) {
-    cli_alert_info("Testing scheduling R script deployments via cr_deploy_r(schedule = '* * * * *')")
+    cli_h2("Testing scheduling R script deployments via cr_deploy_r(schedule = '* * * * *')")
 
     # schedule the script
     rs <- cr_deploy_r(r_lines, schedule = "15 21 * * *")
 
     if (is.null(rs$state) || rs$state != "ENABLED") {
       cli_alert_danger("Something is wrong with scheduled Cloud Build R scripts")
-      test_results <- c(test_results, "Something is wrong with scheduled Cloud Build R scripts")
+      test_results <- c(test_results,
+                        "Something is wrong with scheduled Cloud Build R scripts")
     } else {
       cli_alert_success("Scheduled Cloud Build R scripts deployed successfully")
       test_results <- c(

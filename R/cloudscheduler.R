@@ -279,10 +279,10 @@ cr_schedule_delete <- function(x,
       cr_buildtrigger_delete(the_buildtrigger$id, projectId = projectId)
 
       the_pubsub <- tryCatch({
+        # it deletes subscriptions too
         topics_delete(the_buildtrigger$pubsubConfig$topic)
-        subscriptions_delete(the_buildtrigger$pubsubConfig$subscription)
       }, error = function(err){
-        myMessage("Could not delete topic and/or subscription for ",
+        myMessage("Could not delete topic for ",
                   the_name, "to delete. Aborting. ", err$message, level = 3)
         return(NULL)
       })

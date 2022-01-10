@@ -68,6 +68,7 @@ cr_setup_role_lookup <- function(type = c(
       "roles/run.admin",
       "roles/storage.admin",
       "roles/serviceusage.serviceUsageConsumer",
+      "roles/pubsub.admin",
       "roles/viewer"
     ),
     cloudrun = c(
