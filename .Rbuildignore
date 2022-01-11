@@ -28,3 +28,5 @@
 ^NEWS\.txt$
 ^\.github$
 ^\.lintr$
+_targets\.R
+mtcars\.csv

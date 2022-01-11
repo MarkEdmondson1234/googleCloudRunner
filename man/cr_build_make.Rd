@@ -48,7 +48,7 @@ cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
 cr_build_make(cloudbuild)
 }
 \seealso{
-https://cloud.google.com/cloud-build/docs/build-config
+\url{https://cloud.google.com/build/docs/build-config}
 
 Other Cloud Build functions: 
 \code{\link{Build}()},
@@ -59,7 +59,6 @@ Other Cloud Build functions:
 \code{\link{cr_build_list}()},
 \code{\link{cr_build_logs}()},
 \code{\link{cr_build_status}()},
-\code{\link{cr_build_targets}()},
 \code{\link{cr_build_upload_gcs}()},
 \code{\link{cr_build_wait}()},
 \code{\link{cr_build_write}()},

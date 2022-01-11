@@ -13,7 +13,7 @@
 #' @param waitFor Whether to wait for previous buildsteps to complete before running.  Default it will wait for previous step.
 #' @param secretEnv A list of secrets stored in Secret Manager referred to in args via a \code{$$var}
 #'
-#' @seealso \href{https://cloud.google.com/cloud-build/docs/configuring-builds/use-community-and-custom-builders}{Creating custom build steps how-to guide}
+#' @seealso \href{https://cloud.google.com/build/docs/configuring-builds/use-community-and-custom-builders}{Creating custom build steps how-to guide}
 #'
 #' @details
 #'
@@ -21,7 +21,7 @@
 #'
 #' @section WaitFor:
 #'
-#' By default each buildstep waits for the previous, but if you pass \code{"-"} then it will start immediately, or if you pass in a list of ids it will wait for previous buildsteps to finish who have that id.  See \href{https://cloud.google.com/cloud-build/docs/configuring-builds/configure-build-step-order}{Configuring Build Step Order} for details.
+#' By default each buildstep waits for the previous, but if you pass \code{"-"} then it will start immediately, or if you pass in a list of ids it will wait for previous buildsteps to finish who have that id.  See \href{https://cloud.google.com/build/docs/configuring-builds/configure-build-step-order}{Configuring Build Step Order} for details.
 #'
 #' @section Build Macros:
 #' Fields can include the following variables, which will be expanded when the build is created:-

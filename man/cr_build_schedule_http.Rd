@@ -77,7 +77,7 @@ cr_schedule("itworks-schedule",
 
 }
 \seealso{
-https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/create
+https://cloud.google.com/build/docs/api/reference/rest/v1/projects.builds/create
 
 Other Cloud Scheduler functions: 
 \code{\link{HttpTarget}()},

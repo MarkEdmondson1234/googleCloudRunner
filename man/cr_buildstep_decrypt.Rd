@@ -29,7 +29,7 @@ Key Management Store can encrypt secret files for use within your later buildste
 \section{Setup}{
 
 
-You will need to set up the \href{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials#encrypt_credentials}{encrypted key using gcloud} following the link from Google
+You will need to set up the \href{https://cloud.google.com/build/docs/securing-builds/use-encrypted-secrets-credentials#encrypt_credentials}{encrypted key using gcloud} following the link from Google
 }
 
 \examples{
@@ -58,7 +58,6 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_r}()},
 \code{\link{cr_buildstep_secret}()},
 \code{\link{cr_buildstep_slack}()},
-\code{\link{cr_buildstep_targets}()},
 \code{\link{cr_buildstep}()}
 }
 \concept{Cloud Buildsteps}

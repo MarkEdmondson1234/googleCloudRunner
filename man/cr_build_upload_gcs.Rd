@@ -58,7 +58,6 @@ Other Cloud Build functions:
 \code{\link{cr_build_logs}()},
 \code{\link{cr_build_make}()},
 \code{\link{cr_build_status}()},
-\code{\link{cr_build_targets}()},
 \code{\link{cr_build_wait}()},
 \code{\link{cr_build_write}()},
 \code{\link{cr_build_yaml_artifact}()},

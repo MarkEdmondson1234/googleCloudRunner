@@ -47,7 +47,7 @@ cr_build_yaml(
 \seealso{
 To download from Secret Manager to a file in a dedicated buildstep see \link{cr_buildstep_secret}.
 
-\href{Using secrets from Secret Manager}{https://cloud.google.com/cloud-build/docs/securing-builds/use-secrets}
+\href{https://cloud.google.com/build/docs/securing-builds/use-secrets}{Using secrets from Secret Manager}
 
 Other Cloud Build functions: 
 \code{\link{Build}()},
@@ -59,7 +59,6 @@ Other Cloud Build functions:
 \code{\link{cr_build_logs}()},
 \code{\link{cr_build_make}()},
 \code{\link{cr_build_status}()},
-\code{\link{cr_build_targets}()},
 \code{\link{cr_build_upload_gcs}()},
 \code{\link{cr_build_wait}()},
 \code{\link{cr_build_write}()},

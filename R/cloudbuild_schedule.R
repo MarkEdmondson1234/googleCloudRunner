@@ -2,7 +2,7 @@
 #'
 #' This enables Cloud Scheduler to trigger Cloud Builds
 #'
-#' @seealso https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/create
+#' @seealso https://cloud.google.com/build/docs/api/reference/rest/v1/projects.builds/create
 #'
 #' @param build A \link{Build} object created via \link{cr_build_make} or \link{cr_build}
 #' @param email The email that will authenticate the job set via \link{cr_email_set}

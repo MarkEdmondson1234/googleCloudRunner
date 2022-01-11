@@ -11,9 +11,9 @@
 #'
 #' When \code{data_frame_output=TRUE} results are sorted with the latest buildStartTime in the first row
 #'
-#' If filter is \code{NULL} then this will return all historic builds.  To use filters, ensure you use \code{""} and not \code{''} to quote the fields e.g. \code{'status!="SUCCESS"'} and \code{'status="SUCCESS"'} - see \href{https://cloud.google.com/cloud-build/docs/view-build-results#filtering_build_results_using_queries}{Filtering build results docs}.  \code{cr_build_list_filter} helps you construct valid filters.  More complex filters can be done using a combination of \link{paste} and \code{cr_build_list_filter()} - see examples
+#' If filter is \code{NULL} then this will return all historic builds.  To use filters, ensure you use \code{""} and not \code{''} to quote the fields e.g. \code{'status!="SUCCESS"'} and \code{'status="SUCCESS"'} - see \href{https://cloud.google.com/build/docs/view-build-results#filtering_build_results_using_queries}{Filtering build results docs}.  \code{cr_build_list_filter} helps you construct valid filters.  More complex filters can be done using a combination of \link{paste} and \code{cr_build_list_filter()} - see examples
 #'
-#' @seealso \url{https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/list}
+#' @seealso \url{https://cloud.google.com/build/docs/api/reference/rest/v1/projects.builds/list}
 #'
 #' @importFrom googleAuthR gar_api_generator gar_api_page
 #' @import assertthat

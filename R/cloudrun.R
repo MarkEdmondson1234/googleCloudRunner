@@ -28,7 +28,7 @@
 #'
 #'  Uses Cloud Build to deploy an image to Cloud Run
 #'
-#' @seealso \href{https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run}{Deploying Cloud Run using Cloud Build}
+#' @seealso \href{https://cloud.google.com/build/docs/deploying-builds/deploy-cloud-run}{Deploying Cloud Run using Cloud Build}
 #'
 #' @export
 #' @examples

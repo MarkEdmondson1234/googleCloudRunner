@@ -14,7 +14,7 @@
 #' @param availableSecrets What environment arguments from Secret Manager are available to the build - create via \link{cr_build_yaml_secrets}
 #' @param serviceAccount What service account should the build be run under?
 #'
-#' @seealso \href{https://cloud.google.com/cloud-build/docs/build-config}{Build configuration overview for cloudbuild.yaml}
+#' @seealso \href{https://cloud.google.com/build/docs/build-config}{Build configuration overview for cloudbuild.yaml}
 #' @export
 #' @family Cloud Build functions
 #' @examples
@@ -113,7 +113,7 @@ is.cr_build_artifact <- function(x) {
 #' @family Cloud Build functions
 #' @export
 #' @seealso To download from Secret Manager to a file in a dedicated buildstep see \link{cr_buildstep_secret}.
-#' @seealso \href{Using secrets from Secret Manager}{https://cloud.google.com/cloud-build/docs/securing-builds/use-secrets}
+#' @seealso \href{https://cloud.google.com/build/docs/securing-builds/use-secrets}{Using secrets from Secret Manager}
 #'
 #' @examples
 #'

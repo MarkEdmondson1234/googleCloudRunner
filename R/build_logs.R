@@ -11,7 +11,7 @@
 #'
 #'
 #' @export
-#' @seealso \url{https://cloud.google.com/cloud-build/docs/securing-builds/store-manage-build-logs}
+#' @seealso \url{https://cloud.google.com/build/docs/securing-builds/store-manage-build-logs}
 #' @family Cloud Build functions
 #' @examples
 #' \dontrun{

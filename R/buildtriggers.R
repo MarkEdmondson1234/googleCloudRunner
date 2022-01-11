@@ -473,7 +473,7 @@ cr_buildtrigger_copy <- function(buildTrigger,
 #' @param pubsubConfig PubsubConfig describes the configuration of a trigger that creates a build whenever a Pub/Sub message is published.
 #' @param webhookConfig WebhookConfig describes the configuration of a trigger that creates a build whenever a webhook is sent to a trigger's webhook URL.
 #'
-#' @seealso \url{https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.triggers}
+#' @seealso \url{https://cloud.google.com/build/docs/api/reference/rest/v1/projects.triggers}
 #'
 #' @return BuildTrigger object
 #'

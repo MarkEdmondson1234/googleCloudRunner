@@ -57,7 +57,7 @@ cr_build_yaml(
 )
 }
 \seealso{
-\href{https://cloud.google.com/cloud-build/docs/build-config}{Build configuration overview for cloudbuild.yaml}
+\href{https://cloud.google.com/build/docs/build-config}{Build configuration overview for cloudbuild.yaml}
 
 Other Cloud Build functions: 
 \code{\link{Build}()},
@@ -69,7 +69,6 @@ Other Cloud Build functions:
 \code{\link{cr_build_logs}()},
 \code{\link{cr_build_make}()},
 \code{\link{cr_build_status}()},
-\code{\link{cr_build_targets}()},
 \code{\link{cr_build_upload_gcs}()},
 \code{\link{cr_build_wait}()},
 \code{\link{cr_build_write}()},
