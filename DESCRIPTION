@@ -32,9 +32,6 @@ Imports:
     utils,
     withr,
     yaml (>= 2.2.0)
-Remotes:
-  andodet/googlePubsubR,
-  MarkEdmondson1234/googleAuthR
 Suggests: 
     knitr,
     markdown,
