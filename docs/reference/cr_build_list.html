@@ -189,12 +189,12 @@ cr_build_list_filter outputs valid filters for cr_build_list's filter argument">
     <div id="details">
     <h2>Details</h2>
     <p>When <code>data_frame_output=TRUE</code> results are sorted with the latest buildStartTime in the first row</p>
-<p>If filter is <code>NULL</code> then this will return all historic builds.  To use filters, ensure you use <code>""</code> and not <code>''</code> to quote the fields e.g. <code>'status!="SUCCESS"'</code> and <code>'status="SUCCESS"'</code> - see <a href="https://cloud.google.com/cloud-build/docs/view-build-results#filtering_build_results_using_queries" class="external-link">Filtering build results docs</a>.  <code>cr_build_list_filter</code> helps you construct valid filters.  More complex filters can be done using a combination of <a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a> and <code>cr_build_list_filter()</code> - see examples</p>
+<p>If filter is <code>NULL</code> then this will return all historic builds.  To use filters, ensure you use <code>""</code> and not <code>''</code> to quote the fields e.g. <code>'status!="SUCCESS"'</code> and <code>'status="SUCCESS"'</code> - see <a href="https://cloud.google.com/build/docs/view-build-results#filtering_build_results_using_queries" class="external-link">Filtering build results docs</a>.  <code>cr_build_list_filter</code> helps you construct valid filters.  More complex filters can be done using a combination of <a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a> and <code>cr_build_list_filter()</code> - see examples</p>
 <p>Use <a href="https://rdrr.io/r/base/DateTimeClasses.html" class="external-link">POSIXct</a> via functions like <a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a> to have them formatted into valid timestamps for time related fields, or <a href="https://rdrr.io/r/base/Dates.html" class="external-link">Date</a> objects via functions like <a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><a href="https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/list" class="external-link">https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds/list</a></p>
+    <div class="dont-index"><p><a href="https://cloud.google.com/build/docs/api/reference/rest/v1/projects.builds/list" class="external-link">https://cloud.google.com/build/docs/api/reference/rest/v1/projects.builds/list</a></p>
 <p>Other Cloud Build functions: 
 <code><a href="Build.html">Build</a>()</code>,
 <code><a href="RepoSource.html">RepoSource</a>()</code>,
@@ -204,7 +204,6 @@ cr_build_list_filter outputs valid filters for cr_build_list's filter argument">
 <code><a href="cr_build_logs.html">cr_build_logs</a>()</code>,
 <code><a href="cr_build_make.html">cr_build_make</a>()</code>,
 <code><a href="cr_build_status.html">cr_build_status</a>()</code>,
-<code><a href="cr_build_targets.html">cr_build_targets</a>()</code>,
 <code><a href="cr_build_upload_gcs.html">cr_build_upload_gcs</a>()</code>,
 <code><a href="cr_build_wait.html">cr_build_wait</a>()</code>,
 <code><a href="cr_build_write.html">cr_build_write</a>()</code>,
