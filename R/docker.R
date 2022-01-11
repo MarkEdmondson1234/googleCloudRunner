@@ -263,7 +263,6 @@ cr_deploy_docker_construct <- function(
   args$dir <- "deploy"
   args$projectId <- projectId
   args$kaniko_cache <- kaniko_cache
-  args$waitFor <- waitFor
 
 
   docker_step <- do.call(cr_buildstep_docker, args = args)
