@@ -314,45 +314,6 @@ Historical runs accumulate in the
 <code><a href="cr_build.html">cr_build</a>()</code></p></div>
     </div>
 
-    <div id="ref-examples">
-    <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">mtcars</span>, file <span class="op">=</span> <span class="st">"mtcars.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_script</span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">file1</span>,</span>
-<span class="r-in">      <span class="st">"mtcars.csv"</span>, format <span class="op">=</span> <span class="st">"file"</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">input1</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">file1</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">result1</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">input1</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">result2</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">input1</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">result3</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">input1</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">result4</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">input1</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">merge1</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">result1</span>, <span class="va">result2</span>, <span class="va">result3</span>, <span class="va">result4</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">    <span class="op">)</span>,</span>
-<span class="r-in"> ask <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘targets’</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu">cr_buildstep_targets_multi</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-11 13:19:27 &gt;</span> targets cloud location: gs://my-bucket/targets_cloudbuild</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-11 13:19:27 &gt;</span> Resolving targets::tar_manifest()</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘targets’</span>
-<span class="r-in"><span class="va">par_build</span> <span class="op">&lt;-</span> <span class="fu">cr_build_targets</span><span class="op">(</span><span class="va">bs</span>, path <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in lapply(x, f):</span> object 'bs' not found</span>
-<span class="r-in"><span class="va">par_build</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'par_build' not found</span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-</code></pre></div>
-    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>
