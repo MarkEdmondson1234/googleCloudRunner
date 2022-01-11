@@ -3,7 +3,7 @@
 #' This method returns a long-running `Operation`, which includes the buildID. Pass the build ID to \link{cr_build_status} to determine the build status (such as `SUCCESS` or `FAILURE`).
 #'
 #'
-#' @seealso \href{https://cloud.google.com/cloud-build/docs/}{Google Documentation for Cloud Build}
+#' @seealso \href{https://cloud.google.com/build/docs/}{Google Documentation for Cloud Build}
 #'
 #' @inheritParams Build
 #' @param projectId ID of the project
@@ -143,7 +143,7 @@ extract_logs <- function(o) {
 #'
 #' This creates a \link{Build} object via the standard cloudbuild.yaml format
 #'
-#' @seealso https://cloud.google.com/cloud-build/docs/build-config
+#' @seealso \url{https://cloud.google.com/build/docs/build-config}
 #'
 #' @inheritParams cr_build
 #' @param yaml A \code{Yaml} object created from \link{cr_build_yaml} or a file location of a .yaml/.yml cloud build file

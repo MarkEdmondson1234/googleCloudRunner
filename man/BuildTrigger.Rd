@@ -54,7 +54,7 @@ BuildTrigger object
 Configuration for an automated build in response to source repositorychanges.
 }
 \seealso{
-\url{https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.triggers}
+\url{https://cloud.google.com/build/docs/api/reference/rest/v1/projects.triggers}
 
 Other BuildTrigger functions: 
 \code{\link{GitHubEventsConfig}()},

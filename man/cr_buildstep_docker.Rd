@@ -42,7 +42,7 @@ pushed}
 Create a build step to build and push a docker image
 }
 \details{
-Setting \code{kaniko_cache = TRUE} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{https://cloud.google.com/cloud-build/docs/kaniko-cache}{Using Kaniko cache}
+Setting \code{kaniko_cache = TRUE} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{https://cloud.google.com/build/docs/kaniko-cache}{Using Kaniko cache}
 
 If building multiple tags they don't have to run sequentially - set \code{waitFor = "-"} to build concurrently
 }
@@ -99,7 +99,6 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_r}()},
 \code{\link{cr_buildstep_secret}()},
 \code{\link{cr_buildstep_slack}()},
-\code{\link{cr_buildstep_targets}()},
 \code{\link{cr_buildstep}()}
 }
 \concept{Cloud Buildsteps}

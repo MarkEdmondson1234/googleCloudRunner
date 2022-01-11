@@ -61,7 +61,7 @@ last_logs <- cr_build_logs_last(trigger_id = my_trigger_id)
 }
 }
 \seealso{
-\url{https://cloud.google.com/cloud-build/docs/securing-builds/store-manage-build-logs}
+\url{https://cloud.google.com/build/docs/securing-builds/store-manage-build-logs}
 
 \link{cr_build_logs_badger} to see logs for a badger created build
 
@@ -74,7 +74,6 @@ Other Cloud Build functions:
 \code{\link{cr_build_list}()},
 \code{\link{cr_build_make}()},
 \code{\link{cr_build_status}()},
-\code{\link{cr_build_targets}()},
 \code{\link{cr_build_upload_gcs}()},
 \code{\link{cr_build_wait}()},
 \code{\link{cr_build_write}()},

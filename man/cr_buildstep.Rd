@@ -47,7 +47,7 @@ This uses R to make building steps for cloudbuild.yml files harder to make mista
 \section{WaitFor}{
 
 
-By default each buildstep waits for the previous, but if you pass \code{"-"} then it will start immediately, or if you pass in a list of ids it will wait for previous buildsteps to finish who have that id.  See \href{https://cloud.google.com/cloud-build/docs/configuring-builds/configure-build-step-order}{Configuring Build Step Order} for details.
+By default each buildstep waits for the previous, but if you pass \code{"-"} then it will start immediately, or if you pass in a list of ids it will wait for previous buildsteps to finish who have that id.  See \href{https://cloud.google.com/build/docs/configuring-builds/configure-build-step-order}{Configuring Build Step Order} for details.
 }
 
 \section{Build Macros}{
@@ -122,7 +122,7 @@ cr_buildstep("docker", "version", env = c("ENV1=env1", "ENV2=$PROJECT_ID"))
 cr_buildstep("test", "ls", volumes = list(list(name = "ssh", path = "/root/.ssh")))
 }
 \seealso{
-\href{https://cloud.google.com/cloud-build/docs/configuring-builds/use-community-and-custom-builders}{Creating custom build steps how-to guide}
+\href{https://cloud.google.com/build/docs/configuring-builds/use-community-and-custom-builders}{Creating custom build steps how-to guide}
 
 Other Cloud Buildsteps: 
 \code{\link{cr_buildstep_bash}()},
@@ -140,7 +140,6 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_run}()},
 \code{\link{cr_buildstep_r}()},
 \code{\link{cr_buildstep_secret}()},
-\code{\link{cr_buildstep_slack}()},
-\code{\link{cr_buildstep_targets}()}
+\code{\link{cr_buildstep_slack}()}
 }
 \concept{Cloud Buildsteps}

@@ -2,7 +2,7 @@
 #'
 #' The `Build` that is returned includes its status (such as `SUCCESS`,`FAILURE`, or `WORKING`), and timing information.
 #'
-#' @seealso \url{https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.builds#Build.Status}
+#' @seealso \url{https://cloud.google.com/build/docs/api/reference/rest/v1/projects.builds#Build.Status}
 #'
 #' @param projectId ID of the project
 #' @param id ID of the build or a \code{BuildOperationMetadata} object
@@ -46,7 +46,7 @@ cr_build_status <- function(id = .Last.value,
 #' @import assertthat
 #' @importFrom googleCloudStorageR gcs_list_objects gcs_get_object
 #'
-#' @seealso \href{https://cloud.google.com/cloud-build/docs/building/store-build-artifacts}{Storing images and artifacts}
+#' @seealso \href{https://cloud.google.com/build/docs/building/store-build-artifacts}{Storing images and artifacts}
 #'
 #' @examples
 #' \dontrun{

@@ -38,7 +38,7 @@ Once you have uploaded your secret file and named it, it is available for Cloud
 cr_buildstep_secret("my_secret", decrypted = "/workspace/secret.json")
 }
 \seealso{
-How to set up secrets using \href{https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials}{Secret Manager}
+How to set up secrets using \href{https://cloud.google.com/build/docs/securing-builds/use-encrypted-secrets-credentials}{Secret Manager}
 
 \link{cr_build_yaml_secrets} let you directly support environment arguments in the buildsteps
 
@@ -58,7 +58,6 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_run}()},
 \code{\link{cr_buildstep_r}()},
 \code{\link{cr_buildstep_slack}()},
-\code{\link{cr_buildstep_targets}()},
 \code{\link{cr_buildstep}()}
 }
 \concept{Cloud Buildsteps}

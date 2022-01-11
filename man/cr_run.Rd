@@ -78,7 +78,7 @@ cr_run("gcr.io/cloud-tagging-10302018/gtm-cloud-image:stable",
 
 Use \link{cr_deploy_docker} or similar to create image, \link{cr_deploy_run} to automate building and deploying, \link{cr_deploy_plumber} to deploy plumber APIs.
 
-\href{https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run}{Deploying Cloud Run using Cloud Build}
+\href{https://cloud.google.com/build/docs/deploying-builds/deploy-cloud-run}{Deploying Cloud Run using Cloud Build}
 
 Other Cloud Run functions: 
 \code{\link{cr_jwt_create}()},
