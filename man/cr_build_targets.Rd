@@ -127,6 +127,34 @@ Use \code{cr_build_targets_artifacts} to download the return values of a
 If your target workflow has parallel processing steps then leaving this as default \code{cr_buildstep_targets_multi()} will create a build that uses waitFor and build ids to create a DAG.  Setting this to \code{cr_buildstep_targets_single()} will be single thread but you can then customise the \code{targets::tar_make} script.  Or add your own custom target buildsteps here using \link{cr_buildstep_targets} - for example you could create the docker environment targets runs within before the main pipeline.
 }
 
+\examples{
+
+write.csv(mtcars, file = "mtcars.csv", row.names = FALSE)
+
+targets::tar_script(
+  list(
+    targets::tar_target(file1,
+      "mtcars.csv", format = "file"),
+    targets::tar_target(input1,
+      read.csv(file1)),
+    targets::tar_target(result1,
+      sum(input1$mpg)),
+    targets::tar_target(result2,
+      mean(input1$mpg)),
+    targets::tar_target(result3,
+      max(input1$mpg)),
+    targets::tar_target(result4,
+      min(input1$mpg)),
+    targets::tar_target(merge1,
+      paste(result1, result2, result3, result4))
+    ),
+ ask = FALSE)
+
+bs <- cr_buildstep_targets_multi()
+par_build <- cr_build_targets(bs, path = NULL)
+par_build
+
+}
 \seealso{
 \link{cr_buildstep_targets} if you want to customise the build
 

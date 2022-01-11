@@ -48,7 +48,7 @@ cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
 cr_build_make(cloudbuild)
 }
 \seealso{
-\url{https://cloud.google.com/build/docs/build-config}
+\url{https://cloud.google.com/build/docs/build-config-file-schema}
 
 Other Cloud Build functions: 
 \code{\link{Build}()},

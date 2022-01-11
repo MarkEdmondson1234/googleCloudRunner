@@ -52,7 +52,7 @@ cr_build_yaml(
 )
 }
 \seealso{
-\href{https://cloud.google.com/build/docs/access-private-github-repos}{Accessing private GitHub repositories using Cloud Build (google article)}
+\href{https://cloud.google.com/build/docs/access-github-from-build}{Accessing private GitHub repositories using Cloud Build (google article)}
 
 Other Cloud Buildsteps: 
 \code{\link{cr_buildstep_bash}()},
