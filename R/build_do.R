@@ -143,7 +143,7 @@ extract_logs <- function(o) {
 #'
 #' This creates a \link{Build} object via the standard cloudbuild.yaml format
 #'
-#' @seealso \url{https://cloud.google.com/build/docs/build-config}
+#' @seealso \url{https://cloud.google.com/build/docs/build-config-file-schema}
 #'
 #' @inheritParams cr_build
 #' @param yaml A \code{Yaml} object created from \link{cr_build_yaml} or a file location of a .yaml/.yml cloud build file

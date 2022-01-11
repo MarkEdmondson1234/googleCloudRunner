@@ -8,7 +8,7 @@
 #'
 #' The ssh private key should be uploaded to Google Secret Manager first
 #'
-#' @seealso \href{https://cloud.google.com/build/docs/access-private-github-repos}{Accessing private GitHub repositories using Cloud Build (google article)}
+#' @seealso \href{https://cloud.google.com/build/docs/access-github-from-build}{Accessing private GitHub repositories using Cloud Build (google article)}
 #'
 #' @rdname cr_buildstep_git
 #' @export

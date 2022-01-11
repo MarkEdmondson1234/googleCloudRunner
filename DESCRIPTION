@@ -9,7 +9,7 @@ Authors@R: c(person("Mark", "Edmondson", email = "r@sunholo.com",
               person("Sunholo Ltd", role = "cph"))
 Description: Tools to easily enable R scripts in the Google Cloud Platform.
   Utilise cloud services such as Cloud Run <https://cloud.google.com/run/> for R over HTTP, 
-  Cloud Build <https://cloud.google.com/cloud-build/> for Continuous Delivery 
+  Cloud Build <https://cloud.google.com/build> for Continuous Delivery 
   and Integration services and 
   Cloud Scheduler <https://cloud.google.com/scheduler/> for scheduled scripts.
 URL: https://code.markedmondson.me/googleCloudRunner/

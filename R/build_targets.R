@@ -1,5 +1,4 @@
-#' @title Set up Google Cloud Build to run a targets pipeline
-#' @export
+#' Set up Google Cloud Build to run a targets pipeline
 #' @family Cloud Build functions
 #' @description Creates a Google Cloud Build yaml file so as to execute \link[targets]{tar_make} pipelines
 #'
@@ -71,8 +70,7 @@
 #' par_build
 #'
 #'
-#'
-#'
+#' @export
 cr_build_targets <- function(
   buildsteps = cr_buildstep_targets_multi(),
   execute = c("trigger","now"),
