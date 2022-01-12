@@ -49,7 +49,9 @@ cr_build_logs <- function(built = NULL, log_url = NULL) {
 
   logs <- tryCatch(
     suppressMessages(googleCloudStorageR::gcs_get_object(log_url)),
-    error = function(err) {NULL}
+    error = function(err) {
+      NULL
+    }
   )
 
   if(is.null(logs)){

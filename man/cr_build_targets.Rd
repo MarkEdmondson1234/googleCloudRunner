@@ -151,8 +151,18 @@ targets::tar_script(
  ask = FALSE)
 
 bs <- cr_buildstep_targets_multi()
+
+# only create the yaml
 par_build <- cr_build_targets(bs, path = NULL)
 par_build
+
+\dontrun{
+# run it immediately in cloud
+cr_build_targets(bs, execute="now")
+
+# create a yaml file for use in build triggers
+cr_build_targets(bs)
+}
 
 }
 \seealso{

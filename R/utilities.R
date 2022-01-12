@@ -1,3 +1,18 @@
+underscore_to_dash <- function(x){
+  gsub("[^a-zA-Z0-9\\-]", "-", x)
+}
+
+
+#' If x is NULL and the_list$x is not NULL, x <- the_list$x
+#' @noRd
+#' @keywords internal
+override_list <- function(x, the_list){
+  if (is.null(x) && !is.null(the_list$x)) {
+    x <- the_list$x
+  }
+  x
+}
+
 # unique per invocation, not per session like tempdir()
 tempdir_unique <- function() {
   dd <- tempfile()

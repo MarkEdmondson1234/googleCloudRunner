@@ -65,7 +65,7 @@ cr_buildstep_targets_setup <- function(bucket_folder){
       c("mkdir -p /workspace/_targets &&",
         "mkdir -p /workspace/_targets/meta &&",
         "gsutil -m cp -r",
-        sprintf("%s/_targets/meta",bucket_folder),
+        sprintf("%s/_targets/meta", bucket_folder),
         "/workspace/_targets",
         "|| exit 0"), collapse = " "),
     name = "gcr.io/google.com/cloudsdktool/cloud-sdk:alpine",
@@ -133,7 +133,7 @@ cr_buildstep_targets_multi <- function(
 
   myMessage("# Building DAG:", level = 3)
   bst <- lapply(nodes$name, function(x){
-    wait_for <- edges[edges$to == x,"from"][[1]]
+    wait_for <- edges[edges$to == x, "from"][[1]]
     if(length(wait_for) == 0){
       wait_for <- NULL
     }
@@ -142,7 +142,7 @@ cr_buildstep_targets_multi <- function(
       wait_for <- "get previous _targets metadata"
     }
 
-    cli(cli_ul(paste0("[",paste(wait_for, collapse = ", "), "] -> [", x, "]")))
+    cli(cli_ul(paste0("[", paste(wait_for, collapse = ", "), "] -> [", x, "]")))
 
     task_args <- c(task_args, list(waitFor = wait_for))
 
@@ -160,7 +160,7 @@ cr_buildstep_targets_multi <- function(
     last_id <- nodes$name[[nrow(nodes)]]
   }
 
-  cli(cli_ul(paste0("[",last_id,"] -> [ Upload Artifacts ]")))
+  cli(cli_ul(paste0("[", last_id, "] -> [ Upload Artifacts ]")))
 
   c(
     cr_buildstep_targets_setup(target_bucket),
@@ -169,5 +169,3 @@ cr_buildstep_targets_multi <- function(
                                   last_id = last_id)
   )
 }
-
-

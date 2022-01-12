@@ -82,7 +82,7 @@
 #'
 cr_build_targets <- function(
   buildsteps = cr_buildstep_targets_multi(),
-  execute = c("trigger","now"),
+  execute = c("trigger", "now"),
   path = "cloudbuild_targets.yaml",
   local = ".",
   predefinedAcl = "bucketLevel",
@@ -244,5 +244,5 @@ cr_build_targets_artifacts <- function(
 }
 
 only_target_dir <- function(path){
-  gsub("(.+)/(_targets/.+)","\\2",path)
+  gsub("(.+)/(_targets/.+)", "\\2", path)
 }

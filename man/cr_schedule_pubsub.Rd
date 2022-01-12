@@ -30,7 +30,7 @@ A \link{PubsubTarget} object for use within \link{cr_schedule}
 Create a PubSub Target object for Cloud Scheduler
 }
 \details{
-You can parametise builds by sending in values within PubSub. To read the data in the message set a substitution varaible that picks up the data.  For example \code{_VAR1=$(body.message.data.var1)}
+You can parametrise builds by sending in values within PubSub. To read the data in the message set a substitution variable that picks up the data.  For example \code{_VAR1=$(body.message.data.var1)}
 }
 \examples{
 cr_project_set("my-project")

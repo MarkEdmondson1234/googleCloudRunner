@@ -17,7 +17,7 @@ cr_schedule(
 )
 }
 \arguments{
-\item{name}{Optionally caller-specified in CreateJob, after}
+\item{name}{Name to call your scheduled job}
 
 \item{schedule}{A cron schedule e.g. \code{"15 5 * * *"}}
 

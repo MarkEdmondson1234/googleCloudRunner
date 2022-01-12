@@ -150,6 +150,7 @@ wait_f <- function(init, projectId) {
 
   tick <- 0
   start_time <- Sys.time()
+  build_time <- "Pending..."
   while (wait) {
     if (tick %% 5 == 0) {
       status <- cr_build_status(op, projectId = projectId)

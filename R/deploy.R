@@ -119,77 +119,22 @@ cr_deploy_r <- function(r,
     serviceAccount = serviceAccount
   )
 
-  if (!is.null(schedule)) {
+  if(!is.null(schedule)){
     # a cloud build you would like to schedule
     myMessage(paste("Scheduling R script on cron schedule:", schedule),
       level = 3
     )
 
-    if (schedule_type == "http") {
-      https <- cr_build_schedule_http(br,
-        email = email,
-        projectId = projectId
-      )
-
-      brs <- cr_schedule(schedule,
-        name = run_name,
-        region = region,
-        description = run_name,
-        httpTarget = https
-      )
-    } else if (schedule_type == "pubsub") {
-      if (!is.null(schedule_pubsub)) {
-        assert_that(is.gar_pubsubTarget(schedule_pubsub))
-        topic_basename <- basename(schedule_pubsub$topicName)
-        pubsub_target <- schedule_pubsub
-      } else {
-        check_package_installed("googlePubsubR")
-        topic_basename <- paste0(run_name, "-topic")
-        pubsub_target <- cr_schedule_pubsub(topic_basename)
-
-        myMessage("Creating PubSub topic:", topic_basename, level = 3)
-        # Create a pubsub topic
-        topic_created <- tryCatch(
-          googlePubsubR::topics_create(topic_basename),
-          error = function(err) {
-            stop("Could not create topic:",
-              topic_basename,
-              err$message,
-              call. = FALSE
-            )
-          }
-        )
-      }
-
-      # check PubSub topic is there:
-      topic_got <- googlePubsubR::topics_get(topic_basename)
-
-      # May only contain alphanumeric characters and dashes
-      trigger_name <- gsub(
-        "[^a-zA-Z0-9\\-]", "-",
-        basename(
-          paste0(topic_got$name, "-trigger")
-        )
-      )
-
-      myMessage("Creating BuildTrigger topic:", trigger_name, level = 3)
-      # Create a build trigger that will run when the pubsub topic is called
-      cr_buildtrigger(br,
-        name = trigger_name,
-        trigger = cr_buildtrigger_pubsub(basename(topic_got$name))
-      )
-
-      myMessage("Creating Cloud Schedule to trigger PubSub topicName:",
-        pubsub_target$topicName,
-        level = 3
-      )
-      # Schedule a pubsub message to the topic
-      brs <- cr_schedule(trigger_name,
-        schedule = schedule,
-        pubsubTarget = pubsub_target
-      )
-    }
-
+    brs <- cr_schedule_build(
+      br,
+      schedule = schedule,
+      email = email,
+      projectId = projectId,
+      name = run_name,
+      schedule_type = schedule_type,
+      region = region,
+      description = run_name
+    )
 
     return(brs)
   }

@@ -189,75 +189,100 @@ get_region_setup <- function() {
 #' @noRd
 #' @return NULL if no changes, ENV_ARG="blah" if change
 get_bucket_setup <- function() {
-  if (Sys.getenv("GCE_AUTH_FILE") == "") {
+  if (!nzchar(Sys.getenv("GCE_AUTH_FILE"))) {
     cli_alert_info("You need to setup the auth environment argument before configuring a bucket.  Rerun the wizard once it is setup")
     return(NULL)
   }
 
-  if (Sys.getenv("GCE_DEFAULT_PROJECT_ID") == "") {
+  if (!nzchar(Sys.getenv("GCE_DEFAULT_PROJECT_ID"))) {
     cli_alert_info("You need to setup the project-id environment argument before configuring a bucket.  Rerun the wizard once it is setup")
     return(NULL)
   }
 
   bucket <- usethis::ui_yeah("Do you want to setup a Cloud Storage bucket?")
-  if (bucket) {
-    has_bucket <- usethis::ui_yeah("Do you have an existing Cloud Storage bucket you want to use?")
-    if (has_bucket) {
-      cli_alert_info(paste(
-        "Fetching your buckets under the project-id: ",
-        Sys.getenv("GCE_DEFAULT_PROJECT_ID")
-      ))
-      googleCloudStorageR::gcs_auth(Sys.getenv("GCE_AUTH_FILE"))
-      bucks <- tryCatch(googleCloudStorageR::gcs_list_buckets(Sys.getenv("GCE_DEFAULT_PROJECT_ID")),
-        error = function(err) {
-          cli_alert_danger("Could not fetch a list of your buckets - {err$message}")
-          return(NULL)
-        }
-      )
-      print(bucks[, c("name", "location")])
-      the_bucket <- readline("What is the name of your bucket? e.g. my-bucket-name: ")
-      check_bucket <- tryCatch(
-        googleCloudStorageR::gcs_get_bucket(the_bucket),
-        error = function(err) {
-          cli_alert_danger("Could not get bucket: {err$message}")
-          return(NULL)
-        }
-      )
-      if (!is.null(check_bucket$kind) && check_bucket$kind == "storage#bucket") {
-        cli_alert_info("Validated Cloud Storage bucket")
-        return(paste0("GCS_DEFAULT_BUCKET=", the_bucket))
-      } else {
-        cli_alert_danger("Invalid bucket: {the_bucket}")
-        return(NULL)
-      }
-    } else {
-      make_bucket <- usethis::ui_yeah("Do you want to make a new Cloud Storage bucket?")
-      if (make_bucket) {
-        if (Sys.getenv("GCE_DEFAULT_PROJECT_ID") == "") {
-          cli_alert_info("You need to setup a project-id before creating a bucket")
-          return(NULL)
-        }
-        make_bucket_name <- readline(
-          "What name will the bucket be? :"
-        )
-        new_bucket <- googleCloudStorageR::gcs_create_bucket(
-          make_bucket_name,
-          projectId = cr_project_get()
-        )
-        if (!is.null(new_bucket$kind) && new_bucket$kind == "storage#bucket") {
-          cli_alert_success("Successfully created bucket {make_bucket_name}")
-          return(paste0("GCS_DEFAULT_BUCKET=", make_bucket_name))
-        }
-      } else {
-        cli_ul("No bucket set")
-      }
-    }
+  if(!bucket){
+    return(abort_bucket_make())
   }
 
-  cli_alert_danger("Some Cloud Build (cr_build_*) functionality will not be available
-          with a bucket unless configured via cr_bucket_set()")
 
+  has_bucket <- usethis::ui_yeah("Do you have an existing Cloud Storage bucket you want to use?")
+  if (has_bucket) {
+    # if successful, returns .Renviron string
+    return(setup_existing_bucket())
+
+  }
+
+  make_bucket <- usethis::ui_yeah("Do you want to make a new Cloud Storage bucket?")
+  if(!make_bucket){
+    cli_ul("No bucket set")
+    return(abort_bucket_make())
+  }
+
+  make_new_bucket()
+
+}
+
+abort_bucket_make <- function(){
+  cli::cli_alert_danger("Some Cloud Build (cr_build_*) functionality will not be available
+          with a bucket unless configured via cr_bucket_set()")
   NULL
+}
+
+make_new_bucket <- function(){
+  if (!nzchar(Sys.getenv("GCE_DEFAULT_PROJECT_ID"))) {
+    cli_alert_info("You need to setup a project-id before creating a bucket")
+    return(NULL)
+  }
+  make_bucket_name <- readline(
+    "What name will the bucket be? :"
+  )
+  new_bucket <- googleCloudStorageR::gcs_create_bucket(
+    make_bucket_name,
+    projectId = cr_project_get()
+  )
+
+  if(is.null(new_bucket$kind)){
+    return(NULL)
+  }
+
+  if(new_bucket$kind != "storage#bucket"){
+    return(NULL)
+  }
+
+  cli::cli_alert_success("Successfully created bucket {make_bucket_name}")
+
+  paste0("GCS_DEFAULT_BUCKET=", make_bucket_name)
+
+}
+
+setup_existing_bucket <- function(){
+    cli_alert_info(paste(
+      "Fetching your buckets under the project-id: ",
+      Sys.getenv("GCE_DEFAULT_PROJECT_ID")
+    ))
+    googleCloudStorageR::gcs_auth(Sys.getenv("GCE_AUTH_FILE"))
+    bucks <- tryCatch(googleCloudStorageR::gcs_list_buckets(Sys.getenv("GCE_DEFAULT_PROJECT_ID")),
+                      error = function(err) {
+                        cli::cli_alert_danger("Could not fetch a list of your buckets - {err$message}")
+                        return(NULL)
+                      }
+    )
+    print(bucks[, c("name", "location")])
+    the_bucket <- readline("What is the name of your bucket? e.g. my-bucket-name: ")
+    check_bucket <- tryCatch(
+      googleCloudStorageR::gcs_get_bucket(the_bucket),
+      error = function(err) {
+        cli::cli_alert_danger("Could not get bucket: {err$message}")
+        return(NULL)
+      }
+    )
+    if (!is.null(check_bucket$kind) && check_bucket$kind == "storage#bucket") {
+      cli::cli_alert_info("Validated Cloud Storage bucket")
+      return(paste0("GCS_DEFAULT_BUCKET=", the_bucket))
+    } else {
+      cli::cli_alert_danger("Invalid bucket: {the_bucket}")
+      return(NULL)
+    }
 }
 
 
