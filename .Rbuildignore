@@ -29,5 +29,5 @@
 ^\.github$
 ^lint\.yaml$
 ^\.lintr$
-_targets\.R
-mtcars\.csv
+^\_targets\.R$
+^mtcars\.csv$

@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 ![CloudBuild](https://badger-ewjogewawq-ew.a.run.app/build/status?project=mark-edmondson-gde&id=0a3cade0-425f-4adc-b86b-14cde51af674)
-[![codecov](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner/branch/master/graph/badge.svg)](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner)
+[![codecov](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner/branch/master/graph/badge.svg)] (https://app.codecov.io/gh/MarkEdmondson1234/googleCloudRunner)
 ![CRAN](http://www.r-pkg.org/badges/version/googleCloudRunner)
 [![CodeFactor](https://www.codefactor.io/repository/github/markedmondson1234/googlecloudrunner/badge/master)](https://www.codefactor.io/repository/github/markedmondson1234/googlecloudrunner/overview/master)
 [![R-CMD-check](https://github.com/MarkEdmondson1234/googleCloudRunner/workflows/R-CMD-check/badge.svg)](https://github.com/MarkEdmondson1234/googleCloudRunner/actions)

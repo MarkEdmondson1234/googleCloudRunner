@@ -143,7 +143,7 @@ extract_logs <- function(o) {
 #'
 #' This creates a \link{Build} object via the standard cloudbuild.yaml format
 #'
-#' @seealso \url{https://cloud.google.com/build/docs/build-config}
+#' @seealso \url{https://cloud.google.com/build/docs/build-config-file-schema}
 #'
 #' @inheritParams cr_build
 #' @param yaml A \code{Yaml} object created from \link{cr_build_yaml} or a file location of a .yaml/.yml cloud build file
@@ -175,43 +175,24 @@ cr_build_make <- function(yaml,
     stop("Invalid cloudbuild yaml - 'steps:' not found.", call. = FALSE)
   }
 
-  timeout <- check_timeout(timeout)
-  if (is.null(timeout) && !is.null(stepsy$timeout)) {
-    timeout <- stepsy$timeout
-  }
-
   if (!is.null(source)) {
     assert_that(is.gar_Source(source))
   }
 
-  if (is.null(images) && !is.null(stepsy$images)) {
-    images <- stepsy$images
-  }
+  timeout <- override_list(timeout, stepsy)
+  timeout <- check_timeout(timeout)
 
-  if (is.null(artifacts) && !is.null(stepsy$artifacts)) {
-    artifacts <- stepsy$artifacts
-  }
-
-  if (is.null(options) && !is.null(stepsy$options)) {
-    options <- stepsy$options
-  }
-
-  if (is.null(substitutions) && !is.null(stepsy$substitutions)) {
-    substitutions <- stepsy$substitutions
-  }
-
-  if (is.null(logsBucket) && !is.null(stepsy$logsBucket)) {
-    logsBucket <- stepsy$logsBucket
-  }
+  images         <- override_list(images, stepsy)
+  artifacts      <- override_list(artifacts, stepsy)
+  options        <- override_list(options, stepsy)
+  substitutions  <- override_list(substitutions, stepsy)
+  logsBucket     <- override_list(logsBucket, stepsy)
+  serviceAccount <- override_list(serviceAccount, stepsy)
 
   if (is.null(availableSecrets) && !is.null(stepsy$availableSecrets)) {
     as <- stepsy$availableSecrets
   } else {
     as <- parse_yaml_secret_list(availableSecrets)
-  }
-
-  if (is.null(serviceAccount) && !is.null(stepsy$serviceAccount)) {
-    serviceAccount <- stepsy$serviceAccount
   }
 
   Build(

@@ -1,6 +1,6 @@
-#' @title Set up Google Cloud Build to run a targets pipeline
-#' @export
+#' Set up Google Cloud Build to run a targets pipeline
 #' @family Cloud Build functions
+#' @export
 #' @description Creates a Google Cloud Build yaml file so as to execute \link[targets]{tar_make} pipelines
 #'
 #' Historical runs accumulate in the
@@ -79,15 +79,23 @@
 #'  ask = FALSE)
 #'
 #' bs <- cr_buildstep_targets_multi()
+#'
+#' # only create the yaml
 #' par_build <- cr_build_targets(bs, path = NULL)
 #' par_build
 #' file.remove("mtcars.csv")
 #'
+#' \dontrun{
+#' # run it immediately in cloud
+#' cr_build_targets(bs, execute="now")
 #'
+#' # create a yaml file for use in build triggers
+#' cr_build_targets(bs)
+#' }
 #'
 cr_build_targets <- function(
   buildsteps = cr_buildstep_targets_multi(),
-  execute = c("trigger","now"),
+  execute = c("trigger", "now"),
   path = "cloudbuild_targets.yaml",
   local = ".",
   predefinedAcl = "bucketLevel",
@@ -249,5 +257,5 @@ cr_build_targets_artifacts <- function(
 }
 
 only_target_dir <- function(path){
-  gsub("(.+)/(_targets/.+)","\\2",path)
+  gsub("(.+)/(_targets/.+)", "\\2", path)
 }

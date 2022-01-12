@@ -14,6 +14,8 @@ cr_build_schedule_http(
 cr_schedule_build(
   build,
   schedule,
+  schedule_type = c("http", "pubsub"),
+  schedule_pubsub = NULL,
   email = cr_email_get(),
   projectId = cr_project_get(),
   ...
@@ -28,12 +30,16 @@ cr_schedule_build(
 
 \item{schedule}{A cron schedule e.g. \code{"15 5 * * *"}}
 
+\item{schedule_type}{Whether to use HTTP or PubSub styled schedules}
+
+\item{schedule_pubsub}{If you have a custom pubsub message to send via an existing topic, use \link{cr_schedule_pubsub} to supply it here}
+
 \item{...}{
   Arguments passed on to \code{\link[=cr_schedule]{cr_schedule}}
   \describe{
     \item{\code{region}}{The region usually set with \link{cr_region_set}}
     \item{\code{overwrite}}{If TRUE and an existing job with the same name exists, will overwrite it with the new parameters}
-    \item{\code{name}}{Optionally caller-specified in CreateJob, after}
+    \item{\code{name}}{Name to call your scheduled job}
     \item{\code{httpTarget}}{A HTTP target object \link{HttpTarget}}
     \item{\code{pubsubTarget}}{A Pub/Sub target object \link{PubsubTarget} such as created via \link{cr_schedule_pubsub}}
     \item{\code{description}}{Optionally caller-specified in CreateJob or}
@@ -51,9 +57,16 @@ A cloud scheduler \link{Job} object
 This enables Cloud Scheduler to trigger Cloud Builds
 }
 \details{
-Ensure you have a service email with \link{cr_email_set} of format \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com} with Cloud Scheduler Service Agent role as per https://cloud.google.com/scheduler/docs/http-target-auth#add
+Ensure you have a service email with \link{cr_email_set} of format
+\code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com}
+with Cloud Scheduler Service Agent role as per
+https://cloud.google.com/scheduler/docs/http-target-auth#add
 
-See also \link{cr_schedule_pubsub} which you can use by creating a build trigger of your build via \link{cr_buildtrigger} that accepts Pub/Sub messages.  This method is recommended as being easier to maintain than using HTTP requests to the Cloud Build API that \link{cr_build_schedule_http} produces.
+See also \link{cr_schedule_pubsub} which you can use by creating
+a build trigger of your build via \link{cr_buildtrigger} that accepts
+Pub/Sub messages.  This method is recommended as being easier to maintain
+than using HTTP requests to the Cloud Build API that
+\link{cr_build_schedule_http} produces.
 }
 \examples{
 cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")

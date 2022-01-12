@@ -15,7 +15,10 @@ cr_schedule_pubsub(
 \arguments{
 \item{topicName}{The name of the Cloud Pub/Sub topic to which messages will be published when a job is delivered.}
 
-\item{PubsubMessage}{A \code{PubsubMessage} object generated via \link[googlePubsubR]{PubsubMessage}.  If used, then do not send in `data` or `attributes` arguments as will be redundant since this variable will hold the information.}
+\item{PubsubMessage}{A \code{PubsubMessage} object generated via
+\link[googlePubsubR]{PubsubMessage}.  If used, then do not send in
+`data` or `attributes` arguments as will be redundant since this
+variable will hold the information.}
 
 \item{data}{The message payload for PubsubMessage. An R object that will be turned into JSON via [jsonlite] and then base64 encoded into the PubSub format.}
 
@@ -30,7 +33,9 @@ A \link{PubsubTarget} object for use within \link{cr_schedule}
 Create a PubSub Target object for Cloud Scheduler
 }
 \details{
-You can parametise builds by sending in values within PubSub. To read the data in the message set a substitution varaible that picks up the data.  For example \code{_VAR1=$(body.message.data.var1)}
+You can parametrise builds by sending in values within PubSub. To read
+the data in the message set a substitution variable that picks up the data.
+For example \code{_VAR1=$(body.message.data.var1)}
 }
 \examples{
 cr_project_set("my-project")

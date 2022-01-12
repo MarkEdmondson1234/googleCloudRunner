@@ -267,12 +267,20 @@ cr_schedule_delete <- function(x,
 
     myMessage("PubSub triggered Cloud Build detected.  Attempting to delete topic and build trigger as well for", the_name, level = 3)
 
+    build_trigger_guess <- paste0(underscore_to_dash(basename(the_name)),"-topic-trigger")
+
+    myMessage("Fetching build trigger", build_trigger_guess, level = 3)
     the_buildtrigger <- tryCatch(
-      cr_buildtrigger_get(basename(the_name), projectId = projectId),
-      error = function(err){
-        myMessage("Could not find build trigger", the_name, "to delete. Aborting. ",
+      cr_buildtrigger_get(build_trigger_guess, projectId = projectId),
+      http_404 = function(err){
+        myMessage("Could not find build trigger",
+                  build_trigger_guess,
+                  "to delete. Aborting, you will need to delete it manually. ",
                   err$message, level = 3)
         return(NULL)
+      },
+      error = function(err){
+        stop(err$message, call. = FALSE)
       })
 
     if(!is.null(the_buildtrigger)){
@@ -513,7 +521,7 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
 #' @param status Output only
 #' @param retryConfig Settings that determine the retry behavior
 #' @param state Output only
-#' @param name Optionally caller-specified in CreateJob, after
+#' @param name Name to call your scheduled job
 #' @param lastAttemptTime Output only
 #' @param scheduleTime Output only
 #' @param schedule A cron schedule e.g. \code{"15 5 * * *"}

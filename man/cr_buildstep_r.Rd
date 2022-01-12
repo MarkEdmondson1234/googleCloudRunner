@@ -108,6 +108,7 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_run}()},
 \code{\link{cr_buildstep_secret}()},
 \code{\link{cr_buildstep_slack}()},
+\code{\link{cr_buildstep_targets}()},
 \code{\link{cr_buildstep}()}
 }
 \concept{Cloud Buildsteps}

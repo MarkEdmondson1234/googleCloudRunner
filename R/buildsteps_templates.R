@@ -27,7 +27,7 @@
 #' }
 #' @export
 #'
-#' @seealso \url{https://docs.codecov.io/reference#upload}
+#' @seealso \url{https://docs.codecov.com/reference}
 #' @family Cloud Buildsteps
 #' @examples
 #'
@@ -683,7 +683,7 @@ cr_buildstep_decrypt <- function(cipher,
 #'   \link{cr_buildstep_decrypt}, as it stores the encrypted file in the cloud
 #'   rather than in your project workspace.  For single environment values, \link{cr_build_yaml_secrets} may be more suitable.
 #'
-#' @seealso How to set up secrets using \href{https://cloud.google.com/build/docs/securing-builds/use-encrypted-secrets-credentials}{Secret Manager}
+#' @seealso How to set up secrets using \href{https://cloud.google.com/build/docs/securing-builds/use-secrets}{Secret Manager}
 #'
 #' @param secret The secret data name in Secret Manager
 #' @param decrypted The name of the file the secret will be decrypted into

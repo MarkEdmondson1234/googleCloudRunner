@@ -48,7 +48,7 @@ If using codecov, these environment arguments are added to aid with the codecove
 cr_buildstep_packagetests()
 }
 \seealso{
-\url{https://docs.codecov.io/reference#upload}
+\url{https://docs.codecov.com/reference}
 
 Other Cloud Buildsteps: 
 \code{\link{cr_buildstep_bash}()},
@@ -66,6 +66,7 @@ Other Cloud Buildsteps:
 \code{\link{cr_buildstep_r}()},
 \code{\link{cr_buildstep_secret}()},
 \code{\link{cr_buildstep_slack}()},
+\code{\link{cr_buildstep_targets}()},
 \code{\link{cr_buildstep}()}
 }
 \concept{Cloud Buildsteps}

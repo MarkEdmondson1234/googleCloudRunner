@@ -22,7 +22,7 @@ Job(
 )
 }
 \arguments{
-\item{name}{Optionally caller-specified in CreateJob, after}
+\item{name}{Name to call your scheduled job}
 
 \item{description}{Optionally caller-specified in CreateJob or}
 
