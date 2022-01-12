@@ -27,7 +27,6 @@
 ^data-raw$
 ^NEWS\.txt$
 ^\.github$
-^lint\.yaml$
 ^\.lintr$
 ^\_targets\.R$
 ^mtcars\.csv$
