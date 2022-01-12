@@ -162,6 +162,8 @@
 <span class="fu">cr_schedule_build</span><span class="op">(</span>
   <span class="va">build</span>,
   <span class="va">schedule</span>,
+  schedule_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"http"</span>, <span class="st">"pubsub"</span><span class="op">)</span>,
+  schedule_pubsub <span class="op">=</span> <span class="cn">NULL</span>,
   email <span class="op">=</span> <span class="fu"><a href="cr_email_set.html">cr_email_get</a></span><span class="op">(</span><span class="op">)</span>,
   projectId <span class="op">=</span> <span class="fu"><a href="cr_project_set.html">cr_project_get</a></span><span class="op">(</span><span class="op">)</span>,
   <span class="va">...</span>
@@ -178,6 +180,10 @@
 <dd><p>The projectId</p></dd>
 <dt>schedule</dt>
 <dd><p>A cron schedule e.g. <code>"15 5 * * *"</code></p></dd>
+<dt>schedule_type</dt>
+<dd><p>Whether to use HTTP or PubSub styled schedules</p></dd>
+<dt>schedule_pubsub</dt>
+<dd><p>If you have a custom pubsub message to send via an existing topic, use <a href="cr_schedule_pubsub.html">cr_schedule_pubsub</a> to supply it here</p></dd>
 <dt>...</dt>
 <dd><p>Arguments passed on to <code><a href="cr_schedule.html">cr_schedule</a></code></p><dl><dt><code>region</code></dt>
 <dd><p>The region usually set with <a href="cr_region_set.html">cr_region_set</a></p></dd>
@@ -186,7 +192,7 @@
 <dd><p>If TRUE and an existing job with the same name exists, will overwrite it with the new parameters</p></dd>
 
     <dt><code>name</code></dt>
-<dd><p>Optionally caller-specified in CreateJob, after</p></dd>
+<dd><p>Name to call your scheduled job</p></dd>
 
     <dt><code>httpTarget</code></dt>
 <dd><p>A HTTP target object <a href="HttpTarget.html">HttpTarget</a></p></dd>
