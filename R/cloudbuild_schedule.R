@@ -10,7 +10,10 @@
 #'
 #' @return A \link{HttpTarget} object for use in \link{cr_schedule}
 #'
-#' @details Ensure you have a service email with \link{cr_email_set} of format \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com} with Cloud Scheduler Service Agent role as per https://cloud.google.com/scheduler/docs/http-target-auth#add
+#' @details Ensure you have a service email with \link{cr_email_set} of format
+#' \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com}
+#' with Cloud Scheduler Service Agent role as per
+#' https://cloud.google.com/scheduler/docs/http-target-auth#add
 #'
 #' @export
 #' @import assertthat
@@ -57,7 +60,11 @@ cr_build_schedule_http <- function(build,
 
 #' @rdname cr_build_schedule_http
 #'
-#' @details See also \link{cr_schedule_pubsub} which you can use by creating a build trigger of your build via \link{cr_buildtrigger} that accepts Pub/Sub messages.  This method is recommended as being easier to maintain than using HTTP requests to the Cloud Build API that \link{cr_build_schedule_http} produces.
+#' @details See also \link{cr_schedule_pubsub} which you can use by creating
+#' a build trigger of your build via \link{cr_buildtrigger} that accepts
+#' Pub/Sub messages.  This method is recommended as being easier to maintain
+#' than using HTTP requests to the Cloud Build API that
+#' \link{cr_build_schedule_http} produces.
 #' @export
 #' @param schedule A cron schedule e.g. \code{"15 5 * * *"}
 #' @param ... additional arguments to pass to \link{cr_schedule}
@@ -83,7 +90,10 @@ cr_schedule_build <- function(build,
 #' Create a PubSub Target object for Cloud Scheduler
 #'
 #' @inheritParams PubsubTarget
-#' @param PubsubMessage A \code{PubsubMessage} object generated via \link[googlePubsubR]{PubsubMessage}.  If used, then do not send in `data` or `attributes` arguments as will be redundant since this variable will hold the information.
+#' @param PubsubMessage A \code{PubsubMessage} object generated via
+#' \link[googlePubsubR]{PubsubMessage}.  If used, then do not send in
+#' `data` or `attributes` arguments as will be redundant since this
+#' variable will hold the information.
 #' @param projectId The projectId for where the topic sits
 #' @family Cloud Scheduler functions
 #' @export
@@ -92,7 +102,9 @@ cr_schedule_build <- function(build,
 #'
 #' @details
 #'
-#' You can parametise builds by sending in values within PubSub. To read the data in the message set a substitution varaible that picks up the data.  For example \code{_VAR1=$(body.message.data.var1)}
+#' You can parametise builds by sending in values within PubSub.
+#' To read the data in the message set a substitution varaible that
+#' picks up the data.  For example \code{_VAR1=$(body.message.data.var1)}
 #' @examples
 #' cr_project_set("my-project")
 #' cr_bucket_set("my-bucket")
