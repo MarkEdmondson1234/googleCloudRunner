@@ -128,7 +128,7 @@ If your target workflow has parallel processing steps then leaving this as defau
 }
 
 \examples{
-cr_build_targets(path=tempfile())
+cr_build_targets()
 
 # adding custom environment args and secrets to the build
 cr_build_targets(

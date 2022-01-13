@@ -45,7 +45,7 @@
 #' @inheritParams cr_build_upload_gcs
 #' @seealso \link{cr_buildstep_targets} if you want to customise the build
 #' @examples
-#' cr_build_targets(path=tempfile())
+#' cr_build_targets()
 #'
 #' # adding custom environment args and secrets to the build
 #' cr_build_targets(
