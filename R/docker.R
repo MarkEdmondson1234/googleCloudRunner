@@ -1,6 +1,8 @@
 #' Deploy Docker build from a Git repo
 #'
-#' This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit.
+#' This helps the common use case of building a Dockerfile based on the
+#' contents of a GitHub repo, and sets up a build trigger so it will
+#' build on every commit.
 #'
 #' @seealso \link{cr_deploy_docker} which lets you build Dockerfiles for more generic use cases
 #'
@@ -12,12 +14,18 @@
 #' @param timeout Timeout for build
 #' @inheritDotParams cr_buildstep_docker
 #' @inheritParams cr_buildtrigger
-#' @param projectId_target The project to publish the Docker image to.  The image will be built under the project configured via \link{cr_project_get}.  You will need to give the build project's service email access to the target GCP project via IAM for it to push successfully.
+#' @param projectId_target The project to publish the Docker image to.
+#' The image will be built under the project configured via
+#' \link{cr_project_get}.  You will need to give the build project's
+#' service email access to the target GCP project via IAM for it to push
+#' successfully.
 #' @inheritParams cr_build_make
 #' @family Deployment functions
 #' @details
 #'
-#' This creates a buildtrigger to do a kamiko cache enabled Docker build upon each commit, as defined by your repo settings via \link{cr_buildtrigger_repo}.  It will build all tags concurrently.
+#' This creates a buildtrigger to do a kamiko cache enabled Docker build
+#' upon each commit, as defined by your repo settings via
+#' \link{cr_buildtrigger_repo}.  It will build all tags concurrently.
 #'
 #' @export
 #' @examples
@@ -68,20 +76,28 @@ cr_deploy_docker_trigger <- function(repo,
 
 #' Deploy a local Dockerfile to be built on ContainerRegistry
 #'
-#' Build a local Dockerfile in the cloud. See googleCloudRunner website for help how to generate Dockerfiles.  If you want the docker to build on each commit, see also \link{cr_deploy_docker_trigger}
+#' Build a local Dockerfile in the cloud. See googleCloudRunner website
+#' for help how to generate Dockerfiles.  If you want the docker to build
+#' on each commit, see also \link{cr_deploy_docker_trigger}
 #'
 #'
 #' @seealso If you want the docker to build on each commit, see \link{cr_deploy_docker_trigger}
 #'
 #' @param local The folder containing the Dockerfile to build
 #' @param remote The folder on Google Cloud Storage
-#' @param dockerfile An optional Dockerfile built to support the script.  Not needed if "Dockerfile" exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"
+#' @param dockerfile An optional Dockerfile built to support the script.
+#' Not needed if "Dockerfile" exists in folder.  If supplied will be
+#' copied into deployment folder and called "Dockerfile"
 #' @param bucket The GCS bucket that will be used to deploy code source
-#' @param image_name The name of the docker image to be built either full name starting with gcr.io or constructed from the image_name and projectId via \code{gcr.io/{projectId}/{image_name}}
-#' @param predefinedAcl Access setting for the bucket used in deployed.  Set to "bucketLevel" if using bucket level access
+#' @param image_name The name of the docker image to be built either full
+#' name starting with gcr.io or constructed from the image_name and
+#' \code{projectId} via \code{gcr.io/{projectId}/{image_name}}
+#' @param predefinedAcl Access setting for the bucket used in deployed.
+#' Set to "bucketLevel" if using bucket level access
 #' @param pre_steps Other \link{cr_buildstep} to run before the docker build
 #' @param post_steps Other \link{cr_buildstep} to run after the docker build
-#' @param ... Other arguments passed to \link{cr_buildstep_docker}
+#' @param ... Other arguments passed to \link{cr_buildstep_docker} and
+#' \link{cr_build_yaml}.
 #' @inheritParams cr_buildstep_docker
 #' @inheritParams cr_build
 #' @inheritDotParams cr_buildstep_docker
@@ -92,7 +108,8 @@ cr_deploy_docker_trigger <- function(repo,
 #'
 #' This lets you deploy local folders with Dockerfiles, automating saving the source on Google Cloud Storage.
 #'
-#' To deploy builds on git triggers and sources such as GitHub, see the examples of \link{cr_buildstep_docker} or the use cases on the website
+#' To deploy builds on git triggers and sources such as GitHub, see the
+#' examples of \link{cr_buildstep_docker} or the use cases on the website
 #'
 #' @note `cr_deploy_docker_construct` is a helper function to construct the arguments
 #' needed to deploy the docker, which may be combined with
@@ -198,11 +215,15 @@ cr_deploy_docker_construct <- function(
   # needed if someone does something silly like:
   # res = cr_buildstep_bash("echo hey")
   # pre_steps = res[[1]]
-  if (inherits(pre_steps, "cr_buildstep")) {
-    pre_steps <- list(pre_steps)
+  if (!is.null(pre_steps) &&
+      !is.cr_buildstep_list(pre_steps)) {
+    stop(paste0("pre_steps is not a cr_buildstep_list, you may need to do ",
+         "list(pre_steps)"))
   }
-  if (inherits(post_steps, "cr_buildstep")) {
-    post_steps <- list(post_steps)
+  if (!is.null(post_steps) &&
+      !is.cr_buildstep_list(post_steps)) {
+    stop(paste0("post_steps is not a cr_buildstep_list, you may need to do ",
+                "list(post_steps)"))
   }
   # !!!
   # Should likely move this to the step for cr_build_upload_gcs
@@ -224,7 +245,7 @@ cr_deploy_docker_construct <- function(
   pushed_image <- if(kaniko_cache) NULL else image
 
   # Adding this in for Artifacts Registry
-  pre_steps <- c(pre_steps, cr_buildstep_docker_auth_auto(image = image))
+  pre_steps <- c(pre_steps, cr_buildstep_docker_auth(image = image))
 
   image_tag <- paste0(image, ":", tag)
   myMessage("# Deploy docker build for image:", image, level = 3)
@@ -245,7 +266,7 @@ cr_deploy_docker_construct <- function(
 
   # running this first because these arguments
   # will be removed from args
-  yaml_formals <- formalArgs(cr_build_yaml)
+  yaml_formals <- methods::formalArgs(cr_build_yaml)
   yaml_args <- args[intersect(names(args), yaml_formals)]
   # timeout is specified as an argument in this function AND
   # cr_build_yaml
@@ -253,8 +274,8 @@ cr_deploy_docker_construct <- function(
 
   # as ... passes through to cr_buildstep_docker to
   # cr_buildstep, we need both
-  other_formals = c(formalArgs(cr_buildstep_docker),
-                    formalArgs(cr_buildstep))
+  other_formals = c(methods::formalArgs(cr_buildstep_docker),
+                    methods::formalArgs(cr_buildstep))
 
   remove_args <- setdiff(yaml_formals, other_formals)
 
@@ -300,7 +321,8 @@ cr_deploy_docker_construct <- function(
 
 #' Create a build step to build and push a docker image
 #'
-#' @param image The image tag that will be pushed, starting with gcr.io or created by combining with \code{projectId} if not starting with gcr.io
+#' @param image The image tag that will be pushed, starting with gcr.io
+#' or created by combining with \code{projectId} if not starting with gcr.io
 #' @param tag The tag or tags to be attached to the pushed image - can use \code{Build} macros
 #' @param location Where the Dockerfile to build is in relation to \code{dir}
 #' @param ... Further arguments passed in to \link{cr_buildstep}
@@ -315,7 +337,9 @@ cr_deploy_docker_construct <- function(
 #'
 #' @details
 #'
-#' Setting \code{kaniko_cache = TRUE} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{https://cloud.google.com/build/docs/kaniko-cache}{Using Kaniko cache}
+#' Setting \code{kaniko_cache = TRUE} will enable caching of the layers of
+#' the Dockerfile, which will speed up subsequent builds of that Dockerfile.
+#' See \href{https://cloud.google.com/build/docs/kaniko-cache}{Using Kaniko cache}
 #'
 #' If building multiple tags they don't have to run sequentially - set \code{waitFor = "-"} to build concurrently
 #'
@@ -470,7 +494,11 @@ cr_buildstep_docker <- function(
 #' }
 cr_dockerfile_plumber <- function(deploy_folder, ...) {
   stop(
-    "No Dockerfile detected.  Please create one in the deployment folder.  See a guide on website on how to use library(containerit) to do so: https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html#creating-a-dockerfile-with-containerit",
+    paste0(
+      "No Dockerfile detected.  Please create one in the deployment folder.  ",
+      "See a guide on website on how to use library(containerit) to do so: ",
+      "https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html#creating-a-dockerfile-with-containerit"
+    ),
     call. = FALSE
   )
 }
@@ -495,7 +523,8 @@ find_dockerfile <- function(local, dockerfile) {
 
 #' Authorize Docker using `gcloud auth configure-docker`
 #'
-#' @param registry The registry to authorize `docker`
+#' @param image name of the Docker image to push or pull from that needs
+#' authorization, or simply the registry.
 #' @param ... Other arguments passed to \link{cr_buildstep_gcloud}
 #'
 #'
@@ -505,33 +534,25 @@ find_dockerfile <- function(local, dockerfile) {
 #' @examples
 #' cr_buildstep_docker_auth("us.gcr.io")
 #' cr_buildstep_docker_auth(c("us.gcr.io", "asia.gcr.io"))
-#' cr_buildstep_docker_auth_auto("https://asia.gcr.io/myrepo/image")
-cr_buildstep_docker_auth <- function(registry, ...) {
-  if (is.null(registry) || length(registry) == 0) {
+#' cr_buildstep_docker_auth("https://asia.gcr.io/myrepo/image")
+cr_buildstep_docker_auth <- function(image, ...) {
+  if (is.null(image) || length(image) == 0) {
     return(NULL)
   }
-  registry <- sub("^http(s|)://", "", registry)
-  cr_buildstep_gcloud(
-    "gcloud",
-    c("gcloud", "auth", "configure-docker", "-q",
-      paste(registry, collapse = ",")
-    ),
-    ...)
-
-}
-
-#' @param image name of the Docker image to push or pull from that needs
-#' authorization
-#' @rdname cr_buildstep_docker_auth
-#' @export
-cr_buildstep_docker_auth_auto <- function(image, ...) {
-  # Adding this in for Artifacts Registry
   image <- tolower(image)
   need_location <- grepl("^.*(-docker.pkg.dev|gcr.io)", image)
   res <- NULL
   if (any(need_location)) {
-    registry <- sub("^(.*(-docker.pkg.dev|gcr.io)).*", "\\1", image[need_location])
-    res <- cr_buildstep_docker_auth(registry, ...)
+    registry <- sub("^(.*(-docker.pkg.dev|gcr.io)).*", "\\1",
+                    image[need_location])
+    registry <- sub("^http(s|)://", "", registry)
+    res <- cr_buildstep_gcloud(
+      "gcloud",
+      c("gcloud", "auth", "configure-docker", "-q",
+        paste(registry, collapse = ",")
+      ),
+      ...)
   }
   res
 }
+

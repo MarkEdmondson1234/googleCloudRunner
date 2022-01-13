@@ -49,13 +49,21 @@ pushed}
 
 \item{timeout}{Timeout for build}
 
-\item{projectId_target}{The project to publish the Docker image to.  The image will be built under the project configured via \link{cr_project_get}.  You will need to give the build project's service email access to the target GCP project via IAM for it to push successfully.}
+\item{projectId_target}{The project to publish the Docker image to.
+The image will be built under the project configured via
+\link{cr_project_get}.  You will need to give the build project's
+service email access to the target GCP project via IAM for it to push
+successfully.}
 }
 \description{
-This helps the common use case of building a Dockerfile based on the contents of a GitHub repo, and sets up a build trigger so it will build on every commit.
+This helps the common use case of building a Dockerfile based on the
+contents of a GitHub repo, and sets up a build trigger so it will
+build on every commit.
 }
 \details{
-This creates a buildtrigger to do a kamiko cache enabled Docker build upon each commit, as defined by your repo settings via \link{cr_buildtrigger_repo}.  It will build all tags concurrently.
+This creates a buildtrigger to do a kamiko cache enabled Docker build
+upon each commit, as defined by your repo settings via
+\link{cr_buildtrigger_repo}.  It will build all tags concurrently.
 }
 \examples{
 \dontrun{

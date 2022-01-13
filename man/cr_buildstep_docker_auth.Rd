@@ -2,20 +2,15 @@
 % Please edit documentation in R/docker.R
 \name{cr_buildstep_docker_auth}
 \alias{cr_buildstep_docker_auth}
-\alias{cr_buildstep_docker_auth_auto}
 \title{Authorize Docker using `gcloud auth configure-docker`}
 \usage{
-cr_buildstep_docker_auth(registry, ...)
-
-cr_buildstep_docker_auth_auto(image, ...)
+cr_buildstep_docker_auth(image, ...)
 }
 \arguments{
-\item{registry}{The registry to authorize `docker`}
+\item{image}{name of the Docker image to push or pull from that needs
+authorization, or simply the registry.}
 
 \item{...}{Other arguments passed to \link{cr_buildstep_gcloud}}
-
-\item{image}{name of the Docker image to push or pull from that needs
-authorization}
 }
 \value{
 A buildstep
@@ -26,5 +21,5 @@ Authorize Docker using `gcloud auth configure-docker`
 \examples{
 cr_buildstep_docker_auth("us.gcr.io")
 cr_buildstep_docker_auth(c("us.gcr.io", "asia.gcr.io"))
-cr_buildstep_docker_auth_auto("https://asia.gcr.io/myrepo/image")
+cr_buildstep_docker_auth("https://asia.gcr.io/myrepo/image")
 }

@@ -25,6 +25,7 @@ Imports:
     googlePubsubR (>= 0.0.2),
     httr (>= 1.4.1),
     jose (>= 1.0),
+    methods,
     jsonlite (>= 1.5),
     openssl (>= 1.4.1),
     plumber (>= 1.0.0),

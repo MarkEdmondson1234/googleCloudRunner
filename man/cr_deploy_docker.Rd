@@ -42,9 +42,13 @@ cr_deploy_docker_construct(
 \arguments{
 \item{local}{The folder containing the Dockerfile to build}
 
-\item{image_name}{The name of the docker image to be built either full name starting with gcr.io or constructed from the image_name and projectId via \code{gcr.io/{projectId}/{image_name}}}
+\item{image_name}{The name of the docker image to be built either full
+name starting with gcr.io or constructed from the image_name and
+\code{projectId} via \code{gcr.io/{projectId}/{image_name}}}
 
-\item{dockerfile}{An optional Dockerfile built to support the script.  Not needed if "Dockerfile" exists in folder.  If supplied will be copied into deployment folder and called "Dockerfile"}
+\item{dockerfile}{An optional Dockerfile built to support the script.
+Not needed if "Dockerfile" exists in folder.  If supplied will be
+copied into deployment folder and called "Dockerfile"}
 
 \item{remote}{The folder on Google Cloud Storage}
 
@@ -60,7 +64,8 @@ cr_deploy_docker_construct(
 
 \item{kaniko_cache}{If TRUE will use kaniko cache for Docker builds.}
 
-\item{predefinedAcl}{Access setting for the bucket used in deployed.  Set to "bucketLevel" if using bucket level access}
+\item{predefinedAcl}{Access setting for the bucket used in deployed.
+Set to "bucketLevel" if using bucket level access}
 
 \item{pre_steps}{Other \link{cr_buildstep} to run before the docker build}
 
@@ -69,7 +74,8 @@ cr_deploy_docker_construct(
 \item{...}{
   Arguments passed on to \code{\link[=cr_buildstep_docker]{cr_buildstep_docker}}
   \describe{
-    \item{\code{image}}{The image tag that will be pushed, starting with gcr.io or created by combining with \code{projectId} if not starting with gcr.io}
+    \item{\code{image}}{The image tag that will be pushed, starting with gcr.io
+or created by combining with \code{projectId} if not starting with gcr.io}
     \item{\code{location}}{Where the Dockerfile to build is in relation to \code{dir}}
     \item{\code{build_args}}{additional arguments to pass to \code{docker build},
 should be a character vector.}
@@ -79,12 +85,15 @@ pushed}
   }}
 }
 \description{
-Build a local Dockerfile in the cloud. See googleCloudRunner website for help how to generate Dockerfiles.  If you want the docker to build on each commit, see also \link{cr_deploy_docker_trigger}
+Build a local Dockerfile in the cloud. See googleCloudRunner website
+for help how to generate Dockerfiles.  If you want the docker to build
+on each commit, see also \link{cr_deploy_docker_trigger}
 }
 \details{
 This lets you deploy local folders with Dockerfiles, automating saving the source on Google Cloud Storage.
 
-To deploy builds on git triggers and sources such as GitHub, see the examples of \link{cr_buildstep_docker} or the use cases on the website
+To deploy builds on git triggers and sources such as GitHub, see the
+examples of \link{cr_buildstep_docker} or the use cases on the website
 }
 \note{
 `cr_deploy_docker_construct` is a helper function to construct the arguments

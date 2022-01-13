@@ -17,7 +17,8 @@ cr_buildstep_docker(
 )
 }
 \arguments{
-\item{image}{The image tag that will be pushed, starting with gcr.io or created by combining with \code{projectId} if not starting with gcr.io}
+\item{image}{The image tag that will be pushed, starting with gcr.io
+or created by combining with \code{projectId} if not starting with gcr.io}
 
 \item{tag}{The tag or tags to be attached to the pushed image - can use \code{Build} macros}
 
@@ -42,7 +43,9 @@ pushed}
 Create a build step to build and push a docker image
 }
 \details{
-Setting \code{kaniko_cache = TRUE} will enable caching of the layers of the Dockerfile, which will speed up subsequent builds of that Dockerfile.  See \href{https://cloud.google.com/build/docs/kaniko-cache}{Using Kaniko cache}
+Setting \code{kaniko_cache = TRUE} will enable caching of the layers of
+the Dockerfile, which will speed up subsequent builds of that Dockerfile.
+See \href{https://cloud.google.com/build/docs/kaniko-cache}{Using Kaniko cache}
 
 If building multiple tags they don't have to run sequentially - set \code{waitFor = "-"} to build concurrently
 }
