@@ -243,27 +243,29 @@ cr_deploy_docker_construct <- function(
   # allow for ... to contain arguments to cr_build_yaml as well
   args <- list(...)
 
-  yaml_names <- c("timeout", "logsBucket", "options", "substitutions", "tags",
-                "secrets", "availableSecrets", "artifacts", "serviceAccount")
-  yaml_args <- args[yaml_names]
+  # running this first because these arguments
+  # will be removed from args
+  yaml_formals <- formalArgs(cr_build_yaml)
+  yaml_args <- args[intersect(names(args), yaml_formals)]
+  # timeout is specified as an argument in this function AND
+  # cr_build_yaml
   yaml_args$timeout <- timeout
-  yaml_args <- yaml_args[!sapply(yaml_args, is.null)]
-  yaml_args$images <- pushed_image
 
-  # remove the cr_build_yaml arguments
-  for (iarg in yaml_names) {
-    args[[iarg]] <- NULL
-  }
-  args$timeout <- NULL
+  # as ... passes through to cr_buildstep_docker to
+  # cr_buildstep, we need both
+  other_formals = c(formalArgs(cr_buildstep_docker),
+                    formalArgs(cr_buildstep))
 
-  # assign arguments for cr_buildstep_docker
+  remove_args <- setdiff(yaml_formals, other_formals)
+
+  args <- args[setdiff(names(args), remove_args)]
+
+  # assign arguments for cr_buildstep_docker for the do.call
+  # that intersect with the arguments of THIS function
   args$image <- image
   args$tag <- tag
-  args$location <- "."
-  args$dir <- "deploy"
   args$projectId <- projectId
   args$kaniko_cache <- kaniko_cache
-
 
   docker_step <- do.call(cr_buildstep_docker, args = args)
 
