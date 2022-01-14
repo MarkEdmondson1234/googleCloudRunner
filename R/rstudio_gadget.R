@@ -4,15 +4,15 @@
 #' @import assertthat
 #' @export
 cr_deploy_gadget <- function() {
-  assert_that(
+  assertthat::assert_that(
     cr_project_get() != "",
     cr_bucket_get() != "",
-    cr_region_get() != "",
-    Sys.getenv("GCE_AUTH_FILE") != ""
+    cr_region_get() != ""
   )
 
   # if invoked when the library is not loaded
   if (!googleAuthR::gar_has_token()) {
+    assertthat::assert_that(Sys.getenv("GCE_AUTH_FILE") != "")
     googleAuthR::gar_attach_auto_auth(
       "https://www.googleapis.com/auth/cloud-platform",
       environment_var = "GCE_AUTH_FILE"

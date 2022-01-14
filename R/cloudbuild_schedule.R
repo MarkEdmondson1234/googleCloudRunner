@@ -76,17 +76,23 @@ cr_schedule_build <- function(build,
                               schedule,
                               schedule_type = c("http","pubsub"),
                               schedule_pubsub = NULL,
-                              email = cr_email_get(),
+                              email = NULL,
                               projectId = cr_project_get(),
                               ...) {
 
   schedule_type <- match.arg(schedule_type)
 
   if(schedule_type == "http"){
-    https <- cr_build_schedule_http(build,
-                                    email = email,
-                                    projectId = projectId
+    # this allows email to be set to NULL by default
+    # and then cr_build_schedule_http will pick up the
+    # cr_email_get() so that if using
+    # pubsub then email not necessary
+    args <- list(
+      build = build,
+      projectId = projectId
     )
+    args$email <- email
+    https <- do.call(cr_build_schedule_http, args = args)
 
     # schedule http API call to Cloud Build
     out <- cr_schedule(

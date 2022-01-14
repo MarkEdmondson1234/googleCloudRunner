@@ -16,7 +16,7 @@ cr_schedule_build(
   schedule,
   schedule_type = c("http", "pubsub"),
   schedule_pubsub = NULL,
-  email = cr_email_get(),
+  email = NULL,
   projectId = cr_project_get(),
   ...
 )
