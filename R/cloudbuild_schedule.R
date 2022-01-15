@@ -140,7 +140,7 @@ cr_schedule_build <- function(build,
 }
 
 check_topic_exists = function(topic, projectId) {
-  x = try({googlePubsubR::topics_get(topic)})
+  x = try({googlePubsubR::topics_get(topic)}, silent = TRUE)
   !inherits(x, "try-error")
 }
 
