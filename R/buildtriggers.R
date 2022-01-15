@@ -273,8 +273,11 @@ cr_buildtrigger <- function(build,
     the_filename <- NULL
 
     # remove builds source
-    build$source <- NULL
-    the_build <- cr_build_make(build, source = NULL)
+    # build$source <- NULL
+    # remove repo source, but should keep the bucket if there
+    build$source$repoSource <- NULL
+    the_build <- build
+    # the_build <- cr_build_make(build)
   }
 
   trigger_cloudsource <- NULL
