@@ -112,6 +112,7 @@ cr_schedule_build <- function(build,
       dots$name <- NULL
     }
     trigger_name <- dots$trigger_name
+    dots$trigger_name <- NULL
 
     # creates topic and build trigger
     pubsub_target <- create_pubsub_target(build = build,
