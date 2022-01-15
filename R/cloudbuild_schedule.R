@@ -114,10 +114,16 @@ cr_schedule_build <- function(build,
     trigger_name <- dots$trigger_name
     dots$trigger_name <- NULL
 
+    build_name <- dots$build_name
+    if (is.null(build_name)) {
+      build_name <- run_name
+    }
+    dots$build_name <- NULL
+
     # creates topic and build trigger
     pubsub_target <- create_pubsub_target(build = build,
                                           schedule_pubsub = schedule_pubsub,
-                                          run_name = run_name,
+                                          run_name = build_name,
                                           projectId = projectId,
                                           trigger_name = trigger_name)
 
@@ -140,7 +146,7 @@ cr_schedule_build <- function(build,
 }
 
 check_topic_exists = function(topic, projectId) {
-  x = try({googlePubsubR::topics_get(topic)}, silent = TRUE)
+  x = try({googlePubsubR::topics_get(topic)})
   !inherits(x, "try-error")
 }
 
