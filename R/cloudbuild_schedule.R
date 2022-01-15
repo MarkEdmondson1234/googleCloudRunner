@@ -68,7 +68,8 @@ cr_build_schedule_http <- function(build,
 #' @export
 #' @param schedule A cron schedule e.g. \code{"15 5 * * *"}
 #' @param schedule_type Whether to use HTTP or PubSub styled schedules
-#' @param ... additional arguments to pass to \link{cr_schedule}
+#' @param ... additional arguments to pass to \link{cr_schedule},
+#' including `trigger_name` if using PubSub
 #' @inheritDotParams cr_schedule
 #' @param schedule_pubsub If you have a custom pubsub message to send via an existing topic, use \link{cr_schedule_pubsub} to supply it here
 #' @return A cloud scheduler \link{Job} object
@@ -110,12 +111,14 @@ cr_schedule_build <- function(build,
       run_name <- dots$name
       dots$name <- NULL
     }
+    trigger_name <- dots$trigger_name
 
     # creates topic and build trigger
     pubsub_target <- create_pubsub_target(build = build,
                                           schedule_pubsub = schedule_pubsub,
                                           run_name = run_name,
-                                          projectId = projectId)
+                                          projectId = projectId,
+                                          trigger_name = trigger_name)
 
     myMessage("Creating Cloud Schedule to trigger PubSub topicName:",
               pubsub_target$topicName,
@@ -173,7 +176,8 @@ check_pubsub_topic <- function(schedule_pubsub, run_name,
 }
 
 create_pubsub_target <- function(build, schedule_pubsub, run_name,
-                                 projectId) {
+                                 projectId,
+                                 trigger_name = NULL) {
 
   topic_basename <- check_pubsub_topic(schedule_pubsub, run_name,
                                        projectId)
@@ -183,16 +187,20 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name,
   # check PubSub topic is there:
   topic_got <- googlePubsubR::topics_get(topic_basename)
 
-  # May only contain alphanumeric characters and dashes
-  trigger_name <- underscore_to_dash(paste0(basename(topic_got$name),
-                                            "-trigger"))
+  if (is.null(trigger_name)) {
+    # May only contain alphanumeric characters and dashes
+    trigger_name <- paste0(basename(topic_got$name),
+                           "-trigger")
+  }
+  trigger_name <- underscore_to_dash(trigger_name)
+
 
   myMessage("Creating BuildTrigger subscription:", trigger_name, level = 3)
   # Create a build trigger that will run when the pubsub topic is called
   cr_buildtrigger(build,
                   name = trigger_name,
-                  trigger = cr_buildtrigger_pubsub(basename(topic_got$name,
-                                                            projectId = projectId)))
+                  trigger = cr_buildtrigger_pubsub(basename(topic_got$name),
+                                                   projectId = projectId))
 
   pubsub_target
 
