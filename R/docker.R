@@ -290,8 +290,9 @@ cr_deploy_docker_construct <- function(
 
   docker_step <- do.call(cr_buildstep_docker, args = args)
 
+  pre_steps <- c(cr_buildstep_source_move("deploy"),
+                 pre_steps)
   steps <- c(
-    cr_buildstep_source_move("deploy"),
     pre_steps,
     docker_step,
     post_steps
