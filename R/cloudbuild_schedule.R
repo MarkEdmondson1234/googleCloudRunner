@@ -114,7 +114,8 @@ cr_schedule_build <- function(build,
     # creates topic and build trigger
     pubsub_target <- create_pubsub_target(build = build,
                                           schedule_pubsub = schedule_pubsub,
-                                          run_name = run_name)
+                                          run_name = run_name,
+                                          projectId = projectId)
 
     myMessage("Creating Cloud Schedule to trigger PubSub topicName:",
               pubsub_target$topicName,
@@ -134,37 +135,51 @@ cr_schedule_build <- function(build,
 
 }
 
-check_pubsub_topic <- function(schedule_pubsub, run_name){
+check_topic_exists = function(topic, projectId) {
+  x = try({googlePubsubR::topics_get(topic)})
+  !inherits(x, "try-error")
+}
+
+check_pubsub_topic <- function(schedule_pubsub, run_name,
+                               projectId){
   if (!is.null(schedule_pubsub)) {
     assert_that(is.gar_pubsubTarget(schedule_pubsub))
     topic_basename <- basename(schedule_pubsub$topicName)
-    return(topic_basename)
+  } else {
+    topic_basename <- paste0(run_name, "-topic")
   }
-
   check_package_installed("googlePubsubR")
-  topic_basename <- paste0(run_name, "-topic")
 
   myMessage("Creating PubSub topic:", topic_basename, level = 3)
-  topic_created <- tryCatch(
-    googlePubsubR::topics_create(topic_basename),
-    error = function(err) {
-      stop("Could not create topic:",
-           topic_basename,
-           err$message,
-           call. = FALSE
-      )
-    }
-  )
+  if (!check_topic_exists(topic_basename, projectId = projectId)) {
+    topic_created <- tryCatch(
+      if ("project" %in% methods::formalArgs(googlePubsubR::topics_create)) {
+        googlePubsubR::topics_create(topic_basename, project = projectId)
+      } else {
+        googlePubsubR::topics_create(topic_basename)
+      },
+      error = function(err) {
+        stop("Could not create topic:",
+             topic_basename,
+             err$message,
+             call. = FALSE
+        )
+      }
+    )
+  }
 
   topic_basename
 
 }
 
-create_pubsub_target <- function(build, schedule_pubsub, run_name) {
+create_pubsub_target <- function(build, schedule_pubsub, run_name,
+                                 projectId) {
 
-  topic_basename <- check_pubsub_topic(schedule_pubsub, run_name)
+  topic_basename <- check_pubsub_topic(schedule_pubsub, run_name,
+                                       projectId)
 
-  pubsub_target = cr_schedule_pubsub(topic_basename)
+  pubsub_target = cr_schedule_pubsub(topic_basename,
+                                     projectId = projectId)
   # check PubSub topic is there:
   topic_got <- googlePubsubR::topics_get(topic_basename)
 
@@ -176,7 +191,8 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name) {
   # Create a build trigger that will run when the pubsub topic is called
   cr_buildtrigger(build,
                   name = trigger_name,
-                  trigger = cr_buildtrigger_pubsub(basename(topic_got$name)))
+                  trigger = cr_buildtrigger_pubsub(basename(topic_got$name,
+                                                            projectId = projectId)))
 
   pubsub_target
 
