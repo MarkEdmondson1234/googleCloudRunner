@@ -240,6 +240,7 @@ parse_schedule_list <- function(x){
 #' @param pubsub_cleanup If the Cloud Scheduler is pointing at a Build Trigger/PubSub as deployed by \link{cr_deploy_r} will attempt to clean up those resources too.
 #' @importFrom googleAuthR gar_api_generator
 #' @importFrom googlePubsubR topics_delete subscriptions_delete
+#' @importFrom assertthat assert_that is.flag is.string
 #' @export
 #'
 #' @examples
@@ -255,53 +256,60 @@ cr_schedule_delete <- function(x,
                                pubsub_cleanup = TRUE){
 
   assert_that(
-    assertthat::is.flag(pubsub_cleanup),
+    is.flag(pubsub_cleanup),
     is.string(region),
     is.string(projectId)
   )
 
   the_job <- as.gar_scheduleJob(x)
+  if(is.null(the_job)){
+    stop("Failed to parse out a schedule job", call. = FALSE)
+  }
+
   the_name <- the_job$name
 
-  if(!is.null(the_job) && pubsub_cleanup){
-
-    myMessage("PubSub triggered Cloud Build detected.  Attempting to delete topic and build trigger as well for", the_name, level = 3)
-
-    build_trigger_guess <- paste0(underscore_to_dash(basename(the_name)),"-topic-trigger")
-
-    myMessage("Fetching build trigger", build_trigger_guess, level = 3)
-    the_buildtrigger <- tryCatch(
-      cr_buildtrigger_get(build_trigger_guess, projectId = projectId),
-      http_404 = function(err){
-        myMessage("Could not find build trigger",
-                  build_trigger_guess,
-                  "to delete. Aborting, you will need to delete it manually. ",
-                  err$message, level = 3)
-        return(NULL)
-      },
-      error = function(err){
-        stop(err$message, call. = FALSE)
-      })
-
-    if(!is.null(the_buildtrigger)){
-      cr_buildtrigger_delete(the_buildtrigger$id, projectId = projectId)
-
-      the_pubsub <- tryCatch({
-        # it deletes subscriptions too
-        topics_delete(the_buildtrigger$pubsubConfig$topic)
-      }, error = function(err){
-        myMessage("Could not delete topic for ",
-                  the_name, "to delete. Aborting. ", err$message, level = 3)
-        return(NULL)
-      })
-    }
-
+  if(pubsub_cleanup){
+    delete_schedule_pubsub(the_name, projectId)
   }
 
   url <- sprintf("https://cloudscheduler.googleapis.com/v1/%s", the_name)
   # cloudscheduler.projects.locations.jobs.delete
   f <- gar_api_generator(url, "DELETE", data_parse_function = function(x) TRUE)
   f()
+
+}
+
+delete_schedule_pubsub <- function(the_name, projectId){
+  myMessage("PubSub triggered Cloud Build detected.  Attempting to delete topic and build trigger as well for", the_name, level = 3)
+
+  build_trigger_guess <- paste0(underscore_to_dash(basename(the_name)),"-topic-trigger")
+
+  myMessage("Fetching build trigger", build_trigger_guess, level = 3)
+  the_buildtrigger <- tryCatch(
+    cr_buildtrigger_get(build_trigger_guess, projectId = projectId),
+    http_404 = function(err){
+      myMessage("Could not find build trigger",
+                build_trigger_guess,
+                "to delete. Aborting, you will need to delete it manually. ",
+                err$message, level = 3)
+      return(NULL)
+    },
+    error = function(err){
+      stop(err$message, call. = FALSE)
+    })
+
+  if(!is.null(the_buildtrigger)){
+    cr_buildtrigger_delete(the_buildtrigger$id, projectId = projectId)
+
+    the_pubsub <- tryCatch({
+      # it deletes subscriptions too
+      topics_delete(the_buildtrigger$pubsubConfig$topic)
+    }, error = function(err){
+      myMessage("Could not delete topic for ",
+                the_name, "to delete. Aborting. ", err$message, level = 3)
+      return(NULL)
+    })
+  }
 
 }
 

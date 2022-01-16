@@ -78,8 +78,7 @@ cr_schedule_build <- function(build,
   if(schedule_type == "http"){
     https <- cr_build_schedule_http(build,
                                     email = email,
-                                    projectId = projectId
-    )
+                                    projectId = projectId)
 
     # schedule http API call to Cloud Build
     out <- cr_schedule(
