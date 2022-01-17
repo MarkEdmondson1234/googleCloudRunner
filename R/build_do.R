@@ -100,6 +100,11 @@ cr_build <- function(x,
     )
   }
 
+  if(!is.null(source)){
+    myMessage("Using source supplied in cr_build", level = 2)
+    build$source <- source
+  }
+
 
   parse_f <- function(x) {
     structure(x, class = "BuildOperationMetadata")
