@@ -153,10 +153,12 @@ print.gar_scheduleJob <- function(x, ...) {
   cat0("httpTarget.httpMethod: ", x$httpTarget$httpMethod)
   cat0("pubsubTarget.topicName: ", x$pubsubTarget$topicName)
   cat0("pubsubTarget.data: ", x$pubsubTarget$data)
-  cat0(
-    "pubsubTarget.data (unencoded): ",
-    googlePubsubR::msg_decode(x$pubsubTarget$data)
-  )
+  if(!is.null(x$pubsubTarget$data)){
+    cat0(
+      "pubsubTarget.data (unencoded): ",
+      googlePubsubR::msg_decode(x$pubsubTarget$data)
+    )
+  }
   cat0("userUpdateTime: ", x$userUpdateTime)
   cat0("schedule: ", x$schedule)
   cat0("scheduleTime:", x$scheduleTime)

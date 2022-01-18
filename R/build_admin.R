@@ -10,7 +10,7 @@
 #' @import assertthat
 #' @export
 #' @family Cloud Build functions
-#' @return A gar_Build object \link{Build}
+#' @return A gar_Build object \link{Build} or NULL if not found
 cr_build_status <- function(id = .Last.value,
                             projectId = cr_project_get()) {
   the_id <- extract_build_id(id)
@@ -26,7 +26,17 @@ cr_build_status <- function(id = .Last.value,
     data_parse_function = as.gar_Build
   )
 
-  f()
+  tryCatch(
+    f(),
+    http_404 = function(err){
+      cli::cli_alert_danger("Build: {id} in project {projectId} not found - returning NULL")
+      NULL
+    },
+    http_403 = function(err){
+      cli::cli_alert_danger("The caller does not have permission for project: {projectId}")
+      NULL
+    }
+  )
 }
 
 #' Download artifacts from a build

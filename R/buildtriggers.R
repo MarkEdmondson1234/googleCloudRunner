@@ -18,7 +18,18 @@ cr_buildtrigger_get <- function(triggerId,
     "GET",
     data_parse_function = as.buildTriggerResponse
   )
-  f()
+
+  tryCatch(
+    f(),
+    http_404 = function(err){
+      cli::cli_alert_danger("Trigger: {triggerId} in project {projectId} not found - returning NULL")
+      NULL
+    },
+    http_403 = function(err){
+      cli::cli_alert_danger("The caller does not have permission for project: {projectId}")
+      NULL
+    }
+  )
 }
 
 #' Updates a `BuildTrigger` by its project ID and trigger ID.This API is experimental.
@@ -92,7 +103,19 @@ cr_buildtrigger_delete <- function(triggerId, projectId = cr_project_get()) {
   f <- gar_api_generator(url, "DELETE",
     data_parse_function = function(x) TRUE
   )
-  f()
+
+  tryCatch(
+    f(),
+    http_404 = function(err){
+      cli::cli_alert_info("BuildTrigger: {triggerId} in project {projectId} was not present to delete - returning TRUE")
+      TRUE
+    },
+    http_403 = function(err){
+      cli::cli_alert_danger("The caller does not have permission for project: {projectId}")
+      FALSE
+    }
+  )
+
 }
 
 #' Lists existing `BuildTrigger`s.This API is experimental.
@@ -299,14 +322,7 @@ cr_buildtrigger <- function(build,
     includedFiles = includedFiles
   )
 
-  if (overwrite) {
-    tryCatch(
-      cr_buildtrigger_delete(name, projectId = projectId),
-      error = function(err) {
-        myMessage("overwrite=TRUE but no trigger to overwrite named:", name, level = 3)
-      }
-    )
-  }
+  if (overwrite) cr_buildtrigger_delete(name, projectId = projectId)
 
   url <- sprintf(
     "https://cloudbuild.googleapis.com/v1/projects/%s/triggers",

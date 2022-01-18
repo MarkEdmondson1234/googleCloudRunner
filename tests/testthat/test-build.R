@@ -20,12 +20,7 @@ test_that("[Online] Test building from build object", {
   )
   built <- cr_build(cloudbuild)
 
-  tryCatch(
-    cr_schedule_delete("test1"),
-    http_404 = function(err){
-      message("schedule test1 already deleted")
-    }
-  )
+  cr_schedule_delete("test1")
 
   sched_built <- cr_schedule("test1", "* * * * *",
     httpTarget = cr_build_schedule_http(built)
@@ -95,4 +90,16 @@ test_that("availableSecrets works ok", {
   parsed_logs <- cr_build_logs(the_build)
 
   expect_true(any(grepl("A_SECRET_VALUE SECOND_SECRET", parsed_logs)))
+})
+
+test_that("Build status NULLs", {
+  skip_on_ci()
+  skip_on_cran()
+
+  no_build <- cr_build_status("not_exist")
+  expect_null(no_build)
+
+  no_buildtrigger <- cr_buildtrigger_get("not_exist2")
+  expect_null(no_buildtrigger)
+
 })

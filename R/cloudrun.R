@@ -240,7 +240,18 @@ cr_run_get <- function(name, projectId = cr_project_get()) {
     data_parse_function = parse_service_get,
     checkTrailingSlash = FALSE
   )
-  f()
+
+  tryCatch(
+    f(),
+    http_404 = function(err){
+      cli::cli_alert_danger("Cloud Run: {name} in project {projectId} not found - returning NULL")
+      NULL
+    },
+    http_403 = function(err){
+      cli::cli_alert_danger("The caller does not have permission for project: {projectId}")
+      NULL
+    }
+  )
 }
 
 #' @import assertthat

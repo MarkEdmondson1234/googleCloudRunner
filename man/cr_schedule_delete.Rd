@@ -20,6 +20,9 @@ cr_schedule_delete(
 
 \item{pubsub_cleanup}{If the Cloud Scheduler is pointing at a Build Trigger/PubSub as deployed by \link{cr_deploy_r} will attempt to clean up those resources too.}
 }
+\value{
+\code{TRUE} if job not found or its deleted, \code{FALSE} if it could not delete the job
+}
 \description{
 Deletes a scheduled job.
 }
