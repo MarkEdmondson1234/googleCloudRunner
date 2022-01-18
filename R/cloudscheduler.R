@@ -249,11 +249,12 @@ parse_schedule_list <- function(x){
 #' cr_project_set("my-project")
 #' cr_region_set("europe-west1")
 #' cr_schedule_delete("cloud-build-test1")
+#'
 #' }
 cr_schedule_delete <- function(x,
                                region = cr_region_get(),
                                projectId = cr_project_get(),
-                               pubsub_cleanup = TRUE){
+                               pubsub_cleanup = FALSE){
 
   assert_that(
     is.flag(pubsub_cleanup),

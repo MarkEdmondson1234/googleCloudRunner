@@ -8,7 +8,7 @@ cr_schedule_delete(
   x,
   region = cr_region_get(),
   projectId = cr_project_get(),
-  pubsub_cleanup = TRUE
+  pubsub_cleanup = FALSE
 )
 }
 \arguments{
@@ -29,6 +29,7 @@ Deletes a scheduled job.
 cr_project_set("my-project")
 cr_region_set("europe-west1")
 cr_schedule_delete("cloud-build-test1")
+
 }
 }
 \seealso{

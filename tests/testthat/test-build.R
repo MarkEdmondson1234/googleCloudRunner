@@ -6,10 +6,9 @@ test_that("Online auth", {
   expect_s3_class(builds, "data.frame")
 
   # tests auth on cloud build
-  cr_deploy_r(system.file("schedule/test_auth.R",
-    package = "googleCloudRunner"
-  ),
-  r_image = "gcr.io/gcer-public/googleauthr-verse"
+  gg <- cr_deploy_r(
+    system.file("schedule/test_auth.R", package = "googleCloudRunner"),
+    r_image = "gcr.io/gcer-public/googleauthr-verse"
   )
 })
 
@@ -20,6 +19,14 @@ test_that("[Online] Test building from build object", {
     package = "googleCloudRunner"
   )
   built <- cr_build(cloudbuild)
+
+  tryCatch(
+    cr_schedule_delete("test1"),
+    http_404 = function(err){
+      message("schedule test1 already deleted")
+    }
+  )
+
   sched_built <- cr_schedule("test1", "* * * * *",
     httpTarget = cr_build_schedule_http(built)
   )
