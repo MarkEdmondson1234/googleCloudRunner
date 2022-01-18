@@ -190,16 +190,6 @@ cr_deploy_plumber <- function(api,
          for Cloud Run deployments", call. = FALSE)
   }
 
-  # if no dockerfile, attempt to create it
-  if (is.null(dockerfile)) {
-    if (!"Dockerfile" %in% local_files) {
-      myMessage("No Dockerfile detected in ", local, level = 3)
-      cr_dockerfile_plumber(local)
-    } else {
-      myMessage("Using existing Dockerfile found in folder", level = 3)
-    }
-  }
-
   cr_deploy_run(
     local = local,
     remote = remote,

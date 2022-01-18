@@ -272,6 +272,7 @@ cr_buildstep_mailgun <- function(message,
 #'
 #' @inheritParams cr_run
 #' @param ... passed on to \link{cr_buildstep}
+#' @seealso Docs for \href{https://cloud.google.com/sdk/gcloud/reference/run/deploy}{gcloud run deploy this buildstep invokes}
 #' @export
 #' @family Cloud Buildsteps
 cr_buildstep_run <- function(name,

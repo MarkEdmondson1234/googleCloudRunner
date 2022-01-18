@@ -48,6 +48,8 @@ cr_buildstep_run(
 Create buildsteps to deploy to Cloud Run
 }
 \seealso{
+Docs for \href{https://cloud.google.com/sdk/gcloud/reference/run/deploy}{gcloud run deploy this buildstep invokes}
+
 Other Cloud Buildsteps: 
 \code{\link{cr_buildstep_bash}()},
 \code{\link{cr_buildstep_decrypt}()},
