@@ -163,11 +163,7 @@ check_pubsub_topic <- function(schedule_pubsub, run_name,
   myMessage("Creating PubSub topic:", topic_basename, level = 3)
   if (!check_topic_exists(topic_basename, projectId = projectId)) {
     topic_created <- tryCatch(
-      if ("project" %in% methods::formalArgs(googlePubsubR::topics_create)) {
-        googlePubsubR::topics_create(topic_basename, project = projectId)
-      } else {
-        googlePubsubR::topics_create(topic_basename)
-      },
+      googlePubsubR::topics_create(topic_basename),
       error = function(err) {
         stop("Could not create topic:",
              topic_basename,
