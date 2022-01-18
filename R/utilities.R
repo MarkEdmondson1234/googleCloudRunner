@@ -7,8 +7,8 @@ underscore_to_dash <- function(x){
 #' @noRd
 #' @keywords internal
 override_list <- function(x, the_list){
-  if (is.null(x) && !is.null(the_list$x)) {
-    x <- the_list$x
+  if (is.null(x) && !is.null(the_list[[deparse(substitute(x))]])) {
+    x <- the_list[[deparse(substitute(x))]]
   }
   x
 }

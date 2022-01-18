@@ -7,13 +7,13 @@ test_that("Building Build Objects", {
     object = "my_code.tar.gz",
     bucket = "gs://my-bucket"
   ))
-  expect_true(googleCloudRunner:::is.gar_Source(my_gcs_source))
+  expect_true(is.gar_Source(my_gcs_source))
   expect_snapshot(my_gcs_source)
 
   my_repo_source <- Source(repoSource = RepoSource("https://my-repo.com",
     branchName = "master"
   ))
-  expect_true(googleCloudRunner:::is.gar_Source(my_repo_source))
+  expect_true(is.gar_Source(my_repo_source))
   expect_snapshot(my_repo_source)
 
   bq <- cr_build_make(
@@ -22,7 +22,7 @@ test_that("Building Build Objects", {
     timeout = 10,
     images = "gcr.io/my-project/demo"
   )
-  expect_true(googleCloudRunner:::is.gar_Build(bq))
+  expect_true(is.gar_Build(bq))
   expect_snapshot(bq)
 
   bq2 <- cr_build_make(
@@ -31,7 +31,7 @@ test_that("Building Build Objects", {
     timeout = "11s",
     images = "gcr.io/my-project/demo"
   )
-  expect_true(googleCloudRunner:::is.gar_Build(bq2))
+  expect_true(is.gar_Build(bq2))
   expect_snapshot(bq2)
 
   # write from creating a Yaml object

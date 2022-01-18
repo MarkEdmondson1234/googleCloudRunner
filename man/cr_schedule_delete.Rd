@@ -8,7 +8,7 @@ cr_schedule_delete(
   x,
   region = cr_region_get(),
   projectId = cr_project_get(),
-  pubsub_cleanup = TRUE
+  pubsub_cleanup = FALSE
 )
 }
 \arguments{
@@ -20,6 +20,9 @@ cr_schedule_delete(
 
 \item{pubsub_cleanup}{If the Cloud Scheduler is pointing at a Build Trigger/PubSub as deployed by \link{cr_deploy_r} will attempt to clean up those resources too.}
 }
+\value{
+\code{TRUE} if job not found or its deleted, \code{FALSE} if it could not delete the job
+}
 \description{
 Deletes a scheduled job.
 }
@@ -29,6 +32,7 @@ Deletes a scheduled job.
 cr_project_set("my-project")
 cr_region_set("europe-west1")
 cr_schedule_delete("cloud-build-test1")
+
 }
 }
 \seealso{

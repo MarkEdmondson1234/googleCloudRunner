@@ -201,6 +201,8 @@
 <span class="r-in"><span class="co"># this build includes substitution variables that read from pubsub message var1</span></span>
 <span class="r-in"><span class="va">the_build</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ==CloudBuildObject==</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> substitutions:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> _VAR1 :  $(body.message.data.var1) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> steps:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - name: alpine</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id: Hello Cloud Build</span>
@@ -261,7 +263,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer></div>
