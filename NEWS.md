@@ -1,4 +1,4 @@
-# googleCloudRunner 0.5.0
+# googleCloudRunner 0.4.1.9000
 
 * Add checks for Cloud Build email roles in `cr_setup()`
 * Add direct Secret Manager environment args in builds via `availableSecrets` (#106)

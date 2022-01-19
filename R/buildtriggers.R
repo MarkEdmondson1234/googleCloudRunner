@@ -19,17 +19,11 @@ cr_buildtrigger_get <- function(triggerId,
     data_parse_function = as.buildTriggerResponse
   )
 
-  tryCatch(
-    f(),
-    http_404 = function(err){
-      cli::cli_alert_danger("Trigger: {triggerId} in project {projectId} not found - returning NULL")
-      NULL
-    },
-    http_403 = function(err){
-      cli::cli_alert_danger("The caller does not have permission for project: {projectId}")
-      NULL
-    }
-  )
+  err_404 <- sprintf("Trigger: %s in project %s not found",
+                     triggerId, projectId)
+
+  handle_errs(f, http_404 = cli::cli_alert_danger(err_404))
+
 }
 
 #' Updates a `BuildTrigger` by its project ID and trigger ID.This API is experimental.
@@ -104,17 +98,13 @@ cr_buildtrigger_delete <- function(triggerId, projectId = cr_project_get()) {
     data_parse_function = function(x) TRUE
   )
 
-  tryCatch(
-    f(),
-    http_404 = function(err){
-      cli::cli_alert_info("BuildTrigger: {triggerId} in project {projectId} was not present to delete - returning TRUE")
-      TRUE
-    },
-    http_403 = function(err){
-      cli::cli_alert_danger("The caller does not have permission for project: {projectId}")
-      FALSE
-    }
-  )
+  err_404 <- sprintf("BuildTrigger: %s in project %s was not present to delete - returning TRUE",
+                     triggerId, projectId)
+
+  handle_errs(f,
+              http_404 = cli::cli_alert_info(err_404), return_404 = TRUE,
+              return_403 = FALSE,
+              projectId = projectId)
 
 }
 

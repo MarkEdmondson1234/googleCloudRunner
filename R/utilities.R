@@ -149,7 +149,7 @@ timestamp_to_r <- function(t) {
 difftime_format <- function(start, end){
   stopifnot(inherits(start, "POSIXct"),
             inherits(end, "POSIXct"))
-  duration <- difftime(end, start, units="secs")
+  duration <- difftime(end, start, units = "secs")
   x <- abs(as.numeric(duration))
 
   if(x < 60){
