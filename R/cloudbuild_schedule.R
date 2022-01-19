@@ -75,7 +75,7 @@ cr_build_schedule_http <- function(build,
 #' @return A cloud scheduler \link{Job} object
 cr_schedule_build <- function(build,
                               schedule,
-                              schedule_type = c("http","pubsub"),
+                              schedule_type = c("http", "pubsub"),
                               schedule_pubsub = NULL,
                               email = NULL,
                               projectId = cr_project_get(),
@@ -185,8 +185,7 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name,
   topic_basename <- check_pubsub_topic(schedule_pubsub, run_name,
                                        projectId)
 
-  pubsub_target = cr_schedule_pubsub(topic_basename,
-                                     projectId = projectId)
+  pubsub_target <- cr_schedule_pubsub(topic_basename)
   # check PubSub topic is there:
   topic_got <- googlePubsubR::topics_get(topic_basename)
 

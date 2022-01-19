@@ -16,7 +16,8 @@ test_that("[Online] Test Build Triggers", {
   ps_bt <- cr_buildtrigger(bb,
     name = "pubsub-test-triggered-zzzzz",
     trigger = ps_trigger,
-    projectId = "learning-ga4"
+    projectId = "learning-ga4",
+    overwrite = TRUE
   )
 
   # build with in-line build code

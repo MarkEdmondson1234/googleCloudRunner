@@ -275,7 +275,7 @@ test_that("targets integrations - selected deployments", {
   expect_snapshot(result)
 
   # local build time
-  local_time <- file.info(file.path("_targets","objects","merge1"))
+  local_time <- file.info(file.path("_targets", "objects", "merge1"))
 
   bs <- cr_buildstep_targets_multi(
     target_folder = target_folder,
@@ -285,7 +285,7 @@ test_that("targets integrations - selected deployments", {
 
   built <- cr_build_targets(bs, path = NULL, execute = "now")
 
-  built_time <- file.info(file.path("_targets","objects","merge1"))
+  built_time <- file.info(file.path("_targets", "objects", "merge1"))
 
   expect_gt(built_time$mtime, local_time$mtime)
 

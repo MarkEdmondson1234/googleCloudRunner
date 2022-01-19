@@ -31,7 +31,7 @@ cr_build_source.gar_RepoSource <- function(x) {
 
 #' @export
 #' @rdname cr_build_source
-cr_build_source.gar_StorageSource <- function(x) {
+cr_build_source.gar_StorageSource <- function(x) { #nolint
   Source(storageSource = x)
 }
 

@@ -20,23 +20,16 @@ cr_build_status <- function(id = .Last.value,
     projectId, the_id
   )
 
-
   # cloudbuild.projects.builds.get
-  f <- gar_api_generator(url, "GET",
-    data_parse_function = as.gar_Build
-  )
+  f <- gar_api_generator(url, "GET", data_parse_function = as.gar_Build)
 
-  tryCatch(
-    f(),
-    http_404 = function(err){
-      cli::cli_alert_danger("Build: {id} in project {projectId} not found - returning NULL")
-      NULL
-    },
-    http_403 = function(err){
-      cli::cli_alert_danger("The caller does not have permission for project: {projectId}")
-      NULL
-    }
-  )
+  err_404 <- sprintf("Build: %s in project %s not found - returning NULL",
+                     id, projectId)
+
+  handle_errs(f,
+              http_404 = cli::cli_alert_danger(err_404),
+              projectId = projectId)
+
 }
 
 #' Download artifacts from a build

@@ -271,19 +271,12 @@ cr_schedule_delete <- function(x,
   url <- sprintf("https://cloudscheduler.googleapis.com/v1/%s", the_name)
   # cloudscheduler.projects.locations.jobs.delete
   f <- gar_api_generator(url, "DELETE", data_parse_function = function(x) TRUE)
-  f()
 
-  out <- tryCatch(
-    f(),
-    http_404 = function(err){
-      cli::cli_alert_info("Schedule: {the_name} in project {projectId} was not present to delete - returning TRUE")
-      TRUE
-    },
-    http_403 = function(err){
-      cli::cli_alert_danger("The caller does not have permission for project: {projectId}")
-      FALSE
-    }
-  )
+  err_404 <- sprintf("Schedule: %s in project %s was not present to delete",
+                     the_name, projectId)
+
+  out <- handle_errs(f, http_404 = cli::cli_alert_info(err_404), return_404 = TRUE,
+                     return_403 = FALSE)
 
   # here so it always deletes schedule at least
   if (pubsub_cleanup) delete_schedule_pubsub(the_name, projectId)
@@ -295,7 +288,7 @@ cr_schedule_delete <- function(x,
 delete_schedule_pubsub <- function(the_name, projectId){
   myMessage("PubSub triggered Cloud Build detected.  Attempting to delete topic and build trigger as well for", the_name, level = 3)
 
-  build_trigger_guess <- paste0(underscore_to_dash(basename(the_name)),"-topic-trigger")
+  build_trigger_guess <- paste0(underscore_to_dash(basename(the_name)), "-topic-trigger")
 
   myMessage("Fetching build trigger", build_trigger_guess, level = 3)
   the_buildtrigger <- cr_buildtrigger_get(build_trigger_guess, projectId = projectId)
@@ -363,17 +356,11 @@ cr_schedule_get <- function(name,
   f <- gar_api_generator(url, "GET",
                          data_parse_function = parse_schedule)
 
-  tryCatch(
-    f(),
-    http_404 = function(err){
-      cli::cli_alert_danger("Schedule: {name} in project {projectId} not found - returning NULL")
-      NULL
-    },
-    http_403 = function(err){
-      cli::cli_alert_danger("The caller does not have permission for project: {projectId}")
-      NULL
-    }
-  )
+  err_404 <- sprintf("Schedule: %s in project %s not found", name, projectId)
+
+  handle_errs(f,
+              http_404 = cli::cli_alert_danger(err_404),
+              projectId = projectId)
 
 }
 
