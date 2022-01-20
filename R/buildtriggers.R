@@ -299,28 +299,25 @@ cr_buildtrigger <- function(build,
 
   if (is.gar_pubsubConfig(trigger)) {
     trigger_pubsub <- trigger
-    if(is.null(sourceToBuild)){
-      cli::cli_alert_warning("No sourceToBuild detected for PubSub trigger")
-    }
-  } else if (is.buildtrigger_repo(trigger)) {
-    # trigger params
-    if (trigger$type == "github") {
-      trigger_github <- trigger$repo
-    } else if (trigger$type == "cloud_source") {
-      trigger_cloudsource <- trigger$repo
-    }
-
-    if(!is.null(sourceToBuild)){
-      stop("Can't use sourceToBuild for git event based triggers, needs to be Webhook or PubSub trigger",
-           call. = FALSE)
-    }
+  } else if (is.buildtrigger_repo(trigger) && trigger$type == "github") {
+    trigger_github <- trigger$repo
+  } else if (is.buildtrigger_repo(trigger) && trigger$type == "cloud_source") {
+    trigger_cloudsource <- trigger$repo
   } else if (is.gar_webhookConfig(trigger)) {
     trigger_webhook <- trigger
-    if(is.null(sourceToBuild)){
-      cli::cli_alert_warning("No sourceToBuild detected for PubSub trigger")
-    }
   } else {
     stop("We should never be here - something wrong with trigger parameter", call. = FALSE)
+  }
+
+  # checks on sourceToBuild validity
+  if (is.null(sourceToBuild) &&
+     (is.gar_webhookConfig(trigger) || is.gar_pubsubConfig(trigger))) {
+    cli::cli_alert_warning("No sourceToBuild detected for event based trigger")
+  }
+
+  if (!is.null(sourceToBuild) &&
+     is.buildtrigger_repo(trigger)) {
+    stop("Can't use sourceToBuild for git based triggers", call. = FALSE)
   }
 
 
