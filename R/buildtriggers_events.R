@@ -112,16 +112,20 @@ cr_buildtrigger_repo <- function(repo_name,
                                  github_secret = NULL,
                                  ...) {
   assert_that(
-    is.string(repo_name),
-    is.string(branch)
+    is.string(repo_name)
   )
   type <- match.arg(type)
   dots <- list(...)
 
+  if(!is.null(tag) && !is.null(branch)){
+    stop("Must only have one of branch or tag - set branch=NULL if using tag",
+         call. = FALSE)
+  }
+
   if (type == "github") {
     repo <- GitHubEventsConfig(repo_name,
       branch = branch,
-      tag = NULL,
+      tag = tag,
       ...
     )
   } else if (type == "cloud_source") {

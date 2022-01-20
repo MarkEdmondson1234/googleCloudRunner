@@ -40,7 +40,7 @@ BuildTrigger(
 
 \item{disabled}{If true, the trigger will never result in a build}
 
-\item{sourceToBuild}{A \link{cr_buildtrigger_repo} object.  This field is currently only used by Webhook, Pub/Sub, Manual, and Cron triggers and is the source of the build will execute upon.}
+\item{sourceToBuild}{A \link{cr_buildtrigger_repo} object (but no regex allowed for branch or tag)  This field is currently only used by Webhook, Pub/Sub, Manual, and Cron triggers and is the source of the build will execute upon.}
 
 \item{triggerTemplate}{a \link{RepoSource} object - mutually exclusive with \code{github}}
 

@@ -11,7 +11,7 @@
 #' @param github a \link{GitHubEventsConfig} object - mutually exclusive with \code{triggerTemplate}
 #' @param includedFiles If any of the files altered in the commit pass the ignored_files
 #' @param disabled If true, the trigger will never result in a build
-#' @param sourceToBuild A \link{cr_buildtrigger_repo} object.  This field is currently only used by Webhook, Pub/Sub, Manual, and Cron triggers and is the source of the build will execute upon.
+#' @param sourceToBuild A \link{cr_buildtrigger_repo} object (but no regex allowed for branch or tag)  This field is currently only used by Webhook, Pub/Sub, Manual, and Cron triggers and is the source of the build will execute upon.
 #' @param triggerTemplate a \link{RepoSource} object - mutually exclusive with \code{github}
 #' @param description Human-readable description of this trigger
 #' @param pubsubConfig PubsubConfig describes the configuration of a trigger that creates a build whenever a Pub/Sub message is published.
@@ -163,7 +163,8 @@ GitRepoSource <- function(uri,
   assert_that(
     is.string(uri),
     is.string(ref),
-    isTRUE(grepl("^refs/"))
+    isTRUE(grepl("^refs/", ref)),
+    !grepl("[^A-Za-z0-9/.]", ref) # regex not allowed
   )
 
   repoType <- match.arg(repoType)
@@ -184,19 +185,49 @@ is.gitRepoSource <- function(x){
 
 as.gitRepoSource <- function(x){
   if(!is.buildtrigger_repo(x)){
-    stop("is not buildtrigger repo")
+    stop("is not buildtrigger_repo")
   }
 
   if(is.gar_GitHubEventsConfig(x$repo)){
-      return(
-        GitRepoSource(
-          uri = paste0(x$repo$owner, "/", x$repo$name),
-          ref = paste0("refs/", x$repo$push$branch), # ???
-          repoType = "GITHUB"
-        )
+
+    if(!is.null(x$repo$push$tag)){
+      ref <- paste0("refs/tags/", x$repo$push$tag)
+    } else if(!is.null(x$repo$push$branch)){
+      ref <- paste0("refs/heads/", x$repo$push$branch)
+    } else {
+      stop("No refs/ found", call. = FALSE)
+    }
+
+    return(
+      GitRepoSource(
+        uri = sprintf("https://github.com/%s/%s",
+                      x$repo$owner, x$repo$name),
+        ref = ref,
+        repoType = "GITHUB"
       )
+    )
   }
 
-  stop("Could not convert via as.gitRepoSource")
+  if(is.gar_RepoSource(x$repo)){
+
+    if(!is.null(x$repo$tagName)){
+      ref <- paste0("refs/tags/", x$repo$tagName)
+    } else if(!is.null(x$repo$branchName)){
+      ref <- paste0("refs/heads/", x$repo$branchName)
+    } else {
+      stop("No refs/ found", call. = FALSE)
+    }
+
+    return(
+      GitRepoSource(
+        uri = sprintf("https://source.developers.google.com/p/%s/r/%s",
+                      x$repo$projectId, x$repo$repoName),
+        ref = ref,
+        repoType = "CLOUD_SOURCE_REPOSITORIES"
+      )
+    )
+  }
+
+  stop("Could not convert object via as.gitRepoSource")
 
 }

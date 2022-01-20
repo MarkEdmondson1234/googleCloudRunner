@@ -706,15 +706,17 @@ cr_schedule("target_pubsub_schedule",
 
 Now the PubSub topic is being triggered on a schedule, we create a Build Trigger that will respond to it.
 
-The build trigger for a GitHub source is shown below:
+The build trigger for a GitHub source is shown below - it uses a parameter `sourceToBuild` to specify which git repo to build upon:
 
 ```r
-gh <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+# no regex allowed for sourceToBuild repo objects
+gh <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner", branch = "master")
 
 pubsub_sub <- cr_buildtrigger_pubsub(topic)
 
 cr_buildtrigger("cloudbuild_targets.yaml",
                 name = "targets-scheduled-demo",
+                sourceToBuild = gh,
                 trigger = pubsub_sub)
 ```
 

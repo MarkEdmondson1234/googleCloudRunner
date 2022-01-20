@@ -35,7 +35,7 @@ cr_buildtrigger_copy(
 
 \item{github}{a \link{GitHubEventsConfig} object - mutually exclusive with \code{triggerTemplate}}
 
-\item{sourceToBuild}{A \link{cr_buildtrigger_repo} object.  This field is currently only used by Webhook, Pub/Sub, Manual, and Cron triggers and is the source of the build will execute upon.}
+\item{sourceToBuild}{A \link{cr_buildtrigger_repo} object (but no regex allowed for branch or tag)  This field is currently only used by Webhook, Pub/Sub, Manual, and Cron triggers and is the source of the build will execute upon.}
 
 \item{substitutions}{A named list of Build macro variables}
 
