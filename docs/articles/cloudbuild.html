@@ -778,14 +778,16 @@
             schedule <span class="op">=</span> <span class="st">"15 4 * * *"</span>, 
             pubsubTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span></code></pre></div>
 <p>Now the PubSub topic is being triggered on a schedule, we create a Build Trigger that will respond to it.</p>
-<p>The build trigger for a GitHub source is shown below:</p>
+<p>The build trigger for a GitHub source is shown below - it uses a parameter <code>sourceToBuild</code> to specify which git repo to build upon:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">gh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="co"># no regex allowed for sourceToBuild repo objects</span>
+<span class="va">gh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span>, branch <span class="op">=</span> <span class="st">"master"</span><span class="op">)</span>
 
 <span class="va">pubsub_sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_pubsub.html">cr_buildtrigger_pubsub</a></span><span class="op">(</span><span class="va">topic</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"cloudbuild_targets.yaml"</span>,
                 name <span class="op">=</span> <span class="st">"targets-scheduled-demo"</span>,
+                sourceToBuild <span class="op">=</span> <span class="va">gh</span>,
                 trigger <span class="op">=</span> <span class="va">pubsub_sub</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
