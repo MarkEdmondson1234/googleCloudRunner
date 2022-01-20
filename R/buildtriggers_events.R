@@ -3,6 +3,7 @@
 #' Create a trigger from a Pub/Sub topic
 #'
 #' @inheritParams PubsubConfig
+#' @param topic The name of the Cloud Pub/Sub topic or a Topic object from \link[googlePubsubR]{topics_get}
 #' @param projectId The GCP project the topic is created within
 #' @family BuildTrigger functions
 #' @export
@@ -56,6 +57,11 @@
 cr_buildtrigger_pubsub <- function(topic,
                                    serviceAccountEmail = NULL,
                                    projectId = cr_project_get()) {
+
+  if(inherits(topic, "Topic")){
+    topic <- topic$name
+  }
+
   assert_that(
     is.string(topic)
   )

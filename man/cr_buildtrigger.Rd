@@ -15,6 +15,7 @@ cr_buildtrigger(
   includedFiles = NULL,
   trigger_tags = NULL,
   projectId = cr_project_get(),
+  sourceToBuild = NULL,
   overwrite = FALSE
 )
 }
@@ -38,6 +39,8 @@ cr_buildtrigger(
 \item{trigger_tags}{Tags for the buildtrigger listing}
 
 \item{projectId}{ID of the project for which to configure automatic builds}
+
+\item{sourceToBuild}{A \link{cr_buildtrigger_repo} object.  This field is currently only used by Webhook, Pub/Sub, Manual, and Cron triggers and is the source of the build will execute upon.}
 
 \item{overwrite}{If TRUE will overwrite an existing trigger with the same name}
 }

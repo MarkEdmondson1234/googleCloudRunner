@@ -13,7 +13,7 @@ cr_schedule_pubsub(
 )
 }
 \arguments{
-\item{topicName}{The name of the Cloud Pub/Sub topic to which messages will be published when a job is delivered.}
+\item{topicName}{The name of the Cloud Pub/Sub topic or a Topic object from \link[googlePubsubR]{topics_get}}
 
 \item{PubsubMessage}{A \code{PubsubMessage} object generated via \link[googlePubsubR]{PubsubMessage}.  If used, then do not send in `data` or `attributes` arguments as will be redundant since this variable will hold the information.}
 
@@ -31,6 +31,8 @@ Create a PubSub Target object for Cloud Scheduler
 }
 \details{
 You can parametrise builds by sending in values within PubSub. To read the data in the message set a substitution variable that picks up the data.  For example \code{_VAR1=$(body.message.data.var1)}
+
+If your schedule to PubSub fails with a permission error, try turning the Cloud Scheduler API off and on again the Cloud Console, which will refresh the Google permissions.
 }
 \examples{
 cr_project_set("my-project")

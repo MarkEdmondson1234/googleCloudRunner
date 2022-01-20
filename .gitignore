@@ -22,6 +22,4 @@ _targets.yaml
 tests/testthat/targets
 tests/testthat/_targets
 tests/testthat/_targets_cloudbuild
-cloudbuild_targets.yaml
-_targets*
 mtcars.csv
