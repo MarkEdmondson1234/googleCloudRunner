@@ -3,6 +3,7 @@
 #' Create a trigger from a Pub/Sub topic
 #'
 #' @inheritParams PubsubConfig
+#' @param topic The name of the Cloud Pub/Sub topic or a Topic object from \link[googlePubsubR]{topics_get}
 #' @param projectId The GCP project the topic is created within
 #' @family BuildTrigger functions
 #' @export
@@ -56,6 +57,11 @@
 cr_buildtrigger_pubsub <- function(topic,
                                    serviceAccountEmail = NULL,
                                    projectId = cr_project_get()) {
+
+  if(inherits(topic, "Topic")){
+    topic <- topic$name
+  }
+
   assert_that(
     is.string(topic)
   )
@@ -106,16 +112,20 @@ cr_buildtrigger_repo <- function(repo_name,
                                  github_secret = NULL,
                                  ...) {
   assert_that(
-    is.string(repo_name),
-    is.string(branch)
+    is.string(repo_name)
   )
   type <- match.arg(type)
   dots <- list(...)
 
+  if(!is.null(tag) && !is.null(branch)){
+    stop("Must only have one of branch or tag - set branch=NULL if using tag",
+         call. = FALSE)
+  }
+
   if (type == "github") {
     repo <- GitHubEventsConfig(repo_name,
       branch = branch,
-      tag = NULL,
+      tag = tag,
       ...
     )
   } else if (type == "cloud_source") {

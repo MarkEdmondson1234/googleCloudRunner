@@ -12,6 +12,7 @@ cr_buildtrigger_copy(
   build = NULL,
   ignoredFiles = NULL,
   github = NULL,
+  sourceToBuild = NULL,
   substitutions = NULL,
   includedFiles = NULL,
   disabled = NULL,
@@ -33,6 +34,8 @@ cr_buildtrigger_copy(
 \item{ignoredFiles}{ignored_files and included_files are file glob matches extended with support for "**".}
 
 \item{github}{a \link{GitHubEventsConfig} object - mutually exclusive with \code{triggerTemplate}}
+
+\item{sourceToBuild}{A \link{cr_buildtrigger_repo} object (but no regex allowed for branch or tag)  This field is currently only used by Webhook, Pub/Sub, Manual, and Cron triggers and is the source of the build will execute upon.}
 
 \item{substitutions}{A named list of Build macro variables}
 

@@ -40,6 +40,10 @@ print.BuildTriggerResponse <- function(x, ...) {
   if (!is.null(x$build)) {
     print(x$build)
   }
+
+  cat0("sourceToBuild.uri: ", x$sourceToBuild$uri)
+  cat0("sourceToBuild.ref:", x$sourceToBuild$ref)
+  cat0("sourceToBuild.repoType:", x$sourceToBuild$repoType)
 }
 
 

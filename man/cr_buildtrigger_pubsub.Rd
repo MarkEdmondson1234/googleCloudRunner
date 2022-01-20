@@ -11,7 +11,7 @@ cr_buildtrigger_pubsub(
 )
 }
 \arguments{
-\item{topic}{The name of the topic from which this subscription is receiving messages.}
+\item{topic}{The name of the Cloud Pub/Sub topic or a Topic object from \link[googlePubsubR]{topics_get}}
 
 \item{serviceAccountEmail}{Service account that will make the push request.}
 

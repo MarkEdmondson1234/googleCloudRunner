@@ -217,9 +217,11 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name,
 #' `data` or `attributes` arguments as will be redundant since this
 #' variable will hold the information.
 #' @param projectId The projectId for where the topic sits
+#' @param topicName The name of the Cloud Pub/Sub topic or a Topic object from \link[googlePubsubR]{topics_get}
 #' @family Cloud Scheduler functions
 #' @export
-#' @importFrom jsonlite base64_enc toJSON
+#' @importFrom jsonlite toJSON
+#' @import googlePubsubR
 #' @return A \link{PubsubTarget} object for use within \link{cr_schedule}
 #'
 #' @details
@@ -227,6 +229,11 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name,
 #' You can parametrise builds by sending in values within PubSub. To read
 #' the data in the message set a substitution variable that picks up the data.
 #' For example \code{_VAR1=$(body.message.data.var1)}
+#'
+#' If your schedule to PubSub fails with a permission error, try turning the
+#' Cloud Scheduler API off and on again the Cloud Console, which will
+#' refresh the Google permissions.
+#'
 #' @examples
 #' cr_project_set("my-project")
 #' cr_bucket_set("my-bucket")
@@ -286,6 +293,19 @@ cr_schedule_pubsub <- function(topicName,
                                data = NULL,
                                attributes = NULL,
                                projectId = cr_project_get()) {
+
+  assert_that(
+    is.string(projectId)
+  )
+
+  if(is.string(topicName)){
+    the_name <- sprintf("projects/%s/topics/%s", projectId, topicName)
+  } else if(inherits(topicName, "Topic")){
+    the_name <- topicName$name
+  }
+
+  assert_that(is.string(the_name))
+
   the_attributes <- attributes
   if (!is.null(PubsubMessage)) {
     if (!inherits(PubsubMessage, "PubsubMessage")) {
@@ -298,14 +318,14 @@ cr_schedule_pubsub <- function(topicName,
 
 
   if (is.null(data)) {
-    the_data <- topicName
+    the_data <- the_name
   } else {
-    the_data <- toJSON(data)
+    the_data <- data
   }
 
   PubsubTarget(
-    topicName = sprintf("projects/%s/topics/%s", projectId, topicName),
-    data = base64_enc(the_data),
+    topicName = the_name,
+    data = the_data,
     attributes = the_attributes
   )
 }

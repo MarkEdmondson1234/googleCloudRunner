@@ -15,6 +15,7 @@ cr_buildtrigger(
   includedFiles = NULL,
   trigger_tags = NULL,
   projectId = cr_project_get(),
+  sourceToBuild = NULL,
   overwrite = FALSE
 )
 }
@@ -38,6 +39,8 @@ cr_buildtrigger(
 \item{trigger_tags}{Tags for the buildtrigger listing}
 
 \item{projectId}{ID of the project for which to configure automatic builds}
+
+\item{sourceToBuild}{A \link{cr_buildtrigger_repo} object (but no regex allowed for branch or tag)  This field is currently only used by Webhook, Pub/Sub, Manual, and Cron triggers and is the source of the build will execute upon.}
 
 \item{overwrite}{If TRUE will overwrite an existing trigger with the same name}
 }
@@ -102,6 +105,17 @@ cr_schedule("cloud-build-pubsub",
   "15 5 * * *",
   pubsubTarget = cr_schedule_pubsub("test-topic")
 )
+}
+
+# create a pubsub trigger that uses github as a source of code to build upon
+gh <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+blist <- cr_build_make(cr_build_yaml(cr_buildstep_r('list.files()')))
+
+\dontrun{
+cr_buildtrigger(blist,
+                name = "pubsub-triggered-github-source",
+                trigger = pubsub_trigger,
+                sourceToBuild = gh)
 }
 
 }

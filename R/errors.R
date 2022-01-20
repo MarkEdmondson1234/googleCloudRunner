@@ -4,10 +4,11 @@ handle_errs <- function(f,
                         http_403 = NULL,
                         return_404 = NULL,
                         return_403 = NULL,
-                        projectId = cr_project_get()){
+                        projectId = cr_project_get(),
+                        ...){
 
   tryCatch(
-    f(),
+    f(...),
     http_404 = function(err){
       if(is.null(http_404)){
         cli::cli_alert_danger("404 Not found")

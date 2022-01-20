@@ -11,7 +11,7 @@
 * Add `cr_run_schedule_http()` to schedule Cloud Run HTTP calls (#113)
 * Allow usage of `cr_build_yaml()` objects directly in `cr_buildtrigger()` without needing `cr_build_make()`
 * Fix `cr_deploy_pkgdown()` error writing to file
-* allow `escape_dollar` in `cr_buildstep_r()` and `cr_buildstep_bash()` if you want to use Cloud Build substitutions in the script (#104)
+* Allow `escape_dollar` in `cr_buildstep_r()` and `cr_buildstep_bash()` if you want to use Cloud Build substitutions in the script (#104)
 * Allow direct support for Codecov (#116)
 * Parse `gar_Build` objects to lists in buildtrigger responses so they can be more easily reused
 * Fix bug with Cloud Run deployments not returning image names (#141 - thanks @engti)

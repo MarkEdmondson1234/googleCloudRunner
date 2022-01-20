@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Serverless batched R scripts via Cloud Build</h1>
             
-            <h4 data-toc-skip class="date">2022-01-19</h4>
+            <h4 data-toc-skip class="date">2022-01-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/cloudbuild.Rmd" class="external-link"><code>vignettes/cloudbuild.Rmd</code></a></small>
       <div class="hidden name"><code>cloudbuild.Rmd</code></div>
@@ -652,6 +652,144 @@
 <span class="co">#[59] "PUSH"                                                                                                            </span>
 <span class="co">#[60] "DONE"                                                                                                            </span></code></pre></div>
 <p>See also <code><a href="../reference/cr_schedule_pubsub.html">cr_schedule_pubsub()</a></code> which can use PubSub to trigger scheduled builds. There is a guide using that within <a href="cloudscheduler.html">Cloud Scheduler to trigger Build Triggers via Pubsub</a></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="targets-integration">Targets Integration<a class="anchor" aria-label="anchor" href="#targets-integration"></a>
+</h2>
+<p>The <a href="https://books.ropensci.org/targets/" class="external-link"><code>targets</code> package</a> is a data pipeline toolkit for R which allows for reproducible workflows without having to run the entire pipeline each time. You can use it to create a graph of dependencies (directional acyclic graphs, or DAG).</p>
+<p>It is convenient to have these pipelines run in the cloud and in a serverless manner in particular which <code>googleCloudRunner</code> facilitates via the <code><a href="../reference/cr_build_targets.html">cr_build_targets()</a></code> function. Since the pipeline can run in a Cloud Build, you do not need to have your local machine on to run the pipeline. Cloud Build allows up to 24hrs timeout values for the build, and costs are much lower than having a dedicated computing cluster as you are only charged for the time the job is running.</p>
+<p>The integration looks through your existing <code>targets</code> pipeline and creates the appropriate build steps for your build, reusing the functions and target meta data in your local folder. By selecting to run on Cloud Build, the local targets metadata folder is uploaded to Cloud Storage, used to coordinate the different target pipeline steps (<code>targets</code>) and then downloads the results back to your local session.</p>
+<p>The <code>cr_buildsteps_targets()</code> function is the base buildstep you can use to create your workflows. Its more likely you will use the <code><a href="../reference/cr_build_targets.html">cr_buildstep_targets_multi()</a></code> function which will use these buildsteps to create your pipeline, including trying to optimise the running time as much as possible by setting up concurrent execution if possible.</p>
+<p>In general the integration takes care of these steps:</p>
+<ol style="list-style-type: decimal">
+<li>Scan your system for the targets workflow</li>
+<li>Creates a Cloud Build yaml that will execute the workflow</li>
+<li>Uploads target metadata file (usually with <code>_targets/meta</code>) to a Cloud Storage bucket</li>
+<li>Executes the build, skipping any unnecessary steps and running concurrently if possible</li>
+<li>Uploads the results to Cloud Storage</li>
+<li>Downloads from Cloud Storage to your local session if required</li>
+</ol>
+<p>You will need to create an R based Dockerfile to run the target functions within, including at least targets and any other libraries you need for your functions to execute. By default it will use <code>gcr.io/gcer-public/targets</code> which is an image containing <code>targets</code> only.</p>
+<div class="section level3">
+<h3 id="targets-pipeline-example">Targets pipeline example<a class="anchor" aria-label="anchor" href="#targets-pipeline-example"></a>
+</h3>
+<p>The below example shows a minimal use case of running the pipeline immediately:</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">mtcars</span>, file <span class="op">=</span> <span class="st">"mtcars.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+
+<span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_script</span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">file1</span>,
+      <span class="st">"mtcars.csv"</span>, format <span class="op">=</span> <span class="st">"file"</span><span class="op">)</span>,
+    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">input1</span>,
+      <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">file1</span><span class="op">)</span><span class="op">)</span>,
+    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">result1</span>,
+      <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">input1</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>,
+    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">result2</span>,
+      <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">input1</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>,
+    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">result3</span>,
+      <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">input1</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>,
+    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">result4</span>,
+      <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">input1</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span>,
+    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">merge1</span>,
+      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">result1</span>, <span class="va">result2</span>, <span class="va">result3</span>, <span class="va">result4</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">)</span>,
+ ask <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+
+<span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_targets.html">cr_buildstep_targets_multi</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># run it immediately in cloud</span>
+<span class="fu"><a href="../reference/cr_build_targets.html">cr_build_targets</a></span><span class="op">(</span><span class="va">bs</span>, execute<span class="op">=</span><span class="st">"now"</span><span class="op">)</span></code></pre></div>
+<p>The target pipeline is represented by this DAG (generated by <code>targets::tar_visnetwork()</code>)</p>
+<p><img src="demo_targets.png"></p>
+<p>When you issue <code><a href="../reference/cr_build_targets.html">cr_buildstep_targets_multi()</a></code> the targets DAG is analysed and used to create the buildsteps:</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_targets.html">cr_buildstep_targets_multi</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#ℹ 2022-01-20 15:26:56 &gt; targets cloud location: gs://your-bucket/your-project</span>
+<span class="co">#ℹ 2022-01-20 15:26:56 &gt; Resolving targets::tar_manifest()</span>
+ 
+<span class="co">#── # Building DAG: ───────────────────────────────────────────────────────────</span>
+<span class="co">#• [get previous _targets metadata] -&gt; [file1]</span>
+<span class="co">#• [file1] -&gt; [input1]</span>
+<span class="co">#• [input1] -&gt; [result1]</span>
+<span class="co">#• [input1] -&gt; [result2]</span>
+<span class="co">#• [input1] -&gt; [result3]</span>
+<span class="co">#• [input1] -&gt; [result4]</span>
+<span class="co">#• [result1, result2, result3, result4] -&gt; [merge1]</span>
+<span class="co">#• [merge1] -&gt; [ Upload Artifacts ]</span></code></pre></div>
+<p>The <code>[get previous _targets metadata]</code> buildstep is boilerplate generated by <code><a href="../reference/cr_buildstep_targets.html">cr_buildstep_targets_setup()</a></code>, whilst <code>[ Upload Artifacts ]</code> is the one generated by <code><a href="../reference/cr_buildstep_targets.html">cr_buildstep_targets_teardown()</a></code>.</p>
+<p>The DAG is created by populating the <code>id</code> and <code>waitFor</code> arguments within a <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code>. These buildsteps could be used directly in <code><a href="../reference/cr_build.html">cr_build()</a></code> but you would need to handle uploading the data sources etc. which is what <code><a href="../reference/cr_build_targets.html">cr_build_targets()</a></code> helps with.</p>
+<p>Passing these buildsteps into <code><a href="../reference/cr_build_targets.html">cr_build_targets()</a></code> allows you to select <code>execute="now"</code> which will run the pipeline immediately. <code>execute="trigger"</code> will only create the YAML for you to use in constructing a buildstep.</p>
+<p><code>cr_build_targets(bs, execute="now")</code> will start off a build like the below example:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cr_build_targets</span>(bs, <span class="at">execute=</span><span class="st">"now"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>── <span class="co"># Uploading . to gs://your-buucket/.20220120152659.tar.gz ───────────────────────</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>ℹ <span class="dv">2022-01-20</span> <span class="dv">15</span><span class="sc">:</span><span class="dv">27</span><span class="sc">:</span><span class="dv">00</span> <span class="sc">&gt;</span> Tarring files <span class="cf">in</span> tmpdir<span class="sc">:</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>• _pkgdown.yml</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>• _targets.R</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>• etc ...</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>ℹ Cloud Build started <span class="sc">-</span> logs<span class="sc">:</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="er">&lt;</span>https<span class="sc">:</span><span class="er">//</span>console.cloud.google.com<span class="sc">/</span>cloud<span class="sc">-</span>build<span class="sc">/</span>builds<span class="sc">/</span>17ce8d71<span class="sc">-</span>593c<span class="sc">-</span>44f0<span class="dv">-8990</span><span class="sc">-</span>9a3192016b0f<span class="sc">&gt;</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>ℹ <span class="dv">2022-01-20</span> <span class="dv">15</span><span class="sc">:</span><span class="dv">28</span><span class="sc">:</span><span class="dv">42</span> <span class="sc">&gt;</span> targets cloud location<span class="sc">:</span> gs<span class="sc">:</span><span class="er">//</span>your<span class="sc">-</span>bucket<span class="sc">/</span><span class="er">/</span>your<span class="sc">-</span>local</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>ℹ <span class="dv">2022-01-20</span> <span class="dv">15</span><span class="sc">:</span><span class="dv">28</span><span class="sc">:</span><span class="dv">42</span> <span class="sc">&gt;</span> Downloading to download_folder<span class="sc">:</span> <span class="er">/</span>your<span class="sc">-</span>local<span class="sc">/</span>_targets</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>✓ Saved <span class="sc">/</span>your<span class="sc">-</span>local<span class="sc">/</span>_targets<span class="sc">/</span>buildtime.txt to _targets<span class="sc">/</span><span class="fu">buildtime.txt</span>  ( <span class="dv">29</span> bytes )</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>✓ Saved <span class="sc">/</span>your<span class="sc">-</span>local<span class="sc">/</span>_targets<span class="sc">/</span>meta<span class="sc">/</span>meta to _targets<span class="sc">/</span>meta<span class="sc">/</span><span class="fu">meta</span>  ( <span class="dv">1</span> Kb )</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>✓ Saved <span class="sc">/</span>your<span class="sc">-</span>local<span class="sc">/</span>_targets<span class="sc">/</span>meta<span class="sc">/</span>process to _targets<span class="sc">/</span>meta<span class="sc">/</span><span class="fu">process</span>  ( <span class="dv">56</span> bytes )</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>✓ Saved <span class="sc">/</span>your<span class="sc">-</span>local<span class="sc">/</span>_targets<span class="sc">/</span>meta<span class="sc">/</span>progress to _targets<span class="sc">/</span>meta<span class="sc">/</span><span class="fu">progress</span>  ( <span class="dv">271</span> bytes )</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>✓ Saved <span class="sc">/</span>your<span class="sc">-</span>local<span class="sc">/</span>_targets<span class="sc">/</span>objects<span class="sc">/</span>input1 to _targets<span class="sc">/</span>objects<span class="sc">/</span><span class="fu">input1</span>  ( <span class="dv">861</span> bytes )</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>✓ Saved <span class="sc">/</span>your<span class="sc">-</span>local<span class="sc">/</span>_targets<span class="sc">/</span>objects<span class="sc">/</span>merge1 to _targets<span class="sc">/</span>objects<span class="sc">/</span><span class="fu">merge1</span>  ( <span class="dv">77</span> bytes )</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>✓ Saved <span class="sc">/</span>your<span class="sc">-</span>local<span class="sc">/</span>_targets<span class="sc">/</span>objects<span class="sc">/</span>result1 to _targets<span class="sc">/</span>objects<span class="sc">/</span><span class="fu">result1</span>  ( <span class="dv">52</span> bytes )</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>✓ Saved <span class="sc">/</span>your<span class="sc">-</span>local<span class="sc">/</span>_targets<span class="sc">/</span>objects<span class="sc">/</span>result2 to _targets<span class="sc">/</span>objects<span class="sc">/</span><span class="fu">result2</span>  ( <span class="dv">52</span> bytes )</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>✓ Saved <span class="sc">/</span>your<span class="sc">-</span>local<span class="sc">/</span><span class="er">/</span>_targets<span class="sc">/</span>objects<span class="sc">/</span>result3 to _targets<span class="sc">/</span>objects<span class="sc">/</span><span class="fu">result3</span>  ( <span class="dv">52</span> bytes )</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>✓ Saved <span class="sc">/</span>your<span class="sc">-</span>local<span class="sc">/</span>_targets<span class="sc">/</span>objects<span class="sc">/</span>result4 to _targets<span class="sc">/</span>objects<span class="sc">/</span><span class="fu">result4</span>  ( <span class="dv">52</span> bytes )</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>── <span class="co"># Built targets on Cloud Build with status: SUCCESS ─────────────────────────</span></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>ℹ <span class="dv">2022-01-20</span> <span class="dv">15</span><span class="sc">:</span><span class="dv">28</span><span class="sc">:</span><span class="dv">44</span> <span class="sc">&gt;</span> Build artifacts downloaded to <span class="sc">/</span>your<span class="sc">-</span>local<span class="sc">/</span>_targets</span></code></pre></div>
+<p>Inspecting your local <code>_targets</code> metadata (via <code>targets::tar_meta()</code> or otherwise) should confirm the steps have been updated via the Cloud Build code.</p>
+</div>
+<div class="section level3">
+<h3 id="scheduling-or-triggering-your-targets-pipeline">Scheduling or triggering your targets pipeline<a class="anchor" aria-label="anchor" href="#scheduling-or-triggering-your-targets-pipeline"></a>
+</h3>
+<p>As the targets are running within a Cloud Build, all the usual methods of triggering a build are available via Build Triggers. This includes executing in response to events such as a Cloud Storage bucket being updated with a file, a GitHub commit, a PubSub event or a scheduled PubSub call.</p>
+<p>Since pipelines are normally waiting for Cloud Storage files or say BigQuery table uploads, the new PubSub triggers for build Triggers are particularly convenient, since they can trigger on pretty much any event within GCP via <a href="https://cloud.google.com/logging/docs/export/configure_export_v2" class="external-link">Cloud Logging sinks</a>.</p>
+<p>The example below will use a GitHub source and trigger upon a scheduled PubSub event.</p>
+<div class="section level4">
+<h4 id="creating-a-scheduled-targets-pipeline">Creating a scheduled targets pipeline<a class="anchor" aria-label="anchor" href="#creating-a-scheduled-targets-pipeline"></a>
+</h4>
+<p>The Cloud Build will be the same as the example above, only this time we select <code>execute="trigger"</code></p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cr_build_targets</span>(bs, <span class="at">execute=</span><span class="st">"trigger"</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>ℹ <span class="dv">2022-01-20</span> <span class="dv">16</span><span class="sc">:</span><span class="dv">18</span><span class="sc">:</span><span class="dv">28</span> <span class="sc">&gt;</span> Writing to cloudbuild_targets.yaml</span></code></pre></div>
+<p>The <code>cloudbuild_targets.yaml</code> file will sit in the same GitHub repo as the target pipeline, and all shall be commit to GitHub.</p>
+<p>The PubSub topic can be an existing one but for this example we create our own via <a href="https://CRAN.R-project.org/package=googlePubsubR" class="external-link"><code>googlePubsubR</code></a> and schedule a hit to it every 24hrs at 0415.</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/andodet/googlePubsubR" class="external-link">googlePubsubR</a></span><span class="op">)</span>
+<span class="va">topic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/topics_create.html" class="external-link">topics_create</a></span><span class="op">(</span><span class="st">"target_pubsub_schedule"</span><span class="op">)</span>
+
+<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule_pubsub.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="va">topic</span><span class="op">)</span>
+
+<span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"target_pubsub_schedule"</span>, 
+            schedule <span class="op">=</span> <span class="st">"15 4 * * *"</span>, 
+            pubsubTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span></code></pre></div>
+<p>Now the PubSub topic is being triggered on a schedule, we create a Build Trigger that will respond to it.</p>
+<p>The build trigger for a GitHub source is shown below - it uses a parameter <code>sourceToBuild</code> to specify which git repo to build upon:</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># no regex allowed for sourceToBuild repo objects</span>
+<span class="va">gh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span>, branch <span class="op">=</span> <span class="st">"master"</span><span class="op">)</span>
+
+<span class="va">pubsub_sub</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_pubsub.html">cr_buildtrigger_pubsub</a></span><span class="op">(</span><span class="va">topic</span><span class="op">)</span>
+
+<span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"cloudbuild_targets.yaml"</span>,
+                name <span class="op">=</span> <span class="st">"targets-scheduled-demo"</span>,
+                sourceToBuild <span class="op">=</span> <span class="va">gh</span>,
+                trigger <span class="op">=</span> <span class="va">pubsub_sub</span><span class="op">)</span></code></pre></div>
+</div>
 </div>
 </div>
   </div>

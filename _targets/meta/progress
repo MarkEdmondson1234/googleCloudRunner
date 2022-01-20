@@ -1,0 +1,9 @@
+name|type|parent|branches|progress
+file1|stem|file1|0|skipped
+input1|stem|input1|0|skipped
+result1|stem|result1|0|skipped
+result2|stem|result2|0|skipped
+result3|stem|result3|0|skipped
+result4|stem|result4|0|skipped
+merge1|stem|merge1|0|started
+merge1|stem|merge1|0|built
