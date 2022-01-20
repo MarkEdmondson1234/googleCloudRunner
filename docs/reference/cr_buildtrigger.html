@@ -164,6 +164,7 @@
   includedFiles <span class="op">=</span> <span class="cn">NULL</span>,
   trigger_tags <span class="op">=</span> <span class="cn">NULL</span>,
   projectId <span class="op">=</span> <span class="fu"><a href="cr_project_set.html">cr_project_get</a></span><span class="op">(</span><span class="op">)</span>,
+  sourceToBuild <span class="op">=</span> <span class="cn">NULL</span>,
   overwrite <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -190,6 +191,8 @@
 <dd><p>Tags for the buildtrigger listing</p></dd>
 <dt>projectId</dt>
 <dd><p>ID of the project for which to configure automatic builds</p></dd>
+<dt>sourceToBuild</dt>
+<dd><p>A <a href="cr_buildtrigger_repo.html">cr_buildtrigger_repo</a> object.  This field is currently only used by Webhook, Pub/Sub, Manual, and Cron triggers and is the source of the build will execute upon.</p></dd>
 <dt>overwrite</dt>
 <dd><p>If TRUE will overwrite an existing trigger with the same name</p></dd>
 </dl></div>
@@ -217,10 +220,10 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="cr_project_set.html">cr_project_set</a></span><span class="op">(</span><span class="st">"my-project"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-19 08:34:14 &gt;</span> ProjectId set to my-project</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-20 16:54:00 &gt;</span> ProjectId set to my-project</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-project"</span>
 <span class="r-in"><span class="fu"><a href="cr_bucket_set.html">cr_bucket_set</a></span><span class="op">(</span><span class="st">"my-bucket"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-19 08:34:14 &gt;</span> Bucket set to my-bucket</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-01-20 16:54:00 &gt;</span> Bucket set to my-bucket</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-bucket"</span>
 <span class="r-in"><span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild.yaml"</span>,</span>
 <span class="r-in">  package <span class="op">=</span> <span class="st">"googleCloudRunner"</span></span>
