@@ -24,6 +24,7 @@
 * Fix paging issue sometimes returning NULL for `cr_build_list()` (#149)
 * Update `cr_deploy_r()` to use PubSub/BuildTrigger as its default when scheduling (#148)
 * Add support for running `targets::tar_make()` pipelines on Cloud Build via `cr_build_targets()` (#155)
+* Rename `cr_build_schedule_http()` to `cr_schedule_http()` to be more in line with `cr_schedule_pubsub()` and `cr_schedule_build()`
 
 # googleCloudRunner 0.4.1
 

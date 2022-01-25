@@ -169,6 +169,7 @@ is.gar_webhookConfig <- function(x) {
 
 #' GitRepoSource
 #' Used for PubSub triggers
+#' @noRd
 GitRepoSource <- function(uri,
                           ref,
                           repoType = c("GITHUB","CLOUD_SOURCE_REPOSITORIES")){
