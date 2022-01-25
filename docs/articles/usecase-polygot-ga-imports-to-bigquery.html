@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>GA imports into BigQuery via Polygot Cloud Builds - integrating R code with other languages</h1>
             
-            <h4 data-toc-skip class="date">2022-01-20</h4>
+            <h4 data-toc-skip class="date">2022-01-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-polygot-ga-imports-to-bigquery.Rmd" class="external-link"><code>vignettes/usecase-polygot-ga-imports-to-bigquery.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-polygot-ga-imports-to-bigquery.Rmd</code></div>
@@ -290,7 +290,7 @@
 <span class="co"># 2019-12-28 19:15:50&gt; Writing to cloudbuild.yaml</span></code></pre></div>
 <p>This can then be scheduled as described in Cloud Scheduler section on <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html">scheduled cloud builds</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule_build.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"polygot-example"</span>, <span class="st">"15 8 * * *"</span>, httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span></code></pre></div>
 <p>An example of the cloudbuild.yaml is on GitHub <a href="https://raw.githubusercontent.com/MarkEdmondson1234/googleCloudRunner/master/inst/polygot/cloudbuild.yaml" class="external-link">here</a>.</p>
   </div>

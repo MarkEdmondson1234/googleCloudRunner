@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Run an R script, save results to GitHub</h1>
             
-            <h4 data-toc-skip class="date">2022-01-20</h4>
+            <h4 data-toc-skip class="date">2022-01-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-r-results-github.Rmd" class="external-link"><code>vignettes/usecase-r-results-github.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-r-results-github.Rmd</code></div>
@@ -235,7 +235,7 @@
 <span class="va">build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">build_yaml</span><span class="op">)</span>
 
 <span class="co"># create build API call</span>
-<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_schedule_http.html">cr_build_schedule_http</a></span><span class="op">(</span><span class="va">build</span><span class="op">)</span>
+<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule_build.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">build</span><span class="op">)</span>
 
 <span class="co"># schedule the build</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"r-2-git-demo"</span>, <span class="st">"5 15 * * 0"</span>, httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span>
