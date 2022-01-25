@@ -306,7 +306,8 @@ cr_buildtrigger <- function(build,
   } else if (is.gar_webhookConfig(trigger)) {
     trigger_webhook <- trigger
   } else {
-    stop("We should never be here - something wrong with trigger parameter", call. = FALSE)
+    stop("We should never be here - something wrong with trigger parameter",
+         call. = FALSE)
   }
 
   # checks on sourceToBuild validity
@@ -319,7 +320,6 @@ cr_buildtrigger <- function(build,
      is.buildtrigger_repo(trigger)) {
     stop("Can't use sourceToBuild for git based triggers", call. = FALSE)
   }
-
 
   buildTrigger <- BuildTrigger(
     name = name,
@@ -358,6 +358,10 @@ as.buildTriggerResponse <- function(x) {
   o <- x
   if (!is.null(o$build)) {
     o$build <- as.gar_Build(x$build)
+  }
+
+  if (!is.null(o$pubsubConfig)){
+    o$pubsubConfig <- as.gar_pubsubConfig(o$pubsubConfig)
   }
 
   structure(

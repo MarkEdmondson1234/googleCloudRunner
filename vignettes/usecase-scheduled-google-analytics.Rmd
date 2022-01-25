@@ -133,7 +133,7 @@ build <- cr_build_make(yaml, timeout = 1200)
 # can test a build first via:
 #built <- cr_build(build)
 
-schedule_me <- cr_build_schedule_http(build)
+schedule_me <- cr_schedule_http(build)
 
 cr_schedule("delete-cids", 
             schedule = "5 1 * * *", 

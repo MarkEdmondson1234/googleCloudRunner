@@ -720,4 +720,123 @@ cr_buildtrigger("cloudbuild_targets.yaml",
                 trigger = pubsub_sub)
 ```
 
+In summary the GCP resources you now have should be:
+
+1. A PubSub topic via `googlePubsubR::topics_get("target_pubsub_schedule")`
+2. A scheduler triggering that topic:
+
+```r
+cr_schedule_get("target_pubsub_schedule")
+
+==CloudScheduleJob==
+name:  projects/your-project/locations/europe-west1/jobs/target_pubsub_schedule 
+state:  ENABLED 
+pubsubTarget.topicName:  projects/your-project/topics/target_pubsub_schedule 
+pubsubTarget.data:  InByb2plY3RzL21hcmstZWRtb25kc29uLWdkZS90b3BpY3MvdGFyZ2V0X3B1YnN1Yl9zY2hlZHVsZSI= 
+pubsubTarget.data (unencoded):  "projects/your-project/topics/target_pubsub_schedule" 
+userUpdateTime:  2022-01-20T15:55:28Z 
+schedule:  15 4 * * * 
+scheduleTime: 2022-01-26T03:15:00.867249Z 
+timezone:  Europe/Copenhagen
+```
+
+3. A build trigger triggered by the PubSub and showing the sourceToBuild:
+
+```r
+cr_buildtrigger_get("targets-scheduled-demo")
+
+==CloudBuildTriggerResponse==
+id:  8c4f3447-b718-4252-9b6a-45a504730de2 
+name:  targets-scheduled-demo 
+createdTime:  2022-01-20T21:32:00.603354443Z 
+filename:  cloudbuild_targets.yaml 
+sourceToBuild.uri:  https://github.com/MarkEdmondson1234/googleCloudRunner 
+sourceToBuild.ref:  refs/heads/master 
+sourceToBuild.repoType: GITHUB 
+==CloudBuildTriggerPubSubConfig==
+topic:  projects/your-project/topics/target_pubsub_schedule 
+subscription:  projects/123434564/subscriptions/gcb-targets-scheduled-demo 
+```
+
+You can modify each of these moving parts independently, for example swapping the pubsub for a Cloud Storage event that triggers many builds, or parametrising your PubSub trigger to trigger different behaviour. It is recommend for the first attempt to keep it simple with a one-to-one relationship between builds, pubsub topics and triggers. 
+
+4. You should see successful builds and can check the status of the last build via `cr_build_logs_last()` which downloads the last build of the given build trigger:
+
+```r
+cr_build_logs_last("targets-scheduled-demo")
+
+[1] "starting build \"b3a2c366-3280-4ecb-a7c3-9916233e2dc7\""                                                                                 
+[2] ""                                     
+...
+[96] "Step #1 - \"file1\": gcr.io/gcer-public/targets:latest"                                                                                  
+[97] "Step #1 - \"file1\": ✔ skip target file1"                                                                                                
+[98] "Step #1 - \"file1\": ✔ skip pipeline"                                                                                                    
+[99] "Finished Step #1 - \"file1\""                                                                                                            
+[100] "Starting Step #2 - \"input1\""                                                                                                           
+[101] "Step #2 - \"input1\": Already have image (with digest): gcr.io/gcer-public/targets"                                                      
+[102] "Step #2 - \"input1\": ✔ skip target file1"                                                                                               
+[103] "Step #2 - \"input1\": ✔ skip target input1"                                                                                              
+[104] "Step #2 - \"input1\": ✔ skip pipeline"                                                                                                   
+[105] "Finished Step #2 - \"input1\""                                                                                                           
+[106] "Starting Step #3 - \"result1\""                                                                                                          
+[107] "Starting Step #6 - \"result4\""                                                                                                          
+[108] "Starting Step #5 - \"result3\""                                                                                                          
+[109] "Starting Step #4 - \"result2\""                                                                                                          
+[110] "Step #4 - \"result2\": Already have image (with digest): gcr.io/gcer-public/targets"                                                     
+[111] "Step #6 - \"result4\": Already have image (with digest): gcr.io/gcer-public/targets"                                                     
+[112] "Step #5 - \"result3\": Already have image (with digest): gcr.io/gcer-public/targets"                                                     
+[113] "Step #3 - \"result1\": Already have image (with digest): gcr.io/gcer-public/targets"                                                     
+[114] "Step #5 - \"result3\": ✔ skip target file1"                                                                                              
+[115] "Step #5 - \"result3\": ✔ skip target input1"                                                                                             
+[116] "Step #5 - \"result3\": ✔ skip target result3"                                                                                            
+[117] "Step #5 - \"result3\": ✔ skip pipeline"                                                                                                  
+[118] "Finished Step #5 - \"result3\""                                                                                                          
+[119] "Step #3 - \"result1\": ✔ skip target file1"                                                                                              
+[120] "Step #3 - \"result1\": ✔ skip target input1"                                                                                             
+[121] "Step #3 - \"result1\": ✔ skip target result1"                                                                                            
+[122] "Step #3 - \"result1\": ✔ skip pipeline"                                                                                                  
+[123] "Step #4 - \"result2\": ✔ skip target file1"                                                                                              
+[124] "Step #4 - \"result2\": ✔ skip target input1"                                                                                             
+[125] "Step #4 - \"result2\": ✔ skip target result2"                                                                                            
+[126] "Step #4 - \"result2\": ✔ skip pipeline"                                                                                                  
+[127] "Finished Step #3 - \"result1\""                                                                                                          
+[128] "Step #6 - \"result4\": ✔ skip target file1"                                                                                              
+[129] "Step #6 - \"result4\": ✔ skip target input1"                                                                                             
+[130] "Step #6 - \"result4\": ✔ skip target result4"                                                                                            
+[131] "Step #6 - \"result4\": ✔ skip pipeline"                                                                                                  
+[132] "Finished Step #4 - \"result2\""                                                                                                          
+[133] "Finished Step #6 - \"result4\""                                                                                                          
+[134] "Starting Step #7 - \"merge1\""                                                                                                           
+[135] "Step #7 - \"merge1\": Already have image (with digest): gcr.io/gcer-public/targets"                                                      
+[136] "Step #7 - \"merge1\": ✔ skip target file1"                                                                                               
+[137] "Step #7 - \"merge1\": ✔ skip target input1"                                                                                              
+[138] "Step #7 - \"merge1\": ✔ skip target result1"                                                                                             
+[139] "Step #7 - \"merge1\": ✔ skip target result2"                                                                                             
+[140] "Step #7 - \"merge1\": ✔ skip target result3"                                                                                             
+[141] "Step #7 - \"merge1\": ✔ skip target result4"                                                                                             
+[142] "Step #7 - \"merge1\": ✔ skip target merge1"                                                                                              
+[143] "Step #7 - \"merge1\": ✔ skip pipeline"                                                                                                   
+[144] "Finished Step #7 - \"merge1\""                                                                                                           
+[145] "Starting Step #8 - \"Upload Artifacts\""                                                                                                 
+[146] "Step #8 - \"Upload Artifacts\": Already have image (with digest): gcr.io/google.com/cloudsdktool/cloud-sdk:alpine"                       
+[147] "Step #8 - \"Upload Artifacts\": Copying file://buildtime.txt [Content-Type=text/plain]..."                                               
+[148] "Step #8 - \"Upload Artifacts\": / [0 files][    0.0 B/   29.0 B]                                                "                        
+[149] "/ [1 files][   29.0 B/   29.0 B]                                                "                                                        
+[150] "Step #8 - \"Upload Artifacts\": Operation completed over 1 objects/29.0 B.                                       "                       
+[151] "Step #8 - \"Upload Artifacts\": Copying file:///workspace/_targets/buildtime.txt [Content-Type=text/plain]..."                           
+[152] "Step #8 - \"Upload Artifacts\": / [0 files][    0.0 B/   29.0 B]                                                "                        
+[153] "Copying file:///workspace/_targets/meta/progress [Content-Type=application/octet-stream]..."                                             
+[154] "Step #8 - \"Upload Artifacts\": Copying file:///workspace/_targets/meta/meta [Content-Type=application/octet-stream]..."                 
+[155] "Step #8 - \"Upload Artifacts\": / [0 files][    0.0 B/  273.0 B]                                                "                        
+[156] "/ [0 files][    0.0 B/  1.3 KiB]                                                "                                                        
+[157] "Copying file:///workspace/_targets/objects/result3 [Content-Type=application/octet-stream]..."                                           
+[158] "Step #8 - \"Upload Artifacts\": Copying file:///workspace/_targets/meta/process [Content-Type=application/octet-stream]..."              
+[159] "Step #8 - \"Upload Artifacts\": Copying file:///workspace/_targets/objects/result4 [Content-Type=application/octet-stream]..."           
+[160] "Step #8 - \"Upload Artifacts\": Copying file:///workspace/_targets/objects/input1 [Content-Type=application/octet-stream]..."            
+[161] "Step #8 - \"Upload Artifacts\": / [0 files][    0.0 B/  1.4 KiB]                                                "                        
+...
+[200] "Finished Step #8 - \"Upload Artifacts\""                                                                                                 
+[201] "PUSH"                                                                                                                                    
+[202] "DONE"
+```
 

@@ -23,13 +23,13 @@
 #' # schedule a cloud build (no source)
 #' build1 <- cr_build_make("cloudbuild.yaml")
 #' cr_schedule("cloud-build-test", "15 5 * * *",
-#'              httpTarget = cr_build_schedule_http(build1))
+#'              httpTarget = cr_schedule_http(build1))
 #'
 #' # schedule a cloud build with code source from GCS bucket
 #' my_gcs_source <- cr_build_upload_gcs("my_folder", bucket = cr_get_bucket())
 #' build <- cr_build_make("cloudbuild.yaml", source = my_gcs_source)
 #' cr_schedule("cloud-build-test2", "15 5 * * *",
-#'             httpTarget = cr_build_schedule_http(build))
+#'             httpTarget = cr_schedule_http(build))
 #'
 #' # update a schedule with the same name - only supply what you want to change
 #' cr_schedule("cloud-build-test2", "12 6 * * *", overwrite=TRUE)
@@ -121,7 +121,10 @@ cr_schedule <- function(name,
                          data_parse_function = parse_schedule)
 
   if(overwrite){
-    existing <- cr_schedule_get(the_name, region = region, projectId = projectId)
+    existing <- suppressMessages(
+        cr_schedule_get(the_name, region = region, projectId = projectId)
+      )
+
     if(!is.null(existing)){
       myMessage("Overwriting schedule job: ", name, level = 3)
       # https://cloud.google.com/scheduler/docs/reference/rest/v1/projects.locations.jobs/patch

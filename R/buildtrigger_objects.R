@@ -52,6 +52,10 @@ BuildTrigger <- function(filename = NULL,
     assert_that(is.gar_RepoSource(triggerTemplate))
   }
 
+  if (!is.null(pubsubConfig)) {
+    assert_that(is.gar_pubsubConfig(pubsubConfig))
+  }
+
   structure(rmNullObs(list(
     filename = filename,
     name = name,
@@ -127,6 +131,15 @@ PubsubConfig <- function(subscription = NULL,
 
 is.gar_pubsubConfig <- function(x) {
   inherits(x, "gar_pubsubConfig")
+}
+
+as.gar_pubsubConfig <- function(x){
+  PubsubConfig(
+    subscription = x$subscription,
+    topic = x$topic,
+    serviceAccountEmail = x$serviceAccountEmail,
+    state = x$state
+  )
 }
 
 #' WebhookConfig (Build Triggers)

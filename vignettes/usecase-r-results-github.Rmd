@@ -66,7 +66,7 @@ Now the build needs a schedule.  Taking a working YAML configuration, we use tha
 build <- cr_build_make(build_yaml)
 
 # create build API call
-schedule_me <- cr_build_schedule_http(build)
+schedule_me <- cr_schedule_http(build)
 
 # schedule the build
 cr_schedule("r-2-git-demo", "5 15 * * 0", httpTarget = schedule_me)

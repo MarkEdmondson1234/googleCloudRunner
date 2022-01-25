@@ -23,7 +23,7 @@ test_that("[Online] Test building from build object", {
   cr_schedule_delete("test1")
 
   sched_built <- cr_schedule("test1", "* * * * *",
-    httpTarget = cr_build_schedule_http(built)
+    httpTarget = cr_schedule_http(built)
   )
   expect_equal(sched_built$state, "ENABLED")
   sched_list <- cr_schedule_list()

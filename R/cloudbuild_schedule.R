@@ -1,3 +1,10 @@
+#' @rdname cr_schedule_build
+#' @export
+cr_build_schedule_http <- function(...){
+  .Deprecated("cr_schedule_http")
+  cr_schedule_http(...)
+}
+
 #' Create a Cloud Scheduler HTTP target from a Cloud Build object
 #'
 #' This enables Cloud Scheduler to trigger Cloud Builds
@@ -8,7 +15,7 @@
 #' @param email The email that will authenticate the job set via \link{cr_email_set}
 #' @param projectId The projectId
 #'
-#' @return A \link{HttpTarget} object for use in \link{cr_schedule}
+#' @return \code{cr_schedule_http} returns a \link{HttpTarget} object for use in \link{cr_schedule} or \link{cr_schedule_build}
 #'
 #' @details Ensure you have a service email with \link{cr_email_set} of format \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com} with Cloud Scheduler Service Agent role as per https://cloud.google.com/scheduler/docs/http-target-auth#add
 #'
@@ -16,7 +23,6 @@
 #' @import assertthat
 #' @family Cloud Scheduler functions
 #'
-#' @return a \link{HttpTarget} object for use in \link{cr_schedule}
 #'
 #' @examples
 #' cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")
@@ -25,7 +31,7 @@
 #' \dontrun{
 #' cr_schedule("cloud-build-test1",
 #'   schedule = "15 5 * * *",
-#'   httpTarget = cr_build_schedule_http(build1)
+#'   httpTarget = cr_schedule_http(build1)
 #' )
 #'
 #' # a cloud build you would like to schedule
@@ -34,13 +40,16 @@
 #' # once working, pass in the build to the scheduler
 #' cr_schedule("itworks-schedule",
 #'   schedule = "15 5 * * *",
-#'   httpTarget = cr_build_schedule_http(itworks)
+#'   httpTarget = cr_schedule_http(itworks)
 #' )
 #' }
-#'
-cr_build_schedule_http <- function(build,
-                                   email = cr_email_get(),
-                                   projectId = cr_project_get()) {
+#' @rdname cr_schedule_build
+cr_schedule_http <- function(build,
+                             email = cr_email_get(),
+                             projectId = cr_project_get()) {
+
+  # checks for build class here?
+
   build <- as.gar_Build(build)
   build <- safe_set(build, "status", "QUEUED")
 
@@ -55,16 +64,16 @@ cr_build_schedule_http <- function(build,
   )
 }
 
-#' @rdname cr_build_schedule_http
+#' Schedule a Build object via HTTP or PubSub
 #'
-#' @details See also \link{cr_schedule_pubsub} which you can use by creating a build trigger of your build via \link{cr_buildtrigger} that accepts Pub/Sub messages.  This method is recommended as being easier to maintain than using HTTP requests to the Cloud Build API that \link{cr_build_schedule_http} produces.
+#' @details See also \link{cr_schedule_pubsub} which you can use by creating a build trigger of your build via \link{cr_buildtrigger} that accepts Pub/Sub messages.  This method is recommended as being easier to maintain than using HTTP requests to the Cloud Build API that \link{cr_schedule_http} produces.
 #' @export
 #' @param schedule A cron schedule e.g. \code{"15 5 * * *"}
 #' @param schedule_type Whether to use HTTP or PubSub styled schedules
 #' @param ... additional arguments to pass to \link{cr_schedule}
 #' @inheritDotParams cr_schedule
 #' @param schedule_pubsub If you have a custom pubsub message to send via an existing topic, use \link{cr_schedule_pubsub} to supply it here
-#' @return A cloud scheduler \link{Job} object
+#' @return \code{cr_schedule_build} returns a cloud scheduler \link{Job} object
 cr_schedule_build <- function(build,
                               schedule,
                               schedule_type = c("http", "pubsub"),
@@ -76,9 +85,9 @@ cr_schedule_build <- function(build,
   schedule_type <- match.arg(schedule_type)
 
   if(schedule_type == "http"){
-    https <- cr_build_schedule_http(build,
-                                    email = email,
-                                    projectId = projectId)
+    https <- cr_schedule_http(build,
+                              email = email,
+                              projectId = projectId)
 
     # schedule http API call to Cloud Build
     out <- cr_schedule(
@@ -179,7 +188,7 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name) {
 #' @export
 #' @importFrom jsonlite toJSON
 #' @import googlePubsubR
-#' @return A \link{PubsubTarget} object for use within \link{cr_schedule}
+#' @return \code{cr_schedule_pubsub} returns a \link{PubsubTarget} object for use within \link{cr_schedule} or \link{cr_schedule_build}
 #'
 #' @details
 #'
@@ -240,7 +249,7 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name) {
 #'   )
 #' )
 #' }
-#'
+#' @rdname cr_schedule_build
 cr_schedule_pubsub <- function(topicName,
                                PubsubMessage = NULL,
                                data = NULL,

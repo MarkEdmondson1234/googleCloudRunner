@@ -53,13 +53,13 @@ cr_schedule("test",
 # schedule a cloud build (no source)
 build1 <- cr_build_make("cloudbuild.yaml")
 cr_schedule("cloud-build-test", "15 5 * * *",
-             httpTarget = cr_build_schedule_http(build1))
+             httpTarget = cr_schedule_http(build1))
 
 # schedule a cloud build with code source from GCS bucket
 my_gcs_source <- cr_build_upload_gcs("my_folder", bucket = cr_get_bucket())
 build <- cr_build_make("cloudbuild.yaml", source = my_gcs_source)
 cr_schedule("cloud-build-test2", "15 5 * * *",
-            httpTarget = cr_build_schedule_http(build))
+            httpTarget = cr_schedule_http(build))
 
 # update a schedule with the same name - only supply what you want to change
 cr_schedule("cloud-build-test2", "12 6 * * *", overwrite=TRUE)
@@ -127,7 +127,6 @@ Other Cloud Scheduler functions:
 \code{\link{cr_schedule_get}()},
 \code{\link{cr_schedule_list}()},
 \code{\link{cr_schedule_pause}()},
-\code{\link{cr_schedule_pubsub}()},
 \code{\link{cr_schedule_run}()}
 }
 \concept{Cloud Scheduler functions}

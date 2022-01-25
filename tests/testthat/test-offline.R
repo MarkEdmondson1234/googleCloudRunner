@@ -52,7 +52,7 @@ test_that("Building Build Objects", {
 
   expect_snapshot(run_yaml)
 
-  scheduler <- cr_build_schedule_http(cr_build_make(run_yaml))
+  scheduler <- cr_schedule_http(cr_build_make(run_yaml))
   expect_snapshot(scheduler$body)
 
   cr_build_write(run_yaml, file = "cloudbuild_test.yaml")
