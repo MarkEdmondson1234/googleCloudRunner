@@ -192,7 +192,7 @@
 <dt>disabled</dt>
 <dd><p>If true, the trigger will never result in a build</p></dd>
 <dt>sourceToBuild</dt>
-<dd><p>A <a href="cr_buildtrigger_repo.html">cr_buildtrigger_repo</a> object.  This field is currently only used by Webhook, Pub/Sub, Manual, and Cron triggers and is the source of the build will execute upon.</p></dd>
+<dd><p>A <a href="cr_buildtrigger_repo.html">cr_buildtrigger_repo</a> object (but no regex allowed for branch or tag)  This field is currently only used by Webhook, Pub/Sub, Manual, and Cron triggers and is the source of the build will execute upon.</p></dd>
 <dt>triggerTemplate</dt>
 <dd><p>a <a href="RepoSource.html">RepoSource</a> object - mutually exclusive with <code>github</code></p></dd>
 <dt>webhookConfig</dt>
