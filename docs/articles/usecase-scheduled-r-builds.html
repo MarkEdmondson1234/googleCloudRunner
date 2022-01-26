@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Run R code on a schedule</h1>
             
-            <h4 data-toc-skip class="date">2022-01-25</h4>
+            <h4 data-toc-skip class="date">2022-01-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-scheduled-r-builds.Rmd" class="external-link"><code>vignettes/usecase-scheduled-r-builds.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-scheduled-r-builds.Rmd</code></div>
@@ -344,7 +344,7 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># schedule the build</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"rmd-demo"</span>, schedule <span class="op">=</span> <span class="st">"15 5 * * *"</span>,
-            httpTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_schedule_build.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+            httpTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>The example Rmd file is built and available on a public Cloud Storage bucket - the above example is available at this <a href="https://storage.googleapis.com/mark-edmondson-public-read/scheduled_rmarkdown.html" class="external-link">link</a></p>
 <p><img src="schedule_markdown_hosted_gcs.png"></p>
 </div>
@@ -433,7 +433,7 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <li>Schedule the build using cron syntax</li>
 </ol>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule_build.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"rmd-on-cloudrun"</span>, <span class="st">"15 8 * * *"</span>, httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span>
 <span class="co">#==CloudScheduleJob==</span>
 <span class="co">#name:  projects/project-name/locations/europe-west1/jobs/rmd-on-cloudrun </span>
@@ -472,7 +472,7 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">r_code</span><span class="op">)</span></code></pre></div>
 <p>To set this up in a schedule, add it to the scheduler like so:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule_build.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">r_code</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">r_code</span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"r-code-example"</span>, <span class="st">"15 8 * * *"</span>, httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">

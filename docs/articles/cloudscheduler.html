@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Scheduled R scripts via Cloud Scheduler</h1>
             
-            <h4 data-toc-skip class="date">2022-01-25</h4>
+            <h4 data-toc-skip class="date">2022-01-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/cloudscheduler.Rmd" class="external-link"><code>vignettes/cloudscheduler.Rmd</code></a></small>
       <div class="hidden name"><code>cloudscheduler.Rmd</code></div>
@@ -186,6 +186,8 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">cr_scheduler</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"my-webhook"</span>, <span class="st">"14 5 * * *"</span>, 
              httpTarget <span class="op">=</span> <span class="fu"><a href="../reference/HttpTarget.html">HttpTarget</a></span><span class="op">(</span>httpMethod<span class="op">=</span><span class="st">"GET"</span>, uri <span class="op">=</span> <span class="st">"https://mywebhook.com"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>How scheduling works with various functions in <code>googleCloudRunner</code> is shown in the below plot for an overview:</p>
+<p><img src="schedule_plot.png"></p>
 <div class="section level2">
 <h2 id="schedule-cloud-build">Schedule Cloud Build<a class="anchor" aria-label="anchor" href="#schedule-cloud-build"></a>
 </h2>
@@ -195,8 +197,8 @@
 <code class="sourceCode R"><span class="va">build1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"15 5 * * *"</span>, name<span class="op">=</span><span class="st">"cloud-build-test1"</span>,
-             httpTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_schedule_build.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">build1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>We use <code><a href="../reference/cr_build_make.html">cr_build_make()</a></code> and <code><a href="../reference/cr_schedule_build.html">cr_schedule_http()</a></code> to create the Cloud Build API request, and then send that to the Cloud Scheduler API via its <code>httpTarget</code> parameter.</p>
+             httpTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">build1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>We use <code><a href="../reference/cr_build_make.html">cr_build_make()</a></code> and <code><a href="../reference/cr_schedule.html">cr_schedule_http()</a></code> to create the Cloud Build API request, and then send that to the Cloud Scheduler API via its <code>httpTarget</code> parameter.</p>
 <p>Update a schedule by specifying the same name and the <code>overwrite=TRUE</code> flag. You need then need to supply what you want to change, everything else will remain as previously configured.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"my-webhook"</span>, <span class="st">"12 6 * * *"</span>, overwrite<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -204,7 +206,7 @@
 <div class="section level2">
 <h2 id="schedule-builds-triggers-using-pubsub">Schedule Builds Triggers using PubSub<a class="anchor" aria-label="anchor" href="#schedule-builds-triggers-using-pubsub"></a>
 </h2>
-<p><code><a href="../reference/cr_schedule_build.html">cr_schedule_http()</a></code> works by creating an API call that will trigger a Cloud Build from the Cloud Scheduler service, but this can be harder to set-up from an authentication standpoint and also give unhelpful errors that are hard to debug.</p>
+<p><code><a href="../reference/cr_schedule.html">cr_schedule_http()</a></code> works by creating an API call that will trigger a Cloud Build from the Cloud Scheduler service, but this can be harder to set-up from an authentication standpoint and also give unhelpful errors that are hard to debug.</p>
 <p>For more robust and transparent scheduling of builds it is recommend you use PubSub to trigger builds via a build trigger that has been set-up to respond to Pub/Sub messages. This holds additional advantages such as being able to accept PubSub messages from other sources to trigger your builds, and being able to parametrise your builds using the content within the PubSub message data.</p>
 <p>The general strategy is:</p>
 <ol style="list-style-type: decimal">
@@ -214,7 +216,7 @@
 </li>
 <li>Create a build trigger for your build using <code><a href="../reference/cr_buildtrigger.html">cr_buildtrigger()</a></code> with a topic set using <code><a href="../reference/cr_buildtrigger_pubsub.html">cr_buildtrigger_pubsub()</a></code>
 </li>
-<li>Schedule pushes to the PubSub topic using <code><a href="../reference/cr_schedule_build.html">cr_schedule_pubsub()</a></code>. You can choose to set up schedules with parameters that are passed into the Builds.</li>
+<li>Schedule pushes to the PubSub topic using <code><a href="../reference/cr_schedule.html">cr_schedule_pubsub()</a></code>. You can choose to set up schedules with parameters that are passed into the Builds.</li>
 </ol>
 <p>An example is given below:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -236,7 +238,7 @@
 <span class="co"># create scheduler that calls the pub/sub topic</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-build-pubsub"</span>,
             <span class="st">"15 5 * * *"</span>,
-            pubsubTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_schedule_build.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+            pubsubTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Builds can be also parametrised to respond to parameters within your PubSub topic. The cloudbuild below echo back the value sent in <code>var1</code> of the PubSub message, and the scheduler is set-up to send in parameters.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild_substitutions.yml"</span>,
@@ -255,7 +257,7 @@
 <span class="co"># create scheduler that calls the pub/sub topic with a parameter</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"cloud-build-pubsub-params"</span>,
             <span class="st">"15 5 * * *"</span>,
-            pubsubTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_schedule_build.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="st">"test-topic"</span>,
+            pubsubTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="st">"test-topic"</span>,
                                               data <span class="op">=</span> <span class="va">send_me</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>This opens up a lot of possibilities of when and where your code can run in reaction to both events (git commits, files hitting cloud storage, generic events on GCP) and on a schedule.</p>
 </div>
@@ -310,7 +312,7 @@
 <span class="va">the_build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span><span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="st">"cat(Sys.time())"</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># construct a Cloud Build API call to call that build</span>
-<span class="va">build_call</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule_build.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">the_build</span><span class="op">)</span>
+<span class="va">build_call</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">the_build</span><span class="op">)</span>
 
 <span class="co"># schedule the API call for every minute</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"test1"</span>, <span class="st">"* * * * *"</span>, httpTarget <span class="op">=</span> <span class="va">build_call</span><span class="op">)</span>
@@ -414,7 +416,7 @@
 <p>New from version 0.5 you can run schedules via triggered build triggers. If using build triggers then you can specify the source in the build trigger itself rather than within the build. This is a bit more flexible since you can then simply commit to the GitHub repo to change the running code and/or data for the next time the schedule runs.</p>
 <p>Assuming you have a scheduled pubsub setup then you configure the buildtrigger to run each time that pubsub is called like the example below:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule_build.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="va">topic</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="va">topic</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"target_pubsub_schedule"</span>, 
             schedule <span class="op">=</span> <span class="st">"15 4 * * *"</span>, 
@@ -434,7 +436,7 @@
 <div class="section level3">
 <h3 id="alternate-code-sources">Alternate code sources<a class="anchor" aria-label="anchor" href="#alternate-code-sources"></a>
 </h3>
-<p>There are also some other legacy ways to include code/data sources within your builds, which you may still want to do if you are not scheduling a build trigger but a build directly using <code><a href="../reference/cr_schedule_build.html">cr_schedule_http()</a></code>. It is recommended though to use the PubSub topics for easier debugging and transparency.</p>
+<p>There are also some other legacy ways to include code/data sources within your builds, which you may still want to do if you are not scheduling a build trigger but a build directly using <code><a href="../reference/cr_schedule.html">cr_schedule_http()</a></code>. It is recommended though to use the PubSub topics for easier debugging and transparency.</p>
 <div class="section level4">
 <h4 id="repo-source">Repo Source<a class="anchor" aria-label="anchor" href="#repo-source"></a>
 </h4>
@@ -508,10 +510,10 @@
 <div class="section level4">
 <h4 id="schedule-calling-the-docker-image-using-cloud-scheduler">Schedule calling the Docker image using Cloud Scheduler<a class="anchor" aria-label="anchor" href="#schedule-calling-the-docker-image-using-cloud-scheduler"></a>
 </h4>
-<p>Once you have a working build, schedule that build object by passing it to the <code><a href="../reference/cr_schedule_build.html">cr_schedule_http()</a></code> function, which constructs the Cloud Build API call for Cloud Scheduler to call at its scheduled times.</p>
+<p>Once you have a working build, schedule that build object by passing it to the <code><a href="../reference/cr_schedule.html">cr_schedule_http()</a></code> function, which constructs the Cloud Build API call for Cloud Scheduler to call at its scheduled times.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create a scheduler http endpoint that will trigger your build</span>
-<span class="va">cloud_build_target</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule_build.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">my_build</span><span class="op">)</span>
+<span class="va">cloud_build_target</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">my_build</span><span class="op">)</span>
 
 <span class="co"># schedule it</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"15 5 * * *"</span>, name<span class="op">=</span><span class="st">"scheduled_r"</span>,

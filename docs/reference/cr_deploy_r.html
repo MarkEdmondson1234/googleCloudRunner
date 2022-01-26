@@ -215,7 +215,7 @@
 <dt>schedule_type</dt>
 <dd><p>If you have specified a schedule, this will select what strategy it will use to deploy it. See details</p></dd>
 <dt>schedule_pubsub</dt>
-<dd><p>If you have a custom pubsub message to send via an existing topic, use <a href="cr_schedule_build.html">cr_schedule_pubsub</a> to supply it here</p></dd>
+<dd><p>If you have a custom pubsub message to send via an existing topic, use <a href="cr_schedule.html">cr_schedule_pubsub</a> to supply it here</p></dd>
 <dt>email</dt>
 <dd><p>The email that will authenticate the job set via <a href="cr_email_set.html">cr_email_set</a></p></dd>
 <dt>region</dt>
@@ -249,7 +249,7 @@
 <li><p>Create a Cloud Schedule called <code>"{run_name}-trigger"</code> that will send a pubsub message to the topic: either the default that contains just the name of the script, or the message you supplied in <code>schedule_pubsub</code>.</p></li>
 </ol><p>Type "pubsub" is recommended for more complex R scripts as you will have more visibility for debugging schedules via inspecting the PubSub topic, build trigger and build logs, as well as enabling triggering the script from other PubSub topics and allowing to pass dynamic parameters into your schedule scripts via the PubSub message.</p>
 <p>If <code>schedule_type="http"</code> then scheduling will involve:</p>
-<ol><li><p>Create a Cloud Build API call with your build embedded within it via <a href="cr_schedule_build.html">cr_schedule_http</a></p></li>
+<ol><li><p>Create a Cloud Build API call with your build embedded within it via <a href="cr_schedule.html">cr_schedule_http</a></p></li>
 <li><p>Schedule the HTTP call using the authentication email supplied in <code>email</code> or the default <a href="cr_email_set.html">cr_email_get</a></p></li>
 </ol><p>This is the old default and is suitable for smaller R scripts or when you don't want to use the other  GCP services.  The authentication for the API call from Cloud Scheduler can cause opaque errors as it will give you invalid response codes whether its that or an error in your R script you wish to schedule.</p>
     </div>

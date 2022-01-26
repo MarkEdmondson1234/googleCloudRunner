@@ -155,7 +155,7 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">cr_build_logs</span><span class="op">(</span>built <span class="op">=</span> <span class="cn">NULL</span>, log_url <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
 
-<span class="fu">cr_build_logs_last</span><span class="op">(</span>
+<span class="fu">cr_buildtrigger_logs</span><span class="op">(</span>
   trigger_name <span class="op">=</span> <span class="cn">NULL</span>,
   trigger_id <span class="op">=</span> <span class="cn">NULL</span>,
   projectId <span class="op">=</span> <span class="fu"><a href="cr_project_set.html">cr_project_get</a></span><span class="op">(</span><span class="op">)</span>
@@ -227,10 +227,10 @@
 <span class="r-in"><span class="va">ts</span><span class="op">$</span><span class="va">buildTriggerName</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">my_trigger</span> <span class="op">&lt;-</span> <span class="st">"package-checks"</span></span>
-<span class="r-in"><span class="va">last_logs</span> <span class="op">&lt;-</span> <span class="fu">cr_build_logs_last</span><span class="op">(</span><span class="va">my_trigger</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">last_logs</span> <span class="op">&lt;-</span> <span class="fu">cr_buildtrigger_logs</span><span class="op">(</span><span class="va">my_trigger</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">my_trigger_id</span> <span class="op">&lt;-</span> <span class="st">"0a3cade0-425f-4adc-b86b-14cde51af674"</span></span>
-<span class="r-in"><span class="va">last_logs</span> <span class="op">&lt;-</span> <span class="fu">cr_build_logs_last</span><span class="op">(</span>trigger_id <span class="op">=</span> <span class="va">my_trigger_id</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">last_logs</span> <span class="op">&lt;-</span> <span class="fu">cr_buildtrigger_logs</span><span class="op">(</span>trigger_id <span class="op">=</span> <span class="va">my_trigger_id</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 </code></pre></div>
     </div>

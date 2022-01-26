@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Serverless batched R scripts via Cloud Build</h1>
             
-            <h4 data-toc-skip class="date">2022-01-25</h4>
+            <h4 data-toc-skip class="date">2022-01-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/cloudbuild.Rmd" class="external-link"><code>vignettes/cloudbuild.Rmd</code></a></small>
       <div class="hidden name"><code>cloudbuild.Rmd</code></div>
@@ -186,6 +186,8 @@
 <p>If you want to run scripts that can be triggered one time, batch style, and set them up to trigger on GitHub events or pub/sub, or schedule them using Cloud Scheduler then Cloud Build is suited to your use case.</p>
 <p>If you would also like to have your R code react in real-time to events such as HTTP events, such as a website or API endpoint, consider <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html">Cloud Run</a>.</p>
 <p>PubSub events can also trigger builds via Build Triggers which is good for long-running tasks in reaction to events such as a Cloud Storage file being uploaded, various events around Google Cloud such as billing alerts and via custom metrics set up in Cloud Logging for practically any logged event on Google Cloud.</p>
+<p>An overview of the various functions and how they combine with each other and later functions is shown in this diagram:</p>
+<p><img src="build_plot.png"></p>
 <div class="section level2">
 <h2 id="the-cloudbuild-yaml-format">The cloudbuild.yaml format<a class="anchor" aria-label="anchor" href="#the-cloudbuild-yaml-format"></a>
 </h2>
@@ -376,6 +378,8 @@
 <span class="co">#- bash</span>
 <span class="co">#- -c</span>
 <span class="co">#- echo hello world</span></code></pre></div>
+<p>To further air deployments the <code>cr_deploy_*</code> functions take some common tasks and use the buildsteps above, in some cases also creating a build trigger or schedule.</p>
+<p><img src="deploy_plot.png"></p>
 </div>
 <div class="section level2">
 <h2 id="build-artifacts">Build Artifacts<a class="anchor" aria-label="anchor" href="#build-artifacts"></a>
@@ -641,7 +645,7 @@
 <p>You should now see the Cloud Build start in your GCP console. You can check the logs for the build after it has run to see if it worked:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># did it work?</span>
-<span class="fu"><a href="../reference/cr_build_logs.html">cr_build_logs_last</a></span><span class="op">(</span><span class="st">"pubsub-triggered-subs"</span><span class="op">)</span>
+<span class="fu"><a href="../reference/cr_build_logs.html">cr_buildtrigger_logs</a></span><span class="op">(</span><span class="st">"pubsub-triggered-subs"</span><span class="op">)</span>
 
 <span class="co"># yep!</span>
 <span class="co">#...</span>
@@ -651,7 +655,7 @@
 <span class="co">#[58] "Finished Step #1 - \"Hello R\""                                                                                  </span>
 <span class="co">#[59] "PUSH"                                                                                                            </span>
 <span class="co">#[60] "DONE"                                                                                                            </span></code></pre></div>
-<p>See also <code><a href="../reference/cr_schedule_build.html">cr_schedule_pubsub()</a></code> which can use PubSub to trigger scheduled builds. There is a guide using that within <a href="cloudscheduler.html">Cloud Scheduler to trigger Build Triggers via Pubsub</a></p>
+<p>See also <code><a href="../reference/cr_schedule.html">cr_schedule_pubsub()</a></code> which can use PubSub to trigger scheduled builds. There is a guide using that within <a href="cloudscheduler.html">Cloud Scheduler to trigger Build Triggers via Pubsub</a></p>
 </div>
 </div>
 <div class="section level2">
@@ -671,6 +675,8 @@
 <li>Downloads from Cloud Storage to your local session if required</li>
 </ol>
 <p>You will need to create an R based Dockerfile to run the target functions within, including at least targets and any other libraries you need for your functions to execute. By default it will use <code>gcr.io/gcer-public/targets</code> which is an image containing <code>targets</code> only.</p>
+<p>An overview of the targets functions is shown below:</p>
+<p><img src="targets_plot.png"></p>
 <div class="section level3">
 <h3 id="targets-pipeline-example">Targets pipeline example<a class="anchor" aria-label="anchor" href="#targets-pipeline-example"></a>
 </h3>
@@ -772,7 +778,7 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/andodet/googlePubsubR" class="external-link">googlePubsubR</a></span><span class="op">)</span>
 <span class="va">topic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/topics_create.html" class="external-link">topics_create</a></span><span class="op">(</span><span class="st">"target_pubsub_schedule"</span><span class="op">)</span>
 
-<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule_build.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="va">topic</span><span class="op">)</span>
+<span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule_pubsub</a></span><span class="op">(</span><span class="va">topic</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"target_pubsub_schedule"</span>, 
             schedule <span class="op">=</span> <span class="st">"15 4 * * *"</span>, 
@@ -825,9 +831,9 @@
 <span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>subscription<span class="sc">:</span>  projects<span class="sc">/</span><span class="dv">123434564</span><span class="sc">/</span>subscriptions<span class="sc">/</span>gcb<span class="sc">-</span>targets<span class="sc">-</span>scheduled<span class="sc">-</span>demo </span></code></pre></div>
 <p>You can modify each of these moving parts independently, for example swapping the pubsub for a Cloud Storage event that triggers many builds, or parametrising your PubSub trigger to trigger different behaviour. It is recommend for the first attempt to keep it simple with a one-to-one relationship between builds, pubsub topics and triggers.</p>
 <ol start="4" style="list-style-type: decimal">
-<li>You should see successful builds and can check the status of the last build via <code><a href="../reference/cr_build_logs.html">cr_build_logs_last()</a></code> which downloads the last build of the given build trigger:</li>
+<li>You should see successful builds and can check the status of the last build via <code><a href="../reference/cr_build_logs.html">cr_buildtrigger_logs()</a></code> which downloads the last build of the given build trigger:</li>
 </ol>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cr_build_logs_last</span>(<span class="st">"targets-scheduled-demo"</span>)</span>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cr_buildtrigger_logs</span>(<span class="st">"targets-scheduled-demo"</span>)</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>] <span class="st">"starting build </span><span class="sc">\"</span><span class="st">b3a2c366-3280-4ecb-a7c3-9916233e2dc7</span><span class="sc">\"</span><span class="st">"</span>                                                                                 </span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>[<span class="dv">2</span>] <span class="st">""</span>                                     </span>

@@ -243,7 +243,7 @@
         </td>
         <td><p>Lists the build</p></td>
       </tr><tr><td>
-          <p><code><a href="cr_build_logs.html">cr_build_logs()</a></code> <code><a href="cr_build_logs.html">cr_build_logs_last()</a></code> </p>
+          <p><code><a href="cr_build_logs.html">cr_build_logs()</a></code> <code><a href="cr_build_logs.html">cr_buildtrigger_logs()</a></code> </p>
         </td>
         <td><p>Download logs from a Cloud Build</p></td>
       </tr><tr><td>
@@ -291,7 +291,7 @@
         </td>
         <td><p>Deploy a Cloud Run app to display build badges</p></td>
       </tr><tr><td>
-          <p><code><a href="cr_schedule_build.html">cr_build_schedule_http()</a></code> <code><a href="cr_schedule_build.html">cr_schedule_http()</a></code> <code><a href="cr_schedule_build.html">cr_schedule_build()</a></code> <code><a href="cr_schedule_build.html">cr_schedule_pubsub()</a></code> </p>
+          <p><code><a href="cr_schedule.html">cr_build_schedule_http()</a></code> <code><a href="cr_schedule.html">cr_schedule_http()</a></code> <code><a href="cr_schedule.html">cr_schedule_pubsub()</a></code> <code><a href="cr_schedule.html">cr_schedule()</a></code> </p>
         </td>
         <td><p>Create a Cloud Scheduler HTTP target from a Cloud Build object</p></td>
       </tr><tr><td>
@@ -419,9 +419,13 @@
           <p class="section-desc"></p><p>Functions for creation of triggers that determine when the builds run</p>
         </th>
       </tr></tbody><tbody><tr><td>
+          <p><code><a href="cr_build_logs.html">cr_build_logs()</a></code> <code><a href="cr_build_logs.html">cr_buildtrigger_logs()</a></code> </p>
+        </td>
+        <td><p>Download logs from a Cloud Build</p></td>
+      </tr><tr><td>
           <p><code><a href="cr_buildtrigger.html">cr_buildtrigger()</a></code> </p>
         </td>
-        <td><p>Creates a new `BuildTrigger`.This API is experimental.</p></td>
+        <td><p>Create a new BuildTrigger</p></td>
       </tr><tr><td>
           <p><code><a href="cr_buildtrigger_copy.html">cr_buildtrigger_copy()</a></code> </p>
         </td>
@@ -519,13 +523,13 @@
           <p class="section-desc"></p><p>Functions for working with Cloud Scheduler</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="cr_schedule.html">cr_schedule()</a></code> </p>
-        </td>
-        <td><p>Creates or updates a Cloud Scheduler job.</p></td>
-      </tr><tr><td>
-          <p><code><a href="cr_schedule_build.html">cr_build_schedule_http()</a></code> <code><a href="cr_schedule_build.html">cr_schedule_http()</a></code> <code><a href="cr_schedule_build.html">cr_schedule_build()</a></code> <code><a href="cr_schedule_build.html">cr_schedule_pubsub()</a></code> </p>
+          <p><code><a href="cr_schedule.html">cr_build_schedule_http()</a></code> <code><a href="cr_schedule.html">cr_schedule_http()</a></code> <code><a href="cr_schedule.html">cr_schedule_pubsub()</a></code> <code><a href="cr_schedule.html">cr_schedule()</a></code> </p>
         </td>
         <td><p>Create a Cloud Scheduler HTTP target from a Cloud Build object</p></td>
+      </tr><tr><td>
+          <p><code><a href="cr_schedule_build.html">cr_schedule_build()</a></code> </p>
+        </td>
+        <td><p>Schedule a Build object via HTTP or PubSub</p></td>
       </tr><tr><td>
           <p><code><a href="cr_schedule_delete.html">cr_schedule_delete()</a></code> </p>
         </td>
