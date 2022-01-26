@@ -118,11 +118,11 @@ cr_schedule("cloud-run-scheduled", schedule = "4 16 * * *", httpTarget = run_me)
 
 ### Private HTTP endpoints
 
-When you create an app via `cr_deploy_run("my-app", allowUnauthenticated = TRUE)` a new service account will be created with the rights called "my-app-invoker".  Use that email to tell the scheduler how to call the app:
+When you create an app via `cr_deploy_run("my-app", allowUnauthenticated = FALSE)` a new service account will be created with the rights called "my-app-invoker".  Use that email to tell the scheduler how to call the app:
 
 ```r
 # for authenticated Cloud Run apps - create with allowUnauthenticated=FALSE
-cr_deploy_run("my-app", allowUnauthenticated = TRUE)
+cr_deploy_run("my-app", allowUnauthenticated = FALSE)
 
 # deploying via R will help create a service email called my-app-invoker
 cr_run_email("my-app")
