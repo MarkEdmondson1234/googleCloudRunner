@@ -1,8 +1,12 @@
 #' @rdname cr_schedule
 #' @export
-cr_build_schedule_http <- function(...){
+cr_build_schedule_http <- function(build,
+                                   email = cr_email_get(),
+                                   projectId = cr_project_get()){
   .Deprecated("cr_schedule_http")
-  cr_schedule_http(...)
+  cr_schedule_http(build,
+                   email = email,
+                   projectId = projectId)
 }
 
 #' Create a Cloud Scheduler HTTP target from a Cloud Build object
@@ -15,7 +19,7 @@ cr_build_schedule_http <- function(...){
 #' @param email The email that will authenticate the job set via \link{cr_email_set}
 #' @param projectId The projectId
 #'
-#' @return \code{cr_schedule_http} returns a \link{HttpTarget} object for use in \link{cr_schedule} or \link{cr_schedule_build}
+#' @return \code{cr_schedule_http} returns a \link{HttpTarget} object for use in \link{cr_schedule}
 #'
 #' @details Ensure you have a service email with \link{cr_email_set} of format \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com} with Cloud Scheduler Service Agent role as per https://cloud.google.com/scheduler/docs/http-target-auth#add
 #'
@@ -72,6 +76,7 @@ cr_schedule_http <- function(build,
 #' @param build A Build object
 #' @param schedule_type Whether to use HTTP or PubSub styled schedules
 #' @param ... additional arguments to pass to \link{cr_schedule}
+#' @inheritParams cr_schedule_http
 #' @inheritDotParams cr_schedule
 #' @return \code{cr_schedule_build} returns a cloud scheduler \link{Job} object
 cr_schedule_build <- function(build,

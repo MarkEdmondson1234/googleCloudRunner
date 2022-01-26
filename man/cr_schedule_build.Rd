@@ -20,10 +20,13 @@ cr_schedule_build(
 
 \item{schedule_type}{Whether to use HTTP or PubSub styled schedules}
 
+\item{email}{The email that will authenticate the job set via \link{cr_email_set}}
+
+\item{projectId}{The GCP project to run within usually set with \link{cr_project_set}}
+
 \item{...}{
   Arguments passed on to \code{\link[=cr_schedule]{cr_schedule}}
   \describe{
-    \item{\code{projectId}}{The GCP project to run within usually set with \link{cr_project_set}}
     \item{\code{region}}{The region usually set with \link{cr_region_set}}
     \item{\code{overwrite}}{If TRUE and an existing job with the same name exists, will overwrite it with the new parameters}
     \item{\code{name}}{Name to call your scheduled job}

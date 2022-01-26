@@ -7,7 +7,11 @@
 \alias{cr_schedule}
 \title{Create a Cloud Scheduler HTTP target from a Cloud Build object}
 \usage{
-cr_build_schedule_http(...)
+cr_build_schedule_http(
+  build,
+  email = cr_email_get(),
+  projectId = cr_project_get()
+)
 
 cr_schedule_http(build, email = cr_email_get(), projectId = cr_project_get())
 
@@ -63,7 +67,7 @@ cr_schedule(
 \item{region}{The region usually set with \link{cr_region_set}}
 }
 \value{
-\code{cr_schedule_http} returns a \link{HttpTarget} object for use in \link{cr_schedule} or \link{cr_schedule_build}
+\code{cr_schedule_http} returns a \link{HttpTarget} object for use in \link{cr_schedule}
 
 \code{cr_schedule_pubsub} returns a \link{PubsubTarget} object for use within \link{cr_schedule} or \link{cr_schedule_build}
 
