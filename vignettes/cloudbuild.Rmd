@@ -13,6 +13,10 @@ If you would also like to have your R code react in real-time to events such as 
 
 PubSub events can also trigger builds via Build Triggers which is good for long-running tasks in reaction to events such as a Cloud Storage file being uploaded, various events around Google Cloud such as billing alerts and via custom metrics set up in Cloud Logging for practically any logged event on Google Cloud.
 
+An overview of the various functions and how they combine with each other and later functions is shown in this diagram:
+
+![](build_plot.png)
+
 ## The cloudbuild.yaml format
 
 Cloud Build is centered around the [cloudbuild.yaml format](https://cloud.google.com/cloud-build/docs/build-config) - you can use existing cloudbuild.yaml files or create your own in R using the cloudbuild.yaml helper functions.
@@ -217,6 +221,10 @@ cr_buildstep("ubuntu", args = c("bash", "-c", "echo hello world"), prefix = "")
 #- -c
 #- echo hello world
 ```
+
+To further air deployments the `cr_deploy_*` functions take some common tasks and use the buildsteps above, in some cases also creating a build trigger or schedule.
+
+![](deploy_plot.png)
 
 ## Build Artifacts
 
@@ -538,7 +546,7 @@ You should now see the Cloud Build start in your GCP console.  You can check the
 
 ```r
 # did it work?
-cr_build_logs_last("pubsub-triggered-subs")
+cr_buildtrigger_logs("pubsub-triggered-subs")
 
 # yep!
 #...
@@ -573,6 +581,10 @@ In general the integration takes care of these steps:
 6. Downloads from Cloud Storage to your local session if required
 
 You will need to create an R based Dockerfile to run the target functions within, including at least targets and any other libraries you need for your functions to execute. By default it will use `gcr.io/gcer-public/targets` which is an image containing `targets` only.
+
+An overview of the targets functions is shown below:
+
+![](targets_plot.png)
 
 ### Targets pipeline example
 
@@ -760,10 +772,10 @@ subscription:  projects/123434564/subscriptions/gcb-targets-scheduled-demo
 
 You can modify each of these moving parts independently, for example swapping the pubsub for a Cloud Storage event that triggers many builds, or parametrising your PubSub trigger to trigger different behaviour. It is recommend for the first attempt to keep it simple with a one-to-one relationship between builds, pubsub topics and triggers. 
 
-4. You should see successful builds and can check the status of the last build via `cr_build_logs_last()` which downloads the last build of the given build trigger:
+4. You should see successful builds and can check the status of the last build via `cr_buildtrigger_logs()` which downloads the last build of the given build trigger:
 
 ```r
-cr_build_logs_last("targets-scheduled-demo")
+cr_buildtrigger_logs("targets-scheduled-demo")
 
 [1] "starting build \"b3a2c366-3280-4ecb-a7c3-9916233e2dc7\""                                                                                 
 [2] ""                                     

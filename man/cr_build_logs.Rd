@@ -2,12 +2,12 @@
 % Please edit documentation in R/build_logs.R
 \name{cr_build_logs}
 \alias{cr_build_logs}
-\alias{cr_build_logs_last}
+\alias{cr_buildtrigger_logs}
 \title{Download logs from a Cloud Build}
 \usage{
 cr_build_logs(built = NULL, log_url = NULL)
 
-cr_build_logs_last(
+cr_buildtrigger_logs(
   trigger_name = NULL,
   trigger_id = NULL,
   projectId = cr_project_get()
@@ -54,10 +54,10 @@ ts <- cr_buildtrigger_list()
 ts$buildTriggerName
 
 my_trigger <- "package-checks"
-last_logs <- cr_build_logs_last(my_trigger)
+last_logs <- cr_buildtrigger_logs(my_trigger)
 
 my_trigger_id <- "0a3cade0-425f-4adc-b86b-14cde51af674"
-last_logs <- cr_build_logs_last(trigger_id = my_trigger_id)
+last_logs <- cr_buildtrigger_logs(trigger_id = my_trigger_id)
 }
 }
 \seealso{

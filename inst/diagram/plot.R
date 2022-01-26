@@ -1,0 +1,130 @@
+DiagrammeR::mermaid("
+graph LR
+  cr_buildstep-->cr_build_yaml
+  cr_build_yaml-->cr_build_make
+  cr_build_make-->cr_build
+  cr_buildstep_*-->cr_buildstep
+  cr_build_yaml-->cr_build_write
+  cr_build_write-->cloudbuild.yaml
+  cloudbuild.yaml-->cr_build
+  cr_build_source-->cr_build
+  cr_build_yaml_secrets-->cr_build_yaml
+  cr_build_yaml_artifact-->cr_build_yaml
+  cr_buildtrigger_repo-->cr_buildtrigger
+  cr_buildtrigger_pubsub-->cr_buildtrigger
+  cr_buildtrigger_webhook-->cr_buildtrigger
+  RepoSource-->cr_build_source
+  StorageSource-->cr_build_source
+  cr_build_upload_gcs-->StorageSource
+  cr_build_source-->cr_build_make
+  cloudbuild.yaml-->cr_build_make
+  cr_build-->cr_build_artifacts
+  cr_build-->cr_build_logs
+  cr_buildtrigger-->cr_buildtrigger_logs
+  cloudbuild.yaml-->cr_buildtrigger
+  cr_build_make-->cr_buildtrigger
+  GitHub-->cr_buildtrigger_repo
+")
+
+DiagrammeR::mermaid("
+graph LR
+  GitHub((GitHub))-->BuildTrigger((BuildTrigger))
+  cr_schedule_build-->cr_schedule_http
+  cr_schedule_build-->cr_schedule_pubsub
+  cr_build_make-->cr_schedule_build
+  cr_schedule-->cr_schedule_pubsub
+  cr_schedule_pubsub-->PubSub((PubSub))
+  PubSub((PubSub))-->BuildTrigger
+  cr_schedule-->cr_schedule_http
+  cr_schedule_http-->Build((Build))
+  cr_schedule-->cr_run_schedule_http
+  cr_run_schedule_http-->CloudRun((CloudRun))
+  cr_deploy_run-->CloudRun
+  cr_build_source-->Build
+  RepoSource((RepoSource))-->cr_build_source
+  StorageSource-->cr_build_source
+  cr_build_upload_gcs-->StorageSource
+")
+
+DiagrammeR::mermaid("
+graph LR
+  cr_deploy_plumber-->cr_deploy_run
+  cr_deploy_html-->cr_deploy_run
+  cr_deploy_r-->cr_schedule
+  cr_deploy_r-->cr_buildstep_r
+  cr_buildstep_r-->cr_buildstep
+  cr_deploy_run-->cr_buildstep_run
+  cr_buildstep_run-->cr_buildstep
+  cr_buildstep_run-->cr_buildstep
+  cr_deploy_docker_trigger-->cr_buildstep_docker
+  cr_deploy_docker_trigger-->cr_buildtrigger
+  cr_buildstep_docker-->cr_buildstep
+  cr_buildstep_docker-->cr_buildstep
+  cr_deploy_run_website-->cr_buildstep_run
+  cr_deploy_run_website-->cr_buildtrigger
+  cr_buildtrigger_repo-->cr_buildtrigger
+  cr_deploy_packagetests-->cr_buildtrigger
+  cr_deploy_packagetests-->cr_buildstep_packagetests
+  cr_buildstep_packagetests-->cr_buildstep_r
+  cr_deploy_badger-->cr_buildstep_gcloud
+  cr_buildstep_gcloud-->cr_buildstep
+  cr_deploy_pkgdown-->cr_buildstep_pkgdown
+  cr_deploy_pkgdown-->cr_buildtrigger
+  cr_buildstep_pkgdown-->cr_buildstep_git
+  cr_buildstep_pkgdown-->cr_buildstep_r
+  cr_buildstep_git-->cr_buildstep
+")
+
+
+DiagrammeR::mermaid("
+graph LR
+  cr_deploy_plumber-->cr_deploy_run
+  cr_deploy_run-->cr_deploy_docker
+  cr_deploy_run-->cr_run
+  cr_buildstep_run-->CloudRun
+  cr_run-->cr_buildstep_run
+  api.R-->cr_deploy_plumber
+  Dockerfile-->cr_deploy_docker
+  Dockerfile-->cr_deploy_plumber
+  cr_deploy_docker-->cr_run
+  cr_plumber_pubsub-->api.R
+  CloudRun-->cr_plumber
+  cr_jwt_with_httr-->CloudRun
+  cr_jwt_with_curl-->CloudRun
+  cr_jwt_create-->cr_jwt_token
+  cr_jwt_token-->cr_jwt_with_httr
+  cr_jwt_token-->cr_jwt_with_curl
+  cr_jwt_async-->CloudRun
+  cr_jwt_token-->cr_jwt_async
+  cr_jwt_async-->cr_jwt_with_curl
+  cr_run_email-->cr_jwt_create
+  cr_schedule-->cr_run_schedule_http
+  cr_schedule-->CloudRun
+  cr_run_schedule_http-->CloudRun
+  cr_deploy_run_website-->cr_run
+  cr_buildtrigger_repo-->cr_buildtrigger
+  cr_deploy_run_website-->cr_buildtrigger
+")
+
+DiagrammeR::mermaid("
+graph LR
+  _targets --> cr_buildstep_targets_multi
+  _targets --> cr_buildstep_targets_single
+  cr_buildstep_targets_single-->cr_build_targets
+  cr_buildstep_targets_multi-->cr_build_targets
+  cr_buildstep_targets_multi-->cr_buildstep_targets
+  cr_buildstep_targets_single-->cr_buildstep_targets
+  cr_buildstep_targets-->cr_buildstep_targets_teardown
+  cr_buildstep_targets-->cr_buildstep_targets_setup
+  cr_build_targets-->CloudBuild
+  CloudBuild-->cr_build_targets_artifacts
+  cr_build_targets_artifacts-->_targets
+  BuildTrigger-->CloudBuild
+  PubSub-->BuildTrigger
+  GitHub-->BuildTrigger
+  cr_schedule_build-->PubSub
+  cr_schedule_build-->BuildTrigger
+  cr_build_targets-->cr_build_upload_gcs
+  cr_build_upload_gcs-->StorageSource
+  StorageSource-->CloudBuild
+")

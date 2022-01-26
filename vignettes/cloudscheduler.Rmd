@@ -12,6 +12,10 @@ cr_scheduler(name = "my-webhook", "14 5 * * *",
              httpTarget = HttpTarget(httpMethod="GET", uri = "https://mywebhook.com"))
 ```
 
+How scheduling works with various functions in `googleCloudRunner` is shown in the below plot for an overview:
+
+![](schedule_plot.png)
+
 ## Schedule Cloud Build
 
 Since Cloud Build can run any code in a container, scheduling them becomes a powerful way to setup batched data flows.    

@@ -171,7 +171,11 @@ parse_buildtrigger_list <- function(x) {
   o
 }
 
-#' Creates a new `BuildTrigger`.This API is experimental.
+#' Create a new BuildTrigger
+#'
+#' @description
+#'
+#' Build Triggers are a way to have your builds respond to various events, most commonly a git commit or a pubsub event.
 #'
 #' @inheritParams BuildTrigger
 #' @param trigger The trigger source created via \link{cr_buildtrigger_repo} or a pubsub trigger made with \link{cr_buildtrigger_pubsub} or a webhook trigger made with \link{cr_buildtrigger_webhook}

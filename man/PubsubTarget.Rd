@@ -32,7 +32,6 @@ Other Cloud Scheduler functions:
 \code{\link{cr_schedule_get}()},
 \code{\link{cr_schedule_list}()},
 \code{\link{cr_schedule_pause}()},
-\code{\link{cr_schedule_run}()},
-\code{\link{cr_schedule}()}
+\code{\link{cr_schedule_run}()}
 }
 \concept{Cloud Scheduler functions}

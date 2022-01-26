@@ -1,4 +1,4 @@
-#' @rdname cr_schedule_build
+#' @rdname cr_schedule
 #' @export
 cr_build_schedule_http <- function(...){
   .Deprecated("cr_schedule_http")
@@ -21,7 +21,6 @@ cr_build_schedule_http <- function(...){
 #'
 #' @export
 #' @import assertthat
-#' @family Cloud Scheduler functions
 #'
 #'
 #' @examples
@@ -43,7 +42,7 @@ cr_build_schedule_http <- function(...){
 #'   httpTarget = cr_schedule_http(itworks)
 #' )
 #' }
-#' @rdname cr_schedule_build
+#' @rdname cr_schedule
 cr_schedule_http <- function(build,
                              email = cr_email_get(),
                              projectId = cr_project_get()) {
@@ -66,18 +65,18 @@ cr_schedule_http <- function(build,
 
 #' Schedule a Build object via HTTP or PubSub
 #'
-#' @details See also \link{cr_schedule_pubsub} which you can use by creating a build trigger of your build via \link{cr_buildtrigger} that accepts Pub/Sub messages.  This method is recommended as being easier to maintain than using HTTP requests to the Cloud Build API that \link{cr_schedule_http} produces.
+#' @details See also \link{cr_schedule} which you can use by to customise your schedule.
+#'
 #' @export
 #' @param schedule A cron schedule e.g. \code{"15 5 * * *"}
+#' @param build A Build object
 #' @param schedule_type Whether to use HTTP or PubSub styled schedules
 #' @param ... additional arguments to pass to \link{cr_schedule}
 #' @inheritDotParams cr_schedule
-#' @param schedule_pubsub If you have a custom pubsub message to send via an existing topic, use \link{cr_schedule_pubsub} to supply it here
 #' @return \code{cr_schedule_build} returns a cloud scheduler \link{Job} object
 cr_schedule_build <- function(build,
                               schedule,
                               schedule_type = c("http", "pubsub"),
-                              schedule_pubsub = NULL,
                               email = cr_email_get(),
                               projectId = cr_project_get(),
                               ...) {
@@ -108,7 +107,7 @@ cr_schedule_build <- function(build,
 
     # creates topic and build trigger
     pubsub_target <- create_pubsub_target(build = build,
-                                          schedule_pubsub = schedule_pubsub,
+                                          schedule_pubsub = dots$pubsubTarget,
                                           run_name = run_name)
 
     myMessage("Creating Cloud Schedule to trigger PubSub topicName:",
@@ -249,7 +248,7 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name) {
 #'   )
 #' )
 #' }
-#' @rdname cr_schedule_build
+#' @rdname cr_schedule
 cr_schedule_pubsub <- function(topicName,
                                PubsubMessage = NULL,
                                data = NULL,

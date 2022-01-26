@@ -86,15 +86,15 @@ make_bucket_log_url <- function(x) {
 #' ts$buildTriggerName
 #'
 #' my_trigger <- "package-checks"
-#' last_logs <- cr_build_logs_last(my_trigger)
+#' last_logs <- cr_buildtrigger_logs(my_trigger)
 #'
 #' my_trigger_id <- "0a3cade0-425f-4adc-b86b-14cde51af674"
-#' last_logs <- cr_build_logs_last(trigger_id = my_trigger_id)
+#' last_logs <- cr_buildtrigger_logs(trigger_id = my_trigger_id)
 #' }
 #' @rdname cr_build_logs
-cr_build_logs_last <- function(trigger_name = NULL,
-                               trigger_id = NULL,
-                               projectId = cr_project_get()) {
+cr_buildtrigger_logs <- function(trigger_name = NULL,
+                                 trigger_id = NULL,
+                                 projectId = cr_project_get()) {
   if (is.null(trigger_name) && is.null(trigger_id)) {
     stop("Must supply one of trigger_name or trigger_id", call. = FALSE)
   }
