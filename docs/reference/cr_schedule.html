@@ -153,7 +153,11 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">cr_build_schedule_http</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">cr_build_schedule_http</span><span class="op">(</span>
+  <span class="va">build</span>,
+  email <span class="op">=</span> <span class="fu"><a href="cr_email_set.html">cr_email_get</a></span><span class="op">(</span><span class="op">)</span>,
+  projectId <span class="op">=</span> <span class="fu"><a href="cr_project_set.html">cr_project_get</a></span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span>
 
 <span class="fu">cr_schedule_http</span><span class="op">(</span><span class="va">build</span>, email <span class="op">=</span> <span class="fu"><a href="cr_email_set.html">cr_email_get</a></span><span class="op">(</span><span class="op">)</span>, projectId <span class="op">=</span> <span class="fu"><a href="cr_project_set.html">cr_project_get</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 
@@ -213,7 +217,7 @@
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>cr_schedule_http</code> returns a <a href="HttpTarget.html">HttpTarget</a> object for use in cr_schedule or <a href="cr_schedule_build.html">cr_schedule_build</a><code>cr_schedule_pubsub</code> returns a <a href="PubsubTarget.html">PubsubTarget</a> object for use within cr_schedule or <a href="cr_schedule_build.html">cr_schedule_build</a>A <code>gar_scheduleJob</code> class object</p>
+    <p><code>cr_schedule_http</code> returns a <a href="HttpTarget.html">HttpTarget</a> object for use in cr_schedule<code>cr_schedule_pubsub</code> returns a <a href="PubsubTarget.html">PubsubTarget</a> object for use within cr_schedule or <a href="cr_schedule_build.html">cr_schedule_build</a>A <code>gar_scheduleJob</code> class object</p>
     </div>
     <div id="details">
     <h2>Details</h2>
