@@ -342,7 +342,9 @@ cr_buildtrigger <- function(build,
     includedFiles = includedFiles
   )
 
-  if (overwrite) cr_buildtrigger_delete(name, projectId = projectId)
+  if (overwrite) {
+    suppressMessages(cr_buildtrigger_delete(name, projectId = projectId))
+  }
 
   url <- sprintf(
     "https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
