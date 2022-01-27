@@ -184,7 +184,7 @@ Once the build is tested, we now schedule the Rmd to build each morning, adaptin
 ```r
 # schedule the build
 cr_schedule("rmd-demo", schedule = "15 5 * * *",
-            httpTarget = cr_build_schedule_http(built))
+            httpTarget = cr_schedule_http(built))
 ```
 
 The example Rmd file is built and available on a public Cloud Storage bucket - the above example is available at this [link](https://storage.googleapis.com/mark-edmondson-public-read/scheduled_rmarkdown.html)
@@ -282,7 +282,7 @@ You should see a Cloud Run URL in the logs, like this one:
 6. Schedule the build using cron syntax
 
 ```r
-schedule_me <- cr_build_schedule_http(built)
+schedule_me <- cr_schedule_http(built)
 cr_schedule("rmd-on-cloudrun", "15 8 * * *", httpTarget = schedule_me)
 #==CloudScheduleJob==
 #name:  projects/project-name/locations/europe-west1/jobs/rmd-on-cloudrun 
@@ -331,7 +331,7 @@ cr_build(r_code)
 To set this up in a schedule, add it to the scheduler like so:
 
 ```r
-schedule_me <- cr_build_schedule_http(r_code)
+schedule_me <- cr_schedule_http(r_code)
 cr_schedule("r-code-example", "15 8 * * *", httpTarget = schedule_me)
 ```
 

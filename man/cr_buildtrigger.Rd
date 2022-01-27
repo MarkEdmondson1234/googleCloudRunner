@@ -2,7 +2,7 @@
 % Please edit documentation in R/buildtriggers.R
 \name{cr_buildtrigger}
 \alias{cr_buildtrigger}
-\title{Creates a new `BuildTrigger`.This API is experimental.}
+\title{Create a new BuildTrigger}
 \usage{
 cr_buildtrigger(
   build,
@@ -45,7 +45,7 @@ cr_buildtrigger(
 \item{overwrite}{If TRUE will overwrite an existing trigger with the same name}
 }
 \description{
-Creates a new `BuildTrigger`.This API is experimental.
+Build Triggers are a way to have your builds respond to various events, most commonly a git commit or a pubsub event.
 }
 \details{
 Any source specified in the build will be overwritten to use the trigger as a source (GitHub or Cloud Source Repositories)

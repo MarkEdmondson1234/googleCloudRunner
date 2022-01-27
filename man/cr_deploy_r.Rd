@@ -96,7 +96,7 @@ Type "pubsub" is recommended for more complex R scripts as you will have more vi
 If \code{schedule_type="http"} then scheduling will involve:
 
 \enumerate{
-  \item Create a Cloud Build API call with your build embedded within it via \link{cr_build_schedule_http}
+  \item Create a Cloud Build API call with your build embedded within it via \link{cr_schedule_http}
   \item Schedule the HTTP call using the authentication email supplied in \code{email} or the default \link{cr_email_get}
  }
 

@@ -52,6 +52,10 @@ BuildTrigger <- function(filename = NULL,
     assert_that(is.gar_RepoSource(triggerTemplate))
   }
 
+  if (!is.null(pubsubConfig)) {
+    assert_that(is.gar_pubsubConfig(pubsubConfig))
+  }
+
   structure(rmNullObs(list(
     filename = filename,
     name = name,
@@ -129,6 +133,15 @@ is.gar_pubsubConfig <- function(x) {
   inherits(x, "gar_pubsubConfig")
 }
 
+as.gar_pubsubConfig <- function(x){
+  PubsubConfig(
+    subscription = x$subscription,
+    topic = x$topic,
+    serviceAccountEmail = x$serviceAccountEmail,
+    state = x$state
+  )
+}
+
 #' WebhookConfig (Build Triggers)
 #'
 #' WebhookConfig describes the configuration of a trigger that creates a build whenever a webhook is sent to a trigger's webhook URL.
@@ -156,6 +169,7 @@ is.gar_webhookConfig <- function(x) {
 
 #' GitRepoSource
 #' Used for PubSub triggers
+#' @noRd
 GitRepoSource <- function(uri,
                           ref,
                           repoType = c("GITHUB","CLOUD_SOURCE_REPOSITORIES")){

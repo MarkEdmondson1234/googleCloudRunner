@@ -9,6 +9,10 @@ If you would like to have your R code react in realtime to events such as HTTP o
 
 If you want to run scripts that can be triggered one time, setup to trigger on GitHub events or pub/sub, or scheduled using Cloud Scheduler then [Cloud Build](https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html) is more suited to your use case. 
 
+An overview of the functionality available is in this diagram:
+
+![](cloudrun_plot.png)
+
 ## Quickstart - plumber API
 
 1. Make an R API via [plumber](https://www.rplumber.io/) that contains entry file api.R.  You can use the demo example in `system.file("example", package="googleCloudRunner")` if you like, which is reproduced below:

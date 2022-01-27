@@ -1,5 +1,7 @@
 #' Build a source object
 #'
+#' This creates a source object for a build.  Note you may instead want to use sources connected to a Build Trigger in which case see \link{cr_buildtrigger_repo}
+#'
 #' @param x A \link{RepoSource} or a \link{StorageSource} object
 #'
 #' @export

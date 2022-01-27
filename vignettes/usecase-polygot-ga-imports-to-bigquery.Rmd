@@ -37,7 +37,7 @@ cr_build_write(polygot)
 This can then be scheduled as described in Cloud Scheduler section on [scheduled cloud builds](https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html).
 
 ```r
-schedule_me <- cr_build_schedule_http(built)
+schedule_me <- cr_schedule_http(built)
 cr_schedule("polygot-example", "15 8 * * *", httpTarget = schedule_me)
 ```
 

@@ -12,6 +12,10 @@ cr_scheduler(name = "my-webhook", "14 5 * * *",
              httpTarget = HttpTarget(httpMethod="GET", uri = "https://mywebhook.com"))
 ```
 
+How scheduling works with various functions in `googleCloudRunner` is shown in the below plot for an overview:
+
+![](schedule_plot.png)
+
 ## Schedule Cloud Build
 
 Since Cloud Build can run any code in a container, scheduling them becomes a powerful way to setup batched data flows.    
@@ -22,10 +26,10 @@ A demo below shows how to set up a Cloud Build on a schedule from R:
 build1 <- cr_build_make("cloudbuild.yaml")
 
 cr_schedule("15 5 * * *", name="cloud-build-test1",
-             httpTarget = cr_build_schedule_http(build1))
+             httpTarget = cr_schedule_http(build1))
 ```
 
-We use `cr_build_make()` and `cr_build_schedule_http()` to create the Cloud Build API request, and then send that to the Cloud Scheduler API via its `httpTarget` parameter.
+We use `cr_build_make()` and `cr_schedule_http()` to create the Cloud Build API request, and then send that to the Cloud Scheduler API via its `httpTarget` parameter.
 
 Update a schedule by specifying the same name and the `overwrite=TRUE` flag.  You need then need to supply what you want to change, everything else will remain as previously configured.
 
@@ -35,7 +39,7 @@ cr_schedule("my-webhook", "12 6 * * *", overwrite=TRUE)
 
 ## Schedule Builds Triggers using PubSub
 
-`cr_build_schedule_http()` works by creating an API call that will trigger a Cloud Build from the Cloud Scheduler service, but this can be harder to set-up from an authentication standpoint and also give unhelpful errors that are hard to debug.  
+`cr_schedule_http()` works by creating an API call that will trigger a Cloud Build from the Cloud Scheduler service, but this can be harder to set-up from an authentication standpoint and also give unhelpful errors that are hard to debug.  
 
 For more robust and transparent scheduling of builds it is recommend you use PubSub to trigger builds via a build trigger that has been set-up to respond to Pub/Sub messages.  This holds additional advantages such as being able to accept PubSub messages from other sources to trigger your builds, and being able to parametrise your builds using the content within the PubSub message data.
 
@@ -114,11 +118,11 @@ cr_schedule("cloud-run-scheduled", schedule = "4 16 * * *", httpTarget = run_me)
 
 ### Private HTTP endpoints
 
-When you create an app via `cr_deploy_run("my-app", allowUnauthenticated = TRUE)` a new service account will be created with the rights called "my-app-invoker".  Use that email to tell the scheduler how to call the app:
+When you create an app via `cr_deploy_run("my-app", allowUnauthenticated = FALSE)` a new service account will be created with the rights called "my-app-invoker".  Use that email to tell the scheduler how to call the app:
 
 ```r
 # for authenticated Cloud Run apps - create with allowUnauthenticated=FALSE
-cr_deploy_run("my-app", allowUnauthenticated = TRUE)
+cr_deploy_run("my-app", allowUnauthenticated = FALSE)
 
 # deploying via R will help create a service email called my-app-invoker
 cr_run_email("my-app")
@@ -149,7 +153,7 @@ A minimal example is:
 the_build <- cr_build_yaml(cr_buildstep_r("cat(Sys.time())"))
 
 # construct a Cloud Build API call to call that build
-build_call <- cr_build_schedule_http(the_build)
+build_call <- cr_schedule_http(the_build)
 
 # schedule the API call for every minute
 cr_schedule("test1", "* * * * *", httpTarget = build_call)
@@ -262,6 +266,34 @@ Once the image is built successfully, you do not need to build it again for the 
 
 You may want your R code to operate on data in Google Cloud Storage or a git repo.  Specify that source in your build, then make the build object:
 
+#### GitHub Source
+
+New from version 0.5 you can run schedules via triggered build triggers.  If using build triggers then you can specify the source in the build trigger itself rather than within the build.  This is a bit more flexible since you can then simply commit to the GitHub repo to change the running code and/or data for the next time the schedule runs. 
+
+Assuming you have a scheduled pubsub setup then you configure the buildtrigger to run each time that pubsub is called like the example below:
+
+```r
+schedule_me <- cr_schedule_pubsub(topic)
+
+cr_schedule("target_pubsub_schedule", 
+            schedule = "15 4 * * *", 
+            pubsubTarget = schedule_me)
+            
+# no regex allowed for sourceToBuild repo objects
+gh <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner", branch = "master")
+
+pubsub_sub <- cr_buildtrigger_pubsub(topic)
+
+cr_buildtrigger("cloudbuild_targets.yaml",
+                name = "targets-scheduled-demo",
+                sourceToBuild = gh,
+                trigger = pubsub_sub)
+```
+
+### Alternate code sources
+
+There are also some other legacy ways to include code/data sources within your builds, which you may still want to do if you are not scheduling a build trigger but a build directly using `cr_schedule_http()`.  It is recommended though to use the PubSub topics for easier debugging and transparency.
+
 #### Repo Source
 
 This is if you have your code files within Cloud Source repositories - this can include mirrors from other git providers such as GitHub - see [setting up git](https://code.markedmondson.me/googleCloudRunner/articles/git.html).
@@ -337,30 +369,20 @@ cr_build_yaml(
   )
 ```
 
-### Testing
 
-You may want to test the build works with a one off build first:
+#### Schedule calling the Docker image using Cloud Scheduler
 
-```r
-# test your build works
-schedule_build <- cr_build(my_build)
-```
-
-### 5. Schedule calling the Docker image using Cloud Scheduler
-
-Once you have a working build, schedule that build object by passing it to the `cr_build_schedule_http()` function, which constructs the Cloud Build API call for Cloud Scheduler to call at its scheduled times.
+Once you have a working build, schedule that build object by passing it to the `cr_schedule_http()` function, which constructs the Cloud Build API call for Cloud Scheduler to call at its scheduled times.
 
 ```r
 # create a scheduler http endpoint that will trigger your build
-cloud_build_target <- cr_build_schedule_http(my_build)
+cloud_build_target <- cr_schedule_http(my_build)
 
 # schedule it
 cr_schedule("15 5 * * *", name="scheduled_r",
              httpTarget = cloud_build_target)
 
 ```
-
-Your R script should now be scheduled and running in its own environment.
 
 You can automate updates to the script and/or Docker container or schedule separately, by redoing the relevant step above, or using `cr_buildtrigger()` to automate deployments.
 

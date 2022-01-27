@@ -17,7 +17,7 @@
 #' @import assertthat
 #' @family Cloud Scheduler functions
 #' @family Cloud Run functions
-#' @seealso \link{cr_build_schedule_http} and \link{cr_run} and \link{cr_deploy_run}
+#' @seealso \link{cr_schedule_http} and \link{cr_run} and \link{cr_deploy_run}
 #' @examples
 #' \dontrun{
 #' # for unauthenticated apps create a HttpTarget

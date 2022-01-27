@@ -1,10 +1,10 @@
-# googleCloudRunner 0.4.1.9000
+# googleCloudRunner 0.5.0
 
 * Add checks for Cloud Build email roles in `cr_setup()`
 * Add direct Secret Manager environment args in builds via `availableSecrets` (#106)
 * Add support for `logsBucket` in `cr_build_yaml` and `cr_build_make`
 * Add `cr_build_list()` and `cr_build_list_filter()` 
-* Add `cr_build_logs()` and `cr_build_logs_last()` and `cr_build_logs_badger()`
+* Add `cr_build_logs()` and `cr_buildtrigger_logs()` and `cr_build_logs_badger()`
 * Made Cloud Build status messages prettier
 * Add messaging to `cr_build_upload_gcs()` saying where deploy folder is (#110) and clean up tar.gz folder correctly
 * Add `gcloud_args` to `cr_buildstep_run()` and `cr_run()` and `cr_deploy_run()` to allow more customisation (#113)
@@ -24,6 +24,7 @@
 * Fix paging issue sometimes returning NULL for `cr_build_list()` (#149)
 * Update `cr_deploy_r()` to use PubSub/BuildTrigger as its default when scheduling (#148)
 * Add support for running `targets::tar_make()` pipelines on Cloud Build via `cr_build_targets()` (#155)
+* Rename `cr_build_schedule_http()` to `cr_schedule_http()` to be more in line with `cr_schedule_pubsub()` and `cr_schedule_build()`
 
 # googleCloudRunner 0.4.1
 

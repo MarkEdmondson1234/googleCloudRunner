@@ -16,7 +16,7 @@ cr_build_source(x)
 \item{x}{A \link{RepoSource} or a \link{StorageSource} object}
 }
 \description{
-Build a source object
+This creates a source object for a build.  Note you may instead want to use sources connected to a Build Trigger in which case see \link{cr_buildtrigger_repo}
 }
 \examples{
 

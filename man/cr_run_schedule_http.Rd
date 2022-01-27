@@ -66,7 +66,7 @@ cr_schedule("cloud-run-scheduled-1",
 \seealso{
 https://cloud.google.com/run/docs/triggering/using-scheduler
 
-\link{cr_build_schedule_http} and \link{cr_run} and \link{cr_deploy_run}
+\link{cr_schedule_http} and \link{cr_run} and \link{cr_deploy_run}
 
 Other Cloud Scheduler functions: 
 \code{\link{HttpTarget}()},
@@ -77,9 +77,7 @@ Other Cloud Scheduler functions:
 \code{\link{cr_schedule_get}()},
 \code{\link{cr_schedule_list}()},
 \code{\link{cr_schedule_pause}()},
-\code{\link{cr_schedule_pubsub}()},
-\code{\link{cr_schedule_run}()},
-\code{\link{cr_schedule}()}
+\code{\link{cr_schedule_run}()}
 
 Other Cloud Run functions: 
 \code{\link{cr_jwt_create}()},

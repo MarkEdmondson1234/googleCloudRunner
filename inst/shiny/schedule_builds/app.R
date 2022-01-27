@@ -79,7 +79,7 @@ server <- function(input, output, session){
     req(built()) #nolint
 
     if(built()$status == "SUCCESS"){
-      bb <- cr_build_schedule_http(built())
+      bb <- cr_schedule_http(built())
       x <- cr_schedule(input$schedule_name,
                   schedule = input$cron,
                   httpTarget = bb,

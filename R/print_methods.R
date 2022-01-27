@@ -42,8 +42,13 @@ print.BuildTriggerResponse <- function(x, ...) {
   }
 
   cat0("sourceToBuild.uri: ", x$sourceToBuild$uri)
-  cat0("sourceToBuild.ref:", x$sourceToBuild$ref)
+  cat0("sourceToBuild.ref: ", x$sourceToBuild$ref)
   cat0("sourceToBuild.repoType:", x$sourceToBuild$repoType)
+
+  if (!is.null(x$pubsubConfig)){
+    print(x$pubsubConfig)
+  }
+
 }
 
 
@@ -224,6 +229,7 @@ print.gar_pubsubConfig <- function(x, ...) {
   cat("==CloudBuildTriggerPubSubConfig==\n")
   cat0("topic: ", x$topic)
   cat0("serviceAccountEmail: ", x$serviceAccountEmail)
+  cat0("subscription: ", x$subscription)
 }
 
 #' @method print gar_HttpTarget

@@ -62,7 +62,7 @@ send_me <- msg_encode(message)
 topics_publish(PubsubMessage(send_me), "test-topic")
 
 # did it work? After a while should see logs if it did
-cr_build_logs_last("pubsub-triggered-subs")
+cr_buildtrigger_logs("pubsub-triggered-subs")
 }
 
 }

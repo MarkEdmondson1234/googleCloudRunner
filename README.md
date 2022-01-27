@@ -49,6 +49,31 @@ Browse the [googleCloudRunner website](https://code.markedmondson.me/googleCloud
 * [Use Cases](https://code.markedmondson.me/googleCloudRunner/articles/usecases.html)
 * [Function Reference](https://code.markedmondson.me/googleCloudRunner/reference/index.html)
 
+
+## Diagrams
+
+Some overviews of the function dependencies are below:
+
+### Scheduling using Cloud Scheduler
+
+![](vignettes/schedule_plot.png)
+
+### Building using Cloud Build
+
+![](vignettes/build_plot.png)
+
+### Helper deployment functions calling lower-level functions
+
+![](vignettes/deploy_plot.png)
+
+### Cloud Run functionality
+
+![](vignettes/cloudrun_plot.png)
+
+### library(targets) integration functions
+
+![](vignettes/targets_plot.png)
+
 ## Sponsor
 
 <iframe src="https://github.com/sponsors/MarkEdmondson1234/card" title="Sponsor MarkEdmondson1234" height="225" width="600" style="border: 0;"></iframe>

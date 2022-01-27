@@ -167,13 +167,14 @@ test_that("Render BuildStep objects", {
 })
 
 test_that("Conversions to GitRepoSource", {
-  gh <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+  gh <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner",
+                             branch = "master")
 
   gh2 <- as.gitRepoSource(gh)
   expect_true(is.gitRepoSource(gh2))
 
   cs <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
-                             type = "cloud_source")
+                             type = "cloud_source", branch = NULL, tag = "v1.1")
 
   cs2 <- as.gitRepoSource(cs)
   expect_true(is.gitRepoSource(cs2))

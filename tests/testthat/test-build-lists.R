@@ -32,6 +32,6 @@ test_that("Build logs work", {
   skip_on_ci()
   skip_on_cran()
 
-  last_logs <- cr_build_logs_last("package-checks")
+  last_logs <- cr_buildtrigger_logs("package-checks")
   expect_true(is.character(last_logs))
 })

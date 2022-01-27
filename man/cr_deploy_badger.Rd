@@ -31,5 +31,5 @@ This uses \url{https://github.com/kelseyhightower/badger} to create badges you c
 \code{cr_build_logs_badger} is intended to be run from the root directory of
 an R package that holds a README.md file containing a \code{![Cloudbuild]}
 badge as created by \code{cr_deploy_badger()}.  The function will scan the
-README.md file for the correct triggerId to pass to \link{cr_build_logs_last}
+README.md file for the correct triggerId to pass to \link{cr_buildtrigger_logs}
 }

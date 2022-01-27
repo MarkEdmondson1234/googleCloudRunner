@@ -17,5 +17,5 @@ cr_build_write(build, "inst/docker/packages/cloudbuild.yml")
 
 # make build trigger that responds to schedule
 
-s_me <- cr_build_schedule_http(build)
+s_me <- cr_schedule_http(build)
 cr_schedule("packagetest-build", schedule = "15 9 * * 1", httpTarget = s_me)

@@ -186,7 +186,11 @@ parse_buildtrigger_list <- function(x) {
   o
 }
 
-#' Creates a new `BuildTrigger`.This API is experimental.
+#' Create a new BuildTrigger
+#'
+#' @description
+#'
+#' Build Triggers are a way to have your builds respond to various events, most commonly a git commit or a pubsub event.
 #'
 #' @inheritParams BuildTrigger
 #' @param trigger The trigger source created via \link{cr_buildtrigger_repo} or a pubsub trigger made with \link{cr_buildtrigger_pubsub} or a webhook trigger made with \link{cr_buildtrigger_webhook}
@@ -317,30 +321,27 @@ cr_buildtrigger <- function(build,
 
   if (is.gar_pubsubConfig(trigger)) {
     trigger_pubsub <- trigger
-    if(is.null(sourceToBuild)){
-      cli::cli_alert_warning("No sourceToBuild detected for PubSub trigger")
-    }
-  } else if (is.buildtrigger_repo(trigger)) {
-    # trigger params
-    if (trigger$type == "github") {
-      trigger_github <- trigger$repo
-    } else if (trigger$type == "cloud_source") {
-      trigger_cloudsource <- trigger$repo
-    }
-
-    if(!is.null(sourceToBuild)){
-      stop("Can't use sourceToBuild for git event based triggers, needs to be Webhook or PubSub trigger",
-           call. = FALSE)
-    }
+  } else if (is.buildtrigger_repo(trigger) && trigger$type == "github") {
+    trigger_github <- trigger$repo
+  } else if (is.buildtrigger_repo(trigger) && trigger$type == "cloud_source") {
+    trigger_cloudsource <- trigger$repo
   } else if (is.gar_webhookConfig(trigger)) {
     trigger_webhook <- trigger
-    if(is.null(sourceToBuild)){
-      cli::cli_alert_warning("No sourceToBuild detected for PubSub trigger")
-    }
   } else {
-    stop("We should never be here - something wrong with trigger parameter", call. = FALSE)
+    stop("We should never be here - something wrong with trigger parameter",
+         call. = FALSE)
   }
 
+  # checks on sourceToBuild validity
+  if (is.null(sourceToBuild) &&
+     (is.gar_webhookConfig(trigger) || is.gar_pubsubConfig(trigger))) {
+    cli::cli_alert_warning("No sourceToBuild detected for event based trigger")
+  }
+
+  if (!is.null(sourceToBuild) &&
+     is.buildtrigger_repo(trigger)) {
+    stop("Can't use sourceToBuild for git based triggers", call. = FALSE)
+  }
 
   buildTrigger <- BuildTrigger(
     name = name,
@@ -359,7 +360,9 @@ cr_buildtrigger <- function(build,
     includedFiles = includedFiles
   )
 
-  if (overwrite) cr_buildtrigger_delete(name, projectId = projectId)
+  if (overwrite) {
+    suppressMessages(cr_buildtrigger_delete(name, projectId = projectId))
+  }
 
   url <- sprintf(
     "https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
@@ -379,6 +382,10 @@ as.buildTriggerResponse <- function(x) {
   o <- x
   if (!is.null(o$build)) {
     o$build <- as.gar_Build(x$build)
+  }
+
+  if (!is.null(o$pubsubConfig)){
+    o$pubsubConfig <- as.gar_pubsubConfig(o$pubsubConfig)
   }
 
   structure(
