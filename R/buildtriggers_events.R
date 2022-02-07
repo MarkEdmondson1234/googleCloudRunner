@@ -138,7 +138,6 @@ cr_buildtrigger_repo <- function(repo_name,
     repo <- RepoSource(repo_name,
       branchName = branch,
       tagName = tag,
-      projectId = projectId,
       ...
     )
   }

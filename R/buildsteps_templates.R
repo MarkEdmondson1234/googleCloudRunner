@@ -638,7 +638,7 @@ read_buildstep_file <- function(x,
 #'
 #' @section Setup:
 #'
-#' You will need to set up the \href{https://cloud.google.com/build/docs/securing-builds/use-encrypted-secrets-credentials#encrypt_credentials}{encrypted key using gcloud} following the link from Google
+#' You will need to set up the \href{https://cloud.google.com/build/docs/securing-builds/use-secrets}{encrypted key using gcloud} following the link from Google
 #'
 #' @family Cloud Buildsteps
 #' @export

@@ -14,7 +14,7 @@
 #' @param availableSecrets What environment arguments from Secret Manager are available to the build - create via \link{cr_build_yaml_secrets}
 #' @param serviceAccount What service account should the build be run under?
 #'
-#' @seealso \href{https://cloud.google.com/build/docs/build-config}{Build configuration overview for cloudbuild.yaml}
+#' @seealso \href{https://cloud.google.com/build/docs/build-config-file-schema}{Build configuration overview for cloudbuild.yaml}
 #' @export
 #' @family Cloud Build functions
 #' @examples

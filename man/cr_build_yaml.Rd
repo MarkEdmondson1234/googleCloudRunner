@@ -57,7 +57,7 @@ cr_build_yaml(
 )
 }
 \seealso{
-\href{https://cloud.google.com/build/docs/build-config}{Build configuration overview for cloudbuild.yaml}
+\href{https://cloud.google.com/build/docs/build-config-file-schema}{Build configuration overview for cloudbuild.yaml}
 
 Other Cloud Build functions: 
 \code{\link{Build}()},
