@@ -28,5 +28,6 @@
 ^NEWS\.txt$
 ^\.github$
 ^\.lintr$
-^\_targets\.R$
+^\_targets
 ^mtcars\.csv$
+^cloudbuild_targets\.yaml$

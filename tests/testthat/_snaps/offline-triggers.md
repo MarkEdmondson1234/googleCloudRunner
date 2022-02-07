@@ -544,7 +544,7 @@
 
     ==BuildTriggerRepo==
     Source Repository:  github_markedmondson1234_googlecloudrunner 
-    Project:            mark-edmondson-gde 
+    Project:            my-project 
     Branch:             .* 
 
 ---

@@ -125,7 +125,8 @@ test_that("Render BuildStep objects", {
   expect_snapshot_output(gh_trigger)
 
   cs_trigger <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
-    type = "cloud_source"
+    type = "cloud_source",
+    projectId = "my-project"
   )
 
   expect_s3_class(cs_trigger, "cr_buildtrigger_repo")
@@ -174,7 +175,8 @@ test_that("Conversions to GitRepoSource", {
   expect_true(is.gitRepoSource(gh2))
 
   cs <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
-                             type = "cloud_source", branch = NULL, tag = "v1.1")
+                             type = "cloud_source", branch = NULL, tag = "v1.1",
+                             projectId = "my-project")
 
   cs2 <- as.gitRepoSource(cs)
   expect_true(is.gitRepoSource(cs2))
