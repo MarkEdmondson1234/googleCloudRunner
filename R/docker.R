@@ -245,7 +245,7 @@ cr_deploy_docker_construct <- function(
   pushed_image <- if(kaniko_cache) NULL else image
 
   # Adding this in for Artifacts Registry
-  pre_steps <- c(pre_steps, cr_buildstep_docker_auth(image = image))
+  # pre_steps <- c(pre_steps, cr_buildstep_docker_auth(image = image))
 
   image_tag <- paste0(image, ":", tag)
   myMessage("# Deploy docker build for image:", image, level = 3)
