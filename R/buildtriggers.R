@@ -145,7 +145,7 @@ cr_buildtrigger_list <- function(projectId = cr_project_get(),
 
   parse_files <- function(x) {
     if (is.null(bts_df[[x]])) {
-      return(NA)
+      return(rep(NA, length = nrow(bts_df)))
     }
     unlist(lapply(bts_df[[x]], paste, collapse = ", "))
   }
@@ -155,7 +155,7 @@ cr_buildtrigger_list <- function(projectId = cr_project_get(),
     buildTriggerName = bts_df$name,
     buildTriggerId = bts_df$id,
     buildTriggerCreateTime = bts_df$createTime,
-    filename = bts_df$filename,
+    filename = if (is.null(bts_df$filename)) rep(NA, nrow(bts_df)) else bts_df$filename,
     description = bts_df$description,
     github_name = paste0(bts_df$github$owner, "/", bts_df$github$name),
     ignoredFiles = parse_files("ignoredFiles"),
