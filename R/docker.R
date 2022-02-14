@@ -201,7 +201,7 @@ cr_deploy_docker_construct <- function(
   post_steps = NULL,
   ...) {
 
-  assert_that(
+  assertthat::assert_that(
     dir.exists(local)
   )
 
@@ -274,7 +274,7 @@ cr_deploy_docker_construct <- function(
 
   # as ... passes through to cr_buildstep_docker to
   # cr_buildstep, we need both
-  other_formals = c(methods::formalArgs(cr_buildstep_docker),
+  other_formals <- c(methods::formalArgs(cr_buildstep_docker),
                     methods::formalArgs(cr_buildstep))
 
   remove_args <- setdiff(yaml_formals, other_formals)
@@ -394,7 +394,7 @@ cr_buildstep_docker <- function(
   ...) {
   # don't allow dot names that would break things
   dots <- list(...)
-  assert_that(
+  assertthat::assert_that(
     is.null(dots$name),
     is.null(dots$args),
     is.null(dots$prefix),
@@ -513,7 +513,7 @@ find_dockerfile <- function(local, dockerfile) {
   }
 
   # if no dockerfile, attempt to create it
-  assert_that(assertthat::is.readable(dockerfile))
+  assertthat::assert_that(assertthat::is.readable(dockerfile))
 
   myMessage("Copying Dockerfile from ", dockerfile, " to ", local, level = 3)
   file.copy(dockerfile, file.path(local, "Dockerfile"))
@@ -556,4 +556,3 @@ cr_buildstep_docker_auth <- function(image, ...) {
   }
   res
 }
-

@@ -44,9 +44,9 @@ cr_deploy_run <- function(local,
                           pre_steps = NULL,
                           post_steps = NULL,
                           ...) {
-  assert_that(
-    is.dir(local),
-    is.string(remote),
+  assertthat::assert_that(
+    assertthat::is.dir(local),
+    assertthat::is.string(remote),
     is.character(tag)
   )
 

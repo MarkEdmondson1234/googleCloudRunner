@@ -62,8 +62,8 @@ cr_buildtrigger_pubsub <- function(topic,
     topic <- topic$name
   }
 
-  assert_that(
-    is.string(topic)
+  assertthat::assert_that(
+    assertthat::is.string(topic)
   )
 
   if (grepl("^projects", topic)) {
@@ -111,8 +111,8 @@ cr_buildtrigger_repo <- function(repo_name,
                                  type = c("github", "cloud_source"),
                                  github_secret = NULL,
                                  ...) {
-  assert_that(
-    is.string(repo_name)
+  assertthat::assert_that(
+    assertthat::is.string(repo_name)
   )
   type <- match.arg(type)
   dots <- list(...)
@@ -134,12 +134,13 @@ cr_buildtrigger_repo <- function(repo_name,
     } else {
       projectId <- dots$projectId
     }
-
-    repo <- RepoSource(repo_name,
-      branchName = branch,
-      tagName = tag,
-      ...
+    assertthat::assert_that(
+      is.null(dots$branchName),
+      is.null(dots$tagName)
     )
+    dots$branchName <- branch
+    dots$tagName <- tag
+    repo <- do.call(RepoSource, args = dots)
   }
 
   structure(list(
@@ -198,7 +199,7 @@ GitHubEventsConfig <- function(x,
     push <- list(branch = branch, tag = tag)
   }
 
-  assert_that(
+  assertthat::assert_that(
     xor(is.null(pullRequest), is.null(push)),
     xor(is.null(branch), is.null(tag))
   )
@@ -219,6 +220,6 @@ is.gar_GitHubEventsConfig <- function(x) {
 
 split_github <- function(x) {
   o <- list(owner = dirname(x), name = basename(x))
-  assert_that(o$owner != "", o$name != "")
+  assertthat::assert_that(o$owner != "", o$name != "")
   o
 }

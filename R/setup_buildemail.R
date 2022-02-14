@@ -7,7 +7,6 @@
 #'
 #' @export
 #' @importFrom googleAuthR gar_set_client gar_auth gar_service_grant_roles
-#' @importFrom assertthat assert_that is.string
 #' @family setup functions
 cr_setup_service <- function(account_email,
                              roles = cr_setup_role_lookup("local"),
@@ -15,7 +14,7 @@ cr_setup_service <- function(account_email,
                              email = Sys.getenv("GARGLE_EMAIL")) {
 
   # to prevent #94
-  assert_that(is.string(account_email))
+  assertthat::assert_that(assertthat::is.string(account_email))
 
   the_roles <- paste(roles, collapse = " ")
   account_email <- trimws(account_email)

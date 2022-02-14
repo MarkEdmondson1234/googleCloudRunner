@@ -31,5 +31,3 @@ handle_errs <- function(f,
   )
 
 }
-
-

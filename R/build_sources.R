@@ -77,11 +77,11 @@ Source <- function(storageSource = NULL, repoSource = NULL) {
   }
 
   if (!is.null(repoSource)) {
-    assert_that(is.gar_RepoSource(repoSource))
+    assertthat::assert_that(is.gar_RepoSource(repoSource))
   }
 
   if (!is.null(storageSource)) {
-    assert_that(is.gar_StorageSource(storageSource))
+    assertthat::assert_that(is.gar_StorageSource(storageSource))
   }
   structure(rmNullObs(list(
     repoSource = repoSource,
@@ -158,9 +158,9 @@ RepoSource <- function(repoName = NULL,
                        branchName = NULL,
                        dir = NULL,
                        projectId = NULL) {
-  if (!is.null(commitSha)) assert_that(is.null(branchName), is.null(tagName))
-  if (!is.null(branchName)) assert_that(is.null(commitSha), is.null(tagName))
-  if (!is.null(tagName)) assert_that(is.null(branchName), is.null(commitSha))
+  if (!is.null(commitSha)) assertthat::assert_that(is.null(branchName), is.null(tagName))
+  if (!is.null(branchName)) assertthat::assert_that(is.null(commitSha), is.null(tagName))
+  if (!is.null(tagName)) assertthat::assert_that(is.null(branchName), is.null(commitSha))
 
   structure(rmNullObs(list(
     tagName = tagName,

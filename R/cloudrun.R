@@ -59,10 +59,10 @@ cr_run <- function(image,
     level = 3
   )
 
-  assert_that(
-    is.string(image),
-    is.string(name),
-    is.flag(allowUnauthenticated)
+  assertthat::assert_that(
+    assertthat::is.string(image),
+    assertthat::is.string(name),
+    assertthat::is.flag(allowUnauthenticated)
   )
 
   # use cloud build to deploy
@@ -161,8 +161,8 @@ cr_run_list <- function(projectId = cr_project_get(),
                         labelSelector = NULL,
                         limit = NULL,
                         summary = TRUE) {
-  assert_that(
-    is.flag(summary)
+  assertthat::assert_that(
+    assertthat::is.flag(summary)
   )
 
   url <- make_endpoint(sprintf("namespaces/%s/services", projectId))
@@ -195,7 +195,7 @@ cr_run_list <- function(projectId = cr_project_get(),
 #' @noRd
 #' @import assertthat
 parse_service_list <- function(x) {
-  assert_that(
+  assertthat::assert_that(
     x$kind == "ServiceList"
   )
 
@@ -249,7 +249,7 @@ cr_run_get <- function(name, projectId = cr_project_get()) {
 #' @import assertthat
 #' @noRd
 parse_service_get <- function(x) {
-  assert_that(
+  assertthat::assert_that(
     x$kind == "Service"
   )
 

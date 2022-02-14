@@ -11,7 +11,7 @@ cr_buildstep_targets_single <- function(
 ){
 
   if(!is.null(tar_config)){
-    assert_that(is.character(tar_config))
+    assertthat::assert_that(is.character(tar_config))
   }
 
   target_bucket <- resolve_bucket_folder(target_folder, bucket)
@@ -39,8 +39,8 @@ cr_buildstep_targets <- function(
   task_image = "gcr.io/gcer-public/targets",
   id = "target pipeline"){
 
-  assert_that(is.character(tar_make),
-              is.string(task_image))
+  assertthat::assert_that(is.character(tar_make),
+                          assertthat::is.string(task_image))
 
   do.call(
     cr_buildstep_r,

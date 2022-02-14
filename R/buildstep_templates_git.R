@@ -71,7 +71,7 @@ cr_buildstep_git <- function(git_args = c(
                              ...) {
   # don't allow dot names that would break things
   dots <- list(...)
-  assert_that(
+  assertthat::assert_that(
     is.null(dots$name),
     is.null(dots$args),
     is.null(dots$prefix),

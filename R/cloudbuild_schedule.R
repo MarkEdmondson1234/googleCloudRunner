@@ -170,15 +170,17 @@ cr_schedule_build <- function(build,
 
 }
 
-check_topic_exists = function(topic, projectId) {
-  x = try({googlePubsubR::topics_get(topic)})
+check_topic_exists <- function(topic, projectId) {
+  x <- try({
+    googlePubsubR::topics_get(topic)
+    }, silent = TRUE)
   !inherits(x, "try-error")
 }
 
 check_pubsub_topic <- function(schedule_pubsub, run_name,
                                projectId){
   if (!is.null(schedule_pubsub)) {
-    assert_that(is.gar_pubsubTarget(schedule_pubsub))
+    assertthat::assert_that(is.gar_pubsubTarget(schedule_pubsub))
     topic_basename <- basename(schedule_pubsub$topicName)
   } else {
     topic_basename <- paste0(run_name, "-topic")
@@ -319,8 +321,8 @@ cr_schedule_pubsub <- function(topicName,
                                attributes = NULL,
                                projectId = cr_project_get()) {
 
-  assert_that(
-    is.string(projectId)
+  assertthat::assert_that(
+    assertthat::is.string(projectId)
   )
 
   if(is.string(topicName)){
@@ -329,7 +331,7 @@ cr_schedule_pubsub <- function(topicName,
     the_name <- topicName$name
   }
 
-  assert_that(is.string(the_name))
+  assertthat::assert_that(assertthat::is.string(the_name))
 
   the_attributes <- attributes
   if (!is.null(PubsubMessage)) {

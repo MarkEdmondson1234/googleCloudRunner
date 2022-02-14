@@ -70,7 +70,7 @@ cr_build_artifacts <- function(build,
                                download_folder = getwd(),
                                overwrite = FALSE,
                                path_regex = NULL) {
-  assert_that(
+  assertthat::assert_that(
     is.gar_Build(build),
     !is.null(build$artifacts$objects),
     !is.null(build$artifacts$objects$location),
@@ -94,7 +94,7 @@ cr_build_artifacts <- function(build,
   if (is.null(path_regex)) {
     cloud_files <- cloud_files[cloud_files$name %in% paths, ]
   } else {
-    assert_that(is.string(path_regex))
+    assertthat::assert_that(is.string(path_regex))
     cloud_files <- cloud_files[grepl(path_regex, cloud_files$name), ]
   }
 
@@ -221,7 +221,7 @@ extract_timeout <- function(op = NULL) {
   } else if (is.null(op)) {
     the_timeout <- 600L
   } else {
-    assert_that(is.integer(op))
+    assertthat::assert_that(is.integer(op))
     the_timeout <- op
   }
 
@@ -234,7 +234,7 @@ extract_build_id <- function(op) {
   } else if (is.gar_Build(op)) {
     the_id <- op$id
   } else {
-    assert_that(is.string(op))
+    assertthat::assert_that(assertthat::is.string(op))
     the_id <- op
   }
 
@@ -283,7 +283,7 @@ as.gar_Build <- function(x) {
     class(x) <- c("gar_Build", class(x))
     o <- x
   }
-  assert_that(is.gar_Build(o))
+  assertthat::assert_that(is.gar_Build(o))
 
   if (is.data.frame(o$steps)) {
     o$steps <- cr_buildstep_df(o$steps)

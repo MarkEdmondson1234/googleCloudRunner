@@ -36,7 +36,7 @@ cr_build_logs <- function(built = NULL, log_url = NULL) {
   }
 
   if (is.null(log_url)) {
-    assert_that(is.gar_Build(built))
+    assertthat::assert_that(is.gar_Build(built))
     log_url <- make_bucket_log_url(built)
   }
 

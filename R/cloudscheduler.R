@@ -94,7 +94,7 @@ cr_schedule <- function(name,
                         projectId = cr_project_get()
                         ) {
 
-  assert_that(is.string(region))
+  assertthat::assert_that(assertthat::is.string(region))
 
   stem <- "https://cloudscheduler.googleapis.com/v1"
 
@@ -107,8 +107,8 @@ cr_schedule <- function(name,
              timeZone = timeZone)
 
   if(!overwrite){
-    assert_that(
-      is.string(schedule),
+    assertthat::assert_that(
+      assertthat::is.string(schedule),
       xor(is.null(httpTarget), is.null(pubsubTarget))
       )
   }
@@ -240,7 +240,6 @@ parse_schedule_list <- function(x){
 #' @param pubsub_cleanup If the Cloud Scheduler is pointing at a Build Trigger/PubSub as deployed by \link{cr_deploy_r} will attempt to clean up those resources too.
 #' @importFrom googleAuthR gar_api_generator
 #' @importFrom googlePubsubR topics_delete subscriptions_delete
-#' @importFrom assertthat assert_that is.flag is.string
 #' @export
 #' @return \code{TRUE} if job not found or its deleted, \code{FALSE} if it could not delete the job
 #'
@@ -257,10 +256,10 @@ cr_schedule_delete <- function(x,
                                projectId = cr_project_get(),
                                pubsub_cleanup = FALSE){
 
-  assert_that(
-    is.flag(pubsub_cleanup),
-    is.string(region),
-    is.string(projectId)
+  assertthat::assert_that(
+    assertthat::is.flag(pubsub_cleanup),
+    assertthat::is.string(region),
+    assertthat::is.string(projectId)
   )
 
   the_job <- as.gar_scheduleJob(x)
@@ -497,7 +496,7 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
                        uri = NULL, oidcToken = NULL, httpMethod = NULL) {
 
   if(!is.null(headers)){
-    assert_that(
+    assertthat::assert_that(
       is.list(headers),
       is.character(names(headers))
     )
@@ -592,7 +591,7 @@ as.gar_scheduleJob <- function(x,
   if(is.gar_scheduleJob(x)){
     the_job <- x
   } else {
-    assert_that(is.string(x))
+    assertthat::assert_that(assertthat::is.string(x))
     the_job <- cr_schedule_get(x, region = region, projectId = projectId)
   }
 
@@ -644,7 +643,7 @@ extract_schedule_name <- function(x){
   if(is.gar_scheduleJob(x)){
     return(x$name)
   } else {
-    assert_that(is.string(x))
+    assertthat::assert_that(assertthat::is.string(x))
   }
   x
 }

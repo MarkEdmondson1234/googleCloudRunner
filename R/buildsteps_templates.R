@@ -175,7 +175,7 @@ cr_buildstep_nginx_setup <- function(html_folder, ...) {
 
   # don't allow dot names that would break things
   dots <- list(...)
-  assert_that(
+  assertthat::assert_that(
     is.null(dots$args),
     is.null(dots$name),
     is.null(dots$prefix),
@@ -241,7 +241,7 @@ cr_buildstep_mailgun <- function(message,
 
   # don't allow dot names that would break things
   dots <- list(...)
-  assert_that(
+  assertthat::assert_that(
     is.null(dots$args),
     is.null(dots$name),
     is.null(dots$prefix)
@@ -290,7 +290,7 @@ cr_buildstep_run <- function(name,
 
   # don't allow dot names that would break things
   dots <- list(...)
-  assert_that(
+  assertthat::assert_that(
     is.null(dots$args),
     is.null(dots$name),
     is.null(dots$prefix),
@@ -354,7 +354,7 @@ cr_buildstep_run <- function(name,
   }
 
   if (!is.null(gcloud_args)) {
-    assert_that(is.character(gcloud_args))
+    assertthat::assert_that(is.character(gcloud_args))
   }
 
   deploy_step <- cr_buildstep_gcloud(
@@ -412,7 +412,7 @@ cr_buildstep_bash <- function(bash_script,
 
   # don't allow dot names that would break things
   dots <- list(...)
-  assert_that(
+  assertthat::assert_that(
     is.null(dots$args),
     is.null(dots$name),
     is.null(dots$prefix)
@@ -528,7 +528,7 @@ cr_buildstep_r <- function(r,
 
   # don't allow dot names that would break things
   dots <- list(...)
-  assert_that(
+  assertthat::assert_that(
     is.null(dots$args),
     is.null(dots$name),
     is.null(dots$prefix)
@@ -591,12 +591,13 @@ read_buildstep_file <- function(x,
   code_source <- match.arg(code_source)
   rchars <- x
   if (code_source == "local") {
-    assert_that(is.character(x))
+    assertthat::assert_that(is.character(x))
 
     rchars <- x
     if (grepl(file_grep, x[[1]], ignore.case = TRUE)) {
       # filepath
-      assert_that(assertthat::is.readable(x), is.string(x))
+      assertthat::assert_that(assertthat::is.readable(x),
+                              assertthat::is.string(x))
       rchars <- readLines(x)
       myMessage("Copying into build step code from ", x, level = 2)
     }
@@ -658,7 +659,7 @@ cr_buildstep_decrypt <- function(cipher,
                                  ...) {
   # don't allow dot names that would break things
   dots <- list(...)
-  assert_that(
+  assertthat::assert_that(
     is.null(dots$name),
     is.null(dots$args),
     is.null(dots$prefix),
@@ -826,7 +827,7 @@ cr_buildstep_gcloud <- function(component = c("gcloud", "bq", "gsutil", "kubectl
 
   # don't allow dot names that would break things
   dots <- list(...)
-  assert_that(
+  assertthat::assert_that(
     is.null(dots$name),
     is.null(dots$prefix),
     is.null(dots$entrypoint)

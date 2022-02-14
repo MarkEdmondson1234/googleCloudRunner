@@ -60,10 +60,10 @@ cr_run_schedule_http <- function(uri,
                                  email,
                                  http_method = "GET",
                                  body = NULL) {
-  assert_that(
-    is.string(uri),
-    is.string(http_method),
-    is.string(email)
+  assertthat::assert_that(
+    assertthat::is.string(uri),
+    assertthat::is.string(http_method),
+    assertthat::is.string(email)
   )
 
   HttpTarget(

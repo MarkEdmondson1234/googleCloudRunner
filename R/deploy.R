@@ -351,7 +351,7 @@ cr_deploy_packagetests <- function(steps = NULL,
 
   # creating a buildtrigger
   myMessage("#Creating tests build trigger", level = 3)
-  assert_that(is.buildtrigger_repo(trigger_repo))
+  assertthat::assert_that(is.buildtrigger_repo(trigger_repo))
 
   if (create_trigger == "file") {
     cr_build_write(build_yaml, file = cloudbuild_file)
@@ -364,7 +364,7 @@ cr_deploy_packagetests <- function(steps = NULL,
     myMessage("If you want to use Code Covr, add the Code Covr token in a substitution varaible in the Build Trigger", level = 3)
     subs <- NULL
   } else {
-    assert_that(is.string(codecov_token))
+    assertthat::assert_that(is.string(codecov_token))
     subs <- list(`_CODECOV_TOKEN` = codecov_token)
   }
 

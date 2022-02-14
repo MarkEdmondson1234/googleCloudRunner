@@ -103,5 +103,3 @@ test_that("Build status NULLs", {
   expect_null(no_buildtrigger)
 
 })
-
-

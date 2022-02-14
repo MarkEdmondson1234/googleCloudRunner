@@ -286,8 +286,8 @@ cr_buildtrigger <- function(build,
                             projectId = cr_project_get(),
                             sourceToBuild = NULL,
                             overwrite = FALSE) {
-  assert_that(
-    is.string(name),
+  assertthat::assert_that(
+    assertthat::is.string(name),
     is.buildtrigger_repo(trigger) ||
       is.gar_pubsubConfig(trigger) ||
       is.gar_webhookConfig(trigger)
@@ -298,7 +298,7 @@ cr_buildtrigger <- function(build,
     the_build <- NULL
     the_filename <- build
   } else {
-    assert_that(is.gar_Build(build) || is.Yaml(build))
+    assertthat::assert_that(is.gar_Build(build) || is.Yaml(build))
     the_filename <- NULL
 
     # remove builds source
@@ -310,7 +310,7 @@ cr_buildtrigger <- function(build,
   }
 
   if (!is.null(sourceToBuild)) {
-    assert_that(is.buildtrigger_repo(sourceToBuild))
+    assertthat::assert_that(is.buildtrigger_repo(sourceToBuild))
     sourceToBuild <- as.gitRepoSource(sourceToBuild)
   }
 
@@ -402,7 +402,7 @@ get_buildTriggerResponseId <- function(x) {
   if (is.buildTriggerResponse(x)) {
     return(x$id)
   } else {
-    assert_that(is.string(x))
+    assertthat::assert_that(assertthat::is.string(x))
   }
 
   x
@@ -477,7 +477,7 @@ cr_buildtrigger_copy <- function(buildTrigger,
                                  disabled = NULL,
                                  triggerTemplate = NULL,
                                  projectId = cr_project_get()) {
-  assert_that(is.buildTriggerResponse(buildTrigger))
+  assertthat::assert_that(is.buildTriggerResponse(buildTrigger))
 
   if (!is.null(name)) buildTrigger$name <- name
   if (!is.null(filename)) {

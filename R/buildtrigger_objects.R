@@ -37,7 +37,7 @@ BuildTrigger <- function(filename = NULL,
                          webhookConfig = NULL,
                          description = NULL,
                          pubsubConfig = NULL) {
-  assert_that(
+  assertthat::assert_that(
     xor(is.null(build), is.null(filename)),
     !is.null(webhookConfig) ||
       !is.null(pubsubConfig) ||
@@ -45,15 +45,15 @@ BuildTrigger <- function(filename = NULL,
   )
 
   if (!is.null(github)) {
-    assert_that(is.gar_GitHubEventsConfig(github))
+    assertthat::assert_that(is.gar_GitHubEventsConfig(github))
   }
 
   if (!is.null(triggerTemplate)) {
-    assert_that(is.gar_RepoSource(triggerTemplate))
+    assertthat::assert_that(is.gar_RepoSource(triggerTemplate))
   }
 
   if (!is.null(pubsubConfig)) {
-    assert_that(is.gar_pubsubConfig(pubsubConfig))
+    assertthat::assert_that(is.gar_pubsubConfig(pubsubConfig))
   }
 
   structure(rmNullObs(list(
@@ -81,7 +81,7 @@ is.gar_BuildTrigger <- function(x) {
 }
 
 as.BuildTrigger <- function(x) {
-  assert_that(is.buildTriggerResponse(x))
+  assertthat::assert_that(is.buildTriggerResponse(x))
 
   BuildTrigger(
     filename = x$filename,
@@ -172,11 +172,11 @@ is.gar_webhookConfig <- function(x) {
 #' @noRd
 GitRepoSource <- function(uri,
                           ref,
-                          repoType = c("GITHUB","CLOUD_SOURCE_REPOSITORIES")){
+                          repoType = c("GITHUB", "CLOUD_SOURCE_REPOSITORIES")){
 
-  assert_that(
-    is.string(uri),
-    is.string(ref),
+  assertthat::assert_that(
+    assertthat::is.string(uri),
+    assertthat::is.string(ref),
     isTRUE(grepl("^refs/", ref)),
     !grepl("[^A-Za-z0-9/.]", ref) # regex not allowed
   )
@@ -189,7 +189,7 @@ GitRepoSource <- function(uri,
       ref = ref,
       repoType = repoType
     ),
-    class = c("gar_gitRepoSource","list")
+    class = c("gar_gitRepoSource", "list")
   )
 }
 

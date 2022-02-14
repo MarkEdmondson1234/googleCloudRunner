@@ -1,6 +1,7 @@
 test_that("[Online] Test Build Triggers", {
   skip_on_ci()
   skip_on_cran()
+  skip_if_missing_project()
   cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
     package = "googleCloudRunner"
   )
@@ -8,6 +9,8 @@ test_that("[Online] Test Build Triggers", {
   bb <- cr_build_make(cloudbuild)
 
   gh_trigger <- cr_buildtrigger_repo("MarkEdmondson1234/googleCloudRunner")
+  # this would work if missing projectId if passed in here like below
+
   cs_trigger <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
     type = "cloud_source"
   )

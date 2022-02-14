@@ -69,9 +69,9 @@ cr_build <- function(x,
                      options = NULL,
                      projectId = cr_project_get(),
                      launch_browser = interactive()) {
-  assert_that(
-    is.flag(launch_browser),
-    is.string(projectId)
+  assertthat::assert_that(
+    assertthat::is.flag(launch_browser),
+    assertthat::is.string(projectId)
   )
 
   timeout <- check_timeout(timeout)
@@ -176,7 +176,7 @@ cr_build_make <- function(yaml,
   }
 
   if (!is.null(source)) {
-    assert_that(is.gar_Source(source))
+    assertthat::assert_that(is.gar_Source(source))
   }
 
   timeout <- override_list(timeout, stepsy)

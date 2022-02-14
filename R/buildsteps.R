@@ -106,7 +106,7 @@ cr_buildstep <- function(name,
   }
 
   if (!is.null(entrypoint)) {
-    assert_that(is.string(entrypoint))
+    assertthat::assert_that(assertthat::is.string(entrypoint))
   }
 
   if (dir %in% c("", NA)) dir <- NULL
@@ -136,7 +136,7 @@ is.cr_buildstep <- function(x) {
 }
 
 is.cr_buildstep_list <- function(x) {
-  assert_that(is.list(x), length(x) > 0)
+  assertthat::assert_that(is.list(x), length(x) > 0)
 
   all(unlist(lapply(x, is.cr_buildstep)))
 }
@@ -163,7 +163,7 @@ is.cr_buildstep_list <- function(x) {
 #' )
 #' cr_buildstep_df(y)
 cr_buildstep_df <- function(x) {
-  assert_that(
+  assertthat::assert_that(
     is.data.frame(x),
     all(c("name") %in% names(x))
   )
@@ -226,7 +226,7 @@ cr_buildstep_df <- function(x) {
 #' cr_buildstep_extract(build, step = 1)
 #' cr_buildstep_extract(build, step = 2)
 cr_buildstep_extract <- function(x, step = NULL) {
-  assert_that(is.gar_Build(x))
+  assertthat::assert_that(is.gar_Build(x))
 
   the_step <- x$steps[[step]]
   the_step$prefix <- ""
@@ -265,7 +265,7 @@ cr_buildstep_edit <- function(x,
   # buildsteps are in a list()
   xx <- x[[1]]
 
-  assert_that(is.cr_buildstep(xx))
+  assertthat::assert_that(is.cr_buildstep(xx))
 
   dots <- list(...)
 

@@ -55,7 +55,7 @@ cr_deploy_run_website <- function(repo,
                                   allowUnauthenticated = TRUE,
                                   region = cr_region_get(),
                                   projectId = cr_project_get()) {
-  assert_that(
+  assertthat::assert_that(
     xor(!is.null(rmd_folder), !is.null(html_folder)),
     is.buildtrigger_repo(repo)
   )

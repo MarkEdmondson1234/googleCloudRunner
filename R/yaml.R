@@ -40,7 +40,7 @@ cr_build_yaml <- function(steps,
                           artifacts = NULL,
                           serviceAccount = NULL) {
   if (!is.null(artifacts)) {
-    assert_that(is.cr_build_artifact(artifacts))
+    assertthat::assert_that(is.cr_build_artifact(artifacts))
   }
 
   Yaml(
@@ -139,7 +139,7 @@ cr_build_yaml_secrets <- function(secretEnv,
                                   secret,
                                   version = "latest",
                                   projectId = cr_project_get()) {
-  assert_that(
+  assertthat::assert_that(
     assertthat::is.string(secretEnv),
     assertthat::is.string(secret),
     assertthat::is.string(version),
@@ -169,7 +169,7 @@ parse_yaml_secret_list <- function(availableSecrets) {
     return(list(secretManager = list(availableSecrets)))
   }
 
-  assert_that(all(
+  assertthat::assert_that(all(
     unlist(
       lapply(availableSecrets, inherits, "cr_yaml_secret")
     )
@@ -187,12 +187,12 @@ check_timeout <- function(timeout) {
   }
 
   if (assertthat::is.string(timeout)) {
-    assert_that(grepl("s$", timeout))
+    assertthat::assert_that(grepl("s$", timeout))
     return(timeout)
   }
 
-  assert_that(is.numeric(timeout))
-  assert_that(timeout <= 86400)
+  assertthat::assert_that(is.numeric(timeout))
+  assertthat::assert_that(timeout <= 86400)
   paste0(as.integer(timeout), "s")
 }
 
@@ -233,7 +233,7 @@ get_cr_yaml <- function(x) {
     return(x)
   } else if (assertthat::is.string(x)) {
     # its a yaml file
-    assert_that(
+    assertthat::assert_that(
       is.readable(x),
       grepl("\\.ya?ml$", x, ignore.case = TRUE)
     )
