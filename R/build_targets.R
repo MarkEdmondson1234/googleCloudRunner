@@ -99,9 +99,12 @@ cr_build_targets <- function(
   execute <- match.arg(execute)
 
   if (execute == "trigger") {
-    yaml <- cr_build_yaml(buildsteps, ...)
+    args = list(buildsteps, ...)
+    footer <- if (!is.null(args$footer)) args$footer else TRUE
+    args$footer <- NULL
+    yaml <- do.call(cr_build_yaml, args = args)
 
-    if (!is.null(path)) cr_build_write(yaml, file = path)
+    if (!is.null(path)) cr_build_write(yaml, file = path, footer = footer)
     return(yaml)
   }
 

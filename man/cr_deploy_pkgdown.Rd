@@ -14,7 +14,8 @@ cr_deploy_pkgdown(
   env = NULL,
   build_image = "gcr.io/gcer-public/packagetools:latest",
   post_setup = NULL,
-  post_clone = NULL
+  post_clone = NULL,
+  footer = TRUE
 )
 }
 \arguments{
@@ -37,6 +38,9 @@ cr_deploy_pkgdown(
 \item{post_setup}{Steps that occur after git setup}
 
 \item{post_clone}{A \link{cr_buildstep} that occurs after the repo is cloned}
+
+\item{footer}{flag passed to \code{\link{cr_build_write}}, indicating
+if a footer in the YAML should be added with the creation date/time.}
 }
 \description{
 This builds a pkgdown website each time the trigger fires and deploys it to git

@@ -155,6 +155,8 @@ cr_deploy_r <- function(r,
 #' @param steps extra steps to run before the pkgdown website steps run
 #' @param cloudbuild_file The cloudbuild yaml file to write to
 #' @param create_trigger If not "no" then the buildtrigger will be setup for you via \link{cr_buildtrigger}, if "file" will create a buildtrigger pointing at \code{cloudbuild_file}, if "inline" will put the build inline within the trigger (no file created)
+#' @param footer flag passed to \code{\link{cr_build_write}}, indicating
+#' if a footer in the YAML should be added with the creation date/time.
 #'
 #' @details
 #'
@@ -192,7 +194,8 @@ cr_deploy_pkgdown <- function(github_repo,
                               env = NULL,
                               build_image = "gcr.io/gcer-public/packagetools:latest",
                               post_setup = NULL,
-                              post_clone = NULL) {
+                              post_clone = NULL,
+                              footer = TRUE) {
   create_trigger <- match.arg(create_trigger)
 
   build_yaml <-
@@ -209,7 +212,7 @@ cr_deploy_pkgdown <- function(github_repo,
     ))
 
   if (create_trigger == "no") {
-    cr_build_write(build_yaml, file = cloudbuild_file)
+    cr_build_write(build_yaml, file = cloudbuild_file, footer = footer)
     usethis::ui_line()
     usethis::ui_info("Complete deployment of pkgdown Cloud Build yaml:")
     usethis::ui_todo(c(
@@ -226,7 +229,7 @@ cr_deploy_pkgdown <- function(github_repo,
   myMessage("#Creating pkgdown build trigger for", github_repo, level = 3)
 
   if (create_trigger == "file") {
-    cr_build_write(build_yaml, file = cloudbuild_file)
+    cr_build_write(build_yaml, file = cloudbuild_file, footer = footer)
     the_build <- cloudbuild_file
   } else if (create_trigger == "inline") {
     the_build <- cr_build_make(build_yaml)
@@ -258,6 +261,8 @@ cr_deploy_pkgdown <- function(github_repo,
 #' @inheritDotParams cr_build_make
 #' @param create_trigger If creating a trigger, whether to create it from the cloudbuild_file or inline
 #' @param trigger_repo If not NULL, a \link{cr_buildtrigger_repo} where a buildtrigger will be created via \link{cr_buildtrigger}
+#' @param footer flag passed to \code{\link{cr_build_write}}, indicating
+#' if a footer in the YAML should be added with the creation date/time.
 #'
 #' @details
 #'
@@ -312,7 +317,8 @@ cr_deploy_packagetests <- function(steps = NULL,
                                    build_image = "gcr.io/gcer-public/packagetools:latest",
                                    create_trigger = c("file", "inline", "no"),
                                    trigger_repo = NULL,
-                                   ...) {
+                                   ...,
+                                   footer = TRUE) {
   create_trigger <- match.arg(create_trigger)
 
   build_yaml <-
@@ -331,7 +337,7 @@ cr_deploy_packagetests <- function(steps = NULL,
     )
 
   if (create_trigger == "no") {
-    cr_build_write(build_yaml, file = cloudbuild_file)
+    cr_build_write(build_yaml, file = cloudbuild_file, footer = footer)
 
     usethis::ui_line()
     usethis::ui_info("Complete deployment of tests Cloud Build yaml:")
@@ -354,7 +360,7 @@ cr_deploy_packagetests <- function(steps = NULL,
   assertthat::assert_that(is.buildtrigger_repo(trigger_repo))
 
   if (create_trigger == "file") {
-    cr_build_write(build_yaml, file = cloudbuild_file)
+    cr_build_write(build_yaml, file = cloudbuild_file, footer = footer)
     the_build <- cloudbuild_file
   } else if (create_trigger == "inline") {
     the_build <- cr_build_make(yaml = build_yaml)

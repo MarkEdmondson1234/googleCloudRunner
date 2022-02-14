@@ -14,7 +14,8 @@ cr_deploy_packagetests(
   build_image = "gcr.io/gcer-public/packagetools:latest",
   create_trigger = c("file", "inline", "no"),
   trigger_repo = NULL,
-  ...
+  ...,
+  footer = TRUE
 )
 }
 \arguments{
@@ -50,6 +51,9 @@ cr_deploy_packagetests(
     \item{\code{substitutions}}{Substitutions data for `Build` resource}
     \item{\code{serviceAccount}}{service account email to be used for the build}
   }}
+
+\item{footer}{flag passed to \code{\link{cr_build_write}}, indicating
+if a footer in the YAML should be added with the creation date/time.}
 }
 \description{
 This tests an R package each time you commit, and uploads the test coverage results to Codecov
