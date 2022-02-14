@@ -348,8 +348,11 @@ cr_build_upload_gcs <- function(local,
 #'
 cr_buildstep_source_move <- function(deploy_folder){
   cr_buildstep_bash(
-    sprintf("ls -R /workspace/ && cd /workspace/%s && mv * ../ && ls -R /workspace/",
-            deploy_folder),
+    sprintf(
+      paste0("ls -R /workspace/ && ",
+             '[ -d "/workspace/%s" ] && ',
+             "cd /workspace/%s && mv * ../ && ls -R /workspace/"),
+            deploy_folder, deploy_folder),
     id = "move source files"
   )
 }
