@@ -186,6 +186,31 @@ parse_buildtrigger_list <- function(x) {
   o
 }
 
+extract_trigger <- function(trigger) {
+  trigger_cloudsource <- NULL
+  trigger_github <- NULL
+  trigger_pubsub <- NULL
+  trigger_webhook <- NULL
+
+  if (is.gar_pubsubConfig(trigger)) {
+    trigger_pubsub <- trigger
+  } else if (is.buildtrigger_repo(trigger) && trigger$type == "github") {
+    trigger_github <- trigger$repo
+  } else if (is.buildtrigger_repo(trigger) && trigger$type == "cloud_source") {
+    trigger_cloudsource <- trigger$repo
+  } else if (is.gar_webhookConfig(trigger)) {
+    trigger_webhook <- trigger
+  } else {
+    stop("We should never be here - something wrong with trigger parameter",
+         call. = FALSE)
+  }
+  list(
+    trigger_cloudsource = trigger_cloudsource,
+    trigger_pubsub = trigger_pubsub,
+    trigger_github = trigger_github,
+    trigger_webhook = trigger_webhook
+  )
+}
 #' Create a new BuildTrigger
 #'
 #' @description
@@ -312,25 +337,13 @@ cr_buildtrigger <- function(build,
   if (!is.null(sourceToBuild)) {
     assertthat::assert_that(is.buildtrigger_repo(sourceToBuild))
     sourceToBuild <- as.gitRepoSource(sourceToBuild)
+
+    if (is.buildtrigger_repo(trigger)) {
+      stop("Can't use sourceToBuild for git based triggers", call. = FALSE)
+    }
   }
 
-  trigger_cloudsource <- NULL
-  trigger_github <- NULL
-  trigger_pubsub <- NULL
-  trigger_webhook <- NULL
-
-  if (is.gar_pubsubConfig(trigger)) {
-    trigger_pubsub <- trigger
-  } else if (is.buildtrigger_repo(trigger) && trigger$type == "github") {
-    trigger_github <- trigger$repo
-  } else if (is.buildtrigger_repo(trigger) && trigger$type == "cloud_source") {
-    trigger_cloudsource <- trigger$repo
-  } else if (is.gar_webhookConfig(trigger)) {
-    trigger_webhook <- trigger
-  } else {
-    stop("We should never be here - something wrong with trigger parameter",
-         call. = FALSE)
-  }
+  trigger_ouptut_list <- extract_trigger(trigger)
 
   # checks on sourceToBuild validity
   if (is.null(sourceToBuild) &&
@@ -338,17 +351,13 @@ cr_buildtrigger <- function(build,
     cli::cli_alert_warning("No sourceToBuild detected for event based trigger")
   }
 
-  if (!is.null(sourceToBuild) &&
-     is.buildtrigger_repo(trigger)) {
-    stop("Can't use sourceToBuild for git based triggers", call. = FALSE)
-  }
 
   buildTrigger <- BuildTrigger(
     name = name,
-    github = trigger_github,
-    pubsubConfig = trigger_pubsub,
-    webhookConfig = trigger_webhook,
-    triggerTemplate = trigger_cloudsource,
+    github = trigger_ouptut_list$trigger_github,
+    pubsubConfig = trigger_ouptut_list$trigger_pubsub,
+    webhookConfig = trigger_ouptut_list$trigger_webhook,
+    triggerTemplate = trigger_ouptut_list$trigger_cloudsource,
     build = the_build,
     filename = the_filename,
     description = description,
