@@ -1,2 +1,2 @@
 library(googleCloudRunner)
-cat("Test setup file")
+cat("Test setup file\n")
