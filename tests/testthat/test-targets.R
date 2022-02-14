@@ -6,6 +6,12 @@ test_that("targets integrations", {
   skip_if_missing_project()
 
   dir.create("targets", showWarnings = FALSE)
+  on.exit({
+    unlink("targets", recursive = TRUE)
+    unlink("_targets", recursive = TRUE)
+    unlink("_targets.yaml")
+    unlink("_targets_cloudbuild", recursive = TRUE)
+  }, add = TRUE)
 
   target_folder <- "cr_build_target_tests"
 
@@ -37,7 +43,9 @@ test_that("targets integrations", {
   )
 
   targets::tar_make()
-
+  on.exit({
+    targets::tar_destroy(ask = FALSE)
+  }, add = TRUE)
   # get local result to compare
   result <- targets::tar_read("result1")
   expect_snapshot(result)
@@ -130,23 +138,23 @@ test_that("targets integrations", {
   )
   expect_true(all(unlist(done_deeds)))
 
-  targets::tar_destroy(ask = FALSE)
-  unlink("targets", recursive = TRUE)
-  unlink("_targets", recursive = TRUE)
-  unlink("_targets.yaml")
-  unlink("_targets_cloudbuild", recursive = TRUE)
 })
 
 test_that("targets integrations - parallel builds", {
   skip_on_ci()
   skip_on_cran()
-
-  if (!require(targets)) {
-    skip("library(targets) not installed")
-  }
+  skip_if_not_installed("targets")
+  skip_if_missing_bucket()
+  skip_if_missing_project()
 
   dir.create("targets", showWarnings = FALSE)
 
+  on.exit({
+    unlink("targets", recursive = TRUE)
+    unlink("_targets", recursive = TRUE)
+    unlink("_targets.yaml")
+    unlink("_targets_cloudbuild", recursive = TRUE)
+  }, add = TRUE)
 
   target_folder <- "cr_build_target_tests_multi"
 
@@ -171,6 +179,9 @@ test_that("targets integrations - parallel builds", {
   )
 
   targets::tar_make()
+  on.exit({
+    targets::tar_destroy(ask = FALSE)
+  }, add = TRUE)
   # get local result to compare
   result <- targets::tar_read("merge1")
   expect_snapshot(result)
@@ -229,23 +240,21 @@ test_that("targets integrations - parallel builds", {
   )
   expect_true(all(unlist(done_deeds)))
 
-  targets::tar_destroy(ask = FALSE)
-  unlink("targets", recursive = TRUE)
-  unlink("_targets", recursive = TRUE)
-  unlink("_targets.yaml")
-  unlink("_targets_cloudbuild", recursive = TRUE)
 })
 
 test_that("targets integrations - selected deployments", {
   skip_on_ci()
   skip_on_cran()
-
-  if (!require(targets)) {
-    skip("library(targets) not installed")
-  }
+  skip_if_not_installed("targets")
 
   dir.create("targets", showWarnings = FALSE)
 
+  on.exit({
+    unlink("targets", recursive = TRUE)
+    unlink("_targets", recursive = TRUE)
+    unlink("_targets.yaml")
+    unlink("_targets_cloudbuild", recursive = TRUE)
+  }, add = TRUE)
   target_folder <- "cr_build_target_tests_deployments"
 
   targets::tar_config_set(
@@ -269,12 +278,19 @@ test_that("targets integrations - selected deployments", {
   )
 
   targets::tar_make()
+  on.exit({
+    targets::tar_destroy(ask = FALSE)
+  }, add = TRUE)
+
   # get local result to compare
   result <- targets::tar_read("merge1")
   expect_snapshot(result)
 
   # local build time
   local_time <- file.info(file.path("_targets", "objects", "merge1"))
+
+  skip_if_missing_bucket()
+  skip_if_missing_project()
 
   bs <- cr_buildstep_targets_multi(
     target_folder = target_folder,
@@ -303,10 +319,4 @@ test_that("targets integrations - selected deployments", {
                        bucket = cr_bucket_get()
   )
   expect_true(all(unlist(done_deeds)))
-
-  targets::tar_destroy(ask = FALSE)
-  unlink("targets", recursive = TRUE)
-  unlink("_targets", recursive = TRUE)
-  unlink("_targets.yaml")
-  unlink("_targets_cloudbuild", recursive = TRUE)
 })

@@ -1,6 +1,7 @@
 test_that("[Online] Test Docker", {
   skip_on_ci()
   skip_on_cran()
+  skip_if_missing_project()
 
   runme <- system.file("example/",
     package = "googleCloudRunner",

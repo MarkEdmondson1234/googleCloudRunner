@@ -10,6 +10,7 @@ test_that("[Online] Test schedule jobs", {
   fid <-
     "projects/mark-edmondson-gde/locations/europe-west1/jobs/cloud-build-test1-zzzzz"
 
+  skip_if_missing_project()
   # in case a failed test run left it up
   try(cr_schedule_delete(id))
 

@@ -12,6 +12,7 @@ test_that("[Online] Test Deploy R", {
     branchName = "master"
   ))
 
+  skip_if_missing_project()
   # check the script runs ok
   rb <- cr_deploy_r(r_lines, source = source)
   expect_equal(rb$status, "SUCCESS")
