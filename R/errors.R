@@ -5,12 +5,12 @@ handle_errs <- function(f,
                         return_404 = NULL,
                         return_403 = NULL,
                         projectId = cr_project_get(),
-                        ...){
+                        ...) {
 
   tryCatch(
     f(...),
-    http_404 = function(err){
-      if(is.null(http_404)){
+    http_404 = function(err) {
+      if (is.null(http_404)) {
         cli::cli_alert_danger("404 Not found")
         return(NULL)
       } else {
@@ -19,8 +19,8 @@ handle_errs <- function(f,
       }
 
     },
-    http_403 = function(err){
-      if(is.null(http_403)){
+    http_403 = function(err) {
+      if (is.null(http_403)) {
         cli::cli_alert_danger("The caller does not have permission for project: {projectId}")
         return(NULL)
       } else {

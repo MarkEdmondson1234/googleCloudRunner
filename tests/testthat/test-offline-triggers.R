@@ -1,5 +1,6 @@
 test_that("Render BuildStep objects", {
-  bs1 <- cr_buildstep("alpine", c("-c", "ls -la"), entrypoint = "bash", prefix = "")
+  bs1 <- cr_buildstep("alpine", c("-c", "ls -la"),
+                      entrypoint = "bash", prefix = "")
   expect_snapshot_output(bs1)
 
   cloudbuild_dc <- cr_buildstep_decrypt("secret.json.enc",
@@ -124,7 +125,8 @@ test_that("Render BuildStep objects", {
   expect_s3_class(gh_trigger, "cr_buildtrigger_repo")
   expect_snapshot_output(gh_trigger)
 
-  cs_trigger <- cr_buildtrigger_repo("github_markedmondson1234_googlecloudrunner",
+  cs_trigger <- cr_buildtrigger_repo(
+    "github_markedmondson1234_googlecloudrunner",
     type = "cloud_source",
     projectId = "my-project"
   )

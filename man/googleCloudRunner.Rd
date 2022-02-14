@@ -3,7 +3,9 @@
 \docType{package}
 \name{googleCloudRunner}
 \alias{googleCloudRunner}
-\title{Launch R scripts into the Google Cloud via Cloud Build, Cloud Run and Cloud Scheduler}
+\title{Launch R scripts into the Google Cloud via Cloud Build,
+Cloud Run and Cloud Scheduler}
 \description{
-See website for more details: \url{https://code.markedmondson.me/googleCloudRunner/}
+See website for more details:
+\url{https://code.markedmondson.me/googleCloudRunner/}
 }

@@ -4,7 +4,11 @@ print.cr_buildtrigger_repo <- function(x, ...) {
   cat("==BuildTriggerRepo==\n")
   if (x$type == "github") {
     cat0("GitHub Repo:   ", paste0(x$repo$owner, "/", x$repo$name))
-    if (!is.null(x$repo$push)) cat("--Push trigger\n") else cat("--Pull trigger\n")
+    if (!is.null(x$repo$push)) {
+      cat("--Push trigger\n")
+    } else {
+      cat("--Pull trigger\n")
+    }
     cat0("Branch: ", x$repo$push$branch)
     cat0("Tag:    ", x$repo$push$tag)
     cat0("Branch: ", x$repo$pull$branch)
@@ -144,7 +148,8 @@ print.gar_Service <- function(x, ...) {
   cat("==CloudRunService==\n")
   cat0("name: ", x$metadata$name)
   cat0("location: ", x$metadata$labels$`cloud.googleapis.com/location`)
-  cat0("lastModifier: ", x$metadata$annotations$`serving.knative.dev/lastModifier`)
+  cat0("lastModifier: ",
+       x$metadata$annotations$`serving.knative.dev/lastModifier`)
   cat0("containers: ", x$spec$template$spec$containers$image)
   cat0("creationTimestamp: ", x$metadata$creationTimestamp)
   cat0("observedGeneration: ", x$status$observedGeneration)

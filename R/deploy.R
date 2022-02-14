@@ -119,7 +119,7 @@ cr_deploy_r <- function(r,
     serviceAccount = serviceAccount
   )
 
-  if(!is.null(schedule)){
+  if (!is.null(schedule)) {
     # a cloud build you would like to schedule
     myMessage(paste("Scheduling R script on cron schedule:", schedule),
       level = 3

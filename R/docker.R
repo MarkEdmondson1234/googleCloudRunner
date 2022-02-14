@@ -164,10 +164,10 @@ cr_deploy_docker <- function(local,
 
   b <- cr_build_wait(docker_build, projectId = result$projectId)
 
-  if(b$status == "SUCCESS"){
+  if (b$status == "SUCCESS") {
     myMessage("# Docker images pushed:", level = 3)
 
-    if(!kaniko_cache){
+    if (!kaniko_cache) {
       step_images <- b$results$images$name
     } else {
       step_images <-
@@ -242,7 +242,7 @@ cr_deploy_docker_construct <- function(
   image <- make_image_name(image_name, projectId = projectId)
 
   # kaniko_cache will push image for you
-  pushed_image <- if(kaniko_cache) NULL else image
+  pushed_image <- if (kaniko_cache) NULL else image
 
   # Adding this in for Artifacts Registry
   # pre_steps <- c(pre_steps, cr_buildstep_docker_auth(image = image))
@@ -251,7 +251,7 @@ cr_deploy_docker_construct <- function(
   myMessage("# Deploy docker build for image:", image, level = 3)
 
   remote_tar <- remote
-  remote_tar <- if(!grepl("tar\\.gz$", remote_tar)) paste0(remote, ".tar.gz")
+  remote_tar <- if (!grepl("tar\\.gz$", remote_tar)) paste0(remote, ".tar.gz")
 
   gcs_source <- cr_build_upload_gcs(
     local,

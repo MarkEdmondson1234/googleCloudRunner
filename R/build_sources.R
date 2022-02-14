@@ -302,7 +302,7 @@ cr_build_upload_gcs <- function(local,
   with_dir(
     tdir, {
       myMessage("Tarring files in tmpdir:", level = 3)
-      lapply(tmp_files, function(x){
+      lapply(tmp_files, function(x) {
         cli_li("{.file {x}}")
       })
 
@@ -346,7 +346,7 @@ cr_build_upload_gcs <- function(local,
 #' @examples
 #' cr_buildstep_source_move("deploy")
 #'
-cr_buildstep_source_move <- function(deploy_folder){
+cr_buildstep_source_move <- function(deploy_folder) {
   cr_buildstep_bash(
     sprintf(
       paste0("ls -R /workspace/ && ",

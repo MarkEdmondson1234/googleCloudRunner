@@ -6,7 +6,8 @@
 #' @importFrom googleAuthR gar_api_generator gar_api_page
 cr_sourcerepo_list <- function(projectId = cr_project_get()) {
   f <- gar_api_generator(
-    sprintf("https://sourcerepo.googleapis.com/v1/projects/%s/repos", projectId),
+    sprintf("https://sourcerepo.googleapis.com/v1/projects/%s/repos",
+            projectId),
     "GET",
     data_parse_function = function(x) x$repos
   )

@@ -200,7 +200,7 @@ get_bucket_setup <- function() {
   }
 
   bucket <- usethis::ui_yeah("Do you want to setup a Cloud Storage bucket?")
-  if(!bucket){
+  if (!bucket) {
     return(abort_bucket_make())
   }
 
@@ -212,7 +212,7 @@ get_bucket_setup <- function() {
   }
 
   make_bucket <- usethis::ui_yeah("Do you want to make a new Cloud Storage bucket?")
-  if(!make_bucket){
+  if (!make_bucket) {
     cli_ul("No bucket set")
     return(abort_bucket_make())
   }
@@ -221,13 +221,13 @@ get_bucket_setup <- function() {
 
 }
 
-abort_bucket_make <- function(){
+abort_bucket_make <- function() {
   cli::cli_alert_danger("Some Cloud Build (cr_build_*) functionality will not be available
           with a bucket unless configured via cr_bucket_set()")
   NULL
 }
 
-make_new_bucket <- function(){
+make_new_bucket <- function() {
   if (!nzchar(Sys.getenv("GCE_DEFAULT_PROJECT_ID"))) {
     cli_alert_info("You need to setup a project-id before creating a bucket")
     return(NULL)
@@ -240,11 +240,11 @@ make_new_bucket <- function(){
     projectId = cr_project_get()
   )
 
-  if(is.null(new_bucket$kind)){
+  if (is.null(new_bucket$kind)) {
     return(NULL)
   }
 
-  if(new_bucket$kind != "storage#bucket"){
+  if (new_bucket$kind != "storage#bucket") {
     return(NULL)
   }
 
@@ -254,7 +254,7 @@ make_new_bucket <- function(){
 
 }
 
-setup_existing_bucket <- function(){
+setup_existing_bucket <- function() {
     cli_alert_info(paste(
       "Fetching your buckets under the project-id: ",
       Sys.getenv("GCE_DEFAULT_PROJECT_ID")

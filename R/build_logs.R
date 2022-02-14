@@ -54,7 +54,7 @@ cr_build_logs <- function(built = NULL, log_url = NULL) {
     }
   )
 
-  if(is.null(logs)){
+  if (is.null(logs)) {
     myMessage(error_log, level = 3)
     return(error_log)
   }

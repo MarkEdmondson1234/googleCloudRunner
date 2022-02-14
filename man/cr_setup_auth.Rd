@@ -15,10 +15,12 @@ cr_setup_auth(
 
 \item{file}{Where to save the authentication file}
 
-\item{session_user}{1 for user level, 2 for project level, leave \code{NULL} to be prompted}
+\item{session_user}{1 for user level, 2 for project level,
+leave \code{NULL} to be prompted}
 }
 \value{
-TRUE if the file is ready to be setup by \link{cr_setup}, FALSE if need to stop
+TRUE if the file is ready to be setup by \link{cr_setup},
+`FALSE` if need to stop
 }
 \description{
 This will use your Google OAuth2 user to create a suitable service account

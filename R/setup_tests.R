@@ -149,7 +149,7 @@ setup_test_deploy_plumber <- function(runme){
 
 }
 
-setup_test_deploy_r <- function(r_lines){
+setup_test_deploy_r <- function(r_lines) {
   # check the script runs ok
   rb <- cr_deploy_r(r_lines)
   if (is.null(rb$status) || rb$status != "SUCCESS") {
@@ -162,7 +162,7 @@ setup_test_deploy_r <- function(r_lines){
 
 }
 
-setup_test_schedule_r <- function(r_lines){
+setup_test_schedule_r <- function(r_lines) {
   # schedule the script
   rs <- cr_deploy_r(r_lines, schedule = "* * * * *")
 

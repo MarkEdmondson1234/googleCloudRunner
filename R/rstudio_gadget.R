@@ -53,7 +53,8 @@ cr_deploy_gadget <- function() {
         shiny::column(
           width = 6,
           shiny::h5("Logging"),
-          shiny::checkboxInput("interactive", "Launch logs in browser", value = TRUE),
+          shiny::checkboxInput("interactive", "Launch logs in browser",
+                               value = TRUE),
           shiny::br()
         )
       ),

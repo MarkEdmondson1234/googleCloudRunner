@@ -295,7 +295,7 @@ delete_schedule_pubsub <- function(the_name, projectId){
   myMessage("Fetching build trigger", build_trigger_guess, level = 3)
   the_buildtrigger <- cr_buildtrigger_get(build_trigger_guess, projectId = projectId)
 
-  if(is.null(the_buildtrigger)){
+  if (is.null(the_buildtrigger)) {
     myMessage("Could not find build trigger",
               build_trigger_guess,
               "to delete. Aborting, you will need to delete it manually. ",
@@ -303,14 +303,14 @@ delete_schedule_pubsub <- function(the_name, projectId){
     return(NULL)
   }
 
-  if(!is.null(the_buildtrigger)){
+  if (!is.null(the_buildtrigger)) {
     cr_buildtrigger_delete(the_buildtrigger$id, projectId = projectId)
   }
 
   the_pubsub <- tryCatch({
     # it deletes subscriptions too
     topics_delete(the_buildtrigger$pubsubConfig$topic)
-    }, error = function(err){
+    }, error = function(err) {
     myMessage("Could not delete topic for ",
               the_name, "to delete. Aborting. ", err$message, level = 3)
     return(NULL)
@@ -318,8 +318,8 @@ delete_schedule_pubsub <- function(the_name, projectId){
 
 }
 
-construct_name <- function(name, region, project){
-  if(grepl("^projects", name)){
+construct_name <- function(name, region, project) {
+  if (grepl("^projects", name)) {
     return(name)
   }
 
@@ -495,7 +495,7 @@ cr_schedule_resume <- function(x,
 HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
                        uri = NULL, oidcToken = NULL, httpMethod = NULL) {
 
-  if(!is.null(headers)){
+  if (!is.null(headers)) {
     assertthat::assert_that(
       is.list(headers),
       is.character(names(headers))
@@ -505,9 +505,9 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
   the_body <- toJSON(body, auto_unbox = TRUE)
   myMessage("Body parsed: ", the_body, level = 2)
 
-  if(!is.null(body)){
+  if (!is.null(body)) {
     body <- base64_encode(the_body, linebreaks = FALSE)
-    if(getOption("googleAuthR.verbose") < 3){
+    if (getOption("googleAuthR.verbose") < 3) {
       myMessage("Body unencoded: ", rawToChar(base64_decode(body)))
     }
   }
@@ -581,14 +581,14 @@ Job <- function(name = NULL,
             class = c("gar_scheduleJob", "list"))
 }
 
-is.gar_scheduleJob <- function(x){
+is.gar_scheduleJob <- function(x) {
   inherits(x, "gar_scheduleJob")
 }
 
 as.gar_scheduleJob <- function(x,
                                region = cr_region_get(),
-                               projectId = cr_project_get()){
-  if(is.gar_scheduleJob(x)){
+                               projectId = cr_project_get()) {
+  if (is.gar_scheduleJob(x)) {
     the_job <- x
   } else {
     assertthat::assert_that(assertthat::is.string(x))
@@ -616,10 +616,9 @@ as.gar_scheduleJob <- function(x,
 PubsubTarget <- function(
   topicName = NULL,
   data = NULL,
-  attributes = NULL
-){
+  attributes = NULL) {
 
-  if(!is.null(data)){
+  if (!is.null(data)) {
     the_data <- toJSON(data, auto_unbox = TRUE)
     myMessage("data json:", the_data, level = 2)
     the_data <- base64_encode(the_data, linebreaks = FALSE)
@@ -639,8 +638,8 @@ is.gar_pubsubTarget <- function(x){
 }
 
 
-extract_schedule_name <- function(x){
-  if(is.gar_scheduleJob(x)){
+extract_schedule_name <- function(x) {
+  if (is.gar_scheduleJob(x)) {
     return(x$name)
   } else {
     assertthat::assert_that(assertthat::is.string(x))

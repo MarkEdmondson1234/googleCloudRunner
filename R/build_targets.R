@@ -98,7 +98,7 @@ cr_build_targets <- function(
 
   execute <- match.arg(execute)
 
-  if(execute == "trigger"){
+  if (execute == "trigger") {
     yaml <- cr_build_yaml(buildsteps, ...)
 
     if (!is.null(path)) cr_build_write(yaml, file = path)
@@ -123,7 +123,7 @@ cr_build_targets <- function(
           normalizePath(local)),
     level = 3)
 
-  if(getOption("googleAuthR.verbose") < 3){
+  if (getOption("googleAuthR.verbose") < 3) {
     print(yaml)
   }
 

@@ -4,9 +4,11 @@
 #'
 #' @param email What email to open OAuth2 with
 #' @param file Where to save the authentication file
-#' @param session_user 1 for user level, 2 for project level, leave \code{NULL} to be prompted
+#' @param session_user 1 for user level, 2 for project level,
+#' leave \code{NULL} to be prompted
 #'
-#' @return TRUE if the file is ready to be setup by \link{cr_setup}, FALSE if need to stop
+#' @return TRUE if the file is ready to be setup by \link{cr_setup},
+#' `FALSE` if need to stop
 #'
 #' @export
 #' @importFrom googleAuthR gar_setup_auth_key

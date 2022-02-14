@@ -22,21 +22,28 @@ test_that("[Online] JWT fetches", {
   # needs to be recreated every 60mins
   token <- cr_jwt_token(jwt, the_url)
 
+  app_url = "https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic"
   # call Cloud Run with token
   res <- cr_jwt_with_httr(
-    httr::GET("https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=North%20America&industry=Transportation%20(non-freight)"),
+    httr::GET(paste0(
+      app_url,
+      "?region=North%20America&industry=Transportation%20(non-freight)")
+      ),
     token
   )
   o <- httr::content(res)
 
   expect_true(inherits(o, "list"))
 
-  all_urls <- c(
-    "https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=North%20America&industry=Transportation%20(non-freight)",
-    "https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=Europe&industry=Transportation%20(non-freight)",
-    "https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=South%20America&industry=Transportation%20(non-freight)",
-    "https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=Australia&industry=Transportation%20(non-freight)",
-    "https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=North%20America&industry=Software"
+  all_urls <- paste0(
+    app_url,
+    c(
+      "?region=North%20America&industry=Transportation%20(non-freight)",
+      "?region=Europe&industry=Transportation%20(non-freight)",
+      "?region=South%20America&industry=Transportation%20(non-freight)",
+      "?region=Australia&industry=Transportation%20(non-freight)",
+      "?region=North%20America&industry=Software"
+    )
   )
 
   res2 <- cr_jwt_async(all_urls, token = token)

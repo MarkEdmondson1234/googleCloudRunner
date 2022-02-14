@@ -1,10 +1,10 @@
-if(Sys.getenv("PORT") == "") Sys.setenv(PORT = 8000) #local testing
+if (Sys.getenv("PORT") == "") Sys.setenv(PORT = 8000) #local testing
 
 #' Plot out data from the mtcars
 #' @param cyl If provided, passed into Rmd rendering parameters
 #' @get /
 #' @serializer html
-function(cyl = NULL){
+function(cyl = NULL) {
 
   # to avoid caching a timestamp is added
   outfile <- sprintf("mtcars-%s.html", gsub("[^0-9]", "", Sys.time()))
