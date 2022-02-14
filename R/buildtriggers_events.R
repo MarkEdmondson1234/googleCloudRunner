@@ -134,10 +134,12 @@ cr_buildtrigger_repo <- function(repo_name,
     }
     assertthat::assert_that(
       is.null(dots$branchName),
-      is.null(dots$tagName)
+      is.null(dots$tagName),
+      is.null(dots$repoName)
     )
     dots$branchName <- branch
     dots$tagName <- tag
+    dots$repoName <- repo_name
     repo <- do.call(RepoSource, args = dots)
   }
 
