@@ -10,6 +10,8 @@ test_that("Render BuildStep objects", {
   )
   expect_snapshot_output(cloudbuild_dc)
 
+  skip_if_missing_project()
+
   bsd <- cr_buildstep_docker("my-image", tag = "$BRANCH_NAME")
   expect_snapshot_output(bsd)
 
