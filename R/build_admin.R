@@ -94,7 +94,7 @@ cr_build_artifacts <- function(build,
   if (is.null(path_regex)) {
     cloud_files <- cloud_files[cloud_files$name %in% paths, ]
   } else {
-    assertthat::assert_that(is.string(path_regex))
+    assertthat::assert_that(assertthat::is.string(path_regex))
     cloud_files <- cloud_files[grepl(path_regex, cloud_files$name), ]
   }
 
@@ -136,20 +136,18 @@ cr_build_wait <- function(op = .Last.value,
 }
 
 #' @noRd
-#' @importFrom cli cli_alert_info cli_process_failed cli_process_done
-#' @importFrom cli cli_status cli_status_update make_spinner cli_div
 wait_f <- function(init, projectId) {
   op <- init
   wait <- TRUE
 
-  sb <- cli_status("Launching Cloud Build...")
+  sb <- cli::cli_status("Launching Cloud Build...")
   favs <- c("bouncingBall", "triangle",
             "runner", "shark", "arrow3", "circleHalves")
   sp1 <- make_spinner(
     which = favs[sample.int(6, size = 1)],
     template = "{spin} - building "
   )
-  cli_div(theme = list(span.status = list(color = "blue")))
+  cli::cli_div(theme = list(span.status = list(color = "blue")))
 
   tick <- 0
   start_time <- Sys.time()
@@ -163,7 +161,7 @@ wait_f <- function(init, projectId) {
 
     if (status$status %in%
       c("FAILURE", "INTERNAL_ERROR", "TIMEOUT", "CANCELLED", "EXPIRED")) {
-      cli_process_failed(
+      cli::cli_process_failed(
         id = sb,
         msg_failed = "Build failed with status: {status$status} and took ~{.timestamp {build_time}}"
       )
@@ -171,7 +169,7 @@ wait_f <- function(init, projectId) {
     }
 
     if (status$status %in% c("STATUS_UNKNOWN", "QUEUED", "WORKING")) {
-      cli_status_update(
+      cli::cli_status_update(
         id = sb,
         msg = "{symbol$arrow_right} ------------------- Status: {.status {status$status}} ~{.timestamp {build_time}}"
       )
@@ -183,7 +181,7 @@ wait_f <- function(init, projectId) {
 
     if (status$status == "SUCCESS") {
 
-      cli_process_done(
+      cli::cli_process_done(
         id = sb,
         msg_done = "Build finished with status: {status$status} and took ~{.timestamp {build_time}}"
       )

@@ -103,7 +103,6 @@ cr_buildstep_targets_teardown <- function(bucket_folder, last_id = NULL){
 #' @rdname cr_build_targets
 #' @export
 #' @param tar_config An R script that will run before \code{targets::tar_make()} in the build e.g. \code{"targets::tar_config_set(script = 'targets/_targets.R')"}
-#' @importFrom cli cli cli_ul
 cr_buildstep_targets_multi <- function(
   target_folder = NULL,
   bucket = cr_bucket_get(),

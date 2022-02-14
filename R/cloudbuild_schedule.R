@@ -325,7 +325,7 @@ cr_schedule_pubsub <- function(topicName,
     assertthat::is.string(projectId)
   )
 
-  if(is.string(topicName)){
+  if (assertthat::is.string(topicName)) {
     the_name <- sprintf("projects/%s/topics/%s", projectId, topicName)
   } else if(inherits(topicName, "Topic")){
     the_name <- topicName$name

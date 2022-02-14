@@ -77,7 +77,6 @@ print.BuildOperationMetadata <- function(x, ...) {
 
 #' @method print gar_Build
 #' @export
-#' @importFrom yaml as.yaml
 #' @importFrom utils str
 print.gar_Build <- function(x, ...) {
   cat("==CloudBuildObject==\n")
@@ -104,7 +103,7 @@ print.gar_Build <- function(x, ...) {
     if (is.data.frame(x$steps)) {
       print(cr_buildstep_df(x$steps))
     } else {
-      cat(as.yaml(x$steps))
+      cat(yaml::as.yaml(x$steps))
     }
   }
 
@@ -126,18 +125,16 @@ print.gar_Build <- function(x, ...) {
 
 #' @method print cr_yaml
 #' @export
-#' @importFrom yaml as.yaml
 print.cr_yaml <- function(x, ...) {
   cat("==cloudRunnerYaml==\n")
-  cat(as.yaml(x))
+  cat(yaml::as.yaml(x))
 }
 
 #' @method print cr_buildstep
 #' @export
-#' @importFrom yaml as.yaml
 print.cr_buildstep <- function(x, ...) {
   cat("==cloudRunnerBuildStep==\n")
-  cat(as.yaml(x))
+  cat(yaml::as.yaml(x))
 }
 
 

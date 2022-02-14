@@ -26,7 +26,7 @@ cr_setup_test <- function(option = c(
   option <- match.arg(option)
 
   test_results <- list()
-  cli_alert_info("Perform deployments to test your setup is working. Takes around 5mins.  ESC or 0 to skip.")
+  cli::cli_alert_info("Perform deployments to test your setup is working. Takes around 5mins.  ESC or 0 to skip.")
 
   googleAuthR::gar_setup_auth_check("GCE_AUTH_FILE")
 
@@ -52,7 +52,7 @@ cr_setup_test <- function(option = c(
   }
 
   if (run_tests == 0) {
-    cli_alert_info("Skipping deployment tests")
+    cli::cli_alert_info("Skipping deployment tests")
   }
 
   runme <- system.file("example/",
@@ -135,7 +135,7 @@ setup_test_deploy_plumber <- function(runme){
   print(cr_run_list())
 
   test_url <- cr$status$url
-  cli_alert_info("Testing Pub/Sub API in example Cloud Run app: {test_url}")
+  cli::cli_alert_info("Testing Pub/Sub API in example Cloud Run app: {test_url}")
   test_call <- cr_pubsub(paste0(test_url, "/pubsub"), "hello")
 
   if (test_call[[1]] != "Echo: hello") {

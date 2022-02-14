@@ -53,7 +53,7 @@ library(jsonlite)
 library(googlePubsubR)
 
 # the message with the var1 that will be passed into the Cloud Build via substitution
-message <- toJSON(list(var1 = "hello mum"))
+message <- jsonlite::toJSON(list(var1 = "hello mum"))
 
 # turning into JSON and encoding
 send_me <- msg_encode(message)

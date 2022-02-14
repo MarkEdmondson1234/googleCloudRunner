@@ -502,7 +502,7 @@ HttpTarget <- function(headers = NULL, body = NULL, oauthToken = NULL,
     )
   }
 
-  the_body <- toJSON(body, auto_unbox = TRUE)
+  the_body <- jsonlite::toJSON(body, auto_unbox = TRUE)
   myMessage("Body parsed: ", the_body, level = 2)
 
   if (!is.null(body)) {
@@ -619,9 +619,9 @@ PubsubTarget <- function(
   attributes = NULL) {
 
   if (!is.null(data)) {
-    the_data <- toJSON(data, auto_unbox = TRUE)
+    the_data <- jsonlite::toJSON(data, auto_unbox = TRUE)
     myMessage("data json:", the_data, level = 2)
-    the_data <- base64_encode(the_data, linebreaks = FALSE)
+    the_data <- openssl::base64_encode(the_data, linebreaks = FALSE)
     myMessage("data encoded to: ", the_data, level = 2)
   }
 

@@ -19,7 +19,7 @@ extract_project_number <- function(json) {
 
 #' @noRd
 do_build_service_setup <- function() {
-  cli_alert_info("Checking Cloud Build service email...")
+  cli::cli_alert_info("Checking Cloud Build service email...")
   json <- Sys.getenv("GAR_CLIENT_JSON")
   build_email <- paste0(
     extract_project_number(json),
@@ -30,30 +30,30 @@ do_build_service_setup <- function() {
     json = json,
     scopes = "https://www.googleapis.com/auth/cloud-platform"
   )
-  gar_auth()
+  googleAuthR::gar_auth()
 
   present_roles <- gar_service_get_roles(projectId, accountId = build_email)
 
   if ("roles/cloudbuild.builds.builder" %in% present_roles$roles) {
-    cli_alert_success(
+    cli::cli_alert_success(
       "The Cloud Build service account ({build_email}) has Cloud Build Access."
     )
   }
 
   if (all(cr_setup_role_lookup("secrets") %in% present_roles$roles)) {
-    cli_alert_success(
+    cli::cli_alert_success(
       "The Cloud Build service account ({build_email}) has Secret Manager Access."
     )
   }
 
   if (all(cr_setup_role_lookup("cloudrun") %in% present_roles$roles)) {
-    cli_alert_success(
+    cli::cli_alert_success(
       "The Cloud Build service account ({build_email}) has Cloud Run Access."
     )
   }
 
   if (all(cr_setup_role_lookup("cloudstorage") %in% present_roles$roles)) {
-    cli_alert_success(
+    cli::cli_alert_success(
       "The Cloud Build service account ({build_email}) has Cloud Storage Access."
     )
   }
@@ -69,13 +69,13 @@ do_build_service_setup <- function() {
   )
 
   if (all(recommended_roles %in% present_roles$roles)) {
-    cli_alert_success(
+    cli::cli_alert_success(
       "The Cloud Build service account ({build_email}) has all recommended roles"
     )
     return(TRUE)
   }
 
-  cli_alert_info("The Cloud Build service account ({build_email}) will need permissions during builds for certain operations calling other APIs.  This is distinct from the local authentication file you have setup.  Ensure Cloud Build is enabled at https://console.cloud.google.com/marketplace/product/google/cloudbuild.googleapis.com?project={projectId}")
+  cli::cli_alert_info("The Cloud Build service account ({build_email}) will need permissions during builds for certain operations calling other APIs.  This is distinct from the local authentication file you have setup.  Ensure Cloud Build is enabled at https://console.cloud.google.com/marketplace/product/google/cloudbuild.googleapis.com?project={projectId}")
   do_it <- menu(
     title = "What services do you want to setup for the Cloud Build service account? (Esc or 0 to skip)",
     choices = c(
@@ -88,32 +88,32 @@ do_build_service_setup <- function() {
     )
   )
   if (do_it == 0) {
-    cli_alert_danger("Cloud Build service account will need permissions to complete certain operations.")
+    cli::cli_alert_danger("Cloud Build service account will need permissions to complete certain operations.")
     return(FALSE)
   }
 
   if (do_it == 1) {
-    cli_alert_danger("You will need to configure this yourself using cr_setup_service() or in the GCP web console, giving the build email {build_email} access to the role you require.")
+    cli::cli_alert_danger("You will need to configure this yourself using cr_setup_service() or in the GCP web console, giving the build email {build_email} access to the role you require.")
     return(FALSE)
   }
 
   if (do_it %in% c(2, 3)) {
-    cli_alert_info("Configuring {build_email} for Cloud Run deployments")
+    cli::cli_alert_info("Configuring {build_email} for Cloud Run deployments")
     cr_setup_service(build_email, roles = cr_setup_role_lookup("cloudrun"))
   }
 
   if (do_it %in% c(2, 4)) {
-    cli_alert_info("Configuring {build_email} to be able to access Secret Manager")
+    cli::cli_alert_info("Configuring {build_email} to be able to access Secret Manager")
     cr_setup_service(build_email, roles = cr_setup_role_lookup("secrets"))
   }
 
   if (do_it %in% c(2, 5)) {
-    cli_alert_info("Configuring {build_email} for BigQuery API tasks")
+    cli::cli_alert_info("Configuring {build_email} for BigQuery API tasks")
     cr_setup_service(build_email, roles = cr_setup_role_lookup("bigquery"))
   }
 
   if (do_it %in% c(2, 6)) {
-    cli_alert_info("Configuring {build_email} for Cloud Storage API tasks")
+    cli::cli_alert_info("Configuring {build_email} for Cloud Storage API tasks")
     cr_setup_service(build_email, roles = cr_setup_role_lookup("cloudstorage"))
   }
 
@@ -131,7 +131,7 @@ get_email_setup <- function() {
     )
     if (reuse_auth) {
       if (Sys.getenv("GCE_AUTH_FILE") == "") {
-        cli_alert_info("You need to setup the auth environment argument before configuring an email from it. (If you just set it up, R needs to be restarted and the wizard rerun to see it here.)")
+        cli::cli_alert_info("You need to setup the auth environment argument before configuring an email from it. (If you just set it up, R needs to be restarted and the wizard rerun to see it here.)")
         return(NULL)
       }
 
@@ -142,7 +142,7 @@ get_email_setup <- function() {
 
       the_email <- tryCatch(jsonlite::fromJSON(Sys.getenv("GCE_AUTH_FILE"))$client_email,
         error = function(err) {
-          cli_alert_danger("Invalid JSON found in GCE_AUTH_FILE - incorrect JSON file?  Could not read client_email")
+          cli::cli_alert_danger("Invalid JSON found in GCE_AUTH_FILE - incorrect JSON file?  Could not read client_email")
           stop(err$message)
         }
       )
@@ -150,11 +150,11 @@ get_email_setup <- function() {
       the_email <- readline("Enter the service email you wish to use")
     }
 
-    cli_alert_info("Using email: {the_email}")
+    cli::cli_alert_info("Using email: {the_email}")
     return(paste0("CR_BUILD_EMAIL=", the_email))
   }
 
-  cli_alert_danger("Cloud Scheduler (cr_schedule()) functionality will not be available
+  cli::cli_alert_danger("Cloud Scheduler (cr_schedule()) functionality will not be available
           unless an email is specified via cr_email_set()")
 
   NULL
@@ -173,14 +173,14 @@ get_region_setup <- function() {
     )
     if (region_select > 0) {
       the_region <- choices[[region_select]]
-      cli_alert_success(paste("Selected region:", the_region))
+      cli::cli_alert_success(paste("Selected region:", the_region))
       return(paste0("CR_REGION=", the_region))
     } else {
-      cli_alert_danger("No region selected")
+      cli::cli_alert_danger("No region selected")
     }
   }
 
-  cli_alert_danger("Cloud Run (cr_run_*) functionality will not be available
+  cli::cli_alert_danger("Cloud Run (cr_run_*) functionality will not be available
           unless a region is configured via cr_region_set()")
 
   NULL
@@ -213,7 +213,7 @@ get_bucket_setup <- function() {
 
   make_bucket <- usethis::ui_yeah("Do you want to make a new Cloud Storage bucket?")
   if (!make_bucket) {
-    cli_ul("No bucket set")
+    cli::cli_ul("No bucket set")
     return(abort_bucket_make())
   }
 
@@ -229,7 +229,7 @@ abort_bucket_make <- function() {
 
 make_new_bucket <- function() {
   if (!nzchar(Sys.getenv("GCE_DEFAULT_PROJECT_ID"))) {
-    cli_alert_info("You need to setup a project-id before creating a bucket")
+    cli::cli_alert_info("You need to setup a project-id before creating a bucket")
     return(NULL)
   }
   make_bucket_name <- readline(
@@ -255,7 +255,7 @@ make_new_bucket <- function() {
 }
 
 setup_existing_bucket <- function() {
-    cli_alert_info(paste(
+    cli::cli_alert_info(paste(
       "Fetching your buckets under the project-id: ",
       Sys.getenv("GCE_DEFAULT_PROJECT_ID")
     ))

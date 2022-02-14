@@ -244,7 +244,7 @@ get_cr_yaml <- function(x) {
     stop("Yaml is not class(yaml) or a filepath - class:", class(x))
   }
 
-  read_yaml(x)
+  yaml::read_yaml(x)
 }
 
 #' Write out a Build object to cloudbuild.yaml

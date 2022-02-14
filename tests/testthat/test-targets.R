@@ -1,10 +1,9 @@
 test_that("targets integrations", {
   skip_on_ci()
   skip_on_cran()
-
-  if (!require(targets)) {
-    skip("library(targets) not installed")
-  }
+  skip_if_not_installed("targets")
+  skip_if_missing_bucket()
+  skip_if_missing_project()
 
   dir.create("targets", showWarnings = FALSE)
 

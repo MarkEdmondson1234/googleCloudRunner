@@ -364,7 +364,7 @@ cr_deploy_packagetests <- function(steps = NULL,
     myMessage("If you want to use Code Covr, add the Code Covr token in a substitution varaible in the Build Trigger", level = 3)
     subs <- NULL
   } else {
-    assertthat::assert_that(is.string(codecov_token))
+    assertthat::assert_that(assertthat::is.string(codecov_token))
     subs <- list(`_CODECOV_TOKEN` = codecov_token)
   }
 

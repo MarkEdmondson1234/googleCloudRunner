@@ -10,7 +10,7 @@ skip_if_missing_project <- function() {
 }
 
 skip_if_missing_bucket <- function() {
-  have_project <- tryCatch({
+  have_bucket <- tryCatch({
     cr_bucket_get()
     TRUE},
     error = function(err) FALSE)

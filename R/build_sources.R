@@ -255,7 +255,6 @@ is.gar_StorageSource <- function(x) {
 #' @family Cloud Build functions
 #' @importFrom utils tar
 #' @importFrom withr with_dir
-#' @importFrom cli cli_li
 cr_build_upload_gcs <- function(local,
                                 remote = paste0(
                                   local,
@@ -303,7 +302,7 @@ cr_build_upload_gcs <- function(local,
     tdir, {
       myMessage("Tarring files in tmpdir:", level = 3)
       lapply(tmp_files, function(x) {
-        cli_li("{.file {x}}")
+        cli::cli_li("{.file {x}}")
       })
 
       tar(tar_file, compression = "gzip")
