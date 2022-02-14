@@ -168,7 +168,8 @@ cr_buildtrigger_list <- function(projectId = cr_project_get(),
     trigger_data <- lapply(df$buildTriggerId, function(triggerId) {
       x <- cr_buildtrigger_get(triggerId = triggerId,
                                projectId = projectId)
-      data.frame(buildTriggerId = triggerId, build = I(list(x)))
+      data.frame(buildTriggerId = triggerId, build = I(list(x)),
+                 stringsAsFactors = FALSE)
     })
     trigger_data <- do.call(rbind, trigger_data)
     df <- merge(df, trigger_data, all = TRUE, sort = FALSE)

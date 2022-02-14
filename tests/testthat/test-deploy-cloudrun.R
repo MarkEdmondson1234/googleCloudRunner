@@ -1,6 +1,7 @@
 test_that("[Online] Test Cloud Run", {
   skip_on_ci()
   skip_on_cran()
+  skip_if_missing_project()
 
   runme <- system.file("example/",
     package = "googleCloudRunner",

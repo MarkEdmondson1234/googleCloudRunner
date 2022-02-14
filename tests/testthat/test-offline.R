@@ -52,6 +52,8 @@ test_that("Building Build Objects", {
 
   expect_snapshot(run_yaml)
 
+  # Need email after this
+  skip_if_missing_email()
   scheduler <- cr_schedule_http(cr_build_make(run_yaml))
   expect_snapshot(scheduler$body)
 

@@ -1,6 +1,7 @@
 test_that("[Online] JWT creation", {
   skip_on_ci()
   skip_on_cran()
+  skip_if_missing_project()
 
   test_url <- "https://fake.a.run.app"
   jwt <- cr_jwt_create(test_url)
@@ -13,6 +14,8 @@ test_that("[Online] JWT creation", {
 test_that("[Online] JWT fetches", {
   skip_on_ci()
   skip_on_cran()
+  skip_if_missing_project()
+
   cr <- cr_run_get("parallel-cloudrun")
 
   # Interact with the authenticated Cloud Run service

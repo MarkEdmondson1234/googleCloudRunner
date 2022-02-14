@@ -10,6 +10,7 @@ test_that("Build Listings and Filters", {
   )
   expect_snapshot(gcr_bt)
 
+  skip_if_missing_project()
   gcr_builds <- cr_build_list(gcr_bt)
   expect_s3_class(gcr_builds, "data.frame")
 
@@ -31,6 +32,7 @@ test_that("Build Listings and Filters", {
 test_that("Build logs work", {
   skip_on_ci()
   skip_on_cran()
+  skip_if_missing_project()
 
   last_logs <- cr_buildtrigger_logs("package-checks")
   expect_true(is.character(last_logs))

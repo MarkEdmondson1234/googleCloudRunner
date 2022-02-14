@@ -1,6 +1,8 @@
 test_that("Online auth", {
   skip_on_ci()
   skip_on_cran()
+  skip_if_missing_project()
+
   # assumes auth and necessary args taken from env args already set
   builds <- cr_buildtrigger_list()
   expect_s3_class(builds, "data.frame")
@@ -15,6 +17,8 @@ test_that("Online auth", {
 test_that("[Online] Test building from build object", {
   skip_on_ci()
   skip_on_cran()
+  skip_if_missing_project()
+
   cloudbuild <- system.file("cloudbuild/cloudbuild.yaml",
     package = "googleCloudRunner"
   )
@@ -38,6 +42,7 @@ test_that("[Online] Test building from build object", {
 test_that("[Online] Test Source Repo functions", {
   skip_on_ci()
   skip_on_cran()
+  skip_if_missing_project()
 
   sr <- cr_sourcerepo_list()
 
@@ -47,6 +52,8 @@ test_that("[Online] Test Source Repo functions", {
 test_that("[Online] Test build artifacts", {
   skip_on_ci()
   skip_on_cran()
+  skip_if_missing_project()
+
   r <- "write.csv(mtcars,file = 'artifact.csv')"
   ba <- cr_build_yaml(
     steps = cr_buildstep_r(r),
@@ -69,6 +76,7 @@ test_that("[Online] Test build artifacts", {
 test_that("availableSecrets works ok", {
   skip_on_ci()
   skip_on_cran()
+  skip_if_missing_project()
 
   s1 <- cr_build_yaml_secrets("SECRET", "test_secret")
   s2 <- cr_build_yaml_secrets("SECRET2", "test_secret_two")
@@ -95,6 +103,7 @@ test_that("availableSecrets works ok", {
 test_that("Build status NULLs", {
   skip_on_ci()
   skip_on_cran()
+  skip_if_missing_project()
 
   no_build <- cr_build_status("not_exist")
   expect_null(no_build)
