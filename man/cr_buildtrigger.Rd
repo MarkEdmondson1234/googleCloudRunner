@@ -2,6 +2,7 @@
 % Please edit documentation in R/buildtriggers.R
 \name{cr_buildtrigger}
 \alias{cr_buildtrigger}
+\alias{cr_buildtrigger_build}
 \title{Create a new BuildTrigger}
 \usage{
 cr_buildtrigger(
@@ -17,6 +18,20 @@ cr_buildtrigger(
   projectId = cr_project_get(),
   sourceToBuild = NULL,
   overwrite = FALSE
+)
+
+cr_buildtrigger_build(
+  build,
+  name,
+  trigger,
+  description = paste("cr_buildtrigger: ", Sys.time()),
+  disabled = FALSE,
+  substitutions = NULL,
+  ignoredFiles = NULL,
+  includedFiles = NULL,
+  trigger_tags = NULL,
+  projectId = cr_project_get(),
+  sourceToBuild = NULL
 )
 }
 \arguments{

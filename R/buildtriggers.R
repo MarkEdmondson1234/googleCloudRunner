@@ -15,8 +15,8 @@ cr_buildtrigger_get <- function(triggerId,
   )
   # cloudbuild.projects.triggers.get
   f <- gar_api_generator(url,
-    "GET",
-    data_parse_function = as.buildTriggerResponse
+                         "GET",
+                         data_parse_function = as.buildTriggerResponse
   )
 
   err_404 <- sprintf("Trigger: %s in project %s not found",
@@ -71,8 +71,8 @@ cr_buildtrigger_edit <- function(BuildTrigger,
   )
   # cloudbuild.projects.triggers.patch
   f <- gar_api_generator(url, "PATCH",
-    data_parse_function = as.buildTriggerResponse,
-    checkTrailingSlash = TRUE
+                         data_parse_function = as.buildTriggerResponse,
+                         checkTrailingSlash = TRUE
   )
   stopifnot(inherits(BuildTrigger, "BuildTrigger"))
 
@@ -95,7 +95,7 @@ cr_buildtrigger_delete <- function(triggerId, projectId = cr_project_get()) {
   )
   # cloudbuild.projects.triggers.delete
   f <- gar_api_generator(url, "DELETE",
-    data_parse_function = function(x) TRUE
+                         data_parse_function = function(x) TRUE
   )
 
   err_404 <- sprintf("BuildTrigger: %s in project %s was not present to delete - returning TRUE",
@@ -131,14 +131,14 @@ cr_buildtrigger_list <- function(projectId = cr_project_get(),
   # cloudbuild.projects.triggers.list
   pars <- list(pageToken = "", pageSize = 500)
   f <- gar_api_generator(url, "GET",
-    pars_args = rmNullObs(pars),
-    data_parse_function = parse_buildtrigger_list
+                         pars_args = rmNullObs(pars),
+                         data_parse_function = parse_buildtrigger_list
   )
 
   o <- gar_api_page(f,
-    page_f = function(x) x$nextPageToken,
-    page_method = "param",
-    page_arg = "pageToken"
+                    page_f = function(x) x$nextPageToken,
+                    page_method = "param",
+                    page_arg = "pageToken"
   )
 
   bts_df <- Reduce(rbind, o)
@@ -212,6 +212,8 @@ extract_trigger <- function(trigger) {
     trigger_webhook = trigger_webhook
   )
 }
+
+
 #' Create a new BuildTrigger
 #'
 #' @description
@@ -312,6 +314,53 @@ cr_buildtrigger <- function(build,
                             projectId = cr_project_get(),
                             sourceToBuild = NULL,
                             overwrite = FALSE) {
+
+  buildTrigger <- cr_buildtrigger_build(
+    build = build,
+    name = name,
+    trigger = trigger,
+    description = description,
+    disabled = disabled,
+    substitutions = substitutions,
+    ignoredFiles = ignoredFiles,
+    includedFiles = includedFiles,
+    trigger_tags = trigger_tags,
+    projectId = projectId,
+    sourceToBuild = sourceToBuild)
+
+  if (overwrite) {
+    suppressMessages(cr_buildtrigger_delete(name, projectId = projectId))
+  }
+
+  url <- sprintf(
+    "https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
+    projectId
+  )
+  # cloudbuild.projects.triggers.create
+  f <- gar_api_generator(url, "POST",
+                         data_parse_function = as.buildTriggerResponse,
+                         simplifyVector = FALSE
+  )
+  stopifnot(inherits(buildTrigger, "BuildTrigger"))
+
+  f(the_body = buildTrigger)
+}
+
+#' @export
+#' @rdname cr_buildtrigger
+cr_buildtrigger_build <- function(
+  build,
+  name,
+  trigger,
+  description = paste("cr_buildtrigger: ", Sys.time()),
+  disabled = FALSE,
+  substitutions = NULL,
+  ignoredFiles = NULL,
+  includedFiles = NULL,
+  trigger_tags = NULL,
+  projectId = cr_project_get(),
+  sourceToBuild = NULL) {
+
   assertthat::assert_that(
     assertthat::is.string(name),
     is.buildtrigger_repo(trigger) ||
@@ -348,7 +397,7 @@ cr_buildtrigger <- function(build,
 
   # checks on sourceToBuild validity
   if (is.null(sourceToBuild) &&
-     (is.gar_webhookConfig(trigger) || is.gar_pubsubConfig(trigger))) {
+      (is.gar_webhookConfig(trigger) || is.gar_pubsubConfig(trigger))) {
     cli::cli_alert_warning("No sourceToBuild detected for event based trigger")
   }
 
@@ -369,23 +418,6 @@ cr_buildtrigger <- function(build,
     ignoredFiles = ignoredFiles,
     includedFiles = includedFiles
   )
-
-  if (overwrite) {
-    suppressMessages(cr_buildtrigger_delete(name, projectId = projectId))
-  }
-
-  url <- sprintf(
-    "https://cloudbuild.googleapis.com/v1/projects/%s/triggers",
-    projectId
-  )
-  # cloudbuild.projects.triggers.create
-  f <- gar_api_generator(url, "POST",
-    data_parse_function = as.buildTriggerResponse,
-    simplifyVector = FALSE
-  )
-  stopifnot(inherits(buildTrigger, "BuildTrigger"))
-
-  f(the_body = buildTrigger)
 }
 
 as.buildTriggerResponse <- function(x) {
@@ -438,7 +470,7 @@ cr_buildtrigger_run <- function(triggerId,
 
   # cloudbuild.projects.triggers.run
   f <- gar_api_generator(url, "POST",
-    data_parse_function = as.buildTriggerResponse
+                         data_parse_function = as.buildTriggerResponse
   )
   stopifnot(inherits(RepoSource, "gar_RepoSource"))
 
@@ -521,7 +553,7 @@ cr_buildtrigger_copy <- function(buildTrigger,
   )
   # cloudbuild.projects.triggers.create
   f <- gar_api_generator(url, "POST",
-    data_parse_function = as.buildTriggerResponse
+                         data_parse_function = as.buildTriggerResponse
   )
   stopifnot(inherits(buildTrigger, "BuildTrigger"))
 
