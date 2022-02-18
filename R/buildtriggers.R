@@ -452,7 +452,8 @@ get_buildTriggerResponseId <- function(x) {
 
 #' Runs a `BuildTrigger` at a particular source revision.
 #'
-#' @param RepoSource The \link{RepoSource} object to pass to this method
+#' @param RepoSource The \link{RepoSource} object to pass to this method.
+#' Set to `NULL` if simply running the trigger
 #' @param projectId ID of the project
 #' @param triggerId ID of the `BuildTrigger` to get or a \code{BuildTriggerResponse} object
 #' @importFrom googleAuthR gar_api_generator
@@ -472,7 +473,7 @@ cr_buildtrigger_run <- function(triggerId,
   f <- gar_api_generator(url, "POST",
                          data_parse_function = as.buildTriggerResponse
   )
-  stopifnot(inherits(RepoSource, "gar_RepoSource"))
+  stopifnot(inherits(RepoSource, "gar_RepoSource") || is.null(RepoSource))
 
   f(the_body = RepoSource)
 }
