@@ -135,13 +135,33 @@ cr_schedule_build <- function(build,
     dots$build_name <- NULL
 
     if (is.null(dots$pubsubTarget)) {
-      # creates topic and build trigger
-      pubsub_target <- create_pubsub_target(
+      cr_buildtrigger(
+        build,
+        name,
+        trigger,
+        description = paste("cr_buildtrigger: ", Sys.time()),
+        disabled = FALSE,
+        substitutions = NULL,
+        ignoredFiles = NULL,
+        includedFiles = NULL,
+        trigger_tags = NULL,
+        sourceToBuild = NULL,
+        overwrite = FALSE
+      )
+      pubsub_args = list(
         build = build,
         schedule_pubsub = schedule_pubsub,
         run_name = build_name,
         projectId = projectId,
-        trigger_name = trigger_name)
+        trigger_name = trigger_name,
+        sourceToBuild = dots$sourceToBuild,
+        substitutions = dots$substitutions,
+        ignoredFiles = dots$ignoredFiles,
+        includedFiles = dots$includedFiles,
+        trigger_tags = dots$trigger_tags
+      )
+      # creates topic and build trigger
+      pubsub_target <- do.call(create_pubsub_target, args = pubsub_args)
     } else {
       message(
         paste0("Using pubsubTarget from ... instead of constructing from ",
@@ -207,7 +227,8 @@ check_pubsub_topic <- function(schedule_pubsub, run_name,
 
 create_pubsub_target <- function(build, schedule_pubsub, run_name,
                                  projectId,
-                                 trigger_name = NULL) {
+                                 trigger_name = NULL,
+                                 ...) {
 
   topic_basename <- check_pubsub_topic(schedule_pubsub, run_name,
                                        projectId)
@@ -229,7 +250,9 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name,
   cr_buildtrigger(build,
                   name = trigger_name,
                   trigger = cr_buildtrigger_pubsub(basename(topic_got$name),
-                                                   projectId = projectId))
+                                                   projectId = projectId),
+                  projectId = projectId,
+                  ...)
 
   pubsub_target
 
