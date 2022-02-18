@@ -135,19 +135,6 @@ cr_schedule_build <- function(build,
     dots$build_name <- NULL
 
     if (is.null(dots$pubsubTarget)) {
-      cr_buildtrigger(
-        build,
-        name,
-        trigger,
-        description = paste("cr_buildtrigger: ", Sys.time()),
-        disabled = FALSE,
-        substitutions = NULL,
-        ignoredFiles = NULL,
-        includedFiles = NULL,
-        trigger_tags = NULL,
-        sourceToBuild = NULL,
-        overwrite = FALSE
-      )
       pubsub_args = list(
         build = build,
         schedule_pubsub = schedule_pubsub,
