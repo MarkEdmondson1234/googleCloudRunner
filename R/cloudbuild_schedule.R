@@ -163,13 +163,13 @@ cr_schedule_build <- function(build,
               pubsub_target$topicName,
               level = 3
     )
+    dots <- c(dots,
+      list(name = run_name,
+           schedule = schedule,
+           pubsubTarget = pubsub_target))
+    dots <- dots[intersect(names(dots), methods::formalArgs(cr_schedule))]
     # Schedule a pubsub message to the topic that triggers a BuildTrigger
-    out <- do.call(cr_schedule,
-                   args = c(dots,
-                            list(name = run_name,
-                                 schedule = schedule,
-                                 pubsubTarget = pubsub_target))
-    )
+    out <- do.call(cr_schedule, args = dots)
 
   }
 
