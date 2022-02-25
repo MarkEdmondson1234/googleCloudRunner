@@ -219,14 +219,14 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name,
 
   topic_basename <- check_pubsub_topic(schedule_pubsub, run_name,
                                        projectId)
-  data = NULL
   if (!is.null(schedule_pubsub)) {
     assertthat::assert_that(is.gar_pubsubTarget(schedule_pubsub))
-    data = schedule_pubsub$data
+    # so it will pass cr_schedule_pubsub
+    class(schedule_pubsub) = c("PubsubMessage", "list")
   }
 
   pubsub_target <- cr_schedule_pubsub(topic_basename,
-                                      data = data)
+                                      PubsubMessage = schedule_pubsub)
   # check PubSub topic is there:
   topic_got <- googlePubsubR::topics_get(topic_basename)
 
