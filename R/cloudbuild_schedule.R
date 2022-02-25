@@ -212,6 +212,14 @@ check_pubsub_topic <- function(schedule_pubsub, run_name,
 
 }
 
+trigger_exists = function(...) {
+  x = try({
+    cr_buildtrigger_get(...)
+  }, silent = TRUE)
+
+  !inherits(x, "try-error") && !is.null(x)
+}
+
 create_pubsub_target <- function(build, schedule_pubsub, run_name,
                                  projectId,
                                  trigger_name = NULL,
@@ -239,14 +247,21 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name,
 
 
   myMessage("Creating BuildTrigger subscription:", trigger_name, level = 3)
-  # Create a build trigger that will run when the pubsub topic is called
-  cr_buildtrigger(build,
-                  name = trigger_name,
-                  trigger = cr_buildtrigger_pubsub(basename(topic_got$name),
-                                                   projectId = projectId),
-                  projectId = projectId,
-                  ...)
 
+  te = trigger_exists(trigger_name, projectId = projectId)
+
+  # Create a build trigger that will run when the pubsub topic is called
+  if (!te) {
+    cr_buildtrigger(build,
+                    name = trigger_name,
+                    trigger = cr_buildtrigger_pubsub(basename(topic_got$name),
+                                                     projectId = projectId),
+                    projectId = projectId,
+                    ...)
+  } else {
+    warning("Trigger ", trigger_name, " already exists, not overwriting,",
+            "call \n cr_buildtrigger_delete \n or \n cr_buildtrigger_edit")
+  }
   pubsub_target
 
 }
