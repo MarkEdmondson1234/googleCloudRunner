@@ -365,6 +365,7 @@ cr_schedule_pubsub <- function(topicName,
   assertthat::assert_that(assertthat::is.string(the_name))
 
   the_attributes <- attributes
+  the_data <- NULL
   if (!is.null(PubsubMessage)) {
     if (!inherits(PubsubMessage, "PubsubMessage")) {
       stop("Not a PubsubMessage object passed to function.", call. = FALSE)
@@ -376,7 +377,9 @@ cr_schedule_pubsub <- function(topicName,
 
 
   if (is.null(data)) {
-    the_data <- the_name
+    if (is.null(the_data)) {
+      the_data <- the_name
+    }
   } else {
     the_data <- data
   }
