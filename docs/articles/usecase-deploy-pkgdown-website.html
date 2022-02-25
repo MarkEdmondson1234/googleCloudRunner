@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Deploy a pkgdown website for your R package</h1>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-deploy-pkgdown-website.Rmd" class="external-link"><code>vignettes/usecase-deploy-pkgdown-website.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-deploy-pkgdown-website.Rmd</code></div>
@@ -181,17 +181,32 @@
 
     
     
-<p>When creating an R package <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> is a fantastic resource for creating a package website from your R function’s documentation and vignettes.</p>
-<p>This workflow uses Google’s Secret Manager to securely hold your Git ssh login details, then use those details to commit a built website on each Git commit. This means you do not have to build the website locally.</p>
-<p>Each commit you make, a background task will build the website with your changes and commit it back to the repo - see example for this website:</p>
+<p>When creating an R package <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> is a fantastic resource
+for creating a package website from your R function’s documentation and
+vignettes.</p>
+<p>This workflow uses Google’s Secret Manager to securely hold your Git
+ssh login details, then use those details to commit a built website on
+each Git commit. This means you do not have to build the website
+locally.</p>
+<p>Each commit you make, a background task will build the website with
+your changes and commit it back to the repo - see example for this
+website:</p>
 <p><img src="pkgdown-commit.png"></p>
 <p>A suggested setup workflow to do this is below:</p>
 <ol style="list-style-type: decimal">
-<li>Go to <a href="https://console.cloud.google.com/cloud-build/triggers" class="external-link">GCP console &gt; Cloud Build &gt; Triggers</a> and link your git repo to Cloud Build.</li>
-<li>Create a git ssh key to make commits to your repo. <a href="https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent" class="external-link">GitHub has a guide here</a>
+<li>Go to <a href="https://console.cloud.google.com/cloud-build/triggers" class="external-link">GCP console
+&gt; Cloud Build &gt; Triggers</a> and link your git repo to Cloud
+Build.</li>
+<li>Create a git ssh key to make commits to your repo. <a href="https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent" class="external-link">GitHub
+has a guide here</a>
 </li>
-<li>Upload the ssh key secret to <a href="https://cloud.google.com/secret-manager" class="external-link">Google Cloud Secret Manager</a> - you can use this secret for all future builds.</li>
-<li>Use <code><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown()</a></code> to create a cloudbuild.yml file in your R package’s directory, giving it your secret name from step 2. <code>create_trigger</code> can be <code>file</code> if you want the cloudbuild.yaml to be within your directory, or <code>inline</code> if the build will only be defined in the trigger.</li>
+<li>Upload the ssh key secret to <a href="https://cloud.google.com/secret-manager" class="external-link">Google Cloud Secret
+Manager</a> - you can use this secret for all future builds.</li>
+<li>Use <code><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown()</a></code> to create a cloudbuild.yml file
+in your R package’s directory, giving it your secret name from step 2.
+<code>create_trigger</code> can be <code>file</code> if you want the
+cloudbuild.yaml to be within your directory, or <code>inline</code> if
+the build will only be defined in the trigger.</li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span>,
@@ -200,10 +215,17 @@
 <ol start="5" style="list-style-type: decimal">
 <li>Commit to your git repository</li>
 </ol>
-<p>The function will then create a build customised for creating and rendering pkgdown websites, and committing the rendered version to your GitHub /docs folder.</p>
-<p>The below is an example for <code>googleCloudRunner</code>’s website:</p>
+<p>The function will then create a build customised for creating and
+rendering pkgdown websites, and committing the rendered version to your
+GitHub /docs folder.</p>
+<p>The below is an example for <code>googleCloudRunner</code>’s
+website:</p>
 <p><img src="pkgdown-build-trigger.png"></p>
-<p>You can customise the deployment further by using <code><a href="../reference/cr_buildstep_pkgdown.html">cr_buildstep_pkgdown()</a></code> in your own custom build files. For instance, you could download other auth keys using <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> again, so that your website has working authenticated examples.</p>
+<p>You can customise the deployment further by using
+<code><a href="../reference/cr_buildstep_pkgdown.html">cr_buildstep_pkgdown()</a></code> in your own custom build files. For
+instance, you could download other auth keys using
+<code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> again, so that your website has
+working authenticated examples.</p>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -221,7 +243,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

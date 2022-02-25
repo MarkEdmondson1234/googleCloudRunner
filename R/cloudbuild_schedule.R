@@ -370,6 +370,12 @@ cr_schedule_pubsub <- function(topicName,
 
   assertthat::assert_that(assertthat::is.string(the_name))
 
+  if (is.null(data)) {
+    the_data <- the_name
+  } else {
+    the_data <- data
+  }
+
   the_attributes <- attributes
   the_data <- NULL
   if (!is.null(PubsubMessage)) {
@@ -381,14 +387,6 @@ cr_schedule_pubsub <- function(topicName,
     the_attributes <- PubsubMessage$attributes
   }
 
-
-  if (is.null(data)) {
-    if (is.null(the_data)) {
-      the_data <- the_name
-    }
-  } else {
-    the_data <- data
-  }
 
   PubsubTarget(
     topicName = the_name,

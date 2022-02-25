@@ -170,9 +170,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Serverless batched R scripts via Cloud Build</h1>
+      <h1 data-toc-skip>Serverless batched R scripts via Cloud
+Build</h1>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/cloudbuild.Rmd" class="external-link"><code>vignettes/cloudbuild.Rmd</code></a></small>
       <div class="hidden name"><code>cloudbuild.Rmd</code></div>
@@ -181,18 +182,38 @@
 
     
     
-<p>Cloud Build uses <a href="https://www.docker.com/resources/what-container" class="external-link">Docker containers</a> to run everything. This means it can run almost any language/program or application including R. Having an easy way to create and trigger these builds from R means R can serve as a UI or gateway to any other program e.g. R can trigger a Cloud Build using <code>gcloud</code> to deploy Cloud Run applications.</p>
-<p>The first 120 mins per day are free. <a href="https://cloud.google.com/cloud-build/pricing" class="external-link">See here for more priceinfo.</a></p>
-<p>If you want to run scripts that can be triggered one time, batch style, and set them up to trigger on GitHub events or pub/sub, or schedule them using Cloud Scheduler then Cloud Build is suited to your use case.</p>
-<p>If you would also like to have your R code react in real-time to events such as HTTP events, such as a website or API endpoint, consider <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html">Cloud Run</a>.</p>
-<p>PubSub events can also trigger builds via Build Triggers which is good for long-running tasks in reaction to events such as a Cloud Storage file being uploaded, various events around Google Cloud such as billing alerts and via custom metrics set up in Cloud Logging for practically any logged event on Google Cloud.</p>
-<p>An overview of the various functions and how they combine with each other and later functions is shown in this diagram:</p>
+<p>Cloud Build uses <a href="https://www.docker.com/resources/what-container" class="external-link">Docker
+containers</a> to run everything. This means it can run almost any
+language/program or application including R. Having an easy way to
+create and trigger these builds from R means R can serve as a UI or
+gateway to any other program e.g. R can trigger a Cloud Build using
+<code>gcloud</code> to deploy Cloud Run applications.</p>
+<p>The first 120 mins per day are free. <a href="https://cloud.google.com/cloud-build/pricing" class="external-link">See here for more
+priceinfo.</a></p>
+<p>If you want to run scripts that can be triggered one time, batch
+style, and set them up to trigger on GitHub events or pub/sub, or
+schedule them using Cloud Scheduler then Cloud Build is suited to your
+use case.</p>
+<p>If you would also like to have your R code react in real-time to
+events such as HTTP events, such as a website or API endpoint, consider
+<a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudrun.html">Cloud
+Run</a>.</p>
+<p>PubSub events can also trigger builds via Build Triggers which is
+good for long-running tasks in reaction to events such as a Cloud
+Storage file being uploaded, various events around Google Cloud such as
+billing alerts and via custom metrics set up in Cloud Logging for
+practically any logged event on Google Cloud.</p>
+<p>An overview of the various functions and how they combine with each
+other and later functions is shown in this diagram:</p>
 <p><img src="build_plot.png"></p>
 <div class="section level2">
 <h2 id="the-cloudbuild-yaml-format">The cloudbuild.yaml format<a class="anchor" aria-label="anchor" href="#the-cloudbuild-yaml-format"></a>
 </h2>
-<p>Cloud Build is centered around the <a href="https://cloud.google.com/cloud-build/docs/build-config" class="external-link">cloudbuild.yaml format</a> - you can use existing cloudbuild.yaml files or create your own in R using the cloudbuild.yaml helper functions.</p>
-<p>An example cloudbuild.yaml is shown below - this outputs the versions of docker and echos “Hello Cloud Build” and calls an R function:</p>
+<p>Cloud Build is centered around the <a href="https://cloud.google.com/cloud-build/docs/build-config" class="external-link">cloudbuild.yaml
+format</a> - you can use existing cloudbuild.yaml files or create your
+own in R using the cloudbuild.yaml helper functions.</p>
+<p>An example cloudbuild.yaml is shown below - this outputs the versions
+of docker and echos “Hello Cloud Build” and calls an R function:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">steps</span><span class="kw">:</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">'gcr.io/cloud-builders/docker'</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">id</span><span class="kw">:</span><span class="at"> Docker Version</span></span>
@@ -203,10 +224,13 @@
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">'rocker/r-base'</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">id</span><span class="kw">:</span><span class="at"> Hello R</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">args</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"R"</span><span class="kw">,</span><span class="at"> </span><span class="st">"-e"</span><span class="kw">,</span><span class="at"> </span><span class="st">"paste0('1 + 1 = ', 1+1)"</span><span class="kw">]</span></span></code></pre></div>
-<p>This cloudbuild.yaml file can be built directly via the <code><a href="../reference/cr_build.html">cr_build()</a></code> function. The build will by default trigger a website URL to open with the build logs.</p>
+<p>This cloudbuild.yaml file can be built directly via the
+<code><a href="../reference/cr_build.html">cr_build()</a></code> function. The build will by default trigger a
+website URL to open with the build logs.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span><span class="op">)</span></code></pre></div>
-<p>Or you can choose to wait in R for the build to finish, like below:</p>
+<p>Or you can choose to wait in R for the build to finish, like
+below:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, launch_browser <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">b3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span><span class="op">(</span><span class="va">b2</span><span class="op">)</span>
@@ -218,7 +242,8 @@
 <span class="co"># status:  SUCCESS </span>
 <span class="co"># logUrl:  https://console.cloud.google.com/gcr/builds/c673143a-794d-4c69-8ad4-e777d068c066?project=1080525199262 </span>
 <span class="co"># ...</span></code></pre></div>
-<p>You can export an existing build into a cloudbuild.yaml file, for instance to run in another project not using R.</p>
+<p>You can export an existing build into a cloudbuild.yaml file, for
+instance to run in another project not using R.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">b3</span>, file <span class="op">=</span> <span class="st">"cloudbuild.yml"</span><span class="op">)</span></code></pre></div>
 <div class="section level3">
@@ -227,51 +252,95 @@
 <p>There are several layers to creating Cloud Build objects in R:</p>
 <ul>
 <li>
-<code><a href="../reference/cr_build.html">cr_build()</a></code> triggers the API with Cloud Build objects and cloudbuild.yaml files</li>
+<code><a href="../reference/cr_build.html">cr_build()</a></code> triggers the API with Cloud Build objects
+and cloudbuild.yaml files</li>
 <li>
-<code><a href="../reference/cr_build_yaml.html">cr_build_yaml()</a></code> lets you create the Cloud Build objects in R and can write to .yaml files.</li>
+<code><a href="../reference/cr_build_yaml.html">cr_build_yaml()</a></code> lets you create the Cloud Build objects
+in R and can write to .yaml files.</li>
 <li>
-<code><a href="../reference/cr_build_make.html">cr_build_make()</a></code> creates Cloud Build R objects directly from .yaml files</li>
+<code><a href="../reference/cr_build_make.html">cr_build_make()</a></code> creates Cloud Build R objects directly
+from .yaml files</li>
 <li>
-<code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code> lets you create specific steps within the Cloud Build objects. There are helper template files with common tasks such as <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>
+<code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code> lets you create specific steps within
+the Cloud Build objects. There are helper template files with common
+tasks such as <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>
 </li>
 </ul>
-<p>For common use cases the <code>cr_deploy_*</code> functions use the above functions with some sensible defaults to quickly run use cases for you:</p>
+<p>For common use cases the <code>cr_deploy_*</code> functions use the
+above functions with some sensible defaults to quickly run use cases for
+you:</p>
 <ul>
 <li>
-<code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> - builds from a Dockerfile then pushes the Docker image to Google Container Registry</li>
+<code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> - builds from a Dockerfile then
+pushes the Docker image to Google Container Registry</li>
 <li>
-<code><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger()</a></code> - as above, plus creating a build trigger so the build will run upon each git commit - see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-package-docker-build.html">Docker image use case</a> for both.</li>
+<code><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger()</a></code> - as above, plus creating a
+build trigger so the build will run upon each git commit - see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-package-docker-build.html">Docker
+image use case</a> for both.</li>
 <li>
-<code><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests()</a></code> - create a build that will run R package unit tests and a build trigger to run them upon each commit - see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-testthat-coverage.html">package tests and code coverage use case</a>
+<code><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests()</a></code> - create a build that will run
+R package unit tests and a build trigger to run them upon each commit -
+see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-testthat-coverage.html">package
+tests and code coverage use case</a>
 </li>
 <li>
-<code><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown()</a></code> - create a build that will deploy an R package website and a build trigger to create it upon each commit - see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-deploy-pkgdown-website.html">pkgdown website use case</a>.</li>
+<code><a href="../reference/cr_deploy_pkgdown.html">cr_deploy_pkgdown()</a></code> - create a build that will deploy
+an R package website and a build trigger to create it upon each commit -
+see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-deploy-pkgdown-website.html">pkgdown
+website use case</a>.</li>
 <li>
-<code><a href="../reference/cr_deploy_run_website.html">cr_deploy_run_website()</a></code> - take HTML you have in a folder (perhaps created from an RMarkdown file) and deploy it to a nginx website on Cloud Run</li>
+<code><a href="../reference/cr_deploy_run_website.html">cr_deploy_run_website()</a></code> - take HTML you have in a
+folder (perhaps created from an RMarkdown file) and deploy it to a nginx
+website on Cloud Run</li>
 <li>
-<code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code> - take the R script you supply and run it within a Cloud Build. Optionally also schedule that R script - see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-scheduled-r-builds.html">R code on a schedule use case</a>.</li>
+<code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code> - take the R script you supply and run it
+within a Cloud Build. Optionally also schedule that R script - see the
+<a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-scheduled-r-builds.html">R
+code on a schedule use case</a>.</li>
 <li>
-<code><a href="../reference/cr_deploy_run.html">cr_deploy_run()</a></code> - takes a local folder, builds the Docker image suitable for Cloud run and deploys to Cloud Run. Variants include <code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code> to R plumber APIs and <code><a href="../reference/cr_deploy_run.html">cr_deploy_html()</a></code> for nginx websites. See the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-r-api-microservices.html">R micro-services</a>, <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-r-event-driven-pubsub.html">trigger R functions from pub/sub</a> and <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-slackbot-google-analytics.html">creating a Slackbot</a> use cases</li>
+<code><a href="../reference/cr_deploy_run.html">cr_deploy_run()</a></code> - takes a local folder, builds the
+Docker image suitable for Cloud run and deploys to Cloud Run. Variants
+include <code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code> to R plumber APIs and
+<code><a href="../reference/cr_deploy_run.html">cr_deploy_html()</a></code> for nginx websites. See the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-r-api-microservices.html">R
+micro-services</a>, <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-r-event-driven-pubsub.html">trigger
+R functions from pub/sub</a> and <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-slackbot-google-analytics.html">creating
+a Slackbot</a> use cases</li>
 </ul>
 <p>Some of the above are also available in an RStudio gadget.</p>
-<p>The deploy functions call the underlying cloud build functions, so if they don’t suit you can also customise by using those. An overview on what the deploy functions use is below:</p>
+<p>The deploy functions call the underlying cloud build functions, so if
+they don’t suit you can also customise by using those. An overview on
+what the deploy functions use is below:</p>
 <p><img src="deploy_plot.png"></p>
 </div>
 <div class="section level3">
 <h3 id="docker-images-to-use-in-cloud-build">Docker images to use in Cloud Build<a class="anchor" aria-label="anchor" href="#docker-images-to-use-in-cloud-build"></a>
 </h3>
-<p>Any utility that has a Docker image can be used within Cloud Build steps.</p>
-<p>Official Google images for the <code>gcloud</code>, <code>bq</code> and <code>gsutil</code> are here: <a href="https://github.com/GoogleCloudPlatform/cloud-sdk-docker" class="external-link uri">https://github.com/GoogleCloudPlatform/cloud-sdk-docker</a></p>
-<p>Some <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community" class="external-link">community contributed Cloud Build images are listed here</a>, including <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo" class="external-link">hugo</a>, <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make" class="external-link">make</a>, and <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar" class="external-link">tar</a>, or you can configure your own Dockerfile and build what image you need yourself, perhaps by using a previous Cloud Build and <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code></p>
+<p>Any utility that has a Docker image can be used within Cloud Build
+steps.</p>
+<p>Official Google images for the <code>gcloud</code>, <code>bq</code>
+and <code>gsutil</code> are here: <a href="https://github.com/GoogleCloudPlatform/cloud-sdk-docker" class="external-link uri">https://github.com/GoogleCloudPlatform/cloud-sdk-docker</a></p>
+<p>Some <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community" class="external-link">community
+contributed Cloud Build images are listed here</a>, including <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/hugo" class="external-link">hugo</a>,
+<a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/make" class="external-link">make</a>,
+and <a href="https://github.com/GoogleCloudPlatform/cloud-builders-community/tree/master/tar" class="external-link">tar</a>,
+or you can configure your own Dockerfile and build what image you need
+yourself, perhaps by using a previous Cloud Build and
+<code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="cloud-build-source">Cloud Build source<a class="anchor" aria-label="anchor" href="#cloud-build-source"></a>
 </h2>
 <p>Cloud Builds sometimes need code or data to work on to be useful.</p>
-<p>All cloudbuilds are launched in a serverless environment with a default directory <code>/workspace/</code>. The Source is copied into this workspace before the build steps execute, so steps can share state and files. Cloud Build sources are specified by the <code>source</code> argument.</p>
-<p>A source can be a <a href="https://cloud.google.com/source-repositories/" class="external-link">Cloud Source Repository</a> (perhaps mirrored from GitHub) or a <a href="https://cloud.google.com/storage/" class="external-link">Cloud Storage</a> bucket containing the code/data you want to operate on. An example of specifying both is below:</p>
+<p>All cloudbuilds are launched in a serverless environment with a
+default directory <code>/workspace/</code>. The Source is copied into
+this workspace before the build steps execute, so steps can share state
+and files. Cloud Build sources are specified by the <code>source</code>
+argument.</p>
+<p>A source can be a <a href="https://cloud.google.com/source-repositories/" class="external-link">Cloud Source
+Repository</a> (perhaps mirrored from GitHub) or a <a href="https://cloud.google.com/storage/" class="external-link">Cloud Storage</a> bucket
+containing the code/data you want to operate on. An example of
+specifying both is below:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gcs_source</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_source.html">cr_build_source</a></span><span class="op">(</span>
   <span class="fu"><a href="../reference/StorageSource.html">StorageSource</a></span><span class="op">(</span><span class="st">"gs://my-bucket"</span>, <span class="st">"my_code.tar.gz"</span><span class="op">)</span><span class="op">)</span>
@@ -282,17 +351,33 @@
 
 <span class="va">build1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, source <span class="op">=</span> <span class="va">gcs_source</span><span class="op">)</span>
 <span class="va">build2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, source <span class="op">=</span> <span class="va">repo_source</span><span class="op">)</span></code></pre></div>
-<p><code><a href="../reference/cr_build_upload_gcs.html">cr_build_upload_gcs()</a></code> is a helper function for automating creation of a Google Cloud Storage source - this uses <a href="http://code.markedmondson.me/googleCloudStorageR/" class="external-link"><code>googleCloudStorageR</code></a> to tar and upload your source code locally to your bucket, making it available to your build.</p>
-<p>This returns a <code>Source</code> object that can be used in build functions:</p>
+<p><code><a href="../reference/cr_build_upload_gcs.html">cr_build_upload_gcs()</a></code> is a helper function for
+automating creation of a Google Cloud Storage source - this uses <a href="http://code.markedmondson.me/googleCloudStorageR/" class="external-link"><code>googleCloudStorageR</code></a>
+to tar and upload your source code locally to your bucket, making it
+available to your build.</p>
+<p>This returns a <code>Source</code> object that can be used in build
+functions:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">storage</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_upload_gcs.html">cr_build_upload_gcs</a></span><span class="op">(</span><span class="st">"my_folder"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">my_yaml</span>, source <span class="op">=</span> <span class="va">storage</span><span class="op">)</span></code></pre></div>
-<p>By default this will place your local folder’s contents in the <code>/workspace/deploy/</code> folder. For buildsteps to access those files you may want to add <code>dir="deploy"</code> to them so they will have their working directory start from there, but to be more consistent with Build triggers (that always use sources in the root <code>/workspace</code> directory) a helpful build step can move that deploy folder into root - see <code><a href="../reference/cr_build_upload_gcs.html">cr_buildstep_source_move()</a></code> which is intended to be the first buildstep of a build in those situations you want to move deploy folders.</p>
+<p>By default this will place your local folder’s contents in the
+<code>/workspace/deploy/</code> folder. For buildsteps to access those
+files you may want to add <code>dir="deploy"</code> to them so they will
+have their working directory start from there, but to be more consistent
+with Build triggers (that always use sources in the root
+<code>/workspace</code> directory) a helpful build step can move that
+deploy folder into root - see <code><a href="../reference/cr_build_upload_gcs.html">cr_buildstep_source_move()</a></code>
+which is intended to be the first buildstep of a build in those
+situations you want to move deploy folders.</p>
 </div>
 <div class="section level2">
 <h2 id="cloud-build-default-substitutions">Cloud Build default substitutions<a class="anchor" aria-label="anchor" href="#cloud-build-default-substitutions"></a>
 </h2>
-<p>Cloud Builds can use reserved default substitutions to help with deployments in a continuous development situation. For instance, files can be named according to the Git branch they are committed from. These are <a href="https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values" class="external-link">listed in Google docs here</a> and reproduced below:</p>
+<p>Cloud Builds can use reserved default substitutions to help with
+deployments in a continuous development situation. For instance, files
+can be named according to the Git branch they are committed from. These
+are <a href="https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values" class="external-link">listed
+in Google docs here</a> and reproduced below:</p>
 <ul>
 <li>$PROJECT_ID: the project ID of the build.</li>
 <li>$BUILD_ID: the autogenerated ID of the build.</li>
@@ -300,25 +385,37 @@
 <li>$LOCATION: the region of your build</li>
 <li>$BRANCH_NAME: the branch name specified by RepoSource.</li>
 <li>$TAG_NAME: the tag name specified by RepoSource.</li>
-<li>$REVISION_ID or $COMMIT_SHA: the commit SHA specified by RepoSource or resolved from the specified branch or tag.</li>
+<li>$REVISION_ID or $COMMIT_SHA: the commit SHA specified by RepoSource
+or resolved from the specified branch or tag.</li>
 <li>$SHORT_SHA: first 7 characters of $REVISION_ID or $COMMIT_SHA.</li>
-<li>$TRIGGER_BUILD_CONFIG_PATH: path to the build config file, by default /cloudbuild.yaml</li>
+<li>$TRIGGER_BUILD_CONFIG_PATH: path to the build config file, by
+default /cloudbuild.yaml</li>
 </ul>
-<p>There are also some GitHub specific substitutions, used mostly in Build Triggers we detail later on.</p>
+<p>There are also some GitHub specific substitutions, used mostly in
+Build Triggers we detail later on.</p>
 <ul>
 <li>$_HEAD_BRANCH : head branch of the pull request</li>
 <li>$_BASE_BRANCH : base branch of the pull request</li>
 <li>$_HEAD_REPO_URL : url of the head repo of the pull request</li>
 <li>$_PR_NUMBER : number of the pull request</li>
 </ul>
-<p>Custom macros can also be configured, starting with _$ e.g. $_MY_CUSTOM_MACRO - see the <a href="https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values" class="external-link">Google help files</a> on how to handle those.</p>
+<p>Custom macros can also be configured, starting with _$
+e.g. $_MY_CUSTOM_MACRO - see the <a href="https://cloud.google.com/build/docs/configuring-builds/substitute-variable-values" class="external-link">Google
+help files</a> on how to handle those.</p>
 </div>
 <div class="section level2">
 <h2 id="creating-cloudbuild-yml-build-steps">Creating cloudbuild.yml build steps<a class="anchor" aria-label="anchor" href="#creating-cloudbuild-yml-build-steps"></a>
 </h2>
-<p>Instead of using separate <code>cloudbuild.yml</code> files, you can also choose to make your own cloudbuild.yaml files in R via <code><a href="../reference/cr_build_yaml.html">cr_build_yaml()</a></code> and <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code></p>
-<p>Lets say you don’t want to write a cloudbuild.yaml file manually - instead you can create all the features of the yaml files in R. Refer to the <a href="https://cloud.google.com/cloud-build/docs/build-config" class="external-link">cloudbuild.yml config spec</a> on what is expected in the files or functions.</p>
-<p>An example below recreates a simple cloudbuild.yml file. If you print it to console it will output what the build would look like if it was in a yaml file:</p>
+<p>Instead of using separate <code>cloudbuild.yml</code> files, you can
+also choose to make your own cloudbuild.yaml files in R via
+<code><a href="../reference/cr_build_yaml.html">cr_build_yaml()</a></code> and <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code></p>
+<p>Lets say you don’t want to write a cloudbuild.yaml file manually -
+instead you can create all the features of the yaml files in R. Refer to
+the <a href="https://cloud.google.com/cloud-build/docs/build-config" class="external-link">cloudbuild.yml
+config spec</a> on what is expected in the files or functions.</p>
+<p>An example below recreates a simple cloudbuild.yml file. If you print
+it to console it will output what the build would look like if it was in
+a yaml file:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span> <span class="st">"gcloud"</span>,<span class="st">"version"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#==cloudRunnerYaml==</span>
@@ -329,38 +426,55 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">my_yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span> <span class="st">"gcloud"</span>,<span class="st">"version"</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">my_yaml</span>, file <span class="op">=</span> <span class="st">"cloudbuild.yaml"</span><span class="op">)</span></code></pre></div>
-<p>And also edit or extract steps from existing cloudbuild.yml files via <code><a href="../reference/cr_buildstep_edit.html">cr_buildstep_edit()</a></code> and <code><a href="../reference/cr_buildstep_extract.html">cr_buildstep_extract()</a></code>.</p>
-<p>This allows you to programmatically create cloudbuild yaml files for other languages and triggers. See more at this article on <a href="https://cloud.google.com/cloud-build/docs/create-custom-build-steps" class="external-link">creating custom build steps with your own Docker images</a>.</p>
+<p>And also edit or extract steps from existing cloudbuild.yml files via
+<code><a href="../reference/cr_buildstep_edit.html">cr_buildstep_edit()</a></code> and
+<code><a href="../reference/cr_buildstep_extract.html">cr_buildstep_extract()</a></code>.</p>
+<p>This allows you to programmatically create cloudbuild yaml files for
+other languages and triggers. See more at this article on <a href="https://cloud.google.com/cloud-build/docs/create-custom-build-steps" class="external-link">creating
+custom build steps with your own Docker images</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="pre-made-build-step-templates">Pre-made Build Step templates<a class="anchor" aria-label="anchor" href="#pre-made-build-step-templates"></a>
 </h2>
-<p>Using the above build step editing functions, some helpful build steps you can use in your own cloudbuild steps have been included in the package.</p>
+<p>Using the above build step editing functions, some helpful build
+steps you can use in your own cloudbuild steps have been included in the
+package.</p>
 <ul>
 <li>
-<code><a href="../reference/cr_buildstep_gcloud.html">cr_buildstep_gcloud()</a></code> - an optimised docker for <code>gcloud</code>, <code>bq</code>, <code>gsutil</code> or <code>kubectl</code> commands</li>
+<code><a href="../reference/cr_buildstep_gcloud.html">cr_buildstep_gcloud()</a></code> - an optimised docker for
+<code>gcloud</code>, <code>bq</code>, <code>gsutil</code> or
+<code>kubectl</code> commands</li>
 <li>
 <code><a href="../reference/cr_buildstep_bash.html">cr_buildstep_bash()</a></code> - for including bash scripts</li>
 <li>
-<code><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker()</a></code> - for building and pushing Docker images</li>
+<code><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker()</a></code> - for building and pushing Docker
+images</li>
 <li>
-<code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> - storing secrets in the cloud and decrypting them</li>
+<code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> - storing secrets in the cloud
+and decrypting them</li>
 <li>
-<code><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt()</a></code> - for using Google Key management store to decrypt auth files</li>
+<code><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt()</a></code> - for using Google Key
+management store to decrypt auth files</li>
 <li>
-<code><a href="../reference/cr_buildstep_git.html">cr_buildstep_git()</a></code> - for setting up and running git commands</li>
+<code><a href="../reference/cr_buildstep_git.html">cr_buildstep_git()</a></code> - for setting up and running git
+commands</li>
 <li>
-<code><a href="../reference/cr_buildstep_mailgun.html">cr_buildstep_mailgun()</a></code> - send an email with Mailgun.org</li>
+<code><a href="../reference/cr_buildstep_mailgun.html">cr_buildstep_mailgun()</a></code> - send an email with
+Mailgun.org</li>
 <li>
-<code><a href="../reference/cr_buildstep_nginx_setup.html">cr_buildstep_nginx_setup()</a></code> - setup hosting HTML files with nginx on Cloud Run</li>
+<code><a href="../reference/cr_buildstep_nginx_setup.html">cr_buildstep_nginx_setup()</a></code> - setup hosting HTML files
+with nginx on Cloud Run</li>
 <li>
-<code><a href="../reference/cr_buildstep_pkgdown.html">cr_buildstep_pkgdown()</a></code> - for setting up pkgdown documentation of an R package</li>
+<code><a href="../reference/cr_buildstep_pkgdown.html">cr_buildstep_pkgdown()</a></code> - for setting up pkgdown
+documentation of an R package</li>
 <li>
 <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code> - for running R code</li>
 <li>
-<code><a href="../reference/cr_buildstep_slack.html">cr_buildstep_slack()</a></code> - send a Slack webhook message</li>
+<code><a href="../reference/cr_buildstep_slack.html">cr_buildstep_slack()</a></code> - send a Slack webhook
+message</li>
 </ul>
-<p>If you have any requests for others, please <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/issues" class="external-link">raise an issue on GitHub</a>.</p>
+<p>If you have any requests for others, please <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/issues" class="external-link">raise
+an issue on GitHub</a>.</p>
 <p>Combine buildsteps with <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code> e.g.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
@@ -371,7 +485,9 @@
         <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"my_secret"</span>,<span class="st">"auth.json"</span><span class="op">)</span>,
         <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="st">"sessionInfo()"</span><span class="op">)</span><span class="op">)</span>,
       images <span class="op">=</span> <span class="st">"gcr.io/my-project/my-image"</span><span class="op">)</span></code></pre></div>
-<p>The <code>cr_buildstep_*</code> functions are all calling <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code> with helpful defaults, for example these are equivalent:</p>
+<p>The <code>cr_buildstep_*</code> functions are all calling
+<code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code> with helpful defaults, for example these are
+equivalent:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_buildstep_bash.html">cr_buildstep_bash</a></span><span class="op">(</span><span class="st">"echo hello world"</span><span class="op">)</span>
 <span class="co">#[[1]]</span>
@@ -389,13 +505,21 @@
 <span class="co">#- bash</span>
 <span class="co">#- -c</span>
 <span class="co">#- echo hello world</span></code></pre></div>
-<p>To further aid deployments the <code>cr_deploy_*</code> functions take some common tasks and use the buildsteps above, in some cases also creating a build trigger or schedule.</p>
+<p>To further aid deployments the <code>cr_deploy_*</code> functions
+take some common tasks and use the buildsteps above, in some cases also
+creating a build trigger or schedule.</p>
 <p><img src="deploy_plot.png"></p>
 </div>
 <div class="section level2">
 <h2 id="build-artifacts">Build Artifacts<a class="anchor" aria-label="anchor" href="#build-artifacts"></a>
 </h2>
-<p>You may have some useful files or data after your buildsteps run that you want to use later. You can specify these files as <strong>artifacts</strong> that will be uploaded to a Google Cloud Storage bucket after the build finishes. A helper function <code><a href="../reference/cr_build_artifacts.html">cr_build_artifacts()</a></code> will take your build object and download the files to your local directory via <code>googleCloudStorageR</code></p>
+<p>You may have some useful files or data after your buildsteps run that
+you want to use later. You can specify these files as
+<strong>artifacts</strong> that will be uploaded to a Google Cloud
+Storage bucket after the build finishes. A helper function
+<code><a href="../reference/cr_build_artifacts.html">cr_build_artifacts()</a></code> will take your build object and
+download the files to your local directory via
+<code>googleCloudStorageR</code></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r</span> <span class="op">&lt;-</span> <span class="st">"write.csv(mtcars,file = 'artifact.csv')"</span>
 <span class="va">ba</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
@@ -416,12 +540,17 @@
 <span class="co">#3           Datsun 710 22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
 <span class="co">#4       Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
 <span class="co"># ... etc ...</span></code></pre></div>
-<p>Other common artifacts are Docker images that your build has created. These are usually uploaded automatically to Container Registry, if say you are using <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code>.</p>
+<p>Other common artifacts are Docker images that your build has created.
+These are usually uploaded automatically to Container Registry, if say
+you are using <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="build-logs">Build Logs<a class="anchor" aria-label="anchor" href="#build-logs"></a>
 </h2>
-<p>You can view the logs of the build locally in R using <code><a href="../reference/cr_build_logs.html">cr_build_logs()</a></code> if you pass it a build object, such as from <code><a href="../reference/cr_build_wait.html">cr_build_wait()</a></code> (causes R to wait for build to finish) or <code><a href="../reference/cr_build_status.html">cr_build_status()</a></code> (checks on build status)</p>
+<p>You can view the logs of the build locally in R using
+<code><a href="../reference/cr_build_logs.html">cr_build_logs()</a></code> if you pass it a build object, such as from
+<code><a href="../reference/cr_build_wait.html">cr_build_wait()</a></code> (causes R to wait for build to finish) or
+<code><a href="../reference/cr_build_status.html">cr_build_status()</a></code> (checks on build status)</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">s_yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span> <span class="st">"gcloud"</span>,<span class="st">"version"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_make.html">cr_build_make</a></span><span class="op">(</span><span class="va">s_yaml</span><span class="op">)</span>
@@ -443,28 +572,44 @@
 <div class="section level3">
 <h3 id="rstudio-gadget---build-docker">RStudio Gadget - build Docker<a class="anchor" aria-label="anchor" href="#rstudio-gadget---build-docker"></a>
 </h3>
-<p>If you are using RStudio, installing the library will enable an <a href="https://rstudio.github.io/rstudioaddins/" class="external-link">RStudio Addin</a> that can be called after you have setup the library as per the setup page.</p>
-<p>It includes a Shiny gadget that you can call via the Addin menu in RStudio, via <code><a href="../reference/cr_deploy_gadget.html">googleCloudRunner::cr_deploy_gadget()</a></code> or assigned to a hotkey (I use CTRL+SHIFT+D).</p>
-<p>This sets up a Shiny UI to help smooth out deployments as pictured:</p>
+<p>If you are using RStudio, installing the library will enable an <a href="https://rstudio.github.io/rstudioaddins/" class="external-link">RStudio Addin</a> that
+can be called after you have setup the library as per the setup
+page.</p>
+<p>It includes a Shiny gadget that you can call via the Addin menu in
+RStudio, via <code><a href="../reference/cr_deploy_gadget.html">googleCloudRunner::cr_deploy_gadget()</a></code> or
+assigned to a hotkey (I use CTRL+SHIFT+D).</p>
+<p>This sets up a Shiny UI to help smooth out deployments as
+pictured:</p>
 <p><img src="gadget_docker.png"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="r-buildsteps">R buildsteps<a class="anchor" aria-label="anchor" href="#r-buildsteps"></a>
 </h2>
-<p>Focusing on one buildstep in particular, since this is an R package - you can send in R code into a build trigger using <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>.</p>
-<p>It accepts both inline R code or a file location. This R code is executed in the R environment as specified in argument <code>name</code> - they default to the R images provided by Rocker <a href="https://www.rocker-project.org/" class="external-link">rocker-project.org</a>.</p>
-<p>If you want to build your own images (in perhaps another Cloud Build using <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code>) you can use your own R images with custom R packages and resources.</p>
-<p>Some useful R images have been made you could use or refer to their Dockerfiles for:</p>
+<p>Focusing on one buildstep in particular, since this is an R package -
+you can send in R code into a build trigger using
+<code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>.</p>
+<p>It accepts both inline R code or a file location. This R code is
+executed in the R environment as specified in argument <code>name</code>
+- they default to the R images provided by Rocker <a href="https://www.rocker-project.org/" class="external-link">rocker-project.org</a>.</p>
+<p>If you want to build your own images (in perhaps another Cloud Build
+using <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code>) you can use your own R images
+with custom R packages and resources.</p>
+<p>Some useful R images have been made you could use or refer to their
+Dockerfiles for:</p>
 <ul>
 <li>
-<code>gcr.io/gcer-public/packagetools</code> - installs: devtools covr rhub pkgdown goodpractice httr plumber rmarkdown</li>
+<code>gcr.io/gcer-public/packagetools</code> - installs: devtools
+covr rhub pkgdown goodpractice httr plumber rmarkdown</li>
 <li>
-<code>gcr.io/gcer-public/render_rmd</code> - installs: pkgdown rmarkdown flexdashboard blogdown bookdown</li>
+<code>gcr.io/gcer-public/render_rmd</code> - installs: pkgdown
+rmarkdown flexdashboard blogdown bookdown</li>
 <li>
-<code>gcr.io/gcer-public/googlecloudrunner</code> - installs: containerit, googleCloudStorageR, plumber, googleCloudRunner</li>
+<code>gcr.io/gcer-public/googlecloudrunner</code> - installs:
+containerit, googleCloudStorageR, plumber, googleCloudRunner</li>
 </ul>
-<p>The R code can be created within the Build at build time, or you can refer to an existing R script within the Source.</p>
+<p>The R code can be created within the Build at build time, or you can
+refer to an existing R script within the Source.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create an R buildstep inline</span>
 <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"paste('1+1=', 1+1)"</span>, <span class="st">"sessionInfo()"</span><span class="op">)</span><span class="op">)</span>
@@ -489,44 +634,67 @@
 <div class="section level2">
 <h2 id="build-triggers">Build Triggers<a class="anchor" aria-label="anchor" href="#build-triggers"></a>
 </h2>
-<p>Once you have build steps and possibly a source created, you can either set these up to run on a schedule via <code><a href="../reference/cr_schedule.html">cr_schedule()</a></code> or you can use triggers that will run upon certain events.</p>
+<p>Once you have build steps and possibly a source created, you can
+either set these up to run on a schedule via <code><a href="../reference/cr_schedule.html">cr_schedule()</a></code>
+or you can use triggers that will run upon certain events.</p>
 <div class="section level3">
 <h3 id="setting-up-build-triggers-in-the-web-ui">Setting up Build Triggers in the Web UI<a class="anchor" aria-label="anchor" href="#setting-up-build-triggers-in-the-web-ui"></a>
 </h3>
-<p>The quickest way to get going is to use the web UI for Build Triggers (<code>https://console.cloud.google.com/cloud-build/triggers</code>)</p>
+<p>The quickest way to get going is to use the web UI for Build Triggers
+(<code>https://console.cloud.google.com/cloud-build/triggers</code>)</p>
 <ol style="list-style-type: decimal">
-<li>Link your repo (GitHub, Bitbucket or Cloud Repositories) to Google</li>
+<li>Link your repo (GitHub, Bitbucket or Cloud Repositories) to
+Google</li>
 <li>Create your Cloud Build using <code><a href="../reference/cr_build_yaml.html">cr_build_yaml()</a></code> etc.</li>
-<li>Write out to a <code>cloudbuild.yml</code> file in your repository (by default the root directory is checked)</li>
-<li>Setup the Build Trigger in the Web UI (<code>https://console.cloud.google.com/cloud-build/triggers</code>)</li>
-<li>Make a git commit and check the Cloud Build has run in the history (<code>https://console.cloud.google.com/cloud-build/builds</code>)</li>
-<li>Modify the <code>cloudbuild.yml</code> file as you need, recommit to trigger a new build.</li>
+<li>Write out to a <code>cloudbuild.yml</code> file in your repository
+(by default the root directory is checked)</li>
+<li>Setup the Build Trigger in the Web UI
+(<code>https://console.cloud.google.com/cloud-build/triggers</code>)</li>
+<li>Make a git commit and check the Cloud Build has run in the history
+(<code>https://console.cloud.google.com/cloud-build/builds</code>)</li>
+<li>Modify the <code>cloudbuild.yml</code> file as you need, recommit to
+trigger a new build.</li>
 </ol>
-<p>Learn how to set them up at this Google article on <a href="https://cloud.google.com/cloud-build/docs/running-builds/create-manage-triggers" class="external-link">creating and managing build triggers</a>.</p>
-<p>From there you get the option of connecting a repository either by mirroring it from GitHub/Bitbucket or using Cloud Source Repositories.</p>
-<p>You can setup either Docker builds by just providing the location of the <code>Dockerfile</code>, or have more control by providing a <code>cloudbuild.yml</code> - by default these are looked for in the root directory.</p>
+<p>Learn how to set them up at this Google article on <a href="https://cloud.google.com/cloud-build/docs/running-builds/create-manage-triggers" class="external-link">creating
+and managing build triggers</a>.</p>
+<p>From there you get the option of connecting a repository either by
+mirroring it from GitHub/Bitbucket or using Cloud Source
+Repositories.</p>
+<p>You can setup either Docker builds by just providing the location of
+the <code>Dockerfile</code>, or have more control by providing a
+<code>cloudbuild.yml</code> - by default these are looked for in the
+root directory.</p>
 <p>Here are some example for this package’s GitHub repo:</p>
 <p><img src="buildtrigger_screen.png"></p>
 <ul>
-<li>The “do package checks” performs authenticated tests against the package</li>
-<li>The “git auth and push pkgdown website” rebuilds the website each commit to master branch.</li>
-<li>“Build a dockerfile for package builds” builds the <code>gcr.io/gcer-public/packagetools</code> image</li>
-<li>“pushGoogleCloudRunnerToGcerPublic” builds the <code>gcr.io/gcer-public/googlecloudrunner</code> image</li>
+<li>The “do package checks” performs authenticated tests against the
+package</li>
+<li>The “git auth and push pkgdown website” rebuilds the website each
+commit to master branch.</li>
+<li>“Build a dockerfile for package builds” builds the
+<code>gcr.io/gcer-public/packagetools</code> image</li>
+<li>“pushGoogleCloudRunnerToGcerPublic” builds the
+<code>gcr.io/gcer-public/googlecloudrunner</code> image</li>
 </ul>
 <p><img src="buildtrigger_example.png"></p>
 </div>
 <div class="section level3">
 <h3 id="build-triggers-via-code">Build Triggers via code<a class="anchor" aria-label="anchor" href="#build-triggers-via-code"></a>
 </h3>
-<p>Once you know how to make Build Triggers in the Web UI, you may want to move into doing them within R. This lets you scale quickly applications and are using in some of the <code>cr_deploy_*()</code> functions such as <code><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger()</a></code>.</p>
-<p>Build Triggers can be made via R code using the <code><a href="../reference/cr_buildtrigger.html">cr_buildtrigger()</a></code> function.</p>
+<p>Once you know how to make Build Triggers in the Web UI, you may want
+to move into doing them within R. This lets you scale quickly
+applications and are using in some of the <code>cr_deploy_*()</code>
+functions such as <code><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger()</a></code>.</p>
+<p>Build Triggers can be made via R code using the
+<code><a href="../reference/cr_buildtrigger.html">cr_buildtrigger()</a></code> function.</p>
 <p>Build Triggers can execute on some useful triggers:</p>
 <ul>
 <li>GitHub commits and pull requests</li>
 <li>PubSub triggers such as when a file hits Cloud Storage</li>
 <li>Webhook triggers responding to 3rd party applications</li>
 </ul>
-<p>The example below shows how to set up some of the builds used in the examples above:</p>
+<p>The example below shows how to set up some of the builds used in the
+examples above:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get an existing cloudbuild.yaml file</span>
 <span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild.yaml"</span>,
@@ -541,43 +709,57 @@
 <span class="co"># create the build trigger</span>
 <span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="va">bb</span>, name <span class="op">=</span> <span class="st">"trig1"</span>, trigger <span class="op">=</span> <span class="va">github</span><span class="op">)</span></code></pre></div>
 <p>This build trigger will then build upon each git commit.</p>
-<p>Build substitutions can also be configured by them into the <code>substitutions</code> argument:</p>
+<p>Build substitutions can also be configured by them into the
+<code>substitutions</code> argument:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># creates a trigger with named substitutions</span>
 <span class="va">ss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>`$_MYVAR` <span class="op">=</span> <span class="st">"TEST1"</span>, `$_GITHUB` <span class="op">=</span> <span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
 
 <span class="co"># a buildtrigger with parametised substitutions</span>
 <span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"trig2"</span>, trigger <span class="op">=</span> <span class="va">github</span>, build <span class="op">=</span> <span class="va">bb</span>, substitutions <span class="op">=</span> <span class="va">ss</span><span class="op">)</span></code></pre></div>
-<p>The above examples will create the build step in-line within the trigger, but you can also specify cloudbuild.yaml files by specifying the path to where in the repository the build file will be:</p>
+<p>The above examples will create the build step in-line within the
+trigger, but you can also specify cloudbuild.yaml files by specifying
+the path to where in the repository the build file will be:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create a trigger that will build from the file in the repo</span>
 <span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="st">"cloudbuild.yaml"</span>, name <span class="op">=</span> <span class="st">"trig3"</span>, trigger <span class="op">=</span> <span class="va">github</span><span class="op">)</span></code></pre></div>
-<p>This way you can commit changes to the cloudbuild.yaml file, and they will be reflected in the Build Trigger.</p>
+<p>This way you can commit changes to the cloudbuild.yaml file, and they
+will be reflected in the Build Trigger.</p>
 </div>
 <div class="section level3">
 <h3 id="connecting-to-github">Connecting to GitHub<a class="anchor" aria-label="anchor" href="#connecting-to-github"></a>
 </h3>
-<p>You can connect via the <a href="https://cloud.google.com/source-repositories/docs/mirroring-a-github-repository" class="external-link">Source Repository mirroring service</a> or via the <a href="https://github.com/marketplace/google-cloud-build" class="external-link">Google Cloud Build GitHub app</a> - see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/git.html">git setup page</a> for more details.</p>
+<p>You can connect via the <a href="https://cloud.google.com/source-repositories/docs/mirroring-a-github-repository" class="external-link">Source
+Repository mirroring service</a> or via the <a href="https://github.com/marketplace/google-cloud-build" class="external-link">Google Cloud
+Build GitHub app</a> - see the <a href="https://code.markedmondson.me/googleCloudRunner/articles/git.html">git
+setup page</a> for more details.</p>
 </div>
 <div class="section level3">
 <h3 id="combining-buildsteps-from-triggers-with-other-builds">Combining buildsteps from triggers with other builds<a class="anchor" aria-label="anchor" href="#combining-buildsteps-from-triggers-with-other-builds"></a>
 </h3>
-<p>It may be you want to combine build steps from across buildtriggers. For example, you have a Docker build triggers and want to add some steps that use that Docker image after its been built.</p>
-<p>You can extract the buildsteps from deployed buildtriggers to combine them and avoid having two builds.</p>
+<p>It may be you want to combine build steps from across buildtriggers.
+For example, you have a Docker build triggers and want to add some steps
+that use that Docker image after its been built.</p>
+<p>You can extract the buildsteps from deployed buildtriggers to combine
+them and avoid having two builds.</p>
 <p>For example, say you have deployed a Dockerfile trigger:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"your-github/your-repo"</span><span class="op">)</span>
 
 <span class="co"># first time - by default will be called "docker-{image}"</span>
 <span class="fu"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span><span class="op">(</span><span class="va">repo</span>, image <span class="op">=</span> <span class="st">"my-build"</span><span class="op">)</span></code></pre></div>
-<p>If you want to extract the docker buildsteps you can find it in <code>dock_build$build$steps</code> below:</p>
+<p>If you want to extract the docker buildsteps you can find it in
+<code>dock_build$build$steps</code> below:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get the buildtrigger details</span>
 <span class="va">dock_build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_get.html">cr_buildtrigger_get</a></span><span class="op">(</span><span class="st">"docker-my-build"</span><span class="op">)</span>
 
 <span class="co"># contains the buildsteps from the deployment</span>
 <span class="va">dock_build</span><span class="op">$</span><span class="va">build</span><span class="op">$</span><span class="va">steps</span></code></pre></div>
-<p>You can then combine those buildsteps in the usual way with other buildsteps. The example below assumes you’ve made an R docker image with some of your custom dependencies that you then want to immediately run your R code within:</p>
+<p>You can then combine those buildsteps in the usual way with other
+buildsteps. The example below assumes you’ve made an R docker image with
+some of your custom dependencies that you then want to immediately run
+your R code within:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># uses the docker image previously created</span>
 <span class="va">my_r_step</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span>r <span class="op">=</span> <span class="st">"my_r_code.R"</span>, name <span class="op">=</span> <span class="st">"docker-my-build"</span><span class="op">)</span>
@@ -587,7 +769,8 @@
 
 <span class="co"># remake the build yaml</span>
 <span class="va">yml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span><span class="va">new_buildsteps</span><span class="op">)</span></code></pre></div>
-<p>You can then reconfigure the build trigger with your new build yaml. The below writes the yaml to a file to be read by the build trigger:</p>
+<p>You can then reconfigure the build trigger with your new build yaml.
+The below writes the yaml to a file to be read by the build trigger:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># write it out to the git repo we are in</span>
 <span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">yml</span>, <span class="st">"new_buildsteps.yml"</span><span class="op">)</span>
@@ -605,10 +788,24 @@
 <div class="section level3">
 <h3 id="pubsub-triggered-cloud-builds">Pub/Sub Triggered Cloud Builds<a class="anchor" aria-label="anchor" href="#pubsub-triggered-cloud-builds"></a>
 </h3>
-<p>You can configure your build triggers to run from PubSub events. These events are generated from a lot of different services around GCP, such as when a file hits Cloud Storage, when certain events occur in Cloud Logging, or when your budget alerts fire. Triggering a Cloud Build can allow complex workflows responding to these events, including picking up data from the PubSub message to parametrise your code via Substitutions.</p>
-<p>See the <a href="https://cloud.google.com/build/docs/automating-builds/create-pubsub-triggers" class="external-link">Creating Pub/Sub triggers documentation</a> on how to do this in the WebUI and gcloud.</p>
-<p>Below is an example that uses <a href="https://CRAN.R-project.org/package=googlePubsubR" class="external-link"><code>googlePubSubR</code></a> to create and send a message to PubSub, but any other service that publishes to PubSub could be used.</p>
-<p>For this example, the substitution variables will take its data from the PubSub message content. It will look within the <code>body.message.data.x</code> variable, where <code>x</code> is the field sent in the pubsub message. See how to use these <a href="https://cloud.google.com/build/docs/configuring-builds/use-bash-and-bindings-in-substitutions" class="external-link">payload bindings</a> in other ways at the Google documentation.</p>
+<p>You can configure your build triggers to run from PubSub events.
+These events are generated from a lot of different services around GCP,
+such as when a file hits Cloud Storage, when certain events occur in
+Cloud Logging, or when your budget alerts fire. Triggering a Cloud Build
+can allow complex workflows responding to these events, including
+picking up data from the PubSub message to parametrise your code via
+Substitutions.</p>
+<p>See the <a href="https://cloud.google.com/build/docs/automating-builds/create-pubsub-triggers" class="external-link">Creating
+Pub/Sub triggers documentation</a> on how to do this in the WebUI and
+gcloud.</p>
+<p>Below is an example that uses <a href="https://CRAN.R-project.org/package=googlePubsubR" class="external-link"><code>googlePubSubR</code></a>
+to create and send a message to PubSub, but any other service that
+publishes to PubSub could be used.</p>
+<p>For this example, the substitution variables will take its data from
+the PubSub message content. It will look within the
+<code>body.message.data.x</code> variable, where <code>x</code> is the
+field sent in the pubsub message. See how to use these <a href="https://cloud.google.com/build/docs/configuring-builds/use-bash-and-bindings-in-substitutions" class="external-link">payload
+bindings</a> in other ways at the Google documentation.</p>
 <p>The cloud build yaml looks like:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">steps</span><span class="kw">:</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">'alpine'</span></span>
@@ -619,7 +816,8 @@
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">args</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="st">"Rscript"</span><span class="kw">,</span><span class="at"> </span><span class="st">"-e"</span><span class="kw">,</span><span class="at"> </span><span class="st">"paste0('From PubSub message field1:', '${_VAR1}')"</span><span class="kw">]</span></span>
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">substitutions</span><span class="kw">:</span></span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">_VAR1</span><span class="kw">:</span><span class="at"> </span><span class="st">'$(body.message.data.var1)'</span></span></code></pre></div>
-<p>Note <code>_VAR1</code> which will be filled in with the <code>var1</code> field coming from the PubSub message.</p>
+<p>Note <code>_VAR1</code> which will be filled in with the
+<code>var1</code> field coming from the PubSub message.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create build object</span>
 <span class="va">cloudbuild</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"cloudbuild/cloudbuild_substitutions.yml"</span>,
@@ -633,7 +831,8 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/andodet/googlePubsubR" class="external-link">googlePubsubR</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/pubsub_auth.html" class="external-link">pubsub_auth</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/topics_create.html" class="external-link">topics_create</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span></code></pre></div>
-<p>We now use the function <code><a href="../reference/cr_buildtrigger_pubsub.html">cr_buildtrigger_pubsub()</a></code> to construct the trigger for the Cloud Build.</p>
+<p>We now use the function <code><a href="../reference/cr_buildtrigger_pubsub.html">cr_buildtrigger_pubsub()</a></code> to
+construct the trigger for the Cloud Build.</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create build trigger that will work from pub/subscription</span>
 <span class="va">pubsub_trigger</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_pubsub.html">cr_buildtrigger_pubsub</a></span><span class="op">(</span><span class="st">"test-topic"</span><span class="op">)</span>
@@ -657,9 +856,14 @@
 <span class="co">#  - -e</span>
 <span class="co">#  - paste0('From PubSub message field1:', '${_VAR1}')</span>
 <span class="co">#  id: Hello R</span></code></pre></div>
-<p>The build trigger should now be deployed and available in your Cloud Console.</p>
-<p>We now simulate a PubSub message coming in with the <code>var1</code> field filled. In real applications this PubSub trigger could come from another system, Cloud Storage files, or other R scripts.</p>
-<p>PubSub requires the message to be JSON and base64 encoded, so we use <code><a href="https://arxiv.org/abs/1403.2805" class="external-link">library(jsonlite)</a></code> to do this and <code><a href="https://github.com/andodet/googlePubsubR" class="external-link">library(googlePubsubR)</a></code> again to send the message:</p>
+<p>The build trigger should now be deployed and available in your Cloud
+Console.</p>
+<p>We now simulate a PubSub message coming in with the <code>var1</code>
+field filled. In real applications this PubSub trigger could come from
+another system, Cloud Storage files, or other R scripts.</p>
+<p>PubSub requires the message to be JSON and base64 encoded, so we use
+<code><a href="https://arxiv.org/abs/1403.2805" class="external-link">library(jsonlite)</a></code> to do this and
+<code><a href="https://github.com/andodet/googlePubsubR" class="external-link">library(googlePubsubR)</a></code> again to send the message:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># make base64 encoded json</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://arxiv.org/abs/1403.2805" class="external-link">jsonlite</a></span><span class="op">)</span>                     
@@ -668,7 +872,8 @@
 
 <span class="co"># send the message!</span>
 <span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/topics_publish.html" class="external-link">topics_publish</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/PubsubMessage.html" class="external-link">PubsubMessage</a></span><span class="op">(</span><span class="va">send_me</span><span class="op">)</span>, <span class="st">"test-topic"</span><span class="op">)</span></code></pre></div>
-<p>You should now see the Cloud Build start in your GCP console. You can check the logs for the build after it has run to see if it worked:</p>
+<p>You should now see the Cloud Build start in your GCP console. You can
+check the logs for the build after it has run to see if it worked:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># did it work?</span>
 <span class="fu"><a href="../reference/cr_build_logs.html">cr_buildtrigger_logs</a></span><span class="op">(</span><span class="st">"pubsub-triggered-subs"</span><span class="op">)</span>
@@ -681,32 +886,63 @@
 <span class="co">#[58] "Finished Step #1 - \"Hello R\""                                                                                  </span>
 <span class="co">#[59] "PUSH"                                                                                                            </span>
 <span class="co">#[60] "DONE"                                                                                                            </span></code></pre></div>
-<p>See also <code><a href="../reference/cr_schedule.html">cr_schedule_pubsub()</a></code> which can use PubSub to trigger scheduled builds. There is a guide using that within <a href="cloudscheduler.html">Cloud Scheduler to trigger Build Triggers via Pubsub</a></p>
+<p>See also <code><a href="../reference/cr_schedule.html">cr_schedule_pubsub()</a></code> which can use PubSub to
+trigger scheduled builds. There is a guide using that within <a href="cloudscheduler.html">Cloud Scheduler to trigger Build Triggers via
+Pubsub</a></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="targets-integration">Targets Integration<a class="anchor" aria-label="anchor" href="#targets-integration"></a>
 </h2>
-<p>The <a href="https://books.ropensci.org/targets/" class="external-link"><code>targets</code> package</a> is a data pipeline toolkit for R which allows for reproducible workflows without having to run the entire pipeline each time. You can use it to create a graph of dependencies (directional acyclic graphs, or DAG).</p>
-<p>It is convenient to have these pipelines run in the cloud and in a serverless manner in particular which <code>googleCloudRunner</code> facilitates via the <code><a href="../reference/cr_build_targets.html">cr_build_targets()</a></code> function. Since the pipeline can run in a Cloud Build, you do not need to have your local machine on to run the pipeline. Cloud Build allows up to 24hrs timeout values for the build, and costs are much lower than having a dedicated computing cluster as you are only charged for the time the job is running.</p>
-<p>The integration looks through your existing <code>targets</code> pipeline and creates the appropriate build steps for your build, reusing the functions and target meta data in your local folder. By selecting to run on Cloud Build, the local targets metadata folder is uploaded to Cloud Storage, used to coordinate the different target pipeline steps (<code>targets</code>) and then downloads the results back to your local session.</p>
-<p>The <code>cr_buildsteps_targets()</code> function is the base buildstep you can use to create your workflows. Its more likely you will use the <code><a href="../reference/cr_build_targets.html">cr_buildstep_targets_multi()</a></code> function which will use these buildsteps to create your pipeline, including trying to optimise the running time as much as possible by setting up concurrent execution if possible.</p>
+<p>The <a href="https://books.ropensci.org/targets/" class="external-link"><code>targets</code>
+package</a> is a data pipeline toolkit for R which allows for
+reproducible workflows without having to run the entire pipeline each
+time. You can use it to create a graph of dependencies (directional
+acyclic graphs, or DAG).</p>
+<p>It is convenient to have these pipelines run in the cloud and in a
+serverless manner in particular which <code>googleCloudRunner</code>
+facilitates via the <code><a href="../reference/cr_build_targets.html">cr_build_targets()</a></code> function. Since the
+pipeline can run in a Cloud Build, you do not need to have your local
+machine on to run the pipeline. Cloud Build allows up to 24hrs timeout
+values for the build, and costs are much lower than having a dedicated
+computing cluster as you are only charged for the time the job is
+running.</p>
+<p>The integration looks through your existing <code>targets</code>
+pipeline and creates the appropriate build steps for your build, reusing
+the functions and target meta data in your local folder. By selecting to
+run on Cloud Build, the local targets metadata folder is uploaded to
+Cloud Storage, used to coordinate the different target pipeline steps
+(<code>targets</code>) and then downloads the results back to your local
+session.</p>
+<p>The <code>cr_buildsteps_targets()</code> function is the base
+buildstep you can use to create your workflows. Its more likely you will
+use the <code><a href="../reference/cr_build_targets.html">cr_buildstep_targets_multi()</a></code> function which will
+use these buildsteps to create your pipeline, including trying to
+optimise the running time as much as possible by setting up concurrent
+execution if possible.</p>
 <p>In general the integration takes care of these steps:</p>
 <ol style="list-style-type: decimal">
 <li>Scan your system for the targets workflow</li>
 <li>Creates a Cloud Build yaml that will execute the workflow</li>
-<li>Uploads target metadata file (usually with <code>_targets/meta</code>) to a Cloud Storage bucket</li>
-<li>Executes the build, skipping any unnecessary steps and running concurrently if possible</li>
+<li>Uploads target metadata file (usually with
+<code>_targets/meta</code>) to a Cloud Storage bucket</li>
+<li>Executes the build, skipping any unnecessary steps and running
+concurrently if possible</li>
 <li>Uploads the results to Cloud Storage</li>
 <li>Downloads from Cloud Storage to your local session if required</li>
 </ol>
-<p>You will need to create an R based Dockerfile to run the target functions within, including at least targets and any other libraries you need for your functions to execute. By default it will use <code>gcr.io/gcer-public/targets</code> which is an image containing <code>targets</code> only.</p>
+<p>You will need to create an R based Dockerfile to run the target
+functions within, including at least targets and any other libraries you
+need for your functions to execute. By default it will use
+<code>gcr.io/gcer-public/targets</code> which is an image containing
+<code>targets</code> only.</p>
 <p>An overview of the targets functions is shown below:</p>
 <p><img src="targets_plot.png"></p>
 <div class="section level3">
 <h3 id="targets-pipeline-example">Targets pipeline example<a class="anchor" aria-label="anchor" href="#targets-pipeline-example"></a>
 </h3>
-<p>The below example shows a minimal use case of running the pipeline immediately:</p>
+<p>The below example shows a minimal use case of running the pipeline
+immediately:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">mtcars</span>, file <span class="op">=</span> <span class="st">"mtcars.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
@@ -733,9 +969,11 @@
 
 <span class="co"># run it immediately in cloud</span>
 <span class="fu"><a href="../reference/cr_build_targets.html">cr_build_targets</a></span><span class="op">(</span><span class="va">bs</span>, execute<span class="op">=</span><span class="st">"now"</span><span class="op">)</span></code></pre></div>
-<p>The target pipeline is represented by this DAG (generated by <code>targets::tar_visnetwork()</code>)</p>
+<p>The target pipeline is represented by this DAG (generated by
+<code>targets::tar_visnetwork()</code>)</p>
 <p><img src="demo_targets.png"></p>
-<p>When you issue <code><a href="../reference/cr_build_targets.html">cr_buildstep_targets_multi()</a></code> the targets DAG is analysed and used to create the buildsteps:</p>
+<p>When you issue <code><a href="../reference/cr_build_targets.html">cr_buildstep_targets_multi()</a></code> the targets
+DAG is analysed and used to create the buildsteps:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_targets.html">cr_buildstep_targets_multi</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#ℹ 2022-01-20 15:26:56 &gt; targets cloud location: gs://your-bucket/your-project</span>
@@ -750,10 +988,21 @@
 <span class="co">#• [input1] -&gt; [result4]</span>
 <span class="co">#• [result1, result2, result3, result4] -&gt; [merge1]</span>
 <span class="co">#• [merge1] -&gt; [ Upload Artifacts ]</span></code></pre></div>
-<p>The <code>[get previous _targets metadata]</code> buildstep is boilerplate generated by <code><a href="../reference/cr_buildstep_targets.html">cr_buildstep_targets_setup()</a></code>, whilst <code>[ Upload Artifacts ]</code> is the one generated by <code><a href="../reference/cr_buildstep_targets.html">cr_buildstep_targets_teardown()</a></code>.</p>
-<p>The DAG is created by populating the <code>id</code> and <code>waitFor</code> arguments within a <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code>. These buildsteps could be used directly in <code><a href="../reference/cr_build.html">cr_build()</a></code> but you would need to handle uploading the data sources etc. which is what <code><a href="../reference/cr_build_targets.html">cr_build_targets()</a></code> helps with.</p>
-<p>Passing these buildsteps into <code><a href="../reference/cr_build_targets.html">cr_build_targets()</a></code> allows you to select <code>execute="now"</code> which will run the pipeline immediately. <code>execute="trigger"</code> will only create the YAML for you to use in constructing a buildstep.</p>
-<p><code>cr_build_targets(bs, execute="now")</code> will start off a build like the below example:</p>
+<p>The <code>[get previous _targets metadata]</code> buildstep is
+boilerplate generated by <code><a href="../reference/cr_buildstep_targets.html">cr_buildstep_targets_setup()</a></code>,
+whilst <code>[ Upload Artifacts ]</code> is the one generated by
+<code><a href="../reference/cr_buildstep_targets.html">cr_buildstep_targets_teardown()</a></code>.</p>
+<p>The DAG is created by populating the <code>id</code> and
+<code>waitFor</code> arguments within a <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code>.
+These buildsteps could be used directly in <code><a href="../reference/cr_build.html">cr_build()</a></code> but
+you would need to handle uploading the data sources etc. which is what
+<code><a href="../reference/cr_build_targets.html">cr_build_targets()</a></code> helps with.</p>
+<p>Passing these buildsteps into <code><a href="../reference/cr_build_targets.html">cr_build_targets()</a></code> allows
+you to select <code>execute="now"</code> which will run the pipeline
+immediately. <code>execute="trigger"</code> will only create the YAML
+for you to use in constructing a buildstep.</p>
+<p><code>cr_build_targets(bs, execute="now")</code> will start off a
+build like the below example:</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cr_build_targets</span>(bs, <span class="at">execute=</span><span class="st">"now"</span>)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>── <span class="co"># Uploading . to gs://your-buucket/.20220120152659.tar.gz ───────────────────────</span></span>
@@ -784,22 +1033,38 @@
 <span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>── <span class="co"># Built targets on Cloud Build with status: SUCCESS ─────────────────────────</span></span>
 <span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>ℹ <span class="dv">2022-01-20</span> <span class="dv">15</span><span class="sc">:</span><span class="dv">28</span><span class="sc">:</span><span class="dv">44</span> <span class="sc">&gt;</span> Build artifacts downloaded to <span class="sc">/</span>your<span class="sc">-</span>local<span class="sc">/</span>_targets</span></code></pre></div>
-<p>Inspecting your local <code>_targets</code> metadata (via <code>targets::tar_meta()</code> or otherwise) should confirm the steps have been updated via the Cloud Build code.</p>
+<p>Inspecting your local <code>_targets</code> metadata (via
+<code>targets::tar_meta()</code> or otherwise) should confirm the steps
+have been updated via the Cloud Build code.</p>
 </div>
 <div class="section level3">
 <h3 id="scheduling-or-triggering-your-targets-pipeline">Scheduling or triggering your targets pipeline<a class="anchor" aria-label="anchor" href="#scheduling-or-triggering-your-targets-pipeline"></a>
 </h3>
-<p>As the targets are running within a Cloud Build, all the usual methods of triggering a build are available via Build Triggers. This includes executing in response to events such as a Cloud Storage bucket being updated with a file, a GitHub commit, a PubSub event or a scheduled PubSub call.</p>
-<p>Since pipelines are normally waiting for Cloud Storage files or say BigQuery table uploads, the new PubSub triggers for build Triggers are particularly convenient, since they can trigger on pretty much any event within GCP via <a href="https://cloud.google.com/logging/docs/export/configure_export_v2" class="external-link">Cloud Logging sinks</a>.</p>
-<p>The example below will use a GitHub source and trigger upon a scheduled PubSub event.</p>
+<p>As the targets are running within a Cloud Build, all the usual
+methods of triggering a build are available via Build Triggers. This
+includes executing in response to events such as a Cloud Storage bucket
+being updated with a file, a GitHub commit, a PubSub event or a
+scheduled PubSub call.</p>
+<p>Since pipelines are normally waiting for Cloud Storage files or say
+BigQuery table uploads, the new PubSub triggers for build Triggers are
+particularly convenient, since they can trigger on pretty much any event
+within GCP via <a href="https://cloud.google.com/logging/docs/export/configure_export_v2" class="external-link">Cloud
+Logging sinks</a>.</p>
+<p>The example below will use a GitHub source and trigger upon a
+scheduled PubSub event.</p>
 <div class="section level4">
 <h4 id="creating-a-scheduled-targets-pipeline">Creating a scheduled targets pipeline<a class="anchor" aria-label="anchor" href="#creating-a-scheduled-targets-pipeline"></a>
 </h4>
-<p>The Cloud Build will be the same as the example above, only this time we select <code>execute="trigger"</code></p>
+<p>The Cloud Build will be the same as the example above, only this time
+we select <code>execute="trigger"</code></p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cr_build_targets</span>(bs, <span class="at">execute=</span><span class="st">"trigger"</span>)</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>ℹ <span class="dv">2022-01-20</span> <span class="dv">16</span><span class="sc">:</span><span class="dv">18</span><span class="sc">:</span><span class="dv">28</span> <span class="sc">&gt;</span> Writing to cloudbuild_targets.yaml</span></code></pre></div>
-<p>The <code>cloudbuild_targets.yaml</code> file will sit in the same GitHub repo as the target pipeline, and all shall be commit to GitHub.</p>
-<p>The PubSub topic can be an existing one but for this example we create our own via <a href="https://CRAN.R-project.org/package=googlePubsubR" class="external-link"><code>googlePubsubR</code></a> and schedule a hit to it every 24hrs at 0415.</p>
+<p>The <code>cloudbuild_targets.yaml</code> file will sit in the same
+GitHub repo as the target pipeline, and all shall be commit to
+GitHub.</p>
+<p>The PubSub topic can be an existing one but for this example we
+create our own via <a href="https://CRAN.R-project.org/package=googlePubsubR" class="external-link"><code>googlePubsubR</code></a>
+and schedule a hit to it every 24hrs at 0415.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/andodet/googlePubsubR" class="external-link">googlePubsubR</a></span><span class="op">)</span>
 <span class="va">topic</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/googlePubsubR/man/topics_create.html" class="external-link">topics_create</a></span><span class="op">(</span><span class="st">"target_pubsub_schedule"</span><span class="op">)</span>
@@ -809,8 +1074,11 @@
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"target_pubsub_schedule"</span>, 
             schedule <span class="op">=</span> <span class="st">"15 4 * * *"</span>, 
             pubsubTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span></code></pre></div>
-<p>Now the PubSub topic is being triggered on a schedule, we create a Build Trigger that will respond to it.</p>
-<p>The build trigger for a GitHub source is shown below - it uses a parameter <code>sourceToBuild</code> to specify which git repo to build upon:</p>
+<p>Now the PubSub topic is being triggered on a schedule, we create a
+Build Trigger that will respond to it.</p>
+<p>The build trigger for a GitHub source is shown below - it uses a
+parameter <code>sourceToBuild</code> to specify which git repo to build
+upon:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># no regex allowed for sourceToBuild repo objects</span>
 <span class="va">gh</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span>, branch <span class="op">=</span> <span class="st">"master"</span><span class="op">)</span>
@@ -823,7 +1091,8 @@
                 trigger <span class="op">=</span> <span class="va">pubsub_sub</span><span class="op">)</span></code></pre></div>
 <p>In summary the GCP resources you now have should be:</p>
 <ol style="list-style-type: decimal">
-<li>A PubSub topic via <code>googlePubsubR::topics_get("target_pubsub_schedule")</code>
+<li>A PubSub topic via
+<code>googlePubsubR::topics_get("target_pubsub_schedule")</code>
 </li>
 <li>A scheduler triggering that topic:</li>
 </ol>
@@ -840,7 +1109,8 @@
 <span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>scheduleTime<span class="sc">:</span> <span class="dv">2022-01</span><span class="sc">-</span>26T03<span class="sc">:</span><span class="dv">15</span><span class="sc">:</span><span class="fl">00.867249</span>Z </span>
 <span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>timezone<span class="sc">:</span>  Europe<span class="sc">/</span>Copenhagen</span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
-<li>A build trigger triggered by the PubSub and showing the sourceToBuild:</li>
+<li>A build trigger triggered by the PubSub and showing the
+sourceToBuild:</li>
 </ol>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cr_buildtrigger_get</span>(<span class="st">"targets-scheduled-demo"</span>)</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -855,9 +1125,15 @@
 <span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="sc">==</span>CloudBuildTriggerPubSubConfig<span class="sc">==</span></span>
 <span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>topic<span class="sc">:</span>  projects<span class="sc">/</span>your<span class="sc">-</span>project<span class="sc">/</span>topics<span class="sc">/</span>target_pubsub_schedule </span>
 <span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>subscription<span class="sc">:</span>  projects<span class="sc">/</span><span class="dv">123434564</span><span class="sc">/</span>subscriptions<span class="sc">/</span>gcb<span class="sc">-</span>targets<span class="sc">-</span>scheduled<span class="sc">-</span>demo </span></code></pre></div>
-<p>You can modify each of these moving parts independently, for example swapping the pubsub for a Cloud Storage event that triggers many builds, or parametrising your PubSub trigger to trigger different behaviour. It is recommend for the first attempt to keep it simple with a one-to-one relationship between builds, pubsub topics and triggers.</p>
+<p>You can modify each of these moving parts independently, for example
+swapping the pubsub for a Cloud Storage event that triggers many builds,
+or parametrising your PubSub trigger to trigger different behaviour. It
+is recommend for the first attempt to keep it simple with a one-to-one
+relationship between builds, pubsub topics and triggers.</p>
 <ol start="4" style="list-style-type: decimal">
-<li>You should see successful builds and can check the status of the last build via <code><a href="../reference/cr_build_logs.html">cr_buildtrigger_logs()</a></code> which downloads the last build of the given build trigger:</li>
+<li>You should see successful builds and can check the status of the
+last build via <code><a href="../reference/cr_build_logs.html">cr_buildtrigger_logs()</a></code> which downloads the
+last build of the given build trigger:</li>
 </ol>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cr_buildtrigger_logs</span>(<span class="st">"targets-scheduled-demo"</span>)</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -956,7 +1232,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

@@ -170,9 +170,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Creating a Slackbot for Google Analytics reports</h1>
+      <h1 data-toc-skip>Creating a Slackbot for Google Analytics
+reports</h1>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-slackbot-google-analytics.Rmd" class="external-link"><code>vignettes/usecase-slackbot-google-analytics.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-slackbot-google-analytics.Rmd</code></div>
@@ -181,14 +182,21 @@
 
     
     
-<p>This use case will use Cloud Run to create an R API that Slack can interact with.</p>
-<p>The application will download some information from Google Analytics and send it to Slack for review. I’m most interested in what new websites are linking to my blog so will fetch that data for the endpoint, but this can be adapted upon for your own needs.</p>
+<p>This use case will use Cloud Run to create an R API that Slack can
+interact with.</p>
+<p>The application will download some information from Google Analytics
+and send it to Slack for review. I’m most interested in what new
+websites are linking to my blog so will fetch that data for the
+endpoint, but this can be adapted upon for your own needs.</p>
 <p>The workflow needed is:</p>
 <ol style="list-style-type: decimal">
 <li>Create the R script for downloading the GA data</li>
-<li>Create a plumber script for wrapping the GA fetch into a webhook</li>
-<li>Deploying the plumber API for Cloud Run to generate the webhook URL</li>
-<li>Setting up a build trigger to redeploy the R script on each git commit</li>
+<li>Create a plumber script for wrapping the GA fetch into a
+webhook</li>
+<li>Deploying the plumber API for Cloud Run to generate the webhook
+URL</li>
+<li>Setting up a build trigger to redeploy the R script on each git
+commit</li>
 <li>Creating a Slack App to respond to the Cloud Run webhook</li>
 <li>Modifying the R script to get the right format for Slack</li>
 <li>Scheduling the webhook to fire</li>
@@ -196,7 +204,9 @@
 <div class="section level2">
 <h2 id="create-the-r-script-for-downloading-the-ga-data">Create the R script for downloading the GA data<a class="anchor" aria-label="anchor" href="#create-the-r-script-for-downloading-the-ga-data"></a>
 </h2>
-<p>This will use <code>googleAnalyticsR</code> to get the data. I want to see what sessions came in the last 30 days with a referrer I haven’t seen before in the previous year.</p>
+<p>This will use <code>googleAnalyticsR</code> to get the data. I want
+to see what sessions came in the last 30 days with a referrer I haven’t
+seen before in the previous year.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/" class="external-link">googleAnalyticsR</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
@@ -224,7 +234,11 @@
 <div class="section level2">
 <h2 id="create-a-plumber-script-for-wrapping-the-ga-fetch">Create a plumber script for wrapping the GA fetch<a class="anchor" aria-label="anchor" href="#create-a-plumber-script-for-wrapping-the-ga-fetch"></a>
 </h2>
-<p>Now I’ll put the call behind a plumber API endpoint. The script will assume authentication will come from a local json auth file, that will be in the deployment. To make it a bit more general, the GA viewId will be able to be sent as a parameter, that will work for all GA accounts the auth file has access to.</p>
+<p>Now I’ll put the call behind a plumber API endpoint. The script will
+assume authentication will come from a local json auth file, that will
+be in the deployment. To make it a bit more general, the GA viewId will
+be able to be sent as a parameter, that will work for all GA accounts
+the auth file has access to.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/" class="external-link">googleAnalyticsR</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
@@ -287,7 +301,8 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <div class="section level2">
 <h2 id="deploying-the-plumber-api-for-cloud-run">Deploying the plumber API for Cloud Run<a class="anchor" aria-label="anchor" href="#deploying-the-plumber-api-for-cloud-run"></a>
 </h2>
-<p>The app is now deployed to Cloud Run via <code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code></p>
+<p>The app is now deployed to Cloud Run via
+<code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
@@ -319,17 +334,38 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <span class="co">#creationTimestamp:  2021-03-19T09:14:48.727922Z </span>
 <span class="co">#observedGeneration:  2 </span>
 <span class="co">#url:  https://slackbot-asfkbkdf-ew.a.run.app </span></code></pre></div>
-<p>It will take a few minutes to first build the Docker image (cup of tea time) then deploy it to Cloud Run. The Docker image building will be quicker the next time it builds due to the <code>kaniko_cache=TRUE</code> default enabling skipping over R library builds in the cache.</p>
+<p>It will take a few minutes to first build the Docker image (cup of
+tea time) then deploy it to Cloud Run. The Docker image building will be
+quicker the next time it builds due to the
+<code>kaniko_cache=TRUE</code> default enabling skipping over R library
+builds in the cache.</p>
 <p>Once finished the build should return the Cloud Run URL.</p>
-<p>The homepage should work but the Google Analytics endpoint (<code>/last-30days?ga_id=1234567</code>) won’t yet as we haven’t included the authentication file.</p>
+<p>The homepage should work but the Google Analytics endpoint
+(<code>/last-30days?ga_id=1234567</code>) won’t yet as we haven’t
+included the authentication file.</p>
 </div>
 <div class="section level2">
-<h2 id="setting-up-a-build-trigger-to-redeploy-the-r-script-on-each-git-commit">Setting up a build trigger to redeploy the R script on each git commit<a class="anchor" aria-label="anchor" href="#setting-up-a-build-trigger-to-redeploy-the-r-script-on-each-git-commit"></a>
+<h2 id="setting-up-a-build-trigger-to-redeploy-the-r-script-on-each-git-commit">Setting up a build trigger to redeploy the R script on each git
+commit<a class="anchor" aria-label="anchor" href="#setting-up-a-build-trigger-to-redeploy-the-r-script-on-each-git-commit"></a>
 </h2>
-<p>To make working and updating the API easier, a build trigger will build the Dockerfile and deploy the API upon each git commit.</p>
-<p>The project files above are added to a git repository and published on say GitHub, and the GitHub repo is added to Cloud Build as <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html#build-triggers">described in the Build Triggers docs</a> - in my case its the googleCloudRunner’s own repo and I put everything in the <code>inst/slackbot</code> folder so that alters the directory in the buildsteps below.</p>
-<p>Once the files are on GitHub a build trigger is created which will mimic what <code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code> did earlier - it will build the Dockerfile and re-deploy the Cloud Run app. To have more control, we now use <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code> templates to make the build ourselves.</p>
-<p>If you tried to run the GA endpoint in the logs you can see that the default Client Id for Google Analytics won’t allow non-interactive use - we need to use our own clientId and auth file. These sensitive files are uploaded to <a href="https://console.cloud.google.com/security/secret-manager" class="external-link">Secret Manager</a> so they can be used more securely within builds via <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code></p>
+<p>To make working and updating the API easier, a build trigger will
+build the Dockerfile and deploy the API upon each git commit.</p>
+<p>The project files above are added to a git repository and published
+on say GitHub, and the GitHub repo is added to Cloud Build as <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudbuild.html#build-triggers">described
+in the Build Triggers docs</a> - in my case its the googleCloudRunner’s
+own repo and I put everything in the <code>inst/slackbot</code> folder
+so that alters the directory in the buildsteps below.</p>
+<p>Once the files are on GitHub a build trigger is created which will
+mimic what <code><a href="../reference/cr_deploy_run.html">cr_deploy_plumber()</a></code> did earlier - it will build
+the Dockerfile and re-deploy the Cloud Run app. To have more control, we
+now use <code><a href="../reference/cr_buildstep.html">cr_buildstep()</a></code> templates to make the build
+ourselves.</p>
+<p>If you tried to run the GA endpoint in the logs you can see that the
+default Client Id for Google Analytics won’t allow non-interactive use -
+we need to use our own clientId and auth file. These sensitive files are
+uploaded to <a href="https://console.cloud.google.com/security/secret-manager" class="external-link">Secret
+Manager</a> so they can be used more securely within builds via
+<code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
@@ -371,8 +407,14 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <div class="section level2">
 <h2 id="creating-the-slack-webhook-for-the-slack-bot">Creating the Slack webhook for the Slack bot<a class="anchor" aria-label="anchor" href="#creating-the-slack-webhook-for-the-slack-bot"></a>
 </h2>
-<p>I now reference <a href="https://api.slack.com/apps/" class="external-link">Slack’s dev docs</a> on how to create a Webhook URL which is of the form <code>https://hooks.slack.com/services/XXXX6/B0YYYYYY/3rNZZZZZ</code> There is also useful info on the <a href="https://api.slack.com/reference/messaging/payload" class="external-link">formatting of the messaging</a> and you can make test calls with <code>curl</code> and <code><a href="https://httr.r-lib.org/reference/POST.html" class="external-link">httr::POST()</a></code>.</p>
-<p>I will use <code><a href="https://httr.r-lib.org/reference/POST.html" class="external-link">httr::POST()</a></code> in the API to pass along the GA data, so now is a good time to test with the Slack format.</p>
+<p>I now reference <a href="https://api.slack.com/apps/" class="external-link">Slack’s dev
+docs</a> on how to create a Webhook URL which is of the form
+<code>https://hooks.slack.com/services/XXXX6/B0YYYYYY/3rNZZZZZ</code>
+There is also useful info on the <a href="https://api.slack.com/reference/messaging/payload" class="external-link">formatting of
+the messaging</a> and you can make test calls with <code>curl</code> and
+<code><a href="https://httr.r-lib.org/reference/POST.html" class="external-link">httr::POST()</a></code>.</p>
+<p>I will use <code><a href="https://httr.r-lib.org/reference/POST.html" class="external-link">httr::POST()</a></code> in the API to pass along the GA
+data, so now is a good time to test with the Slack format.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/" class="external-link">httr</a></span><span class="op">)</span>
 <span class="va">slack_url</span> <span class="op">&lt;-</span> <span class="st">"https://hooks.slack.com/services/XXXX6/B0YYYYYY/3rNZZZZZ"</span>
@@ -389,9 +431,12 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <span class="op">)</span>
 
 <span class="fu"><a href="https://httr.r-lib.org/reference/POST.html" class="external-link">POST</a></span><span class="op">(</span><span class="va">slack_url</span>, <span class="fu"><a href="https://httr.r-lib.org/reference/verbose.html" class="external-link">verbose</a></span><span class="op">(</span><span class="op">)</span>, body <span class="op">=</span> <span class="va">the_body</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span></code></pre></div>
-<p>I played around with what exactly to send to Slack for a data.frame and ended up with the above, which looked like this in Slack:</p>
+<p>I played around with what exactly to send to Slack for a data.frame
+and ended up with the above, which looked like this in Slack:</p>
 <p><img src="csv_slack.png"></p>
-<p>It won’t work with large tables, so limit the table down if using kable, or in the end I ended up with just a list of the referral URLs:</p>
+<p>It won’t work with large tables, so limit the table down if using
+kable, or in the end I ended up with just a list of the referral
+URLs:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get last years referrer data</span>
 <span class="va">last_30_new_refs</span> <span class="op">&lt;-</span> <span class="fu">do_ga</span><span class="op">(</span><span class="va">ga_id</span><span class="op">)</span>
@@ -409,7 +454,12 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <div class="section level2">
 <h2 id="modifying-the-r-script-to-get-the-right-format-for-slack">Modifying the R script to get the right format for Slack<a class="anchor" aria-label="anchor" href="#modifying-the-r-script-to-get-the-right-format-for-slack"></a>
 </h2>
-<p>To call the Slack bot, the API needs to collect the data then make a HTTP request itself to pass on the data to the Slack URL. I don’t want to include the Slack URL in the code, so I’ll also alter the Build Trigger to accept a substitution variable in the build, that will hold the Slack URL - this way I can swap out to other Slack webhooks more easily.</p>
+<p>To call the Slack bot, the API needs to collect the data then make a
+HTTP request itself to pass on the data to the Slack URL. I don’t want
+to include the Slack URL in the code, so I’ll also alter the Build
+Trigger to accept a substitution variable in the build, that will hold
+the Slack URL - this way I can swap out to other Slack webhooks more
+easily.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
@@ -456,7 +506,8 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
       <span class="op">)</span>,
   overwrite<span class="op">=</span><span class="cn">TRUE</span>
 <span class="op">)</span></code></pre></div>
-<p>The R API is now also modified to include the new endpoint <code>/trigger-slack</code>:</p>
+<p>The R API is now also modified to include the new endpoint
+<code>/trigger-slack</code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleAnalyticsR/" class="external-link">googleAnalyticsR</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
@@ -483,7 +534,8 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
   
   <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>slack_http_response <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">status_code</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p>We also add knitr to help with rendering the output in the Dockerfile (httr is already a dependency for googleAnalyticsR):</p>
+<p>We also add knitr to help with rendering the output in the Dockerfile
+(httr is already a dependency for googleAnalyticsR):</p>
 <pre><code>FROM rstudio/plumber
 RUN install2.r --error \
     -r 'http://cran.rstudio.com' \
@@ -491,23 +543,30 @@ RUN install2.r --error \
     
 COPY ["./", "./"]
 ENTRYPOINT ["Rscript", "server.R"]</code></pre>
-<p>After making the changes to the Dockerfile and api.R, we commit the changes to redeploy via the Build Trigger (~5mins)</p>
+<p>After making the changes to the Dockerfile and api.R, we commit the
+changes to redeploy via the Build Trigger (~5mins)</p>
 </div>
 <div class="section level2">
 <h2 id="testing-the-app-and-scheduling">Testing the App and Scheduling<a class="anchor" aria-label="anchor" href="#testing-the-app-and-scheduling"></a>
 </h2>
-<p>After deployment it should now be able to respond to the GA endpoint:</p>
+<p>After deployment it should now be able to respond to the GA
+endpoint:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/" class="external-link">httr</a></span><span class="op">)</span>
 <span class="va">ga_id</span> <span class="op">&lt;-</span> <span class="fl">1234557</span>
 <span class="va">my_app</span> <span class="op">&lt;-</span> <span class="st">"https://slackbot-xxxx-ew.a.run.ap"</span>
 <span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://httr.r-lib.org/reference/GET.html" class="external-link">GET</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">my_app</span>, <span class="st">"/last-30-days?ga_id="</span>,<span class="va">ga_id</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://httr.r-lib.org/reference/content.html" class="external-link">content</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></code></pre></div>
-<p>Check the logs for Cloud Build and Cloud Run to see if its all working.</p>
-<p>The first time I tried it the memory was too low for the app, which is why above it specifies “1Gi” for the Cloud Run size.</p>
-<p>But if all goes well then you should be able to see the CSV file come back. (yay!)</p>
+<p>Check the logs for Cloud Build and Cloud Run to see if its all
+working.</p>
+<p>The first time I tried it the memory was too low for the app, which
+is why above it specifies “1Gi” for the Cloud Run size.</p>
+<p>But if all goes well then you should be able to see the CSV file come
+back. (yay!)</p>
 <p><img src="slackbot_csv_download.png"></p>
-<p>The URL endpoint <code>/trigger-slack?ga_id=12345</code> should send the same data you see at <code>/last-30-days?ga_id=12345</code> but send that data to Slack:</p>
+<p>The URL endpoint <code>/trigger-slack?ga_id=12345</code> should send
+the same data you see at <code>/last-30-days?ga_id=12345</code> but send
+that data to Slack:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://httr.r-lib.org/" class="external-link">httr</a></span><span class="op">)</span>
 <span class="va">ga_id</span> <span class="op">&lt;-</span> <span class="fl">1234557</span>
@@ -518,7 +577,8 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <div class="section level3">
 <h3 id="scheduling">Scheduling<a class="anchor" aria-label="anchor" href="#scheduling"></a>
 </h3>
-<p>Now we can schedule the URL via Cloud Scheduler. I’d like it every Friday with my coffee but before my tea.</p>
+<p>Now we can schedule the URL via Cloud Scheduler. I’d like it every
+Friday with my coffee but before my tea.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ga_id</span> <span class="op">&lt;-</span> <span class="fl">1233456</span>
 <span class="va">my_app</span> <span class="op">&lt;-</span> <span class="st">"https://slackbot-xxxxxxx-ew.a.run.app"</span>
@@ -539,9 +599,16 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <div class="section level2">
 <h2 id="where-to-go-from-here">Where to go from here<a class="anchor" aria-label="anchor" href="#where-to-go-from-here"></a>
 </h2>
-<p>Once the app is deployed you can spend most of your time developing the R code rather than worrying about the deployment, which upon each commit will recreate itself.</p>
-<p>You could try adding other endpoints for different GA functions, or making the API/webhook compatible with other services other than Slack.</p>
-<p>You may also want to make the Cloud Run API private, and should if its controlling private of expensive operations, so then look at <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> or <code><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http()</a></code> as your private API options.</p>
+<p>Once the app is deployed you can spend most of your time developing
+the R code rather than worrying about the deployment, which upon each
+commit will recreate itself.</p>
+<p>You could try adding other endpoints for different GA functions, or
+making the API/webhook compatible with other services other than
+Slack.</p>
+<p>You may also want to make the Cloud Run API private, and should if
+its controlling private of expensive operations, so then look at
+<code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> or <code><a href="../reference/cr_run_schedule_http.html">cr_run_schedule_http()</a></code> as
+your private API options.</p>
 </div>
   </div>
 
@@ -562,7 +629,8 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

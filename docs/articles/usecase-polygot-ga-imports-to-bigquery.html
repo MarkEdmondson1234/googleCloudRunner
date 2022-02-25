@@ -170,9 +170,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>GA imports into BigQuery via Polygot Cloud Builds - integrating R code with other languages</h1>
+      <h1 data-toc-skip>GA imports into BigQuery via Polygot Cloud
+Builds - integrating R code with other languages</h1>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-polygot-ga-imports-to-bigquery.Rmd" class="external-link"><code>vignettes/usecase-polygot-ga-imports-to-bigquery.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-polygot-ga-imports-to-bigquery.Rmd</code></div>
@@ -181,22 +182,33 @@
 
     
     
-<p>Since Docker containers can hold any language within them, they offer a universal UI to combine languages. This offers opportunities to extend other languages with R features, and give other languages access to R code without needing to know R.</p>
+<p>Since Docker containers can hold any language within them, they offer
+a universal UI to combine languages. This offers opportunities to extend
+other languages with R features, and give other languages access to R
+code without needing to know R.</p>
 <p>An example below uses:</p>
 <ul>
 <li>
-<code>gcloud</code> - <a href="https://cloud.google.com/sdk/gcloud/" class="external-link">Google’s Cloud command line tool</a> to access Google’s key management store and download an authentication file, and pushes to BigQuery</li>
+<code>gcloud</code> - <a href="https://cloud.google.com/sdk/gcloud/" class="external-link">Google’s Cloud command line
+tool</a> to access Google’s key management store and download an
+authentication file, and pushes to BigQuery</li>
 <li>
-<code>gago</code> - <a href="https://github.com/MarkEdmondson1234/gago" class="external-link">A Go package for fast downloads of Google Analytics data</a>
+<code>gago</code> - <a href="https://github.com/MarkEdmondson1234/gago" class="external-link">A Go package for fast
+downloads of Google Analytics data</a>
 </li>
 <li>
-<code>R</code> - R code to create an Rmd file that will hold interactive forecasts of the Google Analytics data via <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>
+<code>R</code> - R code to create an Rmd file that will hold
+interactive forecasts of the Google Analytics data via
+<code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>
 </li>
 <li>
-<code>nginx</code> - serve up the Rmd files rendered into HTML and hosted on Cloud Run via <code><a href="../reference/cr_deploy_run.html">cr_deploy_html()</a></code>
+<code>nginx</code> - serve up the Rmd files rendered into HTML and
+hosted on Cloud Run via <code><a href="../reference/cr_deploy_run.html">cr_deploy_html()</a></code>
 </li>
 </ul>
-<p>And will perform downloading unsampled data from Google Analytics, creating a statistical report of the data and then uploading the raw data to BigQuery for further analysis.</p>
+<p>And will perform downloading unsampled data from Google Analytics,
+creating a statistical report of the data and then uploading the raw
+data to BigQuery for further analysis.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 <span class="va">polygot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
@@ -279,16 +291,20 @@
 <span class="co"># build the polygot cloud build steps</span>
 <span class="va">build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">polygot</span><span class="op">)</span>
 <span class="va">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span><span class="op">(</span><span class="va">build</span><span class="op">)</span></code></pre></div>
-<p>An example of the demo output is on this Cloud Run instance URL: <code>https://polygot-demo-ewjogewawq-ew.a.run.app/polygot.html</code></p>
+<p>An example of the demo output is on this Cloud Run instance URL:
+<code>https://polygot-demo-ewjogewawq-ew.a.run.app/polygot.html</code></p>
 <p><img src="polygot-html.png"></p>
 <p>It also uploads the data to a BigQuery table:</p>
 <p><img src="polygot-bq-load.png"></p>
-<p>This constructed cloud build can also be used outside of R, by writing out the Cloud Build file via <code><a href="../reference/cr_build_write.html">cr_build_write()</a></code></p>
+<p>This constructed cloud build can also be used outside of R, by
+writing out the Cloud Build file via <code><a href="../reference/cr_build_write.html">cr_build_write()</a></code></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># write out to cloudbuild.yaml for other languages</span>
 <span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">polygot</span><span class="op">)</span>
 <span class="co"># 2019-12-28 19:15:50&gt; Writing to cloudbuild.yaml</span></code></pre></div>
-<p>This can then be scheduled as described in Cloud Scheduler section on <a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html">scheduled cloud builds</a>.</p>
+<p>This can then be scheduled as described in Cloud Scheduler section on
+<a href="https://code.markedmondson.me/googleCloudRunner/articles/cloudscheduler.html">scheduled
+cloud builds</a>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">schedule_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"polygot-example"</span>, <span class="st">"15 8 * * *"</span>, httpTarget <span class="op">=</span> <span class="va">schedule_me</span><span class="op">)</span></code></pre></div>
@@ -310,7 +326,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

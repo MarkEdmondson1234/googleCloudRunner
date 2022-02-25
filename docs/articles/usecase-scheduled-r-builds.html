@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Run R code on a schedule</h1>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-scheduled-r-builds.Rmd" class="external-link"><code>vignettes/usecase-scheduled-r-builds.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-scheduled-r-builds.Rmd</code></div>
@@ -181,27 +181,44 @@
 
     
     
-<p>Sometimes you just want to have some R code running whilst you get on with something else. In this case you can use <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code> to run your R code even after you have turned your computer off, since its running in the cloud. You can also set it up on a schedule to run periodically.</p>
-<p>When running R code, it needs to run in an environment that has the packages and resources it needs. If those are covered by images such as <code>rocker/verse</code> (the tidyverse) then you can commit it straight away. Otherwise you can first make a custom Docker file with the R packages you need in it, and then run your code against that.</p>
-<p>Once you have your R code and chosen the Docker image, then you can use <code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code> to point at your R file and Docker image, set the timeout to what you need (the maximum is 24 hours) and select a schedule if you need it.</p>
+<p>Sometimes you just want to have some R code running whilst you get on
+with something else. In this case you can use
+<code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code> to run your R code even after you have
+turned your computer off, since its running in the cloud. You can also
+set it up on a schedule to run periodically.</p>
+<p>When running R code, it needs to run in an environment that has the
+packages and resources it needs. If those are covered by images such as
+<code>rocker/verse</code> (the tidyverse) then you can commit it
+straight away. Otherwise you can first make a custom Docker file with
+the R packages you need in it, and then run your code against that.</p>
+<p>Once you have your R code and chosen the Docker image, then you can
+use <code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code> to point at your R file and Docker image,
+set the timeout to what you need (the maximum is 24 hours) and select a
+schedule if you need it.</p>
 <div class="section level2">
 <h2 id="typical-workflow-for-running-r-on-cloud-build">Typical workflow for running R on Cloud Build<a class="anchor" aria-label="anchor" href="#typical-workflow-for-running-r-on-cloud-build"></a>
 </h2>
 <p>A typical workflow is:</p>
 <ol style="list-style-type: decimal">
 <li>Create your R script</li>
-<li>Pick or build a Docker image running R that has the libraries necessary for that script - for example <code>rocker/verse</code>. If you need to build your own with a <code>Dockerfile</code> include that in a step before your R code runs.</li>
-<li>Use that Docker image to run your R script within with <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>
+<li>Pick or build a Docker image running R that has the libraries
+necessary for that script - for example <code>rocker/verse</code>. If
+you need to build your own with a <code>Dockerfile</code> include that
+in a step before your R code runs.</li>
+<li>Use that Docker image to run your R script within with
+<code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>
 </li>
 <li>Deploy the Build via <code><a href="../reference/cr_build.html">cr_build()</a></code>
 </li>
-<li>Optionally setup scheduling or a build trigger for when your R script will fire in the future.</li>
+<li>Optionally setup scheduling or a build trigger for when your R
+script will fire in the future.</li>
 </ol>
 <p>An example of code doing the above would be:</p>
 <div class="section level3">
 <h3 id="using-a-precreated-docker-image">Using a precreated docker image<a class="anchor" aria-label="anchor" href="#using-a-precreated-docker-image"></a>
 </h3>
-<p>The below assumes your R script can run with <code>rocker/verse</code></p>
+<p>The below assumes your R script can run with
+<code>rocker/verse</code></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">my_r_script</span> <span class="op">&lt;-</span> <span class="st">"here.R"</span>
 
@@ -219,7 +236,9 @@
 <div class="section level3">
 <h3 id="using-an-r-docker-image-you-build-yourself">Using an R Docker image you build yourself<a class="anchor" aria-label="anchor" href="#using-an-r-docker-image-you-build-yourself"></a>
 </h3>
-<p>Here the Docker image is first built, then used in the R build afterwards (in the <code>name</code> argument). It is also pushed to Google Container Registry.</p>
+<p>Here the Docker image is first built, then used in the R build
+afterwards (in the <code>name</code> argument). It is also pushed to
+Google Container Registry.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">my_r_script</span> <span class="op">&lt;-</span> <span class="st">"here.R"</span>
 <span class="va">my_dockerfile_folder</span> <span class="op">&lt;-</span> <span class="st">"my_build/"</span>
@@ -244,8 +263,12 @@
 </h3>
 <p>Variations include:</p>
 <ul>
-<li>Include the R script within the Docker container, so you just need to run the Docker image to execute your script</li>
-<li>Build the Docker image in the same Cloud Build as the R script running, for which you will need a source for the Dockerfile such as a trigger on GitHub via <code><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo()</a></code> or Cloud Storage</li>
+<li>Include the R script within the Docker container, so you just need
+to run the Docker image to execute your script</li>
+<li>Build the Docker image in the same Cloud Build as the R script
+running, for which you will need a source for the Dockerfile such as a
+trigger on GitHub via <code><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo()</a></code> or Cloud
+Storage</li>
 </ul>
 </div>
 </div>
@@ -254,14 +277,23 @@
 </h2>
 <p>An RStudio gadget is also available to help you deploy:</p>
 <p><img src="gadget_r.png"></p>
-<p>If you want help creating the Docker image, try <a href="https://o2r.info/containerit/" class="external-link"><code>containerit</code></a> to generate your Dockerfile, then use <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> to build it.</p>
-<p>NOTE: You must name the docker file “Dockerfile” when you use the <code>containerit::write()</code> function</p>
+<p>If you want help creating the Docker image, try <a href="https://o2r.info/containerit/" class="external-link"><code>containerit</code></a> to
+generate your Dockerfile, then use <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> to
+build it.</p>
+<p>NOTE: You must name the docker file “Dockerfile” when you use the
+<code>containerit::write()</code> function</p>
 </div>
 <div class="section level2">
 <h2 id="execute-r-scripts-directly-from-cloud-storage">Execute R scripts directly from Cloud Storage<a class="anchor" aria-label="anchor" href="#execute-r-scripts-directly-from-cloud-storage"></a>
 </h2>
-<p>In some cases you may hit character limits of the cloudbuild file in which case you will need to execute the R code from a file. The easiest way to do this is to upload your R code to a Cloud Storage bucket and then supply the <code>gs://</code> URI to <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>:</p>
-<p>The below example uses a public bucket and R image, for your use case you would change to your own private one that your Cloud Build service email has access to:</p>
+<p>In some cases you may hit character limits of the cloudbuild file in
+which case you will need to execute the R code from a file. The easiest
+way to do this is to upload your R code to a Cloud Storage bucket and
+then supply the <code>gs://</code> URI to
+<code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>:</p>
+<p>The below example uses a public bucket and R image, for your use case
+you would change to your own private one that your Cloud Build service
+email has access to:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
@@ -276,11 +308,23 @@
 <div class="section level2">
 <h2 id="authentication-within-the-r-script-on-cloud-build">Authentication within the R script on Cloud Build<a class="anchor" aria-label="anchor" href="#authentication-within-the-r-script-on-cloud-build"></a>
 </h2>
-<p>The recommended way to use secrets in build is to use <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code>, and upload the sensitive authentication file to <a href="https://cloud.google.com/secret-manager" class="external-link">Google Secret Manager</a> before hand.</p>
-<p>You can also authenticate without uploading any file, if you can use the default service account. This is usually the case for cloud services such as BigQuery.</p>
-<p>The default metadata of the Cloud Build server is the same as <code>googleComputeEngineR</code>, so you can use <code>googleAuthR::gar_gce_auth("default", scopes = "https://www.googleapis.com/auth/cloud-platform")</code>.</p>
-<p>You can also use the Cloud Build email (the one that looks like <code>{project-number@cloudbuild.gserviceaccount.com}</code>) if its given the right access in Cloud IAM, authentication in your R script will look like <code>googleAuthR::gar_gce_auth("{project-number@cloudbuild.gserviceaccount.com}", scopes = "https://www.googleapis.com/auth/cloud-platform")</code></p>
-<p>This enables you in the R script to download files from Cloud Storage, for example. A minimal example is shown below:</p>
+<p>The recommended way to use secrets in build is to use
+<code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code>, and upload the sensitive
+authentication file to <a href="https://cloud.google.com/secret-manager" class="external-link">Google Secret Manager</a>
+before hand.</p>
+<p>You can also authenticate without uploading any file, if you can use
+the default service account. This is usually the case for cloud services
+such as BigQuery.</p>
+<p>The default metadata of the Cloud Build server is the same as
+<code>googleComputeEngineR</code>, so you can use
+<code>googleAuthR::gar_gce_auth("default", scopes = "https://www.googleapis.com/auth/cloud-platform")</code>.</p>
+<p>You can also use the Cloud Build email (the one that looks like
+<code>{project-number@cloudbuild.gserviceaccount.com}</code>) if its
+given the right access in Cloud IAM, authentication in your R script
+will look like
+<code>googleAuthR::gar_gce_auth("{project-number@cloudbuild.gserviceaccount.com}", scopes = "https://www.googleapis.com/auth/cloud-platform")</code></p>
+<p>This enables you in the R script to download files from Cloud
+Storage, for example. A minimal example is shown below:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googleCloudStorageR)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googleAuthR)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">gar_gce_auth</span>(<span class="st">"default"</span>, <span class="at">scopes =</span> <span class="st">"https://www.googleapis.com/auth/cloud-platform"</span>)</span>
@@ -293,33 +337,50 @@
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>auth_file <span class="ot">&lt;-</span> <span class="fu">gcs_get_object</span>(<span class="st">"config.json"</span>, <span class="at">bucket =</span> <span class="st">"my-bucket"</span>)</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>...do something with the config file...</span></code></pre></div>
-<p>This would then be saved to an R script and deployed via the gadget or:</p>
+<p>This would then be saved to an R script and deployed via the gadget
+or:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_deploy_r.html">cr_deploy_r</a></span><span class="op">(</span><span class="st">"the_script.R"</span>, r_image <span class="op">=</span> <span class="st">"gcr.io/gcer-public/googleauthr-verse"</span><span class="op">)</span></code></pre></div>
-<p>…where the docker R image is one with googleCloudStorageR installed.</p>
+<p>…where the docker R image is one with googleCloudStorageR
+installed.</p>
 </div>
 <div class="section level2">
 <h2 id="importing-data-for-your-r-script-to-operate-upon">Importing data for your R script to operate upon<a class="anchor" aria-label="anchor" href="#importing-data-for-your-r-script-to-operate-upon"></a>
 </h2>
-<p>There are lots of options for how your script will interact with data:</p>
+<p>There are lots of options for how your script will interact with
+data:</p>
 <ol style="list-style-type: decimal">
-<li>Download the data from within the R script itself, perhaps with <code>googleCloudStorageR</code> or similar</li>
-<li>Have a previous buildstep download the data into the Cloud Build workspace <code>/workspace/</code>, then have your R script import that file. e.g. use <code><a href="../reference/cr_buildstep_gcloud.html">cr_buildstep_gcloud()</a></code> to download from Cloud Storage before running <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>
+<li>Download the data from within the R script itself, perhaps with
+<code>googleCloudStorageR</code> or similar</li>
+<li>Have a previous buildstep download the data into the Cloud Build
+workspace <code>/workspace/</code>, then have your R script import that
+file. e.g. use <code><a href="../reference/cr_buildstep_gcloud.html">cr_buildstep_gcloud()</a></code> to download from Cloud
+Storage before running <code><a href="../reference/cr_buildstep_r.html">cr_buildstep_r()</a></code>
 </li>
-<li>Use <code><a href="../reference/cr_buildstep_git.html">cr_buildstep_git()</a></code> to clone or pull from another git repo</li>
-<li>If using a <code><a href="../reference/RepoSource.html">RepoSource()</a></code> or a <code><a href="../reference/StorageSource.html">StorageSource()</a></code> object in your Cloud Build, update those sources from some other process that will be included in the next build</li>
-<li>If using Build Triggers, the git repo the trigger is based upon will include the changes of the latest git commit</li>
-<li>Include the data within the Docker container environment the R script runs within</li>
+<li>Use <code><a href="../reference/cr_buildstep_git.html">cr_buildstep_git()</a></code> to clone or pull from another
+git repo</li>
+<li>If using a <code><a href="../reference/RepoSource.html">RepoSource()</a></code> or a
+<code><a href="../reference/StorageSource.html">StorageSource()</a></code> object in your Cloud Build, update those
+sources from some other process that will be included in the next
+build</li>
+<li>If using Build Triggers, the git repo the trigger is based upon will
+include the changes of the latest git commit</li>
+<li>Include the data within the Docker container environment the R
+script runs within</li>
 </ol>
 </div>
 <div class="section level2">
 <h2 id="build-an-rmd-on-a-schedule-and-host-its-html-on-cloud-storage">Build an Rmd on a schedule and host its HTML on Cloud Storage<a class="anchor" aria-label="anchor" href="#build-an-rmd-on-a-schedule-and-host-its-html-on-cloud-storage"></a>
 </h2>
-<p>Cloud Storage can host public HTML files like a website, which can be accessed via public or private viewers. This can be useful in setting up reporting infrastructure.</p>
+<p>Cloud Storage can host public HTML files like a website, which can be
+accessed via public or private viewers. This can be useful in setting up
+reporting infrastructure.</p>
 <p>A video of the below workflow is <a href="https://www.youtube.com/watch?v=BainmerWVb0" class="external-link">here</a>:</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/BainmerWVb0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
-<p>The Cloud Build below makes use of Cloud Build artifacts to send the built Rmd files to a public Cloud Storage bucket. The Rmd is built on a schedule to pull in new data from a Google Sheet:</p>
+<p>The Cloud Build below makes use of Cloud Build artifacts to send the
+built Rmd files to a public Cloud Storage bucket. The Rmd is built on a
+schedule to pull in new data from a Google Sheet:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">rmd_build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
   steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
@@ -340,12 +401,14 @@
 
 <span class="co"># test the build</span>
 <span class="va">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">rmd_build</span><span class="op">)</span></code></pre></div>
-<p>Once the build is tested, we now schedule the Rmd to build each morning, adapting to changes in the source data file.</p>
+<p>Once the build is tested, we now schedule the Rmd to build each
+morning, adapting to changes in the source data file.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># schedule the build</span>
 <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule</a></span><span class="op">(</span><span class="st">"rmd-demo"</span>, schedule <span class="op">=</span> <span class="st">"15 5 * * *"</span>,
             httpTarget <span class="op">=</span> <span class="fu"><a href="../reference/cr_schedule.html">cr_schedule_http</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>The example Rmd file is built and available on a public Cloud Storage bucket - the above example is available at this <a href="https://storage.googleapis.com/mark-edmondson-public-read/scheduled_rmarkdown.html" class="external-link">link</a></p>
+<p>The example Rmd file is built and available on a public Cloud Storage
+bucket - the above example is available at this <a href="https://storage.googleapis.com/mark-edmondson-public-read/scheduled_rmarkdown.html" class="external-link">link</a></p>
 <p><img src="schedule_markdown_hosted_gcs.png"></p>
 </div>
 <div class="section level2">
@@ -353,13 +416,29 @@
 </h2>
 <blockquote class="twitter-tweet">
 <p lang="en" dir="ltr">
-I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's the best way to host the dashboard somewhere <em>and</em> make it so it shows the latest data? i.e. how should I show dynamic data in an RMarkdown dashboard? Continually reknit? Make a plumber API? <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw" class="external-link">#rstats</a>
+I have a flexdashboard that shows data from a Google Sheet with
+ggplotly. What's the best way to host the dashboard somewhere
+<em>and</em> make it so it shows the latest data? i.e. how should I show
+dynamic data in an RMarkdown dashboard? Continually reknit? Make a
+plumber API?
+<a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw" class="external-link">#rstats</a>
 </p>
-— Andrew Heiss, PhD (<span class="citation">@andrewheiss</span>) <a href="https://twitter.com/andrewheiss/status/1212408575684943878?ref_src=twsrc%5Etfw" class="external-link">January 1, 2020</a>
+— Andrew Heiss, PhD (<span class="citation">@andrewheiss</span>)
+<a href="https://twitter.com/andrewheiss/status/1212408575684943878?ref_src=twsrc%5Etfw" class="external-link">January
+1, 2020</a>
 </blockquote>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><p>Cloud Run scales from 0 to millions of hits, so can be an option for hosting a website. In particular you may want a private internal website, have R code executing via a plumber API in the same container, or have lots of traffic or data that goes over other free hosting options such as GitHub pages. A nginx server configuration is included to host any HTML you provide via <code><a href="../reference/cr_deploy_run.html">cr_deploy_html()</a></code>.</p>
-<p>You may prefer using Cloud Storage public URLs if you don’t need any of Cloud Run’s features, like the previous example.</p>
-<p>Coupled to that, a common use case is to render Rmd files and host them on a website like the tweet above. For the above tweet scenario, the Rmd has a setup block that reads from googlesheets via the code below:</p>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script><p>Cloud Run scales from 0 to millions of hits, so can be an option for
+hosting a website. In particular you may want a private internal
+website, have R code executing via a plumber API in the same container,
+or have lots of traffic or data that goes over other free hosting
+options such as GitHub pages. A nginx server configuration is included
+to host any HTML you provide via <code><a href="../reference/cr_deploy_run.html">cr_deploy_html()</a></code>.</p>
+<p>You may prefer using Cloud Storage public URLs if you don’t need any
+of Cloud Run’s features, like the previous example.</p>
+<p>Coupled to that, a common use case is to render Rmd files and host
+them on a website like the tweet above. For the above tweet scenario,
+the Rmd has a setup block that reads from googlesheets via the code
+below:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="in">library(flexdashboard)</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="in">library(googlesheets4)</span></span>
@@ -382,8 +461,14 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="in">p &lt;- ggplot(gm, aes(gdpPercap, lifeExp)) + theme_minimal() + scale_x_log10()</span></span>
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
-<p>The build Rmd docker in this case needs all the libraries listed (flexdashboard, googlesheets4 etc.) included in its build - this could be built before hand in another Cloud Build - in this case the libraries are all in <code>gcr.io/gcer-public/render_rmd</code></p>
-<p>For this example, the build is not reading from a git repo but the Rmd file is downloaded from a Cloud Storage bucket, that you may have uploaded to manually, via <code>googleCloudStorageR</code> or perhaps copied over from a repo in another Cloud Build on a Build Trigger.</p>
+<p>The build Rmd docker in this case needs all the libraries listed
+(flexdashboard, googlesheets4 etc.) included in its build - this could
+be built before hand in another Cloud Build - in this case the libraries
+are all in <code>gcr.io/gcer-public/render_rmd</code></p>
+<p>For this example, the build is not reading from a git repo but the
+Rmd file is downloaded from a Cloud Storage bucket, that you may have
+uploaded to manually, via <code>googleCloudStorageR</code> or perhaps
+copied over from a repo in another Cloud Build on a Build Trigger.</p>
 <p>The scheduled build then can be enabled via:</p>
 <ol style="list-style-type: decimal">
 <li>Uploading your Rmarkdown files to a Cloud Storage bucket</li>
@@ -427,7 +512,8 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">build_rmd</span><span class="op">)</span>
 <span class="va">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_wait.html">cr_build_wait</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span></code></pre></div>
-<p>You should see a Cloud Run URL in the logs, like this one: <code>https://my-html-on-cloudrun-ewjogewawq-ew.a.run.app/scheduled_rmarkdown.html</code></p>
+<p>You should see a Cloud Run URL in the logs, like this one:
+<code>https://my-html-on-cloudrun-ewjogewawq-ew.a.run.app/scheduled_rmarkdown.html</code></p>
 <p><img src="rmd-on-cloudrun.png"></p>
 <ol start="6" style="list-style-type: decimal">
 <li>Schedule the build using cron syntax</li>
@@ -446,23 +532,36 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <div class="section level3">
 <h3 id="do-it-all-in-r-using-cr_deploy_r">Do it all in R using cr_deploy_r()<a class="anchor" aria-label="anchor" href="#do-it-all-in-r-using-cr_deploy_r"></a>
 </h3>
-<p>An alternative if you only wanted to do a scheduled deployment would be to put all steps in an R script (downloading, building and uploading to Cloud Storage via <code>googleCloudStorageR</code>) and use the RStudio gadget or <code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code></p>
+<p>An alternative if you only wanted to do a scheduled deployment would
+be to put all steps in an R script (downloading, building and uploading
+to Cloud Storage via <code>googleCloudStorageR</code>) and use the
+RStudio gadget or <code><a href="../reference/cr_deploy_r.html">cr_deploy_r()</a></code></p>
 <p><img src="gadget_r.png"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="migrate-an-existing-scheduled-docker-container">Migrate an existing scheduled Docker container<a class="anchor" aria-label="anchor" href="#migrate-an-existing-scheduled-docker-container"></a>
 </h2>
-<p>You may have an existing Docker container containing code, that doesn’t need a public URL.</p>
-<p>For example, a self-contained R script with <code>googleAnalyticsR</code> and <code>bigQueryR</code> pre-installed, that downloads data from Google Analytics and uploads it to BigQuery. This may be running on a VM from <code>googleComputeEngineR</code>, Kubernetes or Airflow KubernetesPodOperator.</p>
-<p>If you give the cloud build service email the right permissions, then this can all be done on Cloud Build + Cloud Scheduler.</p>
-<p>For example, say your existing container is called <code>gcr.io/my-project/my-r-script</code>. A Cloud Build could look simply like this:</p>
+<p>You may have an existing Docker container containing code, that
+doesn’t need a public URL.</p>
+<p>For example, a self-contained R script with
+<code>googleAnalyticsR</code> and <code>bigQueryR</code> pre-installed,
+that downloads data from Google Analytics and uploads it to BigQuery.
+This may be running on a VM from <code>googleComputeEngineR</code>,
+Kubernetes or Airflow KubernetesPodOperator.</p>
+<p>If you give the cloud build service email the right permissions, then
+this can all be done on Cloud Build + Cloud Scheduler.</p>
+<p>For example, say your existing container is called
+<code>gcr.io/my-project/my-r-script</code>. A Cloud Build could look
+simply like this:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r_code</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
   <span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span><span class="st">"gcr.io/my-project/my-r-script"</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="fu"><a href="../reference/cr_build.html">cr_build</a></span><span class="op">(</span><span class="va">r_code</span><span class="op">)</span></code></pre></div>
-<p>You could add other steps if you wanted, such as sending an email when done via <code><a href="../reference/cr_buildstep_mailgun.html">cr_buildstep_mailgun()</a></code> or <code><a href="../reference/cr_buildstep_slack.html">cr_buildstep_slack()</a></code>:</p>
+<p>You could add other steps if you wanted, such as sending an email
+when done via <code><a href="../reference/cr_buildstep_mailgun.html">cr_buildstep_mailgun()</a></code> or
+<code><a href="../reference/cr_buildstep_slack.html">cr_buildstep_slack()</a></code>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">r_code</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>
   steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="../reference/cr_buildstep.html">cr_buildstep</a></span><span class="op">(</span><span class="st">"gcr.io/my-project/my-r-script"</span><span class="op">)</span>,
@@ -478,14 +577,25 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <div class="section level2">
 <h2 id="run-r-code-via-cloud-run">Run R code via Cloud Run<a class="anchor" aria-label="anchor" href="#run-r-code-via-cloud-run"></a>
 </h2>
-<p>Instead of using Cloud Build, you may want to use Cloud Run as the engine running the R code, either because you want to control the code via parametisation of a HTTP request to your R code, or one use case I came across was needing to make requests from a fixed ip address - Cloud Run offers a way to fix the IP of the app.</p>
-<p>See the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-r-api-microservices.html">R API Microservices Use Case</a> for more details on creating and deploying an R API using plumber.</p>
-<p>R code is triggered using an API package such as plumber to create HTTP endpoints. The scheduler can then use that HTTP endpoint as the mechanism to trigger schedules.</p>
+<p>Instead of using Cloud Build, you may want to use Cloud Run as the
+engine running the R code, either because you want to control the code
+via parametisation of a HTTP request to your R code, or one use case I
+came across was needing to make requests from a fixed ip address - Cloud
+Run offers a way to fix the IP of the app.</p>
+<p>See the <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-r-api-microservices.html">R
+API Microservices Use Case</a> for more details on creating and
+deploying an R API using plumber.</p>
+<p>R code is triggered using an API package such as plumber to create
+HTTP endpoints. The scheduler can then use that HTTP endpoint as the
+mechanism to trigger schedules.</p>
 <p>See <code><a href="../reference/cr_run_schedule_http.html">?cr_run_schedule_http</a></code> for examples.</p>
 <div class="section level3">
 <h3 id="public-apis">Public APIs<a class="anchor" aria-label="anchor" href="#public-apis"></a>
 </h3>
-<p>For R code that is public you don’t need to worry about authentication, so you can trigger your R code by creating a <code><a href="../reference/HttpTarget.html">?HttpTarget</a></code> object that will carry your endpoint and parameters as set up in your plumber app:</p>
+<p>For R code that is public you don’t need to worry about
+authentication, so you can trigger your R code by creating a
+<code><a href="../reference/HttpTarget.html">?HttpTarget</a></code> object that will carry your endpoint and
+parameters as set up in your plumber app:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># for unauthenticated apps create a HttpTarget</span>
 <span class="va">run_me</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/HttpTarget.html">HttpTarget</a></span><span class="op">(</span>
@@ -497,8 +607,14 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 <div class="section level3">
 <h3 id="private-apis">Private APIs<a class="anchor" aria-label="anchor" href="#private-apis"></a>
 </h3>
-<p>For private R APIs, you can use <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> and friends to call the API from your local R session, but for Cloud Scheduler to call the API a special new service account is needed with Cloud Run Invoker authentication rights.</p>
-<p>When you create an app via <code>cr_deploy_run("my-app", allowUnauthenticated = TRUE)</code> a new service account will be created with the rights called “my-app-invoker”. Use that email to tell the scheduler how to call the app:</p>
+<p>For private R APIs, you can use <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> and
+friends to call the API from your local R session, but for Cloud
+Scheduler to call the API a special new service account is needed with
+Cloud Run Invoker authentication rights.</p>
+<p>When you create an app via
+<code>cr_deploy_run("my-app", allowUnauthenticated = TRUE)</code> a new
+service account will be created with the rights called “my-app-invoker”.
+Use that email to tell the scheduler how to call the app:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># for authenticated Cloud Run apps - create with allowUnauthenticated=FALSE</span>
 <span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span><span class="op">(</span><span class="st">"my-app"</span>, allowUnauthenticated <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
@@ -540,7 +656,8 @@ I have a flexdashboard that shows data from a Google Sheet with ggplotly. What's
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

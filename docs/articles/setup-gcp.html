@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Setup</h1>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/setup-gcp.Rmd" class="external-link"><code>vignettes/setup-gcp.Rmd</code></a></small>
       <div class="hidden name"><code>setup-gcp.Rmd</code></div>
@@ -184,58 +184,89 @@
 <div class="section level2">
 <h2 id="setup-new-google-cloud-project-and-client-id">Setup new Google Cloud Project and client Id<a class="anchor" aria-label="anchor" href="#setup-new-google-cloud-project-and-client-id"></a>
 </h2>
-<p>It is recommended to use a new Google Cloud Project, to ensure all modern services are activated. Also cross-project authentication is more complicated so its easiest if you keep all services within one project. Billing will also need to be enabled with a credit card.</p>
-<p>You will need to be logged in as the Owner of the project for the below.</p>
-<p>A video walk-through is available below, on <a href="https://www.youtube.com/watch?v=RrYrMsoIXsw" class="external-link">how to set-up googleCloudRunner’s Google Console and R environment</a>:</p>
+<p>It is recommended to use a new Google Cloud Project, to ensure all
+modern services are activated. Also cross-project authentication is more
+complicated so its easiest if you keep all services within one project.
+Billing will also need to be enabled with a credit card.</p>
+<p>You will need to be logged in as the Owner of the project for the
+below.</p>
+<p>A video walk-through is available below, on <a href="https://www.youtube.com/watch?v=RrYrMsoIXsw" class="external-link">how to set-up
+googleCloudRunner’s Google Console and R environment</a>:</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/RrYrMsoIXsw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 <div class="section level3">
 <h3 id="create-consent-screen-for-your-gcp-client">Create Consent Screen for your GCP client<a class="anchor" aria-label="anchor" href="#create-consent-screen-for-your-gcp-client"></a>
 </h3>
-<p>Once your project is created, visit <code>APIs &amp; Services &gt; Credentials</code> or <code>https://console.cloud.google.com/apis/credentials</code> to set up an OAuth 2.0 Client ID</p>
+<p>Once your project is created, visit
+<code>APIs &amp; Services &gt; Credentials</code> or
+<code>https://console.cloud.google.com/apis/credentials</code> to set up
+an OAuth 2.0 Client ID</p>
 <p><img src="oauth-create-credentials-start.png"></p>
-<p>If not created already, you will first need to make an OAuth consent screen at <code>APIs &amp; Services &gt; OAuth consent screen</code> or <code>https://console.cloud.google.com/apis/credentials/consent</code></p>
+<p>If not created already, you will first need to make an OAuth consent
+screen at <code>APIs &amp; Services &gt; OAuth consent screen</code> or
+<code>https://console.cloud.google.com/apis/credentials/consent</code></p>
 <p><img src="oauth-consent-screen-name-step1.png"></p>
-<p>For most purposes, you will only need to authorize your own email through this OAuth consent screen, in which case the settings you want will be:</p>
+<p>For most purposes, you will only need to authorize your own email
+through this OAuth consent screen, in which case the settings you want
+will be:</p>
 <ul>
 <li>App name - whatever you want</li>
 </ul>
 <p><img src="oauth-consent-screen-name-step1.png"></p>
 <ul>
-<li>Scopes - set them to <code>../auth/cloud-platform</code> (<strong>Note in screenshot a Google bug calls all scopes “BigQueryAPI” but should read “Cloud Platform”</strong>)</li>
+<li>Scopes - set them to <code>../auth/cloud-platform</code>
+(<strong>Note in screenshot a Google bug calls all scopes “BigQueryAPI”
+but should read “Cloud Platform”</strong>)</li>
 </ul>
 <p><img src="oauth-create-credentials-scopes-set-step2.png"></p>
 <ul>
-<li>Test users = “<a href="mailto:your@email.com" class="email">your@email.com</a>” (plus anyone else who will authenticate with same client ID)</li>
+<li>Test users = “<a href="mailto:your@email.com" class="email">your@email.com</a>” (plus anyone else who will
+authenticate with same client ID)</li>
 </ul>
 <p><img src="oauth-consent-screen-test-user-step3.png"></p>
 <ul>
-<li>User type = “External” (or optionally “Internal” if you are a GSuite user)</li>
+<li>User type = “External” (or optionally “Internal” if you are a GSuite
+user)</li>
 </ul>
 <p><img src="oauth-consent-screen-final-app.png"></p>
 <ul>
-<li>Publishing status = “Testing” - you probably do NOT want to push to production otherwise you will need to get approval from Google.</li>
+<li>Publishing status = “Testing” - you probably do NOT want to push to
+production otherwise you will need to get approval from Google.</li>
 </ul>
 <p><img src="oauth-consent-screen-push-to-production.png"></p>
-<p>As the app will not be public or in production, the app should not require verification, only test users (e.g. your email) should be approved.</p>
+<p>As the app will not be public or in production, the app should not
+require verification, only test users (e.g. your email) should be
+approved.</p>
 </div>
 <div class="section level3">
 <h3 id="create-oauth2-client-id-and-download-json-file">Create Oauth2 client ID and download JSON file<a class="anchor" aria-label="anchor" href="#create-oauth2-client-id-and-download-json-file"></a>
 </h3>
-<p>Once the consent screen is configured, you should be able to create credentials at <code>APIs &amp; Services &gt; Credentials &gt; Create Credentials &gt; OAuth client ID</code> or <code>https://console.cloud.google.com/apis/credentials/oauthclient</code></p>
+<p>Once the consent screen is configured, you should be able to create
+credentials at
+<code>APIs &amp; Services &gt; Credentials &gt; Create Credentials &gt; OAuth client ID</code>
+or
+<code>https://console.cloud.google.com/apis/credentials/oauthclient</code></p>
 <p><img src="oauth-create-credentials-start.png"></p>
-<p>Select “Desktop app” - an OAuth client should be created. Download this client ID via the download button on the far right.</p>
+<p>Select “Desktop app” - an OAuth client should be created. Download
+this client ID via the download button on the far right.</p>
 <p><img src="oauth-create-credentials-desktop-app.png"></p>
-<p>Upon creation you will have generated a Client ID and a Client Secret</p>
+<p>Upon creation you will have generated a Client ID and a Client
+Secret</p>
 <p><img src="oauth-create-credentials-created.png"></p>
-<p>Now download the client ID JSON file via the download button far-right that will identify your GCP app. This will be what is used to generated service keys that are another type of JSON file to authenticate users for this app.</p>
+<p>Now download the client ID JSON file via the download button
+far-right that will identify your GCP app. This will be what is used to
+generated service keys that are another type of JSON file to
+authenticate users for this app.</p>
 <p><img src="oauth-create-credentials-download-clientid.png"></p>
-<p>Once you have the client Id JSON file, you should be able to use <code><a href="../reference/cr_setup.html">cr_setup()</a></code> or the manual steps below to setup the rest of the configuration.</p>
+<p>Once you have the client Id JSON file, you should be able to use
+<code><a href="../reference/cr_setup.html">cr_setup()</a></code> or the manual steps below to setup the rest of
+the configuration.</p>
 </div>
 <div class="section level3">
 <h3 id="enable-apis">Enable APIs<a class="anchor" aria-label="anchor" href="#enable-apis"></a>
 </h3>
-<p>To enable automatic provision of the service accounts are services you may also need to active the APIs necessary</p>
+<p>To enable automatic provision of the service accounts are services
+you may also need to active the APIs necessary</p>
 <ul>
 <li>IAM API <a href="https://console.developers.google.com/apis/api/iam.googleapis.com/overview" class="external-link uri">https://console.developers.google.com/apis/api/iam.googleapis.com/overview</a>
 </li>
@@ -246,14 +277,19 @@
 <li>Cloud Build <a href="https://console.cloud.google.com/apis/api/cloudbuild.googleapis.com/overview" class="external-link uri">https://console.cloud.google.com/apis/api/cloudbuild.googleapis.com/overview</a>
 </li>
 </ul>
-<p>If the APIs are not activated, the error messages should point you in the right direction. Enable the APIs if necessary and try the call again.</p>
-<p>You will also need to create a Cloud Schedule job manually first, which will on start up ask you to set up a region for your scheduled jobs. Set them up starting from here: <a href="https://console.cloud.google.com/cloudscheduler" class="external-link uri">https://console.cloud.google.com/cloudscheduler</a></p>
+<p>If the APIs are not activated, the error messages should point you in
+the right direction. Enable the APIs if necessary and try the call
+again.</p>
+<p>You will also need to create a Cloud Schedule job manually first,
+which will on start up ask you to set up a region for your scheduled
+jobs. Set them up starting from here: <a href="https://console.cloud.google.com/cloudscheduler" class="external-link uri">https://console.cloud.google.com/cloudscheduler</a></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="setup-wizard-cr_setup">Setup wizard cr_setup()<a class="anchor" aria-label="anchor" href="#setup-wizard-cr_setup"></a>
 </h2>
-<p>There is a setup function to help you configure the package. Get started via the commands below:</p>
+<p>There is a setup function to help you configure the package. Get
+started via the commands below:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_setup.html">cr_setup</a></span><span class="op">(</span><span class="op">)</span>
@@ -267,17 +303,30 @@
 <span class="co">#4: Configure Cloud Storage bucket</span>
 <span class="co">#5: Configure Cloud Run region</span>
 <span class="co">#6: Configure Cloud Scheduler build email</span></code></pre></div>
-<p>It will walk you through the details below. You can also use it to check your settings.</p>
+<p>It will walk you through the details below. You can also use it to
+check your settings.</p>
 <div class="section level3">
 <h3 id="cr_setup_auth-and-cr_setup_service">cr_setup_auth() and cr_setup_service()<a class="anchor" aria-label="anchor" href="#cr_setup_auth-and-cr_setup_service"></a>
 </h3>
-<p>You can configure authentication separately, as its usually the trickiest bit. The <code><a href="../reference/cr_setup_auth.html">cr_setup_auth()</a></code> function attempts to help you walk through the authentication and after running it and restarting R a couple of times you should only need to download a client ID from your project to have it all configured for you.</p>
-<p>If you are customising things then <code><a href="../reference/cr_setup_service.html">cr_setup_service()</a></code> may be useful, which lets you add common roles to the service account emails. The other setup functions call it to set things up for you, but you may want more control, or have special needs for your cloud build email for example, which needs roles assigned for certain services you want to build.</p>
+<p>You can configure authentication separately, as its usually the
+trickiest bit. The <code><a href="../reference/cr_setup_auth.html">cr_setup_auth()</a></code> function attempts to
+help you walk through the authentication and after running it and
+restarting R a couple of times you should only need to download a client
+ID from your project to have it all configured for you.</p>
+<p>If you are customising things then <code><a href="../reference/cr_setup_service.html">cr_setup_service()</a></code>
+may be useful, which lets you add common roles to the service account
+emails. The other setup functions call it to set things up for you, but
+you may want more control, or have special needs for your cloud build
+email for example, which needs roles assigned for certain services you
+want to build.</p>
 </div>
 <div class="section level3">
 <h3 id="cr_setup_test">cr_setup_test()<a class="anchor" aria-label="anchor" href="#cr_setup_test"></a>
 </h3>
-<p>Once you get all green ticks in <code><a href="../reference/cr_setup.html">cr_setup()</a></code> then you should be able to run the subset of the package unit tests via <code><a href="../reference/cr_setup_test.html">cr_setup_test()</a></code>. Should those all complete then you should be able to run any of the functions in the package!</p>
+<p>Once you get all green ticks in <code><a href="../reference/cr_setup.html">cr_setup()</a></code> then you
+should be able to run the subset of the package unit tests via
+<code><a href="../reference/cr_setup_test.html">cr_setup_test()</a></code>. Should those all complete then you should
+be able to run any of the functions in the package!</p>
 </div>
 </div>
 <div class="section level2">
@@ -286,23 +335,32 @@
 <div class="section level3">
 <h3 id="authentication-background">Authentication background<a class="anchor" aria-label="anchor" href="#authentication-background"></a>
 </h3>
-<p>The package uses several interacting Google Cloud services so setup needs to cover authentication both for yourself and the services interacting on your behalf.</p>
+<p>The package uses several interacting Google Cloud services so setup
+needs to cover authentication both for yourself and the services
+interacting on your behalf.</p>
 <p>There are three types of authentication to keep track of:</p>
 <ol style="list-style-type: decimal">
 <li>Authenticating your local R session so it can submit jobs</li>
-<li>Authenticating Cloud Build so it can do the script you have submitted</li>
-<li>Authenticating services such as Cloud Scheduler so they can trigger builds on your behalf.</li>
+<li>Authenticating Cloud Build so it can do the script you have
+submitted</li>
+<li>Authenticating services such as Cloud Scheduler so they can trigger
+builds on your behalf.</li>
 </ol>
-<p>Its simplest if you use the same authentication key for 1 and 3, and the default Cloud Build service email for 2.</p>
-<p>Confusion can occur if you use the Cloud Build service email from 2 for 1 or 3.</p>
+<p>Its simplest if you use the same authentication key for 1 and 3, and
+the default Cloud Build service email for 2.</p>
+<p>Confusion can occur if you use the Cloud Build service email from 2
+for 1 or 3.</p>
 </div>
 <div class="section level3">
 <h3 id="suggested-setup">Suggested setup<a class="anchor" aria-label="anchor" href="#suggested-setup"></a>
 </h3>
-<p>The suggested setup is only required once per GCP project. Following the below instructions will mean:</p>
+<p>The suggested setup is only required once per GCP project. Following
+the below instructions will mean:</p>
 <ol style="list-style-type: decimal">
-<li>You can use all R functions in the package to trigger builds locally with a dedicated service key</li>
-<li>You can reuse the Cloud Build service email to authenticate build services (such as gcloud and BigQuery)</li>
+<li>You can use all R functions in the package to trigger builds locally
+with a dedicated service key</li>
+<li>You can reuse the Cloud Build service email to authenticate build
+services (such as gcloud and BigQuery)</li>
 <li>Scheduled builds will reuse the key you use locally</li>
 </ol>
 <p>Follow these steps:</p>
@@ -318,7 +376,8 @@
 </ol>
 <p><img src="cr_service_email.png"></p>
 <ol start="5" style="list-style-type: decimal">
-<li>Set the roles of the service account on the next screen to these:</li>
+<li>Set the roles of the service account on the next screen to
+these:</li>
 </ol>
 <p><img src="service-roles.png"></p>
 <ul>
@@ -329,29 +388,61 @@
 <li>Storage Object Admin (or Storage Admin to setup pub/sub)</li>
 </ul>
 <ol start="6" style="list-style-type: decimal">
-<li>Give yourself access as a user to the service account, then click “Create key” and select “JSON”</li>
-<li>Download the auth json key and put it in a folder separate from all R projects or git commits. <strong>This file should be guarded as it grants access to sensitive operations</strong>
+<li>Give yourself access as a user to the service account, then click
+“Create key” and select “JSON”</li>
+<li>Download the auth json key and put it in a folder separate from all
+R projects or git commits. <strong>This file should be guarded as it
+grants access to sensitive operations</strong>
 </li>
-<li>Set your <code>.Renviron</code> file to point at the JSON file you just downloaded, and use its service email for scheduled builds e.g.:</li>
+<li>Set your <code>.Renviron</code> file to point at the JSON file you
+just downloaded, and use its service email for scheduled builds
+e.g.:</li>
 </ol>
 <pre><code><span class="va">GCE_AUTH_FILE</span><span class="op">=</span><span class="st">"/Users/me/auth/auth.json"</span>
 <span class="va">CR_BUILD_EMAIL</span><span class="op">=</span><span class="va">googlecloudrunner</span><span class="op">@</span><span class="va">your</span><span class="op">-</span><span class="va">project.iam.gserviceaccount.com</span></code></pre>
 <ol start="9" style="list-style-type: decimal">
-<li>Ensure you have the Cloud Build, Cloud Run, Cloud Storage and Cloud Scheduler APIs turned on in your GCP project via the <code>GCP console &gt; APIs &amp; Services</code>
+<li>Ensure you have the Cloud Build, Cloud Run, Cloud Storage and Cloud
+Scheduler APIs turned on in your GCP project via the
+<code>GCP console &gt; APIs &amp; Services</code>
 </li>
 </ol>
 </div>
 <div class="section level4">
 <h4 id="the-cloud-build-service-account">The Cloud Build service account<a class="anchor" aria-label="anchor" href="#the-cloud-build-service-account"></a>
 </h4>
-<p>This is the service account for Cloud Build when it is running on your project. It is created automatically, and should look like <code>{project-number}@cloudbuild.gserviceaccount.com</code> when you examine your IAM console.</p>
+<p>This is the service account for Cloud Build when it is running on
+your project. It is created automatically, and should look like
+<code>{project-number}@cloudbuild.gserviceaccount.com</code> when you
+examine your IAM console.</p>
 <ul>
-<li>The Cloud Build service account needs permissions if you want it to deploy to Cloud Run: This can be set <a href="https://console.cloud.google.com/cloud-build/settings" class="external-link">here</a> where you enable <code>Cloud Run Admin</code> and <code>Service Account User</code> roles. More details found at this <a href="https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run" class="external-link">Google reference article</a>.</li>
-<li>Ensure you also have a service email in your IAM section called <code>service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com</code> with Cloud Scheduler Service Agent role. This is only needed if you created the project before March 2019. This only needs to exist in the GCP project, it is not used in deployment. See <a href="https://cloud.google.com/scheduler/docs/http-target-auth#add" class="external-link">here</a>
+<li>The Cloud Build service account needs permissions if you want it to
+deploy to Cloud Run: This can be set <a href="https://console.cloud.google.com/cloud-build/settings" class="external-link">here</a>
+where you enable <code>Cloud Run Admin</code> and
+<code>Service Account User</code> roles. More details found at this <a href="https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-cloud-run" class="external-link">Google
+reference article</a>.</li>
+<li>Ensure you also have a service email in your IAM section called
+<code>service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com</code>
+with Cloud Scheduler Service Agent role. This is only needed if you
+created the project before March 2019. This only needs to exist in the
+GCP project, it is not used in deployment. See <a href="https://cloud.google.com/scheduler/docs/http-target-auth#add" class="external-link">here</a>
 </li>
-<li>To use <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> for <a href="https://cloud.google.com/secret-manager" class="external-link">Google Secret Manager</a> you need the Secret Manager Secret Accessor role assigned to the build service email (<code>{project-number}@cloudbuild.gserviceaccount.com</code>). See <a href="https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials" class="external-link">using encrypted secrets and credentials</a> Google help page. If you want to use the decryption service such as from <code><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt()</a></code> then your Cloud Build service account needs to have at least Cloud KMS CryptoKey Decrypter role.</li>
-<li>Likewise with other GCP services the Cloud Build will use - i.e. if you want to use BigQuery services in your builds, give your build email BigQuery IAM access</li>
-<li>For Cloud Run you need <code>iam.serviceaccounts.actAs</code> permission on the <code>{project-number}-compute@developer.gserviceaccount.com</code> service email that should be there by default. Similarly, <code>service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com</code> should have the role <code>Cloud Run Service Agent</code>
+<li>To use <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> for <a href="https://cloud.google.com/secret-manager" class="external-link">Google Secret Manager</a>
+you need the Secret Manager Secret Accessor role assigned to the build
+service email
+(<code>{project-number}@cloudbuild.gserviceaccount.com</code>). See <a href="https://cloud.google.com/cloud-build/docs/securing-builds/use-encrypted-secrets-credentials" class="external-link">using
+encrypted secrets and credentials</a> Google help page. If you want to
+use the decryption service such as from
+<code><a href="../reference/cr_buildstep_decrypt.html">cr_buildstep_decrypt()</a></code> then your Cloud Build service
+account needs to have at least Cloud KMS CryptoKey Decrypter role.</li>
+<li>Likewise with other GCP services the Cloud Build will use - i.e. if
+you want to use BigQuery services in your builds, give your build email
+BigQuery IAM access</li>
+<li>For Cloud Run you need <code>iam.serviceaccounts.actAs</code>
+permission on the
+<code>{project-number}-compute@developer.gserviceaccount.com</code>
+service email that should be there by default. Similarly,
+<code>service-{project-number}@serverless-robot-prod.iam.gserviceaccount.com</code>
+should have the role <code>Cloud Run Service Agent</code>
 </li>
 </ul>
 </div>
@@ -359,16 +450,27 @@
 <h4 id="misc">Misc<a class="anchor" aria-label="anchor" href="#misc"></a>
 </h4>
 <ul>
-<li>If you want to use GitHub or BitBucket repos, you need to setup mirroring them via Cloud Source Repositories <a href="https://source.cloud.google.com/" class="external-link uri">https://source.cloud.google.com/</a>
+<li>If you want to use GitHub or BitBucket repos, you need to setup
+mirroring them via Cloud Source Repositories <a href="https://source.cloud.google.com/" class="external-link uri">https://source.cloud.google.com/</a>
 </li>
-<li>To use Cloud Scheduler you may need to initiate an App Engine application <a href="https://console.developers.google.com/appengine" class="external-link uri">https://console.developers.google.com/appengine</a> - you only need to set the region (one allowed per GCP project) and you don’t need to create an app</li>
+<li>To use Cloud Scheduler you may need to initiate an App Engine
+application <a href="https://console.developers.google.com/appengine" class="external-link uri">https://console.developers.google.com/appengine</a> - you
+only need to set the region (one allowed per GCP project) and you don’t
+need to create an app</li>
 </ul>
 </div>
 <div class="section level4">
 <h4 id="customise">Customise?<a class="anchor" aria-label="anchor" href="#customise"></a>
 </h4>
-<p>The above should give you the minimal access required for <code>googleCloudRunner</code>. It could be modified to increase the amount of services the local auth file has access to such as Compute Engine VMs etc. (if say you wanted to reuse it for <code>googleComputeEngineR</code>)</p>
-<p>You could also change the build email set in <code>CR_BUILD_EMAIL</code> to be yet another service account, perhaps one with less permissions (such as Cloud Run Invoker, not Cloud Run Admin)</p>
+<p>The above should give you the minimal access required for
+<code>googleCloudRunner</code>. It could be modified to increase the
+amount of services the local auth file has access to such as Compute
+Engine VMs etc. (if say you wanted to reuse it for
+<code>googleComputeEngineR</code>)</p>
+<p>You could also change the build email set in
+<code>CR_BUILD_EMAIL</code> to be yet another service account, perhaps
+one with less permissions (such as Cloud Run Invoker, not Cloud Run
+Admin)</p>
 </div>
 </div>
 </div>
@@ -391,7 +493,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

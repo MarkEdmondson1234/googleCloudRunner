@@ -170,9 +170,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Create Docker image of a package each commit</h1>
+      <h1 data-toc-skip>Create Docker image of a package each
+commit</h1>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-package-docker-build.Rmd" class="external-link"><code>vignettes/usecase-package-docker-build.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-package-docker-build.Rmd</code></div>
@@ -181,26 +182,40 @@
 
     
     
-<p>If you just want a one-off Docker image, use <code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> or make your own build via <code><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker()</a></code></p>
+<p>If you just want a one-off Docker image, use
+<code><a href="../reference/cr_deploy_docker.html">cr_deploy_docker()</a></code> or make your own build via
+<code><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker()</a></code></p>
 <p><img src="gadget_docker.png"></p>
-<p>If you want the Docker image to rebuild each git commit, then you also need a build trigger. This can be enabled using <code><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger()</a></code></p>
-<p>The below example builds this package’s Dockerfile upon each commit, for a Dockerfile located in the <code>cloud_build/</code> folder.</p>
+<p>If you want the Docker image to rebuild each git commit, then you
+also need a build trigger. This can be enabled using
+<code><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger()</a></code></p>
+<p>The below example builds this package’s Dockerfile upon each commit,
+for a Dockerfile located in the <code>cloud_build/</code> folder.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span><span class="op">(</span><span class="va">repo</span>, <span class="st">"test3"</span>, dir <span class="op">=</span> <span class="st">"cloud_build"</span><span class="op">)</span></code></pre></div>
 <div class="section level3">
 <h3 id="kaniko-cache">Kaniko cache<a class="anchor" aria-label="anchor" href="#kaniko-cache"></a>
 </h3>
-<p>A common workflow is to make lots of repeat builds of Docker images as you update the files and libraries within the Dockerfile. If this is a heavy operation it can take 20mins+ to build the image.</p>
-<p>If it is a long build, consider using the <a href="https://cloud.google.com/cloud-build/docs/kaniko-cache" class="external-link">kaniko cache</a> option in your Docker builds. This caches each step of the Dockerfile so only those that are new are built, and can considerably speed up Docker build times.</p>
-<p>To use, select the <code>kamiko_cache=TRUE</code> option in your builds:</p>
+<p>A common workflow is to make lots of repeat builds of Docker images
+as you update the files and libraries within the Dockerfile. If this is
+a heavy operation it can take 20mins+ to build the image.</p>
+<p>If it is a long build, consider using the <a href="https://cloud.google.com/cloud-build/docs/kaniko-cache" class="external-link">kaniko
+cache</a> option in your Docker builds. This caches each step of the
+Dockerfile so only those that are new are built, and can considerably
+speed up Docker build times.</p>
+<p>To use, select the <code>kamiko_cache=TRUE</code> option in your
+builds:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_deploy_docker.html">cr_deploy_docker</a></span><span class="op">(</span><span class="st">"my_folder"</span>, kaniko_cache<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="combining-buildsteps-with-other-builds">Combining buildsteps with other builds<a class="anchor" aria-label="anchor" href="#combining-buildsteps-with-other-builds"></a>
 </h2>
-<p>It may be you want the build to do other things after the Docker image is built such as use that Docker image somewhere. You can extract the buildsteps from deployed buildtriggers to combine them and avoid having two builds.</p>
+<p>It may be you want the build to do other things after the Docker
+image is built such as use that Docker image somewhere. You can extract
+the buildsteps from deployed buildtriggers to combine them and avoid
+having two builds.</p>
 <p>For example, say you have deployed a Dockerfile trigger:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
@@ -209,14 +224,18 @@
 
 <span class="co"># first time - by default will be called "docker-{image}"</span>
 <span class="fu"><a href="../reference/cr_deploy_docker_trigger.html">cr_deploy_docker_trigger</a></span><span class="op">(</span><span class="va">repo</span>, image <span class="op">=</span> <span class="st">"my-build"</span><span class="op">)</span></code></pre></div>
-<p>If you want to extract the docker buildsteps you can find it in <code>dock_build$build$steps</code> below:</p>
+<p>If you want to extract the docker buildsteps you can find it in
+<code>dock_build$build$steps</code> below:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get the buildtrigger details</span>
 <span class="va">dock_build</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_get.html">cr_buildtrigger_get</a></span><span class="op">(</span><span class="st">"docker-my-build"</span><span class="op">)</span>
 
 <span class="co"># contains the buildsteps from the deployment</span>
 <span class="va">dock_build</span><span class="op">$</span><span class="va">build</span><span class="op">$</span><span class="va">steps</span></code></pre></div>
-<p>You can then combine those buildsteps in the usual way with other buildsteps. The example below assumes you’ve made an R docker image with some of your custom dependencies that you then want to immediately run your R code within:</p>
+<p>You can then combine those buildsteps in the usual way with other
+buildsteps. The example below assumes you’ve made an R docker image with
+some of your custom dependencies that you then want to immediately run
+your R code within:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># uses the docker image previously created</span>
 <span class="va">my_r_step</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildstep_r.html">cr_buildstep_r</a></span><span class="op">(</span>
@@ -229,7 +248,8 @@
 
 <span class="co"># remake the build yaml</span>
 <span class="va">yml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span><span class="va">new_buildsteps</span><span class="op">)</span></code></pre></div>
-<p>You can then reconfigure the build trigger with your new build yaml. The below writes the yaml to a file to be read by the build trigger:</p>
+<p>You can then reconfigure the build trigger with your new build yaml.
+The below writes the yaml to a file to be read by the build trigger:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># write it out to the git repo we are in</span>
 <span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">yml</span>, <span class="st">"new_buildsteps.yml"</span><span class="op">)</span>
@@ -263,7 +283,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>
