@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Setup</h1>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/setup.Rmd" class="external-link"><code>vignettes/setup.Rmd</code></a></small>
       <div class="hidden name"><code>setup.Rmd</code></div>
@@ -181,13 +181,15 @@
 
     
     
-<p>A video walk-through is available below, on <a href="https://www.youtube.com/watch?v=RrYrMsoIXsw" class="external-link">how to set-up googleCloudRunner’s Google Console and R environment</a>:</p>
+<p>A video walk-through is available below, on <a href="https://www.youtube.com/watch?v=RrYrMsoIXsw" class="external-link">how to set-up
+googleCloudRunner’s Google Console and R environment</a>:</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/RrYrMsoIXsw?start=898" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 <div class="section level2">
 <h2 id="manual-setup">Manual setup<a class="anchor" aria-label="anchor" href="#manual-setup"></a>
 </h2>
-<p>You can setup the configurations directly using the below R functions:</p>
+<p>You can setup the configurations directly using the below R
+functions:</p>
 <ul>
 <li><code><a href="../reference/cr_region_set.html">cr_region_set()</a></code></li>
 <li><code><a href="../reference/cr_project_set.html">cr_project_set()</a></code></li>
@@ -199,7 +201,8 @@
 <div class="section level2">
 <h2 id="setup-wizard-cr_setup">Setup wizard cr_setup()<a class="anchor" aria-label="anchor" href="#setup-wizard-cr_setup"></a>
 </h2>
-<p>There is a setup function to help you configure the package. Get started via the commands below:</p>
+<p>There is a setup function to help you configure the package. Get
+started via the commands below:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_setup.html">cr_setup</a></span><span class="op">(</span><span class="op">)</span>
@@ -213,17 +216,30 @@
 <span class="co">#4: Configure Cloud Storage bucket</span>
 <span class="co">#5: Configure Cloud Run region</span>
 <span class="co">#6: Configure Cloud Scheduler build email</span></code></pre></div>
-<p>It will walk you through the details below. You can also use it to check your settings.</p>
+<p>It will walk you through the details below. You can also use it to
+check your settings.</p>
 <div class="section level3">
 <h3 id="cr_setup_auth-and-cr_setup_service">cr_setup_auth() and cr_setup_service()<a class="anchor" aria-label="anchor" href="#cr_setup_auth-and-cr_setup_service"></a>
 </h3>
-<p>You can configure authentication separately, as its usually the trickiest bit. The <code><a href="../reference/cr_setup_auth.html">cr_setup_auth()</a></code> function attempts to help you walk through the authentication and after running it and restarting R a couple of times you should only need to download a client ID from your project to have it all configured for you.</p>
-<p>If you are customising things then <code><a href="../reference/cr_setup_service.html">cr_setup_service()</a></code> may be useful, which lets you add common roles to the service account emails. The other setup functions call it to set things up for you, but you may want more control, or have special needs for your cloudbuild email for example, which needs roles assigned for certain services you want to build.</p>
+<p>You can configure authentication separately, as its usually the
+trickiest bit. The <code><a href="../reference/cr_setup_auth.html">cr_setup_auth()</a></code> function attempts to
+help you walk through the authentication and after running it and
+restarting R a couple of times you should only need to download a client
+ID from your project to have it all configured for you.</p>
+<p>If you are customising things then <code><a href="../reference/cr_setup_service.html">cr_setup_service()</a></code>
+may be useful, which lets you add common roles to the service account
+emails. The other setup functions call it to set things up for you, but
+you may want more control, or have special needs for your cloudbuild
+email for example, which needs roles assigned for certain services you
+want to build.</p>
 </div>
 <div class="section level3">
 <h3 id="cr_setup_test">cr_setup_test()<a class="anchor" aria-label="anchor" href="#cr_setup_test"></a>
 </h3>
-<p>Once you get all green ticks in <code><a href="../reference/cr_setup.html">cr_setup()</a></code> then you should be able to run the subset of the package unit tests via <code><a href="../reference/cr_setup_test.html">cr_setup_test()</a></code>. Should those all complete then you should be able to run any of the functions in the package!</p>
+<p>Once you get all green ticks in <code><a href="../reference/cr_setup.html">cr_setup()</a></code> then you
+should be able to run the subset of the package unit tests via
+<code><a href="../reference/cr_setup_test.html">cr_setup_test()</a></code>. Should those all complete then you should
+be able to run any of the functions in the package!</p>
 </div>
 </div>
 <div class="section level2">
@@ -233,25 +249,33 @@
 <h3 id="r-environment-arguments-to-set">R environment arguments to set:<a class="anchor" aria-label="anchor" href="#r-environment-arguments-to-set"></a>
 </h3>
 <ul>
-<li>Reuses environment argument <code>GCE_AUTH_FILE</code> from <a href="https://cloudyr.github.io/googleComputeEngineR" class="external-link">googleComputeEngineR</a> which holds location of your service auth JSON</li>
-<li>Reuses environment argument <code>GCE_DEFAULT_PROJECT_ID</code> from googleComputeEngineR</li>
+<li>Reuses environment argument <code>GCE_AUTH_FILE</code> from <a href="https://cloudyr.github.io/googleComputeEngineR" class="external-link">googleComputeEngineR</a>
+which holds location of your service auth JSON</li>
+<li>Reuses environment argument <code>GCE_DEFAULT_PROJECT_ID</code> from
+googleComputeEngineR</li>
 <li>Reuses environment argument <code>GCS_DEFAULT_BUCKET</code> from <a href="http://code.markedmondson.me/googleCloudStorageR/" class="external-link">googleCloudStorageR</a>
 </li>
-<li>New environment argument <code>CR_BUILD_EMAIL</code> that is a Google service email (see <a href="articles/setup-gcp.html">GCP setup</a>)</li>
-<li>New environment argument <code>CR_REGION</code> can be one of the regions listed in <code><a href="../reference/cr_regions.html">googleCloudRunner::cr_regions</a></code>
+<li>New environment argument <code>CR_BUILD_EMAIL</code> that is a
+Google service email (see <a href="articles/setup-gcp.html">GCP
+setup</a>)</li>
+<li>New environment argument <code>CR_REGION</code> can be one of the
+regions listed in <code><a href="../reference/cr_regions.html">googleCloudRunner::cr_regions</a></code>
 </li>
 </ul>
-<p>e.g. at the end of all set-up your <code>.Renviron</code> should look like:</p>
+<p>e.g. at the end of all set-up your <code>.Renviron</code> should look
+like:</p>
 <pre><code><span class="va">GCE_AUTH_FILE</span><span class="op">=</span><span class="st">"/Users/me/auth/auth.json"</span>
 <span class="va">GCE_DEFAULT_PROJECT_ID</span><span class="op">=</span><span class="st">"my-project"</span>
 <span class="va">GCS_DEFAULT_BUCKET</span><span class="op">=</span><span class="st">"my-bucket"</span>
 <span class="va">CR_REGION</span><span class="op">=</span><span class="st">"europe-west1"</span>
 <span class="va">CR_BUILD_EMAIL</span><span class="op">=</span><span class="va">googlecloudrunner</span><span class="op">@</span><span class="va">your</span><span class="op">-</span><span class="va">project.iam.gserviceaccount.com</span></code></pre>
-<p>And when you restart R and load the library you should see something like:</p>
+<p>And when you restart R and load the library you should see something
+like:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googleCloudRunner)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>✓ Setting scopes to https<span class="sc">:</span><span class="er">//</span>www.googleapis.com<span class="sc">/</span>auth<span class="sc">/</span>cloud<span class="sc">-</span>platform</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>✓ Successfully auto<span class="sc">-</span>authenticated via <span class="sc">/</span>Users<span class="sc">/</span>me<span class="sc">/</span>auth<span class="sc">/</span>keys<span class="sc">/</span>googlecloudrunner<span class="sc">-</span>auth<span class="sc">-</span>key.json</span></code></pre></div>
-<p>This <code>.Renviron</code> file can be placed in the root of your project or as per what is described in <code><a href="https://rdrr.io/r/base/Startup.html" class="external-link">?Startup</a></code>.</p>
+<p>This <code>.Renviron</code> file can be placed in the root of your
+project or as per what is described in <code><a href="https://rdrr.io/r/base/Startup.html" class="external-link">?Startup</a></code>.</p>
 <p>You can also set the above in the R scripts via:</p>
 <ul>
 <li><code><a href="../reference/cr_region_set.html">cr_region_set()</a></code></li>
@@ -283,7 +307,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

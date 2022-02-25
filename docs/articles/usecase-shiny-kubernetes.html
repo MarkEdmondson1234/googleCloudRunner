@@ -170,9 +170,10 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Deploy a Shiny app to Google Kubernetes Engine</h1>
+      <h1 data-toc-skip>Deploy a Shiny app to Google Kubernetes
+Engine</h1>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-shiny-kubernetes.Rmd" class="external-link"><code>vignettes/usecase-shiny-kubernetes.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-shiny-kubernetes.Rmd</code></div>
@@ -181,12 +182,16 @@
 
     
     
-<p>If you have a Shiny app and a Google Kubernetes Engine (GKE) instance you can automate deployment of that app upon each git commit.</p>
-<p>Each commit the buildsteps need to re-build the Docker container with the Shiny app code and environment, then deploy it to the GKE instance.</p>
+<p>If you have a Shiny app and a Google Kubernetes Engine (GKE) instance
+you can automate deployment of that app upon each git commit.</p>
+<p>Each commit the buildsteps need to re-build the Docker container with
+the Shiny app code and environment, then deploy it to the GKE
+instance.</p>
 <div class="section level3">
 <h3 id="dockerfile">Dockerfile<a class="anchor" aria-label="anchor" href="#dockerfile"></a>
 </h3>
-<p>Assuming you have a shiny app in <code>./shiny/</code> relative to the Dockerfile, then a Dockerfile could look like:</p>
+<p>Assuming you have a shiny app in <code>./shiny/</code> relative to
+the Dockerfile, then a Dockerfile could look like:</p>
 <pre><code>FROM rocker/shiny
 
 # install R package dependencies
@@ -209,12 +214,17 @@ RUN install2.r --error \
 
 ## assume shiny app is in build folder /shiny
 COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
-<p>Depending on how your ingress is setup, this would appear on your Kubernetes cluster at <code>/my-app/</code> - see this blog post on details for <a href="https://code.markedmondson.me/r-on-kubernetes-serverless-shiny-r-apis-and-scheduled-scripts/" class="external-link">setting up R on Kubernetes</a></p>
+<p>Depending on how your ingress is setup, this would appear on your
+Kubernetes cluster at <code>/my-app/</code> - see this blog post on
+details for <a href="https://code.markedmondson.me/r-on-kubernetes-serverless-shiny-r-apis-and-scheduled-scripts/" class="external-link">setting
+up R on Kubernetes</a></p>
 </div>
 <div class="section level3">
 <h3 id="kubernetes-deployment-file">Kubernetes deployment file<a class="anchor" aria-label="anchor" href="#kubernetes-deployment-file"></a>
 </h3>
-<p>You can then also have a deployment file for Kubernetes that will govern its configuration after the new docker image is built. An example deployment file is below:</p>
+<p>You can then also have a deployment file for Kubernetes that will
+govern its configuration after the new docker image is built. An example
+deployment file is below:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apiVersion</span><span class="kw">:</span><span class="at"> extensions/v1beta1</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kind</span><span class="kw">:</span><span class="at"> Deployment</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">metadata</span><span class="kw">:</span></span>
@@ -251,7 +261,10 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 <div class="section level3">
 <h3 id="cloud-build">Cloud Build<a class="anchor" aria-label="anchor" href="#cloud-build"></a>
 </h3>
-<p>Your cloudbuild steps will then build the Dockerfile, then use <code>gcr.io/cloud-builders/gke-deploy</code> to deploy it to the cluster - see this <a href="https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-gke" class="external-link">Google guide on deployment to GKE via Cloud Build</a> for details</p>
+<p>Your cloudbuild steps will then build the Dockerfile, then use
+<code>gcr.io/cloud-builders/gke-deploy</code> to deploy it to the
+cluster - see this <a href="https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-gke" class="external-link">Google
+guide on deployment to GKE via Cloud Build</a> for details</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
@@ -269,7 +282,9 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 
 <span class="va">yaml</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_build_yaml.html">cr_build_yaml</a></span><span class="op">(</span>steps <span class="op">=</span> <span class="va">bs</span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_build_write.html">cr_build_write</a></span><span class="op">(</span><span class="va">yaml</span>, <span class="st">"build/cloudbuild.yml"</span><span class="op">)</span></code></pre></div>
-<p>In this example we write the cloudbuild.yml to a build folder rather than making an inline build trigger deployment. This is setup in a Build Trigger upon GitHub commit with the code below:</p>
+<p>In this example we write the cloudbuild.yml to a build folder rather
+than making an inline build trigger deployment. This is setup in a Build
+Trigger upon GitHub commit with the code below:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"your-name/your-repo-with-shiny"</span><span class="op">)</span>
 
@@ -285,7 +300,10 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 |- Dockerfile
 |- shiny/
    | - app.R</code></pre>
-<p>As you update the code in <code>app.R</code> and push to GitHub, the build trigger builds the Docker image and publishes it to the kubernetes cluster. The docker is built using kaniko cache, which speeds up repeat builds and deployments.</p>
+<p>As you update the code in <code>app.R</code> and push to GitHub, the
+build trigger builds the Docker image and publishes it to the kubernetes
+cluster. The docker is built using kaniko cache, which speeds up repeat
+builds and deployments.</p>
 </div>
   </div>
 
@@ -304,7 +322,8 @@ COPY ./shiny/ /srv/shiny-server/my-app/</code></pre>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

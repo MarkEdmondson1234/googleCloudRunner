@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Run package tests and code coverage</h1>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-testthat-coverage.Rmd" class="external-link"><code>vignettes/usecase-testthat-coverage.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-testthat-coverage.Rmd</code></div>
@@ -181,14 +181,23 @@
 
     
     
-<p>This workflow will run the package tests you have upon each commit to your git repo.</p>
-<p>You can also optionally submit those test results to <a href="https://codecov.io" class="external-link">codecov</a> via the excellent <a href="https://covr.r-lib.org/" class="external-link">covr R package</a>, helping you see which code your tests actually test. This is what creates this badge for this package:</p>
+<p>This workflow will run the package tests you have upon each commit to
+your git repo.</p>
+<p>You can also optionally submit those test results to <a href="https://codecov.io" class="external-link">codecov</a> via the excellent <a href="https://covr.r-lib.org/" class="external-link">covr R package</a>, helping you see which
+code your tests actually test. This is what creates this badge for this
+package:</p>
 <p><a href="https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner" class="external-link"><img src="https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner/branch/master/graph/badge.svg" alt="codecov"></a></p>
-<p>If you do not need online authentication for your tests, then this is only a case of deploying the premade default cloudbuild.yml file via <code><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests()</a></code>.</p>
+<p>If you do not need online authentication for your tests, then this is
+only a case of deploying the premade default cloudbuild.yml file via
+<code><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests()</a></code>.</p>
 <p>The below assumes you have created tests for your package.</p>
 <ol style="list-style-type: decimal">
-<li><p>Go to <a href="https://console.cloud.google.com/cloud-build/triggers" class="external-link">GCP console &gt; Cloud Build &gt; Triggers</a> and link your git repo to Cloud Build.</p></li>
-<li><p>Create the tests cloudbuild.yml file via <code><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests()</a></code> and generate a build trigger via its trigger_repo argument:</p></li>
+<li><p>Go to <a href="https://console.cloud.google.com/cloud-build/triggers" class="external-link">GCP console
+&gt; Cloud Build &gt; Triggers</a> and link your git repo to Cloud
+Build.</p></li>
+<li><p>Create the tests cloudbuild.yml file via
+<code><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests()</a></code> and generate a build trigger via
+its trigger_repo argument:</p></li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">repo</span> <span class="op">&lt;-</span> <span class="st">"MarkEdmondson1234/googleCloudRunner"</span>
@@ -206,9 +215,12 @@
 <p>If you want to use codecov as well:</p>
 <ol style="list-style-type: decimal">
 <li>
-<a href="https://docs.codecov.io/reference" class="external-link">Generate a Codecov token</a> on its website and link it to your git repository</li>
-<li>Edit the Build Trigger for your git repository to add a substitution variable <code>_CODECOV_TOKEN</code> with your token</li>
-<li>Run a build and you should start to see Codecov reports after a successful test</li>
+<a href="https://docs.codecov.io/reference" class="external-link">Generate a Codecov
+token</a> on its website and link it to your git repository</li>
+<li>Edit the Build Trigger for your git repository to add a substitution
+variable <code>_CODECOV_TOKEN</code> with your token</li>
+<li>Run a build and you should start to see Codecov reports after a
+successful test</li>
 <li>Add the Codecov badge to your README e.g.</li>
 </ol>
 <pre><code>[![codecov](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner/branch/master/graph/badge.svg)](https://codecov.io/gh/MarkEdmondson1234/googleCloudRunner)</code></pre>
@@ -217,39 +229,62 @@
 <h3 id="readme-cloud-build-badge">Readme Cloud Build Badge<a class="anchor" aria-label="anchor" href="#readme-cloud-build-badge"></a>
 </h3>
 <ol style="list-style-type: decimal">
-<li>If you haven’t already, deploy a Badger Cloud run app in your project (you can use this app for multiple buildtriggers) via <code><a href="../reference/cr_deploy_badger.html">cr_deploy_badger()</a></code>
+<li>If you haven’t already, deploy a Badger Cloud run app in your
+project (you can use this app for multiple buildtriggers) via
+<code><a href="../reference/cr_deploy_badger.html">cr_deploy_badger()</a></code>
 </li>
-<li>Either in the GCP console or using <code><a href="../reference/cr_buildtrigger_list.html">cr_buildtrigger_list()</a></code> find the build trigger ID for your test build e.g. <code>8d99c387-66f1-5ae4-a202-c2cace1fd71f</code>
+<li>Either in the GCP console or using
+<code><a href="../reference/cr_buildtrigger_list.html">cr_buildtrigger_list()</a></code> find the build trigger ID for your
+test build e.g. <code>8d99c387-66f1-5ae4-a202-c2cace1fd71f</code>
 </li>
-<li>The Badger app will have a URL like <code>https://badger-fwjogfwaqq-ew.a.run.app/</code> - use the <code>/build/status?project={your-project}&amp;id={the_build_trigger_id}</code> endpoint to make a URL for a particular build e.g.</li>
+<li>The Badger app will have a URL like
+<code>https://badger-fwjogfwaqq-ew.a.run.app/</code> - use the
+<code>/build/status?project={your-project}&amp;id={the_build_trigger_id}</code>
+endpoint to make a URL for a particular build e.g.</li>
 </ol>
 <pre><code>![CloudBuild](https://badger-fwjogfwaqq-ew.a.run.app/build/status?project=your-project&amp;id=8d99c387-66f1-5ae4-a202-c2cace1fd71f)</code></pre>
 <ol start="3" style="list-style-type: decimal">
 <li>Add the badge to your README.md</li>
 </ol>
-<p>Once in your README.md you can use <code><a href="../reference/cr_deploy_badger.html">cr_build_logs_badger()</a></code> in your local R session to download the last build logs.</p>
+<p>Once in your README.md you can use
+<code><a href="../reference/cr_deploy_badger.html">cr_build_logs_badger()</a></code> in your local R session to download
+the last build logs.</p>
 </div>
 <div class="section level3">
 <h3 id="example-trigger">Example trigger<a class="anchor" aria-label="anchor" href="#example-trigger"></a>
 </h3>
-<p>The below is an example for <code>googleCloudRunner</code>’s website:</p>
+<p>The below is an example for <code>googleCloudRunner</code>’s
+website:</p>
 <p><img src="pkgchecks-trigger.png"></p>
-<p>The example above also adds other substitution variables to help run some of the examples.</p>
+<p>The example above also adds other substitution variables to help run
+some of the examples.</p>
 </div>
 <div class="section level3">
 <h3 id="authenticated-tests">Authenticated tests<a class="anchor" aria-label="anchor" href="#authenticated-tests"></a>
 </h3>
-<p>You can customise the deployment more by using <code><a href="../reference/cr_buildstep_packagetests.html">cr_buildstep_packagetests()</a></code> in your own custom build files.</p>
-<p>For <code>googleCloudRunner</code> and API packages in general, an authentication key is needed to run online tests. This authentication key can be encrypted via <a href="https://cloud.google.com/secret-manager" class="external-link">Google Secret Manager</a> by adding a decryption step to your tests via <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> - its usually only a case of uploading your auth file:</p>
+<p>You can customise the deployment more by using
+<code><a href="../reference/cr_buildstep_packagetests.html">cr_buildstep_packagetests()</a></code> in your own custom build
+files.</p>
+<p>For <code>googleCloudRunner</code> and API packages in general, an
+authentication key is needed to run online tests. This authentication
+key can be encrypted via <a href="https://cloud.google.com/secret-manager" class="external-link">Google Secret Manager</a>
+by adding a decryption step to your tests via
+<code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> - its usually only a case of
+uploading your auth file:</p>
 <p><img src="secret-ui.png"></p>
-<p>In that case, the decryption step needs to occur before the tests run, which you can do by supplying <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> to <code><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests()</a></code>.</p>
-<p>You will also want to use that auth file somehow, in the below example it is placed in an environment argument that your tests use to find the authentication file:</p>
+<p>In that case, the decryption step needs to occur before the tests
+run, which you can do by supplying <code><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret()</a></code> to
+<code><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests()</a></code>.</p>
+<p>You will also want to use that auth file somehow, in the below
+example it is placed in an environment argument that your tests use to
+find the authentication file:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/cr_deploy_packagetests.html">cr_deploy_packagetests</a></span><span class="op">(</span>
   steps <span class="op">=</span> <span class="fu"><a href="../reference/cr_buildstep_secret.html">cr_buildstep_secret</a></span><span class="op">(</span><span class="st">"my_secret"</span>, <span class="st">"auth.json"</span><span class="op">)</span>,
   env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"NOT_CRAN=true"</span>, <span class="st">"MY_AUTH_FILE=auth.json"</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
-<p>Use the resulting cloudbuild.yml file in the same manner as unauthenticated tests.</p>
+<p>Use the resulting cloudbuild.yml file in the same manner as
+unauthenticated tests.</p>
 </div>
   </div>
 
@@ -268,7 +303,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

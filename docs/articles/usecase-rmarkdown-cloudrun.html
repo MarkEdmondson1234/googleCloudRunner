@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Parameterised RMarkdown URLs on Cloud Run</h1>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-rmarkdown-cloudrun.Rmd" class="external-link"><code>vignettes/usecase-rmarkdown-cloudrun.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-rmarkdown-cloudrun.Rmd</code></div>
@@ -182,12 +182,27 @@
     
     
 <div class="section level2">
-<h2 id="serverless-on-demand-parameterised-r-markdown-reports-with-google-cloud-run">Serverless, on-demand parameterised R Markdown reports with Google Cloud Run<a class="anchor" aria-label="anchor" href="#serverless-on-demand-parameterised-r-markdown-reports-with-google-cloud-run"></a>
+<h2 id="serverless-on-demand-parameterised-r-markdown-reports-with-google-cloud-run">Serverless, on-demand parameterised R Markdown reports with Google
+Cloud Run<a class="anchor" aria-label="anchor" href="#serverless-on-demand-parameterised-r-markdown-reports-with-google-cloud-run"></a>
 </h2>
-<p>This use case is inspired by <a href="https://mdneuzerling.com/post/serverless-on-demand-parametrised-r-markdown-reports-with-aws-lambda/" class="external-link">this post by David Neuzerling</a> who showed how it can be done <code><a href="https://lambdr.mdneuzerling.com/" class="external-link">library(lambdr)</a></code>, which is a serverless HTML service similar to Cloud Run but on AWS.</p>
-<p>In this use case we would like an Rmd file to be rendered each time it is requested by HTTP requests. This is opposed to scheduled renders which can host the HTML on Cloud Storage or use Cloud Run as a nginx server to host that HTML (detailed in this use case: <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-scheduled-r-builds.html#build-an-rmd-on-a-schedule-and-host-its-html-on-cloud-storage-1">Build an Rmd on a schedule and host its HTML</a>)</p>
-<p>Since the HTTP request will be executing code each time this is more expensive in compute cost and also bear in mind that although Cloud Run has execution times of up to 60mins the web browsers requesting the page will timeout in at most a minute, so the Rmd you use should not have expensive computations. If you do, schedule a build of the HTML instead.</p>
-<p>You can see an example of the below running at <code>https://cloudrun-rmarkdown-ewjogewawq-ew.a.run.app/</code> which you can also deploy yourself via the following code:</p>
+<p>This use case is inspired by <a href="https://mdneuzerling.com/post/serverless-on-demand-parametrised-r-markdown-reports-with-aws-lambda/" class="external-link">this
+post by David Neuzerling</a> who showed how it can be done
+<code><a href="https://lambdr.mdneuzerling.com/" class="external-link">library(lambdr)</a></code>, which is a serverless HTML service similar
+to Cloud Run but on AWS.</p>
+<p>In this use case we would like an Rmd file to be rendered each time
+it is requested by HTTP requests. This is opposed to scheduled renders
+which can host the HTML on Cloud Storage or use Cloud Run as a nginx
+server to host that HTML (detailed in this use case: <a href="https://code.markedmondson.me/googleCloudRunner/articles/usecase-scheduled-r-builds.html#build-an-rmd-on-a-schedule-and-host-its-html-on-cloud-storage-1">Build
+an Rmd on a schedule and host its HTML</a>)</p>
+<p>Since the HTTP request will be executing code each time this is more
+expensive in compute cost and also bear in mind that although Cloud Run
+has execution times of up to 60mins the web browsers requesting the page
+will timeout in at most a minute, so the Rmd you use should not have
+expensive computations. If you do, schedule a build of the HTML
+instead.</p>
+<p>You can see an example of the below running at
+<code>https://cloudrun-rmarkdown-ewjogewawq-ew.a.run.app/</code> which
+you can also deploy yourself via the following code:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
@@ -200,15 +215,20 @@
 </h2>
 <p>To enable this use case we will need:</p>
 <ul>
-<li>A plumber API to receive the HTTP request, render the Rmd and serve up the result</li>
+<li>A plumber API to receive the HTTP request, render the Rmd and serve
+up the result</li>
 <li>An R Markdown (Rmd) to render into HTML</li>
-<li>A Docker file containing plumber, rmarkdown, any libraries you need for your Rmd to run, plus any system depdencies.</li>
+<li>A Docker file containing plumber, rmarkdown, any libraries you need
+for your Rmd to run, plus any system depdencies.</li>
 </ul>
 <div class="section level3">
 <h3 id="plumber-api">plumber API<a class="anchor" aria-label="anchor" href="#plumber-api"></a>
 </h3>
-<p>The plumber API needs to only render the Rmarkdown. I also include a separate server.R file for launching plumber in Cloud Run in the container.</p>
-<p>The <code>api.R</code> receives the parameter in the URL and passes it into the <code>rmarkdown</code> render, outputting the HTML.</p>
+<p>The plumber API needs to only render the Rmarkdown. I also include a
+separate server.R file for launching plumber in Cloud Run in the
+container.</p>
+<p>The <code>api.R</code> receives the parameter in the URL and passes
+it into the <code>rmarkdown</code> render, outputting the HTML.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#' Plot out data from the mtcars</span>
 <span class="co">#' @param cyl If provided, passed into Rmd rendering parameters</span>
@@ -230,7 +250,8 @@
   <span class="co"># read html of file back in and use as response for plumber</span>
   <span class="fu"><a href="https://rdrr.io/r/base/readChar.html" class="external-link">readChar</a></span><span class="op">(</span><span class="va">outfile</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.info.html" class="external-link">file.info</a></span><span class="op">(</span><span class="va">outfile</span><span class="op">)</span><span class="op">$</span><span class="va">size</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p>The <code>server.R</code> is generic boilerplate that launches the plumber API within the Cloud Run container</p>
+<p>The <code>server.R</code> is generic boilerplate that launches the
+plumber API within the Cloud Run container</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pr</span> <span class="op">&lt;-</span> <span class="fu">plumber</span><span class="fu">::</span><span class="fu"><a href="https://www.rplumber.io/reference/plumb.html" class="external-link">plumb</a></span><span class="op">(</span><span class="st">"api.R"</span><span class="op">)</span>
 <span class="va">pr</span><span class="op">$</span><span class="fu">run</span><span class="op">(</span>host<span class="op">=</span><span class="st">'0.0.0.0'</span>, port<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">'PORT'</span><span class="op">)</span><span class="op">)</span>, swagger<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -238,7 +259,8 @@
 <div class="section level3">
 <h3 id="r-markdown">R Markdown<a class="anchor" aria-label="anchor" href="#r-markdown"></a>
 </h3>
-<p>Key parts from the example R Markdown is shown below. It is expected you modify this to something more exciting:</p>
+<p>Key parts from the example R Markdown is shown below. It is expected
+you modify this to something more exciting:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Parameterised Cars on Cloud Run"</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Mark Edmondson"</span></span>
@@ -247,7 +269,9 @@
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="an">params:</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">  cyl: 6</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span></code></pre></div>
-<p>The above sets up the parameter you will use later in the document via <code>params$cyl</code> - see below for its use in an R chunk within the RMarkdown document:</p>
+<p>The above sets up the parameter you will use later in the document
+via <code>params$cyl</code> - see below for its use in an R chunk within
+the RMarkdown document:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># parameters are blank on first load</span>
 <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">params</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
@@ -257,12 +281,16 @@
 <span class="op">}</span>
 
 <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">the_data</span><span class="op">)</span></code></pre></div>
-<p>See the actual website which is rendered with the code for the full version.</p>
+<p>See the actual website which is rendered with the code for the full
+version.</p>
 </div>
 <div class="section level3">
 <h3 id="docker-file">Docker file<a class="anchor" aria-label="anchor" href="#docker-file"></a>
 </h3>
-<p>The Dockerfile needs the libraries plumber, rmarkdown plus anything else you are using in your Rmd. I have an existing image with plumber installed that I build from here. This is put in the same folder as the plumber and Rmd scripts.</p>
+<p>The Dockerfile needs the libraries plumber, rmarkdown plus anything
+else you are using in your Rmd. I have an existing image with plumber
+installed that I build from here. This is put in the same folder as the
+plumber and Rmd scripts.</p>
 <pre><code>FROM gcr.io/gcer-public/googlecloudrunner:master
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update \
   &amp;&amp; apt-get install -y git-core \
@@ -281,22 +309,27 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 <div class="section level2">
 <h2 id="deployment">Deployment<a class="anchor" aria-label="anchor" href="#deployment"></a>
 </h2>
-<p>Once all the files are in a folder, you can point the deployment function at it to deploy it.</p>
+<p>Once all the files are in a folder, you can point the deployment
+function at it to deploy it.</p>
 <p>The deployment function will:</p>
 <ul>
-<li>Create a Docker container with your files via <code><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker()</a></code>
+<li>Create a Docker container with your files via
+<code><a href="../reference/cr_buildstep_docker.html">cr_buildstep_docker()</a></code>
 </li>
-<li>Deploy that Docker container to Cloud Run via <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code>
+<li>Deploy that Docker container to Cloud Run via
+<code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code>
 </li>
 </ul>
-<p>You can customise the steps by using the specific buildstep functions directly.</p>
+<p>You can customise the steps by using the specific buildstep functions
+directly.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
 <span class="va">deploy_folder</span> <span class="op">&lt;-</span> <span class="st">"your-folder"</span>
 
 <span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_plumber</a></span><span class="op">(</span><span class="va">deploy_folder</span><span class="op">)</span></code></pre></div>
-<p>You may also want to set up a build trigger so when you commit code it will update the deployed Cloud Run.</p>
+<p>You may also want to set up a build trigger so when you commit code
+it will update the deployed Cloud Run.</p>
 </div>
   </div>
 
@@ -317,7 +350,8 @@ ENTRYPOINT ["Rscript", "server.R"]</code></pre>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

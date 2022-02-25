@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Deploying Shiny to Cloud Run</h1>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-shiny-cloudrun.Rmd" class="external-link"><code>vignettes/usecase-shiny-cloudrun.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-shiny-cloudrun.Rmd</code></div>
@@ -181,10 +181,20 @@
 
     
     
-<p>Due to Shiny’s stateful nature, Cloud Run is not a perfect fit for Shiny but it can be configured to run Shiny apps that scale to 0 (e.g. no cost) up to 80 connections at once to one instance. The one instance is necessary to avoid requests being sent to another Shiny container instance and losing the user session. Shiny also needs to have certain websocket features disabled.</p>
-<p>This means you can’t scale to a billion like other Cloud Run apps, and need to keep an eye on the load of the Shiny app (which will depend on your code) to see if 80 connections are too much for the CPU and Memory you assign to the Cloud Run instance. However this should still be a good fit for a lot of data science applications.</p>
+<p>Due to Shiny’s stateful nature, Cloud Run is not a perfect fit for
+Shiny but it can be configured to run Shiny apps that scale to 0
+(e.g. no cost) up to 80 connections at once to one instance. The one
+instance is necessary to avoid requests being sent to another Shiny
+container instance and losing the user session. Shiny also needs to have
+certain websocket features disabled.</p>
+<p>This means you can’t scale to a billion like other Cloud Run apps,
+and need to keep an eye on the load of the Shiny app (which will depend
+on your code) to see if 80 connections are too much for the CPU and
+Memory you assign to the Cloud Run instance. However this should still
+be a good fit for a lot of data science applications.</p>
 <p><img src="max_cpu_mem.png"></p>
-<p>A minimal working example has been created by <span class="citation">@randy3k</span> here: <a href="https://github.com/randy3k/shiny-cloudrun-demo" class="external-link uri">https://github.com/randy3k/shiny-cloudrun-demo</a> which can be deployed to Cloud Run via a fork here:</p>
+<p>A minimal working example has been created by <span class="citation">@randy3k</span> here: <a href="https://github.com/randy3k/shiny-cloudrun-demo" class="external-link uri">https://github.com/randy3k/shiny-cloudrun-demo</a> which can
+be deployed to Cloud Run via a fork here:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://code.markedmondson.me/googleCloudRunner/">googleCloudRunner</a></span><span class="op">)</span>
 
@@ -202,7 +212,11 @@
        name <span class="op">=</span> <span class="st">"shiny-cloudrun"</span>,
        concurrency <span class="op">=</span> <span class="fl">80</span>,
        max_instances <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
-<p>If you need to change the memory for the one instance, you can use <code>cpu</code> and <code>memory</code> arguments in the <code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code> and subsequent functions such as <code><a href="../reference/cr_run.html">cr_run()</a></code>. The maximum allowed is 2 CPUs and 2 gibibytes (<code>2Gi</code>):</p>
+<p>If you need to change the memory for the one instance, you can use
+<code>cpu</code> and <code>memory</code> arguments in the
+<code><a href="../reference/cr_buildstep_run.html">cr_buildstep_run()</a></code> and subsequent functions such as
+<code><a href="../reference/cr_run.html">cr_run()</a></code>. The maximum allowed is 2 CPUs and 2 gibibytes
+(<code>2Gi</code>):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># deploy to Cloud Run with 2GBs of RAM per instance and 2 CPUs</span>
 <span class="fu"><a href="../reference/cr_run.html">cr_run</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"gcr.io/%s/shiny-cloudrun:latest"</span>,<span class="fu"><a href="../reference/cr_project_set.html">cr_project_get</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
@@ -211,7 +225,9 @@
        max_instances <span class="op">=</span> <span class="fl">1</span>,
        cpu <span class="op">=</span> <span class="fl">2</span>,
        memory <span class="op">=</span> <span class="st">"2Gi"</span><span class="op">)</span></code></pre></div>
-<p>Or if you have a local Shiny app in <code>shiny_cloudrun/</code> with the appropriate Dockerfile and Shiny configuration, the full Docker build and deployment pipeline can be carried out with:</p>
+<p>Or if you have a local Shiny app in <code>shiny_cloudrun/</code> with
+the appropriate Dockerfile and Shiny configuration, the full Docker
+build and deployment pipeline can be carried out with:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># deploy the app version from this folder</span>
 <span class="fu"><a href="../reference/cr_deploy_run.html">cr_deploy_run</a></span><span class="op">(</span><span class="st">"shiny_cloudrun/"</span>,
@@ -236,7 +252,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>

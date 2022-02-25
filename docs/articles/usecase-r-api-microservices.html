@@ -172,7 +172,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Run private R micro-services on Cloud Run</h1>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/MarkEdmondson1234/googleCloudRunner/blob/HEAD/vignettes/usecase-r-api-microservices.Rmd" class="external-link"><code>vignettes/usecase-r-api-microservices.Rmd</code></a></small>
       <div class="hidden name"><code>usecase-r-api-microservices.Rmd</code></div>
@@ -181,22 +181,37 @@
 
     
     
-<p>Being able to trigger R code via public HTTP requests opens up lots of possibilities using webhooks, API calls and so on. You can also make use of private HTTP requests so that services running multiple languages can also easily interface with one another using a concept called micro-services.</p>
-<p>The use case described below uses R code deployed to a private as a strategy for running lots of parallel computation, taking advantage of Cloud Run’s autoscaling features to turn up and down compute resources as needed.</p>
-<p>Hosting the computation behind a plumber API and hosted on Cloud Run, you can control what data is worked on via URL parameters, and loop calling the API.</p>
-<p>The R computation behind plumber could call other services or compute directly, although keep in mind the 60min timeout for Cloud Run API responses.</p>
+<p>Being able to trigger R code via public HTTP requests opens up lots
+of possibilities using webhooks, API calls and so on. You can also make
+use of private HTTP requests so that services running multiple languages
+can also easily interface with one another using a concept called
+micro-services.</p>
+<p>The use case described below uses R code deployed to a private as a
+strategy for running lots of parallel computation, taking advantage of
+Cloud Run’s autoscaling features to turn up and down compute resources
+as needed.</p>
+<p>Hosting the computation behind a plumber API and hosted on Cloud Run,
+you can control what data is worked on via URL parameters, and loop
+calling the API.</p>
+<p>The R computation behind plumber could call other services or compute
+directly, although keep in mind the 60min timeout for Cloud Run API
+responses.</p>
 <div class="section level3">
 <h3 id="creating-the-cloud-run-deployment">Creating the Cloud Run deployment<a class="anchor" aria-label="anchor" href="#creating-the-cloud-run-deployment"></a>
 </h3>
-<p>The demo API queries a BigQuery database and computes a forecast for the time-series it gets back. The data is from the Covid public datasets hosted on BigQuery.</p>
+<p>The demo API queries a BigQuery database and computes a forecast for
+the time-series it gets back. The data is from the Covid public datasets
+hosted on BigQuery.</p>
 <p>The plumber script below has two endpoints:</p>
 <ul>
 <li>
 <code>/</code> to test its running</li>
 <li>
-<code>/covid_traffic</code> which is fetched with parameters region and industry to specify what times-series to fetch a forecast for.</li>
+<code>/covid_traffic</code> which is fetched with parameters region
+and industry to specify what times-series to fetch a forecast for.</li>
 </ul>
-<p>We will want these to be private (e.g. only authenticated calls) since they contain potentially expensive BigQuery queries.</p>
+<p>We will want these to be private (e.g. only authenticated calls)
+since they contain potentially expensive BigQuery queries.</p>
 <div class="section level4">
 <h4 id="plumber-api-script">plumber API script<a class="anchor" aria-label="anchor" href="#plumber-api-script"></a>
 </h4>
@@ -299,21 +314,27 @@
 <div class="section level4">
 <h4 id="create-a-build-trigger-so-it-builds-upon-each-git-commit">Create a build trigger so it builds upon each git commit<a class="anchor" aria-label="anchor" href="#create-a-build-trigger-so-it-builds-upon-each-git-commit"></a>
 </h4>
-<p>Now the cloudbuild.yml is available, a build trigger is created so that it will deploy upon each commit to this GitHub:</p>
+<p>Now the cloudbuild.yml is available, a build trigger is created so
+that it will deploy upon each commit to this GitHub:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">repo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_buildtrigger_repo.html">cr_buildtrigger_repo</a></span><span class="op">(</span><span class="st">"MarkEdmondson1234/googleCloudRunner"</span><span class="op">)</span>
 <span class="fu"><a href="../reference/cr_buildtrigger.html">cr_buildtrigger</a></span><span class="op">(</span><span class="va">cloudbuild_file</span>,
                 <span class="st">"parallel-cloudrun"</span>,
                 trigger <span class="op">=</span> <span class="va">repo</span>,
                 includedFiles <span class="op">=</span> <span class="st">"inst/docker/parallel_cloudrun/**"</span><span class="op">)</span></code></pre></div>
-<p>The files are then committed to GitHub and the build reviewed in the GCP Console.</p>
-<p>Once the builds are done, you should have a plumber API deployed with a URL similar to <code>https://parallel-cloudrun-ewjogewawq-ew.a.run.app/</code></p>
+<p>The files are then committed to GitHub and the build reviewed in the
+GCP Console.</p>
+<p>Once the builds are done, you should have a plumber API deployed with
+a URL similar to
+<code>https://parallel-cloudrun-ewjogewawq-ew.a.run.app/</code></p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="calling-the-private-plumber-api-with-a-jwt">Calling the private plumber API with a JWT<a class="anchor" aria-label="anchor" href="#calling-the-private-plumber-api-with-a-jwt"></a>
 </h3>
-<p>Now the plumber API is up, but to call it with authentication will need a JSON Web Token, or JWT. These are supported via the <code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> functions:</p>
+<p>Now the plumber API is up, but to call it with authentication will
+need a JSON Web Token, or JWT. These are supported via the
+<code><a href="../reference/cr_jwt_create.html">cr_jwt_create()</a></code> functions:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cr_run_get.html">cr_run_get</a></span><span class="op">(</span><span class="st">"parallel-cloudrun"</span><span class="op">)</span>
 
@@ -334,7 +355,9 @@
 <div class="section level4">
 <h4 id="use-your-private-micro-service">Use your private micro-service<a class="anchor" aria-label="anchor" href="#use-your-private-micro-service"></a>
 </h4>
-<p>The above shows you can call the API’s test endpoint, but now we wish to call the API many times with the parameters to filter to the data we want.</p>
+<p>The above shows you can call the API’s test endpoint, but now we wish
+to call the API many times with the parameters to filter to the data we
+want.</p>
 <p>This is facilitated by a wrapper function to call our API:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># interact with the API we made</span>
@@ -352,7 +375,8 @@
 
 <span class="co"># test call</span>
 <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">call_api</span><span class="op">(</span>region <span class="op">=</span> <span class="st">"Europe"</span>, industry <span class="op">=</span> <span class="st">"Software"</span>, token <span class="op">=</span> <span class="va">token</span><span class="op">)</span></code></pre></div>
-<p>Once the test call is complete, you can loop over your data - the parameters for this particular dataset are shown below:</p>
+<p>Once the test call is complete, you can loop over your data - the
+parameters for this particular dataset are shown below:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># the variables to loop over</span>
 <span class="va">regions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"North America"</span>, <span class="st">"Europe"</span>,<span class="st">"South America"</span>,<span class="st">"Australia"</span><span class="op">)</span>
@@ -373,9 +397,17 @@
 <div class="section level4">
 <h4 id="parallel-calling-of-the-api">Parallel calling of the API<a class="anchor" aria-label="anchor" href="#parallel-calling-of-the-api"></a>
 </h4>
-<p>For parallel processing, ideally you don’t want R to block waiting for the HTTP response for each URL you are sending. This is easiest achieved through using <a href="https://jeroen.cran.dev/curl" class="external-link"><code>curl</code></a> and its <a href="https://cran.r-project.org/web/packages/curl/vignettes/intro.html#async_requests" class="external-link"><code>curl_fetch_multi()</code></a> function.</p>
-<p>A helper function that takes care of adding multiple URLs to the same curl pool is <code><a href="../reference/cr_jwt_create.html">cr_jwt_with_curl()</a></code> - if you pass it a vector of URL strings to call and the token, it will attempt to call all of them at the same time.</p>
-<p>An example calling each possible combination of the industries/regions above is shown below, which utilises <code><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid()</a></code> to create the URL variations.</p>
+<p>For parallel processing, ideally you don’t want R to block waiting
+for the HTTP response for each URL you are sending. This is easiest
+achieved through using <a href="https://jeroen.cran.dev/curl" class="external-link"><code>curl</code></a> and its <a href="https://cran.r-project.org/web/packages/curl/vignettes/intro.html#async_requests" class="external-link"><code>curl_fetch_multi()</code></a>
+function.</p>
+<p>A helper function that takes care of adding multiple URLs to the same
+curl pool is <code><a href="../reference/cr_jwt_create.html">cr_jwt_with_curl()</a></code> - if you pass it a vector
+of URL strings to call and the token, it will attempt to call all of
+them at the same time.</p>
+<p>An example calling each possible combination of the
+industries/regions above is shown below, which utilises
+<code><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid()</a></code> to create the URL variations.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## curl multi asynch</span>
 
@@ -394,7 +426,10 @@
 
 <span class="co"># calling them</span>
 <span class="fu"><a href="../reference/cr_jwt_create.html">cr_jwt_async</a></span><span class="op">(</span><span class="va">all_urls</span>, token <span class="op">=</span> <span class="va">token</span><span class="op">)</span></code></pre></div>
-<p>Some example output is shown below - note that some combinations didn’t have data so the API returned a 500 error, but later valid combinations completed and returned the JSON response for the forecast:</p>
+<p>Some example output is shown below - note that some combinations
+didn’t have data so the API returned a 500 error, but later valid
+combinations completed and returned the JSON response for the
+forecast:</p>
 <pre><code>&gt; # calling them
 &gt; cr_jwt_async(all_urls, token = token)
 ℹ 2020-09-20 21:58:06 &gt; Calling asynch:  https://parallel-cloudrun-ewjogewawq-ew.a.run.app/covid_traffic?region=North%20America&amp;industry=Transportation%20(non-freight)
@@ -430,7 +465,8 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>
