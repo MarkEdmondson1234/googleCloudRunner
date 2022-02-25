@@ -230,6 +230,12 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name,
   if (!is.null(schedule_pubsub)) {
     assertthat::assert_that(is.gar_pubsubTarget(schedule_pubsub))
     # so it will pass cr_schedule_pubsub
+    # reverse the order it does in PubsubTarget creation
+    schedule_pubsub$data = jsonlite::fromJSON(
+      rawToChar(
+        openssl::base64_decode(schedule_pubsub$data)
+      )
+    )
     class(schedule_pubsub) = c("PubsubMessage", "list")
   }
 
