@@ -377,7 +377,6 @@ cr_schedule_pubsub <- function(topicName,
   }
 
   the_attributes <- attributes
-  the_data <- NULL
   if (!is.null(PubsubMessage)) {
     if (!inherits(PubsubMessage, "PubsubMessage")) {
       stop("Not a PubsubMessage object passed to function.", call. = FALSE)
