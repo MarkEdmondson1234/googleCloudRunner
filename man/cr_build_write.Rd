@@ -4,12 +4,14 @@
 \alias{cr_build_write}
 \title{Write out a Build object to cloudbuild.yaml}
 \usage{
-cr_build_write(x, file = "cloudbuild.yaml")
+cr_build_write(x, file = "cloudbuild.yaml", footer = TRUE)
 }
 \arguments{
 \item{x}{A \link{Build} object perhaps created with \link{cr_build_make} or \link{cr_build_yaml}}
 
 \item{file}{Where to write the yaml file}
+
+\item{footer}{should a comment footer with the time be added?}
 }
 \description{
 Write out a Build object to cloudbuild.yaml

@@ -129,12 +129,13 @@ If your target workflow has parallel processing steps then leaving this as defau
 
 \examples{
 
-write.csv(mtcars, file = "mtcars.csv", row.names = FALSE)
+csv_file = tempfile(fileext = ".csv")
+write.csv(mtcars, file = csv_file, row.names = FALSE)
 
 targets::tar_script(
   list(
     targets::tar_target(file1,
-      "mtcars.csv", format = "file"),
+      csv_file, format = "file"),
     targets::tar_target(input1,
       read.csv(file1)),
     targets::tar_target(result1,
@@ -149,16 +150,18 @@ targets::tar_script(
       paste(result1, result2, result3, result4))
     ),
  ask = FALSE)
-
-bs <- cr_buildstep_targets_multi()
-
-# only create the yaml
-par_build <- cr_build_targets(bs, path = NULL)
-par_build
-
-# clean up example
-unlink("mtcars.csv")
-unlink("_targets.R")
+have_bucket = tryCatch({cr_bucket_get(); TRUE},
+                       error = function(err) FALSE)
+have_project = tryCatch({cr_project_get(); TRUE},
+                       error = function(err) FALSE)
+if (have_project && have_bucket) {
+  bs <- cr_buildstep_targets_multi()
+  # only create the yaml
+  par_build <- cr_build_targets(bs, path = NULL)
+  par_build
+  # clean up example
+  unlink("_targets.R")
+}
 
 \dontrun{
 # run it immediately in cloud
