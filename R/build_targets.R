@@ -72,6 +72,10 @@
 #' par_build <- cr_build_targets(bs, path = NULL)
 #' par_build
 #'
+#' # clean up example
+#' unlink("mtcars.csv")
+#' unlink("_targets.R")
+#'
 #' \dontrun{
 #' # run it immediately in cloud
 #' cr_build_targets(bs, execute="now")
