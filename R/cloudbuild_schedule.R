@@ -174,8 +174,7 @@ cr_schedule_build <- function(build,
 
 }
 
-check_pubsub_topic <- function(schedule_pubsub, run_name,
-                               projectId){
+check_pubsub_topic <- function(schedule_pubsub, run_name){
   if (!is.null(schedule_pubsub)) {
     assert_that(is.gar_pubsubTarget(schedule_pubsub))
     topic_basename <- basename(schedule_pubsub$topicName)
@@ -207,7 +206,6 @@ check_topic_exists <- function(topic) {
   }, silent = TRUE)
   !inherits(x, "try-error")
 }
-
 trigger_exists = function(...) {
   x = try({
     cr_buildtrigger_get(...)
@@ -221,8 +219,7 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name,
                                  trigger_name = NULL,
                                  ...) {
 
-  topic_basename <- check_pubsub_topic(schedule_pubsub, run_name,
-                                       projectId)
+  topic_basename <- check_pubsub_topic(schedule_pubsub, run_name)
   if (!is.null(schedule_pubsub)) {
     assert_that(is.gar_pubsubTarget(schedule_pubsub))
     # so it will pass cr_schedule_pubsub
