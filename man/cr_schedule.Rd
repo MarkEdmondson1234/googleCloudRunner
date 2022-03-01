@@ -80,18 +80,11 @@ A \code{gar_scheduleJob} class object
 This enables Cloud Scheduler to trigger Cloud Builds
 }
 \details{
-Ensure you have a service email with \link{cr_email_set} of format
-\code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com}
-with Cloud Scheduler Service Agent role as per
-https://cloud.google.com/scheduler/docs/http-target-auth#add
+Ensure you have a service email with \link{cr_email_set} of format \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com} with Cloud Scheduler Service Agent role as per https://cloud.google.com/scheduler/docs/http-target-auth#add
 
-You can parametrise builds by sending in values within PubSub. To read
-the data in the message set a substitution variable that picks up the data.
-For example \code{_VAR1=$(body.message.data.var1)}
+You can parametrise builds by sending in values within PubSub. To read the data in the message set a substitution variable that picks up the data. For example \code{_VAR1=$(body.message.data.var1)}
 
-If your schedule to PubSub fails with a permission error, try turning the
-Cloud Scheduler API off and on again the Cloud Console, which will
-refresh the Google permissions.
+If your schedule to PubSub fails with a permission error, try turning the Cloud Scheduler API off and on again the Cloud Console, which will refresh the Google permissions.
 }
 \examples{
 cloudbuild <- system.file("cloudbuild/cloudbuild.yaml", package = "googleCloudRunner")

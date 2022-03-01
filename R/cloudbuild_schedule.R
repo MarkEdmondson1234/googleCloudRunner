@@ -21,10 +21,7 @@ cr_build_schedule_http <- function(build,
 #'
 #' @return \code{cr_schedule_http} returns a \link{HttpTarget} object for use in \link{cr_schedule}
 #'
-#' @details Ensure you have a service email with \link{cr_email_set} of format
-#' \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com}
-#' with Cloud Scheduler Service Agent role as per
-#' https://cloud.google.com/scheduler/docs/http-target-auth#add
+#' @details Ensure you have a service email with \link{cr_email_set} of format \code{service-{project-number}@gcp-sa-cloudscheduler.iam.gserviceaccount.com} with Cloud Scheduler Service Agent role as per https://cloud.google.com/scheduler/docs/http-target-auth#add
 #'
 #' @export
 #' @import assertthat
@@ -177,17 +174,10 @@ cr_schedule_build <- function(build,
 
 }
 
-check_topic_exists <- function(topic) {
-  x <- try({
-    googlePubsubR::topics_get(topic)
-  }, silent = TRUE)
-  !inherits(x, "try-error")
-}
-
 check_pubsub_topic <- function(schedule_pubsub, run_name,
                                projectId){
   if (!is.null(schedule_pubsub)) {
-    assertthat::assert_that(is.gar_pubsubTarget(schedule_pubsub))
+    assert_that(is.gar_pubsubTarget(schedule_pubsub))
     topic_basename <- basename(schedule_pubsub$topicName)
   } else {
     topic_basename <- paste0(run_name, "-topic")
@@ -209,7 +199,13 @@ check_pubsub_topic <- function(schedule_pubsub, run_name,
   }
 
   topic_basename
+}
 
+check_topic_exists <- function(topic) {
+  x <- try({
+    googlePubsubR::topics_get(topic)
+  }, silent = TRUE)
+  !inherits(x, "try-error")
 }
 
 trigger_exists = function(...) {
@@ -228,7 +224,7 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name,
   topic_basename <- check_pubsub_topic(schedule_pubsub, run_name,
                                        projectId)
   if (!is.null(schedule_pubsub)) {
-    assertthat::assert_that(is.gar_pubsubTarget(schedule_pubsub))
+    assert_that(is.gar_pubsubTarget(schedule_pubsub))
     # so it will pass cr_schedule_pubsub
     # reverse the order it does in PubsubTarget creation
     schedule_pubsub$data = jsonlite::fromJSON(
@@ -290,13 +286,9 @@ create_pubsub_target <- function(build, schedule_pubsub, run_name,
 #'
 #' @details
 #'
-#' You can parametrise builds by sending in values within PubSub. To read
-#' the data in the message set a substitution variable that picks up the data.
-#' For example \code{_VAR1=$(body.message.data.var1)}
+#' You can parametrise builds by sending in values within PubSub. To read the data in the message set a substitution variable that picks up the data. For example \code{_VAR1=$(body.message.data.var1)}
 #'
-#' If your schedule to PubSub fails with a permission error, try turning the
-#' Cloud Scheduler API off and on again the Cloud Console, which will
-#' refresh the Google permissions.
+#' If your schedule to PubSub fails with a permission error, try turning the Cloud Scheduler API off and on again the Cloud Console, which will refresh the Google permissions.
 #'
 #' @examples
 #' cr_project_set("my-project")
@@ -358,17 +350,17 @@ cr_schedule_pubsub <- function(topicName,
                                attributes = NULL,
                                projectId = cr_project_get()) {
 
-  assertthat::assert_that(
-    assertthat::is.string(projectId)
+  assert_that(
+    is.string(projectId)
   )
 
-  if (assertthat::is.string(topicName)) {
+  if (is.string(topicName)) {
     the_name <- sprintf("projects/%s/topics/%s", projectId, topicName)
   } else if(inherits(topicName, "Topic")){
     the_name <- topicName$name
   }
 
-  assertthat::assert_that(assertthat::is.string(the_name))
+  assert_that(is.string(the_name))
 
   if (is.null(data)) {
     the_data <- the_name
