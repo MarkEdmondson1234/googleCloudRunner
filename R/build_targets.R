@@ -27,6 +27,7 @@
 #' @param task_image An existing Docker image that will be used to run your targets workflow after the targets meta has been downloaded from Google Cloud Storage
 #' @param target_folder Where target metadata will sit within the Google Cloud Storage bucket as a folder.  If NULL defaults to RStudio project name or "targets_cloudbuild" if no RStudio project found.
 #' @param bucket The Google Cloud Storage bucket the target metadata will be saved to in folder `target_folder`
+#' @param predefinedAcl The ACL rules for the object uploaded. Set to "bucketLevel" for buckets with bucket level access enabled
 #' @param ... Other arguments passed to \link{cr_build_yaml}
 #' @inheritDotParams cr_build_yaml
 #' @param task_args A named list of additional arguments to send to \link{cr_buildstep_r} when its executing the \link[targets]{tar_make} command (such as environment arguments)
@@ -45,12 +46,13 @@
 #' @seealso \link{cr_buildstep_targets} if you want to customise the build
 #' @examples
 #'
-#' write.csv(mtcars, file = "mtcars.csv", row.names = FALSE)
+#' csv_file = tempfile(fileext = ".csv")
+#' write.csv(mtcars, file = csv_file, row.names = FALSE)
 #'
 #' targets::tar_script(
 #'   list(
 #'     targets::tar_target(file1,
-#'       "mtcars.csv", format = "file"),
+#'       csv_file, format = "file"),
 #'     targets::tar_target(input1,
 #'       read.csv(file1)),
 #'     targets::tar_target(result1,
@@ -65,16 +67,18 @@
 #'       paste(result1, result2, result3, result4))
 #'     ),
 #'  ask = FALSE)
-#'
-#' bs <- cr_buildstep_targets_multi()
-#'
-#' # only create the yaml
-#' par_build <- cr_build_targets(bs, path = NULL)
-#' par_build
-#'
-#' # clean up example
-#' unlink("mtcars.csv")
-#' unlink("_targets.R")
+#' have_bucket = tryCatch({cr_bucket_get(); TRUE},
+#'                        error = function(err) FALSE)
+#' have_project = tryCatch({cr_project_get(); TRUE},
+#'                        error = function(err) FALSE)
+#' if (have_project && have_bucket) {
+#'   bs <- cr_buildstep_targets_multi()
+#'   # only create the yaml
+#'   par_build <- cr_build_targets(bs, path = NULL)
+#'   par_build
+#'   # clean up example
+#'   unlink("_targets.R")
+#' }
 #'
 #' \dontrun{
 #' # run it immediately in cloud
@@ -96,10 +100,13 @@ cr_build_targets <- function(
 
   execute <- match.arg(execute)
 
-  if(execute == "trigger"){
-    yaml <- cr_build_yaml(buildsteps, ...)
+  if (execute == "trigger") {
+    args = list(buildsteps, ...)
+    footer <- if (!is.null(args$footer)) args$footer else TRUE
+    args$footer <- NULL
+    yaml <- do.call(cr_build_yaml, args = args)
 
-    if (!is.null(path)) cr_build_write(yaml, file = path)
+    if (!is.null(path)) cr_build_write(yaml, file = path, footer = footer)
     return(yaml)
   }
 
@@ -121,7 +128,7 @@ cr_build_targets <- function(
           normalizePath(local)),
     level = 3)
 
-  if(getOption("googleAuthR.verbose") < 3){
+  if (getOption("googleAuthR.verbose") < 3) {
     print(yaml)
   }
 
