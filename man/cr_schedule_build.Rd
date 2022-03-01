@@ -8,13 +8,14 @@ cr_schedule_build(
   build,
   schedule,
   schedule_type = c("http", "pubsub"),
-  email = cr_email_get(),
+  email = NULL,
   projectId = cr_project_get(),
+  schedule_pubsub = NULL,
   ...
 )
 }
 \arguments{
-\item{build}{A Build object}
+\item{build}{A \link{Build} object created via \link{cr_build_make} or \link{cr_build}}
 
 \item{schedule}{A cron schedule e.g. \code{"15 5 * * *"}}
 
@@ -23,6 +24,9 @@ cr_schedule_build(
 \item{email}{The email that will authenticate the job set via \link{cr_email_set}}
 
 \item{projectId}{The GCP project to run within usually set with \link{cr_project_set}}
+
+\item{schedule_pubsub}{If you have a custom pubsub message to send via
+an existing topic, use \link{cr_schedule_pubsub} to supply it here}
 
 \item{...}{
   Arguments passed on to \code{\link[=cr_schedule]{cr_schedule}}
