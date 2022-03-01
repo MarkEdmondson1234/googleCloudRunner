@@ -171,6 +171,33 @@ parse_buildtrigger_list <- function(x) {
   o
 }
 
+extract_trigger <- function(trigger) {
+  trigger_cloudsource <- NULL
+  trigger_github <- NULL
+  trigger_pubsub <- NULL
+  trigger_webhook <- NULL
+
+  if (is.gar_pubsubConfig(trigger)) {
+    trigger_pubsub <- trigger
+  } else if (is.buildtrigger_repo(trigger) && trigger$type == "github") {
+    trigger_github <- trigger$repo
+  } else if (is.buildtrigger_repo(trigger) && trigger$type == "cloud_source") {
+    trigger_cloudsource <- trigger$repo
+  } else if (is.gar_webhookConfig(trigger)) {
+    trigger_webhook <- trigger
+  } else {
+    stop("We should never be here - something wrong with trigger parameter",
+         call. = FALSE)
+  }
+  list(
+    trigger_cloudsource = trigger_cloudsource,
+    trigger_pubsub = trigger_pubsub,
+    trigger_github = trigger_github,
+    trigger_webhook = trigger_webhook
+  )
+}
+
+
 #' Create a new BuildTrigger
 #'
 #' @description
@@ -271,76 +298,19 @@ cr_buildtrigger <- function(build,
                             projectId = cr_project_get(),
                             sourceToBuild = NULL,
                             overwrite = FALSE) {
-  assert_that(
-    is.string(name),
-    is.buildtrigger_repo(trigger) ||
-      is.gar_pubsubConfig(trigger) ||
-      is.gar_webhookConfig(trigger)
-  )
 
-  # build from a file in the repo
-  if (is.string(build)) {
-    the_build <- NULL
-    the_filename <- build
-  } else {
-    assert_that(is.gar_Build(build) || is.Yaml(build))
-    the_filename <- NULL
-
-    # remove builds source
-    build$source <- NULL
-    the_build <- cr_build_make(build, source = NULL)
-  }
-
-  if (!is.null(sourceToBuild)) {
-    assert_that(is.buildtrigger_repo(sourceToBuild))
-    sourceToBuild <- as.gitRepoSource(sourceToBuild)
-  }
-
-  trigger_cloudsource <- NULL
-  trigger_github <- NULL
-  trigger_pubsub <- NULL
-  trigger_webhook <- NULL
-
-  if (is.gar_pubsubConfig(trigger)) {
-    trigger_pubsub <- trigger
-  } else if (is.buildtrigger_repo(trigger) && trigger$type == "github") {
-    trigger_github <- trigger$repo
-  } else if (is.buildtrigger_repo(trigger) && trigger$type == "cloud_source") {
-    trigger_cloudsource <- trigger$repo
-  } else if (is.gar_webhookConfig(trigger)) {
-    trigger_webhook <- trigger
-  } else {
-    stop("We should never be here - something wrong with trigger parameter",
-         call. = FALSE)
-  }
-
-  # checks on sourceToBuild validity
-  if (is.null(sourceToBuild) &&
-     (is.gar_webhookConfig(trigger) || is.gar_pubsubConfig(trigger))) {
-    cli::cli_alert_warning("No sourceToBuild detected for event based trigger")
-  }
-
-  if (!is.null(sourceToBuild) &&
-     is.buildtrigger_repo(trigger)) {
-    stop("Can't use sourceToBuild for git based triggers", call. = FALSE)
-  }
-
-  buildTrigger <- BuildTrigger(
+  buildTrigger <- cr_buildtrigger_build(
+    build = build,
     name = name,
-    github = trigger_github,
-    pubsubConfig = trigger_pubsub,
-    webhookConfig = trigger_webhook,
-    triggerTemplate = trigger_cloudsource,
-    build = the_build,
-    filename = the_filename,
+    trigger = trigger,
     description = description,
-    tags = trigger_tags,
     disabled = disabled,
     substitutions = substitutions,
-    sourceToBuild = sourceToBuild,
     ignoredFiles = ignoredFiles,
-    includedFiles = includedFiles
-  )
+    includedFiles = includedFiles,
+    trigger_tags = trigger_tags,
+    projectId = projectId,
+    sourceToBuild = sourceToBuild)
 
   if (overwrite) {
     suppressMessages(cr_buildtrigger_delete(name, projectId = projectId))
@@ -352,13 +322,88 @@ cr_buildtrigger <- function(build,
   )
   # cloudbuild.projects.triggers.create
   f <- gar_api_generator(url, "POST",
-    data_parse_function = as.buildTriggerResponse,
-    simplifyVector = FALSE
+                         data_parse_function = as.buildTriggerResponse,
+                         simplifyVector = FALSE
   )
   stopifnot(inherits(buildTrigger, "BuildTrigger"))
 
   f(the_body = buildTrigger)
 }
+
+#' @export
+#' @rdname cr_buildtrigger
+cr_buildtrigger_build <- function(
+  build,
+  name,
+  trigger,
+  description = paste("cr_buildtrigger: ", Sys.time()),
+  disabled = FALSE,
+  substitutions = NULL,
+  ignoredFiles = NULL,
+  includedFiles = NULL,
+  trigger_tags = NULL,
+  projectId = cr_project_get(),
+  sourceToBuild = NULL) {
+
+  assertthat::assert_that(
+    assertthat::is.string(name),
+    is.buildtrigger_repo(trigger) ||
+      is.gar_pubsubConfig(trigger) ||
+      is.gar_webhookConfig(trigger)
+  )
+
+  # build from a file in the repo
+  if (is.string(build)) {
+    the_build <- NULL
+    the_filename <- build
+  } else {
+    assertthat::assert_that(is.gar_Build(build) || is.Yaml(build))
+    the_filename <- NULL
+
+    # remove builds source
+    # build$source <- NULL
+    # remove repo source, but should keep the bucket if there
+    build$source$repoSource <- NULL
+    the_build <- build
+    # the_build <- cr_build_make(build)
+  }
+
+  if (!is.null(sourceToBuild)) {
+    assertthat::assert_that(is.buildtrigger_repo(sourceToBuild))
+    sourceToBuild <- as.gitRepoSource(sourceToBuild)
+
+    if (is.buildtrigger_repo(trigger)) {
+      stop("Can't use sourceToBuild for git based triggers", call. = FALSE)
+    }
+  }
+
+  trigger_ouptut_list <- extract_trigger(trigger)
+
+  # checks on sourceToBuild validity
+  if (is.null(sourceToBuild) &&
+      (is.gar_webhookConfig(trigger) || is.gar_pubsubConfig(trigger))) {
+    cli::cli_alert_warning("No sourceToBuild detected for event based trigger")
+  }
+
+
+  buildTrigger <- BuildTrigger(
+    name = name,
+    github = trigger_ouptut_list$trigger_github,
+    pubsubConfig = trigger_ouptut_list$trigger_pubsub,
+    webhookConfig = trigger_ouptut_list$trigger_webhook,
+    triggerTemplate = trigger_ouptut_list$trigger_cloudsource,
+    build = the_build,
+    filename = the_filename,
+    description = description,
+    tags = trigger_tags,
+    disabled = disabled,
+    substitutions = substitutions,
+    sourceToBuild = sourceToBuild,
+    ignoredFiles = ignoredFiles,
+    includedFiles = includedFiles
+  )
+}
+
 
 as.buildTriggerResponse <- function(x) {
   o <- x
