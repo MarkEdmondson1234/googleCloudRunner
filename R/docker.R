@@ -190,6 +190,20 @@ cr_deploy_docker_construct <- function(
     level = 2
   )
 
+  # needed if someone does something silly like:
+  # res = cr_buildstep_bash("echo hey")
+  # pre_steps = res[[1]]
+  if (!is.null(pre_steps) &&
+      !is.cr_buildstep_list(pre_steps)) {
+    stop(paste0("pre_steps is not a cr_buildstep_list, you may need to do ",
+                "list(pre_steps)"))
+  }
+  if (!is.null(post_steps) &&
+      !is.cr_buildstep_list(post_steps)) {
+    stop(paste0("post_steps is not a cr_buildstep_list, you may need to do ",
+                "list(post_steps)"))
+  }
+
   myMessage("Configuring Dockerfile", level = 2)
   # remove local/Dockerfile if it didn't exist before
   remove_docker_file_after <- find_dockerfile(local, dockerfile = dockerfile)
