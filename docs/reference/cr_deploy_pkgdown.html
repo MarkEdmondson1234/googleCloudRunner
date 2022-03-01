@@ -163,7 +163,8 @@
   env <span class="op">=</span> <span class="cn">NULL</span>,
   build_image <span class="op">=</span> <span class="st">"gcr.io/gcer-public/packagetools:latest"</span>,
   post_setup <span class="op">=</span> <span class="cn">NULL</span>,
-  post_clone <span class="op">=</span> <span class="cn">NULL</span>
+  post_clone <span class="op">=</span> <span class="cn">NULL</span>,
+  footer <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -189,6 +190,9 @@
 <dd><p>Steps that occur after git setup</p></dd>
 <dt>post_clone</dt>
 <dd><p>A <a href="cr_buildstep.html">cr_buildstep</a> that occurs after the repo is cloned</p></dd>
+<dt>footer</dt>
+<dd><p>flag passed to <code><a href="cr_build_write.html">cr_build_write</a></code>, indicating
+if a footer in the YAML should be added with the creation date/time.</p></dd>
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -215,7 +219,7 @@
 <span class="r-in">  secret <span class="op">=</span> <span class="st">"my_git_secret"</span>,</span>
 <span class="r-in">  create_trigger <span class="op">=</span> <span class="st">"no"</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-02-28 10:40:55 &gt;</span> Writing to cloudbuild-pkgdown.yml</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-03-01 14:48:39 &gt;</span> Writing to cloudbuild-pkgdown.yml</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">ℹ</span> Complete deployment of pkgdown Cloud Build yaml:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Go to https://console.cloud.google.com/cloud-build/triggers and</span>

@@ -153,7 +153,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">cr_build_write</span><span class="op">(</span><span class="va">x</span>, file <span class="op">=</span> <span class="st">"cloudbuild.yaml"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">cr_build_write</span><span class="op">(</span><span class="va">x</span>, file <span class="op">=</span> <span class="st">"cloudbuild.yaml"</span>, footer <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -162,6 +162,8 @@
 <dd><p>A <a href="Build.html">Build</a> object perhaps created with <a href="cr_build_make.html">cr_build_make</a> or <a href="cr_build_yaml.html">cr_build_yaml</a></p></dd>
 <dt>file</dt>
 <dd><p>Where to write the yaml file</p></dd>
+<dt>footer</dt>
+<dd><p>should a comment footer with the time be added?</p></dd>
 </dl></div>
     <div id="see-also">
     <h2>See also</h2>
@@ -187,7 +189,7 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="cr_project_set.html">cr_project_set</a></span><span class="op">(</span><span class="st">"my-project"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-02-28 10:40:45 &gt;</span> ProjectId set to my-project</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-03-01 14:48:28 &gt;</span> ProjectId set to my-project</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "my-project"</span>
 <span class="r-in"><span class="co"># write from creating a Yaml object</span></span>
 <span class="r-in"><span class="va">image</span> <span class="op">&lt;-</span> <span class="st">"gcr.io/my-project/my-image$BUILD_ID"</span></span>

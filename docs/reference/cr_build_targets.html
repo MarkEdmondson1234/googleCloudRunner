@@ -317,12 +317,13 @@ Historical runs accumulate in the
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">mtcars</span>, file <span class="op">=</span> <span class="st">"mtcars.csv"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">csv_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".csv"</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span><span class="va">mtcars</span>, file <span class="op">=</span> <span class="va">csv_file</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_script</span><span class="op">(</span></span>
 <span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">file1</span>,</span>
-<span class="r-in">      <span class="st">"mtcars.csv"</span>, format <span class="op">=</span> <span class="st">"file"</span><span class="op">)</span>,</span>
+<span class="r-in">      <span class="va">csv_file</span>, format <span class="op">=</span> <span class="st">"file"</span><span class="op">)</span>,</span>
 <span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">input1</span>,</span>
 <span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">file1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span class="r-in">    <span class="fu">targets</span><span class="fu">::</span><span class="fu">tar_target</span><span class="op">(</span><span class="va">result1</span>,</span>
@@ -338,21 +339,21 @@ Historical runs accumulate in the
 <span class="r-in">    <span class="op">)</span>,</span>
 <span class="r-in"> ask <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘targets’</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu">cr_buildstep_targets_multi</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-02-28 10:40:43 &gt;</span> targets cloud location: gs://my-bucket/targets_cloudbuild</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-02-28 10:40:43 &gt;</span> Resolving targets::tar_manifest()</span>
+<span class="r-in"><span class="va">have_bucket</span> <span class="op">=</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="op">{</span><span class="fu"><a href="cr_bucket_set.html">cr_bucket_get</a></span><span class="op">(</span><span class="op">)</span>; <span class="cn">TRUE</span><span class="op">}</span>,</span>
+<span class="r-in">                       error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">err</span><span class="op">)</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">have_project</span> <span class="op">=</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="op">{</span><span class="fu"><a href="cr_project_set.html">cr_project_get</a></span><span class="op">(</span><span class="op">)</span>; <span class="cn">TRUE</span><span class="op">}</span>,</span>
+<span class="r-in">                       error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">err</span><span class="op">)</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="va">have_project</span> <span class="op">&amp;&amp;</span> <span class="va">have_bucket</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in">  <span class="va">bs</span> <span class="op">&lt;-</span> <span class="fu">cr_buildstep_targets_multi</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in">  <span class="co"># only create the yaml</span></span>
+<span class="r-in">  <span class="va">par_build</span> <span class="op">&lt;-</span> <span class="fu">cr_build_targets</span><span class="op">(</span><span class="va">bs</span>, path <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span class="r-in">  <span class="va">par_build</span></span>
+<span class="r-in">  <span class="co"># clean up example</span></span>
+<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="st">"_targets.R"</span><span class="op">)</span></span>
+<span class="r-in"><span class="op">}</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-03-01 14:48:26 &gt;</span> targets cloud location: gs://my-bucket/targets_cloudbuild</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-03-01 14:48:26 &gt;</span> Resolving targets::tar_manifest()</span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in loadNamespace(x):</span> there is no package called ‘targets’</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># only create the yaml</span></span>
-<span class="r-in"><span class="va">par_build</span> <span class="op">&lt;-</span> <span class="fu">cr_build_targets</span><span class="op">(</span><span class="va">bs</span>, path <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in lapply(x, f):</span> object 'bs' not found</span>
-<span class="r-in"><span class="va">par_build</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> object 'par_build' not found</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># clean up example</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="st">"mtcars.csv"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="st">"_targets.R"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="co"># run it immediately in cloud</span></span>

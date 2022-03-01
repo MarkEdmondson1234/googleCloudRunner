@@ -163,7 +163,8 @@
   build_image <span class="op">=</span> <span class="st">"gcr.io/gcer-public/packagetools:latest"</span>,
   create_trigger <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"file"</span>, <span class="st">"inline"</span>, <span class="st">"no"</span><span class="op">)</span>,
   trigger_repo <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>
+  <span class="va">...</span>,
+  footer <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -220,6 +221,9 @@
 
   
 </dl></dd>
+<dt>footer</dt>
+<dd><p>flag passed to <code><a href="cr_build_write.html">cr_build_write</a></code>, indicating
+if a footer in the YAML should be added with the creation date/time.</p></dd>
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -246,7 +250,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
 <span class="r-in"><span class="co"># create a local cloudbuild.yml file for packagetests</span></span>
 <span class="r-in"><span class="va">pd</span> <span class="op">&lt;-</span> <span class="fu">cr_deploy_packagetests</span><span class="op">(</span>create_trigger <span class="op">=</span> <span class="st">"no"</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-02-28 10:40:55 &gt;</span> Writing to cloudbuild-tests.yml</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-03-01 14:48:39 &gt;</span> Writing to cloudbuild-tests.yml</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">ℹ</span> Complete deployment of tests Cloud Build yaml:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Go to https://console.cloud.google.com/cloud-build/triggers and</span>
@@ -303,7 +307,7 @@
 <span class="r-in">  timeout <span class="op">=</span> <span class="fl">1200</span>,</span>
 <span class="r-in">  create_trigger <span class="op">=</span> <span class="st">"no"</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-02-28 10:40:55 &gt;</span> Writing to cloudbuild-tests.yml</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> <span style="color: #B2B2B2;">2022-03-01 14:48:39 &gt;</span> Writing to cloudbuild-tests.yml</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">ℹ</span> Complete deployment of tests Cloud Build yaml:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Go to https://console.cloud.google.com/cloud-build/triggers and</span>
