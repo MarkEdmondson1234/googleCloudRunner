@@ -1,6 +1,6 @@
 # googleCloudRunner 0.5.0.9000
 
-* ...
+* Added `full` flag argument to `cr_buildtrigger_list` to return a column `build`, which is a list of the builds.
 
 # googleCloudRunner 0.5.0
 

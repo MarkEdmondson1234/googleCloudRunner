@@ -82,3 +82,14 @@ test_that("[Online] Test Build Triggers", {
   info <- cr_buildtrigger_get("0a3cade0-425f-4adc-b86b-14cde51af674")
   expect_equal(info$name, "package-checks")
 })
+
+test_that("[Online] Test Build Triggers with Builds", {
+  skip_on_ci()
+  skip_on_cran()
+
+  the_list <- cr_buildtrigger_list(full = TRUE)
+  expect_true("build" %in% names(the_list))
+  if (nrow(the_list) > 0) {
+    expect_true(is.list(the_list$build))
+  }
+})
