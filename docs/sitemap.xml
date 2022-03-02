@@ -193,6 +193,9 @@
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildstep_docker.html</loc>
   </url>
   <url>
+    <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildstep_docker_auth.html</loc>
+  </url>
+  <url>
     <loc>https://code.markedmondson.me/googleCloudRunner/reference/cr_buildstep_edit.html</loc>
   </url>
   <url>
