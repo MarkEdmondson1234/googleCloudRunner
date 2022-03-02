@@ -222,7 +222,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> args:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - bash</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - -c</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> - ls -R /workspace/ &amp;&amp; cd /workspace/deploy &amp;&amp; mv * ../ &amp;&amp; ls -R /workspace/</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> - ls -R /workspace/; [ -d "/workspace/deploy" ] &amp;&amp; cd /workspace/deploy &amp;&amp; mv * ../;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ls -R /workspace/</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> id: move source files</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>

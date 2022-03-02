@@ -204,8 +204,6 @@ cr_deploy_docker_construct <- function(
   # kaniko_cache will push image for you
   pushed_image <- if(kaniko_cache) NULL else image
 
-  # Adding this in for Artifacts Registry
-  pre_steps <- add_docker_auth_prestep(image, pre_steps)
 
   image_tag <- paste0(image, ":", tag)
   myMessage("# Deploy docker build for image:", image, level = 3)
@@ -455,22 +453,37 @@ find_dockerfile <- function(local, dockerfile) {
   TRUE
 }
 
-add_docker_auth_prestep <- function(image, pre_steps) {
-  # Adding this in for Artifacts Registry
-  need_location <- grepl("^.*-docker.pkg.dev", tolower(image))
-  if (need_location) {
-    dev_location <- sub("^(.*-docker.pkg.dev).*", "\\1", tolower(image))
-    dev_location <- sub("^http(s|)://", "", dev_location)
-    pre_steps <- c(
-      pre_steps,
-      cr_buildstep_gcloud(
-        "gcloud",
-        c(
-          "gcloud", "auth", "configure-docker",
-          dev_location
-        )
-      )
-    )
+#' Authorize Docker using \code{gcloud auth configure-docker}
+#'
+#' @param image name of the Docker image to push or pull from that needs
+#' authorization, or simply the registry.
+#' @param ... Other arguments passed to \link{cr_buildstep_gcloud}
+#'
+#'
+#' @return A buildstep
+#' @export
+#'
+#' @examples
+#' cr_buildstep_docker_auth("us.gcr.io")
+#' cr_buildstep_docker_auth(c("us.gcr.io", "asia.gcr.io"))
+#' cr_buildstep_docker_auth("https://asia.gcr.io/myrepo/image")
+cr_buildstep_docker_auth <- function(image, ...) {
+  if (is.null(image) || length(image) == 0) {
+    return(NULL)
   }
-  pre_steps
+  image <- tolower(image)
+  need_location <- grepl("^.*(-docker.pkg.dev|gcr.io)", image)
+  res <- NULL
+  if (any(need_location)) {
+    registry <- sub("^(.*(-docker.pkg.dev|gcr.io)).*", "\\1",
+                    image[need_location])
+    registry <- sub("^http(s|)://", "", registry)
+    res <- cr_buildstep_gcloud(
+      "gcloud",
+      c("gcloud", "auth", "configure-docker", "-q",
+        paste(registry, collapse = ",")
+      ),
+      ...)
+  }
+  res
 }
