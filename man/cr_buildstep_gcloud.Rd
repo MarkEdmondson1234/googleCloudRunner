@@ -2,9 +2,18 @@
 % Please edit documentation in R/buildsteps_templates.R
 \name{cr_buildstep_gcloud}
 \alias{cr_buildstep_gcloud}
+\alias{cr_buildstep_gsutil}
+\alias{cr_buildstep_bq}
+\alias{cr_buildstep_kubectl}
 \title{A buildstep template for gcloud}
 \usage{
 cr_buildstep_gcloud(component = c("gcloud", "bq", "gsutil", "kubectl"), ...)
+
+cr_buildstep_gsutil(...)
+
+cr_buildstep_bq(...)
+
+cr_buildstep_kubectl(...)
 }
 \arguments{
 \item{component}{What gcloud service you need, such as "gcloud", "bq" or "gsutil"}
