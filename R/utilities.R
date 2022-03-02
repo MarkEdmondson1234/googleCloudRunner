@@ -44,6 +44,9 @@ has_registry_prefix <- function(name) {
 }
 
 make_image_name <- function(name, projectId) {
+  if (is.null(name)) {
+    return(name)
+  }
   prefix <- has_registry_prefix(name)
   if (prefix) {
     the_image <- name
