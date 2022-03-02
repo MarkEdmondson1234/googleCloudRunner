@@ -130,17 +130,19 @@ cr_buildtrigger_repo <- function(repo_name,
     )
   } else if (type == "cloud_source") {
     if (is.null(dots$projectId)) {
-      projectId <- cr_project_get()
-    } else {
-      projectId <- dots$projectId
+      dots$projectId <- cr_project_get()
     }
-
-    repo <- RepoSource(repo_name,
-      branchName = branch,
-      tagName = tag,
-      ...
+    assertthat::assert_that(
+      is.null(dots$branchName),
+      is.null(dots$tagName),
+      is.null(dots$repoName)
     )
+    dots$branchName <- branch
+    dots$tagName <- tag
+    dots$repoName <- repo_name
+    repo <- do.call(RepoSource, args = dots)
   }
+
 
   structure(list(
     repo = repo,
