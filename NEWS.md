@@ -1,6 +1,6 @@
 # googleCloudRunner 0.5.0.9000
 
-* ...
+* Ensure `googlePubSubR` project is set when scheduling (#189 - thanks @eteitelbaum)
 
 # googleCloudRunner 0.5.0
 

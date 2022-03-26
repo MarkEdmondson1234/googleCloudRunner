@@ -141,6 +141,8 @@ check_pubsub_topic <- function(schedule_pubsub, run_name){
   }
 
   check_package_installed("googlePubsubR")
+  suppressMessages(googlePubsubR::ps_project_set(cr_project_get()))
+
   topic_basename <- paste0(run_name, "-topic")
 
   myMessage("Creating PubSub topic:", topic_basename, level = 3)

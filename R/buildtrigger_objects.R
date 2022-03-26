@@ -56,6 +56,11 @@ BuildTrigger <- function(filename = NULL,
     assert_that(is.gar_pubsubConfig(pubsubConfig))
   }
 
+  if (!is.null(substitutions)) {
+    assert_that(is.list(substitutions),
+                all(unlist(lapply(substitutions, is.character))))
+  }
+
   structure(rmNullObs(list(
     filename = filename,
     name = name,
