@@ -118,6 +118,7 @@ cr_deploy_docker <- function(local,
                              predefinedAcl = "bucketOwnerFullControl",
                              pre_steps = NULL,
                              post_steps = NULL,
+                             availableSecrets = NULL,
                              ...) {
   result <- cr_deploy_docker_construct(
     local = local,
@@ -133,6 +134,7 @@ cr_deploy_docker <- function(local,
     predefinedAcl = predefinedAcl,
     pre_steps = pre_steps,
     post_steps = post_steps,
+    availableSecrets = availableSecrets,
     ...
   )
 
@@ -180,8 +182,8 @@ cr_deploy_docker_construct <- function(
   predefinedAcl = "bucketOwnerFullControl",
   pre_steps = NULL,
   post_steps = NULL,
+  availableSecrets = NULL,
   ...) {
-
   assert_that(
     dir.exists(local)
   )
@@ -237,7 +239,8 @@ cr_deploy_docker_construct <- function(
   )
   build_yaml <- cr_build_yaml(
     steps = steps,
-    images = pushed_image
+    images = pushed_image,
+    availableSecrets = availableSecrets
   )
 
   list(
@@ -402,6 +405,7 @@ cr_buildstep_docker <- function(
           "-f", dockerfile,
           "--destination", paste0(the_image, ":", x),
           sprintf("--context=%s", build_context),
+          build_args,
           "--cache=true"
         ),
         ...
