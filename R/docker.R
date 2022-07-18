@@ -373,7 +373,7 @@ cr_buildstep_docker <- function(
       steps <- c(
         steps,
         cr_buildstep(
-          "docker", c("push", the_image),
+          "docker", c("push", "-a", the_image),
           id = "pushing image",
           ...
         )
