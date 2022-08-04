@@ -177,14 +177,19 @@ is.gar_webhookConfig <- function(x) {
 #' @noRd
 GitRepoSource <- function(uri,
                           ref,
-                          repoType = c("GITHUB","CLOUD_SOURCE_REPOSITORIES")){
+                          repoType = c("GITHUB","CLOUD_SOURCE_REPOSITORIES"),
+                          allow_regex = FALSE){
 
   assert_that(
     is.string(uri),
-    is.string(ref),
-    isTRUE(grepl("^refs/", ref)),
-    !grepl("[^A-Za-z0-9/.]", ref) # regex not allowed
+    is.string(ref)
   )
+  if (!allow_regex) {
+    assert_that(
+      isTRUE(grepl("^refs/", ref)),
+      !grepl("[^A-Za-z0-9/.]", ref) # regex not allowed
+    )
+  }
 
   repoType <- match.arg(repoType)
 
@@ -202,7 +207,7 @@ is.gitRepoSource <- function(x){
   inherits(x, "gar_gitRepoSource")
 }
 
-as.gitRepoSource <- function(x){
+as.gitRepoSource <- function(x, allow_regex = FALSE){
   if(!is.buildtrigger_repo(x)){
     stop("is not buildtrigger_repo")
   }
@@ -222,7 +227,8 @@ as.gitRepoSource <- function(x){
         uri = sprintf("https://github.com/%s/%s",
                       x$repo$owner, x$repo$name),
         ref = ref,
-        repoType = "GITHUB"
+        repoType = "GITHUB",
+        allow_regex = allow_regex
       )
     )
   }
@@ -242,7 +248,8 @@ as.gitRepoSource <- function(x){
         uri = sprintf("https://source.developers.google.com/p/%s/r/%s",
                       x$repo$projectId, x$repo$repoName),
         ref = ref,
-        repoType = "CLOUD_SOURCE_REPOSITORIES"
+        repoType = "CLOUD_SOURCE_REPOSITORIES",
+        allow_regex = allow_regex
       )
     )
   }

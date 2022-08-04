@@ -293,7 +293,7 @@ cr_buildtrigger <- function(build,
 
   if (!is.null(sourceToBuild)) {
     assert_that(is.buildtrigger_repo(sourceToBuild))
-    sourceToBuild <- as.gitRepoSource(sourceToBuild)
+    sourceToBuild <- as.gitRepoSource(sourceToBuild, allow_regex = TRUE)
   }
 
   trigger_cloudsource <- NULL
