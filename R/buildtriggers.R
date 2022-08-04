@@ -366,7 +366,7 @@ as.buildTriggerResponse <- function(x) {
     o$build <- as.gar_Build(x$build)
   }
 
-  if (!is.null(o$pubsubConfig)){
+  if (!is.null(o$pubsubConfig)) {
     o$pubsubConfig <- as.gar_pubsubConfig(o$pubsubConfig)
   }
 
@@ -484,7 +484,7 @@ cr_buildtrigger_copy <- function(buildTrigger,
   }
   if (!is.null(disabled)) buildTrigger$disabled <- disabled
 
-  if(!is.null(sourceToBuild)) buildTrigger$sourceToBuild <- sourceToBuild
+  if (!is.null(sourceToBuild)) buildTrigger$sourceToBuild <- sourceToBuild
 
   buildTrigger <- as.BuildTrigger(buildTrigger)
   url <- sprintf(

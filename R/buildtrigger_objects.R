@@ -138,7 +138,7 @@ is.gar_pubsubConfig <- function(x) {
   inherits(x, "gar_pubsubConfig")
 }
 
-as.gar_pubsubConfig <- function(x){
+as.gar_pubsubConfig <- function(x) {
   PubsubConfig(
     subscription = x$subscription,
     topic = x$topic,
@@ -178,7 +178,7 @@ is.gar_webhookConfig <- function(x) {
 GitRepoSource <- function(uri,
                           ref,
                           repoType = c("GITHUB","CLOUD_SOURCE_REPOSITORIES"),
-                          allow_regex = FALSE){
+                          allow_regex = FALSE) {
 
   assert_that(
     is.string(uri),
@@ -203,20 +203,20 @@ GitRepoSource <- function(uri,
   )
 }
 
-is.gitRepoSource <- function(x){
+is.gitRepoSource <- function(x) {
   inherits(x, "gar_gitRepoSource")
 }
 
-as.gitRepoSource <- function(x, allow_regex = FALSE){
-  if(!is.buildtrigger_repo(x)){
+as.gitRepoSource <- function(x, allow_regex = FALSE) {
+  if (!is.buildtrigger_repo(x)) {
     stop("is not buildtrigger_repo")
   }
 
-  if(is.gar_GitHubEventsConfig(x$repo)){
+  if (is.gar_GitHubEventsConfig(x$repo)) {
 
-    if(!is.null(x$repo$push$tag)){
+    if (!is.null(x$repo$push$tag)) {
       ref <- paste0("refs/tags/", x$repo$push$tag)
-    } else if(!is.null(x$repo$push$branch)){
+    } else if (!is.null(x$repo$push$branch)) {
       ref <- paste0("refs/heads/", x$repo$push$branch)
     } else {
       stop("No refs/ found", call. = FALSE)
@@ -233,11 +233,11 @@ as.gitRepoSource <- function(x, allow_regex = FALSE){
     )
   }
 
-  if(is.gar_RepoSource(x$repo)){
+  if (is.gar_RepoSource(x$repo)) {
 
-    if(!is.null(x$repo$tagName)){
+    if (!is.null(x$repo$tagName)) {
       ref <- paste0("refs/tags/", x$repo$tagName)
-    } else if(!is.null(x$repo$branchName)){
+    } else if (!is.null(x$repo$branchName)) {
       ref <- paste0("refs/heads/", x$repo$branchName)
     } else {
       stop("No refs/ found", call. = FALSE)
