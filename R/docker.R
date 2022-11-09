@@ -402,7 +402,8 @@ cr_buildstep_docker <- function(
           "-f", dockerfile,
           "--destination", paste0(the_image, ":", x),
           sprintf("--context=%s", build_context),
-          "--cache=true"
+          "--cache=true",
+          build_args
         ),
         ...
       )
