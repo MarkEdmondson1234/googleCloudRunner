@@ -90,6 +90,43 @@ function(region=NULL, industry=NULL){
 }
 ```
 
+### Deploy to Cloud Run and reusing the default authentication
+
+When you deploy to Cloud Run, you can choose which service key the Cloud Run service will run under, the default being the GCE default service key.  This means you can authenticate using this key without needing to upload your own service JSON file.  An example is available in the example Cloud Run app included with the package, deployable via `cr_deploy_plumber(system.file("example", package = "googleCloudRunner"))`
+
+The relevant R code is shown below, which lets you list a Google Cloud Storage bucket within the same GCP project, reusing the default authentication.
+
+```r
+#' List a Google Cloud Storage bucket as an auth example
+#' @get /gcs_list
+#' @param bucket the bucket to list.  Must be authenticated for this Cloud Run service account
+function(bucket=NULL){
+  if(is.null(bucket)){
+    return("No bucket specified in URL parameter e.g ?bucket=my-bucket")
+  }
+
+  library(googleCloudStorageR)
+
+  auth <- gargle::credentials_gce()
+  if(is.null(auth)){
+    return("Could not authenticate")
+  }
+
+  message("Authenticated with service token")
+
+  # put it into googleCloudStorageR auth
+  gcs_auth(token = auth)
+
+  gcs_list_objects(bucket)
+
+}
+```
+
+Once deployed, you can see it listing objects via the endpoint `browseURL("https://{your-app-endpoint}/gcs_list?bucket={your-bucket}")`
+
+
+
+
 #### Deploy plumber API as a private micro-service
 
 The first step is to host the plumber API above.

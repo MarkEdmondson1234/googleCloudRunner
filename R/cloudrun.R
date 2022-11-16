@@ -126,19 +126,6 @@ make_endpoint <- function(endbit) {
     )
   }
 
-  endpoints <- c(
-    "us-central1",
-    "asia-northeast1",
-    "europe-west1",
-    "us-east1"
-  )
-  if (!region %in% endpoints) {
-    warning(
-      "Endpoint is not one of ",
-      paste(endpoints, collapse = " "), " got: ", region
-    )
-  }
-
   sprintf(
     "https://%s-run.googleapis.com/apis/serving.knative.dev/v1/%s",
     region, endbit

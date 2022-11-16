@@ -1,14 +1,14 @@
 if(Sys.getenv("PORT") == "") Sys.setenv(PORT = 8000)
 
 #' @get /
-#' @html
+#' @serializer html
 function(){
   "<html><h1>It works!</h1></html>"
 }
 
 
 #' @get /hello
-#' @html
+#' @serializer html
 function(){
   "<html><h1>hello world</h1></html>"
 }
@@ -23,7 +23,7 @@ function(msg=""){
 #' Plot out data from the iris dataset
 #' @param spec If provided, filter the data to only this species (e.g. 'setosa')
 #' @get /plot
-#' @png
+#' @serializer png
 function(spec){
   myData <- iris
   title <- "All Species"
@@ -48,5 +48,29 @@ function(message=NULL){
     paste("Echo:", x)
     }
   googleCloudRunner::cr_plumber_pubsub(message, pub)
+
+}
+
+#' List a Google Cloud Storage bucket as an auth example
+#' @get /gcs_list
+#' @param bucket the bucket to list.  Must be authenticated for this Cloud Run service account
+function(bucket=NULL){
+  if(is.null(bucket)){
+    return("No bucket specified in URL parameter e.g ?bucket=my-bucket")
+  }
+
+  library(googleCloudStorageR)
+
+  auth <- gargle::credentials_gce()
+  if(is.null(auth)){
+    return("Could not authenticate")
+  }
+
+  message("Authenticated with service token")
+
+  # put it into googleCloudStorageR auth
+  gcs_auth(token = auth)
+
+  gcs_list_objects(bucket)
 
 }
