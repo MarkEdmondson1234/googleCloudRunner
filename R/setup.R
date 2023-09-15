@@ -11,8 +11,8 @@ cr_setup <- function() {
       "Configure/check all googleCloudRunner settings",
       "Configure GCP Project Id",
       "Configure Authentication JSON file",
-      "Configure Cloud Storage bucket",
       "Configure Cloud Run region",
+      "Configure Cloud Storage bucket",
       "Configure Cloud Scheduler build email",
       "Configure Cloud Build service account"
     ),
@@ -32,8 +32,7 @@ cr_setup <- function() {
     session_user = session_user
   )
 
-
-  if (we_edit) {
+    if (we_edit) {
     return(invisible(""))
   }
 
@@ -66,6 +65,20 @@ cr_setup <- function() {
 
   cli_rule()
   we_edit <- op == 4
+  region <- gar_setup_menu_do(op,
+                              trigger = c(1, 5),
+                              do_function = gar_setup_env_check,
+                              env_arg = "CR_REGION",
+                              set_to = get_region_setup(),
+                              edit_option = we_edit,
+                              session_user = session_user
+  )
+  if (we_edit) {
+    return(invisible(""))
+  }
+
+  cli_rule()
+  we_edit <- op == 5
   bucket <- gar_setup_menu_do(op,
     trigger = c(1, 4),
     do_function = gar_setup_env_check,
@@ -77,19 +90,7 @@ cr_setup <- function() {
   if (we_edit) {
     return(invisible(""))
   }
-  cli_rule()
-  we_edit <- op == 5
-  region <- gar_setup_menu_do(op,
-    trigger = c(1, 5),
-    do_function = gar_setup_env_check,
-    env_arg = "CR_REGION",
-    set_to = get_region_setup(),
-    edit_option = we_edit,
-    session_user = session_user
-  )
-  if (we_edit) {
-    return(invisible(""))
-  }
+
   cli_rule()
   we_edit <- op == 6
   email <- gar_setup_menu_do(op,
