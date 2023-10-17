@@ -446,7 +446,7 @@ cr_schedule("cloud-run-scheduled", schedule = "4 16 * * *", httpTarget = run_me)
 
 ```r
 # deploy a non-public app
-cr_deploy_run("your-cloud-run", allowUnauthenticated = TRUE)
+cr_deploy_run("your-cloud-run", allowUnauthenticated = FALSE)
 
 # get your previously deployed Cloud Run app
 my_app <- cr_run_get("your-cloud-run")
