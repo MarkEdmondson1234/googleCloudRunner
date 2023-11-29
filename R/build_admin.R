@@ -15,10 +15,17 @@ cr_build_status <- function(id = .Last.value,
                             projectId = cr_project_get()) {
   the_id <- extract_build_id(id)
 
-  url <- sprintf(
-    "https://cloudbuild.googleapis.com/v1/projects/%s/builds/%s",
-    projectId, the_id
-  )
+  if (has_private_worker_pool(id)){
+    url <- sprintf(
+      "https://cloudbuild.googleapis.com/v1/%s",
+      id[["metadata"]][["build"]][["name"]]
+    )
+  } else{
+    url <- sprintf(
+      "https://cloudbuild.googleapis.com/v1/projects/%s/builds/%s",
+      projectId, the_id
+    )
+  }
 
   # cloudbuild.projects.builds.get
   f <- gar_api_generator(url, "GET", data_parse_function = as.gar_Build)
