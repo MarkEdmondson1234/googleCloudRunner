@@ -139,6 +139,7 @@ is.BuildOperationMetadata <- function(x) {
 }
 
 has_private_worker_pool <- function(x){
+  has_pool_name <- FALSE
   if (is.Yaml(x)){
     has_pool_name <- length(x[["options"]][["pool"]][["name"]]) > 0
   }
