@@ -233,12 +233,24 @@ make_new_bucket <- function(){
     cli_alert_info("You need to setup a project-id before creating a bucket")
     return(NULL)
   }
+
   make_bucket_name <- readline(
     "What name will the bucket be? :"
   )
-  new_bucket <- googleCloudStorageR::gcs_create_bucket(
+
+  if(!nzchar(Sys.getenv("CR_REGION"))){
+    make_bucket_location <- readline(
+      "What location shall the bucket be in? :"
+    )
+  } else {
+    make_bucket_location <- Sys.getenv("CR_REGION")
+  }
+
+
+    new_bucket <- googleCloudStorageR::gcs_create_bucket(
     make_bucket_name,
-    projectId = cr_project_get()
+    projectId = cr_project_get(),
+    location = make_bucket_location
   )
 
   if(is.null(new_bucket$kind)){

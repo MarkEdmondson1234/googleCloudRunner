@@ -68,6 +68,7 @@ cr_build <- function(x,
                      artifacts = NULL,
                      options = NULL,
                      projectId = cr_project_get(),
+                     region = cr_region_get(),
                      launch_browser = interactive()) {
   assert_that(
     is.flag(launch_browser),
@@ -76,10 +77,20 @@ cr_build <- function(x,
 
   timeout <- check_timeout(timeout)
 
-  url <- sprintf(
-    "https://cloudbuild.googleapis.com/v1/projects/%s/builds",
-    projectId
-  )
+  # If options$pool$name exists, use different API endpoint that specifies
+  # the location; region has to match the region of the worker
+  if (has_private_worker_pool(x)){
+    url <- sprintf(
+      "https://cloudbuild.googleapis.com/v1/projects/%s/locations/%s/builds",
+      projectId,
+      region
+    )
+  } else {
+    url <- sprintf(
+      "https://cloudbuild.googleapis.com/v1/projects/%s/builds",
+      projectId
+    )
+  }
 
   if (is.gar_Build(x)) {
     # turn existing build into a valid new build
@@ -127,7 +138,16 @@ is.BuildOperationMetadata <- function(x) {
   inherits(x, "BuildOperationMetadata")
 }
 
-
+has_private_worker_pool <- function(x){
+  has_pool_name <- FALSE
+  if (is.Yaml(x)){
+    has_pool_name <- length(x[["options"]][["pool"]][["name"]]) > 0
+  }
+  if (is.BuildOperationMetadata(x)){
+    has_pool_name <- length(x[["metadata"]][["build"]][["options"]][["pool"]][["name"]]) > 0
+  }
+  has_pool_name
+}
 
 extract_logs <- function(o) {
   if (is.BuildOperationMetadata(o)) {

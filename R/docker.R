@@ -46,7 +46,8 @@ cr_deploy_docker_trigger <- function(repo,
         projectId = projectId_target,
         ...,
         kaniko_cache = TRUE
-      )
+      ),
+      timeout = timeout
     ),
     timeout = timeout
   )
@@ -142,7 +143,8 @@ cr_deploy_docker <- function(local,
     result$build_yaml,
     source = result$gcs_source,
     launch_browser = launch_browser,
-    timeout = result$timeout
+    timeout = result$timeout,
+    projectId = projectId
   )
 
   b <- cr_build_wait(docker_build, projectId = result$projectId)
@@ -191,6 +193,20 @@ cr_deploy_docker_construct <- function(
   myMessage("Building", local, "folder for Docker image:", image_name,
     level = 2
   )
+
+  # needed if someone does something silly like:
+  # res = cr_buildstep_bash("echo hey")
+  # pre_steps = res[[1]]
+  if (!is.null(pre_steps) &&
+      !is.cr_buildstep_list(pre_steps)) {
+    stop(paste0("pre_steps is not a cr_buildstep_list, you may need to do ",
+                "list(pre_steps)"))
+  }
+  if (!is.null(post_steps) &&
+      !is.cr_buildstep_list(post_steps)) {
+    stop(paste0("post_steps is not a cr_buildstep_list, you may need to do ",
+                "list(post_steps)"))
+  }
 
   myMessage("Configuring Dockerfile", level = 2)
   # remove local/Dockerfile if it didn't exist before

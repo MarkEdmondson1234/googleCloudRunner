@@ -15,10 +15,17 @@ cr_build_status <- function(id = .Last.value,
                             projectId = cr_project_get()) {
   the_id <- extract_build_id(id)
 
-  url <- sprintf(
-    "https://cloudbuild.googleapis.com/v1/projects/%s/builds/%s",
-    projectId, the_id
-  )
+  if (has_private_worker_pool(id)){
+    url <- sprintf(
+      "https://cloudbuild.googleapis.com/v1/%s",
+      id[["metadata"]][["build"]][["name"]]
+    )
+  } else{
+    url <- sprintf(
+      "https://cloudbuild.googleapis.com/v1/projects/%s/builds/%s",
+      projectId, the_id
+    )
+  }
 
   # cloudbuild.projects.builds.get
   f <- gar_api_generator(url, "GET", data_parse_function = as.gar_Build)
@@ -273,9 +280,15 @@ parse_build_meta_to_obj <- function(o) {
 
 as.gar_Build <- function(x) {
   if (is.BuildOperationMetadata(x)) {
-    bb <- cr_build_status(extract_build_id(x),
-      projectId = x$metadata$build$projectId
-    )
+    # This may be excessively defensive. It's not clear to me why
+    # we can't just call cr_build_status(x) for both cases.
+    if (has_private_worker_pool(x)){
+      bb <- cr_build_status(x)
+    } else {
+      bb <- cr_build_status(extract_build_id(x),
+                            projectId = x$metadata$build$projectId
+      )
+    }
     o <- parse_build_meta_to_obj(bb)
   } else if (is.gar_Build(x)) {
     o <- x # maybe more here later...
