@@ -43,7 +43,13 @@ has_registry_prefix <- function(name) {
     grepl("^.*-docker.pkg.dev", name)
 }
 
-make_image_name <- function(name, projectId) {
+# update to artifact registry format
+# {region}.pkg.dev/{projectId}/{repo}/{name}
+make_image_name <- function(
+    name,
+    projectId,
+    region=cr_region_get(),
+    repo="r") {
   if (is.null(name)) {
     return(name)
   }
@@ -51,7 +57,7 @@ make_image_name <- function(name, projectId) {
   if (prefix) {
     the_image <- name
   } else {
-    the_image <- sprintf("gcr.io/%s/%s", projectId, name)
+    the_image <- sprintf("%s.pkg.dev/%s/%s/%s", region, projectId, repo, name)
   }
   tolower(the_image)
 }

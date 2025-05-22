@@ -201,7 +201,7 @@ cr_deploy_docker_construct <- function(
     })
   }
 
-  image <- make_image_name(image_name, projectId = projectId)
+  image <- make_image_name(image_name, projectId = projectId, region=cr_region_get())
 
   # kaniko_cache will push image for you
   pushed_image <- if(kaniko_cache) NULL else image
@@ -283,6 +283,8 @@ cr_deploy_docker_construct <- function(
 #'
 #' If building multiple tags they don't have to run sequentially - set \code{waitFor = "-"} to build concurrently
 #'
+#' Set the region for artifact registry via cr_region_set()
+#'
 #' @family Cloud Buildsteps
 #' @export
 #' @import assertthat
@@ -341,7 +343,8 @@ cr_buildstep_docker <- function(
     is.null(dots$id)
   )
 
-  the_image <- make_image_name(image, projectId = projectId)
+  the_image <- make_image_name(image, projectId = projectId, region=cr_region_get())
+
 
   # has to be lowercase for kaniko so may as well do it here too
   the_image <- tolower(the_image)

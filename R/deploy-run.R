@@ -52,7 +52,9 @@ cr_deploy_run <- function(local,
 
   myMessage("Uploading", local, "folder for Cloud Run", level = 3)
 
-  image_name <- make_image_name(image_name, projectId)
+  image_name <- make_image_name(image_name,
+                                projectId=projectId,
+                                region=region)
 
   built <- cr_deploy_docker(local,
     image_name = image_name,
