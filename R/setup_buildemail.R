@@ -74,6 +74,7 @@ cr_setup_role_lookup <- function(type = c(
     cloudrun = c(
       "roles/run.admin",
       "roles/iam.serviceAccountUser",
+      "run.services.setIamPolicy",
       "roles/serverless.serviceAgent"
     ),
     bigquery = "roles/bigquery.admin",
