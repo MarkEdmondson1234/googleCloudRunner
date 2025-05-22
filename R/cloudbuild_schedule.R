@@ -56,12 +56,18 @@ cr_schedule_http <- function(build,
   build <- as.gar_Build(build)
   build <- safe_set(build, "status", "QUEUED")
 
-  HttpTarget(
-    httpMethod = "POST",
-    uri = sprintf(
+  if (has_private_worker_pool(build)){
+    uri <- paste0("https://cloudbuild.googleapis.com/v1/",build[["options"]][["pool"]][["name"]])
+  } else {
+    uri <- sprintf(
       "https://cloudbuild.googleapis.com/v1/projects/%s/builds",
       projectId
-    ),
+    )
+  }
+
+  HttpTarget(
+    httpMethod = "POST",
+    uri = uri,
     body = build,
     oauthToken = list(serviceAccountEmail = email)
   )
