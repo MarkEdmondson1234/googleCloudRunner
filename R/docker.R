@@ -46,7 +46,8 @@ cr_deploy_docker_trigger <- function(repo,
         projectId = projectId_target,
         ...,
         kaniko_cache = TRUE
-      )
+      ),
+      timeout = timeout
     ),
     timeout = timeout
   )
@@ -142,7 +143,8 @@ cr_deploy_docker <- function(local,
     result$build_yaml,
     source = result$gcs_source,
     launch_browser = launch_browser,
-    timeout = result$timeout
+    timeout = result$timeout,
+    projectId = projectId
   )
 
   b <- cr_build_wait(docker_build, projectId = result$projectId)
