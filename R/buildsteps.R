@@ -135,6 +135,12 @@ is.cr_buildstep <- function(x) {
   inherits(x, "cr_buildstep")
 }
 
+is.cr_buildstep_list <- function(x) {
+  assertthat::assert_that(is.list(x), length(x) > 0)
+
+  all(unlist(lapply(x, is.cr_buildstep)))
+}
+
 #' Convert a data.frame into cr_buildstep
 #'
 #' Helper to turn a data.frame of buildsteps info into format accepted by \link{cr_build}
