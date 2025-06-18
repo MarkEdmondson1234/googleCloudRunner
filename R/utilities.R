@@ -45,7 +45,7 @@ has_registry_prefix <- function(name) {
 
 # update to artifact registry format
 # {region}.pkg.dev/{projectId}/{repo}/{name}
-#{region}-docker.pkg.dev/{projectId}/{name}
+#{region}-docker.pkg.dev/{projectId}/{repo}/{name}
 make_image_name <- function(
     name,
     projectId,
@@ -58,7 +58,7 @@ make_image_name <- function(
   if (prefix) {
     the_image <- name
   } else {
-    the_image <- sprintf("%s.pkg.dev/%s/%s/%s", region, projectId, repo, name)
+    the_image <- sprintf("%s-docker.pkg.dev/%s/%s/%s", region, projectId, repo, name)
   }
   tolower(the_image)
 }
