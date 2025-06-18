@@ -58,7 +58,7 @@ make_image_name <- function(
   if (prefix) {
     the_image <- name
   } else {
-    the_image <- sprintf("%s-docker.pkg.dev/%s/%s/%s", region, projectId, name)
+    the_image <- sprintf("%s-docker.pkg.dev/%s/%s", region, projectId, name)
   }
   tolower(the_image)
 }
